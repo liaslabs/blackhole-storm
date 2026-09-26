@@ -489,6 +489,8 @@ body.v2 #rage2{display:flex;align-items:center;gap:6px;width:min(170px,88%);marg
 #rage2.ready i{background:linear-gradient(90deg,#ff6a3d,#ffd08a);}
 #rage2.on i{background:linear-gradient(90deg,#ff3d2e,#ffcf8a);}
 @keyframes rg2{to{box-shadow:0 0 18px rgba(255,160,90,1);}}
+#rage2.hl{outline:2px dashed #ffd76a;outline-offset:5px;border-radius:4px;animation:tip2 .7s ease-in-out infinite alternate;}@keyframes tip2{to{outline-color:rgba(255,215,106,.35);}}
+#mTip2{z-index:60;}#mTip2.tTop{top:31%;}#mTip2.tBot{top:69%;}#mTip2 .i2{font-size:30px;line-height:1;margin-bottom:4px;}#mTip2 .logo{font-size:22px;margin-bottom:6px;}#mTip2 p{font-size:15px;color:#dfe3ee;line-height:1.45;margin:0 0 12px;}
 body.v2 #tmr2{display:flex;align-items:center;gap:4px;flex:0 0 auto;padding:6px 9px;border-radius:6px;border:1px solid var(--line);background:var(--pan);font-family:var(--fm);font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;}
 #tmr2 span{font-size:12px;opacity:.7;}#tmr2.low{color:#ff8a5c;border-color:rgba(255,138,92,.5);}
 body.v2 #hearts{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;pointer-events:none;padding:5px 8px;border-radius:6px;background:rgba(7,9,12,.55);}
@@ -562,6 +564,13 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <canvas id="pvCan" width="192" height="192"></canvas>
    <p class="muted" id="introDesc" style="font-size:15px;color:#dfe3ee;"></p>
    <div class="row"><button class="btn big" id="introOk">ANLADIM</button></div>
+  </div>
+  <div class="modal card" id="mTip2">
+   <div class="h">İPUCU</div>
+   <div class="i2" id="tip2I"></div>
+   <div class="logo" id="tip2T"></div>
+   <p id="tip2D"></p>
+   <div class="row"><button class="btn big" id="tip2Ok">ANLADIM</button></div>
   </div>
   <div class="modal card" id="mRescue" style="border-color:rgba(63,216,232,.45);">
    <div class="h" style="color:var(--cyan);">BONUS GÖREV</div>
@@ -792,6 +801,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow vol"><input type="range" id="sSfxV" min="0" max="1" step="0.05" aria-label="Efekt ses seviyesi"></div>
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
+  <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
   <div class="srow"><span>💎 Elmas butonu</span><div class="seg"><button id="sBtnL">SOL</button><button id="sBtnR">SAĞ</button></div></div>
   <div class="credits"><b>Emeği geçenler</b><br>
    Bölge fotoğrafları (CC BY 4.0): Hubble Ultra Derin Alan — NASA, ESA, S. Beckwith (STScI), HUDF Team · Westerlund 2 — NASA, ESA, Hubble Heritage Team (STScI/AURA), A. Nota, Westerlund 2 Science Team · Orion — NASA, ESA, M. Robberto, HST Orion Treasury Team · Karina — NASA, ESA, N. Smith, Hubble Heritage Team · Kozmik Uçurumlar — NASA, ESA, CSA, STScI (Webb)<br>
@@ -981,8 +991,8 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,lives:0,shield:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0;
-function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
+let SHOP={noAds:false,lives:0,shield:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={};
+function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -996,7 +1006,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   savedLevel=svI(d.savedLevel,1,1,9999);savedScore=svI(d.savedScore,0);
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,9999));seen=svO(d.seen)||{};
-  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);
+  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
   for(const k of ['lives','shield','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
@@ -1776,8 +1786,8 @@ function mapSheet(l,st,k){
 const GUIDE={
  'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin.'],['step4','','Süre bitince seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can.']],
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×7 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
- 'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['💎','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Çarparsa can gider, combo sıfırlanır.']],
- 'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Yutunca patlar: yakındaki küçük cisimler zincirleme sana gelir, meteorlar parçalanır.'],['🌀','MİNİ KARA DELİK','6 saniye kendi kendine cisim toplayan ikinci bir kara delik.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.']],
+ 'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['💎','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır.']],
+ 'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.']],
  'EŞYALAR':[['🛡','KALKAN','Bir meteor çarpınca otomatik devreye girer, can gitmez. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','ULTRA GENİŞLİK','Oyunda elmas butonuna dokun: çekim alanın 20 saniye 1,5 katı (20 💎).']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
@@ -2636,7 +2646,7 @@ function drawRescue(){
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mCont','mNoStar','mIntro','mRescue','mSprint','mZone','mLvl','mOver','mTime'];
+const MODALS=['mCont','mNoStar','mIntro','mRescue','mSprint','mZone','mLvl','mOver','mTime','mTip2'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function showBig(html,ms){const b=$('bigtxt');b.innerHTML=html;b.style.opacity='1';b.style.transform='translate(-50%,-50%) scale(1)';setTimeout(()=>{b.style.opacity='0';b.style.transform='translate(-50%,-50%) scale(.6)';},ms);}
@@ -3084,6 +3094,7 @@ addEventListener('popstate',()=>{
   else if(on('sChal')){$('sChal').classList.remove('on');}
   else if(gState==='playing'||gState==='rescue_play'){pauseGame();}
   else if(gState==='paused'){resumeGame();}
+  else if(gState==='tip'){v2TipOk();}
   else if(on('sMenu')||on('sProfile')){try{history.back();}catch(e){}return;} // step past our entry so the app closes
   armBack();
 });
@@ -3231,7 +3242,7 @@ document.addEventListener('keydown',e=>{if(e.code==='Space'&&(gState==='playing'
 // ══════════════════════════════════════════════════════
 // SETTINGS
 // ══════════════════════════════════════════════════════
-function syncSettingsUI(){
+function syncSettingsUI(){if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;$('sBtnL').classList.toggle('on',SET.left);$('sBtnR').classList.toggle('on',!SET.left);
@@ -3250,6 +3261,8 @@ $('pMusic').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('pSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();};
 $('pSet').onclick=$('setBtn').onclick=()=>{syncSettingsUI();$('sSet').classList.add('on');};
 $('setClose').onclick=()=>$('sSet').classList.remove('on');
+$('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
+$('sTips').onclick=()=>{TIPS={};saveG();$('sTips').textContent='✓';sfx('click',{vol:.4});};
 if(!canLink())$('privRow').innerHTML='🔒 Oyun kişisel veri toplamaz; skorlar ve ayarlar yalnızca bu cihazda saklanır.';
 
 // ══════════════════════════════════════════════════════

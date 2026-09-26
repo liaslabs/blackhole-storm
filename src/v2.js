@@ -9,7 +9,8 @@ const V2=true;
 const V2K={r0:34,rMax:180,rRage:240,gK:2.2,gMax:450,gMaxOver:500,off:50,follow:.9,
   acc:{min:.15,max:1.8,rage:3},
   rage:{dur:5,r:1.33,g:1.5,acc:1.67,score:2},time:{dur:6,k:.45},over:{dur:15,r:1.25,g:1.4,ctl:1.15},
-  mini:{dur:6,r:28,g:70,k:.6},bomb:{r:140,dur:.8,pts:25,max:500},imm:.8,cont:{imm:3,rage:50},
+  mini:{dur:6,k:.6,rMin:17,rMax:60,gK:2.4,gMax:150},bomb:{r:3,hold:3,pts:25,max:500},imm:.8,
+  met:{slow:.3,ramp:.3},cont:{imm:3,rage:50},
   dodge:{lo:10,hi:35,cd:1.5},perfectK:.2,swallow:.35,
   dur:[0,60,65,70,70,75,75,80,80,90,90],comboT:[0,3,2.7,2.5,2.3]};
 // r: radius, v/dv/vm: speed at level 1, per-level increase, maximum (ref px/s); pts: score; grow: radius gain;
@@ -33,16 +34,16 @@ const MULT2=c=>c>=30?7:c>=20?6:c>=15?5:c>=10?4:c>=5?3:c>=3?2:1;
 const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl payı geçersen PERFECT DODGE.'],
   3:['💎','CRYSTAL','Çok değerli ama genelde bir meteorun yanında. Risk alacak mısın?'],
   4:['⏱','TIME BALL','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
-  5:['💣','BOMB PLANET','Yut: yakındaki küçük cisimler zincirleme sana gelir.'],
+  5:['💣','BOMB PLANET','Çekim alanında 3 saniye tut: ekrandaki her şey sana gelir.'],
   6:['⚡','SPEED + OVERLOAD','Cisimler hızlanıyor. Sınıra kadar büyürsen 15 saniyelik OVERLOAD başlar.'],
   7:['↔️','SIDE STREAMS','Cisimler artık yanlardan da geliyor.'],
-  8:['🌀','MINI BLACK HOLE','Yut: 6 saniye sana yardım eden ikinci bir kara delik açılır.'],
+  8:['🌀','MINI BLACK HOLE','Yut: 6 saniye etrafında dönen yardımcı bir kara delik açılır.'],
   9:['🪨','ASTEROID STORM','Yoğun alan: dev combo zamanı.'],
   10:['🪐','GIANT PLANET','Boss: koptukça parçalarını topla, küçülünce bütünüyle yut.'],
   11:['🌐','360°','Cisimler her yönden geliyor.']};
 function new2(l){return NEW2[l]||(l%10===0?NEW2[10]:null);}
 
-const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],
+const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,
   rr:34,cap:46,peak:34,R:34,G:75,vx:0,vy:0,tx:0,ty:0,lx:0,ly:0,
   combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,
   eaten:0,perfA:0,perfD:0,dmg:0,acc:0,swarm:0,swarmT:0,script:null,si:0,st:0,touched:false,tut:1,contUsed:false,
@@ -70,7 +71,7 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();
   balls=[];blocks=[];rifts=[];PU={slow:0,magnet:0,mult:0};MIS=null;holeK=1;isRescueLevel=false;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
-  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],
+  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
     script:mode==='level'&&level===1&&!REPLAY?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1?1:0,touched:false,contUsed:false,boss:null,ending:0,endT:0,sprBlock:-1});
@@ -120,12 +121,14 @@ function v2Obj(k,x,y,vx,vy,opt={}){
   const K=OBJ2[k];const o={k,x,y,vx,vy,rr:K.r*(opt.scale||1),r:0,st:'in',t:0,inG:false,b:1e9,seen:false,rot:rnd(0,TAU),vr:rnd(-1.2,1.2),
     si:Math.floor(rnd(0,6)),wait:k==='meteor'?(opt.wait??.75):0,minGap:1e9,dodged:false,prevD:1e9,boss:!!opt.boss,noScore:false,age:0};
   o.r=o.rr*G2.S;
+  if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(1.25-.03*(G2.lv-2),.7,1.25);o.ramp=0;} // enters slowly, then speeds up
   if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
   G2.objs.push(o);return o;
 }
 function v2Edge(k,side,x0){
   const s=v2Speed(k),r=OBJ2[k].r*G2.S;let x,y,a;
   if(side==null){const d=G2.L.dirs;const q=rng();side=d>=4?(q<.45?0:q<.64?1:q<.83?2:3):d>=2?(q<.7?0:q<.85?1:2):0;}
+  if(k==='meteor'&&side&&G2.objs.some(m=>m.k==='meteor'&&m.side&&m.st==='in'))side=0; // one side meteor at a time
   for(let tries=0;tries<5;tries++){
     if(side===0){x=x0??rrnd(W*.08,W*.92);y=-r-4;a=Math.PI/2+rrnd(-.26,.26);}
     else if(side===1){x=-r-4;y=rrnd(H*.08,H*.55);a=rrnd(-.15,.5);}
@@ -134,7 +137,7 @@ function v2Edge(k,side,x0){
     if(Math.hypot(x-hX,y-hY)>sp2(250))break;x0=null;
   }
   // aim sideways/bottom entries toward the play area so they cross the screen
-  return v2Obj(k,x,y,Math.cos(a)*s,Math.sin(a)*s);
+  const o=v2Obj(k,x,y,Math.cos(a)*s,Math.sin(a)*s);o.side=side;return o;
 }
 function v2Pick(){const w=G2.L.w;let tot=0;for(const k in w)tot+=w[k];let r=rng()*tot;for(const k in w){r-=w[k];if(r<=0)return k;}return 'ast';}
 function v2Active(){let n=0;for(const o of G2.objs)if(o.st==='in'&&!o.boss)n++;return n;}
@@ -226,8 +229,8 @@ function v2Update(dt){
   if(diamTimer>0){diamTimer-=dt;if(diamTimer<=0)diamTimer=0;}
   if(G2.overT>0){G2.overT-=dt;if(G2.overT<=0){G2.rr=V2K.r0+(G2.cap-V2K.r0)*.6;v2Call('COLLAPSE','THE HOLE SHRINKS','#b9a8ff',1.3);sfx('slow',{vol:.6,rate:.6});v2Burst(hX,hY,26,'#b9a8ff',2,6,.7);}}
   if(G2.rageT>0){G2.rageT-=dt;G2.rage=Math.max(0,G2.rageT/V2K.rage.dur*100);heat=Math.max(heat,.55);if(G2.rageT<=0){G2.rage=0;G2.rageT=0;SND.setDrone(.14,650);}}
-  if(G2.ready)G2.readyT+=dt;
-  if(G2.combo>0){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
+  if(G2.ready)G2.readyT+=dt;if(G2.tipCD>0)G2.tipCD-=dt;
+  if(G2.combo>0&&!G2.hold){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
   if(gameMode==='survival'){survTime+=dt;survSpeed=survTime/60;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);}
     const nl=Math.min(40,effLevel());if(nl!==G2.lv){G2.lv=nl;const cap=G2.cap;G2.L=v2Rules(nl);G2.cap=Math.max(cap,V2K.r0*G2.L.capMul);v2Call('LEVEL UP','SPEED '+nl,'#ffb35c',1.2,true);const z=zoneOf(nl);if(z!==curZone)setZone(z);}}
   if(gameMode==='sprint'){const sec=Math.ceil(SPR_RUN.dur-SPR_RUN.t);SPR_RUN.t+=dt;const s2=Math.ceil(SPR_RUN.dur-SPR_RUN.t);
@@ -259,13 +262,21 @@ function v2Update(dt){
   if(G2.ending){G2.endT-=dt;if(G2.endT<=0&&gState==='playing'){G2.ending=2;v2Complete();}}
 
   // minis, bomb waves, boss
-  for(let i=G2.minis.length-1;i>=0;i--){const q=G2.minis[i];q.t-=dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.a+=dt*5;if(q.x<q.r||q.x>W-q.r)q.vx*=-1;if(q.t<=0||q.y>H+q.r){v2Burst(q.x,q.y,14,'#c9a8ff',1,4,.5);G2.minis.splice(i,1);}}
-  for(let i=G2.waves.length-1;i>=0;i--){const w=G2.waves[i];w.t+=dt;const st=w.t<.27?1:w.t<.53?2:3;w.rad=sp2(V2K.bomb.r)*st/3*Math.min(1,(w.t%.27)/.12+.3);
-    for(const o of G2.objs){if(o.st!=='in'||w.hit.has(o)||o.boss||!(SMALL2.has(o.k)||o.k==='meteor'||o.k==='energy'))continue;if(Math.hypot(o.x-w.x,o.y-w.y)>sp2(V2K.bomb.r)*st/3+o.r)continue;
-      w.hit.add(o);w.n++;const add=Math.min(V2K.bomb.pts,V2K.bomb.max-w.bonus);w.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(5);
+  for(let i=G2.minis.length-1;i>=0;i--){const q=G2.minis[i];q.t-=dt;q.a+=dt*5;q.ph+=dt*1.5;v2MiniSize(q);
+    // helper: sweeps an arc on the open side of the hole (above it, or below when the hole is high up), always on screen
+    const up=hY>H*.42,dist=G2.R+q.r+sp2(60),th=(up?-1:1)*Math.PI/2+1.05*Math.sin(q.ph);
+    let tx=clamp(hX+Math.cos(th)*dist,q.r+6,W-q.r-6),ty=clamp(hY+Math.sin(th)*dist,q.r+sp2(70),H-q.r-sp2(56));
+    const ddx=tx-hX,min=G2.R+q.r+sp2(12);if(Math.hypot(ddx,ty-hY)<min)ty=hY+(up?-1:1)*Math.sqrt(Math.max(0,min*min-ddx*ddx));
+    const kq=Math.min(1,dt*7);q.x+=(tx-q.x)*kq;q.y+=(ty-q.y)*kq;
+    if(q.t<=0){v2Burst(q.x,q.y,14,'#c9a8ff',1,4,.5);G2.minis.splice(i,1);}}
+  for(let i=G2.beams.length-1;i>=0;i--){const b=G2.beams[i];b.t+=dt;if(b.t>=.25){G2.pulse=1;G2.beams.splice(i,1);}}
+  for(let i=G2.waves.length-1;i>=0;i--){const w=G2.waves[i];w.t+=dt;const p=Math.min(1,w.t/w.dur);w.rad=w.max*(1-(1-p)*(1-p));
+    for(const o of G2.objs){if(o.st!=='in'||o.wait>0||w.hit.has(o)||o.boss||o.orb)continue;
+      if(!(o.k==='meteor'||(w.mega?o.k!=='bomb'&&v2Edible(o):SMALL2.has(o.k))))continue;if(Math.hypot(o.x-w.x,o.y-w.y)>w.rad+o.r)continue;
+      w.hit.add(o);w.n++;const add=Math.min(V2K.bomb.pts,V2K.bomb.max-w.bonus);w.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(w.mega?3:5);
       if(o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,14,'#ff8a4c',2,6,.5);}else{o.noScore=false;o.chain=true;v2Swallow(o,null);}
       if(w.n>=2)v2Call('CHAIN ×'+w.n,'','#ffb35c',.9);}
-    if(w.t>=V2K.bomb.dur){if(w.n>=3){shake=Math.max(shake,9);v2Pop('CHAIN ×'+w.n+'  +'+w.bonus,'#ffb35c',17);}G2.waves.splice(i,1);}}
+    if(w.t>=w.dur){if(w.n>=3){shake=Math.max(shake,9);v2Pop('CHAIN ×'+w.n+'  +'+w.bonus,'#ffb35c',17);}G2.waves.splice(i,1);}}
   v2BossStep(dt,tk);
 
   // bodies
@@ -276,10 +287,12 @@ function v2Update(dt){
     if(o.spinA!==undefined)o.spinA+=o.spinV*dt;o.rot+=o.vr*dt;
     if(o.wait>0){o.wait-=dt*tk;continue;}
     const odt=dt*tk;
+    if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;
     // gravity of the main hole (and any mini hole) — meteors fly straight
     let dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1;
     if(o.k!=='meteor'){
       const ed=v2Edible(o)||G2.ending;
+      if(d<Gr&&o.k==='bomb'&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
@@ -287,7 +300,7 @@ function v2Update(dt){
         // swirl + damping so bodies fall in instead of slingshotting around
         o.vx+=-dy/d*A*.22;o.vy+=dx/d*A*.22;const damp=Math.pow(1-.9*q,odt);o.vx*=damp;o.vy*=damp;
       }else if(d>Gr*1.2)o.inG=false;
-      for(const q of G2.minis){if(!SMALL2.has(o.k))continue;const mx=q.x-o.x,my=q.y-o.y,md=Math.hypot(mx,my)||1;if(md<q.g){const A=(V2K.acc.min+1.2*(1-md/q.g))*V2K.mini.k*S*3600*odt;o.vx+=mx/md*A;o.vy+=my/md*A;}
+      for(const q of G2.minis){if(!SMALL2.has(o.k)||!ed)continue;const mx=q.x-o.x,my=q.y-o.y,md=Math.hypot(mx,my)||1;if(md<q.g){const A=(V2K.acc.min+1.2*(1-md/q.g))*V2K.mini.k*S*3600*odt;o.vx+=mx/md*A;o.vy+=my/md*A;}
         if(md<q.r+o.r*.65){v2Swallow(o,q);break;}}
       if(o.st!=='in')continue;
       o.x+=o.vx*odt;o.y+=o.vy*odt;dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
@@ -297,7 +310,12 @@ function v2Update(dt){
           const nx=-dx/d,ny=-dy/d,vn=o.vx*nx+o.vy*ny;if(vn<0){o.vx-=1.8*vn*nx;o.vy-=1.8*vn*ny;}o.x=hX+nx*(G2.R+o.r*.66);o.y=hY+ny*(G2.R+o.r*.66);
           if(!o.bounced){o.bounced=true;v2Call('TOO BIG','GROW FIRST','#ffb35c',.9);v2Sfx('armor',{vol:.35,rate:.7});}}}
     }else{ // meteor
+      if(o.slow>0){o.slow-=odt;const q=V2K.met.slow;o.vx=o.fvx*q;o.vy=o.fvy*q;if(o.slow<=0)v2Sfx('thrust',{vol:.4,rate:.7,x:o.x});}
+      else if(o.ramp<V2K.met.ramp){o.ramp+=odt;const q=V2K.met.slow+(1-V2K.met.slow)*Math.min(1,o.ramp/V2K.met.ramp);o.vx=o.fvx*q;o.vy=o.fvy*q;}
       o.x+=o.vx*odt;o.y+=o.vy*odt;dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
+      for(const q of G2.minis)if(Math.hypot(o.x-q.x,o.y-q.y)<q.r+o.r*.8){o.st='dead';q.t=Math.max(.4,q.t-1);v2Burst(o.x,o.y,18,'#c9a8ff',2,6,.5);
+        ftexts.push(new FText('BLOCKED',q.x,q.y-q.r-sp2(14),'#c9a8ff',15));v2Sfx('armor',{vol:.5,rate:1.3});break;}
+      if(o.st==='dead')continue;
       const gap=d-G2.R-o.r;
       if(gap<-o.r*.25&&!o.hit){o.hit=true;
         if(G2.rageT>0||G2.ending){o.st='dead';v2Burst(o.x,o.y,20,'#ff8a4c',2,7,.6);const p=50;totalScore+=p;levelScore+=p;v2Pop('SMASH +'+p,'#ff9a6c',15);v2Sfx('boom',{vol:.5,rate:1.4});continue;}
@@ -309,11 +327,15 @@ function v2Update(dt){
     }
     // off screen
     const mg=o.r*3+20;if(o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r)o.seen=true;
+    if(!o.tipd&&o.st==='in'&&o.x>o.r&&o.x<W-o.r&&o.y>o.r+sp2(60)&&o.y<H-o.r)v2TipFor(o);
     if((o.seen||o.age>12)&&(o.x<-mg||o.x>W+mg||o.y<-mg||o.y>H+mg)){if(o.fromBoss&&G2.boss)G2.boss.shed=Math.min(G2.boss.shed,.3);G2.objs.splice(i,1);}
   }
   // particles
   for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
   for(let i=G2.calls.length-1;i>=0;i--){G2.calls[i].life-=dt;if(G2.calls[i].life<=0)G2.calls.splice(i,1);}
+  if(G2.overT>0&&!TIPS.over)v2Tip('over',null);
+  if(G2.boss&&!G2.boss.sw&&G2.t>2.2&&!TIPS.boss)v2Tip('boss',G2.boss);
+  if(G2.ready&&!TIPS.rage)v2Tip('rage',null);
   if(G2.overT<=0&&!G2.overDone&&G2.L.overload&&G2.rr>=G2.cap-.01&&!G2.ending){G2.overT=V2K.over.dur;G2.overDone=true;v2Call('OVERLOAD','MORE POWER · HARDER TO STEER','#c9a8ff',1.8,true);sfx('bossIntro',{vol:.5,rate:1.5});shake=Math.max(shake,8);}
 }
 
@@ -355,11 +377,11 @@ function v2Eaten(o){ // the body has crossed the event horizon
   const n=Math.min(G2.rageT>0?12:8,4+Math.floor(G2.combo/3));const col={crystal:'#9ef3ff',gold:'#ffd76a',energy:'#ff7ad9',time:'#8fd0ff',bomb:'#ff8a4c',mini:'#c9a8ff'}[o.k]||'#e6dcff';
   v2Burst(cx,cy,n,col,1.2,3.5+Math.min(3,G2.combo*.1),.45,1.6);
   if(o.noScore)return;
-  if(!o.mini){const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow);G2.pulse=1;}
+  {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow);if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
   addMass(1);
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
-  else if(o.k==='bomb'){G2.waves.push({x:hX,y:hY,t:0,rad:0,hit:new Set(),n:0,bonus:0});shake=Math.max(shake,6);flash=Math.max(flash,.5);sfx('boom',{vol:.7});v2Call('BOMB!','','#ff8a4c',.8);}
-  else if(o.k==='mini'){const q={x:W-hX,y:Math.max(sp2(90),hY-H*.35),vx:sp2(rrnd(-40,40)),vy:sp2(22),t:V2K.mini.dur,r:sp2(V2K.mini.r),g:sp2(V2K.mini.g),a:0};q.x=clamp(q.x,q.r+10,W-q.r-10);G2.minis.push(q);v2Call('MINI BLACK HOLE','6 s','#c9a8ff',1.2);}
+  else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
+  else if(o.k==='mini'){const q={x:hX,y:hY,t:V2K.mini.dur,a:0,ph:0};v2MiniSize(q);q.y=hY-G2.R-q.r;G2.minis.push(q);v2Call('MINI BLACK HOLE','HELPER · 6 s','#c9a8ff',1.3);if(!TIPS.mini)v2Tip('mini',q);}
 }
 function v2Dodge(o){
   G2.dodgeCD=V2K.dodge.cd;G2.perfD++;const p=50*(G2.rageT>0?2:1);totalScore+=p;levelScore+=p;v2AddRage(8);G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;if(G2.combo>G2.best)G2.best=G2.combo;
@@ -369,6 +391,7 @@ function v2Dodge(o){
 function v2Hit(o){
   v2Burst(o.x,o.y,22,'#ff7a5c',2,7,.6,2.2);
   if(G2.immT>0)return;G2.immT=V2K.imm;
+  if(G2.hold){const b=G2.hold;G2.hold=null;b.orb=null;b.st='dead';v2Blast(b.x,b.y,false);}
   if(SHOP.shield>0&&monOn()&&gameMode!=='sprint'){SHOP.shield--;saveG();updateUI();sfx('armor',{vol:.9});v2Call('SHIELD','','#8fe9ff',1);shake=Math.max(shake,6);return;}
   G2.dmg++;lostThisLevel=true;v2ComboLost();G2.rage=G2.ready?G2.rage:Math.max(0,G2.rage-15);
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
@@ -395,6 +418,55 @@ function v2RageGo(){
   v2Call('BLACK HOLE RAGE!','','#ff6a3d',1.8,true);sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.6,rate:.7});sfx('boom',{vol:.5,rate:.5});SND.setDrone(.24,420);vib([40,30,90]);
   v2Burst(hX,hY,40,'#ff8a4c',2,8,.8,2.2);dmEvent('rescue',1);
 }
+
+// ── helper hole, bomb hold, blasts ────────────────────
+function v2MiniSize(q){const rr=clamp(G2.R/G2.S*.5,V2K.mini.rMin,V2K.mini.rMax);q.r=sp2(rr);q.g=sp2(Math.min(rr*V2K.mini.gK,V2K.mini.gMax));} // half your size, capped so it fits
+function v2BombCatch(o,d){ // the bomb settles into orbit; hold it 3 s for the mega blast
+  o.orb={a:Math.atan2(o.y-hY,o.x-hX),t:0,dist:clamp(d,G2.R+o.r+sp2(10),G2.R+(G2.G-G2.R)*.55),beep:0,lag:0};G2.hold=o;
+  v2Call('HOLD IT!','3 s','#ff8a4c',1.1);v2Sfx('armor',{vol:.45,rate:.8});vib(20);
+}
+function v2BombStep(o,dt){
+  const b=o.orb;b.t+=dt;b.a+=dt*2.6;b.dist=clamp(b.dist,G2.R+o.r+sp2(10),Math.max(G2.R+o.r+sp2(10),G2.G*.9));
+  const tx=hX+Math.cos(b.a)*b.dist,ty=hY+Math.sin(b.a)*b.dist,px=o.x,py=o.y,k=Math.min(1,dt*14);
+  o.x+=(tx-o.x)*k;o.y+=(ty-o.y)*k;o.vx=(o.x-px)/Math.max(dt,1e-3);o.vy=(o.y-py)/Math.max(dt,1e-3);o.rot+=dt*4;
+  b.lag=Math.hypot(tx-o.x,ty-o.y)/Math.max(1,G2.G*.5); // how hard the drag is pulling on it (1 = it breaks free)
+  if(b.lag>1){o.orb=null;G2.hold=null;o.noCap=1;o.inG=false;v2Call('BOMB LOST','TOO FAST','#ff8a4c',1.1);v2Sfx('thrust',{vol:.5,rate:.8});return;}
+  const sec=Math.ceil(V2K.bomb.hold-b.t);if(sec!==b.beep&&sec>0){b.beep=sec;v2Sfx('tickHi',{vol:.55,rate:1+(3-sec)*.2});}
+  if(b.t>=V2K.bomb.hold){o.orb=null;G2.hold=null;o.mega=true;o.noScore=false;v2Swallow(o,null);}
+}
+function v2Blast(x,y,mega){ // mega: the whole screen falls in; otherwise ~3× your radius (spec)
+  G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,hit:new Set(),n:0,bonus:0});
+  shake=Math.max(shake,mega?12:6);flash=Math.max(flash,mega?.9:.5);sfx('boom',{vol:mega?.9:.7,rate:mega?.7:1});
+  if(mega){shock=1;v2Call('MEGA BOMB!','','#ff8a4c',1.5,true);vib([40,30,120]);}else v2Call('BOMB!','','#ff8a4c',.8);
+}
+
+// ── first-encounter tips: one card per thing, once per player, the game waits for ANLADIM ──
+const TIP2={
+  rage:['🔥','RAGE','Rage barın doldu! Ekrana dokun: 5 saniye boyunca kara deliğin devleşir, her şeyi çeker, puanın ×2 olur ve meteorlar sana zarar veremez.'],
+  meteor:['☄️','METEOR','Kırmızı meteor tehlikeli: çarparsa 1 can gider. Önce yavaş girer, sonra hızlanır. Kırmızı çizgi gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE!'],
+  crystal:['💎','KRİSTAL','Kristal çok değerli: +200 puan ve hızlı büyüme. Ama çoğu zaman yanında bir meteor olur, dikkat et.'],
+  energy:['⚡','ENERJİ','Enerji topu Rage barını hızla doldurur. Kaçırma!'],
+  gold:['🌕','ALTIN GEZEGEN','Nadir ve çok hızlı: +500 puan. Yutmak için biraz büyümüş olman gerekir.'],
+  time:['⏱','ZAMAN TOPU','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
+  bomb:['💣','BOMBA GEZEGEN','Bombayı çekim alanına al: etrafında döner, fitili yanar. 3 saniye alanında tutarsan MEGA BOMB ekrandaki her şeyi sana çeker. Çok hızlı hareket edersen bomba kaçar.'],
+  mini:['🌀','MİNİ KARA DELİK','Yut: 6 saniye boyunca etrafında dönen yardımcı bir kara delik açılır. Onun yuttukları sana akar. Meteor ona çarparsa can gitmez.'],
+  big:['🪐','ÇOK BÜYÜK','Bu cisim şimdilik senden büyük: çarpınca seker. Küçük cisimleri yiyerek büyü, sonra onu da yut.'],
+  over:['🟣','OVERLOAD','Sınıra kadar büyüdün! 15 saniye boyunca daha güçlüsün ama yönetmek zorlaşır. Sonra kara delik biraz küçülür.'],
+  boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!']};
+function v2TipFor(o){let id=null;
+  if(o.k==='meteor'){if(!(o.slow>0)){o.tipd=1;return;}id='meteor';}
+  else if(['crystal','energy','gold','time','bomb','mini'].includes(o.k))id=o.k;
+  else if(GL2.has(o.k)&&!v2Edible(o))id='big';
+  if(!id||TIPS[id]||v2Tip(id,o))o.tipd=1;}
+function v2Tip(id,tg){
+  if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched))return false;
+  TIPS[id]=1;saveSoon();G2.tip={id,tg};gState='tip';DRAG.id=null;const t=TIP2[id];
+  $('tip2I').textContent=t[0];$('tip2T').textContent=t[1];$('tip2D').textContent=t[2];
+  const y=id==='rage'?0:tg?tg.y:hY,m=$('mTip2');m.classList.toggle('tTop',y>H*.5);m.classList.toggle('tBot',y<=H*.5);
+  $('rage2')&&$('rage2').classList.toggle('hl',id==='rage');
+  showModal('mTip2');SND.duck(.4,1e5);sfx('bell',{vol:.5,rate:1.25});return true;
+}
+function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8;$('rage2')&&$('rage2').classList.remove('hl');gState='playing';lastT=performance.now();SND.duck(1,0);sfx('click',{vol:.4});}
 
 // ── level end ─────────────────────────────────────────
 function v2Complete(){
@@ -428,8 +500,9 @@ function v2Frame(dt){
   ctx.save();ctx.globalCompositeOperation='lighter';for(const d of dust){d.update(dt);d.draw();}ctx.restore();ctx.globalAlpha=1;
   drawScreenFx(dt);
   v2DrawField();
-  for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/V2K.bomb.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
+  for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/w.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=w.mega?6:3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
   for(const q of G2.minis)v2DrawMini(q);
+  v2DrawLinks();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
@@ -439,12 +512,12 @@ function v2Frame(dt){
   for(let i=ftexts.length-1;i>=0;i--){if(!ftexts[i].update(dt))ftexts.splice(i,1);else ftexts[i].draw();}
   for(let i=cols.length-1;i>=0;i--){if(!cols[i].update(dt,f)){const c=cols.splice(i,1)[0];if(c.gem){diamonds++;sfx('gem',{vol:.45,rate:1+Math.random()*.2});}else{stars++;sfx('coin',{vol:.4,rate:1+Math.random()*.25});}updateUI();}else cols[i].draw();}
   if(explA>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(230,220,255,${explA})`;ctx.lineWidth=14*explA+2;ctx.beginPath();ctx.arc(hX,hY,explR,0,TAU);ctx.stroke();ctx.restore();explR+=9*f;explA-=.012*f;}
-  v2DrawCalls();v2DrawTut();
+  v2DrawTipMark();v2DrawCalls();v2DrawTut();
   recFrame();
   G2.uiT-=dt;if(G2.uiT<=0){G2.uiT=.1;v2Ui(false);}
 }
 function v2DrawField(){ // gravity field, rage aura, overload wobble, damage blink
-  if(gState!=='playing'&&gState!=='paused')return;
+  if(gState!=='playing'&&gState!=='paused'&&gState!=='tip')return;
   const R=G2.R,Gr=G2.G;ctx.save();ctx.translate(hX,hY);
   let pull=false;for(const o of G2.objs)if(o.st==='in'&&o.inG&&o.k!=='meteor'){pull=true;break;}
   ctx.setLineDash([3,7]);ctx.lineDashOffset=-clock*14;ctx.lineWidth=1.2;
@@ -467,7 +540,7 @@ function v2DrawObj(o,gl){
   if(o.wait>0){v2DrawWarn(o);return;}
   ctx.save();if(o.st==='sw')ctx.globalAlpha=Math.max(.15,s);
   if(k==='ast'||k==='frag'){v2Rock(o,s);if(k==='frag'){ctx.globalCompositeOperation='lighter';ctx.fillStyle='rgba(255,150,70,.25)';ctx.beginPath();ctx.arc(o.x,o.y,r*1.1,0,TAU);ctx.fill();}}
-  else if(k==='meteor'){const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp;ctx.globalCompositeOperation='lighter';
+  else if(k==='meteor'){v2MetPath(o);const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp;ctx.globalCompositeOperation='lighter';
     const tl=r*5.5,g=ctx.createLinearGradient(o.x,o.y,o.x-ux*tl,o.y-uy*tl);g.addColorStop(0,'rgba(255,150,60,.9)');g.addColorStop(.4,'rgba(255,70,40,.45)');g.addColorStop(1,'rgba(255,40,30,0)');
     ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(o.x-uy*r*.9,o.y+ux*r*.9);ctx.lineTo(o.x-ux*tl,o.y-uy*tl);ctx.lineTo(o.x+uy*r*.9,o.y-ux*r*.9);ctx.closePath();ctx.fill();
     ctx.globalCompositeOperation='source-over';v2Rock(o,s,'rgba(255,90,40,.45)');
@@ -485,11 +558,30 @@ function v2DrawObj(o,gl){
   else if(k==='bomb'){ctx.translate(o.x,o.y);ctx.rotate(o.rot);const g=ctx.createRadialGradient(-r*.3,-r*.3,0,0,0,r);g.addColorStop(0,'#7a2a1c');g.addColorStop(.7,'#3a0d08');g.addColorStop(1,'#140404');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(255,${120+60*Math.sin(clock*10)|0},40,.9)`;ctx.lineWidth=1.6;
     ctx.beginPath();ctx.moveTo(-r*.6,-r*.2);ctx.lineTo(-r*.1,r*.1);ctx.lineTo(r*.2,-r*.4);ctx.moveTo(-r*.1,r*.1);ctx.lineTo(r*.1,r*.6);ctx.moveTo(r*.2,-r*.4);ctx.lineTo(r*.65,-r*.1);ctx.stroke();
-    ctx.strokeStyle=`rgba(255,110,50,${.4+.4*Math.sin(clock*12)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*1.3,0,TAU);ctx.stroke();}
+    ctx.strokeStyle=`rgba(255,110,50,${.4+.4*Math.sin(clock*12)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*1.3,0,TAU);ctx.stroke();
+    if(o.orb){ctx.rotate(-o.rot);ctx.globalCompositeOperation='source-over';ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.55)';ctx.beginPath();ctx.arc(0,0,r*1.75,0,TAU);ctx.stroke();
+      ctx.strokeStyle='#ffd76a';ctx.shadowColor='#ff8a4c';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(0,0,r*1.75,-Math.PI/2,-Math.PI/2+TAU*Math.min(1,o.orb.t/V2K.bomb.hold));ctx.stroke();
+      ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='900 13px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(Math.max(1,Math.ceil(V2K.bomb.hold-o.orb.t)),0,-r*1.75-11);}}
   else if(k==='mini'){v2DrawMini({x:o.x,y:o.y,r,a:o.rot*3,t:9});}
   else if(!gl&&o.cell!==undefined){const im=SPR.byCell&&SPR.byCell[o.cell];if(im)ctx.drawImage(im,o.x-r,o.y-r,r*2,r*2);else{ctx.fillStyle='#9aa';ctx.beginPath();ctx.arc(o.x,o.y,r,0,TAU);ctx.fill();}}
   ctx.restore();
 }
+function v2MetPath(o){ // the lane a meteor will take, shown until it speeds up
+  const a=o.wait>0?.5:o.slow>0?.55:Math.max(0,.55*(1-o.ramp/V2K.met.ramp));if(a<=.02)return;
+  const sp=Math.hypot(o.fvx,o.fvy)||1,ux=o.fvx/sp,uy=o.fvy/sp,L=Math.hypot(W,H)*1.3;
+  ctx.save();ctx.globalAlpha=a*(.75+.25*Math.sin(clock*10));ctx.strokeStyle='#ff5a45';ctx.lineWidth=Math.max(2,o.r*.5);ctx.setLineDash([10,9]);ctx.lineDashOffset=-clock*60;
+  ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(o.x+ux*L,o.y+uy*L);ctx.stroke();ctx.restore();}
+function v2DrawLinks(){ // bomb tether (turns red as the drag pulls it loose) and helper beams
+  const b=G2.hold;if(b&&b.orb){const t=Math.min(1,b.orb.lag);ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.5+.4*t;
+    ctx.strokeStyle=`rgb(255,${200-150*t|0},${80-60*t|0})`;ctx.lineWidth=2+3*t;ctx.setLineDash([6,5]);ctx.lineDashOffset=clock*40;ctx.beginPath();ctx.moveTo(hX,hY);ctx.lineTo(b.x,b.y);ctx.stroke();ctx.restore();}
+  if(G2.beams.length){ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+    for(const m of G2.beams){const p=m.t/.25,x=m.x+(hX-m.x)*p,y=m.y+(hY-m.y)*p,x0=m.x+(hX-m.x)*Math.max(0,p-.35),y0=m.y+(hY-m.y)*Math.max(0,p-.35);
+      ctx.strokeStyle='rgba(201,168,255,.85)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,3,0,TAU);ctx.fill();}
+    ctx.restore();}
+}
+function v2DrawTipMark(){ // points at what the open tip card is about
+  const t=G2.tip;if(!t||t.id==='rage')return;const o=t.tg,x=o?o.x:hX,y=o?o.y:hY,r=(o?o.r:G2.R)*1.5+sp2(10)+4*Math.sin(clock*6);
+  ctx.save();ctx.strokeStyle='#ffd76a';ctx.lineWidth=3;ctx.shadowColor='#ffb35c';ctx.shadowBlur=14;ctx.setLineDash([8,6]);ctx.lineDashOffset=-clock*30;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.restore();}
 function v2DrawGold(o){ctx.save();ctx.globalCompositeOperation='lighter';const r=o.r,g=ctx.createRadialGradient(o.x,o.y,r*.7,o.x,o.y,r*1.8);g.addColorStop(0,'rgba(255,215,106,.55)');g.addColorStop(1,'rgba(255,200,80,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,r*1.8,0,TAU);ctx.fill();
   ctx.strokeStyle='rgba(255,220,120,.8)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(o.x,o.y,r+2,0,TAU);ctx.stroke();ctx.strokeStyle='#ffe7a0';ctx.lineWidth=1.2;for(let i=0;i<3;i++){const a=clock*1.3+i*2.1;ctx.beginPath();ctx.arc(o.x+Math.cos(a)*r*1.3,o.y+Math.sin(a)*r*1.3,1.6,0,TAU);ctx.stroke();}ctx.restore();}
 function v2DrawMini(q){const r=Math.max(1,q.r);ctx.save();ctx.translate(q.x,q.y);const al=Math.min(1,q.t);ctx.globalAlpha=al;ctx.globalCompositeOperation='lighter';
@@ -497,6 +589,7 @@ function v2DrawMini(q){const r=Math.max(1,q.r);ctx.save();ctx.translate(q.x,q.y)
   ctx.strokeStyle='rgba(220,200,255,.8)';ctx.lineWidth=1.4;for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(0,0,r*(1.15+i*.28),q.a+i*2,q.a+i*2+2.2);ctx.stroke();}
   ctx.globalCompositeOperation='source-over';ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawWarn(o){ // meteor about to enter: a red marker where it will come in
+  if(o.k==='meteor')v2MetPath(o);
   const x=clamp(o.x,14,W-14),y=clamp(o.y,14,H-14),pu=.55+.45*Math.sin(clock*18);ctx.save();ctx.translate(x,y);
   const a=Math.atan2(o.vy,o.vx);ctx.globalAlpha=pu;ctx.fillStyle='#ff5a45';ctx.beginPath();ctx.moveTo(Math.cos(a)*14,Math.sin(a)*14);ctx.lineTo(Math.cos(a+2.5)*9,Math.sin(a+2.5)*9);ctx.lineTo(Math.cos(a-2.5)*9,Math.sin(a-2.5)*9);ctx.closePath();ctx.fill();
   ctx.fillStyle='#fff';ctx.font='900 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',0,1);ctx.restore();}
