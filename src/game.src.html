@@ -166,7 +166,12 @@ html[lang=ar] *{letter-spacing:0!important;}
 .evo .t b{font-size:12px;color:#fff;letter-spacing:.5px;}
 .bar{height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:6px;}
 .bar i{display:block;height:100%;background:linear-gradient(90deg,#8a93a2,#e7e3da);}
-.evo .s{font-size:12.5px;color:#9aa0b6;margin-top:5px;}
+.evo .s{font-size:12.5px;color:#9aa0b6;margin-top:5px;}.evo{cursor:pointer;}.evo .go{font-family:var(--fd);font-size:11px;letter-spacing:.08em;color:var(--gold);margin-top:6px;text-align:end;}
+.skc{max-width:400px;}#skBig{width:220px;height:220px;display:block;margin:6px auto 4px;border-radius:50%;}.sknm{font-family:var(--fd);font-size:17px;color:#fff;letter-spacing:.06em;}.skst{font-size:12.5px;color:var(--dim);min-height:17px;margin-top:2px;}
+.skg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}.skg button{padding:6px 4px 7px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer;font-family:var(--fd);font-size:10.5px;letter-spacing:.04em;line-height:1.25;}
+.skg button canvas{width:100%;aspect-ratio:1;display:block;border-radius:50%;margin-bottom:4px;}.skg button.sel{border-color:var(--gold);box-shadow:0 0 12px rgba(242,169,59,.35);}.skg button.lock canvas{filter:grayscale(.75) brightness(.55);}.skg button small{display:block;font-size:10px;color:var(--dim);margin-top:1px;}
+.skmono{text-align:start;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,216,77,.3);background:rgba(255,216,77,.05);margin-bottom:8px;}.skmono b{font-family:var(--fd);font-size:12px;letter-spacing:.08em;color:#ffe7a0;}.skmono p{font-size:12.5px;color:var(--dim);margin:4px 0 8px;}
+.skmono input{width:100%;box-sizing:border-box;padding:9px 10px;border-radius:6px;border:1px solid var(--line);background:#0b0e12;color:#fff;font-family:var(--fd);font-size:18px;letter-spacing:.2em;text-transform:uppercase;}.skmono .srow{margin-top:8px;}
 .dm{text-align:start;padding:10px 12px;border-radius:8px;background:rgba(127,214,176,.05);border:1px solid rgba(127,214,176,.22);margin:10px 0;}
 .dm .hd{display:flex;justify-content:space-between;font-family:var(--fd);font-size:10.5px;letter-spacing:1px;color:var(--mint);margin-bottom:2px;}
 .dmr{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid rgba(255,255,255,.05);}
@@ -817,6 +822,17 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 </div>
 
 <!-- SETTINGS -->
+<div class="screen" id="sSkin" style="z-index:127;">
+ <div class="card skc">
+  <div class="h" style="font-size:15px;">🕳️ KARA DELİĞİN</div>
+  <canvas id="skBig" width="440" height="440"></canvas>
+  <div class="sknm" id="skName"></div><div class="skst" id="skSt"></div>
+  <div class="row"><button class="btn" id="skAct"></button></div>
+  <div class="skg" id="skGrid"></div>
+  <div class="skmono" id="skMono"></div>
+  <div class="row"><button class="btn sec" id="skClose" style="width:100%;">TAMAM</button></div>
+ </div>
+</div>
 <div class="screen" id="sSet" style="z-index:140;">
  <div class="card" style="max-width:380px;">
   <div class="h" style="font-size:15px;">⚙️ AYARLAR</div>
@@ -967,7 +983,7 @@ function detectLang(){
 function fmtNum(m){if(LANG==='tr')return m;if(m[0]==='%')return new Intl.NumberFormat(LOC,{style:'percent'}).format(+m.slice(1).replace(',','.')/100);if(/^\d{1,3}(\.\d{3})+$/.test(m))return (+m.replace(/\./g,'')).toLocaleString(LOC);if(/^\d+,\d{1,2}$/.test(m))return (+m.replace(',','.')).toLocaleString(LOC);return m;}
 function i18Names(){
   if(I18.nameRe)return I18.nameRe;const a=new Set(['DEV + MAGNETAR','ÇİFT DEV','MAGNETAR','KIZIL DEV','EVE DÖNÜŞ','SAPAN KURTARMA']);
-  try{ZONES.forEach(z=>a.add(z.n));STAGES.forEach(s=>a.add(s.n));Object.values(SPECIALS).forEach(s=>a.add(s[0]));}catch(e){return null;}
+  try{ZONES.forEach(z=>a.add(z.n));STAGES.forEach(s=>a.add(s.n));Object.values(SPECIALS).forEach(s=>a.add(s[0]));SKINS.forEach(k=>a.add(k.n));}catch(e){return null;}
   const esc=[...a].sort((x,y)=>y.length-x.length).map(x=>x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
   return I18.nameRe=new RegExp(esc.join('|'),'g');
 }
@@ -1018,8 +1034,8 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
-function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
+let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
+function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -1033,11 +1049,12 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   savedLevel=svI(d.savedLevel,1,1,9999);savedScore=svI(d.savedScore,0);
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,9999));seen=svO(d.seen)||{};
-  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);
+  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
   for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);
-  if(V2&&!TIPS.gift&&bestLevel>2){TIPS.gift=1;SHOP.shield++;} // players past level 2 before the first-shield gift existedSHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
+  if(V2&&!TIPS.gift&&bestLevel>2){TIPS.gift=1;SHOP.shield++;}
+  if(!skinOwned(SKIN.sel))SKIN.sel=0; // e.g. a pack look on a save without the pack // players past level 2 before the first-shield gift existedSHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
   }catch(e){}
 }
@@ -1220,9 +1237,39 @@ precision highp float;
 precision mediump float;
 #endif
 `;
+// black hole looks (skins): emission around the event horizon; q is in hole radii, x=|q|, a=angle, fc=device pixel
+const SKIN_GLSL=`
+float k_h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+float k_n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(k_h(i),k_h(i+vec2(1.,0.)),f.x),mix(k_h(i+vec2(0.,1.)),k_h(i+vec2(1.,1.)),f.x),f.y);}
+float k_f(vec2 p){float s=0.,w=.5;for(int i=0;i<4;i++){s+=w*k_n(p);p=p*2.03+vec2(1.7,9.2);w*=.5;}return s;}
+vec3 k_hue(float x){return clamp(abs(fract(x+vec3(0.,.333,.667))*6.-3.)-1.,0.,1.);}
+vec3 skinEm(float s,vec2 q,float x,float a,float t,vec2 fc,float R){
+ vec3 c=vec3(0.);float e=max(x-1.,0.),sa=a+1.6/(x+.2)-t*.4;vec2 cs=vec2(cos(sa),sin(sa)),ca=vec2(cos(a),sin(a));
+ if(s<1.5){float arms=k_f(cs*2.2+vec2(x*1.8,0.));
+  c=mix(vec3(.05,.2,.7),vec3(.75,.92,1.),pow(arms,1.6))*pow(arms,1.2)*exp(-e*1.25)*1.7+vec3(.6,.85,1.)*exp(-pow((x-1.03)/.05,2.))*1.2;}
+ else if(s<2.5){vec2 cell=vec2(floor(a*60.),floor(x*26.));float h=k_h(cell),tw=.5+.5*sin(t*4.+h*40.);
+  float gl=step(.9,h)*smoothstep(.9,1.,k_h(cell+3.))*exp(-e*4.);
+  c=vec3(.75,1.,1.)*exp(-pow((x-1.02)/.018,2.))*2.+vec3(.2,.75,.9)*exp(-e*5.5)*.9+vec3(.8,1.,1.)*gl*tw*2.5
+   +vec3(.1,.35,.5)*.35*exp(-e*1.2)*(.5+.5*sin(x*38.-t*2.+k_f(ca*3.+x)*6.));}
+ else if(s<3.5){float d=k_f(cs*2.+x*1.3),g=k_h(floor(fc/1.6));
+  c=vec3(.92,.9,.88)*step(1.-d*.95,g)*exp(-e*1.7)*1.2+vec3(.35)*d*exp(-e*1.5)*.5+vec3(1.)*exp(-pow((x-1.02)/.03,2.))*.6;}
+ else if(s<4.5){float rays=k_f(ca*6.+vec2(0.,x*1.2-t*.2))*k_f(ca*14.+vec2(x*.6,0.));
+  c=mix(vec3(.35,.12,.6),vec3(.95,.8,1.),rays)*rays*exp(-e*2.1)*2.6+vec3(.95,.85,1.)*exp(-pow((x-1.015)/.025,2.))*1.6;}
+ else if(s<5.5){float sw=k_f(cs*1.8+x*1.5);c=mix(vec3(.45,.05,.25),vec3(1.,.55,.8),sw)*sw*exp(-e*1.3)*1.7;
+  float bolt=k_f(ca*2.+vec2(x*2.,0.)+t*.7),ln=smoothstep(.012,0.,abs(bolt-.5))*step(1.08,x)*step(x,2.3)*step(.55,k_n(vec2(a*2.,floor(t*3.))));
+  c+=vec3(1.,.85,.95)*ln*1.8+vec3(1.,.8,.9)*exp(-pow((x-1.03)/.04,2.))*1.2;}
+ else if(s<6.5){float px=max(3.,R*.08);vec2 qq=(floor(fc/px)+.5)*px;vec2 qd=(qq-fc)/R+q;float xr=length(qd),aa=atan(qd.y,qd.x),ss=aa+1.6/(xr+.2)-t*.4;
+  float sw=k_f(vec2(cos(ss),sin(ss))*2.+xr*1.4);c=k_hue(ss*.16+xr*.12)*(.35+sw)*1.3*clamp(exp(-max(xr-1.,0.)*1.2)*sw*1.6,0.,1.)*step(1.,xr);}
+ else if(s<7.5){float st=k_f(ca*8.+vec2(x*7.-t*.5,0.)),band=smoothstep(1.,1.08,x)*smoothstep(1.75,1.2,x);
+  c=mix(vec3(.35,.1,.03),vec3(1.,.75,.4),st)*band*(.7+st)*1.5+vec3(1.,.85,.6)*exp(-pow((x-1.02)/.03,2.))*.9;}
+ else{for(int i=0;i<3;i++){float fi=float(i),rr=1.18+fi*.2,a0=t*(.6-fi*.15)+fi*2.1,da=mod(a-a0+3.14159,6.28318)-3.14159;
+   c+=mix(vec3(.5,.6,1.),vec3(1.,.7,.95),fi*.5)*exp(-pow((x-rr)/.02,2.))*smoothstep(1.3,0.,abs(da))*2.2;}
+  c+=vec3(.8,.8,1.)*exp(-pow((x-1.02)/.02,2.))*.8;}
+ return c*smoothstep(.985,1.,x);}
+`;
 const VS_BG='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
-const FS_BG=HDR+`
-uniform vec2 uRes,uHole,uTexSz,uPan;uniform float uR,uRing,uT,uLock,uHeat,uShock,uFlash,uScale,uStage;uniform vec3 uDeep,uMid;uniform sampler2D uTex,uTexB;uniform float uBlur,uDim;
+const FS_BG=HDR+SKIN_GLSL+`
+uniform vec2 uRes,uHole,uTexSz,uPan;uniform float uR,uRing,uT,uLock,uHeat,uShock,uFlash,uScale,uStage,uSkin;uniform vec3 uDeep,uMid;uniform sampler2D uTex,uTexB;uniform float uBlur,uDim;
 uniform vec3 uDM[3]; // dark-matter clumps: x,y,radius in device px (radius 0 = unused)
 float h3(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float n3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
@@ -1249,9 +1296,10 @@ void main(){
   float halo=smoothstep(-.015,.01,edge)*(exp(-e*2.1/(1.+.28*uStage))*(.35+.8*g)+exp(-e*14.)*1.4)*(1.+.7*uHeat)*(1.+.16*uStage);
   vec3 c=mix(uDeep,uMid,exp(-e*3.));c=mix(c,vec3(1.),exp(-e*16.));
   vec3 em=c*halo*(1.+.12*cos(ang-3.14159));
+  if(uSkin>.5)em=skinEm(uSkin,d/R,x,ang,uT,fc,R)*(1.+.5*uHeat);
   float sh=smoothstep(.988,1.003,x),cover=clamp(dot(em,vec3(.3,.5,.2)),0.,1.);
   col=bg*sh*(1.-.6*cover)+em*sh;
-  col+=mix(uMid,vec3(1.),.6)*exp(-pow((x-1.035)/.022,2.))*(1.2+.25*uStage);
+  if(uSkin<.5)col+=mix(uMid,vec3(1.),.6)*exp(-pow((x-1.035)/.022,2.))*(1.2+.25*uStage);
   if(uStage>1.5)col+=uMid*exp(-pow((x-1.13)/.018,2.))*.45*sh;
  }
  if(uStage>2.5){ // quasar: twin relativistic jets along a tilted axis, flickering
@@ -1311,7 +1359,7 @@ function glInit(){
   const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){console.error(gl.getShaderInfoLog(o));return null;}return o;};
   const prog=(vs,fs,names)=>{const v=sh(gl.VERTEX_SHADER,vs),f=sh(gl.FRAGMENT_SHADER,fs);if(!v||!f)return null;const p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);
     if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.error(gl.getProgramInfoLog(p));return null;}const u={};names.forEach(n=>u[n]=gl.getUniformLocation(p,n));return {p,u,a:gl.getAttribLocation(p,vs.indexOf('attribute vec2 a;')>=0?'a':'p')};};
-  GL.bg=prog(VS_BG,FS_BG,['uRes','uHole','uTexSz','uPan','uR','uRing','uT','uLock','uHeat','uShock','uFlash','uScale','uStage','uDeep','uMid','uTex','uTexB','uBlur','uDim','uDM']);
+  GL.bg=prog(VS_BG,FS_BG,['uRes','uHole','uTexSz','uPan','uR','uRing','uT','uLock','uHeat','uShock','uFlash','uScale','uStage','uSkin','uDeep','uMid','uTex','uTexB','uBlur','uDim','uDM']);
   GL.body=prog(VS_BODY,FS_BODY,['uRes','uC','uRad','uAng','uSt','uSq','uPad','uTex','uCell','uAtmo','uL','uSpin','uTilt','uPitch','uFade','uRed','uEmit','uFlashW','uLightK','uHot','uEdge','uSep','uFill']);
   if(!GL.bg||!GL.body)return false;
   GL.qTri=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,GL.qTri);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
@@ -1360,7 +1408,7 @@ function glDraw(t,sx=0,sy=0){
   gl.uniform2f(u.uPan,(hX/W-.5)*.025+Math.sin(t*.021)*.02,(hY/H-.5)*.02+Math.cos(t*.017)*.02);
   gl.uniform1f(u.uR,curR/RING_K*k*holeK);gl.uniform1f(u.uRing,(curR+1)*k);gl.uniform1f(u.uT,t%600);gl.uniform1f(u.uLock,lockK);gl.uniform1f(u.uScale,k);
   gl.uniform1f(u.uHeat,clamp(heat,0,1));gl.uniform1f(u.uShock,clamp(shock,0,1));gl.uniform1f(u.uFlash,clamp(flash,0,1));
-  gl.uniform3fv(u.uDeep,GL.deep);gl.uniform3fv(u.uMid,GL.mid);gl.uniform1f(u.uStage,G2.on?0:stageOf(mass));
+  gl.uniform3fv(u.uDeep,GL.deep);gl.uniform3fv(u.uMid,GL.mid);gl.uniform1f(u.uStage,G2.on?0:stageOf(mass));gl.uniform1f(u.uSkin,SKIN.sel);
   const dm=new Float32Array(9);let di=0;for(const b of balls){if(b.kind==='dark'&&di<3){dm[di*3]=(b.x+sx)*k;dm[di*3+1]=(H-b.y-sy)*k;dm[di*3+2]=b.r*k*(b.suck?b.fade:1);di++;}}gl.uniform3fv(u.uDM,dm);
   gl.drawArrays(gl.TRIANGLES,0,3);
   // bodies
@@ -1502,15 +1550,69 @@ function nextAch(){if(!achQueue.length){achShowing=false;return;}achShowing=true
 // EVOLUTION — every swallowed body adds mass (kept across runs); the hole grows through four stages
 // ══════════════════════════════════════════════════════
 const STAGES=[{n:'YILDIZ KÜTLELİ',m:0},{n:'ORTA KÜTLELİ',m:150},{n:'SÜPER KÜTLELİ',m:600},{n:'KUASAR',m:1500}];
+// black hole looks: unlocked by evolution, bought with diamonds, or in the Cosmic ID pack (with the name letters)
+const SKINS=[{n:'KLASİK',u:'free'},{n:'MAVİ GİRDAP',u:'stage',v:1},{n:'BUZ HALKASI',u:'gem',v:60},{n:'KOZMİK TOZ',u:'gem',v:60},{n:'MOR TUTULMA',u:'stage',v:2},
+  {n:'PEMBE FIRTINA',u:'pack'},{n:'PİKSEL NEBULA',u:'pack'},{n:'KOR HALKASI',u:'stage',v:3},{n:'HİLAL YAYLARI',u:'gem',v:80}];
+const SKIN_TINT=['#c9c2ff','#9fd8ff','#bff6ff','#e8e6e2','#e2c8ff','#ffb3d9','#ffffff','#ffc58a','#d6ccff'];
+let SKIN={sel:0,own:[],mono:'',monoOn:true};
+function skinOwned(i){const k=SKINS[i];return !!k&&(k.u==='free'||(k.u==='stage'&&stageOf(mass)>=k.v)||(k.u==='pack'&&SHOP.cid)||SKIN.own.includes(i));}
+const monoClean=v=>[...String(v).toLocaleUpperCase('tr')].filter(ch=>/[\p{L}\p{N}]/u.test(ch)).slice(0,7).join('');
+function monoText(){return monoClean(SKIN.mono||playerName||'');}
 function stageOf(m){let s=0;for(let i=1;i<STAGES.length;i++)if(m>=STAGES[i].m)s=i;return s;}
-function addMass(k){const s0=stageOf(mass);mass+=k;swallowed++;const s1=stageOf(mass);if(s1>s0&&!G2.on)setTimeout(()=>evolve(s1),700);saveSoon();}
+function addMass(k){const s0=stageOf(mass);mass+=k;swallowed++;const s1=stageOf(mass);if(s1>s0){if(G2.on){diamonds+=10;const k2=SKINS.findIndex(x=>x.u==='stage'&&x.v===s1);toast('🕳️','KARA DELİK EVRİMLEŞTİ',k2>0?`Yeni görünüm: ${SKINS[k2].n} · +10 💎`:'+10 💎');}else setTimeout(()=>evolve(s1),700);}saveSoon();}
 function evolve(st){
   diamonds+=10;flash=1;shock=.5;shake=14;vib([40,40,40,40,120]);sfx('levelup',{vol:.7,rate:.8,rev:.5});sfx('boom',{vol:.6,rev:.4});SND.duck(.3,2.5);
   showBig(`<div style="font-size:13px;color:#cbbcff;letter-spacing:3px;">KARA DELİK EVRİMLEŞTİ</div><div style="font-size:25px;color:#fff;margin-top:6px;text-shadow:0 0 22px rgba(185,167,255,.9)">${STAGES[st].n}</div><div style="font-size:15px;color:var(--cyan);margin-top:6px;">+10 💎</div>`,2800);
   updateUI();saveG();
 }
+const SKINUI={view:0,run:false,gl:null};
+function skinGL(){ // a small separate renderer for the menu thumbnails and the big preview
+  if(SKINUI.gl!==null)return SKINUI.gl;const cv=document.createElement('canvas');cv.width=cv.height=440;const gl=cv.getContext('webgl',{preserveDrawingBuffer:true});
+  if(!gl)return SKINUI.gl=false;
+  const fs=HDR+SKIN_GLSL+`uniform vec2 uRes;uniform float uT,uR,uS;
+   void main(){vec2 fc=gl_FragCoord.xy,q=(fc-uRes*.5)/uR;float x=length(q),a=atan(q.y,q.x);
+    vec3 col=vec3(.01,.012,.03)+vec3(.05,.03,.09)*k_f(q*.4+3.)*k_f(q*.8);vec2 g=floor(fc/5.);float st=k_h(g);if(st>.985)col+=vec3(.8,.85,1.)*(st-.985)*40.;
+    if(uS<.5)col+=vec3(.75,.7,1.)*exp(-pow((x-1.035)/.03,2.))*1.4+vec3(.55,.45,1.)*exp(-(x-1.)*3.5)*.35*step(1.,x);else col+=skinEm(uS,q,x,a,uT,fc,uR);
+    if(x<1.)col=vec3(0.);gl_FragColor=vec4(col,1.);}`;
+  const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return o;};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS_BG));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);
+  if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return SKINUI.gl=false;gl.useProgram(pr);
+  const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const l=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
+  return SKINUI.gl={gl,cv,u:k=>gl.getUniformLocation(pr,k)};}
+function skinPaint(target,i,t,R){const G=skinGL(),c=target.getContext('2d');if(!G){c.fillStyle='#000';c.fillRect(0,0,target.width,target.height);return;}
+  const {gl,cv,u}=G;gl.viewport(0,0,440,440);gl.uniform2f(u('uRes'),440,440);gl.uniform1f(u('uT'),t);gl.uniform1f(u('uR'),R);gl.uniform1f(u('uS'),i);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  c.drawImage(cv,0,0,target.width,target.height);}
+function monoDraw(c,cx,cy,Rp,txt,tint){ // the name letters inside the black core; the font shrinks as letters are added
+  if(!txt)return;c.save();c.font='800 100px "IBM Plex Sans Condensed",sans-serif';const w=c.measureText(txt).width||100;
+  const fs=Math.min(Rp*.9,100*Rp*1.5/w);c.translate(cx,cy);c.font=`800 ${fs}px "IBM Plex Sans Condensed",sans-serif`;c.textAlign='center';c.textBaseline='middle';
+  c.shadowColor=tint;c.shadowBlur=fs*.35;c.fillStyle=tint;c.globalAlpha=.55;c.fillText(txt,0,fs*.05);c.shadowBlur=0;c.globalAlpha=.92;c.lineWidth=Math.max(1,fs*.035);c.strokeStyle=tint;c.strokeText(txt,0,fs*.05);c.restore();}
+function skinLockTxt(i){const k=SKINS[i];if(skinOwned(i))return i===SKIN.sel?'✓ SEÇİLİ':'SEÇ';
+  return k.u==='stage'?`🔒 ${STAGES[k.v].n}`:k.u==='gem'?`💎 ${k.v}`:'🌌 KOZMİK KİMLİK';}
+function openSkins(){SKINUI.view=SKIN.sel;$('sSkin').classList.add('on');renderSkins();SKINUI.run=true;const t0=performance.now();
+  const tick=now=>{if(!SKINUI.run)return;skinBig((now-t0)/1000);requestAnimationFrame(tick);};requestAnimationFrame(tick);}
+function skinBig(t){const cv=$('skBig');skinPaint(cv,SKINUI.view,t,105);const txt=SHOP.cid&&SKIN.monoOn?monoText():'';if(txt)monoDraw(cv.getContext('2d'),220,220,105,txt,SKIN_TINT[SKINUI.view]);}
+function renderSkins(){
+  const g=$('skGrid');if(!g.children.length){SKINS.forEach((k,i)=>{const b=document.createElement('button');b.innerHTML=`<canvas width="150" height="150"></canvas><span>${k.n}</span><small></small>`;b.onclick=()=>{SKINUI.view=i;sfx('click',{vol:.3});if(skinOwned(i)){SKIN.sel=i;saveG();}renderSkins();};g.appendChild(b);skinPaint(b.querySelector('canvas'),i,2.3,120);});}
+  [...g.children].forEach((b,i)=>{b.className=(i===SKINUI.view?'sel':'')+(skinOwned(i)?'':' lock');b.querySelector('small').textContent=skinLockTxt(i);});
+  const i=SKINUI.view,k=SKINS[i],own=skinOwned(i),a=$('skAct');$('skName').textContent=k.n;
+  $('skSt').textContent=own?(i===SKIN.sel?'Oyunda bu görünüm kullanılıyor':''):k.u==='stage'?`Kara deliğin ${STAGES[k.v].n} evresine ulaşınca açılır (kütle ${STAGES[k.v].m.toLocaleString(LOC)})`:k.u==='gem'?'Elmasla açılır':'Kozmik Kimlik paketiyle açılır';
+  a.parentNode.hidden=own||k.u==='stage'||(k.u==='pack'&&!monOn());a.disabled=k.u==='gem'&&diamonds<k.v;
+  a.textContent=k.u==='gem'?(diamonds>=k.v?`${k.v} 💎 İLE AÇ`:`${k.v} 💎 GEREKLİ`):'🌌 KOZMİK KİMLİK';
+  const m=$('skMono');
+  if(!SHOP.cid)m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>İsmin kara deliğinin içinde: en başta ilk harf, delik büyüdükçe diğerleri (7 harfe kadar). Kozmik Kimlik paketiyle açılır.</p>`+(monOn()?`<button class="btn" id="skPack" style="width:100%;">🌌 KOZMİK KİMLİK</button>`:`<p style="margin:0">Paket, oyunun Google Play sürümünde satın alınabilir.</p>`);
+  else if(!m.querySelector('input')){m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>En fazla 7 harf veya rakam. Oyunda en başta ilk harf görünür, delik büyüdükçe diğerleri açılır.</p><input id="skIn" class="notr" maxlength="7" autocomplete="off" spellcheck="false"><div class="srow"><span>Harfleri göster</span><button class="tg" id="skOn"></button></div>`;
+    const inp=$('skIn');inp.value=monoText();inp.oninput=()=>{const v=monoClean(inp.value);if(inp.value!==v)inp.value=v;SKIN.mono=v;saveSoon();};
+    $('skOn').onclick=()=>{SKIN.monoOn=!SKIN.monoOn;saveG();renderSkins();};}
+  if($('skOn'))$('skOn').classList.toggle('on',SKIN.monoOn);if($('skPack'))$('skPack').onclick=()=>buy('cosmic_id');
+}
+function skinAct(){const i=SKINUI.view,k=SKINS[i];if(skinOwned(i))return;
+  if(k.u==='gem'){if(diamonds<k.v)return;diamonds-=k.v;SKIN.own.push(i);SKIN.sel=i;saveG();updateUI();sfx('achieve',{vol:.6});toast('🕳️',k.n,'Yeni görünüm açıldı');renderSkins();}
+  else if(k.u==='pack'&&monOn())buy('cosmic_id');}
 function renderEvo(){
   const st=stageOf(mass),nx=STAGES[st+1],pct=nx?(mass-STAGES[st].m)/(nx.m-STAGES[st].m)*100:100;
+  if(V2){const nk=nx&&SKINS.find(x=>x.u==='stage'&&x.v===st+1);$('evoBox').innerHTML=`<div class="t"><span>🕳️ KARA DELİĞİN</span><b>${SKINS[SKIN.sel].n}</b></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>`+
+    `<div class="s">${nk?`Sonraki görünüm: ${nk.n} · kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)}`:`Kütle ${mass.toLocaleString(LOC)} · evrim görünümlerinin hepsi açık`}</div><div class="go">GÖRÜNÜMÜ DEĞİŞTİR ›</div>`;return;}
   $('evoBox').innerHTML=`<div class="t"><span>🕳️ KARA DELİĞİN</span><b>${STAGES[st].n}</b></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>`+
     `<div class="s">${nx?`Kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)} · sonraki evre: ${nx.n}`:'Son evre: jetler fışkırıyor!'}<br>Bugüne kadar ${swallowed.toLocaleString(LOC)} gök cismi yuttun.</div>`;
 }
@@ -1842,6 +1944,7 @@ const IAP=[
  {id:'starter',sec:'offer',ic:'🎁',t:'BAŞLANGIÇ PAKETİ',d:'300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali. Tek sefer.',price:'₺19,99',was:'₺79,99',tag:'%75 İNDİRİM',once:true,give:{gems:300,stars:3000,lives:10,shield:5,time:3}},
  {id:'vip_monthly',sec:'offer',cls:'vip',ic:'👑',t:'VIP KULÜP · AYLIK',d:'Her günlük girişte ekstra +15 💎 +1 🛡 · Her ay otomatik paket: 300 💎 · 3.000 ⭐ · 5 kalkan · 5 yedek can · 3 zaman kristali',price:'₺39,99',per:'/ay',tag:'EN KÂRLI',sub:true},
  {id:'captain',sec:'offer',cls:'cap',ic:'🧑‍🚀',t:'KAPTAN SETİ',d:'Oyunu kolaylaştırır: 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎',price:'₺29,99',tag:'KOLAYLAŞTIR',give:{shield:5,lives:5,time:3,gems:100}},
+ {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (7 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺49,99',once:true,perm:true},
  {id:'no_ads',sec:'offer',cls:'noad',ic:'🚫',t:'REKLAMSIZ OYNA',d:'Araya giren reklamlar tamamen kalkar; reklamlı ödüller reklam izlemeden anında gelir. Tek sefer, kalıcı.',price:'₺99,99',once:true,perm:true},
  {id:'gems_s',sec:'gems',ic:'💎',t:'80',d:'Avuç',price:'₺9,99',give:{gems:80}},
  {id:'gems_m',sec:'gems',ic:'💎',t:'250',d:'Kese · +%25',price:'₺24,99',tag:'POPÜLER',give:{gems:250}},
@@ -1896,10 +1999,11 @@ function grant(g,src){if(!g)return;stars+=g.stars||0;diamonds+=g.gems||0;SHOP.li
   const parts=[];if(g.gems)parts.push(`+${g.gems} 💎`);if(g.stars)parts.push(`+${g.stars.toLocaleString(LOC)} ⭐`);if(g.lives)parts.push(`+${g.lives} ❤️`);if(g.shield)parts.push(`+${g.shield} 🛡`);if(g.time)parts.push(`+${g.time} ⏱`);
   toast('🎁',src||'ALINDI',parts.join('  '));}
 function toast(i,t,d){$('tI').textContent=i;$('tT').textContent=t;$('tD').textContent=d;const e=$('toast');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600);}
-function owned(p){return (p.id==='no_ads'&&SHOP.noAds)||(p.id==='starter'&&SHOP.starter)||(p.sub&&vipOn());}
+function owned(p){return (p.id==='no_ads'&&SHOP.noAds)||(p.id==='cosmic_id'&&SHOP.cid)||(p.id==='starter'&&SHOP.starter)||(p.sub&&vipOn());}
 function applyPurchase(p,tok){
   if(tok){if(SHOP.tok.includes(tok))return false;SHOP.tok.push(tok);if(SHOP.tok.length>60)SHOP.tok.shift();}
   if(p.id==='no_ads'){SHOP.noAds=true;saveG();toast('🚫','REKLAMSIZ','Teşekkürler! Artık reklam yok.');}
+  else if(p.id==='cosmic_id'){SHOP.cid=true;saveG();toast('🌌','KOZMİK KİMLİK','İsmin artık kara deliğinin içinde.');if($('sSkin').classList.contains('on'))renderSkins();}
   else if(p.sub)vipSet(Date.now()+(MON.mode==='test'?30:3)*864e5);
   else{if(p.id==='starter')SHOP.starter=true;grant(p.give,p.t);}
   monApply();renderShop();return true;
@@ -3121,6 +3225,7 @@ addEventListener('popstate',()=>{
   backArmed=false;
   const on=id=>$(id).classList.contains('on');
   if(on('sSet')){$('sSet').classList.remove('on');}
+  else if(on('sSkin')){$('skClose').click();}
   else if(on('sMap')){if($('mSheet').classList.contains('on'))$('mSheet').classList.remove('on');else closeMap();}
   else if(on('sShop')){$('sShop').classList.remove('on');}
   else if(on('sGuide')){$('sGuide').classList.remove('on');}
@@ -3297,6 +3402,7 @@ $('pMusic').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('pSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();};
 $('pSet').onclick=$('setBtn').onclick=()=>{syncSettingsUI();$('sSet').classList.add('on');};
 $('setClose').onclick=()=>$('sSet').classList.remove('on');
+$('evoBox').onclick=()=>{if(V2)openSkins();};$('skClose').onclick=()=>{$('sSkin').classList.remove('on');SKINUI.run=false;renderEvo();};$('skAct').onclick=()=>skinAct();
 [...$('sFd').children].forEach((b,i)=>b.onclick=()=>{SET.fd=i;saveG();syncSettingsUI();sfx('click',{vol:.4});});
 $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};

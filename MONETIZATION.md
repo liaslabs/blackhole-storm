@@ -14,6 +14,7 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 |---|---|---|---|---|
 | `starter` | Başlangıç Paketi | 300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali | Tek sefer (tüketilmez) | ₺19,99 |
 | `captain` | Kaptan Seti | 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎 | Tekrar alınabilir | ₺29,99 |
+| `cosmic_id` | Kozmik Kimlik | Oyuncunun ismi kara deliğin içinde (7 harfe kadar, delik büyüdükçe açılır) + Pembe Fırtına ve Piksel Nebula görünümleri | Tek sefer, kalıcı | ₺49,99 |
 | `no_ads` | Reklamsız Oyna | Araya giren reklamlar kalkar, reklamlı ödüller reklamsız gelir | Tek sefer, kalıcı | ₺99,99 |
 | `gems_s` | Avuç Elmas | 80 💎 | Tekrar alınabilir | ₺9,99 |
 | `gems_m` | Kese Elmas | 250 💎 (+%25) | Tekrar alınabilir | ₺24,99 |
@@ -64,7 +65,7 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
 
 - **Satın almalar:** Google Play Billing, Digital Goods API ile bağlandı (`android/twa-manifest.json` → `playBilling`).
   Android paketi bu ayarla derlendi (izin: `com.android.vending.BILLING`, en düşük Android 6.0).
-  Kalıcı ürünler (`starter`, `no_ads`) ve aktif VIP aboneliği cihaz değişince **Satın alımları geri yükle** ile geri gelir.
+  Kalıcı ürünler (`starter`, `cosmic_id`, `no_ads`) ve aktif VIP aboneliği cihaz değişince **Satın alımları geri yükle** ile geri gelir.
   Elmas, yıldız ve eşya bakiyesi ise cihazda durur (hesap sistemi yok); uygulama silinirse gider.
 - **Reklamlar:** Oyun, reklamları `window.BHS_ADS` adında bir bağlantı üzerinden istiyor
   (`rewarded()` ve `interstitial()`). Bu bağlantıyı sağlayacak reklam ağı **henüz seçilmedi** (aşağıya bak).
@@ -123,7 +124,7 @@ edilir ve ürün geri alınır. Kurallar:
 | Ürün | Oyun şu an ne yapıyor | Eksik |
 |---|---|---|
 | Elmas/yıldız paketleri (tüketilebilir) | `consume()` çağırıyor; bu Google tarafından onay sayılır. Başarısız olursa açılışta tekrar dener. | Yok |
-| Başlangıç paketi, Reklamsız (tek seferlik) | Ürünü veriyor ama onaylamıyor | Sunucu tarafı onay |
+| Başlangıç paketi, Kozmik Kimlik, Reklamsız (tek seferlik) | Ürünü veriyor ama onaylamıyor | Sunucu tarafı onay |
 | VIP (abonelik) | Ürünü veriyor ama onaylamıyor | Sunucu tarafı onay |
 
 Tek seferlik ürünler ve abonelik, TWA'da yalnızca bir **sunucu** üzerinden (Google Play Developer API ve bir hizmet
@@ -131,7 +132,7 @@ hesabı ile) onaylanabilir. Google aynı sunucuda satın alma jetonunun doğrula
 
 1. **Küçük bir sunucu fonksiyonu** (ör. Cloudflare Worker veya Firebase Functions, ücretsiz katman yeterli): oyun
    jetonu gönderir, sunucu Google'a doğrulatıp onaylar, oyun ürünü ancak "onaylandı" cevabı gelince verir.
-2. **Sunucu kurulana kadar** yalnızca tüketilebilir paketleri satmak; Başlangıç paketi, Reklamsız ve VIP'i Play
+2. **Sunucu kurulana kadar** yalnızca tüketilebilir paketleri satmak; Başlangıç paketi, Kozmik Kimlik, Reklamsız ve VIP'i Play
    Console'da etkinleştirmemek.
 
 Ayrıntı: https://developer.chrome.com/docs/android/trusted-web-activity/receive-payments-play-billing
