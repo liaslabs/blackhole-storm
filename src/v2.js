@@ -8,7 +8,7 @@
 const V2=true;
 const V2K={r0:34,rMax:180,rRage:240,gK:2.2,gMax:450,gMaxOver:500,off:50,follow:.9,
   acc:{min:.15,max:1.8,rage:3},
-  rage:{dur:5,r:1.33,g:1.5,acc:1.67,score:2},time:{dur:6,k:.45},over:{dur:15,r:1.25,g:1.4,ctl:1.15},
+  rage:{dur:5,r:1.2,g:1.5,acc:1.67,score:2},time:{dur:6,k:.45},over:{dur:15,r:1.15,g:1.4,ctl:1.15},
   mini:{dur:6,k:.6,rMin:17,rMax:60,gK:2.4,gMax:150},bomb:{r:3,hold:3,pts:25,max:500},imm:.8,
   met:{slow:.3,ramp:.3},cont:{imm:3,rage:50},
   dodge:{lo:10,hi:35,cd:1.5},perfectK:.2,swallow:.35,
@@ -27,15 +27,23 @@ const OBJ2={
   mini:   {r:28,v:150,dv:5, vm:300,pts:100,grow:0,  rage:3, need:1},
   meteor: {r:22,v:380,dv:20,vm:750,pts:0,  grow:0,  rage:0, need:99},
   frag:   {r:15,v:150,dv:0, vm:300,pts:30, grow:.6, rage:3, need:1},  // shed by the giant planet
-  shard:  {r:24,v:170,dv:6, vm:340,pts:50, grow:.5, rage:3, need:1}}; // a third of a shield
+  shard:  {r:24,v:170,dv:6, vm:340,pts:50, grow:.5, rage:3, need:1},  // a third of a shield
+  comet:  {r:16,v:460,dv:10,vm:720,pts:60, grow:.8, rage:4, need:1},    // very fast; extends the combo clock
+  split:  {r:46,v:120,dv:6, vm:240,pts:0,  grow:0,  rage:0, need:99},   // never swallowed: breaks into fragments on contact
+  anti:   {r:18,v:230,dv:8, vm:460,pts:0,  grow:0,  rage:0, need:1},    // antimatter: swallowing it shrinks you
+  magnet: {r:22,v:170,dv:6, vm:340,pts:50, grow:.5, rage:3, need:1},
+  pulsar: {r:18,v:170,dv:6, vm:340,pts:150,grow:1,  rage:6, need:1},    // only swallowable while it shines
+  mpair:  {r:30,v:150,dv:6, vm:300,pts:100,grow:1.5,rage:4, need:1.15}, // planet with a moon
+  sat:    {r:12,v:150,dv:0, vm:300,pts:100,grow:.5, rage:3, need:1},    // the moon, once its planet is gone
+  dark:   {r:26,v:140,dv:6, vm:280,pts:120,grow:1.2,rage:5, need:1}};   // dark matter: seen only by how it bends light
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
-const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,planet:.55};
+const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
-Object.assign(V2K,{r0:V2K.r0*.6,rMax:90,rRage:120,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
+Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
   decay:{wait:3,k:.2,min:1.2},shield:{dur:5,cost:30}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});Object.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag']);
-const GL2=new Set(['moon','planet','gold']);
+const GL2=new Set(['moon','planet','gold','split','mpair','sat']);
 const MULT2=c=>c>=30?7:c>=20?6:c>=15?5:c>=10?4:c>=5?3:c>=3?2:1;
 // what each level brings in (level-start banner, level-complete teaser, map)
 const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl payı geçersen PERFECT DODGE.'],
@@ -47,7 +55,15 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   8:['🌀','MINI BLACK HOLE','Yut: 6 saniye etrafında dönen yardımcı bir kara delik açılır.'],
   9:['🪨','ASTEROID STORM','Yoğun alan: dev combo zamanı.'],
   10:['🪐','GIANT PLANET','Boss: koptukça parçalarını topla, küçülünce bütünüyle yut.'],
-  11:['🌐','360°','Cisimler her yönden geliyor.']};
+  11:['🌐','360°','Cisimler her yönden geliyor.'],
+  12:['☄️','COMET','Çok hızlı geçer. Yakalarsan combo süren uzar.'],
+  13:['🌋','SPLIT PLANET','Yutulmaz ama çarpınca parçalara bölünür: parçaları yut.'],
+  14:['⚛️','ANTIMATTER','Yutma! Kara deliğini küçültür. Çekim alanından uzak tut.'],
+  15:['🧲','MAGNET','Yut: 4 saniye küçük cisimler sana doğru süzülür.'],
+  16:['💫','PULSAR','Sadece parlarken yutulur. Sönükken seker.'],
+  17:['🪐','MOON PAIR','Gezegeni, sonra uydusunu yut: çift puan.'],
+  18:['🌫️','DARK MATTER','Görünmez! Yıldızları bükmesinden fark edilir.'],
+  19:['🌀','WORMHOLE','Turuncu kapıya giren cisim mavi kapıdan sana doğru çıkar.']};
 function new2(l){return NEW2[l]||(l%10===0?NEW2[10]:null);}
 
 const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,shardAt:1e9,gift:0,
@@ -67,7 +83,8 @@ function v2Rules(l){
   const crystal=l===1?0:tb([0,5,7,10,10,12,12,14,15,15,18],Math.min(20,18+(l-10)*.2));
   const meteor=tb([0,0,8,10,12,14,16,18,20,22,25],Math.min(30,25+(l-10)*.3));
   const gold=l<=3?0:l<=5?2:l<=7?3:l<=9?4:5;
-  const w={crystal,meteor:l%10===9?meteor*.5:meteor,gold,moon:l===1?18:15,planet:l>=2?Math.min(10,5+l*.5):0,energy:l>=2?4:0,time:l>=4?3:0,bomb:l>=5?3:0,mini:l>=8?1.5:0};
+  const w={crystal,meteor:l%10===9?meteor*.5:meteor,gold,moon:l===1?18:15,planet:l>=2?Math.min(10,5+l*.5):0,energy:l>=2?4:0,time:l>=4?3:0,bomb:l>=5?3:0,mini:l>=8?1.5:0,
+    comet:l>=12?4:0,split:l>=13?3:0,anti:l>=14?Math.min(6,3+(l-14)*.2):0,magnet:l>=15?1.5:0,pulsar:l>=16?3:0,mpair:l>=17?2:0,dark:l>=18?3:0};
   let rest=100;for(const k in w)rest-=w[k];w.ast=Math.max(20,rest);
   return {w,cap:l===1?8:l===2?10:12,capMul:Math.min(V2K.rMax/V2K.r0,1.2+.15*l),comboT:tb(V2K.comboT,2),
     speedK:l>=6?1.15:1,dirs:l>=11?4:l>=7?2:1,iv:Math.max(.5,1.05-.025*(l-1))*(l%10===9?.6:1),dense:l%10===9,boss:l%10===0,
@@ -79,13 +96,14 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();
   balls=[];blocks=[];rifts=[];PU={slow:0,magnet:0,mult:0};MIS=null;holeK=1;isRescueLevel=false;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
-  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,
+  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],wormT:14,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
     script:mode==='level'&&level===1&&!REPLAY?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1?1:0,touched:false,contUsed:false,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1});
   comboCount=0;comboMult=1;diamTimer=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
+  if(mode==='level')lives=3; // every level starts with 3 lives; the stars count what is left
   if(G2.L.boss&&mode==='level')v2BossInit();
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('LEVEL '+level,nw?`NEW: ${nw[0]} ${nw[1]}`:'',nw?'#ffb35c':'#e7e3da',2.2,true);
@@ -133,17 +151,19 @@ function v2Obj(k,x,y,vx,vy,opt={}){
     si:Math.floor(rnd(0,6)),wait:k==='meteor'?(opt.wait??.75):0,minGap:1e9,dodged:false,prevD:1e9,boss:!!opt.boss,noScore:false,age:0};
   o.r=o.rr*G2.S;
   if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(1.25-.03*(G2.lv-2),.7,1.25);o.ramp=0;} // enters slowly, then speeds up
-  if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
+  if(k==='pulsar')o.ph=rng()*1.6;if(k==='mpair')o.sa=rng()*TAU;
+  if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:k==='split'?13:k==='mpair'?5:k==='sat'?10:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
   G2.objs.push(o);return o;
 }
 function v2Edge(k,side,x0){
   const s=v2Speed(k),r=OBJ2[k].r*G2.S;let x,y,a;
   if(side==null){const d=G2.L.dirs;const q=rng();side=d>=4?(q<.45?0:q<.64?1:q<.83?2:3):d>=2?(q<.7?0:q<.85?1:2):0;}
+  if(k==='meteor'&&side===3)side=0; // no meteors from below
   if(k==='meteor'&&side&&G2.objs.some(m=>m.k==='meteor'&&m.side&&m.st==='in'))side=0; // one side meteor at a time
   for(let tries=0;tries<5;tries++){
     if(side===0){x=x0??rrnd(W*.08,W*.92);y=-r-4;a=Math.PI/2+rrnd(-.26,.26);}
-    else if(side===1){x=-r-4;y=rrnd(H*.08,H*.55);a=rrnd(-.15,.5);}
-    else if(side===2){x=W+r+4;y=rrnd(H*.08,H*.55);a=Math.PI-rrnd(-.15,.5);}
+    else if(side===1){x=-r-4;y=k==='meteor'?rrnd(H*.1,H*.45):rrnd(H*.08,H*.55);a=rrnd(-.15,.5);} // side meteors: top half only
+    else if(side===2){x=W+r+4;y=k==='meteor'?rrnd(H*.1,H*.45):rrnd(H*.08,H*.55);a=Math.PI-rrnd(-.15,.5);}
     else {x=x0??rrnd(W*.12,W*.88);y=H+r+4;a=-Math.PI/2+rrnd(-.22,.22);}
     if(Math.hypot(x-hX,y-hY)>sp2(250))break;x0=null;
   }
@@ -157,6 +177,7 @@ function v2Spawn(){
   if(k==='meteor'&&G2.objs.filter(o=>o.k==='meteor'&&o.wait>0).length>=3)k='ast'; // never more than 3 meteors released together
   if(k==='bomb'&&G2.objs.some(o=>o.k==='bomb'))k='ast';
   if(k==='mini'&&(G2.minis.length||G2.objs.some(o=>o.k==='mini')))k='ast';
+  if(k==='magnet'&&(G2.magT>0||G2.objs.some(o=>o.k==='magnet')))k='ast';if(k==='dark'&&G2.objs.filter(o=>o.k==='dark').length>=3)k='ast';
   if(k==='time'&&(G2.timeT>0||G2.objs.some(o=>o.k==='time')))k='ast';
   if(k==='ast'&&rng()<(G2.L.dense?.55:.3)){ // a line of small rocks: combo fodder
     const n=G2.L.dense?rpick([3,4,5]):3,x=rrnd(W*.2,W*.8),gap=sp2(32);for(let i=0;i<n;i++){const o=v2Edge('ast',0,clamp(x+(i-(n-1)/2)*gap,sp2(20),W-sp2(20)));o.y-=Math.abs(i-(n-1)/2)*sp2(21);}return;}
@@ -228,7 +249,7 @@ function v2Dims(){
   G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S;G2.peak=Math.max(G2.peak,rr);
 }
 function v2Size(){return G2.R/(V2K.r0*G2.S);}
-function v2Edible(o){if(o.k==='meteor'||o.boss)return false;let need=OBJ2[o.k].need;if(level===1&&G2.mode==='level')need=1;return v2Size()>=need-1e-6;}
+function v2Edible(o){if(o.k==='meteor'||o.boss||(o.k==='pulsar'&&!o.lit))return false;let need=OBJ2[o.k].need;if(level===1&&G2.mode==='level')need=1;return v2Size()>=need-1e-6;}
 function v2AddRage(n){if(G2.rageT>0||G2.ready)return;G2.rage=Math.min(G2.script&&G2.st<42?90:100,G2.rage+n);} // level 1: the first Rage is saved for its moment (~42 s)
 function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO LOST','#9aa3b2',13);G2.combo=0;comboCount=0;}
 
@@ -240,7 +261,8 @@ function v2Update(dt){
   if(diamTimer>0){diamTimer-=dt;if(diamTimer<=0)diamTimer=0;}
   if(G2.overT>0){G2.overT-=dt;if(G2.overT<=0){G2.rr=V2K.r0+(G2.cap-V2K.r0)*.6;v2Call('COLLAPSE','THE HOLE SHRINKS','#b9a8ff',1.3);sfx('slow',{vol:.6,rate:.6});v2Burst(hX,hY,26,'#b9a8ff',2,6,.7);}}
   if(G2.rageT>0){G2.rageT-=dt;G2.rage=Math.max(0,G2.rageT/V2K.rage.dur*100);heat=Math.max(heat,.55);if(G2.rageT<=0){G2.rage=0;G2.rageT=0;SND.setDrone(.14,650);}}
-  if(G2.ready)G2.readyT+=dt;if(G2.tipCD>0)G2.tipCD-=dt;
+  if(G2.ready)G2.readyT+=dt;if(G2.tipCD>0)G2.tipCD-=dt;if(G2.magT>0)G2.magT-=dt;if(G2.pairT>0)G2.pairT-=dt;
+  v2Worms(dt);
   if(G2.shT>0){G2.shT-=dt;if(G2.shT<1.5&&G2.shT>0){const k=Math.ceil(G2.shT*2);if(k!==G2.shTick){G2.shTick=k;v2Sfx('tickHi',{vol:.5,rate:1.3});vib(8);}}
     if(G2.shT<=0){G2.shT=0;v2Call('SHIELD OFF','','#ffb35c',.8);v2Sfx('armor',{vol:.35,rate:.6});}}
   // a hole that stops eating slowly evaporates back toward its starting size
@@ -294,7 +316,7 @@ function v2Update(dt){
   for(let i=G2.beams.length-1;i>=0;i--){const b=G2.beams[i];b.t+=dt;if(b.t>=.25){G2.pulse=1;G2.beams.splice(i,1);}}
   for(let i=G2.waves.length-1;i>=0;i--){const w=G2.waves[i];w.t+=dt;const p=Math.min(1,w.t/w.dur);w.rad=w.max*(1-(1-p)*(1-p));
     for(const o of G2.objs){if(o.st!=='in'||o.wait>0||w.hit.has(o)||o.boss||o.orb)continue;
-      if(!(o.k==='meteor'||(w.mega?o.k!=='bomb'&&v2Edible(o):SMALL2.has(o.k))))continue;if(Math.hypot(o.x-w.x,o.y-w.y)>w.rad+o.r)continue;
+      if(!(o.k==='meteor'||(w.mega?o.k!=='bomb'&&o.k!=='anti'&&v2Edible(o):SMALL2.has(o.k))))continue;if(Math.hypot(o.x-w.x,o.y-w.y)>w.rad+o.r)continue;
       w.hit.add(o);w.n++;const add=Math.min(V2K.bomb.pts,V2K.bomb.max-w.bonus);w.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(w.mega?3:5);
       if(o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,14,'#ff8a4c',2,6,.5);}else{o.noScore=false;o.chain=true;v2Swallow(o,null);}
       if(w.n>=2)v2Call('CHAIN ×'+w.n,'','#ffb35c',.9);}
@@ -310,11 +332,13 @@ function v2Update(dt){
     if(o.wait>0){o.wait-=dt*tk;continue;}
     const odt=dt*tk;
     if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;
+    if(o.k==='pulsar'){o.ph+=dt;o.lit=(o.ph%1.6)<.8;}if(o.k==='mpair')o.sa+=dt*2.4;
     // gravity of the main hole (and any mini hole) — meteors fly straight
     let dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1;
     if(o.k!=='meteor'){
       const ed=v2Edible(o)||G2.ending;
       if(d<Gr&&o.k==='bomb'&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
+      if(G2.magT>0&&ed&&SMALL2.has(o.k)&&d>=Gr){const A=sp2(260)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;} // magnet: small bodies drift in
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
@@ -330,7 +354,8 @@ function v2Update(dt){
         if(ed)v2Swallow(o,null);
         else{ // too big: bounces off the event horizon
           const nx=-dx/d,ny=-dy/d,vn=o.vx*nx+o.vy*ny;if(vn<0){o.vx-=1.8*vn*nx;o.vy-=1.8*vn*ny;}o.x=hX+nx*(G2.R+o.r*.66);o.y=hY+ny*(G2.R+o.r*.66);
-          if(!o.bounced){o.bounced=true;v2Call('TOO BIG','GROW FIRST','#ffb35c',.9);v2Sfx('armor',{vol:.35,rate:.7});}}}
+          if(o.k==='split'){v2Split(o);continue;}
+          if(!o.bounced){o.bounced=true;if(o.k!=='pulsar')v2Call('TOO BIG','GROW FIRST','#ffb35c',.9);v2Sfx('armor',{vol:.35,rate:.7});}}}
     }else{ // meteor
       if(o.slow>0){o.slow-=odt;const q=V2K.met.slow;o.vx=o.fvx*q;o.vy=o.fvy*q;if(o.slow<=0)v2Sfx('thrust',{vol:.4,rate:.7,x:o.x});}
       else if(o.ramp<V2K.met.ramp){o.ramp+=odt;const q=V2K.met.slow+(1-V2K.met.slow)*Math.min(1,o.ramp/V2K.met.ramp);o.vx=o.fvx*q;o.vy=o.fvy*q;}
@@ -369,6 +394,7 @@ function v2Swallow(o,mini){
   o.dir=((o.vx*(cy-o.y)-o.vy*(cx-o.x))>0?-1:1);
   if(o.cell!==undefined){o.suck={ph:'fall'};o.stretch=1;o.squeeze=1;o.fade=1;o.sp=0;}
   if(G2.ending&&!o.chain){o.noScore=true;return;}
+  if(o.k==='anti'){o.anti=1;return;} // not food: no combo, no score
   v2Score(o,mini);
 }
 function v2SwallowStep(o,dt){
@@ -388,7 +414,7 @@ function v2Score(o,mini){
   if(m>MULT2(G2.combo-1)){v2Call('COMBO ×'+m,'','#ffd76a',1,false);v2Sfx('mult',{vol:.55,rate:.8+m*.1});if(m>=4)shake=Math.max(shake,4);totalCombos++;}
   if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('PERFECT +'+pts,'#fff1b8',18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
   else v2Pop('+'+pts,o.k==='crystal'?'#9ef3ff':o.k==='gold'?'#ffd76a':m>=4?'#ffcf8a':'#e7e3da',o.k==='ast'?15+m:19+m);
-  const snd={ast:['capture',.45,1.2],moon:['capture2',.55,1],planet:['boom',.6,.7],crystal:['gem',.7,1.3],gold:['master',.8,1],energy:['sparkle',.6,.8],time:['slow',.7,1.2],bomb:['bomb',.7,1],mini:['magnet',.7,1],frag:['capture2',.5,1.3],shard:['gem',.7,.8]}[o.k]||['capture',.5,1];
+  const snd={ast:['capture',.45,1.2],moon:['capture2',.55,1],planet:['boom',.6,.7],crystal:['gem',.7,1.3],gold:['master',.8,1],energy:['sparkle',.6,.8],time:['slow',.7,1.2],bomb:['bomb',.7,1],mini:['magnet',.7,1],frag:['capture2',.5,1.3],shard:['gem',.7,.8],comet:['gem',.6,1.5],magnet:['magnet',.7,1],pulsar:['sparkle',.8,1],mpair:['capture2',.6,.9],sat:['capture2',.5,1.2],dark:['slow',.6,1.3]}[o.k]||['capture',.5,1];
   v2Sfx(snd[0],{vol:snd[1],rate:snd[2]*(1+Math.min(.5,G2.combo*.015)),x:hX});
   dmEvent('catch',1);dmEvent('combo',G2.combo,true);if(o.k==='crystal')dmEvent('comet',1);dmEvent('score',totalScore,true);
   if(gameMode==='sprint'){const bi=Math.min(9,Math.floor(SPR_RUN.t/6));SPR_RUN.blocks[bi].c++;if(perf)SPR_RUN.blocks[bi].p++;SPR_RUN.caught++;}
@@ -398,13 +424,19 @@ function v2Score(o,mini){
 }
 function v2Eaten(o){ // the body has crossed the event horizon
   const K=OBJ2[o.k];const cx=o.mini?o.mini.x:hX,cy=o.mini?o.mini.y:hY;
-  const n=Math.min(G2.rageT>0?12:8,4+Math.floor(G2.combo/3));const col={crystal:'#9ef3ff',gold:'#ffd76a',energy:'#ff7ad9',time:'#8fd0ff',bomb:'#ff8a4c',mini:'#c9a8ff',shard:'#ffd84d'}[o.k]||'#e6dcff';
+  const n=Math.min(G2.rageT>0?12:8,4+Math.floor(G2.combo/3));const col={crystal:'#9ef3ff',gold:'#ffd76a',energy:'#ff7ad9',time:'#8fd0ff',bomb:'#ff8a4c',mini:'#c9a8ff',shard:'#ffd84d',comet:'#bff6ff',anti:'#7dffb0',magnet:'#ff8a8a',pulsar:'#bfe6ff',dark:'#b9a8ff'}[o.k]||'#e6dcff';
   v2Burst(cx,cy,n,col,1.2,3.5+Math.min(3,G2.combo*.1),.45,1.6);
+  if(o.anti){v2Anti();return;}
   if(o.noScore)return;
   {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow);if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
   addMass(1);
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
+  else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO TIME','+2 s','#bff6ff',.9);}
+  else if(o.k==='magnet'){G2.magT=4;v2Call('MAGNET','4 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
+  else if(o.k==='pulsar'){v2Pop('PULSAR','#bfe6ff',17);shock=Math.max(shock,.3);}
+  else if(o.k==='mpair'){const a=o.sa,d=o.r*1.9,sat=v2Obj('sat',o.x+Math.cos(a)*d,o.y+Math.sin(a)*d,o.vx-Math.sin(a)*sp2(120),o.vy+Math.cos(a)*sp2(120));sat.pair=1;G2.pairT=3;v2Call('NOW THE MOON!','3 s','#cfd6ff',1);}
+  else if(o.k==='sat'&&o.pair&&G2.pairT>0){const b=Math.round((OBJ2.mpair.pts+OBJ2.sat.pts)*MULT2(G2.combo));totalScore+=b;levelScore+=b;G2.pairT=0;v2Call('PAIR ×2','+'+b,'#ffd76a',1.3);sfx('achieve',{vol:.5});}
   else if(o.k==='shard'){SHOP.shards=(SHOP.shards||0)+1;if(SHOP.shards>=3){SHOP.shards-=3;SHOP.shield++;v2Call('SHIELD +1','3 / 3','#ffd84d',1.8,true);sfx('achieve',{vol:.6});}
     else v2Call('SHIELD PIECE',SHOP.shards+' / 3','#ffd84d',1.3);saveG();updateUI();}
   else if(o.k==='mini'){const q={x:hX,y:hY,t:V2K.mini.dur,a:0,ph:0};v2MiniSize(q);q.y=hY-G2.R-q.r;G2.minis.push(q);v2Call('MINI BLACK HOLE','HELPER · 6 s','#c9a8ff',1.3);if(!TIPS.mini)v2Tip('mini',q);}
@@ -447,6 +479,24 @@ function v2RageGo(){
   shake=Math.max(shake,10);flash=Math.max(flash,.8);shock=1;heat=.6;
   v2Call('BLACK HOLE RAGE!','','#ff6a3d',1.8,true);sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.6,rate:.7});sfx('boom',{vol:.5,rate:.5});SND.setDrone(.24,420);vib([40,30,90]);
   v2Burst(hX,hY,40,'#ff8a4c',2,8,.8,2.2);dmEvent('rescue',1);
+}
+
+// ── split planets, antimatter, wormholes ─────────────
+function v2Split(o){ // a split planet breaks into three pieces flying away from the hole
+  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(let i=0;i<3;i++){const a=a0+(i-1)*.7,s=sp2(rrnd(110,170));v2Obj('frag',o.x+Math.cos(a)*o.r*.5,o.y+Math.sin(a)*o.r*.5,Math.cos(a)*s,Math.sin(a)*s);}
+  v2Burst(o.x,o.y,26,'#ff8a4c',2,7,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('SPLIT!','','#ffb35c',.9);
+}
+function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
+  if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NEUTRALIZED +'+p,'#7dffb0',15);return;}
+  G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9);flash=Math.max(flash,.4);
+  v2Burst(hX,hY,30,'#7dffb0',2,7,.6,2);v2Call('ANTIMATTER!','SHRINK','#7dffb0',1.2);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
+}
+function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the screen, a blue one above the hole
+  if(G2.lv>=19&&!G2.ending&&!G2.boss&&!G2.script){G2.wormT-=dt;if(G2.wormT<=0&&!G2.worms.length){G2.wormT=24;const pr=sp2(26);
+    const w={ax:rrnd(W*.18,W*.82),ay:H*.86,bx:clamp(hX,pr+10,W-pr-10),by:clamp(hY-G2.G-sp2(90),sp2(110),H*.5),r:pr,t:0,life:10};G2.worms.push(w);v2Call('WORMHOLE','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
+  for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){G2.worms.splice(i,1);continue;}
+    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.boss||o.orb||o.wait>0||o.jumped>0)continue;if(Math.hypot(o.x-w.ax,o.y-w.ay)<w.r+o.r*.5){
+      v2Burst(o.x,o.y,10,'#ffb35c',1,4,.4);o.x=w.bx;o.y=w.by;const dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1,sp=Math.max(sp2(140),Math.hypot(o.vx,o.vy)*.6);o.vx=dx/d*sp;o.vy=dy/d*sp;o.jumped=1;v2Burst(o.x,o.y,10,'#8fd0ff',1,4,.4);v2Sfx('thrust',{vol:.35,rate:1.4});}}}
 }
 
 // ── helper hole, bomb hold, blasts ────────────────────
@@ -499,11 +549,19 @@ const TIP2={
   shield:['🛡','KALKAN','Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: 5 saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir.'],
   shard:['🛡','KALKAN PARÇASI','Kalkan parçasını yut: 3 parça toplayınca 1 kalkan kazanırsın.'],
   shrink:['💨','KÜÇÜLÜYOR','Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.'],
+  comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
+  split:['🌋','BÖLÜNEN GEZEGEN','Bu gezegen yutulmaz ama kara deliğine çarpınca üç parçaya bölünür. Parçaları yut!'],
+  anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Rage açıkken zararsızdır.'],
+  magnet:['🧲','MIKNATIS','Yut: 4 saniye boyunca ekrandaki küçük cisimler sana doğru süzülür.'],
+  pulsar:['💫','PULSAR','Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.'],
+  mpair:['🪐','UYDULU GEZEGEN','Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!'],
+  dark:['🌫️','KARANLIK MADDE','Görünmez! Arkasındaki yıldızları nasıl büktüğüne bak. Yakalarsan 120 puan.'],
+  worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapıya giren cisim mavi kapıdan kara deliğine doğru fırlar. Kaçırdığın cisimler geri gelir!'],
   boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!']};
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}
-  else if(['crystal','energy','gold','time','bomb','mini','shard'].includes(o.k))id=o.k;
-  else if(GL2.has(o.k)&&!v2Edible(o))id='big';
+  else if(['crystal','energy','gold','time','bomb','mini','shard','comet','split','anti','magnet','pulsar','mpair','dark'].includes(o.k))id=o.k;
+  else if(GL2.has(o.k)&&o.k!=='sat'&&!v2Edible(o))id='big';
   if(!id||TIPS[id]||v2Tip(id,o))o.tipd=1;}
 function v2Tip(id,tg){
   if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched))return false;
@@ -532,7 +590,7 @@ function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on 
 function v2SizeTxt(x){return (x||0).toFixed(2)+'M';}
 function v2Result(){ // level-complete card body
   const sz=G2.peak/V2K.r0;const row=(k,v,hl)=>`<div class="r2"><span>${T(k)}</span><b${hl?' class="hl"':''}>${v}</b></div>`;
-  const st=[[1,T('Seviyeyi bitir')],[!G2.dmg,T('Can kaybetme')],[G2.best>=10,'×10 COMBO']].map(([ok,t])=>`<span class="${ok?'ok':''}">${ok?'★':'☆'} ${t}</span>`).join('');
+  const lv=clamp(lives,1,3),st=`<span class="ok">${'♥'.repeat(lv)}</span><span>${'♥'.repeat(3-lv)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span><span>${T('Kalan can kadar yıldız')}</span>`;
   const s3=G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 25 💎<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;
   return `<div class="stc2">${st}</div>${s3}<div class="how2">HOW BIG CAN YOU GET?</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div>`+
     `<div class="res2">${row('SKOR',levelScore.toLocaleString(LOC))}${row('EN İYİ COMBO','×'+G2.best)}${row('YUTULAN',G2.eaten)}${row('PERFECT ABSORB',G2.perfA)}${row('PERFECT DODGE',G2.perfD)}${row('ÖDÜL','+5 ⭐'+(level%5===0?' +3 💎':'')+(G2.gift?' +1 🛡':''),true)}</div>`;
@@ -557,7 +615,8 @@ function v2Frame(dt){
   for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/w.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=w.mega?6:3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
   for(const q of G2.minis)v2DrawMini(q);
   v2DrawLinks();v2DrawShield();v2DrawMono();
-  for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);continue;}v2DrawObj(o,gl);}
+  v2DrawWorms();
+  for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if(o.k==='split'&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
   v2DrawMarks();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
@@ -622,6 +681,24 @@ function v2DrawObj(o,gl){
       ctx.shadowBlur=0;ctx.fillStyle='#fff';ctx.font='900 13px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(Math.max(1,Math.ceil(V2K.bomb.hold-o.orb.t)),0,-r*1.75-11);}}
   else if(k==='mini'){v2DrawMini({x:o.x,y:o.y,r,a:o.rot*3,t:9});}
   else if(k==='shard'){ctx.restore();v2DrawShard(o,s);return;}
+  else if(k==='comet'){const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp,tl=r*9;ctx.globalCompositeOperation='lighter';
+    const g=ctx.createLinearGradient(o.x,o.y,o.x-ux*tl,o.y-uy*tl);g.addColorStop(0,'rgba(210,250,255,.9)');g.addColorStop(.3,'rgba(120,200,255,.45)');g.addColorStop(1,'rgba(80,140,255,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(o.x-uy*r*.8,o.y+ux*r*.8);ctx.lineTo(o.x-ux*tl,o.y-uy*tl);ctx.lineTo(o.x+uy*r*.8,o.y-ux*r*.8);ctx.closePath();ctx.fill();
+    const c=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*1.6);c.addColorStop(0,'#fff');c.addColorStop(.4,'rgba(190,240,255,.9)');c.addColorStop(1,'rgba(120,200,255,0)');ctx.fillStyle=c;ctx.beginPath();ctx.arc(o.x,o.y,r*1.6,0,TAU);ctx.fill();}
+  else if(k==='anti'){const pu=.75+.25*Math.sin(clock*7+o.si);ctx.translate(o.x,o.y);
+    const g=ctx.createRadialGradient(0,0,r*.2,0,0,r*1.9);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.45,'rgba(20,60,40,.95)');g.addColorStop(.7,`rgba(125,255,176,${.55*pu})`);g.addColorStop(1,'rgba(125,255,176,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*1.9,0,TAU);ctx.fill();ctx.strokeStyle=`rgba(190,255,220,${.8*pu})`;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.stroke();
+    ctx.rotate(clock*1.5);ctx.strokeStyle='rgba(125,255,176,.85)';ctx.lineWidth=1.2;for(let i=0;i<3;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.ellipse(0,0,r*.85,r*.32,0,0,TAU);ctx.stroke();}
+    ctx.rotate(-clock*1.5);ctx.strokeStyle='#eafff2';ctx.lineWidth=Math.max(1.5,r*.18);ctx.beginPath();ctx.moveTo(-r*.35,0);ctx.lineTo(r*.35,0);ctx.stroke();}
+  else if(k==='magnet'){ctx.translate(o.x,o.y);ctx.rotate(Math.sin(clock*2+o.si)*.35);ctx.shadowColor='#ff6a6a';ctx.shadowBlur=10;ctx.lineCap='butt';ctx.lineWidth=r*.55;
+    ctx.strokeStyle='#e0414b';ctx.beginPath();ctx.arc(0,-r*.1,r*.62,Math.PI,0);ctx.stroke();ctx.shadowBlur=0;
+    ctx.beginPath();ctx.moveTo(-r*.62,-r*.1);ctx.lineTo(-r*.62,r*.55);ctx.moveTo(r*.62,-r*.1);ctx.lineTo(r*.62,r*.55);ctx.stroke();
+    ctx.strokeStyle='#e8ecf2';ctx.beginPath();ctx.moveTo(-r*.62,r*.55);ctx.lineTo(-r*.62,r*.95);ctx.moveTo(r*.62,r*.55);ctx.lineTo(r*.62,r*.95);ctx.stroke();}
+  else if(k==='pulsar'){ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const lit=o.lit,k2=lit?1:.25;
+    if(lit){ctx.rotate(clock*5);const bl=r*5.5;for(const sg of [1,-1]){const g=ctx.createLinearGradient(0,0,0,sg*bl);g.addColorStop(0,'rgba(200,235,255,.85)');g.addColorStop(1,'rgba(120,180,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(-r*.35,0);ctx.lineTo(0,sg*bl);ctx.lineTo(r*.35,0);ctx.closePath();ctx.fill();}ctx.rotate(-clock*5);}
+    const g=ctx.createRadialGradient(0,0,0,0,0,r*(lit?2.2:1.2));g.addColorStop(0,`rgba(255,255,255,${k2})`);g.addColorStop(.35,`rgba(170,215,255,${.8*k2})`);g.addColorStop(1,'rgba(120,170,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*(lit?2.2:1.2),0,TAU);ctx.fill();
+    ctx.globalCompositeOperation='source-over';ctx.fillStyle=lit?'#fff':'#6c7890';ctx.beginPath();ctx.arc(0,0,r*.5,0,TAU);ctx.fill();}
+  else if(k==='dark'){const d=Math.hypot(o.x-hX,o.y-hY);if(d<G2.G*1.3||o.st==='sw'){ctx.globalAlpha=(o.st==='sw'?.5:.3)*(.6+.4*Math.sin(clock*9));ctx.strokeStyle='#cbb8ff';ctx.lineWidth=1.2;ctx.setLineDash([2,5]);ctx.beginPath();ctx.arc(o.x,o.y,r*1.1,0,TAU);ctx.stroke();ctx.setLineDash([]);}}
   else if(!gl&&o.cell!==undefined){const im=SPR.byCell&&SPR.byCell[o.cell];if(im)ctx.drawImage(im,o.x-r,o.y-r,r*2,r*2);else{ctx.fillStyle='#9aa';ctx.beginPath();ctx.arc(o.x,o.y,r,0,TAU);ctx.fill();}}
   ctx.restore();
 }
@@ -648,11 +725,11 @@ function v2DrawShield(){
   ctx.strokeStyle=`rgba(${r},${g},${b},.9)`;ctx.lineWidth=Math.max(1,s*.06);ctx.beginPath();ctx.ellipse(0,-s*.05,s*.42,s*.13,-.35,0,TAU);ctx.stroke();
   ctx.restore();
 }
-function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, one more every 0.5M (7 max)
+function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, one more every 0.4M (7 max)
   if(!SHOP.cid||!SKIN.monoOn||G2.shT>0)return;const txt=monoText();if(!txt)return;const L=[...txt],sz=v2Size();let n=G2.monoN||1;
-  while(n<L.length&&sz>=1+n*.5)n++;while(n>1&&sz<1+(n-1)*.5-.08)n--; // a little slack so letters do not flicker at the edge
+  while(n<L.length&&sz>=1+n*.4)n++;while(n>1&&sz<1+(n-1)*.4-.07)n--; // a little slack so letters do not flicker at the edge
   if(n!==G2.monoN){G2.monoN=n;G2.monoT=0;}G2.monoT=Math.min(1,(G2.monoT||0)+1/30);
-  ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel]);ctx.restore();}
+  ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock*.35);ctx.restore();}
 function v2DrawShard(o,sc){ // a golden third of the crest, glinting
   const s=o.r*sc;if(s<.6)return;ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const gl=ctx.createRadialGradient(0,0,s*.3,0,0,s*2.2);gl.addColorStop(0,'rgba(255,210,90,.4)');gl.addColorStop(1,'rgba(255,200,60,0)');
   ctx.fillStyle=gl;ctx.beginPath();ctx.arc(0,0,s*2.2,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';ctx.rotate(o.rot*.4);ctx.translate(s*.5,0);
@@ -663,7 +740,9 @@ function v2DrawShard(o,sc){ // a golden third of the crest, glinting
 function v2DrawMarks(){ // what can be eaten: pull lines, too-big warnings, your size under the hole
   if(gState!=='playing'&&gState!=='tip')return;const Gr=G2.G;ctx.save();
   for(const o of G2.objs){if(o.st!=='in'||o.wait>0||o.k==='meteor'||o.orb)continue;const d=Math.hypot(o.x-hX,o.y-hY);
+    if(o.k==='anti'){if(d<Gr*1.6){ctx.globalAlpha=.6+.4*Math.sin(clock*12);ctx.strokeStyle='#7dffb0';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.6+3,0,TAU);ctx.stroke();ctx.setLineDash([]);}continue;}
     if(v2Edible(o)){if(d<Gr){const k=1-d/Gr;ctx.globalAlpha=.18+.4*k;ctx.strokeStyle='#e6ecff';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(hX+(o.x-hX)/d*G2.R,hY+(o.y-hY)/d*G2.R);ctx.stroke();}}
+    else if(o.k==='split'||o.k==='pulsar'){}
     else if(d<Gr*1.5){ctx.globalAlpha=.85;ctx.strokeStyle='#ff6a5a';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.25+3,0,TAU);ctx.stroke();ctx.setLineDash([]);
       ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';const t=v2SizeTxt(OBJ2[o.k].need),y=o.y-o.r*1.25-8;ctx.strokeText(t,o.x,y);ctx.fillStyle='#ffb3a8';ctx.fillText(t,o.x,y);}}
   ctx.globalAlpha=.8;ctx.font='700 11px "IBM Plex Mono",monospace';ctx.textAlign='center';const t=v2SizeTxt(v2Size()),y=hY+G2.R*(G2.shT>0?1.5:1)+15;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(t,hX,y);
@@ -680,6 +759,17 @@ function v2DrawLinks(){ // bomb tether (turns red as the drag pulls it loose) an
 function v2DrawTipMark(){ // points at what the open tip card is about
   const t=G2.tip;if(!t||t.id==='rage'||t.id==='shield'||t.id==='buy')return;const o=t.tg,x=o?o.x:hX,y=o?o.y:hY,r=(o?o.r:G2.R)*1.5+sp2(10)+4*Math.sin(clock*6);
   ctx.save();ctx.strokeStyle='#ffd76a';ctx.lineWidth=3;ctx.shadowColor='#ffb35c';ctx.shadowBlur=14;ctx.setLineDash([8,6]);ctx.lineDashOffset=-clock*30;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.restore();}
+function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(a)*d,r=Math.max(2,o.r*.34);ctx.save();
+  ctx.strokeStyle='rgba(200,210,240,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(o.x,o.y,d,0,TAU);ctx.stroke();
+  const g=ctx.createRadialGradient(x-r*.35,y-r*.35,0,x,y,r);g.addColorStop(0,'#f2f2ee');g.addColorStop(1,'#6f7078');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();}
+function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot*.3);ctx.globalCompositeOperation='lighter';const r=o.r;ctx.strokeStyle=`rgba(255,${130+60*Math.sin(clock*6)|0},50,.85)`;ctx.lineWidth=Math.max(1.2,r*.07);
+  ctx.beginPath();ctx.moveTo(-r*.8,-r*.2);ctx.lineTo(-r*.2,r*.05);ctx.lineTo(r*.15,-r*.45);ctx.moveTo(-r*.2,r*.05);ctx.lineTo(0,r*.75);ctx.moveTo(r*.15,-r*.45);ctx.lineTo(r*.75,-r*.1);ctx.stroke();ctx.restore();}
+function v2DrawWorms(){for(const w of G2.worms){const a=Math.min(1,w.t/.4,(w.life-w.t)/.6);ctx.save();ctx.globalAlpha=a*.35;ctx.strokeStyle='#b9a8ff';ctx.lineWidth=1.2;ctx.setLineDash([3,8]);ctx.lineDashOffset=-clock*30;
+  ctx.beginPath();ctx.moveTo(w.ax,w.ay);ctx.quadraticCurveTo((w.ax+w.bx)/2+W*.25,(w.ay+w.by)/2,w.bx,w.by);ctx.stroke();ctx.setLineDash([]);
+  for(const [x,y,c,dir] of [[w.ax,w.ay,'255,160,70',1],[w.bx,w.by,'120,200,255',-1]]){ctx.globalAlpha=a;ctx.globalCompositeOperation='lighter';
+    const g=ctx.createRadialGradient(x,y,0,x,y,w.r*1.6);g.addColorStop(0,`rgba(${c},.05)`);g.addColorStop(.6,`rgba(${c},.35)`);g.addColorStop(1,`rgba(${c},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,w.r*1.6,0,TAU);ctx.fill();
+    ctx.strokeStyle=`rgb(${c})`;ctx.lineWidth=2.2;for(let i=0;i<3;i++){const s=clock*2.4*dir+i*2.1;ctx.beginPath();ctx.arc(x,y,w.r*(.55+i*.2),s,s+2.2);ctx.stroke();}
+    ctx.globalCompositeOperation='source-over';ctx.fillStyle='#05060a';ctx.beginPath();ctx.arc(x,y,w.r*.38,0,TAU);ctx.fill();}ctx.restore();}}
 function v2DrawGold(o){ctx.save();ctx.globalCompositeOperation='lighter';const r=o.r,g=ctx.createRadialGradient(o.x,o.y,r*.7,o.x,o.y,r*1.8);g.addColorStop(0,'rgba(255,215,106,.55)');g.addColorStop(1,'rgba(255,200,80,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,r*1.8,0,TAU);ctx.fill();
   ctx.strokeStyle='rgba(255,220,120,.8)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(o.x,o.y,r+2,0,TAU);ctx.stroke();ctx.strokeStyle='#ffe7a0';ctx.lineWidth=1.2;for(let i=0;i<3;i++){const a=clock*1.3+i*2.1;ctx.beginPath();ctx.arc(o.x+Math.cos(a)*r*1.3,o.y+Math.sin(a)*r*1.3,1.6,0,TAU);ctx.stroke();}ctx.restore();}
 function v2DrawMini(q){const r=Math.max(1,q.r);ctx.save();ctx.translate(q.x,q.y);const al=Math.min(1,q.t);ctx.globalAlpha=al;ctx.globalCompositeOperation='lighter';
