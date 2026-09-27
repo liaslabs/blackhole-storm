@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "Kamu menemukan semua hadiah",
 "KARA DELİK KÜTLESİ": "MASSA LUBANG HITAM",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} massa Matahari",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Setiap {n} level: buka setidaknya tiga dari sembilan kotak; dua berisi lubang hitam. Setelah tiga kotak, ambil hadiahmu kapan saja"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Setiap {n} level: buka setidaknya tiga dari sembilan kotak; dua berisi lubang hitam. Setelah tiga kotak, ambil hadiahmu kapan saja",
+"{n} HAK DAHA": "{n} KESEMPATAN LAGI",
+"sonraki kutu": "kotak berikutnya",
+"İkinci şans! Devam et ya da hemen al": "Kesempatan kedua! Lanjut atau ambil sekarang",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "Lubang hitam! Tonton iklan agar perolehanmu tetap aman dan lubang hitam berubah jadi hadiah",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "Planet es ini tak bisa ditelan utuh: saat menabrak lubang hitammu ia terbelah dua dan dua bagian setengah massa melesat menjauh. Kejar dan telan keduanya",
+"MIKNATIS TAŞI": "BATU MAGNET",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Telan batu magnet ini: selama {n} detik semua yang bisa kamu makan tertarik cepat ke arahmu",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "Gerbang oranye menarik benda di dekatnya dan mengirimnya lewat gerbang biru langsung ke lubang hitammu",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "Tak bisa ditelan utuh; saat menabrak terbelah dua dan dua bagian melesat: tangkap",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "Gerbang oranye menarik benda di dekatnya dan mengirimnya padamu lewat gerbang biru",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "Gerbang oranye menarik benda di dekatnya dan mengirimnya ke lubang hitammu lewat gerbang biru",
+"BOMBA GEZEGEN": "PLANET BOM"
 }

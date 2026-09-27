@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "Você encontrou todos os presentes",
 "KARA DELİK KÜTLESİ": "MASSA DO BURACO NEGRO",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} massa solar",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "A cada {n} fases: abra pelo menos três de nove caixas; duas escondem um buraco negro. Depois de três caixas, pegue os prêmios quando quiser"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "A cada {n} fases: abra pelo menos três de nove caixas; duas escondem um buraco negro. Depois de três caixas, pegue os prêmios quando quiser",
+"{n} HAK DAHA": "MAIS {n} CHANCE",
+"sonraki kutu": "próxima caixa",
+"İkinci şans! Devam et ya da hemen al": "Segunda chance! Continue ou pegue agora",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "Buraco negro! Assista a um anúncio para manter seus ganhos e transformar o buraco negro em prêmio",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "Este planeta gelado não é engolido inteiro: ao bater no seu buraco negro ele se parte em dois e duas metades disparam para longe. Persiga e engula as duas",
+"MIKNATIS TAŞI": "PEDRA-ÍMÃ",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Engula esta pedra-ímã: por {n} segundos tudo o que você pode comer é puxado rápido até você",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "O portal laranja puxa os corpos próximos e os envia pelo portal azul direto ao seu buraco negro",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "Não é engolido inteiro; ao bater se parte em dois e duas metades disparam: pegue-as",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "O portal laranja puxa os corpos próximos e os envia a você pelo portal azul",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "O portal laranja puxa os corpos próximos e os envia ao seu buraco negro pelo portal azul",
+"BOMBA GEZEGEN": "PLANETA-BOMBA"
 }

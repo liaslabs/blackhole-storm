@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "Du hast alle Geschenke gefunden",
 "KARA DELİK KÜTLESİ": "MASSE DES SCHWARZEN LOCHS",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} Sonnenmasse",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Alle {n} Level: Öffne mindestens drei von neun Kisten; zwei verbergen ein Schwarzes Loch. Nach drei Kisten nimmst du deine Belohnungen, wann du willst"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Alle {n} Level: Öffne mindestens drei von neun Kisten; zwei verbergen ein Schwarzes Loch. Nach drei Kisten nimmst du deine Belohnungen, wann du willst",
+"{n} HAK DAHA": "{n} WEITERE CHANCE",
+"sonraki kutu": "nächste Kiste",
+"İkinci şans! Devam et ya da hemen al": "Zweite Chance! Weiter oder jetzt nehmen",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "Schwarzes Loch! Sieh dir eine Werbung an, dann behältst du deinen Gewinn und das Loch wird zur Belohnung",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "Dieser Eisplanet lässt sich nicht im Ganzen schlucken: Trifft er dein Schwarzes Loch, bricht er entzwei und zwei Hälften schießen davon. Jag ihnen nach und schluck beide",
+"MIKNATIS TAŞI": "MAGNETFELS",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Schluck diesen Magnetfelsen: {n} Sekunden lang wird alles Fressbare schnell zu dir gezogen",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "Das orange Tor zieht nahe Körper an und schickt sie durch das blaue Tor direkt in dein Schwarzes Loch",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "Nicht im Ganzen schluckbar; beim Aufprall bricht er entzwei und zwei Hälften schießen davon: fang sie",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "Das orange Tor zieht nahe Körper an und schickt sie dir durch das blaue Tor",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "Das orange Tor zieht nahe Körper an und schickt sie durch das blaue Tor in dein Schwarzes Loch",
+"BOMBA GEZEGEN": "BOMBENPLANET"
 }

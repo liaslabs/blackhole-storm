@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "وجدت كل الهدايا",
 "KARA DELİK KÜTLESİ": "كتلة الثقب الأسود",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} كتلة شمسية",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "كل {n} مستوى: افتح ثلاثة من تسعة صناديق على الأقل؛ صندوقان يخفيان ثقبًا أسود. بعد ثلاثة صناديق خذ جوائزك متى شئت"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "كل {n} مستوى: افتح ثلاثة من تسعة صناديق على الأقل؛ صندوقان يخفيان ثقبًا أسود. بعد ثلاثة صناديق خذ جوائزك متى شئت",
+"{n} HAK DAHA": "{n} محاولة أخرى",
+"sonraki kutu": "الصندوق التالي",
+"İkinci şans! Devam et ya da hemen al": "فرصة ثانية! تابع أو خذها الآن",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "ثقب أسود! شاهد إعلانًا لتحتفظ بمكسبك ويتحول الثقب الأسود إلى جائزة",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "لا يُبتلع هذا الكوكب الجليدي كاملًا: عند اصطدامه بثقبك الأسود ينقسم نصفين يندفعان بعيدًا بسرعة. طاردهما وابتلعهما",
+"MIKNATIS TAŞI": "حجر المغناطيس",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "ابتلع حجر المغناطيس هذا: لمدة {n} ثوانٍ يُسحب إليك بسرعة كل ما يمكنك التهامه",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "تجذب البوابة البرتقالية الأجرام القريبة وترسلها عبر البوابة الزرقاء مباشرة إلى ثقبك الأسود",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "لا يُبتلع كاملًا؛ عند الاصطدام ينقسم نصفين يندفعان بعيدًا: التقطهما",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "تجذب البوابة البرتقالية الأجرام القريبة وترسلها إليك عبر البوابة الزرقاء",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "تجذب البوابة البرتقالية الأجرام القريبة وترسلها إلى ثقبك الأسود عبر البوابة الزرقاء",
+"BOMBA GEZEGEN": "الكوكب القنبلة"
 }

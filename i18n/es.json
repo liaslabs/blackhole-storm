@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "Encontraste todos los regalos",
 "KARA DELİK KÜTLESİ": "MASA DEL AGUJERO NEGRO",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} masa solar",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Cada {n} niveles: abre al menos tres de nueve cajas; dos esconden un agujero negro. Tras tres cajas, llévate los premios cuando quieras"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Cada {n} niveles: abre al menos tres de nueve cajas; dos esconden un agujero negro. Tras tres cajas, llévate los premios cuando quieras",
+"{n} HAK DAHA": "{n} INTENTO MÁS",
+"sonraki kutu": "siguiente caja",
+"İkinci şans! Devam et ya da hemen al": "¡Segunda oportunidad! Sigue o llévatelo ya",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "¡Agujero negro! Mira un anuncio para conservar tus ganancias y convertir el agujero negro en premio",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "Este planeta helado no se traga entero: al chocar con tu agujero negro se parte en dos y dos mitades salen disparadas. Persíguelas y trágatelas",
+"MIKNATIS TAŞI": "ROCA IMÁN",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Trágate esta roca imán: durante {n} segundos todo lo que puedes comer es atraído rápido hacia ti",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "La puerta naranja atrae los cuerpos cercanos y los envía por la puerta azul directo a tu agujero negro",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "No se traga entero; al chocar se parte en dos y dos mitades salen disparadas: atrápalas",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "La puerta naranja atrae los cuerpos cercanos y te los envía por la puerta azul",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "La puerta naranja atrae los cuerpos cercanos y los envía a tu agujero negro por la puerta azul",
+"BOMBA GEZEGEN": "PLANETA BOMBA"
 }

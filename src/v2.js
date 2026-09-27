@@ -29,7 +29,8 @@ const OBJ2={
   frag:   {r:15,v:150,dv:0, vm:300,pts:30, grow:.6, rage:3, need:1},  // shed by the giant planet
   shard:  {r:24,v:170,dv:6, vm:340,pts:50, grow:.5, rage:3, need:1},  // a third of a shield
   comet:  {r:16,v:460,dv:10,vm:720,pts:60, grow:.8, rage:4, need:1},    // very fast; extends the combo clock
-  split:  {r:46,v:120,dv:6, vm:240,pts:0,  grow:0,  rage:0, need:99},   // never swallowed: breaks into fragments on contact
+  split:  {r:46,v:120,dv:6, vm:240,pts:0,  grow:0,  rage:0, need:99},   // never swallowed whole: touching it splits it in two
+  half:   {r:33,v:120,dv:0, vm:420,pts:80, grow:1.4,rage:4, need:1.15}, // one half of a split planet: half the mass
   anti:   {r:18,v:230,dv:8, vm:460,pts:0,  grow:0,  rage:0, need:1},    // antimatter: swallowing it shrinks you
   magnet: {r:22,v:170,dv:6, vm:340,pts:50, grow:.5, rage:3, need:1},
   pulsar: {r:18,v:170,dv:6, vm:340,pts:150,grow:1,  rage:6, need:1},    // only swallowable while it shines
@@ -37,14 +38,14 @@ const OBJ2={
   sat:    {r:12,v:150,dv:0, vm:300,pts:100,grow:.5, rage:3, need:1},    // the moon, once its planet is gone
   dark:   {r:26,v:140,dv:6, vm:280,pts:120,grow:1.2,rage:5, need:1}};   // dark matter: seen only by how it bends light
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
-const SZ2={ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
+const SZ2={ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
 Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
-  decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.85},cont:{...V2K.cont,dia:25}});
+  decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.75},cont:{...V2K.cont,dia:25}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag']);
-const GL2=new Set(['moon','planet','gold','split','mpair','sat']);
+const GL2=new Set(['moon','planet','gold','split','half','mpair','sat']);
 const MULT2=c=>c>=20?5:c>=10?4:c>=5?3:c>=3?2:1;
 // what each level brings in (level-start banner, level-complete teaser, map)
 const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl payı geçersen PERFECT DODGE.'],
@@ -58,13 +59,13 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   10:['🪐','GIANT PLANET','Boss: koptukça parçalarını topla, küçülünce bütünüyle yut.'],
   11:['🌐','360°','Cisimler her yönden geliyor.'],
   12:['☄️','COMET','Çok hızlı geçer. Yakalarsan combo süren uzar.'],
-  13:['🌋','SPLIT PLANET','Yutulmaz ama çarpınca parçalara bölünür: parçaları yut.'],
+  13:['🌋','SPLIT PLANET','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],
   14:['⚛️','ANTIMATTER','Yutma! Kara deliğini küçültür. Çekim alanından uzak tut.'],
   15:['🧲','MAGNET','Yut: 4 saniye yutabileceğin her şey sana çekilir.'],
   16:['💫','PULSAR','Sadece parlarken yutulur. Sönükken seker.'],
   17:['🪐','MOON PAIR','Gezegeni, sonra uydusunu yut: çift puan.'],
   18:['🌫️','DARK MATTER','Görünmez! Yıldızları bükmesinden fark edilir.'],
-  19:['🌀','WORMHOLE','Turuncu kapıya giren cisim mavi kapıdan sana doğru çıkar.']};
+  19:['🌀','WORMHOLE','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir.']};
 function new2(l){return NEW2[l]||(l%10===0?NEW2[10]:null);}
 
 const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,shardAt:1e9,gift:0,
@@ -159,7 +160,7 @@ function v2Obj(k,x,y,vx,vy,opt={}){
   o.r=o.rr*G2.S;
   if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(1.25-.03*(G2.lv-2),.7,1.25)+.4*v2Big();o.ramp=0;} // enters slowly (longer when the hole is big), then speeds up
   if(k==='pulsar')o.ph=rng()*1.6;if(k==='mpair')o.sa=rng()*TAU;
-  if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:k==='split'?13:k==='mpair'?5:k==='sat'?10:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
+  if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:k==='split'||k==='half'?14:k==='mpair'?5:k==='sat'?10:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
   G2.objs.push(o);return o;
 }
 function v2Edge(k,side,x0){
@@ -494,9 +495,9 @@ function v2RageGo(){
 }
 
 // ── split planets, antimatter, wormholes ─────────────
-function v2Split(o){ // a split planet breaks into three pieces flying away from the hole
-  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(let i=0;i<3;i++){const a=a0+(i-1)*.7,s=sp2(rrnd(110,170));v2Obj('frag',o.x+Math.cos(a)*o.r*.5,o.y+Math.sin(a)*o.r*.5,Math.cos(a)*s,Math.sin(a)*s);}
-  v2Burst(o.x,o.y,26,'#ff8a4c',2,7,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('SPLIT!','','#ffb35c',.9);
+function v2Split(o){ // a split planet cracks in two: both halves (half the mass each) shoot away from the hole
+  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*.55,s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;}
+  v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('SPLIT!','','#ffb35c',.9);
 }
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NEUTRALIZED +'+p,'#7dffb0',15);return;}
@@ -505,10 +506,15 @@ function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth
 }
 function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the screen, a blue one above the hole
   if(G2.lv>=19&&!G2.ending&&!G2.boss&&!G2.script){G2.wormT-=dt;if(G2.wormT<=0&&!G2.worms.length){G2.wormT=24;const pr=sp2(44);
-    const w={ax:rrnd(W*.18,W*.82),ay:H*.86,bx:clamp(hX,pr+10,W-pr-10),by:clamp(hY-G2.G-sp2(90),sp2(110),H*.5),r:pr,t:0,life:10};G2.worms.push(w);v2Call('WORMHOLE','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
-  for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){G2.worms.splice(i,1);continue;}
-    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.boss||o.orb||o.wait>0||o.jumped>0)continue;if(Math.hypot(o.x-w.ax,o.y-w.ay)<w.r+o.r*.8){
-      v2Burst(o.x,o.y,10,'#ffb35c',1,4,.4);o.x=w.bx;o.y=w.by;const dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1,sp=Math.max(sp2(140),Math.hypot(o.vx,o.vy)*.6);o.vx=dx/d*sp;o.vy=dy/d*sp;o.jumped=1;v2Burst(o.x,o.y,10,'#8fd0ff',1,4,.4);v2Sfx('thrust',{vol:.35,rate:1.4});}}}
+    let ax=W*.5,ay=H*.3;for(let t=0;t<12;t++){ax=rrnd(W*.18,W*.82);ay=rrnd(H*.2,H*.55);if(Math.hypot(ax-hX,ay-hY)>G2.G+pr*2.5)break;}
+    const w={ax,ay,bx:hX,by:hY,r:pr,t:0,life:12,n:0};G2.worms.push(w);v2Call('WORMHOLE','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
+  for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){if(w.n)v2Pop('PORTAL ×'+w.n,'#8fd0ff',15);G2.worms.splice(i,1);continue;}
+    {const a=Math.atan2(hY-w.ay,hX-w.ax);const d0=(G2.R+G2.G)*.5;w.bx=hX-Math.cos(a)*d0;w.by=hY-Math.sin(a)*d0;} // the exit rides inside your pull, on the side facing the entrance
+    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.boss||o.orb||o.wait>0||o.jumped>0)continue;const dx=w.ax-o.x,dy=w.ay-o.y,d=Math.hypot(dx,dy)||1;
+      if(d<w.r*3.6){const A=sp2(1100)*dt;o.vx+=dx/d*A;o.vy+=dy/d*A;const sp=Math.hypot(o.vx,o.vy),mx=sp2(340);if(sp>mx){o.vx*=mx/sp;o.vy*=mx/sp;} // the mouth draws nearby bodies in
+        if(Math.random()<dt*12&&G2.parts.length<150)G2.parts.push({x:o.x,y:o.y,vx:dx/d*1.5,vy:dy/d*1.5,life:.35,max:.35,c:'#ffb35c',sz:1.6});}
+      if(d<w.r+o.r*.8){v2Burst(o.x,o.y,12,'#ffb35c',1,4,.4);o.x=w.bx;o.y=w.by;const ex=hX-o.x,ey=hY-o.y,ed=Math.hypot(ex,ey)||1,sp=sp2(180);o.vx=ex/ed*sp;o.vy=ey/ed*sp;o.jumped=1;w.n++;
+        v2Burst(o.x,o.y,12,'#8fd0ff',1,4,.4);v2Sfx('thrust',{vol:.35,rate:1.4});}}}
 }
 
 // ── helper hole, bomb hold, blasts ────────────────────
@@ -589,14 +595,14 @@ const TIP2={
   shard:['🛡','KALKAN PARÇASI','Kalkan parçasını yut: 3 parça toplayınca 1 kalkan kazanırsın.'],
   shrink:['💨','KÜÇÜLÜYOR','Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.'],
   comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
-  split:['🌋','BÖLÜNEN GEZEGEN','Bu gezegen yutulmaz ama kara deliğine çarpınca üç parçaya bölünür. Parçaları yut!'],
+  split:['🌋','BÖLÜNEN GEZEGEN','Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!'],
   anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Rage açıkken zararsızdır.'],
-  magnet:['🧲','MAGNETAR','Bu mıknatıs yıldızını yut: 4 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
+  magnet:['🧲','MIKNATIS TAŞI','Bu mıknatıs taşını yut: 4 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
   nova:['💎','SÜPERNOVA','Üstteki elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],
   pulsar:['💫','PULSAR','Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.'],
   mpair:['🪐','UYDULU GEZEGEN','Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!'],
   dark:['🌫️','KARANLIK MADDE','Görünmez! Arkasındaki yıldızları nasıl büktüğüne bak. Yakalarsan 120 puan.'],
-  worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapıya giren cisim mavi kapıdan kara deliğine doğru fırlar. Kaçırdığın cisimler geri gelir!'],
+  worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir.'],
   boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!']};
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}
@@ -657,7 +663,7 @@ function v2Frame(dt){
   for(const q of G2.minis)v2DrawMini(q);
   v2DrawLinks();v2DrawShield();v2DrawMono();
   v2DrawWorms();
-  for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if(o.k==='split'&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
+  for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
   v2DrawMarks();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
@@ -692,8 +698,14 @@ function v2DrawField(){ // gravity field, rage aura, overload wobble, damage bli
   if(G2.pulse>0){ctx.globalAlpha=G2.pulse*.6;ctx.strokeStyle='#e6dcff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,R*(1.05+.25*(1-G2.pulse)),0,TAU);ctx.stroke();}
   ctx.restore();
 }
+const ROCKB={};
+function v2RockImg(i){ // rock photos brightened once: dark rocks were hard to spot on the nebulae
+  const im=sprImg('rocks',i);if(!im||!im.complete||!im.naturalWidth)return im;if(ROCKB[i])return ROCKB[i];
+  const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');
+  if('filter' in x){x.filter='brightness(1.6) contrast(1.08) saturate(1.1)';x.drawImage(im,0,0);}else{x.drawImage(im,0,0);x.globalCompositeOperation='lighter';x.globalAlpha=.45;x.drawImage(im,0,0);}
+  return ROCKB[i]=c;}
 function v2Rock(o,s,tint){
-  const im=sprImg('rocks',o.si%6);const r=o.r*s;ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot);
+  const im=v2RockImg(o.si%6);const r=o.r*s;ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot);
   if(im){ctx.drawImage(im,-r*1.15,-r*1.15,r*2.3,r*2.3);}else{ctx.fillStyle='#8a8a86';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();}
   if(tint){ctx.globalCompositeOperation='source-atop';ctx.fillStyle=tint;ctx.fillRect(-r*1.2,-r*1.2,r*2.4,r*2.4);}
   ctx.restore();
@@ -743,12 +755,13 @@ function v2DrawObj(o,gl){
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*1.9,0,TAU);ctx.fill();ctx.strokeStyle=`rgba(190,255,220,${.8*pu})`;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.stroke();
     ctx.rotate(clock*1.5);ctx.strokeStyle='rgba(125,255,176,.85)';ctx.lineWidth=1.2;for(let i=0;i<3;i++){ctx.rotate(Math.PI/3);ctx.beginPath();ctx.ellipse(0,0,r*.85,r*.32,0,0,TAU);ctx.stroke();}
     ctx.rotate(-clock*1.5);ctx.strokeStyle='#eafff2';ctx.lineWidth=Math.max(1.5,r*.18);ctx.beginPath();ctx.moveTo(-r*.35,0);ctx.lineTo(r*.35,0);ctx.stroke();}
-  else if(k==='magnet'){ctx.translate(o.x,o.y);ctx.rotate(clock*.9+o.si); // magnetar: a tiny dense star inside turning field loops
-    ctx.globalCompositeOperation='lighter';const hg=ctx.createRadialGradient(0,0,0,0,0,r*1.5);hg.addColorStop(0,'rgba(255,120,170,.55)');hg.addColorStop(1,'rgba(255,60,120,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(0,0,r*1.5,0,TAU);ctx.fill();
-    ctx.lineWidth=Math.max(1,r*.07);for(let i=0;i<3;i++){const s2=.55+i*.22;ctx.strokeStyle=`rgba(255,${150+i*30},${200+i*15},${.8-i*.2})`;
-      ctx.beginPath();ctx.ellipse(r*s2*.5,0,r*s2*.55,r*s2*.32,0,0,TAU);ctx.stroke();ctx.beginPath();ctx.ellipse(-r*s2*.5,0,r*s2*.55,r*s2*.32,0,0,TAU);ctx.stroke();}
-    const pb=.5+.5*Math.sin(clock*9+o.si);ctx.strokeStyle=`rgba(190,220,255,${.35+.4*pb})`;ctx.lineWidth=Math.max(1,r*.12);ctx.beginPath();ctx.moveTo(0,-r*1.25);ctx.lineTo(0,r*1.25);ctx.stroke();
-    ctx.globalCompositeOperation='source-over';const cg=ctx.createRadialGradient(-r*.08,-r*.08,0,0,0,r*.34);cg.addColorStop(0,'#ffffff');cg.addColorStop(.5,'#ffc2dc');cg.addColorStop(1,'#e0417a');ctx.fillStyle=cg;ctx.shadowColor='#ff6aa8';ctx.shadowBlur=12;ctx.beginPath();ctx.arc(0,0,r*.34,0,TAU);ctx.fill();ctx.shadowBlur=0;}
+  else if(k==='magnet'){ctx.translate(o.x,o.y);ctx.rotate(Math.sin(clock*1.2+o.si)*.35); // a horseshoe asteroid: reads as a magnet at a glance
+    ctx.globalCompositeOperation='lighter';ctx.lineWidth=Math.max(1,r*.07);for(let q=0;q<3;q++){const ph=(clock*.8+q/3)%1;ctx.strokeStyle=`rgba(255,140,170,${.6*(1-ph)})`;ctx.beginPath();ctx.ellipse(0,r*.62,r*(.35+ph*.75),r*(.25+ph*.6),0,Math.PI*.05,Math.PI*.95);ctx.stroke();} // field lines from pole to pole
+    ctx.globalCompositeOperation='source-over';const U=()=>{ctx.beginPath();ctx.arc(0,-r*.05,r*.62,Math.PI,0);ctx.lineTo(r*.62,r*.62);ctx.moveTo(-r*.62,-r*.05);ctx.lineTo(-r*.62,r*.62);};
+    ctx.lineCap='butt';ctx.shadowColor='#ff4a5a';ctx.shadowBlur=12;U();ctx.lineWidth=r*.58;ctx.strokeStyle='#8e1f2a';ctx.stroke();ctx.shadowBlur=0;
+    U();ctx.lineWidth=r*.42;const g=ctx.createLinearGradient(-r,-r,r,r);g.addColorStop(0,'#ff6b6b');g.addColorStop(.5,'#d9303d');g.addColorStop(1,'#8e1f2a');ctx.strokeStyle=g;ctx.stroke();
+    ctx.fillStyle='rgba(60,8,14,.55)';for(const [cx,cy,cr] of [[-r*.55,-r*.2,.07],[r*.1,-r*.62,.06],[r*.58,r*.15,.05]]){ctx.beginPath();ctx.arc(cx,cy,r*cr,0,TAU);ctx.fill();} // craters
+    ctx.fillStyle='#e8eef6';ctx.fillRect(-r*.91,r*.46,r*.58,r*.36);ctx.fillRect(r*.33,r*.46,r*.58,r*.36);ctx.fillStyle='rgba(120,135,150,.8)';ctx.fillRect(-r*.91,r*.72,r*.58,r*.1);ctx.fillRect(r*.33,r*.72,r*.58,r*.1);}
   else if(k==='pulsar'){ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const lit=o.lit,k2=lit?1:.25;
     if(lit){ctx.rotate(clock*5);const bl=r*5.5;for(const sg of [1,-1]){const g=ctx.createLinearGradient(0,0,0,sg*bl);g.addColorStop(0,'rgba(200,235,255,.85)');g.addColorStop(1,'rgba(120,180,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(-r*.35,0);ctx.lineTo(0,sg*bl);ctx.lineTo(r*.35,0);ctx.closePath();ctx.fill();}ctx.rotate(-clock*5);}
     const g=ctx.createRadialGradient(0,0,0,0,0,r*(lit?2.2:1.2));g.addColorStop(0,`rgba(255,255,255,${k2})`);g.addColorStop(.35,`rgba(170,215,255,${.8*k2})`);g.addColorStop(1,'rgba(120,170,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*(lit?2.2:1.2),0,TAU);ctx.fill();
@@ -815,7 +828,9 @@ function v2DrawTipMark(){ // points at what the open tip card is about
 function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(a)*d,r=Math.max(2,o.r*.34);ctx.save();
   ctx.strokeStyle='rgba(200,210,240,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(o.x,o.y,d,0,TAU);ctx.stroke();
   const g=ctx.createRadialGradient(x-r*.35,y-r*.35,0,x,y,r);g.addColorStop(0,'#f2f2ee');g.addColorStop(1,'#6f7078');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();}
-function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot*.3);ctx.globalCompositeOperation='lighter';const r=o.r;ctx.strokeStyle=`rgba(255,${130+60*Math.sin(clock*6)|0},50,.85)`;ctx.lineWidth=Math.max(1.2,r*.07);
+function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const r=o.r,k=.7+.3*Math.sin(clock*6);
+  if(o.k==='half'){ctx.rotate(o.cut||0);ctx.strokeStyle=`rgba(160,245,255,${.9*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=10;ctx.lineWidth=Math.max(1.5,r*.12);ctx.beginPath();ctx.moveTo(-r*.95,0);ctx.lineTo(-r*.3,r*.08);ctx.lineTo(r*.2,-r*.06);ctx.lineTo(r*.95,0);ctx.stroke();ctx.restore();return;} // the fresh fracture face
+  ctx.rotate(o.rot*.3);ctx.strokeStyle=`rgba(150,240,255,${.85*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=8;ctx.lineWidth=Math.max(1.2,r*.07);
   ctx.beginPath();ctx.moveTo(-r*.8,-r*.2);ctx.lineTo(-r*.2,r*.05);ctx.lineTo(r*.15,-r*.45);ctx.moveTo(-r*.2,r*.05);ctx.lineTo(0,r*.75);ctx.moveTo(r*.15,-r*.45);ctx.lineTo(r*.75,-r*.1);ctx.stroke();ctx.restore();}
 function v2DrawWorms(){for(const w of G2.worms){const a=Math.min(1,w.t/.4,(w.life-w.t)/.6);ctx.save();ctx.globalAlpha=a*.35;ctx.strokeStyle='#b9a8ff';ctx.lineWidth=1.2;ctx.setLineDash([3,8]);ctx.lineDashOffset=-clock*30;
   ctx.beginPath();ctx.moveTo(w.ax,w.ay);ctx.quadraticCurveTo((w.ax+w.bx)/2+W*.25,(w.ay+w.by)/2,w.bx,w.by);ctx.stroke();ctx.setLineDash([]);

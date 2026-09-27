@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "You found every gift",
 "KARA DELİK KÜTLESİ": "BLACK HOLE MASS",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} solar mass",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Every {n} levels: open at least three of nine boxes; two hide a black hole. After three boxes, take your rewards whenever you like"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Every {n} levels: open at least three of nine boxes; two hide a black hole. After three boxes, take your rewards whenever you like",
+"{n} HAK DAHA": "{n} MORE TRY",
+"sonraki kutu": "next box",
+"İkinci şans! Devam et ya da hemen al": "Second chance! Keep going or take it now",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "Black hole! Watch an ad to keep your winnings and turn the black hole into a reward",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "This icy planet can't be swallowed whole: when it hits your black hole it splits in two, and two half-mass pieces shoot away. Chase them and swallow both",
+"MIKNATIS TAŞI": "MAGNET ROCK",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Swallow this magnet rock: for {n} seconds everything you can eat is pulled to you fast",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "The orange gate pulls in nearby bodies and sends them straight to your black hole through the blue gate",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "Can't be swallowed whole; on impact it splits in two and two half-mass pieces shoot away: catch them",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "The orange gate pulls in nearby bodies and sends them to you through the blue gate",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "The orange gate pulls in nearby bodies and sends them to your black hole through the blue gate",
+"BOMBA GEZEGEN": "BOMB PLANET"
 }

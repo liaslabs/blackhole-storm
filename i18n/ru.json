@@ -758,5 +758,17 @@
 "Bütün hediyeleri buldun": "Ты нашёл все подарки",
 "KARA DELİK KÜTLESİ": "МАССА ЧЁРНОЙ ДЫРЫ",
 "{n} M = {n} Güneş kütlesi": "{n} M = {n} масса Солнца",
-"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Каждые {n} уровней: открой хотя бы три из девяти коробок; в двух прячется чёрная дыра. После трёх коробок забирай награды когда захочешь"
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Каждые {n} уровней: открой хотя бы три из девяти коробок; в двух прячется чёрная дыра. После трёх коробок забирай награды когда захочешь",
+"{n} HAK DAHA": "ЕЩЁ {n} ПОПЫТКА",
+"sonraki kutu": "следующая коробка",
+"İkinci şans! Devam et ya da hemen al": "Второй шанс! Продолжай или забирай сейчас",
+"Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner": "Чёрная дыра! Посмотри рекламу — выигрыш сохранится, а дыра станет наградой",
+"Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut": "Эту ледяную планету целиком не проглотить: столкнувшись с чёрной дырой, она раскалывается надвое, и две половинки быстро разлетаются. Догони и проглоти обе",
+"MIKNATIS TAŞI": "МАГНИТНЫЙ КАМЕНЬ",
+"Bu mıknatıs taşını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Проглоти этот магнитный камень: {n} секунд всё съедобное быстро притягивается к тебе",
+"Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir": "Оранжевые врата притягивают ближние тела и через синие отправляют их прямо в твою чёрную дыру",
+"Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala": "Целиком не проглотить; при ударе раскалывается надвое, половинки разлетаются: лови их",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir": "Оранжевые врата притягивают ближние тела и отправляют их тебе через синие",
+"Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir": "Оранжевые врата притягивают ближние тела и через синие отправляют их в твою чёрную дыру",
+"BOMBA GEZEGEN": "ПЛАНЕТА-БОМБА"
 }
