@@ -503,6 +503,17 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .easeBox .row{display:flex;gap:6px;margin:0;}.easeBox .btn{flex:1;font-size:12px;padding:8px 4px;}
 .lnkbtn{width:100%;background:none;border:0;color:var(--dim,#9aa0b6);font:600 13px var(--fd,sans-serif);letter-spacing:.12em;padding:8px 0 2px;cursor:pointer;text-decoration:underline;text-underline-offset:4px;}.lnkbtn:hover{color:#e8ebf4;}
 .contWhy{border:1px solid rgba(255,110,90,.45);background:rgba(255,90,70,.08);border-radius:8px;padding:8px 10px;margin:2px 0 8px;text-align:center;}.contWhy b{display:block;font-family:var(--fd);color:#ffb2a4;font-size:14px;letter-spacing:.06em;}.contWhy span{display:block;color:#d9dde8;font-size:12.5px;margin-top:2px;}
+.atsum{text-align:center;color:var(--dim);font-size:13px;margin:-4px 0 10px;}.atsum b{color:var(--gold);}
+.atgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;max-height:46vh;overflow-y:auto;}
+.atc{border:1px solid var(--line);border-radius:8px;padding:7px 3px 6px;background:var(--pan);text-align:center;cursor:pointer;font:inherit;color:inherit;}
+.atc.sel{border-color:var(--gold);}.atc i{display:block;font-style:normal;font-size:22px;line-height:1.1;}.atc b{display:block;font-family:var(--fd);font-size:9.5px;letter-spacing:.04em;margin-top:3px;line-height:1.15;min-height:2.3em;}
+.atc .pp{display:flex;justify-content:center;gap:3px;margin-top:3px;}.atc .pp s{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.14);}.atc .pp s.on{background:var(--gold);}
+.atc small{display:block;font-family:var(--fm,monospace);font-size:9px;color:var(--dim);margin-top:2px;}.atc.lock i{filter:grayscale(1) brightness(.35);}.atc.lock b{color:var(--dim);}
+.atnote{margin:10px 0 6px;padding:8px 10px;border-radius:8px;background:rgba(143,216,255,.07);border:1px solid rgba(143,216,255,.25);font-size:13px;color:#d9e6f2;min-height:2.6em;text-align:start;}
+.atnote b{color:var(--cyan,#8fd8ff);font-family:var(--fd);letter-spacing:.05em;}.atrw{font-size:11.5px;color:var(--dim);text-align:center;margin-bottom:8px;}
+#sig2{position:absolute;left:50%;top:64px;transform:translateX(-50%) translateY(-8px);width:min(88%,360px);padding:9px 12px;border-radius:8px;border:1px solid rgba(143,216,255,.45);background:rgba(6,10,18,.84);
+ color:#cfe6f5;font:13px/1.4 var(--fm,monospace);opacity:0;pointer-events:none;transition:opacity .4s,transform .4s;z-index:40;text-align:start;}
+#sig2.on{opacity:1;transform:translateX(-50%) translateY(0);}#sig2 b{display:block;color:#8fd8ff;font-family:var(--fd);font-size:11px;letter-spacing:.14em;margin-bottom:3px;}
 #mGift{width:min(94%,380px);position:fixed;z-index:160;max-height:96vh;overflow-y:auto;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
 .gfH{color:var(--gold);text-align:center;letter-spacing:.12em;}
 .gfTxt{font-size:13px;line-height:1.45;color:#cdd3e0;text-align:center;margin:8px 0 10px;}
@@ -543,6 +554,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="hud-float" id="combo"></div>
   <div class="hud-float" id="badge"></div>
   <div id="hit2"></div>
+  <div id="sig2"><b id="sigH"></b><span id="sigT"></span></div>
   <div id="toast"><div class="i" id="tI">🏅</div><div><b class="t" id="tT">BAŞARIM</b><span class="d" id="tD"></span></div></div>
 
   <div class="modal card" id="mCont">
@@ -675,6 +687,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="dock">
    <button id="dmBtn">📋<span>GÖREVLER</span><em id="dmBadge"></em></button>
    <button id="lbBtn">🏆<span>REKORLAR</span></button>
+   <button id="atBtn">📖<span>ATLAS</span><em id="atBadge"></em></button>
    <button id="guideBtn">❓<span>REHBER</span></button>
    <button id="shopBtn" class="mon">🛒<span>MAĞAZA</span></button>
   </div>
@@ -706,6 +719,18 @@ body.v2 #gw{cursor:grab;touch-action:none;}
  <div class="card" style="text-align:start;">
   <div class="dm" id="dmBox" style="margin:0;"></div>
   <div class="row"><button class="btn" id="dmClose">KAPAT</button></div>
+ </div>
+</div>
+
+<!-- ATLAS -->
+<div class="screen" id="sAtlas" style="z-index:130;">
+ <div class="card">
+  <div class="h" style="font-size:15px;">📖 KOZMİK ATLAS</div>
+  <div class="atsum" id="atSum"></div>
+  <div class="atgrid" id="atGrid"></div>
+  <div class="atnote" id="atNote">Bir cisme dokun: gözlem notunu oku.</div>
+  <div class="atrw"><span>Görüldü: +10 ⭐ · İncelendi: +25 ⭐ · Ustalaştı: +5 💎</span><br><span>Hepsini gör: +50 💎 · Hepsinde ustalaş: +200 💎</span><br><span>ve Kozmik Arşivci unvanı</span></div>
+  <div class="row"><button class="btn" id="atClose">KAPAT</button></div>
  </div>
 </div>
 
@@ -999,7 +1024,7 @@ let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
 let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
-function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,hrt:HEARTS,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
+function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,hrt:HEARTS,atl:COSMO,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -1014,6 +1039,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
+  {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999)};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
   {const h=svO(d.hrt)||{};HEARTS.n=svI(h.n,HRT.max,0,HRT.max);HEARTS.t=svN(h.t,0,0,Date.now());}
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
@@ -1565,6 +1591,50 @@ function renderEvo(){
 // ══════════════════════════════════════════════════════
 // DAILY MISSIONS — three per day, same set for everyone on that date
 // ══════════════════════════════════════════════════════
+// KOZMİK ATLAS: every kind you swallow is counted; three tiers each (seen / studied / mastered) with small rewards
+const ATLAS_DEF=[
+ ['ast','🪨','ASTEROİT','Güneş Sistemi\'nin yapı taşı. Milyonlarcası Mars ile Jüpiter arasında döner.'],
+ ['moon','🌑','AY','Bir gezegenin sadık eşlikçisi. Küçükken yutamazsın, sana çarpıp seker.'],
+ ['planet','🪐','GEZEGEN','Kayalık dünya ya da gaz devi: her biri kara deliğe bir öğün.'],
+ ['crystal','🔷','KRİSTAL','Yıldız tozundan donmuş mücevher. Genelde bir meteorun yanında saklanır.'],
+ ['gold','🌕','ALTIN GEZEGEN','Nadir ve hızlı. Çekirdeği ağır metallerle dolu.'],
+ ['energy','⚡','ENERJİ','Saf ışık kümesi. Rage barını hızla doldurur.'],
+ ['time','⏱','ZAMAN TOPU','Yakınında zaman yavaşlar; kara delik bundan etkilenmez.'],
+ ['bomb','💣','BOMBA GEZEGEN','Kararsız bir çekirdek. Çekim alanında sıkıştırınca patlar.'],
+ ['mini','🌀','MİNİ KARA DELİK','Senin küçük bir kopyan. Bir süre yanında avlanır.'],
+ ['shard','🛡','KALKAN PARÇASI','Eski bir kalkanın parçası. Üçü birleşince yeniden çalışır.'],
+ ['comet','☄️','KUYRUKLU YILDIZ','Buz ve toz. Güneş\'e yaklaşınca kuyruğu uzar.'],
+ ['split','🧩','BÖLÜNEN GEZEGEN','Çatlak kabuğu dokununca ikiye ayrılır.'],
+ ['magnet','🧲','MIKNATIS TAŞI','Demir-nikel çekirdek. Manyetik alanı bütün ekranı tarar.'],
+ ['pulsar','💫','PULSAR','Saniyede yüzlerce kez dönen nötron yıldızı. Sadece parlarken yutulur.'],
+ ['mpair','🌗','AY ÇİFTİ','Birbirinin etrafında dönen ikiz aylar. İkisini birden yutmak ödül getirir.'],
+ ['dark','🌫','KARANLIK MADDE','Görünmez. Sadece çevresindeki ışığı bükmesinden fark edilir.'],
+ ['frag','🔥','BOSS PARÇASI','Bir devden kopan sıcak madde. Her parça boss\'u küçültür.'],
+ ['prey','✨','ALTIN AV','Ürkek bir yıldız parçacığı. Yorulmadan yakalanmaz.'],
+ ['anti','🟢','ANTİMADDE','Madde ile karşılaşınca yok olur. Yutma: kara deliğini küçültür.'],
+ ['b_planet','🪐','DEV GEZEGEN','Yörüngesinden kopmuş dev bir gezegen. Kopan parçaları onu zayıflatır.'],
+ ['b_red','🔴','KIRMIZI DEV','Ölmekte olan yaşlı bir yıldız. Nefes alır gibi şişip söner.'],
+ ['b_nova','💥','SÜPERNOVA','Çekirdeği çöken bir yıldızın son patlaması.']];
+const ATLAS_ALIAS={half:'split',sat:'mpair',plasma:'frag'},ATLAS_TIERS={b_planet:[1,3,6],b_red:[1,3,6],b_nova:[1,3,6],prey:[1,8,25],anti:[1,5,15]},ATLAS_RARE=new Set(['gold','mini','shard','dark','pulsar','mpair','split','magnet','bomb','time','comet']);
+const ATLAS_RW=[['⭐',10],['⭐',25],['💎',5]],ATLAS_TN=['GÖRÜLDÜ','İNCELENDİ','USTALAŞTI'];
+let COSMO={c:{},seenAll:0,masterAll:0,newT:0};
+function atlasTiers(k){return ATLAS_TIERS[k]||(ATLAS_RARE.has(k)?[1,5,20]:[1,10,50]);}
+function atlasTier(k){const n=COSMO.c[k]|0,t=atlasTiers(k);return n>=t[2]?3:n>=t[1]?2:n>=t[0]?1:0;}
+function atlasAdd(k){k=ATLAS_ALIAS[k]||k;const d=ATLAS_DEF.find(x=>x[0]===k);if(!d||REPLAY&&false)return;const t0=atlasTier(k);COSMO.c[k]=(COSMO.c[k]|0)+1;const t1=atlasTier(k);if(t1<=t0){saveSoon();return;}
+  const rw=ATLAS_RW[t1-1];if(rw[0]==='⭐')stars+=rw[1];else diamonds+=rw[1];COSMO.newT=(COSMO.newT|0)+1;dmEvent('atlas',1);
+  achQueue.push({i:d[1],t:T('ATLAS')+' · '+T(d[2]),d:T(ATLAS_TN[t1-1])+' · +'+rw[1]+' '+rw[0],at:performance.now()});
+  const all=ATLAS_DEF.every(x=>atlasTier(x[0])>=1),mast=ATLAS_DEF.every(x=>atlasTier(x[0])>=3);
+  if(all&&!COSMO.seenAll){COSMO.seenAll=1;diamonds+=50;achQueue.push({i:'📖',t:T('ATLAS TAMAM'),d:T('Her cismi gördün')+' · +50 💎',at:performance.now()});}
+  if(mast&&!COSMO.masterAll){COSMO.masterAll=1;diamonds+=200;achQueue.push({i:'🏛',t:T('KOZMİK ARŞİVCİ'),d:T('Her cisimde ustalaştın')+' · +200 💎',at:performance.now()});}
+  if(!achShowing)nextAch();saveG();atlasBadge();}
+function atlasBadge(){const e=$('atBadge');if(!e)return;const n=COSMO.newT|0;e.textContent=n?'+'+n:'';e.className=n?'hot':'';}
+let atSel=null;
+function renderAtlas(){const seen=ATLAS_DEF.filter(x=>atlasTier(x[0])>=1).length,mast=ATLAS_DEF.filter(x=>atlasTier(x[0])>=3).length;
+  $('atSum').innerHTML=`${T('Keşfedilen')} <b>${seen}/${ATLAS_DEF.length}</b> · ${T('Ustalaşılan')} <b>${mast}/${ATLAS_DEF.length}</b>`+(COSMO.masterAll?` · 🏛 <b>${T('KOZMİK ARŞİVCİ')}</b>`:'');
+  $('atGrid').innerHTML=ATLAS_DEF.map(([k,ic,n])=>{const t=atlasTier(k),c=COSMO.c[k]|0,th=atlasTiers(k),nx=t<3?th[t]:null;
+    return `<button class="atc${t?'':' lock'}${atSel===k?' sel':''}" data-k="${k}"><i>${t?ic:'❔'}</i><b>${t?T(n):'???'}</b><span class="pp">${[0,1,2].map(i=>`<s class="${i<t?'on':''}"></s>`).join('')}</span><small>${nx?c+'/'+nx:'✓'}</small></button>`;}).join('');
+  [...$('atGrid').children].forEach(b=>b.onclick=()=>{sfx('click',{vol:.3});atSel=b.dataset.k;renderAtlas();});
+  const d=ATLAS_DEF.find(x=>x[0]===atSel);if(d){const t=atlasTier(d[0]);$('atNote').innerHTML=t?`<b>${d[1]} ${T(d[2])} · ${T(ATLAS_TN[t-1])}</b><br>${T(d[3])}`:`<b>???</b><br>${T('Henüz görmedin. Yutunca burada açılır.')}`;}}
 const MPOOL=[
   {id:'catch',t:n=>`${n} gök cismi yut`,v:[30,45,60],r:['⭐',40]},
   {id:'perfect',t:n=>`${n} PERFECT yap`,v:[5,8,12],r:['⭐',50]},
@@ -1576,6 +1646,11 @@ const MPOOL=[
   {id:'surv',t:n=>`Hayatta Kal'da ${n} saniye dayan`,v:[60,90,120],abs:1,r:['⭐',50]},
   {id:'edge',t:n=>`${n} PERFECT DODGE yap`,v:[2,4],r:['⭐',30],need:2},
   {id:'diamond',t:()=>'Elmas gücünü bir kez kullan',v:[1],r:['⭐',25]},
+  {id:'rulelv',t:()=>'Özel bir seviyeyi bitir (Kısıtlı, Boyut ya da Av)',v:[1],r:['💎',5],need:12},
+  {id:'hunt',t:n=>`${n} altın av yakala`,v:[2,4],r:['⭐',50],need:12},
+  {id:'boss',t:()=>'Bir boss yut',v:[1],r:['💎',6],need:11},
+  {id:'crack',t:n=>`Boss'larda ${n} zayıf nokta kır`,v:[3,5],r:['⭐',40],need:11},
+  {id:'atlas',t:n=>`Atlas'ta ${n} yeni kademe aç`,v:[1,2],r:['⭐',30]},
 ];
 function dmRoll(){
   const today=new Date().toDateString();if(DM.date===today&&DM.list&&DM.list.length)return;
@@ -2138,6 +2213,9 @@ function levelSuccess(){
 // what took the last life, and how to avoid it next time
 const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek PERFECT DODGE verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle.'],
   prey:['🎯','AV KAÇTI','Avı çekim alanında tut ki yorulsun; kızarınca hemen üstüne git. Dokunursan sıçrayıp kaçar.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.']};
+// A short radio note over the field: zone arrivals and boss warnings (never pauses the game)
+function sigShow(h,txt,sec=5){const e=$('sig2');if(!e)return;$('sigH').textContent=h;const tt=$('sigT');tt.textContent='';e.classList.add('on');let i=0;clearInterval(e._i);clearTimeout(e._t);
+  e._i=setInterval(()=>{i+=2;tt.textContent=txt.slice(0,i);if(i>=txt.length)clearInterval(e._i);},28);e._t=setTimeout(()=>e.classList.remove('on'),sec*1000);}
 function showCont(){
   $('contAd').parentNode.hidden=!monOn()||adReviveUsed||!adReady();$('contAd').textContent=adLabel('1 CANLA DEVAM');
   $('contLife').parentNode.hidden=SHOP.lives<=0;$('contLife').textContent=`❤️ YEDEK CAN KULLAN (${SHOP.lives})`;
@@ -2449,7 +2527,7 @@ const MODE_TXT={
 function showMenu(){
   if(G2.on)v2Stop();
   runId++;pendingWin=false;
-  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();
+  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();atlasBadge();
   $('menuSub').textContent=loginStreak>1?`🔥 ${loginStreak} günlük seri`:'Hoş geldin, kaptan';
   renderMapCard();monApply();
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
@@ -2470,6 +2548,7 @@ $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('surviv
 $('startBtn').onclick=()=>{if(gameMode==='classic'&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(savedLevel,()=>$('startBtn').click()))return;SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=showLB;
+$('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
 $('mapBtn').onclick=openMap;$('shopBtn').onclick=openShop;$('starterRib').onclick=openShop;$('pShop').onclick=openShop;
