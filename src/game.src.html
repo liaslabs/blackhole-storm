@@ -502,6 +502,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .easeBox b{display:block;font-family:var(--fd);color:#9ff0da;font-size:14px;letter-spacing:.05em;}.easeBox small{display:block;color:#c9d2e2;font-size:12px;margin:2px 0 6px;}
 .easeBox .row{display:flex;gap:6px;margin:0;}.easeBox .btn{flex:1;font-size:12px;padding:8px 4px;}
 .lnkbtn{width:100%;background:none;border:0;color:var(--dim,#9aa0b6);font:600 13px var(--fd,sans-serif);letter-spacing:.12em;padding:8px 0 2px;cursor:pointer;text-decoration:underline;text-underline-offset:4px;}.lnkbtn:hover{color:#e8ebf4;}
+.contWhy{border:1px solid rgba(255,110,90,.45);background:rgba(255,90,70,.08);border-radius:8px;padding:8px 10px;margin:2px 0 8px;text-align:center;}.contWhy b{display:block;font-family:var(--fd);color:#ffb2a4;font-size:14px;letter-spacing:.06em;}.contWhy span{display:block;color:#d9dde8;font-size:12.5px;margin-top:2px;}
 #mGift{width:min(94%,380px);position:fixed;z-index:160;max-height:96vh;overflow-y:auto;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
 .gfH{color:var(--gold);text-align:center;letter-spacing:.12em;}
 .gfTxt{font-size:13px;line-height:1.45;color:#cdd3e0;text-align:center;margin:8px 0 10px;}
@@ -546,6 +547,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 
   <div class="modal card" id="mCont">
    <div class="h">CANIN TÜKENDİ</div>
+   <div class="contWhy" id="contWhy" hidden></div>
    <p class="muted" id="contMsg" style="font-size:14.5px;color:#dfe3ee;">Kaldığın yerden devam etmek ister misin?</p>
    <div class="box" id="contBox"><div style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:16px;">100 ⭐ İLE DEVAM</div><div class="muted">Puanın korunur, 3 can · Mevcut: <span id="contStars">0</span> ⭐</div></div>
    <div class="easeBox" id="easeBox" hidden><b>🪶 BU SEVİYEYİ KOLAYLAŞTIR</b><small>3 kez olmadı. Hedef %20 düşer, seviye baştan başlar (can harcamaz).</small><div class="row"><button class="btn cy" id="contEase">💎 15 · KOLAYLAŞTIR</button><button class="btn adbtn mon" id="contEaseAd">▶ REKLAM İZLE · KOLAYLAŞTIR</button></div></div>
@@ -2133,6 +2135,9 @@ function levelSuccess(){
   later(()=>{showModal('mLvl');gState='menu';updateUI();},2900);checkAchs();
 }
 // Classic never throws you back to level 1: out of lives you can pay to continue, replay the level for free, or leave with progress saved.
+// what took the last life, and how to avoid it next time
+const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek PERFECT DODGE verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle.'],
+  prey:['🎯','AV KAÇTI','Avı çekim alanında tut ki yorulsun; kızarınca hemen üstüne git. Dokunursan sıçrayıp kaçar.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.']};
 function showCont(){
   $('contAd').parentNode.hidden=!monOn()||adReviveUsed||!adReady();$('contAd').textContent=adLabel('1 CANLA DEVAM');
   $('contLife').parentNode.hidden=SHOP.lives<=0;$('contLife').textContent=`❤️ YEDEK CAN KULLAN (${SHOP.lives})`;
@@ -2143,6 +2148,7 @@ function showCont(){
   if(ez){$('contEase').textContent=`💎 ${EASE.dia} · ${T('KOLAYLAŞTIR')}`;$('contEase').classList.toggle('dim',diamonds<EASE.dia);$('contEaseAd').hidden=!monOn()||!adReady();$('contEaseAd').textContent=adLabel('KOLAYLAŞTIR');}
   $('contDia').parentNode.hidden=!(G2.on&&cl);if(G2.on&&cl){const dc=V2K.cont.dia*2**G2.diaCont;$('contDia').textContent=`💎 ${dc} · 2 CANLA DEVAM`;$('contDia').classList.toggle('dim',diamonds<dc);}
   if(G2.on){const one=!G2.contUsed;$('contYes').parentNode.hidden=!one;if(!one){$('contAd').parentNode.hidden=true;$('contLife').parentNode.hidden=true;}
+    const why=HIT_WHY[G2.lastHit]||HIT_WHY.meteor;$('contWhy').innerHTML=`<b>${why[0]} ${T(why[1])}</b><span>${T(why[2])}</span>`;$('contWhy').hidden=!G2.lastHit;
     $('contBox').hidden=!one;$('contBox').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">${T('100 ⭐ İLE DEVAM')}</div><div class="cst">${T('Yıldızın')}: <b id="contStars">${stars.toLocaleString(LOC)}</b> ⭐</div>`;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+(one?`<br>${T('Devam edersen boyutun korunur: 1 can, Rage %50.')}`:`<br>${T('Bu oyunda devam hakkını kullandın.')}`);
     $('contRetry').style.display=cl?'':'none';$('contRetry').textContent=heartsOn(level)?T('🔄 SEVİYEYİ YENİDEN OYNA · 💖 1 CAN'):T('🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA');$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');return;}
   $('contMsg').textContent=cl?`Seviye ${level}'de canların bitti. İlerlemen kayıtlı: baştan başlamazsın.`:'Kaldığın yerden devam etmek ister misin?';
