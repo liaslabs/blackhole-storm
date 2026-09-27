@@ -697,6 +697,7 @@ function v2Frame(dt){
   v2DrawTipMark();v2DrawCalls();v2DrawTut();
   recFrame();
   G2.uiT-=dt;if(G2.uiT<=0){G2.uiT=.1;v2Ui(false);}
+  if(gState==='playing'){G2.achT=(G2.achT||0)-dt;if(G2.achT<=0){G2.achT=.4;checkAchs();}} // achievements show the moment they are earned, not at the end of the level
 }
 function v2DrawField(){ // gravity field, rage aura, overload wobble, damage blink
   if(gState!=='playing'&&gState!=='paused'&&gState!=='tip')return;
