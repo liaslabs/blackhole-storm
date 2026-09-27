@@ -793,5 +793,9 @@
 "Yeni can": "Prochaine vie",
 "Her {n} dakikada {n} can dolar (en fazla {n}). Kazandığın seviye can harcamaz": "{n} vie revient toutes les {n} minutes ({n} max). Un niveau gagné ne coûte pas de vie",
 "BU SEVİYEYİ KOLAYLAŞTIR": "FACILITER CE NIVEAU",
-"{n} kez olmadı. Hedef {n} düşer, seviye baştan başlar (can harcamaz)": "{n} essais sans succès. L'objectif baisse de {n} et le niveau recommence (sans coûter de vie)"
+"{n} kez olmadı. Hedef {n} düşer, seviye baştan başlar (can harcamaz)": "{n} essais sans succès. L'objectif baisse de {n} et le niveau recommence (sans coûter de vie)",
+"RADYASYONA YAKALANDIN": "TOUCHÉ PAR LA RADIATION",
+"Boss ışıma yapmadan önce kırmızı bir alan belirir ve geri sayar. Sayım bitmeden alanın dışına kaç: içinde kalırsan can kaybedersin. Kalkan ve Rage seni korur": "Avant que le boss irradie, une zone rouge apparaît avec un compte à rebours. Sors-en avant la fin : si tu restes dedans, tu perds une vie. Le bouclier ou la Rage te protègent",
+"CC{n} ve Lias Labs": "CC{n} et Lias Labs",
+"Müzik: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)": "Musique : “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)"
 }

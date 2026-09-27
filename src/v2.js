@@ -41,7 +41,7 @@ const OBJ2={
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
 const SZ2={ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,plasma:.75,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
-Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
+Object.assign(V2K,{boss:{spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7},radFire:.4},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
   decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.75},cont:{...V2K.cont,dia:25}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
@@ -100,7 +100,7 @@ function v2Rules(l){
 
 // ── start / reset ─────────────────────────────────────
 function v2Start(mode){
-  v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();
+  v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
   const goal=mode==='level'?Math.round(v2Goal(l)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)/100)*100:0; // the ease offer takes 20% off
@@ -226,7 +226,7 @@ function v2BossInit(){
   let hp=Math.min(46,22+Math.floor(level/10)*4); // tops out at level 60 so any boss stays beatable
   if(SHOP.easyLv===level)hp=Math.round(hp*.8);const bt=v2BossType(level),B=BOSS2[bt];
   const b={k:'boss',x:W/2,y:H*.24,rr:57,r:57*G2.S,hp,max:hp,cell:[2,5,15,13][(Math.floor(level/10)+3)%4],vx:sp2(28),shed:1.4,edible:false,sw:0,
-    sX:1,sY:1,gs:1,suck:null,heat:0,isBoss:false,age:0,bt,burst:4,fade:1};giveSpin(b);b.spinV*=.25;if(bt!=='planet'){delete b.cell;v2BossImg(bt==='red'?'bossRG':'bossSN');v2BossImg('bossRays');}G2.boss=b;
+    sX:1,sY:1,gs:1,suck:null,heat:0,isBoss:false,age:0,bt,burst:4,fade:1,spots:[],spotCD:1.2,chips:[],hitFx:0,rad:{ph:'idle',t:0,cd:V2K.boss.radFirst}};if(bt==='nova')b.burst=1e9;/* the supernova's debris ring now goes off with its radiation burst */giveSpin(b);b.spinV*=.25;if(bt!=='planet'){delete b.cell;v2BossImg(bt==='red'?'bossRG':'bossSN');v2BossImg('bossRays');}G2.boss=b;
   v2Call(B.n,B.sub,B.col,2.4,true);sfx('bossIntro',{vol:.7,rev:.4});
 }
 function v2BossStep(dt,tk){
@@ -243,17 +243,61 @@ function v2BossStep(dt,tk){
     b.shed-=dt*tk*(b.bt==='red'&&b.br>1.06?1.7:1);if(b.shed<=0){b.shed=Math.max(.75,1.5*b.hp/b.max+.35);const a=rrnd(.3,Math.PI-.3),s=rrnd(.6,1.1)*v2Speed('frag')/G2.L.speedK;
       const k=rng()<.14?'crystal':rng()<.1?'energy':b.bt==='planet'?'frag':'plasma';const o=v2Obj(k,b.x+Math.cos(a)*b.r,b.y+Math.sin(a)*b.r,Math.cos(a)*s,Math.sin(a)*s);o.fromBoss=true;if(k==='plasma')o.pc=BOSS2[b.bt].pc;}
 }
+  if(!b.edible){v2BossSpots(b,dt,tk);v2BossRad(b,dt,tk);}
+  if(!b.edible&&b.hp<=b.max*V2K.boss.early&&G2.R>=b.r){b.edible=true;v2Call('SWALLOW IT!','BIG ENOUGH','#8dffcb',1.6,true);sfx('bell',{vol:.8});} // grown past it after breaking half of it: swallow early
+  if(b.hitFx>0)b.hitFx=Math.max(0,b.hitFx-dt*3);for(let i=b.chips.length-1;i>=0;i--){const c=b.chips[i];c.t+=dt;if(c.t>.7)b.chips.splice(i,1);}
   // solid until it is small enough: the hole is pushed out instead of passing through
   const dx=hX-b.x,dy=hY-b.y,d=Math.hypot(dx,dy)||1,min=b.r+G2.R*.7;
   if(b.edible&&d<G2.R+b.r*.45&&G2.R/(V2K.r0*G2.S)>=1.25){b.sw=.001;v2BossEaten();}
   else if(d<min){hX=b.x+dx/d*min;hY=b.y+dy/d*min;if(b.edible&&b.warnT===undefined){b.warnT=1;v2Call('GROW BIGGER','','#ffb35c',1);}}
 }
+// Weak spots: glowing cracks on the rim that turn with the boss. Touch one with the hole to break off a chunk (2 hits: the crack, then the chunk you swallow).
+function v2BossSpots(b,dt,tk){const K=V2K.boss,want=b.hp<=b.max*.5?2:1;b.spotCD-=dt*tk;
+  if(b.spots.length<want&&b.spotCD<=0){b.spots.push({a:rrnd(0,TAU),t:0});b.spotCD=K.spotCD;}
+  for(let i=b.spots.length-1;i>=0;i--){const s=b.spots[i];s.t+=dt;const P=v2SpotPos(b,s),sr=v2SpotR(b);
+    if(Math.hypot(hX-P.x,hY-P.y)<G2.R+sr*.9){b.spots.splice(i,1);b.spotCD=K.spotCD*.6;v2BossCrack(b,P);}}}
+function v2SpotPos(b,s){const a=s.a+b.age*V2K.boss.orbit;return {x:b.x+Math.cos(a)*b.r*.9,y:b.y+Math.sin(a)*b.r*.9,a};}
+const v2SpotR=b=>Math.max(9*G2.S,b.r*.2);
+// Radiation: every few seconds the boss marks a danger zone (a ring around it, or a flare cone aimed at you for the red giant),
+// counts down, then fires. Be outside the zone when it fires; a shield or Rage protects you.
+function v2RadWarn(){return Math.max(1,1.5-.05*(Math.floor(level/10)-1));}
+function v2RadR(b){return b.r*(b.bt==='nova'?3.8:3.1);}
+function v2RadIn(b,x,y){const r=b.rad,d=Math.hypot(x-b.x,y-b.y);
+  if(b.bt==='red'){const a=Math.atan2(y-b.y,x-b.x),da=Math.abs(((a-r.ang)%TAU+TAU*1.5)%TAU-Math.PI);return d<H*.8&&da<.42+Math.atan2(G2.R*.5,Math.max(d,1));}
+  return d-G2.R*.5<v2RadR(b);}
+function v2BossRad(b,dt,tk){const r=b.rad,K=V2K.boss;
+  if(r.ph==='idle'){r.cd-=dt*tk;if(r.cd<=0){r.ph='warn';r.t=0;r.hit=false;r.ang=Math.atan2(hY-b.y,hX-b.x);v2Sfx('powerup',{vol:.35,rate:.55});
+      if(!TIPS.rad)v2Tip('rad',b);else if(!G2.radSeen){G2.radSeen=1;v2Call('RADIATION!','GET OUT OF THE RED','#ff5a4a',1.3,true);}}}
+  else if(r.ph==='warn'){r.t+=dt;if(b.bt==='red')r.ang+=((Math.atan2(hY-b.y,hX-b.x)-r.ang+Math.PI*3)%TAU-Math.PI)*Math.min(1,dt*.6); // the flare drifts after you, slowly
+    if(r.t>=v2RadWarn()){r.ph='fire';r.t=0;shake=Math.max(shake,8);flash=Math.max(flash,.3);v2Sfx('boom',{vol:.6,rate:b.bt==='nova'?.8:1.1});if(b.bt==='nova')b.burst=0;}}
+  else{r.t+=dt;if(!r.hit&&r.t<K.radFire*.8&&v2RadIn(b,hX,hY)){r.hit=true;if(G2.shT<=0&&G2.rageT<=0){G2.hitWhy='rad';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}
+    if(r.t>=K.radFire){r.ph='idle';r.cd=K.radEvery[b.bt]||9;if(b.bt==='nova')b.burst=1e9;}}}
+function v2DrawRad(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;const R=v2RadR(b),red=b.bt==='red',L=H*.8,col=b.bt==='red'?'255,120,50':b.bt==='nova'?'170,235,255':'190,255,90';
+  ctx.save();ctx.translate(b.x,b.y);const shape=rad=>{ctx.beginPath();if(red){ctx.moveTo(0,0);ctx.arc(0,0,rad,r.ang-.42,r.ang+.42);ctx.closePath();}else{ctx.arc(0,0,rad,0,TAU);ctx.arc(0,0,b.r,0,TAU,true);}};
+  if(r.ph==='warn'){const q=Math.min(1,r.t/v2RadWarn()),pu=.5+.5*Math.sin(clock*(10+q*14));
+    ctx.fillStyle=`rgba(255,50,40,${.07+.08*pu+.08*q})`;shape(red?L:R);ctx.fill('evenodd');
+    ctx.fillStyle=`rgba(255,70,50,${.16+.1*q})`;shape(b.r+((red?L:R)-b.r)*q);ctx.fill('evenodd'); // fills outward as the countdown runs
+    ctx.strokeStyle=`rgba(255,90,70,${.55+.4*pu})`;ctx.lineWidth=2.5;ctx.setLineDash([10,7]);ctx.lineDashOffset=-clock*30;
+    if(red){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(r.ang-.42)*L,Math.sin(r.ang-.42)*L);ctx.moveTo(0,0);ctx.lineTo(Math.cos(r.ang+.42)*L,Math.sin(r.ang+.42)*L);ctx.stroke();}
+    else{ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.stroke();}ctx.setLineDash([]);
+    ctx.font='900 14px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.fillStyle=`rgba(255,120,100,${.7+.3*pu})`;const tx=red?Math.cos(r.ang)*Math.min(L*.45,R*1.2):0,ty=red?Math.sin(r.ang)*Math.min(L*.45,R*1.2):R+18;
+    ctx.fillText('☢ '+Math.max(0,v2RadWarn()-r.t).toFixed(1),tx,ty);}
+  else{const q=Math.min(1,r.t/V2K.boss.radFire),a=1-q;ctx.globalCompositeOperation='lighter';
+    if(red){const g=ctx.createRadialGradient(0,0,b.r,0,0,L);g.addColorStop(0,`rgba(255,240,200,${.9*a})`);g.addColorStop(.5,`rgba(${col},${.55*a})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;shape(L);ctx.fill();}
+    else{const w=b.r+(R-b.r)*Math.min(1,q*1.4),g=ctx.createRadialGradient(0,0,Math.max(b.r,w-40),0,0,w+10);g.addColorStop(0,`rgba(${col},0)`);g.addColorStop(.7,`rgba(255,255,235,${.9*a})`);g.addColorStop(1,`rgba(${col},0)`);
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,w+10,0,TAU);ctx.fill();ctx.fillStyle=`rgba(${col},${.18*a})`;ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.fill();}}
+  ctx.restore();}
+function v2BossCrack(b,P){const n=Math.max(1,Math.round(b.max/24)); // ring segments that break off with this hit
+  for(let i=0;i<n*2;i++){const a=P.a+rrnd(-.25,.25);b.chips.push({a,t:0,v:rrnd(.8,1.3)});}
+  v2BossHit();b.hitFx=1;shake=Math.max(shake,9);flash=Math.max(flash,.25);vib(25);v2Sfx('boom',{vol:.5,rate:1.35});
+  const col=b.bt==='red'?'#ffd28a':b.bt==='nova'?'#bff6ff':'#ffb35c';v2Burst(P.x,P.y,22,col,2,7,.6,2.2);v2Pop('CRACK!',col,18);
+  const k=b.bt==='planet'?'frag':'plasma',o=v2Obj(k,P.x,P.y,0,0);o.fromBoss=true;o.seen=true;if(k==='plasma')o.pc=BOSS2[b.bt].pc;v2Swallow(o,null);}
 function v2BossHit(){const b=G2.boss;if(!b||b.edible)return;b.hp=Math.max(0,b.hp-1);shock=Math.max(shock,.3);
   if(b.hp===0){b.edible=true;v2Call('SWALLOW IT!','','#8dffcb',1.6,true);sfx('bell',{vol:.8});}}
 function v2BossEaten(){
   const pts=Math.round(1000*MULT2(G2.combo+1)*(G2.rageT>0?2:1));totalScore+=pts;levelScore+=pts;G2.combo++;G2.comboT=G2.L.comboT;
   G2.rr=Math.min(V2K.rMax,G2.rr+10);G2.cap=Math.max(G2.cap,G2.rr);v2AddRage(25);G2.eaten++;bossSlain=true;
-  shake=Math.max(shake,14);flash=1;shock=1;sfx('bossDie',{vol:.9,rev:.5});sfx('boom',{vol:.7,rate:.6});vib([60,40,120]);
+  shake=Math.max(shake,14);flash=1;shock=1;sfx('bossDie',{vol:.9,rev:.5});sfx('swallowBig',{vol:.9,rate:.8,rev:.4});vib([60,40,120]);
   v2Call(BOSS2[G2.boss?G2.boss.bt:'planet'].n+' SWALLOWED','SIZE UP','#ffd76a',2.4,true);v2Pop('+'+pts.toLocaleString(LOC),'#ffd76a',26);
   v2Burst(hX,hY,60,'#ffcf8a',2,9,1.1,2.4);addMass(5);updateUI();
 }
@@ -435,7 +479,7 @@ function v2Score(o,mini){
   if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('PERFECT +'+pts,'#fff1b8',18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
   else if(o.mega2)ftexts.push(new FText('+'+pts,o.x,o.y-o.r-sp2(6),'#ffcf8a',15+Math.min(6,m)));
   else v2Pop('+'+pts,o.k==='crystal'?'#9ef3ff':o.k==='gold'?'#ffd76a':m>=4?'#ffcf8a':'#e7e3da',o.k==='ast'?15+m:19+m);
-  const snd={ast:['capture',.45,1.2],moon:['capture2',.55,1],planet:['boom',.6,.7],crystal:['gem',.7,1.3],gold:['master',.8,1],energy:['sparkle',.6,.8],time:['slow',.7,1.2],bomb:['bomb',.7,1],mini:['magnet',.7,1],frag:['capture2',.5,1.3],shard:['gem',.7,.8],comet:['gem',.6,1.5],magnet:['magnet',.7,1],pulsar:['sparkle',.8,1],mpair:['capture2',.6,.9],sat:['capture2',.5,1.2],dark:['slow',.6,1.3]}[o.k]||['capture',.5,1];
+  const snd={ast:['capture',.45,1.2],moon:['capture2',.55,1],planet:['swallowBig',.7,1],crystal:['gem',.7,1.3],gold:['master',.8,1],energy:['sparkle',.6,.8],time:['slow',.7,1.2],bomb:['bomb',.7,1],mini:['magnet',.7,1],frag:['capture2',.5,1.3],shard:['gem',.7,.8],comet:['gem',.6,1.5],magnet:['magnet',.7,1],pulsar:['sparkle',.8,1],mpair:['capture2',.6,.9],sat:['capture2',.5,1.2],dark:['slow',.6,1.3]}[o.k]||['capture',.5,1];
   v2Sfx(snd[0],{vol:snd[1],rate:snd[2]*(1+Math.min(.5,G2.combo*.015)),x:hX});
   dmEvent('catch',1);dmEvent('combo',G2.combo,true);if(o.k==='crystal')dmEvent('comet',1);dmEvent('score',totalScore,true);
   if(gameMode==='sprint'){const bi=Math.min(9,Math.floor(SPR_RUN.t/6));SPR_RUN.blocks[bi].c++;if(perf)SPR_RUN.blocks[bi].p++;SPR_RUN.caught++;}
@@ -481,7 +525,7 @@ function v2Hit(o){
 }
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.6;const el=$('hit2');if(!el)return;
-  el.innerHTML=`<b>-1 ♥</b><div class="t">${T('METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
@@ -624,6 +668,7 @@ const TIP2={
   worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir.'],
   boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!'],
   bossRed:['🔴','KIRMIZI DEV','Ölmekte olan dev bir yıldız: nefes alır gibi şişip söner, şiştikçe daha çok plazma saçar. Plazmayı yut: her biri onu küçültür. Yeşile dönünce bütünüyle yut!'],
+  rad:['☢','RADYASYON','Boss ışıma yapmadan önce kırmızı bir alan belirir ve geri sayar. Sayım bitmeden alanın dışına kaç: içinde kalırsan can kaybedersin. Kalkan ve Rage seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}
@@ -881,14 +926,28 @@ function v2DrawStar(b){ // red giant / supernova: layered textures, turning surf
   if(!red&&b.flash>0){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=al*b.flash*b.flash*.7;ctx.fillStyle='#ffffff';ctx.beginPath();ctx.arc(0,0,R*1.05,0,TAU);ctx.fill();}
   ctx.restore();}
 function v2DrawBoss(b,gl){
+  v2DrawRad(b);
   if(b.bt&&b.bt!=='planet')v2DrawStar(b);
   ctx.save();if(!gl&&b.cell!==undefined){const im=SPR.byCell&&SPR.byCell[b.cell];if(im)ctx.drawImage(im,b.x-b.r,b.y-b.r,b.r*2,b.r*2);}
   if(b.sw)return ctx.restore();
-  const hpK=b.hp/b.max;ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.beginPath();ctx.arc(b.x,b.y,b.r+9,-Math.PI/2,-Math.PI/2+TAU);ctx.stroke();
-  ctx.strokeStyle=b.edible?`rgba(141,255,203,${.6+.4*Math.sin(clock*10)})`:'#ffb35c';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(b.x,b.y,b.r+9,-Math.PI/2,-Math.PI/2+TAU*(b.edible?1:hpK));ctx.stroke();
-  ctx.font='900 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.fillStyle=b.edible?'#8dffcb':'#ffcf8a';ctx.fillText(b.edible?'SWALLOW!':BOSS2[b.bt||'planet'].n+' · '+b.hp,b.x,b.y-b.r-16);
+  const N=Math.min(24,b.max),per=b.max/N,on=b.edible?N:Math.ceil(b.hp/per-1e-6),Rr=b.r+10,gap=.06,seg=TAU/N; // segmented health ring: one slice per chunk of health
+  ctx.lineCap='butt';for(let i=0;i<N;i++){const a0=-Math.PI/2+i*seg+gap/2,a1=a0+seg-gap;ctx.lineWidth=6;ctx.strokeStyle='rgba(0,0,0,.55)';ctx.beginPath();ctx.arc(b.x,b.y,Rr,a0,a1);ctx.stroke();
+    if(i<on){const lo=b.hp/b.max;ctx.lineWidth=4;ctx.strokeStyle=b.edible?`rgba(141,255,203,${.6+.4*Math.sin(clock*10)})`:lo>.5?'#ffb35c':lo>.25?'#ff8a4c':'#ff5a4a';ctx.beginPath();ctx.arc(b.x,b.y,Rr,a0,a1);ctx.stroke();}}
+  for(const c of b.chips){const q=c.t/.7,d=Rr+q*40*c.v;ctx.globalAlpha=1-q;ctx.strokeStyle='#fff3c4';ctx.lineWidth=4;ctx.beginPath();ctx.arc(b.x,b.y,d,c.a-.07,c.a+.07);ctx.stroke();}ctx.globalAlpha=1; // broken slices fly off
+  if(!b.edible)for(const s of b.spots)v2DrawSpot(b,s);
+  if(b.hitFx>0){ctx.globalCompositeOperation='lighter';ctx.globalAlpha=b.hitFx*.5;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill();ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';}
+  ctx.font='900 12px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';const lbl=b.edible?'SWALLOW!':BOSS2[b.bt||'planet'].n+' · '+b.hp;
+  ctx.strokeText(lbl,b.x,b.y-Rr-10);ctx.fillStyle=b.edible?'#8dffcb':'#ffcf8a';ctx.fillText(lbl,b.x,b.y-Rr-10);
   ctx.restore();
 }
+function v2DrawSpot(b,s){ // a glowing crack with a pulsing target ring around it
+  const P=v2SpotPos(b,s),sr=v2SpotR(b),in_=Math.min(1,s.t/.35),pu=.5+.5*Math.sin(clock*8),col=b.bt==='red'?[255,230,150]:b.bt==='nova'?[190,245,255]:[255,190,90];
+  ctx.save();ctx.translate(P.x,P.y);ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(0,0,0,0,0,sr*1.8);
+  g.addColorStop(0,`rgba(255,255,240,${.95*in_})`);g.addColorStop(.35,`rgba(${col},${.7*in_})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,sr*1.8*(1+.15*pu),0,TAU);ctx.fill();
+  ctx.rotate(P.a+Math.PI);ctx.strokeStyle=`rgba(255,250,225,${.9*in_})`;ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round'; // jagged cracks running into the body
+  for(let k=-1;k<=1;k++){ctx.beginPath();ctx.moveTo(0,0);let x=0,y=0;for(let j=1;j<=3;j++){x=j*sr*.55;y=k*sr*.35*j/3+((j%2)?1:-1)*sr*.18;ctx.lineTo(x,y);}ctx.stroke();}
+  ctx.globalCompositeOperation='source-over';ctx.rotate(-(P.a+Math.PI));ctx.globalAlpha=in_*(.55+.45*pu);ctx.strokeStyle=`rgb(${col})`;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.lineDashOffset=-clock*20;
+  ctx.beginPath();ctx.arc(0,0,sr*(1.6+.25*pu),0,TAU);ctx.stroke();ctx.setLineDash([]);ctx.restore();}
 function v2DrawCalls(){
   for(const c of G2.calls){const age=c.max-c.life,a=Math.min(1,c.life/.25,age/.08),sc=age<.12?.7+age/.12*.3+.15*Math.sin(age/.12*Math.PI):1;
     const y=c.top?H*.3:Math.max(H*.14,hY-G2.G-sp2(40));ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,y);ctx.scale(sc,sc);ctx.textAlign='center';
