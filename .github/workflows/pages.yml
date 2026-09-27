@@ -29,7 +29,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html privacy.html manifest.webmanifest sw.js intro.mp4 _site/
-          cp -r icons _site/
+          cp -r icons music _site/
           mkdir -p _site/store && cp store/screenshot-*.jpg _site/store/
           touch _site/.nojekyll
 

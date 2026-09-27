@@ -793,5 +793,9 @@
 "Yeni can": "Следующая жизнь",
 "Her {n} dakikada {n} can dolar (en fazla {n}). Kazandığın seviye can harcamaz": "Каждые {n} минут восстанавливается {n} жизнь (максимум {n}). Пройденный уровень не тратит жизнь",
 "BU SEVİYEYİ KOLAYLAŞTIR": "ОБЛЕГЧИТЬ ЭТОТ УРОВЕНЬ",
-"{n} kez olmadı. Hedef {n} düşer, seviye baştan başlar (can harcamaz)": "{n} попытки без успеха. Цель снизится на {n}, уровень начнётся заново (без траты жизни)"
+"{n} kez olmadı. Hedef {n} düşer, seviye baştan başlar (can harcamaz)": "{n} попытки без успеха. Цель снизится на {n}, уровень начнётся заново (без траты жизни)",
+"RADYASYONA YAKALANDIN": "ПОПАЛ ПОД ИЗЛУЧЕНИЕ",
+"Boss ışıma yapmadan önce kırmızı bir alan belirir ve geri sayar. Sayım bitmeden alanın dışına kaç: içinde kalırsan can kaybedersin. Kalkan ve Rage seni korur": "Перед излучением босса появляется красная зона с обратным отсчётом. Покинь её до конца отсчёта: останешься внутри — потеряешь жизнь. Щит или Rage защищают тебя",
+"CC{n} ve Lias Labs": "CC{n} и Lias Labs",
+"Müzik: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)": "Музыка: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)"
 }
