@@ -732,5 +732,7 @@
 "Açılış videosu": "Вступительное видео",
 "İZLE": "СМОТРЕТЬ",
 "Sesi aç": "Включить звук",
-"GEÇ": "ПРОПУСТИТЬ"
+"GEÇ": "ПРОПУСТИТЬ",
+"Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Проглоти: {n} секунд всё, что можно съесть, быстро притягивается к тебе",
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Проглоти: {n} секунд всё съедобное притягивается к тебе"
 }

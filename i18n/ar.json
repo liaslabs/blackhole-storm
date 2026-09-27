@@ -732,5 +732,7 @@
 "Açılış videosu": "فيديو الافتتاح",
 "İZLE": "شاهد",
 "Sesi aç": "شغّل الصوت",
-"GEÇ": "تخطَّ"
+"GEÇ": "تخطَّ",
+"Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "ابتلعه: لمدة {n} ثوانٍ يُسحب إليك بسرعة كل ما يمكنك التهامه",
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "ابتلعه: {n} ثوانٍ يُسحب إليك كل ما يمكنك التهامه"
 }

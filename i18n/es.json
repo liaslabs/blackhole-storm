@@ -732,5 +732,7 @@
 "Açılış videosu": "Vídeo de inicio",
 "İZLE": "VER",
 "Sesi aç": "Activar sonido",
-"GEÇ": "SALTAR"
+"GEÇ": "SALTAR",
+"Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Trágalo: durante {n} segundos todo lo que puedes comer es atraído rápido hacia ti",
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Trágalo: {n} segundos todo lo que puedes comer es atraído hacia ti"
 }

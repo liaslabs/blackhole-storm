@@ -40,7 +40,7 @@ const OBJ2={
 const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
 Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
-  decay:{wait:3,k:.2,min:1.2},shield:{dur:5,cost:30}});
+  decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag']);
@@ -60,7 +60,7 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   12:['☄️','COMET','Çok hızlı geçer. Yakalarsan combo süren uzar.'],
   13:['🌋','SPLIT PLANET','Yutulmaz ama çarpınca parçalara bölünür: parçaları yut.'],
   14:['⚛️','ANTIMATTER','Yutma! Kara deliğini küçültür. Çekim alanından uzak tut.'],
-  15:['🧲','MAGNET','Yut: 4 saniye küçük cisimler sana doğru süzülür.'],
+  15:['🧲','MAGNET','Yut: 4 saniye yutabileceğin her şey sana çekilir.'],
   16:['💫','PULSAR','Sadece parlarken yutulur. Sönükken seker.'],
   17:['🪐','MOON PAIR','Gezegeni, sonra uydusunu yut: çift puan.'],
   18:['🌫️','DARK MATTER','Görünmez! Yıldızları bükmesinden fark edilir.'],
@@ -97,7 +97,7 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();
   balls=[];blocks=[];rifts=[];PU={slow:0,magnet:0,mult:0};MIS=null;holeK=1;isRescueLevel=false;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
-  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],wormT:14,
+  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],wormT:14,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -318,7 +318,7 @@ function v2Update(dt){
     if(q.t<=0){v2Burst(q.x,q.y,14,'#c9a8ff',1,4,.5);G2.minis.splice(i,1);}}
   for(let i=G2.beams.length-1;i>=0;i--){const b=G2.beams[i];b.t+=dt;if(b.t>=.25){G2.pulse=1;G2.beams.splice(i,1);}}
   for(let i=G2.waves.length-1;i>=0;i--){const w=G2.waves[i];w.t+=dt;const p=Math.min(1,w.t/w.dur);w.rad=w.max*(1-(1-p)*(1-p));
-    for(const o of G2.objs){if(o.st!=='in'||o.wait>0||w.hit.has(o)||o.boss||o.orb)continue;
+    if(!w.vis)for(const o of G2.objs){if(o.st!=='in'||o.wait>0||w.hit.has(o)||o.boss||o.orb)continue;
       if(!(o.k==='meteor'||(w.mega?o.k!=='bomb'&&o.k!=='anti'&&v2Edible(o):SMALL2.has(o.k))))continue;if(Math.hypot(o.x-w.x,o.y-w.y)>w.rad+o.r)continue;
       w.hit.add(o);w.n++;const add=Math.min(V2K.bomb.pts,V2K.bomb.max-w.bonus);w.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(w.mega?3:5);
       if(o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,14,'#ff8a4c',2,6,.5);}else{o.noScore=false;o.chain=true;v2Swallow(o,null);}
@@ -341,7 +341,7 @@ function v2Update(dt){
     if(o.k!=='meteor'){
       const ed=v2Edible(o)||G2.ending;
       if(d<Gr&&o.k==='bomb'&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
-      if(G2.magT>0&&ed&&SMALL2.has(o.k)&&d>=Gr){const A=sp2(260)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;} // magnet: small bodies drift in
+      if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(1500)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(380);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
@@ -401,7 +401,9 @@ function v2Swallow(o,mini){
   v2Score(o,mini);
 }
 function v2SwallowStep(o,dt){
-  o.t+=dt;const p=Math.min(1,o.t/V2K.swallow),cx=o.mini?o.mini.x:hX,cy=o.mini?o.mini.y:hY;
+  if(o.hang>0){o.hang-=dt;return false;} // mega bomb: the body flares first, then drifts in
+  if(o.mega2&&G2.parts.length<150)G2.parts.push({x:o.x,y:o.y,vx:rnd(-.4,.4),vy:rnd(-.4,.4),life:.35,max:.35,c:'#ffc27a',sz:2.2}); // glowing trail
+  o.t+=dt;const p=Math.min(1,o.t/(o.swDur||V2K.swallow)),cx=o.mini?o.mini.x:hX,cy=o.mini?o.mini.y:hY;
   const e=p<.43?p/.43*.35:p<.77?.35+(p-.43)/.34*.45:.8+(p-.77)/.23*.2; // attract, spiral, vanish
   const d=o.d0*(1-e);o.a+=o.dir*(2+10*p)*dt*(p>.43?2.2:1);o.x=cx+Math.cos(o.a)*d;o.y=cy+Math.sin(o.a)*d;o.sc=Math.max(.05,1-e*.95);
   if(o.cell!==undefined){o.gs=o.sc;o.radAng=Math.atan2(cy-o.y,cx-o.x);o.stretch=1+p*1.4;o.squeeze=1-p*.5;o.fade=1-p*.6;o.sp=p;}
@@ -416,6 +418,7 @@ function v2Score(o,mini){
   v2AddRage((K.rage+(perf?4:0))*(G2.script?1.6:1));
   if(m>MULT2(G2.combo-1)){v2Call('COMBO ×'+m,'','#ffd76a',1,false);v2Sfx('mult',{vol:.55,rate:.8+m*.1});if(m>=4)shake=Math.max(shake,4);totalCombos++;}
   if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('PERFECT +'+pts,'#fff1b8',18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
+  else if(o.mega2)ftexts.push(new FText('+'+pts,o.x,o.y-o.r-sp2(6),'#ffcf8a',15+Math.min(6,m)));
   else v2Pop('+'+pts,o.k==='crystal'?'#9ef3ff':o.k==='gold'?'#ffd76a':m>=4?'#ffcf8a':'#e7e3da',o.k==='ast'?15+m:19+m);
   const snd={ast:['capture',.45,1.2],moon:['capture2',.55,1],planet:['boom',.6,.7],crystal:['gem',.7,1.3],gold:['master',.8,1],energy:['sparkle',.6,.8],time:['slow',.7,1.2],bomb:['bomb',.7,1],mini:['magnet',.7,1],frag:['capture2',.5,1.3],shard:['gem',.7,.8],comet:['gem',.6,1.5],magnet:['magnet',.7,1],pulsar:['sparkle',.8,1],mpair:['capture2',.6,.9],sat:['capture2',.5,1.2],dark:['slow',.6,1.3]}[o.k]||['capture',.5,1];
   v2Sfx(snd[0],{vol:snd[1],rate:snd[2]*(1+Math.min(.5,G2.combo*.015)),x:hX});
@@ -495,10 +498,10 @@ function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth
   v2Burst(hX,hY,30,'#7dffb0',2,7,.6,2);v2Call('ANTIMATTER!','SHRINK','#7dffb0',1.2);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
 }
 function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the screen, a blue one above the hole
-  if(G2.lv>=19&&!G2.ending&&!G2.boss&&!G2.script){G2.wormT-=dt;if(G2.wormT<=0&&!G2.worms.length){G2.wormT=24;const pr=sp2(26);
+  if(G2.lv>=19&&!G2.ending&&!G2.boss&&!G2.script){G2.wormT-=dt;if(G2.wormT<=0&&!G2.worms.length){G2.wormT=24;const pr=sp2(44);
     const w={ax:rrnd(W*.18,W*.82),ay:H*.86,bx:clamp(hX,pr+10,W-pr-10),by:clamp(hY-G2.G-sp2(90),sp2(110),H*.5),r:pr,t:0,life:10};G2.worms.push(w);v2Call('WORMHOLE','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
   for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){G2.worms.splice(i,1);continue;}
-    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.boss||o.orb||o.wait>0||o.jumped>0)continue;if(Math.hypot(o.x-w.ax,o.y-w.ay)<w.r+o.r*.5){
+    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.boss||o.orb||o.wait>0||o.jumped>0)continue;if(Math.hypot(o.x-w.ax,o.y-w.ay)<w.r+o.r*.8){
       v2Burst(o.x,o.y,10,'#ffb35c',1,4,.4);o.x=w.bx;o.y=w.by;const dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1,sp=Math.max(sp2(140),Math.hypot(o.vx,o.vy)*.6);o.vx=dx/d*sp;o.vy=dy/d*sp;o.jumped=1;v2Burst(o.x,o.y,10,'#8fd0ff',1,4,.4);v2Sfx('thrust',{vol:.35,rate:1.4});}}}
 }
 
@@ -518,17 +521,37 @@ function v2BombStep(o,dt){
   if(b.t>=V2K.bomb.hold){o.orb=null;G2.hold=null;o.mega=true;o.noScore=false;v2Swallow(o,null);}
 }
 function v2Blast(x,y,mega){ // mega: the whole screen falls in; otherwise ~3× your radius (spec)
-  G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,hit:new Set(),n:0,bonus:0});
+  G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,vis:mega,hit:new Set(),n:0,bonus:0});
+  if(mega){const L=G2.objs.filter(o=>o.st==='in'&&o.wait<=0&&!o.boss&&!o.orb&&o.k!=='anti'&&o.k!=='bomb').sort((a,b)=>Math.hypot(a.x-hX,a.y-hY)-Math.hypot(b.x-hX,b.y-hY));
+    G2.mega={t:0,i:0,list:L,gap:Math.min(.07,1.1/Math.max(1,L.length)),bonus:0,n:0};}
   shake=Math.max(shake,mega?12:6);flash=Math.max(flash,mega?.9:.5);sfx('boom',{vol:mega?.9:.7,rate:mega?.7:1});
   if(mega){v2Ach.mega++;shock=1;v2Call('MEGA BOMB!','','#ff8a4c',1.5,true);vib([40,30,120]);}else v2Call('BOMB!','','#ff8a4c',.8);
 }
 
-// ── golden shield: the player decides when; 5 s, meteors shatter on the bubble ──
+function v2MegaStep(dt){ // play pauses while the screen pops body by body and everything spirals into the hole
+  const M=G2.mega;M.t+=dt;
+  while(M.i<M.list.length&&M.t>=M.i*M.gap){const o=M.list[M.i++];if(o.st!=='in')continue;M.n++;
+    const add=Math.min(V2K.bomb.pts,V2K.bomb.max-M.bonus);M.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(2);
+    G2.megaFx.push({x:o.x,y:o.y,r:o.r,t:0,c:o.k==='meteor'?'#ff5a3c':'#ffb35c'});v2Burst(o.x,o.y,16,o.k==='meteor'?'#ff6a4c':'#ffd29a',2,7,.6,2.4);shake=Math.max(shake,3);
+    if(M.n%2)sfx('capture',{vol:.35,rate:1.1+Math.min(.8,M.n*.04),x:o.x});
+    if(o.k==='meteor'){o.st='dead';ftexts.push(new FText('+'+add,o.x,o.y,'#ff8a6b',15));}
+    else{o.noScore=false;o.chain=true;o.mega2=true;o.hang=.14;o.swDur=.75;v2Swallow(o,null);}}
+  for(let i=G2.objs.length-1;i>=0;i--){const o=G2.objs[i];if(o.st==='dead'){G2.objs.splice(i,1);continue;}if(o.st==='sw'&&v2SwallowStep(o,dt))G2.objs.splice(i,1);}
+  for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
+  for(let i=G2.waves.length-1;i>=0;i--){const w=G2.waves[i];w.t+=dt;w.rad=w.max*(1-(1-Math.min(1,w.t/w.dur))**2);if(w.t>=w.dur)G2.waves.splice(i,1);}
+  if(M.i>=M.list.length&&!G2.objs.some(o=>o.st==='sw'&&o.mega2)){G2.mega=null;if(M.n)v2Pop('MEGA ×'+M.n+'  +'+M.bonus,'#ffb35c',19);}}
+function v2DrawMegaFx(dt){ // a white-hot flare on every body the mega bomb detonates
+  for(let i=G2.megaFx.length-1;i>=0;i--){const f=G2.megaFx[i];f.t+=dt;const p=f.t/.55;if(p>=1){G2.megaFx.splice(i,1);continue;}
+    const R=f.r*(1.6+3.2*p)+sp2(8);ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,R);
+    g.addColorStop(0,`rgba(255,255,255,${1-p*.8})`);g.addColorStop(.35,f.c+Math.round(200*(1-p)).toString(16).padStart(2,'0'));g.addColorStop(1,'rgba(255,120,40,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(f.x,f.y,R,0,TAU);ctx.fill();ctx.globalAlpha=1-p;ctx.strokeStyle=f.c;ctx.lineWidth=2;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(1+3*p),0,TAU);ctx.stroke();ctx.restore();}}
+
+// ── golden shield: the player decides when; 10 s, meteors shatter on the bubble ──
 function v2Shield(){
   if(!G2.on||gState!=='playing'||gameMode==='sprint'||G2.shT>0||G2.rageT>0)return;
   if(SHOP.shield<=0){if(monOn())v2ShieldBuy();else{toast('🛡','KALKANIN YOK','3 kalkan parçası topla: seviye 4’ten itibaren gelir.');v2Sfx('buzz',{vol:.25});}return;}
   SHOP.shield--;saveG();updateUI();G2.shT=V2K.shield.dur;G2.shTick=0;
-  v2Call('SHIELD','5 s','#ffd84d',1.1);sfx('armor',{vol:.8,rate:.9});sfx('powerup',{vol:.45,rate:1.3});vib(25);v2Burst(hX,hY,24,'#ffd84d',2,6,.6);v2Ui(true);
+  v2Call('SHIELD','10 s','#ffd84d',1.1);sfx('armor',{vol:.8,rate:.9});sfx('powerup',{vol:.45,rate:1.3});vib(25);v2Burst(hX,hY,24,'#ffd84d',2,6,.6);v2Ui(true);
 }
 function v2ShieldBuy(){ // empty: offer one for diamonds, the game waits
   const c=V2K.shield.cost,ok=diamonds>=c;G2.tip={id:'buy'};gState='tip';DRAG.id=null;
@@ -549,13 +572,13 @@ const TIP2={
   mini:['🌀','MİNİ KARA DELİK','Yut: 6 saniye boyunca etrafında dönen yardımcı bir kara delik açılır. Onun yuttukları sana akar. Meteor ona çarparsa can gitmez.'],
   big:['🪐','ÇOK BÜYÜK','Bu cisim şimdilik senden büyük: çarpınca seker. Küçük cisimleri yiyerek büyü, sonra onu da yut.'],
   over:['🟣','OVERLOAD','Sınıra kadar büyüdün! 15 saniye boyunca daha güçlüsün ama yönetmek zorlaşır. Sonra kara delik biraz küçülür.'],
-  shield:['🛡','KALKAN','Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: 5 saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir.'],
+  shield:['🛡','KALKAN','Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir.'],
   shard:['🛡','KALKAN PARÇASI','Kalkan parçasını yut: 3 parça toplayınca 1 kalkan kazanırsın.'],
   shrink:['💨','KÜÇÜLÜYOR','Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.'],
   comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
   split:['🌋','BÖLÜNEN GEZEGEN','Bu gezegen yutulmaz ama kara deliğine çarpınca üç parçaya bölünür. Parçaları yut!'],
   anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Rage açıkken zararsızdır.'],
-  magnet:['🧲','MIKNATIS','Yut: 4 saniye boyunca ekrandaki küçük cisimler sana doğru süzülür.'],
+  magnet:['🧲','MIKNATIS','Yut: 4 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
   pulsar:['💫','PULSAR','Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.'],
   mpair:['🪐','UYDULU GEZEGEN','Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!'],
   dark:['🌫️','KARANLIK MADDE','Görünmez! Arkasındaki yıldızları nasıl büktüğüne bak. Yakalarsan 120 puan.'],
@@ -604,7 +627,7 @@ function v2Teaser(l){const n=new2(l);return n?`<b>${T('SIRADA')}</b>LEVEL ${l} �
 function v2Frame(dt){
   const f=dt*60;clock+=dt;
   heat=Math.max(G2.rageT>0?.55:Math.min(.4,G2.combo*.02),heat-dt*.8);shock=Math.max(0,shock-dt*1.6);flash=Math.max(0,flash-dt*1.4);
-  if(gState==='playing'){if(G2.freeze>0)G2.freeze-=dt;else v2Update(dt);}
+  if(gState==='playing'){if(G2.mega)v2MegaStep(dt);else if(G2.freeze>0)G2.freeze-=dt;else v2Update(dt);}
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
   v2Dims();curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;dangerK=0;
@@ -615,7 +638,7 @@ function v2Frame(dt){
   ctx.save();ctx.globalCompositeOperation='lighter';for(const d of dust){d.update(dt);d.draw();}ctx.restore();ctx.globalAlpha=1;
   drawScreenFx(dt);
   v2DrawField();
-  for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/w.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=w.mega?6:3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
+  v2DrawMegaFx(dt);for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/w.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=w.mega?6:3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
   for(const q of G2.minis)v2DrawMini(q);
   v2DrawLinks();v2DrawShield();v2DrawMono();
   v2DrawWorms();
@@ -716,7 +739,7 @@ function v2Heater(c,s){c.beginPath();c.moveTo(-s,-s*.95);c.quadraticCurveTo(0,-s
 function v2ShCol(p){ // remaining share of the shield: gold, then orange, then red
   const G=[255,216,77],O=[255,140,30],Rd=[255,45,40],m=(x,y,k)=>x.map((v,i)=>Math.round(v+(y[i]-v)*clamp(k,0,1)));return p>=.6?G:p>=.3?m(G,O,(.6-p)/.3):m(O,Rd,(.3-p)/.15);}
 function v2DrawShield(){
-  if(G2.shT<=0)return;const p=G2.shT/V2K.shield.dur,[r,g,b]=v2ShCol(p),C=`rgb(${r},${g},${b})`,warn=G2.shT<1.5,k=warn?1+.06*Math.sin(clock*18):1,R=G2.R,B=R*1.5*k;
+  if(G2.shT<=0)return;const p=G2.shT/V2K.shield.dur,[r,g,b]=v2ShCol(p),C=`rgb(${r},${g},${b})`,warn=G2.shT<2.5,k=warn?1+.06*Math.sin(clock*18):1,R=G2.R,B=R*1.5*k;
   ctx.save();ctx.translate(hX,hY);
   const bg=ctx.createRadialGradient(0,0,R*1.05,0,0,B);bg.addColorStop(0,`rgba(${r},${g},${b},0)`);bg.addColorStop(.8,`rgba(${r},${g},${b},${warn?.2:.12})`);bg.addColorStop(1,`rgba(${r},${g},${b},${warn?.45:.3})`);
   ctx.fillStyle=bg;ctx.beginPath();ctx.arc(0,0,B,0,TAU);ctx.fill();ctx.shadowColor=C;ctx.shadowBlur=warn?24:14;ctx.strokeStyle=C;ctx.lineWidth=warn?4:3;ctx.beginPath();ctx.arc(0,0,B,0,TAU);ctx.stroke();ctx.shadowBlur=0;

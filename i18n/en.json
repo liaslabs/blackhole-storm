@@ -732,5 +732,7 @@
 "Açılış videosu": "Intro video",
 "İZLE": "WATCH",
 "Sesi aç": "Sound on",
-"GEÇ": "SKIP"
+"GEÇ": "SKIP",
+"Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Swallow: for {n} seconds everything you can eat is pulled to you fast",
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Swallow: for {n} seconds everything you can eat is pulled to you"
 }

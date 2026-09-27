@@ -732,5 +732,7 @@
 "Açılış videosu": "Vidéo d'intro",
 "İZLE": "VOIR",
 "Sesi aç": "Activer le son",
-"GEÇ": "PASSER"
+"GEÇ": "PASSER",
+"Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Avale-le : pendant {n} secondes, tout ce que tu peux manger est vite attiré vers toi",
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Avale-le : {n} secondes, tout ce que tu peux manger est attiré vers toi"
 }
