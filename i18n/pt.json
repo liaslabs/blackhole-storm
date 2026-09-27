@@ -745,5 +745,18 @@
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "No jogo, toque no botão de diamante ({n} 💎): tudo na tela explode e desliza para o seu buraco negro, depois os meteoros não te ferem por {n} segundos. {n} vezes por fase",
 "ELMASLA DEVAM": "CONTINUAR COM DIAMANTES",
 "Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Quando suas vidas acabarem, pague diamantes para continuar de onde parou com {n} vidas. O preço dobra a cada uso",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Alcance a pontuação-alvo no topo para concluir a fase. Não bata em meteoros: cada batida custa uma vida"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Alcance a pontuação-alvo no topo para concluir a fase. Não bata em meteoros: cada batida custa uma vida",
+"KAPTANIN HEDİYESİ": "PRESENTE DO CAPITÃO",
+"Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al": "Abra pelo menos três das nove caixas. Duas escondem um buraco negro: se sair, tudo é engolido. Depois de três caixas, pegue os prêmios quando quiser",
+"AÇILAN KUTU": "CAIXAS ABERTAS",
+"KAZANÇ": "GANHOS",
+"En az üç kutu aç": "Abra pelo menos três caixas",
+"Devam et ya da hemen al": "Continue ou pegue agora",
+"HEMEN AL": "PEGAR AGORA",
+"KARA DELİK": "BURACO NEGRO",
+"Bu sefer olmadı… Bir dahaki sefere": "Não foi desta vez… Fica para a próxima",
+"Bütün hediyeleri buldun": "Você encontrou todos os presentes",
+"KARA DELİK KÜTLESİ": "MASSA DO BURACO NEGRO",
+"{n} M = {n} Güneş kütlesi": "{n} M = {n} massa solar",
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "A cada {n} fases: abra pelo menos três de nove caixas; duas escondem um buraco negro. Depois de três caixas, pegue os prêmios quando quiser"
 }

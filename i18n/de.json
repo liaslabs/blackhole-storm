@@ -745,5 +745,18 @@
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tippe im Spiel auf den Diamant-Knopf ({n} 💎): Alles auf dem Bildschirm platzt und gleitet in dein Schwarzes Loch, danach können dir Meteore {n} Sekunden lang nichts anhaben. {n}-mal pro Level",
 "ELMASLA DEVAM": "MIT DIAMANTEN WEITER",
 "Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Wenn deine Leben aufgebraucht sind, spielst du mit Diamanten an derselben Stelle mit {n} Leben weiter. Der Preis verdoppelt sich jedes Mal",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Erreiche die Zielpunktzahl oben, um das Level zu schaffen. Weich Meteoren aus: Jeder Treffer kostet ein Leben"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Erreiche die Zielpunktzahl oben, um das Level zu schaffen. Weich Meteoren aus: Jeder Treffer kostet ein Leben",
+"KAPTANIN HEDİYESİ": "GESCHENK DES KAPITÄNS",
+"Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al": "Öffne mindestens drei der neun Kisten. Zwei verbergen ein Schwarzes Loch: Kommt es, wird alles verschluckt. Nach drei Kisten nimmst du deine Belohnungen, wann du willst",
+"AÇILAN KUTU": "GEÖFFNET",
+"KAZANÇ": "GEWINN",
+"En az üç kutu aç": "Öffne mindestens drei Kisten",
+"Devam et ya da hemen al": "Weiter oder jetzt nehmen",
+"HEMEN AL": "JETZT NEHMEN",
+"KARA DELİK": "SCHWARZES LOCH",
+"Bu sefer olmadı… Bir dahaki sefere": "Diesmal nicht… Nächstes Mal",
+"Bütün hediyeleri buldun": "Du hast alle Geschenke gefunden",
+"KARA DELİK KÜTLESİ": "MASSE DES SCHWARZEN LOCHS",
+"{n} M = {n} Güneş kütlesi": "{n} M = {n} Sonnenmasse",
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Alle {n} Level: Öffne mindestens drei von neun Kisten; zwei verbergen ein Schwarzes Loch. Nach drei Kisten nimmst du deine Belohnungen, wann du willst"
 }

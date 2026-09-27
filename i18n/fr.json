@@ -745,5 +745,18 @@
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "En jeu, touche le bouton diamant ({n} 💎) : tout ce qui est à l'écran explose et glisse dans ton trou noir, puis les météores ne peuvent plus te blesser pendant {n} secondes. {n} fois par niveau",
 "ELMASLA DEVAM": "CONTINUER AVEC DES DIAMANTS",
 "Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Quand tu n'as plus de vies, paie des diamants pour reprendre là où tu étais avec {n} vies. Le prix double à chaque fois",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Atteins le score visé en haut pour finir le niveau. Évite les météores : chaque choc coûte une vie"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Atteins le score visé en haut pour finir le niveau. Évite les météores : chaque choc coûte une vie",
+"KAPTANIN HEDİYESİ": "CADEAU DU CAPITAINE",
+"Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al": "Ouvre au moins trois des neuf boîtes. Deux cachent un trou noir : s'il sort, tout est englouti. Après trois boîtes, prends tes récompenses quand tu veux",
+"AÇILAN KUTU": "BOÎTES OUVERTES",
+"KAZANÇ": "GAINS",
+"En az üç kutu aç": "Ouvre au moins trois boîtes",
+"Devam et ya da hemen al": "Continue ou prends tout de suite",
+"HEMEN AL": "PRENDRE MAINTENANT",
+"KARA DELİK": "TROU NOIR",
+"Bu sefer olmadı… Bir dahaki sefere": "Pas cette fois… Ce sera pour la prochaine",
+"Bütün hediyeleri buldun": "Tu as trouvé tous les cadeaux",
+"KARA DELİK KÜTLESİ": "MASSE DU TROU NOIR",
+"{n} M = {n} Güneş kütlesi": "{n} M = {n} masse solaire",
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Tous les {n} niveaux : ouvre au moins trois des neuf boîtes ; deux cachent un trou noir. Après trois boîtes, prends tes récompenses quand tu veux"
 }

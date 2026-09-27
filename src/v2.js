@@ -37,7 +37,7 @@ const OBJ2={
   sat:    {r:12,v:150,dv:0, vm:300,pts:100,grow:.5, rage:3, need:1},    // the moon, once its planet is gone
   dark:   {r:26,v:140,dv:6, vm:280,pts:120,grow:1.2,rage:5, need:1}};   // dark matter: seen only by how it bends light
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
-const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
+const SZ2={ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
 Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
   decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.85},cont:{...V2K.cont,dia:25}});
@@ -80,7 +80,7 @@ const sp2=v=>v*G2.S;
 function v2Lv(){return gameMode==='survival'?Math.min(40,effLevel()):gameMode==='sprint'?G2.sprLv:level;}
 // level rules: counts, spawn odds, directions (spec §26, §36–39)
 // score needed to finish level l (boss levels end with the boss instead)
-function v2Goal(l){if(l%10===0)return 0;const g=V2K.goal;let x=g.a+g.b*Math.pow(Math.min(l-1,19),g.p)+g.mid*clamp(l-20,0,15)+g.late*Math.max(0,l-35); // steep while you learn, gentler once speeds top out
+function v2Goal(l){if(l%10===0)return 0;const g=V2K.goal;let x=g.a+g.b*Math.pow(Math.min(l-1,19),g.p)+g.mid*clamp(l-20,0,15)+g.late*clamp(l-35,0,25); // flat from level 60 on: any level number stays playable // steep while you learn, gentler once speeds top out
   if(l%10===9)x*=g.storm;else if(l>=12&&l<=18)x*=g.intro; // storm levels are dense and fast; 12–18 each bring a new body to learn
   return Math.round(x/100)*100;}
 function v2Rules(l){
@@ -218,7 +218,7 @@ function v2RunScript(dt){
 
 // ── giant planet boss (every 10th level) ─────────────
 function v2BossInit(){
-  const hp=22+Math.floor(level/10)*4;
+  const hp=Math.min(46,22+Math.floor(level/10)*4); // tops out at level 60 so any boss stays beatable
   const b={k:'boss',x:W/2,y:H*.24,rr:57,r:57*G2.S,hp,max:hp,cell:[2,5,15,13][(Math.floor(level/10)+3)%4],vx:sp2(28),shed:1.4,edible:false,sw:0,
     sX:1,sY:1,gs:1,suck:null,heat:0,isBoss:false,age:0,meteorT:6};giveSpin(b);b.spinV*=.25;G2.boss=b;
   v2Call('GIANT PLANET','EAT ITS FRAGMENTS','#ffb35c',2.4,true);sfx('bossIntro',{vol:.7,rev:.4});
@@ -627,12 +627,12 @@ function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on 
   G2.lifeGift=0;if(REPLAY||gameMode!=='classic')return;
   if(st===3&&!G2.starCont){STREAK3++;if(STREAK3>=10){STREAK3=0;diamonds+=25;G2.lifeGift=1;later(()=>toast('🎁','+25 💎','10 seviye üst üste 3 yıldız!'),2400);}}else STREAK3=0;saveG();
 }
-function v2SizeTxt(x){return (x||0).toFixed(2)+' M☉';}
+function v2SizeTxt(x){return (x||0).toFixed(2)+' M';}
 function v2Result(){ // level-complete card body
   const sz=G2.peak/V2K.r0;const row=(k,v,hl)=>`<div class="r2"><span>${T(k)}</span><b${hl?' class="hl"':''}>${v}</b></div>`;
   const lv=clamp(lives,1,3),st=`<span class="ok">${'♥'.repeat(lv)}</span><span>${'♥'.repeat(3-lv)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span>`;
   const s3=G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 25 💎<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;
-  return `<div class="stc2">${st}</div>${s3}<div class="how2">HOW BIG CAN YOU GET?</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div><div class="how2u">${T('M☉ = Güneş kütlesi: puan değil, kara deliğinin boyutu')}</div>`+
+  return `<div class="stc2">${st}</div>${s3}<div class="how2">${T('KARA DELİK KÜTLESİ')}</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div><div class="how2u">${T('1 M = 1 Güneş kütlesi')}</div>`+
     `<div class="res2">${row('SKOR',levelScore.toLocaleString(LOC))}${row('EN İYİ COMBO','×'+G2.best)}${row('YUTULAN',G2.eaten)}${row('PERFECT ABSORB',G2.perfA)}${row('PERFECT DODGE',G2.perfD)}${row('ÖDÜL','+5 ⭐'+(level%5===0?' +3 💎':'')+(G2.gift?' +1 🛡':''),true)}</div>`;
 }
 function v2Teaser(l){const n=new2(l);return n?`<b>${T('SIRADA')}</b>LEVEL ${l} · NEW: ${n[0]} ${n[1]}`:'';}
@@ -715,9 +715,16 @@ function v2DrawObj(o,gl){
   else if(k==='energy'){const pu=.8+.2*Math.sin(clock*9+o.si);ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.4);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(255,120,220,.95)');g.addColorStop(1,'rgba(255,60,200,0)');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,r*2.4*pu,0,TAU);ctx.fill();ctx.strokeStyle='rgba(255,170,240,.8)';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(o.x,o.y,Math.max(.5,r*1.3+Math.sin(clock*5)*2*s),0,TAU);ctx.stroke();
     ctx.fillStyle='#fff';ctx.font=`900 ${Math.round(r*1.2)}px "IBM Plex Sans Condensed",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⚡',o.x,o.y+1);}
-  else if(k==='time'){ctx.translate(o.x,o.y);const g=ctx.createRadialGradient(-r*.3,-r*.3,0,0,0,r);g.addColorStop(0,'#e4f6ff');g.addColorStop(.6,'#5aa9e6');g.addColorStop(1,'#1b4f8f');
-    ctx.shadowColor='#8fd0ff';ctx.shadowBlur=16;ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,r*.72,0,TAU);ctx.stroke();
-    ctx.lineCap='round';ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(0,-r*.55);ctx.moveTo(0,0);const a=clock*2;ctx.lineTo(Math.cos(a)*r*.45,Math.sin(a)*r*.45);ctx.stroke();}
+  else if(k==='time'){ctx.translate(o.x,o.y); // hourglass in a slow time-wave: reads as "slow down" even when small
+    ctx.globalCompositeOperation='lighter';for(let q=0;q<2;q++){const ph=((clock*.45+q*.5)%1);ctx.strokeStyle=`rgba(143,208,255,${.55*(1-ph)})`;ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,r*(1.05+ph*1.1),0,TAU);ctx.stroke();}
+    const hg=ctx.createRadialGradient(0,0,0,0,0,r*1.3);hg.addColorStop(0,'rgba(143,208,255,.45)');hg.addColorStop(1,'rgba(143,208,255,0)');ctx.fillStyle=hg;ctx.beginPath();ctx.arc(0,0,r*1.3,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';
+    ctx.rotate(Math.sin(clock*1.3+o.si)*.18);const w=r*.62,h=r*.86;
+    const glass=()=>{ctx.beginPath();ctx.moveTo(-w,-h);ctx.lineTo(w,-h);ctx.quadraticCurveTo(w,-h*.2,r*.1,0);ctx.quadraticCurveTo(w,h*.2,w,h);ctx.lineTo(-w,h);ctx.quadraticCurveTo(-w,h*.2,-r*.1,0);ctx.quadraticCurveTo(-w,-h*.2,-w,-h);ctx.closePath();};
+    glass();ctx.fillStyle='rgba(200,236,255,.28)';ctx.fill();
+    const f=(clock*.25+o.si*.1)%1;ctx.save();glass();ctx.clip();ctx.fillStyle='#ffd88a'; // sand: top drains, bottom fills
+    ctx.fillRect(-w,-h*(1-f)*.85-h*.02,w*2,h*(1-f)*.85);ctx.fillRect(-w,h-h*f*.85,w*2,h*f*.85);ctx.fillRect(-r*.05,0,r*.1,h);ctx.restore();
+    glass();ctx.lineWidth=Math.max(1.2,r*.1);ctx.strokeStyle='#dff4ff';ctx.shadowColor='#8fd0ff';ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='#f2c46d';ctx.fillRect(-w*1.25,-h-r*.2,w*2.5,r*.22);ctx.fillRect(-w*1.25,h,w*2.5,r*.22);}
   else if(k==='bomb'){ctx.translate(o.x,o.y);ctx.rotate(o.rot);const g=ctx.createRadialGradient(-r*.3,-r*.3,0,0,0,r);g.addColorStop(0,'#7a2a1c');g.addColorStop(.7,'#3a0d08');g.addColorStop(1,'#140404');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(255,${120+60*Math.sin(clock*10)|0},40,.9)`;ctx.lineWidth=1.6;
     ctx.beginPath();ctx.moveTo(-r*.6,-r*.2);ctx.lineTo(-r*.1,r*.1);ctx.lineTo(r*.2,-r*.4);ctx.moveTo(-r*.1,r*.1);ctx.lineTo(r*.1,r*.6);ctx.moveTo(r*.2,-r*.4);ctx.lineTo(r*.65,-r*.1);ctx.stroke();

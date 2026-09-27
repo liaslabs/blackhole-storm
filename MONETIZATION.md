@@ -14,7 +14,7 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 |---|---|---|---|---|
 | `starter` | Başlangıç Paketi | 300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali | Tek sefer (tüketilmez) | ₺19,99 |
 | `captain` | Kaptan Seti | 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎 | Tekrar alınabilir | ₺29,99 |
-| `cosmic_id` | Kozmik Kimlik | Oyuncunun ismi kara deliğin içinde (7 harfe kadar, delik büyüdükçe açılır) + Pembe Fırtına ve Piksel Nebula görünümleri | Tek sefer, kalıcı | ₺49,99 |
+| `cosmic_id` | Kozmik Kimlik | Oyuncunun ismi kara deliğin içinde (7 harfe kadar, delik büyüdükçe açılır) + Pembe Fırtına ve Piksel Nebula görünümleri | Tek sefer, kalıcı | ₺19,99 |
 | `no_ads` | Reklamsız Oyna | Araya giren reklamlar kalkar, reklamlı ödüller reklamsız gelir | Tek sefer, kalıcı | ₺99,99 |
 | `gems_s` | Avuç Elmas | 80 💎 | Tekrar alınabilir | ₺9,99 |
 | `gems_m` | Kese Elmas | 250 💎 (+%25) | Tekrar alınabilir | ₺24,99 |

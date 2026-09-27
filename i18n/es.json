@@ -745,5 +745,18 @@
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "En el juego, toca el botón de diamante ({n} 💎): todo lo que hay en pantalla estalla y cae en tu agujero negro, y luego los meteoros no te dañan durante {n} segundos. {n} veces por nivel",
 "ELMASLA DEVAM": "CONTINUAR CON DIAMANTES",
 "Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Cuando te quedes sin vidas, paga diamantes para seguir donde estabas con {n} vidas. El precio se duplica cada vez",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Alcanza la puntuación objetivo de arriba para completar el nivel. No choques con meteoros: cada choque es una vida"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Alcanza la puntuación objetivo de arriba para completar el nivel. No choques con meteoros: cada choque es una vida",
+"KAPTANIN HEDİYESİ": "REGALO DEL CAPITÁN",
+"Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al": "Abre al menos tres de las nueve cajas. Dos esconden un agujero negro: si sale, se lo traga todo. Tras tres cajas, llévate los premios cuando quieras",
+"AÇILAN KUTU": "CAJAS ABIERTAS",
+"KAZANÇ": "GANANCIAS",
+"En az üç kutu aç": "Abre al menos tres cajas",
+"Devam et ya da hemen al": "Sigue o llévatelo ya",
+"HEMEN AL": "LLÉVATELO YA",
+"KARA DELİK": "AGUJERO NEGRO",
+"Bu sefer olmadı… Bir dahaki sefere": "Esta vez no… ¡La próxima será",
+"Bütün hediyeleri buldun": "Encontraste todos los regalos",
+"KARA DELİK KÜTLESİ": "MASA DEL AGUJERO NEGRO",
+"{n} M = {n} Güneş kütlesi": "{n} M = {n} masa solar",
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Cada {n} niveles: abre al menos tres de nueve cajas; dos esconden un agujero negro. Tras tres cajas, llévate los premios cuando quieras"
 }

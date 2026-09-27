@@ -492,6 +492,28 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .mgrid .daily .row .btn{width:100%;margin:0;padding:9px 4px;font-size:11.5px;}
 .mcard .dock{margin-top:10px;}
 @media (max-height:700px){.mcard .mlogo{font-size:21px;margin-top:6px;}.mcard .dock button{padding:7px 2px 6px;}.mcard #startBtn{padding-top:11px;padding-bottom:11px;}}
+
+/* Captain's Gift: 3×3 mystery boxes */
+#mGift{width:min(94%,380px);position:fixed;z-index:160;max-height:96vh;overflow-y:auto;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
+.gfH{color:var(--gold);text-align:center;letter-spacing:.12em;}
+.gfTxt{font-size:13px;line-height:1.45;color:#cdd3e0;text-align:center;margin:8px 0 10px;}
+.gfBar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:var(--fm);font-size:11px;letter-spacing:.06em;color:var(--dim);margin-bottom:8px;min-height:18px;}
+.gfBag{color:var(--gold);font-weight:600;text-align:end;}
+.gfGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:2px 0 10px;perspective:600px;}
+.gfb{aspect-ratio:1;border-radius:10px;border:1.5px solid rgba(242,169,59,.55);background:radial-gradient(circle at 50% 38%,rgba(242,169,59,.2),rgba(14,16,24,.96) 72%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--ink);font-family:var(--fd);cursor:pointer;padding:4px;box-shadow:inset 0 0 14px rgba(242,169,59,.14);transition:transform .15s;}
+.gfb:active{transform:scale(.94);}
+.gfb .q{font-size:32px;font-weight:800;color:var(--gold);text-shadow:0 0 14px rgba(242,169,59,.8);animation:gfq 1.8s ease-in-out infinite;}
+.gfb .rw{font-size:14px;font-weight:700;line-height:1.35;text-align:center;}
+.gfb.open{animation:gfFlip .35s ease both;border-color:rgba(127,214,176,.75);background:radial-gradient(circle at 50% 38%,rgba(127,214,176,.22),rgba(14,16,24,.96) 72%);cursor:default;}
+.gfb.bad{border-color:var(--red);background:radial-gradient(circle,#000 28%,rgba(229,72,77,.4) 70%,rgba(14,16,24,.96));}
+.gfb.bad .bh{width:44%;aspect-ratio:1;border-radius:50%;background:#000;box-shadow:0 0 0 2px rgba(255,190,150,.85),0 0 18px 6px rgba(255,90,60,.55);}
+.gfb.bad small{font-size:9.5px;letter-spacing:.1em;color:#ff9a8a;}
+.gfb.peek{opacity:.42;animation:none;}
+.gfMsg{text-align:center;font-family:var(--fd);font-size:13.5px;min-height:18px;margin-bottom:6px;color:var(--dim);}
+.gfMsg.bad{color:#ff9a8a;}.gfMsg.ok{color:var(--mint);}
+@keyframes gfFlip{0%{transform:rotateY(90deg);}100%{transform:none;}}
+@keyframes gfq{50%{transform:scale(1.14);}}
+.nd.d5{font-size:12px!important;}.nd.d7{font-size:9.5px!important;letter-spacing:-.02em;}.nd.d5 .num,.nd.d7 .num{font-size:9px!important;}
 </style>
 </head>
 <body>
@@ -523,6 +545,14 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row"><button class="btn big" id="contYes">DEVAM ET · 100 ⭐</button></div>
    <div class="row"><button class="btn sec" id="contRetry" style="width:100%;">🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contNo" style="width:100%;">BİTİR</button></div>
+  </div>
+  <div class="modal card" id="mGift">
+   <div class="h gfH">🎁 KAPTANIN HEDİYESİ</div>
+   <p class="gfTxt">Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al.</p>
+   <div class="gfBar"><span id="gfCount"></span><span class="gfBag" id="gfBag"></span></div>
+   <div class="gfGrid" id="gfGrid"></div>
+   <div class="gfMsg" id="gfMsg"></div>
+   <div class="row"><button class="btn big" id="gfTake" hidden>HEMEN AL</button></div>
   </div>
   <div class="modal card" id="mNoStar">
    <div class="h">YILDIZ YETERSİZ</div><p class="muted">Devam etmek için 100 ⭐ gerekiyor.</p>
@@ -945,7 +975,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
+let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
 function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
@@ -957,9 +987,9 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,10):[];
   lastLogin=typeof d.lastLogin==='string'?d.lastLogin:'';loginStreak=svI(d.loginStreak,0,0,1e5);
   rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?d.playerName.slice(0,12):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';
-  savedLevel=svI(d.savedLevel,1,1,9999);savedScore=svI(d.savedScore,0);
+  savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
-  mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,9999));seen=svO(d.seen)||{};
+  mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
@@ -1583,7 +1613,7 @@ function endReplay(toMap){
 // map node kinds follow the real level rules
 function levelKind(l){if(l%10===0)return {t:'boss',ic:'🪐',n:'GIANT PLANET'};const n=new2(l);return n?{t:'new',ic:n[0],n:n[1]}:null;}
 const KIND_TXT={boss:'Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.',new:''};
-let mapPts=[],mapN=0;
+let mapPts=[],mapN=0,mapB=0; // mapB: levels before the first drawn node
 function renderMapCard(){
   const cur=Math.max(1,savedLevel);let nb=0;for(let l=cur;l<cur+60;l++){const k=levelKind(l);if(k&&k.t==='boss'){nb=l;break;}}
   $('mapTxt').innerHTML=`${cur>1?`${cur-1} seviye geçildi · ${totalStars()} ⭐`:'Yolculuğun burada başlıyor'}<br>Sıradaki boss: seviye ${nb}`;
@@ -1592,7 +1622,7 @@ function renderMapCard(){
   c.setLineDash([2,8]);c.strokeStyle='rgba(255,255,255,.35)';c.beginPath();P.slice(5).forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.stroke();c.setLineDash([]);
   P.forEach((p,i)=>{c.fillStyle=i<5?'#f2c46d':i===5?'#3fd8e8':'#2a2e44';c.beginPath();c.arc(p[0],p[1],i===5?9:7,0,TAU);c.fill();});
 }
-function openMap(){$('sMap').classList.add('on');$('mSheet').classList.remove('on');buildMap();requestAnimationFrame(()=>{const sc=$('mapScroll'),cp=mapPts[Math.max(1,savedLevel)-1];if(cp)sc.scrollTop=cp.y-sc.clientHeight*.55;});}
+function openMap(){$('sMap').classList.add('on');$('mSheet').classList.remove('on');buildMap();requestAnimationFrame(()=>{const sc=$('mapScroll'),cp=mapPts[Math.max(1,savedLevel)-1-mapB];if(cp)sc.scrollTop=cp.y-sc.clientHeight*.55;});}
 function closeMap(){$('sMap').classList.remove('on');MSKY.job++;MSKY.ensure=null;$('mapInner').querySelectorAll('.mtile').forEach(e=>e.remove());} // tile canvases hold tens of MB: free them for gameplay
 // ── Map sky: a procedural nebula drawn at the screen's own resolution in 460 px tiles. Noise and
 // stars use world coordinates, zones blend into each other across their boundaries, and the hash
@@ -1652,7 +1682,7 @@ function mapSky(W0,H0,GAP,cur){
   const inner=$('mapInner'),svg=$('mapSvg'),d=Math.min(devicePixelRatio||1,1.5),key=[W0,H0,d].join('|'),TILE=460;
   if(MSKY.key===key&&inner.querySelector('.mtile,.zb'))return;
   inner.querySelectorAll('.mtile,.zb').forEach(e=>e.remove());MSKY.key=key;const job=++MSKY.job;
-  const bands=[];for(let b=0;b*10<mapN;b++)bands.push({z:zoneOf(b*10+1),top:b*10+9>=mapN-1?0:mapPts[b*10+9].y-GAP/2,bot:b===0?H0:mapPts[b*10].y+GAP/2});
+  const bands=[];for(let b=0;b*10<mapN;b++)bands.push({z:zoneOf(mapB+b*10+1),top:b*10+9>=mapN-1?0:mapPts[b*10+9].y-GAP/2,bot:b===0?H0:mapPts[b*10].y+GAP/2});
   const G=mapSkyGL();
   if(!G){const bgs=(window.ASSETS||{}).bgs||[]; // no WebGL: fall back to the zone photos
     for(const bd of bands){const e=document.createElement('div');e.className='zb';e.style.top=Math.max(0,bd.top-120)+'px';e.style.height=(Math.min(H0,bd.bot+120)-Math.max(0,bd.top-120))+'px';if(bgs[bd.z])e.style.backgroundImage=`url(${bgs[bd.z]})`;inner.insertBefore(e,svg);}return;}
@@ -1664,7 +1694,7 @@ function mapSky(W0,H0,GAP,cur){
   g.uniform2f(U('uSize'),Wd,Td);g.uniform1f(U('uD'),d);g.uniform1f(U('uW'),W0);
   const setZ=(pf,z)=>{g.uniform3fv(U(pf+'Bg'),z.bg);g.uniform3fv(U(pf+'C1'),z.c1);g.uniform3fv(U(pf+'C2'),z.c2);g.uniform3fv(U(pf+'C3'),z.c3);g.uniform4f(U(pf+'K'),z.neb,z.dust,z.core,z.cliff);g.uniform1f(U(pf+'Cl'),z.cl);};
   const tops=[];for(let top=0;top<H0;top+=TILE)tops.push(top);
-  const cy=mapPts[Math.min(mapN-1,cur-1)].y;tops.sort((a,b)=>Math.abs(a+TILE/2-cy)-Math.abs(b+TILE/2-cy)); // near the player first
+  const cy=mapPts[Math.min(mapN-1,cur-1-mapB)].y;tops.sort((a,b)=>Math.abs(a+TILE/2-cy)-Math.abs(b+TILE/2-cy)); // near the player first
   const bandAt=y=>{for(let b=0;b<bands.length;b++)if(y>=bands[b].top&&y<=bands[b].bot)return b;return 0;};
   const one=top=>{
     const mid=top+TILE/2,b=bandAt(mid),bd=bands[b];let lo,hi,by;
@@ -1693,22 +1723,22 @@ function mapSky(W0,H0,GAP,cur){
 }
 function buildMap(){
   const sc=$('mapScroll'),inner=$('mapInner'),svg=$('mapSvg'),cur=Math.max(1,savedLevel);
-  const GAP=92,PADB=120,PADT=150,W0=sc.clientWidth||360;mapN=Math.max(30,Math.ceil((cur+12)/10)*10);
+  const GAP=92,PADB=120,PADT=150,W0=sc.clientWidth||360;mapB=Math.max(0,Math.floor((cur-1)/10)*10-40);mapN=Math.max(30,Math.ceil((cur+12)/10)*10-mapB);
   const H0=PADB+PADT+(mapN-1)*GAP;inner.style.height=H0+'px';svg.setAttribute('width',W0);svg.setAttribute('height',H0);svg.setAttribute('viewBox',`0 0 ${W0} ${H0}`);
-  const amp=Math.min(115,W0*.29);mapPts=[];for(let i=0;i<mapN;i++)mapPts.push({l:i+1,x:W0/2+Math.sin(i*.72)*amp,y:H0-PADB-i*GAP});
+  const amp=Math.min(115,W0*.29);mapPts=[];for(let i=0;i<mapN;i++)mapPts.push({l:mapB+i+1,x:W0/2+Math.sin(i*.72)*amp,y:H0-PADB-i*GAP});
   inner.querySelectorAll('.zb,.zlabel,.nd,.me').forEach(e=>e.remove());
-  for(let b=0;b*10<mapN;b++){const l0=b*10+1,z=zoneOf(l0),cyc=cycleOf(l0);
+  for(let b=0;b*10<mapN;b++){const l0=mapB+b*10+1,z=zoneOf(l0),cyc=cycleOf(l0);
     const lab=document.createElement('div');lab.className='zlabel';const my=b===0?mapPts[0].y+56:(mapPts[b*10].y+mapPts[b*10-1].y)/2-18,mx=b===0?mapPts[0].x:(mapPts[b*10].x+mapPts[b*10-1].x)/2;lab.style.top=my+'px';lab.style.justifyContent=mx>W0/2?'flex-start':'flex-end';
     lab.innerHTML=`<div><b>BÖLGE ${z+1} · ${ZONES[z].n}</b><small>${cyc>1?`DÖNGÜ ${cyc} · `:''}SEVİYE ${l0}–${l0+9}</small></div>`;inner.appendChild(lab);}
   mapSky(W0,H0,GAP,cur);
   const seg=(a,b)=>{let d='';for(let i=a;i<=b;i++){const p=mapPts[i];if(i===a)d+=`M${p.x},${p.y}`;else{const q=mapPts[i-1],my=(p.y+q.y)/2;d+=` C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`;}}return d;};
-  const ci=Math.min(mapN-1,cur-1);
+  const ci=Math.min(mapN-1,cur-1-mapB);
   svg.innerHTML=`<defs><linearGradient id="mpg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#3fd8e8"/></linearGradient></defs>
    <path d="${seg(ci,mapN-1)}" fill="none" stroke="rgba(0,0,0,.5)" stroke-width="9" stroke-linecap="round"/>
    <path d="${seg(ci,mapN-1)}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round"/>
    ${ci>0?`<path d="${seg(0,ci)}" fill="none" stroke="rgba(0,0,0,.6)" stroke-width="13" stroke-linecap="round"/><path d="${seg(0,ci)}" fill="none" stroke="url(#mpg)" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(255,215,106,.8))"/>`:''}`;
   for(const p of mapPts){const k=levelKind(p.l),st=p.l<cur?'done':p.l===cur?'cur':'lock',ls=LSTARS[p.l];
-    const b=document.createElement('button');b.className=`nd ${st}${k?' sp':''}`;b.style.left=p.x+'px';b.style.top=p.y+'px';b.setAttribute('aria-label','Seviye '+p.l);
+    const b=document.createElement('button'),dg=String(p.l).length;b.className=`nd ${st}${k?' sp':''}${dg>=7?' d7':dg>=5?' d5':''}`;b.style.left=p.x+'px';b.style.top=p.y+'px';b.setAttribute('aria-label','Seviye '+p.l);
     b.innerHTML=k?`${k.ic}<span class="num">${p.l}</span>`:(st==='lock'?'🔒':p.l);
     if(st==='done'){if(k&&k.t==='mis'){if(ls)b.innerHTML+=`<span class="medal">${ls===3?'🏅':'💔'}</span>`;}else b.innerHTML+=`<span class="st">${'★'.repeat(Math.max(0,ls|0))}<i>${'★'.repeat(3-Math.max(0,ls|0))}</i></span>`;}
     if(k){const tg=document.createElement('span');tg.className='tag';tg.textContent=k.n;tg.style[p.x>W0/2?'right':'left']='calc(100% + 8px)';tg.style.color=k.t==='boss'?'#ff9a8a':'#8fe9ff';b.appendChild(tg);}
@@ -1733,7 +1763,7 @@ const GUIDE={
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×5 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
  'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca üç parçaya bölünür, parçaları yut.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Rage açıkken zararsız.'],['🧲','MIKNATIS','Yut: 4 saniye küçük cisimler sana süzülür.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapıya giren cisim mavi kapıdan kara deliğine doğru çıkar.']],
  'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.']],
- 'EŞYALAR':[['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
+ 'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
   $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}">${k}</button>`).join('');
@@ -1754,7 +1784,7 @@ const IAP=[
  {id:'starter',sec:'offer',ic:'🎁',t:'BAŞLANGIÇ PAKETİ',d:'300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali. Tek sefer.',price:'₺19,99',was:'₺79,99',tag:'%75 İNDİRİM',once:true,give:{gems:300,stars:3000,lives:10,shield:5,time:3}},
  {id:'vip_monthly',sec:'offer',cls:'vip',ic:'👑',t:'VIP KULÜP · AYLIK',d:'Her günlük girişte ekstra +15 💎 +1 🛡 · Her ay otomatik paket: 300 💎 · 3.000 ⭐ · 5 kalkan · 5 yedek can · 3 zaman kristali',price:'₺39,99',per:'/ay',tag:'EN KÂRLI',sub:true},
  {id:'captain',sec:'offer',cls:'cap',ic:'🧑‍🚀',t:'KAPTAN SETİ',d:'Oyunu kolaylaştırır: 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎',price:'₺29,99',tag:'KOLAYLAŞTIR',give:{shield:5,lives:5,time:3,gems:100}},
- {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (7 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺49,99',once:true,perm:true},
+ {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (7 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺19,99',once:true,perm:true},
  {id:'no_ads',sec:'offer',cls:'noad',ic:'🚫',t:'REKLAMSIZ OYNA',d:'Araya giren reklamlar tamamen kalkar; reklamlı ödüller reklam izlemeden anında gelir. Tek sefer, kalıcı.',price:'₺99,99',once:true,perm:true},
  {id:'gems_s',sec:'gems',ic:'💎',t:'80',d:'Avuç',price:'₺9,99',give:{gems:80}},
  {id:'gems_m',sec:'gems',ic:'💎',t:'250',d:'Kese · +%25',price:'₺24,99',tag:'POPÜLER',give:{gems:250}},
@@ -1862,6 +1892,36 @@ function revive(n){if(G2.contUsed)return;v2Revive();lives=Math.max(1,n);updateUI
 let adReviveUsed=false,lvlAdUsed=false;
 
 // ══════════════════════════════════════════════════════
+// CAPTAIN'S GIFT — every 20 levels: nine boxes, two hide a black hole. Open at least three; after that
+// cash out whenever you like. A black hole swallows everything gathered so far. One try per milestone.
+// ══════════════════════════════════════════════════════
+const GIFT={bad:2,min:3,pool:[{stars:60},{stars:100},{stars:150},{gems:8},{gems:15},{shield:1},{stars:50,gems:5},{shield:1,stars:40},{gems:10,shield:1}]};
+let GIFTS=null;
+function giftDue(){const m=Math.floor((Math.max(1,savedLevel,level)-1)/20)*20;const l=gameMode==='classic'&&!REPLAY&&level%20===0?level:m;return l>=20&&(SHOP.giftLv|0)<l?l:0;}
+function giftTxt(g){const p=[];if(g.stars)p.push(`⭐ ${g.stars}`);if(g.gems)p.push(`💎 ${g.gems}`);if(g.shield)p.push(`🛡 ${g.shield}`);return p.join(' · ');}
+function openGift(lv,done){
+  SHOP.giftLv=lv;saveG(); // one try per milestone, even if the app is closed halfway
+  const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+  const safe=sh(GIFT.pool.slice()).slice(0,9-GIFT.bad).map(g=>({g}));
+  GIFTS={boxes:sh([...safe,...Array.from({length:GIFT.bad},()=>({bad:true}))]),got:{stars:0,gems:0,shield:0},n:0,over:false,done};
+  const grid=$('gfGrid');grid.innerHTML='';
+  GIFTS.boxes.forEach((b,i)=>{const e=document.createElement('button');e.className='gfb';e.innerHTML='<span class="q notr">?</span>';e.onclick=ev=>{ev.stopPropagation();giftPick(i);};b.el=e;grid.appendChild(e);});
+  $('gfMsg').className='gfMsg';$('gfTake').hidden=true;giftHud();showModal('mGift');gState='menu';sfx('achieve',{vol:.5});
+}
+function giftHud(){const S=GIFTS;$('gfCount').textContent=`${T('AÇILAN KUTU')}: ${S.n}`;$('gfBag').textContent=S.n&&giftTxt(S.got)?`${T('KAZANÇ')}: ${giftTxt(S.got)}`:'';
+  if(!S.over)$('gfMsg').textContent=S.n<GIFT.min?T('En az üç kutu aç'):T('Devam et ya da hemen al');
+  $('gfTake').hidden=S.over?false:S.n<GIFT.min;$('gfTake').textContent=S.over?T('TAMAM'):`${T('HEMEN AL')} · ${giftTxt(S.got)}`;}
+function giftPick(i){const S=GIFTS;if(!S||S.over)return;const b=S.boxes[i];if(b.open)return;b.open=true;S.n++;
+  if(b.bad){S.over=true;b.el.className='gfb open bad';b.el.innerHTML=`<span class="bh"></span><small>${T('KARA DELİK')}</small>`;
+    S.boxes.forEach(x=>{if(!x.open){x.el.className='gfb peek'+(x.bad?' bad':'');x.el.innerHTML=x.bad?'<span class="bh"></span>':`<span class="rw">${giftTxt(x.g)}</span>`;}});
+    S.got={stars:0,gems:0,shield:0};$('gfMsg').className='gfMsg bad';$('gfMsg').textContent=T('Bu sefer olmadı… Bir dahaki sefere!');sfx('boom',{vol:.6,rate:.8});vib([40,40,80]);giftHud();return;}
+  for(const k in b.g)S.got[k]+=b.g[k];b.el.className='gfb open';b.el.innerHTML=`<span class="rw">${giftTxt(b.g)}</span>`;sfx('coin',{vol:.55,rate:1+S.n*.06});vib(12);
+  if(S.boxes.every(x=>x.bad||x.open)){$('gfMsg').className='gfMsg ok';$('gfMsg').textContent=T('Bütün hediyeleri buldun!');S.over=true;giftHud();$('gfTake').textContent=`${T('HEMEN AL')} · ${giftTxt(S.got)}`;S.win=true;return;}
+  giftHud();}
+$('gfTake').onclick=e=>{e.stopPropagation();const S=GIFTS;if(!S)return;const g={};for(const k in S.got)if(S.got[k])g[k]=S.got[k];
+  if(Object.keys(g).length)grant(g,T('KAPTANIN HEDİYESİ'));GIFTS=null;hideModals();S.done&&S.done();};
+
+// ══════════════════════════════════════════════════════
 // DAILY BONUS
 // ══════════════════════════════════════════════════════
 function checkDaily(){
@@ -1945,7 +2005,7 @@ function litFrom(x,y){const dx=hX-x,dy=hY-y,d=Math.hypot(dx,dy)||1;return {x:dx/
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mCont','mNoStar','mSprint','mLvl','mOver','mTip2','mShBuy'];
+const MODALS=['mCont','mNoStar','mGift','mSprint','mLvl','mOver','mTip2','mShBuy'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function resetRun(full,fromSave){
@@ -2343,7 +2403,7 @@ function selMode(m){gameMode=m;$('modeC').classList.toggle('on',m==='classic');$
   const Z=ZONES[zoneOf(savedLevel)];
   $('startBtn').innerHTML=m==='classic'?(savedLevel>1?`▶ DEVAM ET · SEVİYE ${savedLevel}<small><span class="notr">${capName(T(Z.n))}</span> · ${totalStars()} ⭐ yıldız</small>`:'▶ OYNA<small>Klasik · seviye 1</small>'):`▶ OYNA · HAYATTA KAL<small>En iyi: ${bestScore.toLocaleString(LOC)} puan</small>`;}
 $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('survival');
-$('startBtn').onclick=()=>{SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
+$('startBtn').onclick=()=>{if(gameMode==='classic'&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=showLB;
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
@@ -2367,7 +2427,9 @@ $('pResume').onclick=resumeGame;
 $('pLB').onclick=showLB;
 $('pRestart').onclick=()=>{if(REPLAY){$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';startReplayLevel();return;}$('sPause').classList.remove('on');SND.duck(1,0);if(gameMode==='classic')resetRun(false);else if(gameMode==='sprint')startSprint(SPR_RUN.seed,SPR_RUN.opt);else resetRun(true,false);};
 $('pMenu').onclick=()=>{if(REPLAY)endReplay(false);$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';hideModals();$('badge').className='hud-float';showMenu();};
-$('nextLvl').onclick=async e=>{e.stopPropagation();if(REPLAY){endReplay(false);selMode('classic');$('startBtn').click();return;}hideModals();await maybeInterstitial();level++;levelCheck();};
+$('nextLvl').onclick=async e=>{e.stopPropagation();if(REPLAY){endReplay(false);selMode('classic');$('startBtn').click();return;}
+  if(giftDue()===level){openGift(level,async()=>{await maybeInterstitial();level++;levelCheck();});return;} // every 20 levels: the Captain's Gift first
+  hideModals();await maybeInterstitial();level++;levelCheck();};
 $('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed)return;if(await showRewarded()){lvlAdUsed=true;$('lvlAd').disabled=true;$('lvlAd').textContent='✓ +25 ⭐ ALINDI';grant({stars:25},'BONUS');}};
 $('lvlRetry').onclick=e=>{e.stopPropagation();if(!REPLAY){startReplay(level);return;}hideModals();startReplayLevel();};
 $('againBtn').onclick=()=>{if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();SND.music('game');resetRun(true,false);};
@@ -2399,6 +2461,7 @@ SND.init();
 buildProfile();
 updateUI();
 {const t=$('toast');document.body.appendChild(t);t.style.position='fixed';t.style.zIndex=400;} // toasts show above panels too
+document.body.appendChild($('mGift')); // the Captain's Gift can open over the menu too
 monInit();
 if(playerName&&playerAvatar){showMenu();offerChallenge();}else $('sProfile').classList.add('on');
 {let seen=false;try{seen=!!localStorage.getItem('bhs_intro');}catch(e){}if(!seen&&(!playerName||window.BHS_INTRO))playIntro();} // first install only

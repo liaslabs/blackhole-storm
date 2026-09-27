@@ -745,5 +745,18 @@
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "В игре нажми кнопку с алмазом ({n} 💎): всё на экране взрывается и затягивается в твою чёрную дыру, а затем {n} секунды метеоры не могут тебе навредить. {n} раза за уровень",
 "ELMASLA DEVAM": "ПРОДОЛЖИТЬ ЗА АЛМАЗЫ",
 "Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Когда жизни закончатся, продолжи с того же места с {n} жизнями за алмазы. Цена каждый раз удваивается",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Набери целевые очки вверху, чтобы пройти уровень. Не сталкивайся с метеорами: каждое столкновение — минус жизнь"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Набери целевые очки вверху, чтобы пройти уровень. Не сталкивайся с метеорами: каждое столкновение — минус жизнь",
+"KAPTANIN HEDİYESİ": "ПОДАРОК КАПИТАНА",
+"Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al": "Открой хотя бы три из девяти коробок. В двух прячется чёрная дыра: если она выпадет, всё будет поглощено. После трёх коробок забирай награды когда захочешь",
+"AÇILAN KUTU": "ОТКРЫТО",
+"KAZANÇ": "ВЫИГРЫШ",
+"En az üç kutu aç": "Открой хотя бы три коробки",
+"Devam et ya da hemen al": "Продолжай или забирай сейчас",
+"HEMEN AL": "ЗАБРАТЬ СЕЙЧАС",
+"KARA DELİK": "ЧЁРНАЯ ДЫРА",
+"Bu sefer olmadı… Bir dahaki sefere": "Не в этот раз… В следующий раз повезёт",
+"Bütün hediyeleri buldun": "Ты нашёл все подарки",
+"KARA DELİK KÜTLESİ": "МАССА ЧЁРНОЙ ДЫРЫ",
+"{n} M = {n} Güneş kütlesi": "{n} M = {n} масса Солнца",
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "Каждые {n} уровней: открой хотя бы три из девяти коробок; в двух прячется чёрная дыра. После трёх коробок забирай награды когда захочешь"
 }

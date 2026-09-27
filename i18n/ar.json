@@ -745,5 +745,18 @@
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "أثناء اللعب اضغط زر الألماس ({n} 💎): ينفجر كل ما على الشاشة وينساب إلى ثقبك الأسود، ثم لا تؤذيك النيازك لمدة {n} ثوانٍ. {n} مرات في كل مستوى",
 "ELMASLA DEVAM": "تابع بالألماس",
 "Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "عندما تنفد أرواحك ادفع ألماسًا لتكمل من حيث توقفت بـ {n} أرواح. يتضاعف السعر في كل مرة",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "اجمع النقاط المستهدفة في الأعلى لتنهي المستوى. لا تصطدم بالنيازك: كل اصطدام يكلّفك روحًا"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "اجمع النقاط المستهدفة في الأعلى لتنهي المستوى. لا تصطدم بالنيازك: كل اصطدام يكلّفك روحًا",
+"KAPTANIN HEDİYESİ": "هدية القبطان",
+"Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al": "افتح ثلاثة صناديق على الأقل من تسعة. صندوقان يخفيان ثقبًا أسود: إن ظهر ابتلع كل شيء. بعد ثلاثة صناديق خذ جوائزك متى شئت",
+"AÇILAN KUTU": "صناديق مفتوحة",
+"KAZANÇ": "المكسب",
+"En az üç kutu aç": "افتح ثلاثة صناديق على الأقل",
+"Devam et ya da hemen al": "تابع أو خذها الآن",
+"HEMEN AL": "خذها الآن",
+"KARA DELİK": "ثقب أسود",
+"Bu sefer olmadı… Bir dahaki sefere": "ليس هذه المرة… في المرة القادمة",
+"Bütün hediyeleri buldun": "وجدت كل الهدايا",
+"KARA DELİK KÜTLESİ": "كتلة الثقب الأسود",
+"{n} M = {n} Güneş kütlesi": "{n} M = {n} كتلة شمسية",
+"Her {n} seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al": "كل {n} مستوى: افتح ثلاثة من تسعة صناديق على الأقل؛ صندوقان يخفيان ثقبًا أسود. بعد ثلاثة صناديق خذ جوائزك متى شئت"
 }
