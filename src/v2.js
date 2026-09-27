@@ -41,7 +41,7 @@ const OBJ2={
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
 const SZ2={ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,plasma:.75,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
-Object.assign(V2K,{boss:{spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7},radFire:.4},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
+Object.assign(V2K,{boss:{spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7}},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
   decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.75},cont:{...V2K.cont,dia:25}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
@@ -258,34 +258,44 @@ function v2BossSpots(b,dt,tk){const K=V2K.boss,want=b.hp<=b.max*.5?2:1;b.spotCD-
     if(Math.hypot(hX-P.x,hY-P.y)<G2.R+sr*.9){b.spots.splice(i,1);b.spotCD=K.spotCD*.6;v2BossCrack(b,P);}}}
 function v2SpotPos(b,s){const a=s.a+b.age*V2K.boss.orbit;return {x:b.x+Math.cos(a)*b.r*.9,y:b.y+Math.sin(a)*b.r*.9,a};}
 const v2SpotR=b=>Math.max(9*G2.S,b.r*.2);
-// Radiation: every few seconds the boss marks a danger zone (a ring around it, or a flare cone aimed at you for the red giant),
-// counts down, then fires. Be outside the zone when it fires; a shield or Rage protects you.
+// Radiation: the boss charges (a radiation sign on it, the danger sectors shaded), then sends out waves of arcs.
+// Between the arcs are gaps: sit in a gap as a wave passes. A shield or Rage protects you.
+const RAD2={planet:{n:3,fill:.6,waves:2,gap:.55,shift:0,v:300,col:'190,255,90'},red:{n:2,fill:.62,waves:2,gap:.6,shift:0,v:260,col:'255,140,60'},nova:{n:4,fill:.5,waves:2,gap:1.1,shift:.5,v:320,col:'170,235,255'}};
 function v2RadWarn(){return Math.max(1,1.5-.05*(Math.floor(level/10)-1));}
-function v2RadR(b){return b.r*(b.bt==='nova'?3.8:3.1);}
-function v2RadIn(b,x,y){const r=b.rad,d=Math.hypot(x-b.x,y-b.y);
-  if(b.bt==='red'){const a=Math.atan2(y-b.y,x-b.x),da=Math.abs(((a-r.ang)%TAU+TAU*1.5)%TAU-Math.PI);return d<H*.8&&da<.42+Math.atan2(G2.R*.5,Math.max(d,1));}
-  return d-G2.R*.5<v2RadR(b);}
-function v2BossRad(b,dt,tk){const r=b.rad,K=V2K.boss;
-  if(r.ph==='idle'){r.cd-=dt*tk;if(r.cd<=0){r.ph='warn';r.t=0;r.hit=false;r.ang=Math.atan2(hY-b.y,hX-b.x);v2Sfx('powerup',{vol:.35,rate:.55});
-      if(!TIPS.rad)v2Tip('rad',b);else if(!G2.radSeen){G2.radSeen=1;v2Call('RADIATION!','GET OUT OF THE RED','#ff5a4a',1.3,true);}}}
-  else if(r.ph==='warn'){r.t+=dt;if(b.bt==='red')r.ang+=((Math.atan2(hY-b.y,hX-b.x)-r.ang+Math.PI*3)%TAU-Math.PI)*Math.min(1,dt*.6); // the flare drifts after you, slowly
-    if(r.t>=v2RadWarn()){r.ph='fire';r.t=0;shake=Math.max(shake,8);flash=Math.max(flash,.3);v2Sfx('boom',{vol:.6,rate:b.bt==='nova'?.8:1.1});if(b.bt==='nova')b.burst=0;}}
-  else{r.t+=dt;if(!r.hit&&r.t<K.radFire*.8&&v2RadIn(b,hX,hY)){r.hit=true;if(G2.shT<=0&&G2.rageT<=0){G2.hitWhy='rad';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}
-    if(r.t>=K.radFire){r.ph='idle';r.cd=K.radEvery[b.bt]||9;if(b.bt==='nova')b.burst=1e9;}}}
-function v2DrawRad(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;const R=v2RadR(b),red=b.bt==='red',L=H*.8,col=b.bt==='red'?'255,120,50':b.bt==='nova'?'170,235,255':'190,255,90';
-  ctx.save();ctx.translate(b.x,b.y);const shape=rad=>{ctx.beginPath();if(red){ctx.moveTo(0,0);ctx.arc(0,0,rad,r.ang-.42,r.ang+.42);ctx.closePath();}else{ctx.arc(0,0,rad,0,TAU);ctx.arc(0,0,b.r,0,TAU,true);}};
-  if(r.ph==='warn'){const q=Math.min(1,r.t/v2RadWarn()),pu=.5+.5*Math.sin(clock*(10+q*14));
-    ctx.fillStyle=`rgba(255,50,40,${.07+.08*pu+.08*q})`;shape(red?L:R);ctx.fill('evenodd');
-    ctx.fillStyle=`rgba(255,70,50,${.16+.1*q})`;shape(b.r+((red?L:R)-b.r)*q);ctx.fill('evenodd'); // fills outward as the countdown runs
-    ctx.strokeStyle=`rgba(255,90,70,${.55+.4*pu})`;ctx.lineWidth=2.5;ctx.setLineDash([10,7]);ctx.lineDashOffset=-clock*30;
-    if(red){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(r.ang-.42)*L,Math.sin(r.ang-.42)*L);ctx.moveTo(0,0);ctx.lineTo(Math.cos(r.ang+.42)*L,Math.sin(r.ang+.42)*L);ctx.stroke();}
-    else{ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.stroke();}ctx.setLineDash([]);
-    ctx.font='900 14px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.fillStyle=`rgba(255,120,100,${.7+.3*pu})`;const tx=red?Math.cos(r.ang)*Math.min(L*.45,R*1.2):0,ty=red?Math.sin(r.ang)*Math.min(L*.45,R*1.2):R+18;
-    ctx.fillText('☢ '+Math.max(0,v2RadWarn()-r.t).toFixed(1),tx,ty);}
-  else{const q=Math.min(1,r.t/V2K.boss.radFire),a=1-q;ctx.globalCompositeOperation='lighter';
-    if(red){const g=ctx.createRadialGradient(0,0,b.r,0,0,L);g.addColorStop(0,`rgba(255,240,200,${.9*a})`);g.addColorStop(.5,`rgba(${col},${.55*a})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;shape(L);ctx.fill();}
-    else{const w=b.r+(R-b.r)*Math.min(1,q*1.4),g=ctx.createRadialGradient(0,0,Math.max(b.r,w-40),0,0,w+10);g.addColorStop(0,`rgba(${col},0)`);g.addColorStop(.7,`rgba(255,255,235,${.9*a})`);g.addColorStop(1,`rgba(${col},0)`);
-      ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,w+10,0,TAU);ctx.fill();ctx.fillStyle=`rgba(${col},${.18*a})`;ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.fill();}}
+function v2RadArc(b,a,a0){const C=RAD2[b.bt]||RAD2.planet,seg=TAU/C.n,x=((a-a0)%seg+seg*2)%seg;return x<seg*C.fill;} // is angle a inside an arc of the pattern starting at a0?
+function v2RadIn(b,x,y){const r=b.rad;if(!r||r.ph==='idle')return false;const C=RAD2[b.bt]||RAD2.planet,a=Math.atan2(y-b.y,x-b.x),d=Math.max(1,Math.hypot(x-b.x,y-b.y)),m=Math.atan2(G2.R*.55,d);
+  const k=r.ph==='fire'?Math.min(C.waves-1,r.next):0,a0=r.a0+k*C.shift*TAU/C.n;return v2RadArc(b,a-m,a0)||v2RadArc(b,a+m,a0)||v2RadArc(b,a,a0);}
+function v2BossRad(b,dt,tk){const r=b.rad,K=V2K.boss,C=RAD2[b.bt]||RAD2.planet;
+  if(r.ph==='idle'){r.cd-=dt*tk;if(r.cd<=0){r.ph='warn';r.t=0;const seg=TAU/C.n;r.a0=Math.atan2(hY-b.y,hX-b.x)-seg*C.fill/2;r.waves=[];r.next=0;r.hurt=false;v2Sfx('powerup',{vol:.35,rate:.55}); // an arc is aimed straight at you: move into a gap
+      if(!TIPS.rad)v2Tip('rad',b);else if(!G2.radSeen){G2.radSeen=1;v2Call('RADIATION!','HIDE IN THE GAPS','#ff5a4a',1.3,true);}}}
+  else if(r.ph==='warn'){r.t+=dt;if(r.t>=v2RadWarn()){r.ph='fire';r.t=0;r.next=0;r.spawnT=0;if(b.bt==='nova')b.burst=0;}}
+  else{r.t+=dt;r.spawnT-=dt;
+    if(r.next<C.waves&&r.spawnT<=0){r.waves.push({r:b.r,a0:r.a0+r.next*C.shift*TAU/C.n,hit:false});r.next++;r.spawnT=C.gap;shake=Math.max(shake,5);flash=Math.max(flash,.15);v2Sfx('boom',{vol:.45,rate:b.bt==='nova'?.9:1.2});}
+    const far=Math.hypot(W,H),th=sp2(16);
+    for(const w of r.waves){w.r+=sp2(C.v)*dt*tk;if(w.hit)continue;const d=Math.hypot(hX-b.x,hY-b.y);
+      if(Math.abs(d-w.r)<th*.5+G2.R*.55){const a=Math.atan2(hY-b.y,hX-b.x),m=Math.atan2(G2.R*.45,Math.max(d,1));
+        if(v2RadArc(b,a,w.a0)||v2RadArc(b,a-m,w.a0)||v2RadArc(b,a+m,w.a0)){w.hit=true;if(!r.hurt&&G2.shT<=0&&G2.rageT<=0&&G2.immT<=0){r.hurt=true;G2.hitWhy='rad';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}}}
+    if(r.next>=C.waves&&r.waves.every(w=>w.r>far)){r.ph='idle';r.cd=K.radEvery[b.bt]||9;r.waves=[];if(b.bt==='nova')b.burst=1e9;}}}
+function v2DrawRadSign(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;const C=RAD2[b.bt]||RAD2.planet,seg=TAU/C.n,rot=r.a0+seg*C.fill/2+Math.PI/2; // the radiation sign on the boss, drawn above its body
+  if(r.ph==='warn'){const q=Math.min(1,r.t/v2RadWarn()),pu=.5+.5*Math.sin(clock*(9+q*16));v2DrawTrefoil(b.x,b.y,b.r*.62,rot+(1-q)*2,C.col,.55+.45*pu);}
+  else v2DrawTrefoil(b.x,b.y,b.r*.62,rot,C.col,Math.max(0,.9-r.t*.8));}
+function v2DrawTrefoil(x,y,R,rot,col,al){ctx.save();ctx.translate(x,y);ctx.rotate(rot);ctx.globalAlpha=al;ctx.fillStyle=`rgba(${col},1)`;ctx.strokeStyle='rgba(20,10,0,.85)';ctx.lineWidth=Math.max(1.5,R*.06);
+  for(let i=0;i<3;i++){const a=i*TAU/3-Math.PI/2;ctx.beginPath();ctx.arc(0,0,R*.9,a-.5,a+.5);ctx.arc(0,0,R*.28,a+.5,a-.5,true);ctx.closePath();ctx.fill();ctx.stroke();}
+  ctx.beginPath();ctx.arc(0,0,R*.16,0,TAU);ctx.fill();ctx.stroke();ctx.restore();}
+function v2DrawRad(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;const C=RAD2[b.bt]||RAD2.planet,seg=TAU/C.n,far=Math.hypot(W,H);
+  ctx.save();
+  if(r.ph==='warn'){const q=Math.min(1,r.t/v2RadWarn()),pu=.5+.5*Math.sin(clock*(9+q*16));
+    for(let i=0;i<C.n;i++){const a0=r.a0+i*seg,a1=a0+seg*C.fill;ctx.fillStyle=`rgba(255,60,45,${.06+.07*pu+.08*q})`;ctx.beginPath();ctx.moveTo(b.x,b.y);ctx.arc(b.x,b.y,far,a0,a1);ctx.closePath();ctx.fill(); // danger directions
+      ctx.strokeStyle=`rgba(${C.col},${.35+.4*pu})`;ctx.lineWidth=3;ctx.lineCap='round';for(const k of [1.6,2.4,3.2]){const rr=b.r*k+(1-q)*20;ctx.beginPath();ctx.arc(b.x,b.y,rr,a0+.04,a1-.04);ctx.stroke();}} // the coming wave shape
+    ctx.font='900 14px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.fillStyle=`rgba(255,120,100,${.7+.3*pu})`;ctx.fillText('☢ '+Math.max(0,v2RadWarn()-r.t).toFixed(1),b.x,b.y+b.r+34);
+    if(v2RadIn(b,hX,hY)){ctx.strokeStyle=`rgba(255,70,55,${.5+.5*pu})`;ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();ctx.arc(hX,hY,G2.R+10+4*pu,0,TAU);ctx.stroke();ctx.setLineDash([]); // you are in a wave's path: move
+      ctx.fillStyle=`rgba(255,90,70,${.7+.3*pu})`;ctx.font='900 16px "IBM Plex Sans Condensed",sans-serif';ctx.fillText('⚠',hX,hY-G2.R-16);}}
+  else{ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+    for(const w of r.waves){if(w.r>far)continue;const al=Math.max(.25,1-w.r/far);
+      for(let i=0;i<C.n;i++){const a0=w.a0+i*seg,a1=a0+seg*C.fill;
+        ctx.strokeStyle=`rgba(${C.col},${.35*al})`;ctx.lineWidth=sp2(30);ctx.beginPath();ctx.arc(b.x,b.y,w.r,a0,a1);ctx.stroke(); // glow
+        ctx.strokeStyle=`rgba(255,255,235,${.95*al})`;ctx.lineWidth=sp2(7);ctx.beginPath();ctx.arc(b.x,b.y,w.r,a0,a1);ctx.stroke(); // hot core
+        ctx.strokeStyle=`rgba(${C.col},${.3*al})`;ctx.lineWidth=sp2(3);ctx.beginPath();ctx.arc(b.x,b.y,w.r-sp2(22),a0+.05,a1-.05);ctx.stroke();}}} // trailing ripple
   ctx.restore();}
 function v2BossCrack(b,P){const n=Math.max(1,Math.round(b.max/24)); // ring segments that break off with this hit
   for(let i=0;i<n*2;i++){const a=P.a+rrnd(-.25,.25);b.chips.push({a,t:0,v:rrnd(.8,1.3)});}
@@ -668,7 +678,7 @@ const TIP2={
   worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir.'],
   boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!'],
   bossRed:['🔴','KIRMIZI DEV','Ölmekte olan dev bir yıldız: nefes alır gibi şişip söner, şiştikçe daha çok plazma saçar. Plazmayı yut: her biri onu küçültür. Yeşile dönünce bütünüyle yut!'],
-  rad:['☢','RADYASYON','Boss ışıma yapmadan önce kırmızı bir alan belirir ve geri sayar. Sayım bitmeden alanın dışına kaç: içinde kalırsan can kaybedersin. Kalkan ve Rage seni korur.'],
+  rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Rage seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}
@@ -928,6 +938,7 @@ function v2DrawStar(b){ // red giant / supernova: layered textures, turning surf
 function v2DrawBoss(b,gl){
   v2DrawRad(b);
   if(b.bt&&b.bt!=='planet')v2DrawStar(b);
+  v2DrawRadSign(b);
   ctx.save();if(!gl&&b.cell!==undefined){const im=SPR.byCell&&SPR.byCell[b.cell];if(im)ctx.drawImage(im,b.x-b.r,b.y-b.r,b.r*2,b.r*2);}
   if(b.sw)return ctx.restore();
   const N=Math.min(24,b.max),per=b.max/N,on=b.edible?N:Math.ceil(b.hp/per-1e-6),Rr=b.r+10,gap=.06,seg=TAU/N; // segmented health ring: one slice per chunk of health
