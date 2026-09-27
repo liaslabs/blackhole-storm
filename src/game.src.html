@@ -1463,11 +1463,12 @@ const ACHS=[
   {id:'mega1',i:'💣',t:'Mega Bomba',d:'İlk MEGA BOMB',c:()=>v2Ach.mega>=1},
   {id:'streak7',i:'📅',t:'Sadık Pilot',d:'7 gün üst üste giriş',c:()=>loginStreak>=7},
 ];
-let achShowing=false;
-function checkAchs(){for(const a of ACHS){if(!unlockedAch.has(a.id)&&a.c()){unlockedAch.add(a.id);achQueue.push(a);saveG();}}if(achQueue.length&&!achShowing)nextAch();}
-function nextAch(){if(!achQueue.length){achShowing=false;return;}achShowing=true;const a=achQueue.shift();
+let achShowing=false;const ACH_STALE=5000;
+function checkAchs(){for(const a of ACHS){if(!unlockedAch.has(a.id)&&a.c()){unlockedAch.add(a.id);achQueue.push({...a,at:performance.now()});saveG();}}if(achQueue.length&&!achShowing)nextAch();}
+function nextAch(){const now=performance.now();while(achQueue.length&&now-(achQueue[0].at||now)>ACH_STALE)achQueue.shift(); // a note that waited too long in line is skipped (the achievement stays unlocked)
+  if(!achQueue.length){achShowing=false;return;}achShowing=true;const a=achQueue.shift();
   $('tI').textContent=a.i;$('tT').textContent=a.t;$('tD').textContent=a.d;$('toast').classList.add('on');sfx('achieve',{vol:.55,rev:.3});
-  setTimeout(()=>{$('toast').classList.remove('on');setTimeout(nextAch,500);},3200);}
+  setTimeout(()=>{$('toast').classList.remove('on');setTimeout(nextAch,350);},2400);}
 
 // ══════════════════════════════════════════════════════
 // EVOLUTION — every swallowed body adds mass (kept across runs); the hole grows through four stages
@@ -1567,7 +1568,7 @@ function dmRoll(){
 function dmText(m){const d=MPOOL.find(x=>x.id===m.id);return d?d.t(m.n):m.id;}
 function dmEvent(id,v,abs){
   if(!DM.list)return;for(const m of DM.list){if(m.id!==id||m.done)continue;const d=MPOOL.find(x=>x.id===id);m.p=(abs||(d&&d.abs))?Math.max(m.p,v):m.p+v;
-    if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m)});if(!achShowing)nextAch();}saveSoon();}
+    if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m),at:performance.now()});if(!achShowing)nextAch();}saveSoon();}
 }
 function renderDM(){
   dmRoll();const box=$('dmBox');{const cl=DM.list.filter(m=>m.cl).length,hot=DM.list.some(m=>m.done&&!m.cl),bd=$('dmBadge');if(bd){bd.textContent=hot?'AL!':`${cl}/${DM.list.length}`;bd.className=hot?'hot':'';}}let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`;
