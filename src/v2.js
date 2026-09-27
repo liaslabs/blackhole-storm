@@ -31,6 +31,7 @@ const OBJ2={
   comet:  {r:16,v:460,dv:10,vm:720,pts:60, grow:.8, rage:4, need:1},    // very fast; extends the combo clock
   split:  {r:46,v:120,dv:6, vm:240,pts:0,  grow:0,  rage:0, need:99},   // never swallowed whole: touching it splits it in two
   plasma: {r:15,v:150,dv:0, vm:300,pts:30, grow:.6, rage:3, need:1},  // glowing matter shed by the red giant / supernova
+  prey:   {r:15,v:200,dv:0, vm:420,pts:1500,grow:1.2,rage:15,need:0},  // the hunt target: always edible, runs away
   half:   {r:33,v:120,dv:0, vm:420,pts:80, grow:1.4,rage:4, need:1.15}, // one half of a split planet: half the mass
   anti:   {r:18,v:230,dv:8, vm:460,pts:0,  grow:0,  rage:0, need:1},    // antimatter: swallowing it shrinks you
   magnet: {r:22,v:170,dv:6, vm:340,pts:50, grow:.5, rage:3, need:1},
@@ -39,9 +40,9 @@ const OBJ2={
   sat:    {r:12,v:150,dv:0, vm:300,pts:100,grow:.5, rage:3, need:1},    // the moon, once its planet is gone
   dark:   {r:26,v:140,dv:6, vm:280,pts:120,grow:1.2,rage:5, need:1}};   // dark matter: seen only by how it bends light
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
-const SZ2={ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,plasma:.75,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
+const SZ2={prey:.8,ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,plasma:.75,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
-Object.assign(V2K,{boss:{spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7}},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
+Object.assign(V2K,{prey:{wear:2.6,tired:2.6},boss:{spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7}},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
   decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.75},cont:{...V2K.cont,dia:25}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
@@ -67,7 +68,16 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   17:['🪐','MOON PAIR','Gezegeni, sonra uydusunu yut: çift puan.'],
   18:['🌫️','DARK MATTER','Görünmez! Yıldızları bükmesinden fark edilir.'],
   19:['🌀','WORMHOLE','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir.']};
-function new2(l){return NEW2[l]||(l%10===0?(v2BossType(l)==='red'?['🔴','RED GIANT','Boss: nefes alan yıldız; şişince daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.']:v2BossType(l)==='nova'?['💥','SUPERNOVA','Boss: her 7 saniyede patlar ve etrafa enkaz saçar. Enkazı yut, küçülünce onu da yut.']:NEW2[10]):null);}
+// Level types: most levels are "reach the score", but from level 11 every few levels one has its own rule.
+const RSETS=[{ban:['ast','frag'],ic:'🪨',n:'ASTEROİT YASAK',k:.6},{ban:['moon','planet','half','split'],ic:'🌑',n:'AY VE GEZEGEN YASAK',k:.55},{ban:['crystal','energy','gold','comet'],ic:'💎',n:'PARLAK CİSİMLER YASAK',k:.4}];
+function v2LevelType(l){if(l<11||l%10===0||l%10===9)return 'score';const sp=l<=20?l%4===3:l%3===2;return sp?['restrict','window','hunt'][Math.floor(l/(l<=20?4:3))%3]:'score';}
+function v2RuleFor(l){const t=v2LevelType(l);
+  if(t==='restrict'){const s=RSETS[Math.floor(l/7)%(l<30?2:3)];/* the hardest set (no bright bodies) only from level 30 */return {t,tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+  if(t==='window'){const late=l>30;return {t,tip:'window',win:1,lo:late?1.6:1.4,hi:late?2.3:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:late?.4:.5};}
+  if(t==='hunt')return {t,tip:'hunt',hunt:1,need:l>40?5:4,life:l>40?14:16,ic:'🎯',n:'AV',k:0};
+  return null;}
+const RULE_NEW={restrict:'Yasaklı cisimler seni iter; üstlerine gidersen combo yarıya iner. Hedef puan daha düşük.',window:'Puan sadece kara delik yeşil aralıktayken gelir. Fazla büyürsen buharlaşırsın; o sırada yediğin puan getirmez.',hunt:'Altın avı çekim alanında tutarak yor; yorulunca kızarır, o an yut. Süresi dolarsa kaçar ve can götürür.'};
+function new2(l){const ru=G2.mode!=='sprint'?v2RuleFor(l):null;if(ru&&!NEW2[l])return [ru.ic,ru.n,RULE_NEW[ru.t]];return NEW2[l]||(l%10===0?(v2BossType(l)==='red'?['🔴','RED GIANT','Boss: nefes alan yıldız; şişince daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.']:v2BossType(l)==='nova'?['💥','SUPERNOVA','Boss: her 7 saniyede patlar ve etrafa enkaz saçar. Enkazı yut, küçülünce onu da yut.']:NEW2[10]):null);}
 
 const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,shardAt:1e9,gift:0,
   rr:34,cap:46,peak:34,R:34,G:75,vx:0,vy:0,tx:0,ty:0,lx:0,ly:0,
@@ -103,8 +113,9 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
-  const goal=mode==='level'?Math.round(v2Goal(l)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)/100)*100:0; // the ease offer takes 20% off
-  Object.assign(G2,{goal,t:0,dur:mode==='surv'||goal?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,
+  const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;
+  const goal=mode==='level'&&!(rule&&rule.hunt)?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&rule.hunt)?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -320,7 +331,8 @@ function v2Dims(){
   G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S;G2.peak=Math.max(G2.peak,rr);
 }
 function v2Size(){return G2.R/(V2K.r0*G2.S);}
-function v2Edible(o){if(o.k==='meteor'||o.boss||(o.k==='pulsar'&&!o.lit))return false;let need=OBJ2[o.k].need;if(level===1&&G2.mode==='level')need=1;return v2Size()>=need-1e-6;}
+function v2Banned(o){return !!(G2.rule&&G2.rule.ban&&G2.rule.ban.includes(o.k));}
+function v2Edible(o){if(o.k==='meteor'||o.boss||(o.k==='pulsar'&&!o.lit)||v2Banned(o)||(o.k==='prey'&&!(o.tiredT>0)))return false;let need=OBJ2[o.k].need;if(level===1&&G2.mode==='level')need=1;return v2Size()>=need-1e-6;}
 function v2AddRage(n){if(G2.rageT>0||G2.ready)return;G2.rage=Math.min(G2.script&&G2.st<42?90:100,G2.rage+n);} // level 1: the first Rage is saved for its moment (~42 s)
 function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO LOST','#9aa3b2',13);G2.combo=0;comboCount=0;}
 
@@ -338,6 +350,7 @@ function v2Update(dt){
   if(G2.shT>0){G2.shT-=dt;if(G2.shT<1.5&&G2.shT>0){const k=Math.ceil(G2.shT*2);if(k!==G2.shTick){G2.shTick=k;v2Sfx('tickHi',{vol:.5,rate:1.3});vib(8);}}
     if(G2.shT<=0){G2.shT=0;v2Call('SHIELD OFF','','#ffb35c',.8);v2Sfx('armor',{vol:.35,rate:.6});}}
   // a hole that stops eating slowly evaporates back toward its starting size
+  if(v2WinOut()>0&&G2.rageT<=0&&!G2.ending){const hi=G2.rule.hi*V2K.r0;G2.rr=Math.max(hi-.5,G2.rr-((G2.rr-hi)*.9+1.4)*dt);if(rng()<dt*40&&G2.parts.length<150){const a=rng()*TAU;G2.parts.push({x:hX+Math.cos(a)*G2.R,y:hY+Math.sin(a)*G2.R,vx:Math.cos(a)*1.4,vy:Math.sin(a)*1.4,life:.6,max:.6,c:'#ff9a8a',sz:1.5});}} // too big for the window: it evaporates, even while eating
   if(G2.script||G2.rageT>0||G2.hold||G2.boss||G2.overT>0||G2.ending){G2.hungry=0;G2.shrink=false;}
   else{G2.hungry+=dt;G2.shrink=G2.hungry>V2K.decay.wait&&G2.rr>V2K.r0+.05;
     if(G2.shrink){G2.rr=Math.max(V2K.r0,G2.rr-Math.max(V2K.decay.min,(G2.rr-V2K.r0)*V2K.decay.k)*dt);
@@ -368,8 +381,10 @@ function v2Update(dt){
     if(G2.t>=G2.shardAt&&!G2.script){G2.shardAt=G2.mode==='surv'?G2.t+50:1e9;v2Edge('shard',0);}
     if(G2.swarm>0){G2.swarmT-=dt;if(G2.swarmT<=0&&v2Active()<20){G2.swarmT=.09;G2.swarm--;const q=rng();v2Edge(q<.08?'crystal':q<.25?'moon':'ast',rng()<.75?0:null);}}
   }
+  if(G2.hunt&&!G2.ending)v2HuntStep(dt);
   // level timer
   if(G2.mode==='level'&&!G2.ending){
+    if(G2.hunt&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('GOAL!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
     if(G2.boss&&G2.t>=G2.dur){
       if(SHOP.time>0&&monOn()){SHOP.time--;saveG();G2.dur+=30;v2Call('TIME CRYSTAL','+30 s','#8fd0ff',1.4,true);sfx('slow',{vol:.7,rate:1.2});} // a time crystal buys the boss fight 30 s
       else{v2Fail('DEV GEZEGEN KAÇTI');return;}}
@@ -403,7 +418,7 @@ function v2Update(dt){
     if(o.spinA!==undefined)o.spinA+=o.spinV*dt;o.rot+=o.vr*dt;
     if(o.wait>0){o.wait-=dt*tk;continue;}
     const odt=dt*tk;
-    if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;
+    if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;if(o.k==='prey')v2PreyStep(o,odt);
     if(o.k==='pulsar'){o.ph+=dt;o.lit=(o.ph%1.6)<.8;}if(o.k==='mpair')o.sa+=dt*2.4;
     // gravity of the main hole (and any mini hole) — meteors fly straight
     let dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1;
@@ -414,7 +429,7 @@ function v2Update(dt){
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
-        if(!ed)a*=.3;if(G2.ending)a*=3;const A=a*S*3600*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;
+        if(!ed)a*=v2Banned(o)?-.7:o.k==='prey'?0:.3;/* banned bodies are pushed away; a fresh prey ignores the pull */if(G2.ending)a*=3;const A=a*S*3600*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;
         // swirl + damping so bodies fall in instead of slingshotting around
         o.vx+=-dy/d*A*.22;o.vy+=dx/d*A*.22;const damp=Math.pow(1-.9*q,odt);o.vx*=damp;o.vy*=damp;
       }else if(d>Gr*1.2)o.inG=false;
@@ -427,7 +442,7 @@ function v2Update(dt){
         else{ // too big: bounces off the event horizon
           const nx=-dx/d,ny=-dy/d,vn=o.vx*nx+o.vy*ny;if(vn<0){o.vx-=1.8*vn*nx;o.vy-=1.8*vn*ny;}o.x=hX+nx*(G2.R+o.r*.66);o.y=hY+ny*(G2.R+o.r*.66);
           if(o.k==='split'){v2Split(o);continue;}
-          if(!o.bounced){o.bounced=true;if(o.k!=='pulsar')v2Call('TOO BIG','GROW FIRST','#ffb35c',.9);v2Sfx('armor',{vol:.35,rate:.7});}}}
+          if(!o.bounced){o.bounced=true;if(v2Banned(o)){v2Call('FORBIDDEN','COMBO ÷2','#ff5a4a',.9);G2.combo=Math.floor(G2.combo/2);comboCount=G2.combo;}else if(o.k!=='pulsar')v2Call('TOO BIG','GROW FIRST','#ffb35c',.9);v2Sfx('armor',{vol:.35,rate:.7});}}}
     }else{ // meteor
       if(o.slow>0){o.slow-=odt;const q=V2K.met.slow;o.vx=o.fvx*q;o.vy=o.fvy*q;if(o.slow<=0)v2Sfx('thrust',{vol:.4,rate:.7,x:o.x});}
       else if(o.ramp<V2K.met.ramp){o.ramp+=odt;const q=V2K.met.slow+(1-V2K.met.slow)*Math.min(1,o.ramp/V2K.met.ramp);o.vx=o.fvx*q;o.vy=o.fvy*q;}
@@ -447,7 +462,7 @@ function v2Update(dt){
       o.prevD=d;
     }
     // off screen
-    const mg=o.r*3+20;if(o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r)o.seen=true;
+    const mg=o.r*3+20;if(o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r)o.seen=true;if(o.k==='prey'&&!o.esc)continue;
     if(!o.tipd&&o.st==='in'&&o.x>o.r&&o.x<W-o.r&&o.y>(o.k==='meteor'?o.r*.5:o.r+sp2(60))&&o.y<H-o.r)v2TipFor(o);
     if((o.seen||o.age>12)&&(o.x<-mg||o.x>W+mg||o.y<-mg||o.y>H+mg)){if(o.fromBoss&&G2.boss)G2.boss.shed=Math.min(G2.boss.shed,.3);G2.objs.splice(i,1);}
   }
@@ -455,6 +470,7 @@ function v2Update(dt){
   for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
   for(let i=G2.calls.length-1;i>=0;i--){G2.calls[i].life-=dt;if(G2.calls[i].life<=0)G2.calls.splice(i,1);}
   if(G2.overT>0&&!TIPS.over)v2Tip('over',null);
+  if(G2.rule&&G2.t>1.2&&!TIPS[G2.rule.tip])v2Tip(G2.rule.tip,null);
   if(G2.boss&&!G2.boss.sw&&G2.t>2.2){const id=G2.boss.bt==='red'?'bossRed':G2.boss.bt==='nova'?'bossNova':'boss';if(!TIPS[id])v2Tip(id,G2.boss);}
   if(G2.ready&&!TIPS.rage)v2Tip('rage',null);
   if(G2.overT<=0&&!G2.overDone&&G2.L.overload&&G2.rr>=G2.cap-.01&&!G2.ending){G2.overT=V2K.over.dur;G2.overDone=true;v2Call('OVERLOAD','MORE POWER · HARDER TO STEER','#c9a8ff',1.8,true);sfx('bossIntro',{vol:.5,rate:1.5});shake=Math.max(shake,8);}
@@ -478,11 +494,36 @@ function v2SwallowStep(o,dt){
   if(o.cell!==undefined){o.gs=o.sc;o.radAng=Math.atan2(cy-o.y,cx-o.x);o.stretch=1+p*1.4;o.squeeze=1-p*.5;o.fade=1-p*.6;o.sp=p;}
   if(p>=1){v2Eaten(o);return true;}return false;
 }
+function v2HuntStep(dt){const h=G2.hunt;
+  if(!h.prey){h.next-=dt;if(h.next<=0){const o=v2Edge('prey',rng()<.5?1:2);o.life=G2.rule.life;o.max=o.life;o.stam=1;o.head=Math.atan2(o.vy,o.vx);h.prey=o;v2Call('PREY!',`${h.n+1}/${h.need}`,'#ffd76a',1,false);v2Sfx('sparkle',{vol:.6,rate:.8});}}
+  else if(h.prey.st!=='in'&&h.prey.st!=='sw')h.prey=null;}
+function v2PreyStep(o,dt){ // flees the hole; keep it in your pull to wear it down (then it can be caught for a moment); touched fresh, it blinks away
+  o.life-=dt;const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;o.blinkCD=Math.max(0,(o.blinkCD||0)-dt);
+  if(o.tiredT>0){o.tiredT-=dt;if(o.tiredT<=0){o.tire=.35;v2Pop('RECOVERED','#ffd76a',14);}}
+  else if(d<Math.max(G2.G,sp2(110))){o.tire=Math.min(1,(o.tire||0)+dt/V2K.prey.wear);if(o.tire>=1){o.tiredT=V2K.prey.tired;v2Call('TIRED!','CATCH IT','#ff8a5c',.9);v2Sfx('bell',{vol:.5,rate:1.4});}}
+  else o.tire=Math.max(0,(o.tire||0)-dt*.2);
+  if(!(o.tiredT>0)&&d<G2.R+o.r*1.2&&o.blinkCD<=0&&o.life>0){const a=Math.atan2(dy,dx)+rrnd(-.6,.6),j=sp2(170);v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4); // blink away
+    o.x=clamp(o.x+Math.cos(a)*j,sp2(30),W-sp2(30));o.y=clamp(o.y+Math.sin(a)*j,sp2(30),H-sp2(80));o.blinkCD=1.1;v2Sfx('thrust',{vol:.45,rate:1.6});v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4);}
+  if(flee){o.stam=Math.max(0,o.stam-dt*.08);const a=Math.atan2(dy,dx);o.head+=((a-o.head+Math.PI*3)%TAU-Math.PI)*Math.min(1,dt*4);}
+  else{o.stam=Math.min(1,o.stam+dt*.05);o.head+=Math.sin(G2.t*1.7+o.si)*dt*1.2;}
+  const m=sp2(40);if(o.life>0){if(o.x<m)o.head=0;else if(o.x>W-m)o.head=Math.PI;if(o.y<m)o.head=Math.PI/2;else if(o.y>H-m-50)o.head=-Math.PI/2;}
+  else if(!o.esc){o.esc=1;o.head=o.x<W/2?Math.PI:0;}
+  const sp=sp2(o.esc?520:o.tiredT>0?70:(flee?190+230*o.stam:120)),k=Math.min(1,dt*4);o.vx+=(Math.cos(o.head)*sp-o.vx)*k;o.vy+=(Math.sin(o.head)*sp-o.vy)*k;
+  if(o.esc&&(o.x<-o.r*3||o.x>W+o.r*3)){o.st='dead';G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('PREY ESCAPED','','#ff7a5c',1.2,true);G2.hitWhy='prey';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}
+function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.hypot(o.vx,o.vy)||1;ctx.save();ctx.globalCompositeOperation='lighter';
+  const tl=r*(2+sp/sp2(120)),tx=-o.vx/sp*tl,ty=-o.vy/sp*tl,g=ctx.createLinearGradient(o.x,o.y,o.x+tx,o.y+ty);g.addColorStop(0,'rgba(255,215,110,.8)');g.addColorStop(1,'rgba(255,160,60,0)');
+  ctx.strokeStyle=g;ctx.lineWidth=r*1.3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(o.x+tx,o.y+ty);ctx.stroke(); // tail
+  const gl=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.4);gl.addColorStop(0,'rgba(255,250,220,1)');gl.addColorStop(.35,'rgba(255,200,80,.85)');gl.addColorStop(1,'rgba(255,170,40,0)');ctx.fillStyle=gl;ctx.beginPath();ctx.arc(o.x,o.y,r*2.4,0,TAU);ctx.fill();
+  ctx.globalCompositeOperation='source-over';if(!o.esc){ctx.strokeStyle=q<.3?'#ff6a5a':'rgba(255,215,106,.75)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(o.x,o.y,r*2.3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke(); // time left
+    const tr=o.tiredT>0?1:(o.tire||0);ctx.strokeStyle=o.tiredT>0?`rgba(255,110,80,${.6+.4*Math.sin(clock*16)})`:'#fff3c4';ctx.lineWidth=5;ctx.beginPath();ctx.arc(o.x,o.y,r*1.6,-Math.PI/2,-Math.PI/2+TAU*tr);ctx.stroke();} // wear: full = catch it
+  ctx.restore();}
+function v2WinOut(){const r=G2.rule;if(!r||!r.win)return 0;const s=G2.rr/V2K.r0;return s>r.hi?1:s<r.lo?-1:0;}
 function v2Score(o,mini){
   const K=OBJ2[o.k];G2.hungry=0;G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;
   if(G2.combo>G2.best){G2.best=G2.combo;lvCombo=G2.best;}if(G2.combo>maxCombo)maxCombo=G2.combo;
   const perf=!mini&&o.inG&&o.b<V2K.perfectK*G2.G&&!o.chain;
   const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;pts=Math.round(pts);
+  const wo=v2WinOut();if(wo&&o.k!=='prey'){pts=0;if(!G2.woT||G2.t-G2.woT>1.2){G2.woT=G2.t;v2Pop(wo>0?T('ÇOK BÜYÜK · 0'):T('ÇOK KÜÇÜK · 0'),'#ff8a7a',15);}} // outside the size window nothing scores
   totalScore+=pts;levelScore+=pts;G2.eaten++;
   v2AddRage((K.rage+(perf?4:0))*(G2.script?1.6:1));
   if(m>MULT2(G2.combo-1)){v2Call('COMBO ×'+m,'','#ffd76a',1,false);v2Sfx('mult',{vol:.55,rate:.8+m*.1});if(m>=4)shake=Math.max(shake,4);totalCombos++;}
@@ -508,6 +549,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO TIME','+2 s','#bff6ff',.9);}
+  else if(o.k==='prey'&&G2.hunt){G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('CAUGHT!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});shake=Math.max(shake,6);}
   else if(o.k==='magnet'){G2.magT=6;v2Call('MAGNET','6 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
   else if(o.k==='pulsar'){v2Pop('PULSAR','#bfe6ff',17);shock=Math.max(shock,.3);}
   else if(o.k==='mpair'){const a=o.sa,d=o.r*1.9,sat=v2Obj('sat',o.x+Math.cos(a)*d,o.y+Math.sin(a)*d,o.vx-Math.sin(a)*sp2(120),o.vy+Math.cos(a)*sp2(120));sat.pair=1;G2.pairT=3;v2Call('NOW THE MOON!','3 s','#cfd6ff',1);}
@@ -525,7 +567,7 @@ function v2Hit(o){
   v2Burst(o.x,o.y,22,'#ff7a5c',2,7,.6,2.2);
   if(G2.immT>0)return;G2.immT=V2K.imm;
   if(G2.hold){const b=G2.hold;G2.hold=null;b.orb=null;b.st='dead';v2Blast(b.x,b.y,false);}
-  G2.dmg++;lostThisLevel=true;v2ComboLost();G2.rage=G2.ready?G2.rage:Math.max(0,G2.rage-15);
+  G2.dmg++;G2.lastHit=G2.hitWhy||(o&&o.k)||'meteor';lostThisLevel=true;v2ComboLost();G2.rage=G2.ready?G2.rage:Math.max(0,G2.rage-15);
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
   const tutorial=level===1&&G2.mode==='level';
@@ -678,6 +720,9 @@ const TIP2={
   worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir.'],
   boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!'],
   bossRed:['🔴','KIRMIZI DEV','Ölmekte olan dev bir yıldız: nefes alır gibi şişip söner, şiştikçe daha çok plazma saçar. Plazmayı yut: her biri onu küçültür. Yeşile dönünce bütünüyle yut!'],
+  restrict:['⛔','KISITLI SEVİYE','Bu seviyede bazı cisimler yasak: üstlerinde kırmızı işaret var. Seni iterler; üstlerine gidip çarparsan combo yarıya iner. Geri kalanını yiyerek hedefi tamamla.'],
+  window:['📏','BOYUT PENCERESİ','Puan sadece kara delik üstteki yeşil aralıktayken gelir. Küçüksen büyü. Fazla büyürsen buharlaşırsın ve o sırada yediğin puan getirmez: yavaş ye, aralıkta kal.'],
+  hunt:['🎯','AV','Altın av yutulmaz, önce yorulması gerekir: onu çekim alanında tut, iç halkası dolsun. Yorulunca kızarır ve yavaşlar, o an üstüne git ve yut. Dokunursan kaçar. Dış halka süresidir; biterse av kaçar ve 1 can gider.'],
   rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Rage seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
@@ -749,7 +794,7 @@ function v2Frame(dt){
   for(let i=ftexts.length-1;i>=0;i--){if(!ftexts[i].update(dt))ftexts.splice(i,1);else ftexts[i].draw();}
   for(let i=cols.length-1;i>=0;i--){if(!cols[i].update(dt,f)){const c=cols.splice(i,1)[0];if(c.gem){diamonds++;sfx('gem',{vol:.45,rate:1+Math.random()*.2});}else{stars++;sfx('coin',{vol:.4,rate:1+Math.random()*.25});}updateUI();}else cols[i].draw();}
   if(explA>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(230,220,255,${explA})`;ctx.lineWidth=14*explA+2;ctx.beginPath();ctx.arc(hX,hY,explR,0,TAU);ctx.stroke();ctx.restore();explR+=9*f;explA-=.012*f;}
-  v2DrawTipMark();v2DrawCalls();v2DrawTut();
+  v2DrawRule();v2DrawTipMark();v2DrawCalls();v2DrawTut();
   recFrame();
   G2.uiT-=dt;if(G2.uiT<=0){G2.uiT=.1;v2Ui(false);}
   if(gState==='playing'){G2.achT=(G2.achT||0)-dt;if(G2.achT<=0){G2.achT=.4;checkAchs();}} // achievements show the moment they are earned, not at the end of the level
@@ -788,7 +833,8 @@ function v2DrawObj(o,gl){
   const s=o.st==='sw'?(o.sc??1):1,r=o.r*s;if(!(r>=.6))return;const k=o.k;
   if(o.wait>0){v2DrawWarn(o);return;}
   ctx.save();if(o.st==='sw')ctx.globalAlpha=Math.max(.15,s);
-  if(k==='plasma'){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const c=o.pc||[255,140,50],g=ctx.createRadialGradient(0,0,0,0,0,r*1.9);
+  if(k==='prey')v2DrawPrey(o,s);
+  else if(k==='plasma'){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const c=o.pc||[255,140,50],g=ctx.createRadialGradient(0,0,0,0,0,r*1.9);
     g.addColorStop(0,'rgba(255,255,240,1)');g.addColorStop(.3,`rgba(${c[0]},${c[1]},${c[2]},.95)`);g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*1.9*(1+.08*Math.sin(clock*9+o.si)),0,TAU);ctx.fill();ctx.restore();}
   else if(k==='ast'||k==='frag'){v2Rock(o,s);if(k==='frag'){ctx.globalCompositeOperation='lighter';ctx.fillStyle='rgba(255,150,70,.25)';ctx.beginPath();ctx.arc(o.x,o.y,r*1.1,0,TAU);ctx.fill();}}
   else if(k==='meteor'){v2MetPath(o);const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp;ctx.globalCompositeOperation='lighter';
@@ -881,10 +927,20 @@ function v2DrawShard(o,sc){ // a golden third of the crest, glinting
   v2Heater(ctx,s);const g=ctx.createLinearGradient(-s,-s*1.1,s,s*1.3);g.addColorStop(0,'#fff7cf');g.addColorStop(.3,'#ffd84d');g.addColorStop(.62,'#e3a11c');g.addColorStop(1,'#7c4a07');ctx.fillStyle=g;ctx.fill();ctx.lineWidth=s*.13;ctx.strokeStyle='#6d4207';ctx.stroke();ctx.restore();
   ctx.strokeStyle=`rgba(255,250,220,${.6+.4*Math.sin(clock*6)})`;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-s*.05,-s*1.1);ctx.lineTo(s*.12,-s*.75);ctx.lineTo(-s*.18,-s*.3);ctx.lineTo(s*.1,s*.15);ctx.lineTo(-s*.12,s*.6);ctx.lineTo(-s*.02,s*1.1);ctx.stroke();ctx.restore();
 }
+function v2DrawRule(){const r=G2.rule;if(!r||gState==='menu'||G2.ending)return;const y=sp2(20);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
+  const w=ctx.measureText(txt).width+22,out=v2WinOut();ctx.fillStyle='rgba(10,12,18,.72)';ctx.strokeStyle=r.ban?'rgba(255,90,74,.8)':r.win?(out?'rgba(255,120,100,.9)':'rgba(141,255,203,.8)'):'rgba(255,215,106,.85)';ctx.lineWidth=1.5;
+  const x0=W/2-w/2;ctx.beginPath();ctx.roundRect(x0,y-11,w,22,11);ctx.fill();ctx.stroke();ctx.fillStyle='#e8ebf4';ctx.fillText(txt,W/2,y+1);
+  if(r.win){const bw=Math.min(W*.6,sp2(220)),bx=W/2-bw/2,by=y+19,s0=1,s1=Math.max(r.hi+.6,2.6),X=s=>bx+bw*clamp((s-s0)/(s1-s0),0,1),s=G2.rr/V2K.r0; // the size bar: green = scoring range
+    ctx.fillStyle='rgba(255,255,255,.14)';ctx.fillRect(bx,by,bw,6);ctx.fillStyle=out?'rgba(141,255,203,.45)':'rgba(141,255,203,.85)';ctx.fillRect(X(r.lo),by,X(r.hi)-X(r.lo),6);
+    const mx=X(s);ctx.fillStyle=out?(Math.sin(clock*14)>0?'#ff6a5a':'#ffd0c8'):'#ffffff';ctx.beginPath();ctx.moveTo(mx,by-3);ctx.lineTo(mx-5,by-9);ctx.lineTo(mx+5,by-9);ctx.closePath();ctx.fill();ctx.fillRect(mx-1,by-2,2,10);
+    if(out){ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.fillStyle='#ff9a8a';ctx.fillText(out>0?T('ÇOK BÜYÜK: yavaş ye'):T('ÇOK KÜÇÜK: büyü'),W/2,by+19);}}
+  ctx.restore();}
 function v2DrawMarks(){ // what can be eaten: pull lines and too-big warnings
   if(gState!=='playing'&&gState!=='tip')return;const Gr=G2.G;ctx.save();
   for(const o of G2.objs){if(o.st!=='in'||o.wait>0||o.k==='meteor'||o.orb)continue;const d=Math.hypot(o.x-hX,o.y-hY);
     if(o.k==='anti'){if(d<Gr*1.6){ctx.globalAlpha=.6+.4*Math.sin(clock*12);ctx.strokeStyle='#7dffb0';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.6+3,0,TAU);ctx.stroke();ctx.setLineDash([]);}continue;}
+    if(v2Banned(o)){{ctx.globalAlpha=(d<Gr*1.8?.7:.4)+.3*Math.sin(clock*9);ctx.strokeStyle='#ff5a4a';ctx.lineWidth=2.5;const rr=o.r*1.3+3;ctx.beginPath();ctx.arc(o.x,o.y,rr,0,TAU);ctx.moveTo(o.x-rr*.7,o.y-rr*.7);ctx.lineTo(o.x+rr*.7,o.y+rr*.7);ctx.stroke();}continue;} // forbidden: red no-entry mark
     if(v2Edible(o)){if(d<Gr){const k=1-d/Gr;ctx.globalAlpha=.18+.4*k;ctx.strokeStyle='#e6ecff';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(hX+(o.x-hX)/d*G2.R,hY+(o.y-hY)/d*G2.R);ctx.stroke();}}
     else if(o.k==='split'||o.k==='pulsar'){}
     else if(d<Gr*1.5){ctx.globalAlpha=.85;ctx.strokeStyle='#ff6a5a';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.25+3,0,TAU);ctx.stroke();ctx.setLineDash([]);}}
@@ -998,8 +1054,8 @@ function v2Ui(force){
   const left=G2.mode==='surv'?Math.floor(survTime):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));
   {const tp=$('tmr2'),showT=G2.mode==='sprint'||!!G2.L.boss&&G2.mode==='level';if(tp&&tp.hidden!==!showT)tp.hidden=!showT; // the clock only matters in timed runs and boss fights
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',G2.mode==='level'&&left<=10);}
-  const pct=G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
-  {const sc=G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;$('scVal').innerHTML=G2.goal?`${Math.min(sc,G2.goal).toLocaleString(LOC)}<small class="gl">/${G2.goal.toLocaleString(LOC)}</small>`:sc.toLocaleString(LOC);}}
+  const pct=G2.hunt?G2.hunt.n/G2.hunt.need*100:G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
+  {const sc=G2.hunt?-1-G2.hunt.n:G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;$('scVal').innerHTML=G2.hunt?`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`:G2.goal?`${Math.min(sc,G2.goal).toLocaleString(LOC)}<small class="gl">/${G2.goal.toLocaleString(LOC)}</small>`:sc.toLocaleString(LOC);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));
