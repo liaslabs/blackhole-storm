@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "لا يمكن ابتلاعه. يدخل ببطء ثم يتسارع، والخط الأحمر يُظهر مساره. الاصطدام يكلّف روحًا ويصفّر الكومبو",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "أبقِها في حقل جاذبيتك {n} ثوانٍ: تجذب MEGA BOMB كل ما على الشاشة إليك وتحطم النيازك. إن تحركت بسرعة كبيرة تهرب",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "ثقب أسود مساعد يدور حولك لمدة {n} ثوانٍ. ما يبتلعه يتدفق إليك، ويوقف النيازك"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "ثقب أسود مساعد يدور حولك لمدة {n} ثوانٍ. ما يبتلعه يتدفق إليك، ويوقف النيازك",
+"AL VE KULLAN": "اشترِ واستخدم",
+"Yetersiz elmas": "الألماس غير كافٍ",
+"Yıldızın": "نجومك",
+"Elmasın": "ألماسك",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "نفدت دروعك. اشترِ درعًا بالألماس واستخدمه فورًا",
+"{n} saniye meteor koruması": "حماية من النيازك لمدة {n} ثوانٍ",
+"Dev gezegene +{n} sn": "الكوكب العملاق +{n} ث",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "النيازك الحمراء خطيرة: الاصطدام يكلّفك {n} روح. تدخل ببطء ثم تتسارع. الأسهم الحمراء تُظهر مسارها، فابتعد عنه. مرّ بجانبها بفارق شعرة لتحصل على PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "لديك درع! عندما يقترب نيزك المس زر الدرع: لمدة {n} ثوانٍ يتحطم كل نيزك يصطدم بك. عندما يحمرّ الدرع فهو على وشك الانتهاء",
+"KALKAN PARÇASI": "قطعة درع",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "ابتلع قطع الدرع: اجمع {n} قطع لتحصل على {n} درع",
+"KÜÇÜLÜYOR": "يتقلّص",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "إذا لم تبتلع شيئًا لفترة يتقلّص ثقبك الأسود ببطء. استمر في الأكل! في نهاية المستوى يُحتسب أكبر حجم وصلت إليه",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "كلما ابتلعت كبرت: يتسع حقلك وتستطيع أكل أجرام أكبر. إن توقفت عن الأكل لفترة تتقلص ببطء",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "لا يمكن ابتلاعه. يدخل ببطء ثم يتسارع، والأسهم الحمراء تُظهر مساره. الاصطدام يكلّف روحًا ويصفّر الكومبو",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "يظهر بين حين وآخر ابتداءً من المستوى {n}. {n} قطع = {n} درع",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "المس زر الدرع أثناء اللعب: لمدة {n} ثوانٍ يتحطم كل نيزك يصطدم بك. يُشترى من المتجر أو يُكسب بجمع {n} قطع درع. لا يُستخدم في الكون اليومي والتحديات"
 }

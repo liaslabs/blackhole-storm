@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Ne peut pas être avalé. Entre lentement puis accélère ; la ligne rouge montre sa trajectoire. Un choc coûte une vie et remet le combo à zéro",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Garde-la {n} secondes dans ton champ de gravité : la MEGA BOMB attire tout l'écran vers toi et brise les météores. Si tu bouges trop vite, elle s'échappe",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Un trou noir assistant tourne autour de toi pendant {n} secondes. Ce qu'il avale te revient, et il arrête les météores"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Un trou noir assistant tourne autour de toi pendant {n} secondes. Ce qu'il avale te revient, et il arrête les météores",
+"AL VE KULLAN": "ACHETER ET UTILISER",
+"Yetersiz elmas": "Pas assez de diamants",
+"Yıldızın": "Tes étoiles",
+"Elmasın": "Tes diamants",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "Tu n'as plus de bouclier. Achètes-en un avec des diamants et utilise-le tout de suite",
+"{n} saniye meteor koruması": "Protection contre les météores de {n} secondes",
+"Dev gezegene +{n} sn": "Planète géante +{n} s",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "Les météores rouges sont dangereux : un choc coûte {n} vie. Ils entrent lentement, puis accélèrent. Les flèches rouges montrent leur trajectoire : écarte-toi. Frôle-le de justesse pour un PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "Tu as un bouclier ! Quand un météore arrive, touche le bouton bouclier : pendant {n} secondes chaque météore qui te touche éclate. Quand le bouclier devient rouge, il va bientôt s'arrêter",
+"KALKAN PARÇASI": "MORCEAU DE BOUCLIER",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "Avale les morceaux de bouclier : rassemble {n} morceaux pour gagner {n} bouclier",
+"KÜÇÜLÜYOR": "RÉTRÉCISSEMENT",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "Si tu n'avales rien pendant un moment, ton trou noir rétrécit lentement. Continue à manger ! En fin de niveau, c'est la plus grande taille atteinte qui compte",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Plus tu avales, plus tu grandis : ton champ s'élargit et tu peux avaler de plus gros corps. Arrête de manger un moment et tu rétrécis lentement",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Ne peut pas être avalé. Entre lentement puis accélère ; les flèches rouges montrent sa trajectoire. Un choc coûte une vie et remet le combo à zéro",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Apparaît de temps en temps à partir du niveau {n}. {n} morceaux = {n} bouclier",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Touche le bouton bouclier en jeu : pendant {n} secondes chaque météore qui te touche éclate. S'achète en boutique ou se gagne en rassemblant {n} morceaux de bouclier. Non utilisable en Cosmos du jour ni en défi"
 }

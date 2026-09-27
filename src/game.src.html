@@ -63,6 +63,14 @@ button{font-family:inherit;}
 #diaBtn{position:absolute;right:16px;bottom:max(18px,calc(env(safe-area-inset-bottom,0px) + 8px));z-index:20;width:64px;height:64px;border-radius:50%;padding:0;border:none;cursor:pointer;display:none;
   background:conic-gradient(var(--cyan) calc(var(--p,0)*1turn),rgba(255,255,255,.1) 0);box-shadow:0 6px 20px rgba(0,0,0,.55);}
 #diaBtn.show{display:block;}
+#shBtn{position:absolute;right:16px;bottom:calc(max(18px,calc(env(safe-area-inset-bottom,0px) + 8px)) + 76px);z-index:20;width:64px;height:64px;border-radius:50%;padding:0;border:none;cursor:pointer;display:none;background:conic-gradient(#ffd84d calc(var(--p,0)*1turn),rgba(255,216,77,.22) 0);box-shadow:0 6px 20px rgba(0,0,0,.55);}
+#shBtn.show{display:block;}#shBtn.left{right:auto;left:16px;}
+#shBtn .in{position:absolute;inset:3px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 30%,#2a2210,#0c0b08);border:1px solid rgba(255,216,77,.25);}
+#shBtn .ic .ico{width:28px;height:28px;}#shBtn .n{font-family:var(--fd);font-size:11px;font-weight:700;color:#ffe7a0;margin-top:1px;font-variant-numeric:tabular-nums;}
+#shBtn.empty .ic{filter:grayscale(.85) brightness(.6);}#shBtn.empty .n{color:#8a8472;}
+#shBtn.ready{box-shadow:0 0 0 2px rgba(255,216,77,.55),0 0 18px rgba(255,200,60,.4),0 6px 20px rgba(0,0,0,.55);}
+#shBtn.pulse{animation:shPulse .55s ease-in-out infinite alternate;}@keyframes shPulse{to{box-shadow:0 0 0 3px rgba(255,216,77,.95),0 0 30px rgba(255,200,60,.9),0 6px 20px rgba(0,0,0,.55);transform:scale(1.07);}}
+#shBtn.on .in{background:radial-gradient(circle at 40% 30%,#5a4410,#1a1406);}#shBtn.hl{outline:2px dashed #ffd76a;outline-offset:5px;}
 #diaBtn.left{right:auto;left:16px;}
 #diaBtn .in{position:absolute;inset:3px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 40% 30%,rgba(40,60,90,.95),rgba(8,10,22,.96));border:1px solid rgba(255,255,255,.08);}
 #diaBtn .ic{font-size:22px;line-height:1;filter:grayscale(.7) brightness(.7);}
@@ -427,6 +435,7 @@ html[lang=ar] *{letter-spacing:0!important;}
 .box,.how{background:var(--pan);border-color:var(--line);}
 .stat,.lbrow,.lbstats div,.popt,.srow,.tip,.gc,.acard,.afact,.credits,.sitem,.inv span,.wallet span,.dock button,.mode,.gtabs button,.tg,.seg,.mdesc{border-color:var(--line);}
 .wallet span{background:transparent;font-family:var(--fm);font-weight:500;display:inline-flex;align-items:center;gap:5px;}
+.wallet span span{padding:0;border:0;background:none;}.wallet small{font-size:10px;opacity:.8;}
 .mseg{border-color:var(--line);border-radius:6px;}
 .mseg .mode.on{background:rgba(242,169,59,.12);}
 .evo{background:var(--pan);border-color:var(--line);}
@@ -490,7 +499,7 @@ body.v2 #rage2{display:flex;align-items:center;gap:6px;width:min(170px,88%);marg
 #rage2.on i{background:linear-gradient(90deg,#ff3d2e,#ffcf8a);}
 @keyframes rg2{to{box-shadow:0 0 18px rgba(255,160,90,1);}}
 #rage2.hl{outline:2px dashed #ffd76a;outline-offset:5px;border-radius:4px;animation:tip2 .7s ease-in-out infinite alternate;}@keyframes tip2{to{outline-color:rgba(255,215,106,.35);}}
-#mTip2{z-index:60;}#mTip2.tTop{top:31%;}#mTip2.tBot{top:69%;}#mTip2 .i2{font-size:30px;line-height:1;margin-bottom:4px;}#mTip2 .logo{font-size:22px;margin-bottom:6px;}#mTip2 p{font-size:15px;color:#dfe3ee;line-height:1.45;margin:0 0 12px;}
+#mTip2,#mShBuy{z-index:60;}#mTip2.tTop{top:31%;}#mTip2.tBot{top:69%;}#mTip2 .i2{font-size:30px;line-height:1;margin-bottom:4px;}#mTip2 .logo{font-size:22px;margin-bottom:6px;}#mTip2 p{font-size:15px;color:#dfe3ee;line-height:1.45;margin:0 0 12px;}
 body.v2 #tmr2{display:flex;align-items:center;gap:4px;flex:0 0 auto;padding:6px 9px;border-radius:6px;border:1px solid var(--line);background:var(--pan);font-family:var(--fm);font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums;}
 #tmr2 span{font-size:12px;opacity:.7;}#tmr2.low{color:#ff8a5c;border-color:rgba(255,138,92,.5);}
 body.v2 #hearts{position:fixed;left:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40;pointer-events:none;padding:5px 8px;border-radius:6px;background:rgba(7,9,12,.55);}
@@ -498,6 +507,7 @@ body.v2 #combo{top:auto;bottom:calc(14px + env(safe-area-inset-bottom,0px));left
 body.v2 #combo b{font-size:17px;letter-spacing:.05em;}body.v2 #combo span{font-size:10px;opacity:.75;letter-spacing:.12em;}
 body.v2 #combo::after{content:'';display:block;width:64px;height:3px;margin-top:3px;border-radius:2px;background:linear-gradient(90deg,currentColor calc(var(--ct,1)*100%),rgba(255,255,255,.12) 0);}
 body.v2 #gw{cursor:grab;touch-action:none;}
+.cst{font-family:var(--fm);font-size:15px;color:#e7e3da;margin-top:4px;}.cst b{color:var(--gold);font-size:19px;}
 .how2{font-family:var(--fd);font-size:11px;letter-spacing:.2em;color:var(--dim);margin-top:6px;}
 .size2{font-family:var(--fm);font-size:34px;color:var(--gold);line-height:1.1;margin:2px 0 8px;}
 .size2 i{display:block;font-style:normal;font-family:var(--fd);font-size:12px;letter-spacing:.14em;color:#8dffcb;}
@@ -533,6 +543,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="hud-float" id="rhud"><div class="t" id="rhT">KURTARMA · MEKİK 1/3</div><div class="s">Kesikli yol istasyona değip yeşile dönünce dokun</div></div>
   <div class="hud-float" id="pubar"></div>
   <div class="hud-float" id="hint">Gezegen halkaya girince ekrana dokun</div>
+  <button id="shBtn" aria-label="Kalkan"><span class="in"><span class="ic">🛡</span><span class="n" id="shVal">0</span></span></button>
   <button id="diaBtn" aria-label="Halkayı büyüt: 20 elmas"><span class="in"><span class="ic">💎</span><span class="n" id="dVal">50</span></span></button>
   <div id="astro"><canvas id="astroCv" width="192" height="240"></canvas><div class="bub"><div class="nm" id="astroNm">FİLO KOMUTANI</div><div id="astroTx" class="notr"></div><button class="btn cy" id="astroBtn" style="display:none"></button></div></div>
   <div id="toast"><div class="i" id="tI">🏅</div><div><b class="t" id="tT">BAŞARIM</b><span class="d" id="tD"></span></div></div>
@@ -564,6 +575,12 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <canvas id="pvCan" width="192" height="192"></canvas>
    <p class="muted" id="introDesc" style="font-size:15px;color:#dfe3ee;"></p>
    <div class="row"><button class="btn big" id="introOk">ANLADIM</button></div>
+  </div>
+  <div class="modal card" id="mShBuy">
+   <div class="h">🛡 KALKAN</div>
+   <p id="shbD" style="font-size:15px;color:#dfe3ee;"></p>
+   <div class="row"><button class="btn big" id="shbYes">AL VE KULLAN</button></div>
+   <div class="row"><button class="btn sec" id="shbNo" style="width:100%;">VAZGEÇ</button></div>
   </div>
   <div class="modal card" id="mTip2">
    <div class="h">İPUCU</div>
@@ -603,6 +620,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row"><button class="btn big" id="zoneOk">BÖLGEYE GİR</button></div>
   </div>
   <div class="modal card" id="mLvl">
+   <div class="wallet wal2"></div>
    <div class="h" id="lvlHead">SEVİYE TAMAMLANDI</div>
    <div class="big-num" id="lvlNum">1</div>
    <div class="lvst" id="lvlStars"></div>
@@ -653,7 +671,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <button class="icb" id="setBtn" aria-label="Ayarlar">⚙️</button>
   </div>
   <div class="logo mlogo">BLACKHOLE STORM</div>
-  <div class="wallet"><span>⭐ <b id="menuStars">0</b></span><span>💎 <b id="menuDia">0</b></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
+  <div class="wallet"><span>⭐ <b id="menuStars">0</b></span><span>💎 <b id="menuDia">0</b></span><span>🛡 <b id="menuSh">0</b></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
   <div class="evo" id="evoBox"></div>
   <div class="banner" id="contBanner" style="display:none"><div class="s" id="contText"></div></div>
   <div class="box" id="dailyPrev" style="display:none;"></div>
@@ -779,6 +797,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <div class="screen" id="sPause" style="z-index:110;">
  <div class="card" style="max-width:340px;">
   <div class="h" style="font-size:16px;">DURAKLATILDI</div>
+  <div class="wallet wal2" style="margin:0 0 10px;"></div>
   <button class="popt" id="pResume">▶ Devam et</button>
   <button class="popt" id="pMusic">🎵 Müzik <em id="pMusicL">AÇIK</em></button>
   <button class="popt" id="pSfx">🔊 Efekt sesleri <em id="pSfxL">AÇIK</em></button>
@@ -857,7 +876,7 @@ const ICO=(()=>{
    '💎':'<path d="M6 3.6h12l4 5.4-10 11.9L2 9z" fill="#7fd0ea"/><path d="M2 9h20L12 20.9z" fill="#3a9cc8"/><path d="M6 3.6L9 9l3-5.4L15 9l3-5.4M9 9l3 11.9L15 9" fill="none" stroke="#e1f7ff" stroke-width=".7" opacity=".85"/><path d="M6 3.6h12l4 5.4-10 11.9L2 9z" fill="none" stroke="#1b5f82" stroke-width=".9"/>',
    '❤️':heart,'❤':heart,'♥':heart,
    '💔':heart+'<path d="M12 6.9l-1.6 3.4 2.4 2.1-1.5 3.6" fill="none" stroke="#0d1015" stroke-width="1.4"/>',
-   '🛡':'<path d="M12 2.8l7.5 2.8v5.6c0 4.8-3.2 8.2-7.5 10-4.3-1.8-7.5-5.2-7.5-10V5.6z" fill="url(#gShield)" stroke="#23405c" stroke-width=".9"/><path d="M12 5v14.3c3.3-1.6 5.4-4.3 5.4-8V7.1z" fill="rgba(255,255,255,.18)"/>',
+   '🛡':'<path d="M4.4 4.4Q12 2.6 19.6 4.4v6.8c0 5-3.5 8.3-7.6 10.4C7.9 19.5 4.4 16.2 4.4 11.2z" fill="url(#gShield)" stroke="#6d4207" stroke-width="1.1"/><path d="M6.4 6q5.6-1.3 11.2 0v5.2c0 3.8-2.6 6.4-5.6 8-3-1.6-5.6-4.2-5.6-8z" fill="none" stroke="#fff0a8" stroke-width=".7"/><circle cx="12" cy="10.8" r="2.3" fill="#120c02"/><ellipse cx="12" cy="10.8" rx="4" ry="1.15" transform="rotate(-20 12 10.8)" fill="none" stroke="#ffe27a" stroke-width=".8"/><path d="M5.5 5.2l5 0-5 7z" fill="rgba(255,255,255,.35)"/>',
    '⏱':'<circle cx="12" cy="13.5" r="7.5" fill="#1b2430" stroke="#a9d3e8" stroke-width="1.7"/><path d="M12 13.5V9.2M12 13.5l3 2" stroke="#e7e3da" stroke-width="1.7" stroke-linecap="round"/><path d="M10 2.8h4M12 2.8v3.2M18.2 6.6l1.4-1.4" stroke="#a9d3e8" stroke-width="1.7" stroke-linecap="round"/>',
    '👑':'<path d="M3 8l4.5 4L12 5l4.5 7L21 8l-2 10H5z" fill="url(#gStar)" stroke="#7a4f12" stroke-width=".9" stroke-linejoin="round"/><path d="M5.3 16h13.4" stroke="#7a4f12" stroke-width=".9"/><circle cx="12" cy="12.8" r="1.3" fill="#e5484d"/>',
    '🔥':'<path d="M12 21.2c-3.9 0-6.6-2.6-6.6-6.3 0-3.2 2.2-5.1 3.6-7.3.5 1.4 1.3 2.3 2.3 2.8-.1-3 .9-5.6 3.2-7.6.2 3.3 1.9 5 3.2 6.9.8 1.2 1.3 2.6 1.3 4.2 0 4.4-3 7.3-7 7.3z" fill="url(#gFire)"/><path d="M12 21.2c-1.9 0-3.2-1.3-3.2-3.1 0-2 1.6-3 2.4-4.6.9 1.3 3.9 2.6 3.9 4.9 0 1.6-1.3 2.8-3.1 2.8z" fill="#ffe08a"/>',
@@ -911,7 +930,7 @@ const ICO=(()=>{
 function icoDefs(){if($('icoDefs'))return;document.body.insertAdjacentHTML('afterbegin','<svg id="icoDefs" width="0" height="0" style="position:absolute" aria-hidden="true"><defs>'+
   '<linearGradient id="gStar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe3a0"/><stop offset="1" stop-color="#e59a2f"/></linearGradient>'+
   '<linearGradient id="gHeart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f58a92"/><stop offset="1" stop-color="#cf2e40"/></linearGradient>'+
-  '<linearGradient id="gShield" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9cc7e0"/><stop offset="1" stop-color="#3e6c90"/></linearGradient>'+
+  '<linearGradient id="gShield" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff7cf"/><stop offset=".35" stop-color="#ffd84d"/><stop offset=".7" stop-color="#e3a11c"/><stop offset="1" stop-color="#8a560a"/></linearGradient>'+
   '<linearGradient id="gFire" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e5484d"/><stop offset=".6" stop-color="#f28b2f"/><stop offset="1" stop-color="#ffd27a"/></linearGradient></defs></svg>');}
 const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function icoFill(w){if(w._src===undefined&&w._raw===undefined)return;const out=w._src==null?w._raw:trLookup(w._src);w.innerHTML=escH(out).replace(ICO.re,m=>ICO.svg(m));}
@@ -991,7 +1010,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,lives:0,shield:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={};
+let SHOP={noAds:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={};
 function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
@@ -1009,7 +1028,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
-  for(const k of ['lives','shield','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
+  for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
   }catch(e){}
 }
@@ -1784,11 +1803,11 @@ function mapSheet(l,st,k){
 }
 // guide: everything that used to crowd the main menu
 const GUIDE={
- 'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin.'],['step4','','Süre bitince seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can.']],
+ 'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün.'],['step4','','Süre bitince seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can.']],
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×7 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
- 'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['💎','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır.']],
+ 'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['💎','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.']],
  'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.']],
- 'EŞYALAR':[['🛡','KALKAN','Bir meteor çarpınca otomatik devreye girer, can gitmez. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','ULTRA GENİŞLİK','Oyunda elmas butonuna dokun: çekim alanın 20 saniye 1,5 katı (20 💎).']],
+ 'EŞYALAR':[['🛡','KALKAN','Oyunda kalkan butonuna dokun: 5 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','ULTRA GENİŞLİK','Oyunda elmas butonuna dokun: çekim alanın 20 saniye 1,5 katı (20 💎).']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
   $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}">${k}</button>`).join('');
@@ -1819,7 +1838,7 @@ const IAP=[
  {id:'time_pack',sec:'packs',ic:'⏱',t:'5',d:'Zaman kristali',price:'₺9,99',give:{time:5}}];
 // VIP subscription: an extra reward with every daily bonus, and one reward pack per 30 days of membership
 const VIP={daily:{gems:15,shield:1},month:{gems:300,stars:3000,shield:5,lives:5,time:3}};
-const GEM_ITEMS=[{k:'shield',ic:'🛡',t:'Kalkan',d:'Bir can kaybını önler',cost:30},{k:'lives',ic:'❤️',t:'Yedek can',d:'Canın bitince devam',cost:25},{k:'time',ic:'⏱',t:'Zaman kristali',d:'Dev gezegene +30 sn',cost:20},{k:'stars',ic:'⭐',t:'500 yıldız',d:'Devam için',cost:40,n:500}];
+const GEM_ITEMS=[{k:'shield',ic:'🛡',t:'Kalkan',d:'5 saniye meteor koruması',cost:30},{k:'lives',ic:'❤️',t:'Yedek can',d:'Canın bitince devam',cost:25},{k:'time',ic:'⏱',t:'Zaman kristali',d:'Dev gezegene +30 sn',cost:20},{k:'stars',ic:'⭐',t:'500 yıldız',d:'Devam için',cost:40,n:500}];
 const MON={mode:'off',svc:null,prices:{},busy:false,lastInter:0,winsSinceInter:0};
 const monOn=()=>MON.mode!=='off';
 function monApply(){const on=monOn();document.querySelectorAll('.mon').forEach(e=>e.hidden=!on);$('menuVip').hidden=$('dVip').hidden=!vipOn();if(on){$('starterRib').hidden=SHOP.starter||bestLevel<3;}}
@@ -2646,7 +2665,7 @@ function drawRescue(){
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mCont','mNoStar','mIntro','mRescue','mSprint','mZone','mLvl','mOver','mTime','mTip2'];
+const MODALS=['mCont','mNoStar','mIntro','mRescue','mSprint','mZone','mLvl','mOver','mTime','mTip2','mShBuy'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function showBig(html,ms){const b=$('bigtxt');b.innerHTML=html;b.style.opacity='1';b.style.transform='translate(-50%,-50%) scale(1)';setTimeout(()=>{b.style.opacity='0';b.style.transform='translate(-50%,-50%) scale(.6)';},ms);}
@@ -2903,7 +2922,7 @@ function showCont(){
   if(REPLAY){lvlButtons(true);$('lvlHead').textContent='SEVİYE BAŞARISIZ';$('lvlNum').textContent=level;$('lvlMsg').textContent='Canların bitti. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez.';showModal('mLvl');gState='menu';return;}
   const cl=gameMode==='classic';$('contStars').textContent=stars;
   if(G2.on){const one=!G2.contUsed;$('contYes').parentNode.hidden=!one;if(!one){$('contAd').parentNode.hidden=true;$('contLife').parentNode.hidden=true;}
-    $('contBox').hidden=!one;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+(one?`<br>${T('Devam edersen boyutun korunur: 1 can, Rage %50.')}`:`<br>${T('Bu oyunda devam hakkını kullandın.')}`);
+    $('contBox').hidden=!one;$('contBox').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">${T('100 ⭐ İLE DEVAM')}</div><div class="cst">${T('Yıldızın')}: <b id="contStars">${stars.toLocaleString(LOC)}</b> ⭐</div>`;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+(one?`<br>${T('Devam edersen boyutun korunur: 1 can, Rage %50.')}`:`<br>${T('Bu oyunda devam hakkını kullandın.')}`);
     $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');return;}
   $('contMsg').textContent=cl?`Seviye ${level}'de canların bitti. İlerlemen kayıtlı: baştan başlamazsın.`:'Kaldığın yerden devam etmek ister misin?';
   $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');
@@ -2917,13 +2936,16 @@ function gameOver(){
   $('finBest').textContent=bestScore.toLocaleString(LOC);$('finCombo').textContent=maxCombo;$('finRescue').textContent=rescueOK;
   showModal('mOver');sfx('gameover',{vol:.8,rev:.4});gState='over';SND.music('menu');
 }
+function fillWallets(){const t=`<span>⭐ ${stars.toLocaleString(LOC)}</span><span>💎 ${diamonds.toLocaleString(LOC)}</span><span>🛡 ${SHOP.shield}${SHOP.shards?` <small>+${SHOP.shards}/3</small>`:''}</span>`;
+  document.querySelectorAll('.wal2').forEach(e=>{if(e._t!==t){e._t=t;e.innerHTML=t;}});const m=$('menuSh');if(m)m.textContent=SHOP.shield;}
 function updateUI(){
+  fillWallets();
   $('scVal').textContent=totalScore.toLocaleString(LOC);
   $('lvLbl').textContent=REPLAY?'TEKRAR':isRescueLevel||MIS?'GÖREV':gameMode==='survival'?'HIZ':gameMode==='sprint'?'SÜRE':'SEVİYE';
   $('lvVal').textContent=MIS?'🚀':isRescueLevel?'🛰️':gameMode==='survival'?effLevel():gameMode==='sprint'?Math.max(0,Math.ceil(SPR_RUN.dur-SPR_RUN.t)):level;
   $('scSub').textContent=MIS?`KAPSÜL ${MIS.got} / ${MIS.need}`:gameMode==='sprint'?(SPR_RUN.opt.chal?`RAKİP ${SPR_RUN.opt.chal.s.toLocaleString(LOC)}`:`EN İYİ ${Math.max(sprintBest,0).toLocaleString(LOC)}`):isRescueLevel?`KURTARILAN ${rSaved} / ${RESCUE_SHIPS}`:gameMode==='survival'?`REKOR ${bestScore.toLocaleString(LOC)}`:`HEDEF ${Math.min(levelScore,levelTarget(level))} / ${levelTarget(level)}`;
   const hs=$('hearts');const key=lives+'|'+isRescueLevel+'|'+(monOn()?SHOP.shield:0);
-  if(hs._k!==key){hs._k=key;let h='';if(!isRescueLevel){if(lives<=5){for(let i=0;i<Math.max(3,lives);i++)h+=`<span class="h${i<lives?'':' off'}">♥</span>`;}else h=`<span class="h">♥</span><span class="x">×${lives}</span>`;}if(monOn()&&SHOP.shield>0&&!isRescueLevel)h+=`<span class="shd">🛡${SHOP.shield}</span>`;hs.innerHTML=h;hs.className=lives<=1?'low':'';}
+  if(hs._k!==key){hs._k=key;let h='';if(!isRescueLevel){if(lives<=5){for(let i=0;i<Math.max(3,lives);i++)h+=`<span class="h${i<lives?'':' off'}">♥</span>`;}else h=`<span class="h">♥</span><span class="x">×${lives}</span>`;}if(!G2.on&&monOn()&&SHOP.shield>0&&!isRescueLevel)h+=`<span class="shd">🛡${SHOP.shield}</span>`;hs.innerHTML=h;hs.className=lives<=1?'low':'';}
   $('dVal').textContent=diamonds;updateDiaBtn();
   const pct=MIS?Math.min(100,MIS.got/MIS.need*100):gameMode==='sprint'?Math.min(100,SPR_RUN.t/SPR_RUN.dur*100):isRescueLevel?(RESCUE_SHIPS-rShips)/RESCUE_SHIPS*100:gameMode==='classic'?Math.min(100,levelScore/levelTarget(level)*100):Math.min(100,(survScore%1000)/10);
   if(G2.on){$('lvLbl').textContent=gameMode==='survival'?'HIZ':REPLAY?'TEKRAR':gameMode==='sprint'?'SÜRE':'SEVİYE';$('lvVal').textContent=gameMode==='survival'?G2.lv:gameMode==='sprint'?Math.max(0,Math.ceil(SPR_RUN.dur-SPR_RUN.t)):level;$('pb').style.background='';return;}
@@ -3262,6 +3284,7 @@ $('pSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();};
 $('pSet').onclick=$('setBtn').onclick=()=>{syncSettingsUI();$('sSet').classList.add('on');};
 $('setClose').onclick=()=>$('sSet').classList.remove('on');
 $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
+$('shBtn').onclick=e=>{e.stopPropagation();v2Shield();};$('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('sTips').onclick=()=>{TIPS={};saveG();$('sTips').textContent='✓';sfx('click',{vol:.4});};
 if(!canLink())$('privRow').innerHTML='🔒 Oyun kişisel veri toplamaz; skorlar ve ayarlar yalnızca bu cihazda saklanır.';
 
@@ -3290,7 +3313,7 @@ const MODE_TXT={
 function showMenu(){
   if(G2.on)v2Stop();
   runId++;pendingWin=false;$('minus').style.display='none';
-  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;
+  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();
   $('menuSub').textContent=loginStreak>1?`🔥 ${loginStreak} günlük seri`:'Hoş geldin, kaptan';
   renderMapCard();monApply();
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();

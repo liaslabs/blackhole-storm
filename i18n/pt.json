@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Não pode ser engolido. Entra devagar e depois acelera; a linha vermelha mostra o caminho. Uma batida custa uma vida e zera o combo",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Segure-a {n} segundos no seu campo de gravidade: a MEGA BOMB puxa tudo da tela para você e quebra os meteoros. Se mover rápido demais, ela escapa",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Um buraco negro ajudante gira ao seu redor por {n} segundos. O que ele engole flui para você, e ele para meteoros"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Um buraco negro ajudante gira ao seu redor por {n} segundos. O que ele engole flui para você, e ele para meteoros",
+"AL VE KULLAN": "COMPRAR E USAR",
+"Yetersiz elmas": "Diamantes insuficientes",
+"Yıldızın": "Suas estrelas",
+"Elmasın": "Seus diamantes",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "Seus escudos acabaram. Compre um com diamantes e use na hora",
+"{n} saniye meteor koruması": "Proteção contra meteoros de {n} segundos",
+"Dev gezegene +{n} sn": "Planeta gigante +{n} s",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "Meteoros vermelhos são perigosos: uma batida custa {n} vida. Eles entram devagar e depois aceleram. As setas vermelhas mostram o caminho: saia da frente. Desvie raspando e faça um PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "Você tem um escudo! Quando vier um meteoro, toque no botão do escudo: por {n} segundos todo meteoro que bater se quebra. Quando o escudo fica vermelho, está acabando",
+"KALKAN PARÇASI": "PEDAÇO DE ESCUDO",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "Engula pedaços de escudo: junte {n} pedaços e ganhe {n} escudo",
+"KÜÇÜLÜYOR": "ENCOLHENDO",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "Se você não engolir nada por um tempo, seu buraco negro encolhe devagar. Continue comendo! No fim do nível conta o maior tamanho que você alcançou",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Quanto mais você engole, mais cresce: seu campo aumenta e você pode comer corpos maiores. Pare de comer por um tempo e você encolhe devagar",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Não pode ser engolido. Entra devagar e depois acelera; as setas vermelhas mostram o caminho. Uma batida custa uma vida e zera o combo",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Aparece de vez em quando a partir do nível {n}. {n} pedaços = {n} escudo",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Toque no botão do escudo durante o jogo: por {n} segundos todo meteoro que bater se quebra. Compre na loja ou ganhe juntando {n} pedaços de escudo. Não vale no Cosmos Diário nem em desafios"
 }

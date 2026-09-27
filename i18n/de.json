@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Kann nicht verschlungen werden. Kommt langsam herein und wird dann schnell; die rote Linie zeigt die Bahn. Ein Treffer kostet ein Leben und setzt die Combo zurück",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Halte sie {n} Sekunden in deinem Schwerefeld: Die MEGA BOMB zieht alles auf dem Bildschirm zu dir und zerschlägt Meteoren. Bewegst du dich zu schnell, entkommt sie",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Ein Helfer-Loch kreist {n} Sekunden lang um dich. Was es verschlingt, fließt zu dir, und es hält Meteoren auf"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Ein Helfer-Loch kreist {n} Sekunden lang um dich. Was es verschlingt, fließt zu dir, und es hält Meteoren auf",
+"AL VE KULLAN": "KAUFEN UND NUTZEN",
+"Yetersiz elmas": "Nicht genug Diamanten",
+"Yıldızın": "Deine Sterne",
+"Elmasın": "Deine Diamanten",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "Du hast keinen Schild mehr. Kauf einen mit Diamanten und nutze ihn sofort",
+"{n} saniye meteor koruması": "{n} Sekunden Meteorschutz",
+"Dev gezegene +{n} sn": "Riesenplanet +{n} s",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "Rote Meteoren sind gefährlich: Ein Treffer kostet {n} Leben. Sie kommen langsam herein und werden dann schnell. Die roten Pfeile zeigen ihre Bahn, also geh aus dem Weg. Weichst du haarscharf aus, gibt es ein PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "Du hast einen Schild! Kommt ein Meteor, tippe auf den Schild-Knopf: {n} Sekunden lang zerbricht jeder Meteor, der dich trifft. Wird der Schild rot, läuft er bald ab",
+"KALKAN PARÇASI": "SCHILDTEIL",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "Verschling Schildteile: Sammle {n} Teile und du bekommst {n} Schild",
+"KÜÇÜLÜYOR": "SCHRUMPFT",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "Verschlingst du eine Weile nichts, schrumpft dein Schwarzes Loch langsam. Friss weiter! Am Levelende zählt die größte Größe, die du erreicht hast",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Je mehr du verschlingst, desto größer wirst du: Dein Feld wächst und du kannst größere Körper fressen. Hörst du eine Weile auf zu fressen, schrumpfst du langsam",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Kann nicht verschlungen werden. Kommt langsam herein und wird dann schnell; die roten Pfeile zeigen die Bahn. Ein Treffer kostet ein Leben und setzt die Combo zurück",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Taucht ab Level {n} ab und zu auf. {n} Teile = {n} Schild",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tippe im Spiel auf den Schild-Knopf: {n} Sekunden lang zerbricht jeder Meteor, der dich trifft. Im Shop kaufen oder durch {n} gesammelte Schildteile verdienen. Nicht im Täglichen Kosmos und in Duellen"
 }

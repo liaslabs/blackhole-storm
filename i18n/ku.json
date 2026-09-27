@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Nayê daqurtandin. Pêşî hêdî tê, paşê bilez dibe; xeta sor rêya wê nîşan dide. Lêdan canekî dibe û combo sifir dike",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "{n} saniyeyan di qada kêşana xwe de bigire: MEGA BOMB her tiştê li ekranê dikişîne cem te û meteoran dişkîne. Heke pir bilez bilivî, direve",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Qulekî reş ê alîkar {n} saniyeyan li dora te dizivire. Tiştên ku ew daqurtîne tên cem te, û meteoran radiwestîne"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Qulekî reş ê alîkar {n} saniyeyan li dora te dizivire. Tiştên ku ew daqurtîne tên cem te, û meteoran radiwestîne",
+"AL VE KULLAN": "BIKIRE Û BIKAR BÎNE",
+"Yetersiz elmas": "Elmas têr nake",
+"Yıldızın": "Stêrkên te",
+"Elmasın": "Elmasên te",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "Mertalên te xilas bûn. Bi elmasan yekê bikire û yekser bikar bîne",
+"{n} saniye meteor koruması": "{n} saniye parastina ji meteoran",
+"Dev gezegene +{n} sn": "Gerstêrka dêw +{n} s",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "Meteorên sor xeternak in: lêdan {n} canî dibe. Pêşî hêdî dikevin, paşê bilez dibin. Tîrên sor rêya wan nîşan didin, ji wê rêyê dûr bikeve. Bi mûyekê jê xelas bibe, PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "Mertalek te heye! Dema meteor tê, li bişkoka mertal bitikîne: {n} saniyeyan her meteorê ku li te dikeve dişkê. Dema mertal sor bû, nêzî xilasbûnê ye",
+"KALKAN PARÇASI": "PARÇEYA MERTAL",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "Parçeyên mertal daqurtîne: {n} parçe berhev bike, {n} mertal qezenc bike",
+"KÜÇÜLÜYOR": "BIÇÛK DIBE",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "Heke demekê tiştekî daqurtînî, qula te ya reş hêdî hêdî biçûk dibe. Xwarinê berdewam bike! Di dawiya astê de mezinahiya herî mezin a ku gihîştiyê tê hesibandin",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Her ku daqurtînî mezin dibî: qada te fireh dibe û tu dikarî laşên mezintir bixwî. Heke demekê nexwî, hêdî hêdî biçûk dibî",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Nayê daqurtandin. Pêşî hêdî tê, paşê bilez dibe; tîrên sor rêya wê nîşan didin. Lêdan canekî dibe û combo sifir dike",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Ji asta {n} û pê ve carinan tê. {n} parçe = {n} mertal",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Di lîstikê de li bişkoka mertal bitikîne: {n} saniyeyan her meteorê ku li te dikeve dişkê. Ji dikanê tê kirîn an bi berhevkirina {n} parçeyên mertal tê qezenckirin. Di Kozmosa Rojane û pêşbirkan de nayê bikaranîn"
 }

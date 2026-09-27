@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Can't be swallowed. Enters slowly, then speeds up; the red line shows its path. A hit costs a life and resets the combo",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Hold it in your gravity field for {n} seconds: the MEGA BOMB pulls everything on screen into you and shatters meteors. Move too fast and it escapes",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "A helper black hole circles you for {n} seconds. What it swallows flows into you, and it stops meteors"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "A helper black hole circles you for {n} seconds. What it swallows flows into you, and it stops meteors",
+"AL VE KULLAN": "BUY AND USE",
+"Yetersiz elmas": "Not enough diamonds",
+"Yıldızın": "Your stars",
+"Elmasın": "Your diamonds",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "You're out of shields. Buy one with diamonds and use it right away",
+"{n} saniye meteor koruması": "{n}-second meteor protection",
+"Dev gezegene +{n} sn": "Giant planet +{n} s",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "Red meteors are dangerous: a hit costs {n} life. They enter slowly, then speed up. The red arrows show their path, so get out of the way. Miss one by a hair for a PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "You have a shield! When a meteor comes, tap the shield button: for {n} seconds every meteor that hits shatters. When the shield turns red, it's about to run out",
+"KALKAN PARÇASI": "SHIELD PIECE",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "Swallow shield pieces: collect {n} pieces to earn {n} shield",
+"KÜÇÜLÜYOR": "SHRINKING",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "If you don't swallow anything for a while, your black hole slowly shrinks. Keep eating! At the end of the level, the biggest size you reached counts",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "The more you swallow, the bigger you get: your field widens and you can swallow bigger bodies. Stop eating for a while and you slowly shrink",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Can't be swallowed. Enters slowly, then speeds up; the red arrows show its path. A hit costs a life and resets the combo",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Shows up now and then from level {n}. {n} pieces = {n} shield",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tap the shield button in play: for {n} seconds every meteor that hits shatters. Buy it in the shop or earn it by collecting {n} shield pieces. Not usable in Daily Cosmos or challenges"
 }

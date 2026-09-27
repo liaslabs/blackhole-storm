@@ -634,5 +634,22 @@
 "PERFECT DODGE": "PERFECT DODGE",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı çizgi yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Нельзя поглотить. Входит медленно, потом ускоряется; красная линия показывает путь. Удар стоит жизни и сбрасывает комбо",
 "Çekim alanında {n} saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Удержи её в поле гравитации {n} секунды: MEGA BOMB притянет к тебе всё на экране и разобьёт метеоры. Если двигаться слишком быстро, она улетит",
-"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Чёрная дыра-помощник {n} секунд кружит вокруг тебя. Всё, что она поглощает, достаётся тебе, и она останавливает метеоры"
+"{n} saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur": "Чёрная дыра-помощник {n} секунд кружит вокруг тебя. Всё, что она поглощает, достаётся тебе, и она останавливает метеоры",
+"AL VE KULLAN": "КУПИТЬ И ИСПОЛЬЗОВАТЬ",
+"Yetersiz elmas": "Не хватает алмазов",
+"Yıldızın": "Твои звёзды",
+"Elmasın": "Твои алмазы",
+"Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan": "Щиты закончились. Купи щит за алмазы и сразу используй",
+"{n} saniye meteor koruması": "Защита от метеоров на {n} секунд",
+"Dev gezegene +{n} sn": "Гигантская планета +{n} с",
+"Kırmızı meteor tehlikeli: çarparsa {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE": "Красные метеоры опасны: удар стоит {n} жизни. Они входят медленно, а потом ускоряются. Красные стрелки показывают их путь — уйди с него. Пропусти метеор впритирку — это PERFECT DODGE",
+"Bir kalkanın var! Meteor yaklaşınca kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Kalkan kırmızıya dönünce bitmek üzeredir": "У тебя есть щит! Когда летит метеор, нажми кнопку щита: {n} секунд каждый метеор разбивается о щит. Когда щит краснеет, он скоро закончится",
+"KALKAN PARÇASI": "ЧАСТЬ ЩИТА",
+"Kalkan parçasını yut: {n} parça toplayınca {n} kalkan kazanırsın": "Поглощай части щита: собери {n} части и получи {n} щит",
+"KÜÇÜLÜYOR": "УМЕНЬШАЕТСЯ",
+"Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır": "Если какое-то время ничего не поглощать, чёрная дыра медленно уменьшается. Продолжай есть! В конце уровня засчитывается наибольший достигнутый размер",
+"Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Чем больше поглощаешь, тем больше становишься: поле растёт, и можно есть тела побольше. Перестанешь есть — начнёшь медленно уменьшаться",
+"Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Нельзя поглотить. Входит медленно, потом ускоряется; красные стрелки показывают путь. Удар стоит жизни и сбрасывает комбо",
+"Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Иногда появляется начиная с уровня {n}. {n} части = {n} щит",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Нажми кнопку щита в игре: {n} секунд каждый метеор разбивается о щит. Покупается в магазине или собирается из {n} частей щита. Не действует в Ежедневном космосе и вызовах"
 }
