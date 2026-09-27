@@ -1,6 +1,6 @@
 {
   "packageId": "com.liaslabs.blackholestorm",
-  "host": "sinansoyu.github.io",
+  "host": "liaslabs.github.io",
   "name": "Blackhole Storm",
   "launcherName": "Blackhole Storm",
   "display": "fullscreen",
@@ -14,8 +14,8 @@
   "backgroundColor": "#03040A",
   "enableNotifications": true,
   "startUrl": "/blackhole-storm/",
-  "iconUrl": "https://sinansoyu.github.io/blackhole-storm/icons/icon-512.png",
-  "maskableIconUrl": "https://sinansoyu.github.io/blackhole-storm/icons/icon-maskable-512.png",
+  "iconUrl": "https://liaslabs.github.io/blackhole-storm/icons/icon-512.png",
+  "maskableIconUrl": "https://liaslabs.github.io/blackhole-storm/icons/icon-maskable-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
     "path": "./android.keystore",
@@ -25,7 +25,7 @@
   "appVersionCode": 1,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
-  "webManifestUrl": "https://sinansoyu.github.io/blackhole-storm/manifest.webmanifest",
+  "webManifestUrl": "https://liaslabs.github.io/blackhole-storm/manifest.webmanifest",
   "fallbackType": "customtabs",
   "features": {
     "playBilling": {
@@ -38,7 +38,7 @@
   "enableSiteSettingsShortcut": false,
   "isChromeOSOnly": false,
   "isMetaQuest": false,
-  "fullScopeUrl": "https://sinansoyu.github.io/blackhole-storm/",
+  "fullScopeUrl": "https://liaslabs.github.io/blackhole-storm/",
   "minSdkVersion": 23,
   "fingerprints": [],
   "additionalTrustedOrigins": [],
