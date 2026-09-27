@@ -1,6 +1,6 @@
-# sinansoyu.github.io için dosyalar
+# liaslabs.github.io için dosyalar
 
-Bu klasörün içeriği `sinansoyu.github.io` adlı **ayrı ve herkese açık** bir depoya kopyalanır
+Bu klasörün içeriği `liaslabs.github.io` adlı **ayrı ve herkese açık** bir depoya kopyalanır
 (GOOGLE_PLAY.md, adım 4). Android bu adresteki `/.well-known/assetlinks.json` dosyasından
 uygulamanın siteye ait olduğunu doğrular; kök adreste durması zorunlu.
 

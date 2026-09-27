@@ -16,12 +16,12 @@ ile GitHub Actions'ta otomatik üretilir; bilgisayarına Android Studio kurman g
 | `manifest.webmanifest`, `sw.js`, `icons/` | PWA: yükleme, çevrimdışı çalışma, ikonlar |
 | `privacy.html` | Gizlilik politikası (TR + EN) |
 | `store/` | Tanıtım görseli (1024×500) ve 6 ekran görüntüsü (1080×1920) |
-| `root-site/` | `sinansoyu.github.io` deposuna kopyalanacak dosyalar (adım 4) |
+| `root-site/` | `liaslabs.github.io` deposuna kopyalanacak dosyalar (adım 4) |
 | `MONETIZATION.md` | Mağaza ürünleri, reklam yerleri, paranın hesaba geçişi |
 
 Varsayılan adres ve paket adı:
 
-- Site: `https://sinansoyu.github.io/blackhole-storm/`
+- Site: `https://liaslabs.github.io/blackhole-storm/`
 - Paket adı: `com.liaslabs.blackholestorm` (Play'e ilk yüklemeden sonra **değiştirilemez**)
 
 ---
@@ -31,10 +31,10 @@ Varsayılan adres ve paket adı:
 1. Bu dalı `main`'e birleştir (PR'ı merge et).
 2. GitHub → depo → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. **Actions** sekmesinde "Web sitesini yayınla" iş akışı yeşil olunca oyun
-   `https://sinansoyu.github.io/blackhole-storm/` adresinde açılır.
+   `https://liaslabs.github.io/blackhole-storm/` adresinde açılır.
 4. Telefonda Chrome ile aç: menüde "Uygulamayı yükle" çıkmalı, uçak modunda da açılmalı.
 
-> Gizlilik politikasının adresi: `https://sinansoyu.github.io/blackhole-storm/privacy.html`.
+> Gizlilik politikasının adresi: `https://liaslabs.github.io/blackhole-storm/privacy.html`.
 > Yayıncı: **Lias Labs** · iletişim: `liaslabs.games@gmail.com` (gizlilik sayfasına işlendi).
 
 ## 2. İmza anahtarını oluştur (bir kez)
@@ -62,11 +62,11 @@ Varsayılan adres ve paket adı:
 
 ## 4. Alan adı doğrulaması (adres çubuğunu gizler)
 
-Android, uygulamanın siteye ait olduğunu `https://sinansoyu.github.io/.well-known/assetlinks.json`
+Android, uygulamanın siteye ait olduğunu `https://liaslabs.github.io/.well-known/assetlinks.json`
 dosyasından doğrular. Bu dosya alan adının **kökünde** olmalı; `blackhole-storm` deposunun Pages
 adresi `/blackhole-storm/` altında olduğu için oraya konamaz. Çözüm, tek dosyalık ikinci bir depo:
 
-1. GitHub'da `sinansoyu.github.io` adında **herkese açık** yeni bir depo oluştur.
+1. GitHub'da **liaslabs** kuruluşunun altında `liaslabs.github.io` adında **herkese açık** yeni bir depo oluştur.
 2. Bu depodaki `root-site/` klasörünün içeriğini oraya kopyala:
    - `.nojekyll` (boş dosya)
    - `.well-known/assetlinks.json`: `android/assetlinks.example.json` şablonunu kopyala, parmak izlerini yaz:
@@ -74,7 +74,7 @@ adresi `/blackhole-storm/` altında olduğu için oraya konamaz. Çözüm, tek d
      - Play Console → uygulaman → **Test ve yayınla → Kurulum → Uygulama bütünlüğü → Uygulama imzalama**
        sayfasındaki **uygulama imzalama anahtarı** SHA-256'sı (Play, uygulamayı kendi anahtarıyla yeniden imzalar).
 3. O depoda **Settings → Pages → Source: Deploy from a branch → main / (root)**.
-4. Kontrol: `https://sinansoyu.github.io/.well-known/assetlinks.json` tarayıcıda JSON göstermeli.
+4. Kontrol: `https://liaslabs.github.io/.well-known/assetlinks.json` tarayıcıda JSON göstermeli.
 
 Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğu görünür. Kapalı teste bununla başlanabilir.
 
@@ -91,7 +91,7 @@ Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğ
 
 | Form | Cevap |
 |---|---|
-| Gizlilik politikası | `https://sinansoyu.github.io/blackhole-storm/privacy.html` |
+| Gizlilik politikası | `https://liaslabs.github.io/blackhole-storm/privacy.html` |
 | Uygulama erişimi | Tüm işlevler giriş gerektirmeden kullanılabilir |
 | Reklamlar | Reklam ağı eklenene kadar **Hayır**; eklenince **Evet** (bkz. MONETIZATION.md) |
 | İçerik derecelendirme | Kategori: Oyun. Şiddet, korku, kumar, cinsellik, küfür yok; kullanıcılar arası iletişim yok; **dijital ürün satın alma var**. Beklenen sonuç: 3+ / Herkes |
