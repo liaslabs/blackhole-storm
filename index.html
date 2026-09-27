@@ -3184,11 +3184,12 @@ function v2HuntStep(dt){const h=G2.hunt;
   else if(h.prey.st!=='in'&&h.prey.st!=='sw')h.prey=null;}
 function v2PreyStep(o,dt){ // flees the hole; keep it in your pull to wear it down (then it can be caught for a moment); touched fresh, it blinks away
   o.life-=dt;const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;o.blinkCD=Math.max(0,(o.blinkCD||0)-dt);
+  if(o.life<3.5&&o.life>0&&!o.warned){o.warned=1;v2Call('ESCAPING!','','#ff7a5c',1);v2Sfx('tickHi',{vol:.5,rate:.9});}
   if(o.tiredT>0){o.tiredT-=dt;if(o.tiredT<=0){o.tire=.35;v2Pop('RECOVERED','#ffd76a',14);}}
   else if(d<Math.max(G2.G,sp2(110))){o.tire=Math.min(1,(o.tire||0)+dt/V2K.prey.wear);if(o.tire>=1){o.tiredT=V2K.prey.tired;v2Call('TIRED!','CATCH IT','#ff8a5c',.9);v2Sfx('bell',{vol:.5,rate:1.4});}}
   else o.tire=Math.max(0,(o.tire||0)-dt*.2);
   if(!(o.tiredT>0)&&d<G2.R+o.r*1.2&&o.blinkCD<=0&&o.life>0){const a=Math.atan2(dy,dx)+rrnd(-.6,.6),j=sp2(170);v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4); // blink away
-    o.x=clamp(o.x+Math.cos(a)*j,sp2(30),W-sp2(30));o.y=clamp(o.y+Math.sin(a)*j,sp2(30),H-sp2(80));o.blinkCD=1.1;v2Sfx('thrust',{vol:.45,rate:1.6});v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4);}
+    o.x=clamp(o.x+Math.cos(a)*j,sp2(30),W-sp2(30));o.y=clamp(o.y+Math.sin(a)*j,sp2(30),H-sp2(80));o.blinkCD=1.1;v2Sfx('thrust',{vol:.45,rate:1.6});if((G2.hunt.tipN=(G2.hunt.tipN||0)+1)<=3)v2Call('TIRE IT FIRST','KEEP IT IN YOUR PULL','#ffd76a',1.1);v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4);}
   if(flee){o.stam=Math.max(0,o.stam-dt*.08);const a=Math.atan2(dy,dx);o.head+=((a-o.head+Math.PI*3)%TAU-Math.PI)*Math.min(1,dt*4);}
   else{o.stam=Math.min(1,o.stam+dt*.05);o.head+=Math.sin(G2.t*1.7+o.si)*dt*1.2;}
   const m=sp2(40);if(o.life>0){if(o.x<m)o.head=0;else if(o.x>W-m)o.head=Math.PI;if(o.y<m)o.head=Math.PI/2;else if(o.y>H-m-50)o.head=-Math.PI/2;}
@@ -3262,7 +3263,7 @@ function v2Hit(o){
 }
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.6;const el=$('hit2');if(!el)return;
-  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
