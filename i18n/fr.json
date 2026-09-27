@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "NIVEAU {n} TERMINÉ",
 "{n} seviye üst üste {n} yıldız": "{n} niveaux d'affilée avec {n} étoiles",
 "{n} yıldız serisi": "Série à {n} étoiles",
-"HEDİYE CAN": "VIE OFFERTE"
+"HEDİYE CAN": "VIE OFFERTE",
+"KALKANIN YOK": "PAS DE BOUCLIER",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "Rassemble {n} morceaux de bouclier : ils apparaissent dès le niveau {n}"
 }

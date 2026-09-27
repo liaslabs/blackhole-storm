@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "УРОВЕНЬ {n} ПРОЙДЕН",
 "{n} seviye üst üste {n} yıldız": "{n} уровней подряд на {n} звезды",
 "{n} yıldız serisi": "Серия на {n} звезды",
-"HEDİYE CAN": "ЖИЗНЬ В ПОДАРОК"
+"HEDİYE CAN": "ЖИЗНЬ В ПОДАРОК",
+"KALKANIN YOK": "НЕТ ЩИТА",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "Собери {n} части щита: они появляются с уровня {n}"
 }

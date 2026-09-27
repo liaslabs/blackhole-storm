@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "LEVEL {n} GESCHAFFT",
 "{n} seviye üst üste {n} yıldız": "{n} Level in Folge mit {n} Sternen",
 "{n} yıldız serisi": "{n}-Sterne-Serie",
-"HEDİYE CAN": "GESCHENKTES LEBEN"
+"HEDİYE CAN": "GESCHENKTES LEBEN",
+"KALKANIN YOK": "KEIN SCHILD",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "Sammle {n} Schildteile: Sie tauchen ab Level {n} auf"
 }

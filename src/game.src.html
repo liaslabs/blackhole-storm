@@ -1036,7 +1036,8 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
-  for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
+  for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);
+  if(V2&&!TIPS.gift&&bestLevel>2){TIPS.gift=1;SHOP.shield++;} // players past level 2 before the first-shield gift existedSHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
   }catch(e){}
 }
@@ -1635,7 +1636,7 @@ function nextTeaser(l){if(gameMode!=='classic'||REPLAY)return '';if(V2)return v2
 function lvlButtons(replay){$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=false;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel('+25 ⭐');$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
 function v2LvlUi(replay){ // V2 level card: title with the level, stars under it, play again / continue
   $('lvlNum').style.display='none';if(!replay)$('lvlHead').textContent=`SEVİYE ${level} TAMAMLANDI`;
-  $('lvlRetry').style.display='';$('lvlRetry').textContent='🔄 TEKRAR OYNA';$('nextLvl').textContent='DEVAM ET ▶';
+  $('lvlRetry').style.display=levelStars()>=3?'none':'';$('lvlRetry').textContent='🔄 TEKRAR OYNA';$('nextLvl').textContent='DEVAM ET ▶';
 }
 function startReplay(l){
   hideModals();document.querySelectorAll('.screen.on').forEach(e=>e.classList.remove('on'));

@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "ASTA {n} QEDIYA",
 "{n} seviye üst üste {n} yıldız": "{n} ast li pey hev bi {n} stêrkan",
 "{n} yıldız serisi": "Rêza {n} stêrkan",
-"HEDİYE CAN": "CANÊ DIYARÎ"
+"HEDİYE CAN": "CANÊ DIYARÎ",
+"KALKANIN YOK": "MERTAL TUNE",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "{n} parçeyên mertal berhev bike: ji asta {n} û pê ve tên"
 }

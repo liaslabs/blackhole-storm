@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "LEVEL {n} COMPLETE",
 "{n} seviye üst üste {n} yıldız": "{n} levels in a row with {n} stars",
 "{n} yıldız serisi": "{n}-star streak",
-"HEDİYE CAN": "GIFT LIFE"
+"HEDİYE CAN": "GIFT LIFE",
+"KALKANIN YOK": "NO SHIELD",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "Collect {n} shield pieces: they appear from level {n}"
 }

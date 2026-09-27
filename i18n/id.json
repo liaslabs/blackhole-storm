@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "LEVEL {n} SELESAI",
 "{n} seviye üst üste {n} yıldız": "{n} level berturut-turut dengan {n} bintang",
 "{n} yıldız serisi": "Rangkaian {n} bintang",
-"HEDİYE CAN": "NYAWA HADIAH"
+"HEDİYE CAN": "NYAWA HADIAH",
+"KALKANIN YOK": "TIDAK ADA PERISAI",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "Kumpulkan {n} kepingan perisai: muncul mulai level {n}"
 }

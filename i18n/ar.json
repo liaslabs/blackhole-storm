@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "اكتمل المستوى {n}",
 "{n} seviye üst üste {n} yıldız": "{n} مستويات متتالية بـ{n} نجوم",
 "{n} yıldız serisi": "سلسلة {n} نجوم",
-"HEDİYE CAN": "روح هدية"
+"HEDİYE CAN": "روح هدية",
+"KALKANIN YOK": "لا يوجد درع",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "اجمع {n} قطع درع: تظهر ابتداءً من المستوى {n}"
 }

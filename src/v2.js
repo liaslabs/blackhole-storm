@@ -473,7 +473,7 @@ function v2Blast(x,y,mega){ // mega: the whole screen falls in; otherwise ~3× y
 // ── golden shield: the player decides when; 5 s, meteors shatter on the bubble ──
 function v2Shield(){
   if(!G2.on||gState!=='playing'||gameMode==='sprint'||G2.shT>0||G2.rageT>0)return;
-  if(SHOP.shield<=0){if(monOn())v2ShieldBuy();else{v2Call('NO SHIELD','COLLECT 3 PIECES','#ffd84d',1.2);v2Sfx('buzz',{vol:.25});}return;}
+  if(SHOP.shield<=0){if(monOn())v2ShieldBuy();else{toast('🛡','KALKANIN YOK','3 kalkan parçası topla: seviye 4’ten itibaren gelir.');v2Sfx('buzz',{vol:.25});}return;}
   SHOP.shield--;saveG();updateUI();G2.shT=V2K.shield.dur;G2.shTick=0;
   v2Call('SHIELD','5 s','#ffd84d',1.1);sfx('armor',{vol:.8,rate:.9});sfx('powerup',{vol:.45,rate:1.3});vib(25);v2Burst(hX,hY,24,'#ffd84d',2,6,.6);v2Ui(true);
 }
@@ -525,15 +525,15 @@ function v2Complete(){
   if(gameMode==='survival'){gameOver();return;}
   levelSuccess();
 }
-function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on a continue → a spare life
+function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on a continue → 25 diamonds
   G2.lifeGift=0;if(REPLAY||gameMode!=='classic')return;
-  if(st===3&&!G2.starCont){STREAK3++;if(STREAK3>=10){STREAK3=0;SHOP.lives++;G2.lifeGift=1;later(()=>toast('🎁','HEDİYE CAN','10 seviye üst üste 3 yıldız!'),2400);}}else STREAK3=0;saveG();
+  if(st===3&&!G2.starCont){STREAK3++;if(STREAK3>=10){STREAK3=0;diamonds+=25;G2.lifeGift=1;later(()=>toast('🎁','+25 💎','10 seviye üst üste 3 yıldız!'),2400);}}else STREAK3=0;saveG();
 }
 function v2SizeTxt(x){return (x||0).toFixed(2)+'M';}
 function v2Result(){ // level-complete card body
   const sz=G2.peak/V2K.r0;const row=(k,v,hl)=>`<div class="r2"><span>${T(k)}</span><b${hl?' class="hl"':''}>${v}</b></div>`;
   const st=[[1,T('Seviyeyi bitir')],[!G2.dmg,T('Can kaybetme')],[G2.best>=10,'×10 COMBO']].map(([ok,t])=>`<span class="${ok?'ok':''}">${ok?'★':'☆'} ${t}</span>`).join('');
-  const s3=G2.lifeGift?`<div class="s3b gift"><b>🎁 +1 ❤️</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 ❤️<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;
+  const s3=G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 25 💎<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;
   return `<div class="stc2">${st}</div>${s3}<div class="how2">HOW BIG CAN YOU GET?</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div>`+
     `<div class="res2">${row('SKOR',levelScore.toLocaleString(LOC))}${row('EN İYİ COMBO','×'+G2.best)}${row('YUTULAN',G2.eaten)}${row('PERFECT ABSORB',G2.perfA)}${row('PERFECT DODGE',G2.perfD)}${row('ÖDÜL','+5 ⭐'+(level%5===0?' +3 💎':'')+(G2.gift?' +1 🛡':''),true)}</div>`;
 }
@@ -725,7 +725,7 @@ function v2Ui(force){
   const h=G2.hud,sb=$('shTop');
   if(sb){const inc=SHOP.shield>0&&G2.shT<=0&&G2.rageT<=0&&G2.objs.some(o=>o.k==='meteor'&&o.st==='in'&&(o.wait>0||o.slow>0));
     const c='hb2'+(gameMode==='sprint'?' off':G2.shT>0?' on':SHOP.shield>0?(G2.rageT>0?'':' ready'):' empty')+(inc?' pulse':'')+(sb.classList.contains('hl')?' hl':'');
-    if(sb.className!==c)sb.className=c;const n=G2.shT>0?Math.ceil(G2.shT)+'s':String(SHOP.shield);if(sb._n!==n){sb._n=n;sb.querySelector('b').textContent=n;}
+    if(sb.className!==c)sb.className=c;const n=String(SHOP.shield);if(sb._n!==n){sb._n=n;sb.querySelector('b').textContent=n;}
     sb.style.setProperty('--p',G2.shT>0?(G2.shT/V2K.shield.dur).toFixed(3):0);}
   const db=$('diaTop');if(db){const c='hb2 dia'+(diamTimer>0?' on':diamonds>=20?' ready':' empty'),n=diamTimer>0?Math.ceil(diamTimer)+'s':String(diamonds);
     if(db.className!==c)db.className=c;if(db._n!==n){db._n=n;db.querySelector('b').textContent=n;}}const rg=Math.round(G2.rage),rd=G2.ready,rt=G2.rageT>0;

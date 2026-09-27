@@ -668,5 +668,7 @@
 "SEVİYE {n} TAMAMLANDI": "NÍVEL {n} CONCLUÍDO",
 "{n} seviye üst üste {n} yıldız": "{n} níveis seguidos com {n} estrelas",
 "{n} yıldız serisi": "Sequência de {n} estrelas",
-"HEDİYE CAN": "VIDA DE PRESENTE"
+"HEDİYE CAN": "VIDA DE PRESENTE",
+"KALKANIN YOK": "SEM ESCUDO",
+"{n} kalkan parçası topla: seviye {n}’ten itibaren gelir": "Junte {n} pedaços de escudo: aparecem a partir do nível {n}"
 }
