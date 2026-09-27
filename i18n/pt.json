@@ -734,5 +734,15 @@
 "Sesi aç": "Ativar som",
 "GEÇ": "PULAR",
 "Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Engula: por {n} segundos tudo o que você pode comer é puxado rápido até você",
-"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Engula: {n} segundos tudo o que você pode comer é puxado até você"
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Engula: {n} segundos tudo o que você pode comer é puxado até você",
+"M☉ = Güneş kütlesi: puan değil, kara deliğinin boyutu": "M☉ = massas solares: não é pontuação, é o tamanho do seu buraco negro",
+"Süpernova için {n} 💎 gerekli": "A supernova precisa de {n} 💎",
+"Devam için {n} 💎 gerekli": "Você precisa de {n} 💎 para continuar",
+"ELMASIN YETMİYOR": "DIAMANTES INSUFICIENTES",
+"Bu mıknatıs yıldızını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Engula esta estrela magnética: por {n} segundos tudo o que você pode comer é puxado rápido até você",
+"SÜPERNOVA": "SUPERNOVA",
+"Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Toque no botão de diamante no topo ({n} 💎): tudo na tela explode e desliza para o seu buraco negro, depois os meteoros não te ferem por {n} segundos. {n} vezes por fase",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "No jogo, toque no botão de diamante ({n} 💎): tudo na tela explode e desliza para o seu buraco negro, depois os meteoros não te ferem por {n} segundos. {n} vezes por fase",
+"ELMASLA DEVAM": "CONTINUAR COM DIAMANTES",
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Quando suas vidas acabarem, pague diamantes para continuar de onde parou com {n} vidas. O preço dobra a cada uso"
 }

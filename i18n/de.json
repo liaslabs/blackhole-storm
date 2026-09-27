@@ -734,5 +734,15 @@
 "Sesi aç": "Ton an",
 "GEÇ": "ÜBERSPRINGEN",
 "Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Schlucken: {n} Sekunden lang wird alles, was du fressen kannst, schnell zu dir gezogen",
-"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Schlucken: {n} Sekunden wird alles Fressbare zu dir gezogen"
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Schlucken: {n} Sekunden wird alles Fressbare zu dir gezogen",
+"M☉ = Güneş kütlesi: puan değil, kara deliğinin boyutu": "M☉ = Sonnenmassen: nicht die Punkte, sondern die Größe deines Schwarzen Lochs",
+"Süpernova için {n} 💎 gerekli": "Die Supernova kostet {n} 💎",
+"Devam için {n} 💎 gerekli": "Zum Weiterspielen brauchst du {n} 💎",
+"ELMASIN YETMİYOR": "NICHT GENUG DIAMANTEN",
+"Bu mıknatıs yıldızını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Schluck diesen Magnetstern: {n} Sekunden lang wird alles Fressbare schnell zu dir gezogen",
+"SÜPERNOVA": "SUPERNOVA",
+"Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tippe oben auf den Diamant-Knopf ({n} 💎): Alles auf dem Bildschirm platzt und gleitet in dein Schwarzes Loch, danach können dir Meteore {n} Sekunden lang nichts anhaben. {n}-mal pro Level",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tippe im Spiel auf den Diamant-Knopf ({n} 💎): Alles auf dem Bildschirm platzt und gleitet in dein Schwarzes Loch, danach können dir Meteore {n} Sekunden lang nichts anhaben. {n}-mal pro Level",
+"ELMASLA DEVAM": "MIT DIAMANTEN WEITER",
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Wenn deine Leben aufgebraucht sind, spielst du mit Diamanten an derselben Stelle mit {n} Leben weiter. Der Preis verdoppelt sich jedes Mal"
 }

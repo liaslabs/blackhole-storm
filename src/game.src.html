@@ -344,6 +344,8 @@ html[lang=ar] *{letter-spacing:0!important;}
 .lvst{display:flex;justify-content:center;gap:8px;margin:-4px 0 6px;font-size:34px;line-height:1;}
 .lvst span{display:inline-block;color:#f2b84b;animation:bandStar .45s cubic-bezier(.2,1.8,.4,1) both;}
 .lvst span.no{color:rgba(255,255,255,.14);text-shadow:none;}
+.lvst span.no svg,#winBand .st span.no svg,.stc2>span:not(.ok) svg{filter:grayscale(1) brightness(.55);opacity:.3;}
+.how2u{text-align:center;font-size:11px;color:var(--dim);margin:-2px 0 8px;}
 .lvnext{margin:2px 0 4px;padding:8px 10px;border-radius:6px;background:rgba(111,183,216,.07);border:1px solid rgba(111,183,216,.28);font-size:13.5px;color:#b9d6e4;}
 .lvnext:empty{display:none;}
 .lvnext b{font-family:var(--fd);font-size:9.5px;letter-spacing:1.5px;color:var(--cyan);margin-right:4px;}
@@ -591,6 +593,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="box" id="contBox"><div style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:16px;">100 ⭐ İLE DEVAM</div><div class="muted">Puanın korunur, 3 can · Mevcut: <span id="contStars">0</span> ⭐</div></div>
    <div class="row mon"><button class="btn big adbtn" id="contAd">▶ REKLAM İZLE · 1 CANLA DEVAM</button></div>
    <div class="row mon"><button class="btn big cy" id="contLife">❤️ YEDEK CAN KULLAN</button></div>
+   <div class="row"><button class="btn big cy" id="contDia">💎 25 · 2 CANLA DEVAM</button></div>
    <div class="row"><button class="btn big" id="contYes">DEVAM ET · 100 ⭐</button></div>
    <div class="row"><button class="btn sec" id="contRetry" style="width:100%;">🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contNo" style="width:100%;">BİTİR</button></div>
@@ -1288,7 +1291,7 @@ vec3 skinEm(float s,vec2 q,float x,float a,float t,vec2 fc,float R){
  else if(s<5.5){float sw=k_f(cs*1.8+x*1.5);c=mix(vec3(.45,.05,.25),vec3(1.,.55,.8),sw)*sw*exp(-e*1.3)*1.7;
   float bolt=k_f(ca*2.+vec2(x*2.,0.)+t*.7),ln=smoothstep(.012,0.,abs(bolt-.5))*step(1.08,x)*step(x,2.3)*step(.55,k_n(vec2(a*2.,floor(t*3.))));
   c+=vec3(1.,.85,.95)*ln*1.8+vec3(1.,.8,.9)*exp(-pow((x-1.03)/.04,2.))*1.2;}
- else if(s<6.5){float px=max(3.,R*.08);vec2 qq=(floor(fc/px)+.5)*px;vec2 qd=(qq-fc)/R+q;float xr=length(qd),aa=atan(qd.y,qd.x),ss=aa+1.6/(xr+.2)-t*.4;
+ else if(s<6.5){float px=clamp(R*.05,3.,6.);vec2 qq=(floor(fc/px)+.5)*px;vec2 qd=(qq-fc)/R+q;float xr=length(qd),aa=atan(qd.y,qd.x),ss=aa+1.6/(xr+.2)-t*.4;
   float sw=k_f(vec2(cos(ss),sin(ss))*2.+xr*1.4);c=k_hue(ss*.16+xr*.12)*(.35+sw)*1.3*clamp(exp(-max(xr-1.,0.)*1.2)*sw*1.6,0.,1.)*step(1.,xr);}
  else if(s<7.5){float st=k_f(ca*8.+vec2(x*7.-t*.5,0.)),band=smoothstep(1.,1.08,x)*smoothstep(1.75,1.2,x);
   c=mix(vec3(.35,.1,.03),vec3(1.,.75,.4),st)*band*(.7+st)*1.5+vec3(1.,.85,.6)*exp(-pow((x-1.02)/.03,2.))*.9;}
@@ -1613,20 +1616,23 @@ function skinGL(){ // a small separate renderer for the menu thumbnails and the 
 function skinPaint(target,i,t,R){const G=skinGL(),c=target.getContext('2d');if(!G){c.fillStyle='#000';c.fillRect(0,0,target.width,target.height);return;}
   const {gl,cv,u}=G;gl.viewport(0,0,440,440);gl.uniform2f(u('uRes'),440,440);gl.uniform1f(u('uT'),t);gl.uniform1f(u('uR'),R);gl.uniform1f(u('uS'),i);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   c.drawImage(cv,0,0,target.width,target.height);}
-function monoDraw(c,cx,cy,Rp,txt,tint,rot=0){ // the name letters on a ring inside the black core, tops outward, slowly turning
+function monoDraw(c,cx,cy,Rp,txt,tint,t=0){ // the name on a ring inside the core, tops outward; the lead letter sets off and the rest chase it, each swelling as it moves
   const L=[...txt],n=L.length;if(!n)return;const rr=Rp*(n===1?.46:n===2?.52:.62);let fs=Rp*(n===1?.7:n===2?.6:.44);
   const F=f=>`800 ${f}px "IBM Plex Sans Condensed",sans-serif`;c.save();c.font=F(fs);let w=L.map(ch=>c.measureText(ch).width),gap=fs*.22,arc=w.reduce((a,b)=>a+b,0)+gap*(n-1);
   const max=2*Math.PI*rr*.9;if(arc>max){const k=max/arc;fs*=k;w=w.map(x=>x*k);gap*=k;arc=max;c.font=F(fs);}
-  c.translate(cx,cy);c.textAlign='center';c.textBaseline='middle';let a=-Math.PI/2+rot-arc/rr/2;
-  for(let i=0;i<n;i++){a+=w[i]/2/rr;c.save();c.rotate(a+Math.PI/2);c.translate(0,-rr);
-    c.shadowColor=tint;c.shadowBlur=fs*.35;c.fillStyle=tint;c.globalAlpha=.6;c.fillText(L[i],0,0);c.shadowBlur=0;c.globalAlpha=.95;c.lineWidth=Math.max(1,fs*.035);c.strokeStyle=tint;c.strokeText(L[i],0,0);c.restore();
+  const CY=2.6,ST=.95,MV=.55,LAG=.13,cyc=Math.floor(t/CY),ph=t-cyc*CY,ease=q=>q<.5?4*q*q*q:1-Math.pow(-2*q+2,3)/2;
+  c.translate(cx,cy);c.textAlign='center';c.textBaseline='middle';let a=-Math.PI/2-arc/rr/2;
+  for(let i=0;i<n;i++){a+=w[i]/2/rr;const q=Math.min(1,Math.max(0,(ph-(n-1-i)*LAG)/MV)),mv=Math.sin(q*Math.PI),ang=a+(cyc+ease(q))*ST;
+    c.save();c.rotate(ang+Math.PI/2);c.translate(0,-rr-mv*Rp*.06);const sc=1+mv*.14;c.scale(sc,sc);
+    c.shadowColor=tint;c.shadowBlur=fs*(.35+mv*.9);c.fillStyle=tint;c.globalAlpha=.6;c.fillText(L[i],0,0);c.shadowBlur=0;c.globalAlpha=.95;c.lineWidth=Math.max(1,fs*.035);c.strokeStyle=mv>.3?'#fff':tint;c.strokeText(L[i],0,0);
+    if(mv>.05){c.globalAlpha=mv*.55;c.fillStyle='#fff';c.fillText(L[i],0,0);}c.restore();
     a+=(w[i]/2+gap)/rr;}
   c.restore();}
 function skinLockTxt(i){const k=SKINS[i];if(skinOwned(i))return i===SKIN.sel?'✓ SEÇİLİ':'SEÇ';
   return k.u==='stage'?`🔒 ${STAGES[k.v].n}`:k.u==='gem'?`💎 ${k.v}`:'🌌 KOZMİK KİMLİK';}
 function openSkins(){SKINUI.view=SKIN.sel;$('sSkin').classList.add('on');renderSkins();SKINUI.run=true;const t0=performance.now();
   const tick=now=>{if(!SKINUI.run)return;skinBig((now-t0)/1000);requestAnimationFrame(tick);};requestAnimationFrame(tick);}
-function skinBig(t){const cv=$('skBig');skinPaint(cv,SKINUI.view,t,105);const txt=SHOP.cid&&SKIN.monoOn?monoText():'';if(txt)monoDraw(cv.getContext('2d'),220,220,105,txt,SKIN_TINT[SKINUI.view],t*.35);}
+function skinBig(t){const cv=$('skBig');skinPaint(cv,SKINUI.view,t,105);const txt=SHOP.cid&&SKIN.monoOn?monoText():'';if(txt)monoDraw(cv.getContext('2d'),220,220,105,txt,SKIN_TINT[SKINUI.view],t);}
 function renderSkins(){
   const g=$('skGrid');if(!g.children.length){SKINS.forEach((k,i)=>{const b=document.createElement('button');b.innerHTML=`<canvas width="150" height="150"></canvas><span>${k.n}</span><small></small>`;b.onclick=()=>{SKINUI.view=i;sfx('click',{vol:.3});if(skinOwned(i)){SKIN.sel=i;saveG();}renderSkins();};g.appendChild(b);skinPaint(b.querySelector('canvas'),i,2.3,120);});}
   [...g.children].forEach((b,i)=>{b.className=(i===SKINUI.view?'sel':'')+(skinOwned(i)?'':' lock');b.querySelector('small').textContent=skinLockTxt(i);});
@@ -1954,10 +1960,10 @@ function mapSheet(l,st,k){
 // guide: everything that used to crowd the main menu
 const GUIDE={
  'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün.'],['step4','','Süre bitince seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can.']],
- 'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×7 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
+ 'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×5 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
  'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca üç parçaya bölünür, parçaları yut.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Rage açıkken zararsız.'],['🧲','MIKNATIS','Yut: 4 saniye küçük cisimler sana süzülür.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapıya giren cisim mavi kapıdan kara deliğine doğru çıkar.']],
  'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.']],
- 'EŞYALAR':[['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','ULTRA GENİŞLİK','Oyunda elmas butonuna dokun: çekim alanın 20 saniye 1,5 katı (20 💎).']],
+ 'EŞYALAR':[['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
   $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}">${k}</button>`).join('');
@@ -3074,6 +3080,7 @@ function showCont(){
   $('contLife').parentNode.hidden=SHOP.lives<=0;$('contLife').textContent=`❤️ YEDEK CAN KULLAN (${SHOP.lives})`;
   if(REPLAY){lvlButtons(true);$('lvlHead').textContent='SEVİYE BAŞARISIZ';$('lvlNum').textContent=level;$('lvlMsg').textContent='Canların bitti. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez.';showModal('mLvl');gState='menu';return;}
   const cl=gameMode==='classic';$('contStars').textContent=stars;
+  $('contDia').parentNode.hidden=!(G2.on&&cl);if(G2.on&&cl){const dc=V2K.cont.dia*2**G2.diaCont;$('contDia').textContent=`💎 ${dc} · 2 CANLA DEVAM`;$('contDia').classList.toggle('dim',diamonds<dc);}
   if(G2.on){const one=!G2.contUsed;$('contYes').parentNode.hidden=!one;if(!one){$('contAd').parentNode.hidden=true;$('contLife').parentNode.hidden=true;}
     $('contBox').hidden=!one;$('contBox').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">${T('100 ⭐ İLE DEVAM')}</div><div class="cst">${T('Yıldızın')}: <b id="contStars">${stars.toLocaleString(LOC)}</b> ⭐</div>`;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+(one?`<br>${T('Devam edersen boyutun korunur: 1 can, Rage %50.')}`:`<br>${T('Bu oyunda devam hakkını kullandın.')}`);
     $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');return;}
@@ -3531,6 +3538,9 @@ $('introOk').onclick=e=>{e.stopPropagation();hideModals();initLevel();};
 $('rescueGo').onclick=e=>{e.stopPropagation();hideModals();initRescue();};
 $('againBtn').onclick=()=>{if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();SND.music('game');resetRun(true,false);};
 $('overMenu').onclick=()=>{hideModals();balls=[];showMenu();};
+$('contDia').onclick=()=>{if(!G2.on)return;const dc=V2K.cont.dia*2**G2.diaCont;
+  if(diamonds<dc){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:dc}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}
+  diamonds-=dc;G2.diaCont++;G2.starCont=1;dmEvent('diamond',1);v2Revive();lives=2;updateUI();saveG();};
 $('contYes').onclick=()=>{if(G2.on&&stars>=100&&!G2.contUsed){stars-=100;G2.starCont=1;v2Revive();return;}if(stars>=100){stars-=100;lives=3;curR=BASE_R;tgtR=BASE_R;resetInact();hideModals();updateUI();gState='playing';lastT=performance.now();saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});}else showModal('mNoStar');};
 $('contRetry').onclick=retryLevel;
 $('contAd').onclick=async()=>{if(adReviveUsed)return;if(await showRewarded()){adReviveUsed=true;revive(1);}};

@@ -734,5 +734,15 @@
 "Sesi aç": "Включить звук",
 "GEÇ": "ПРОПУСТИТЬ",
 "Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Проглоти: {n} секунд всё, что можно съесть, быстро притягивается к тебе",
-"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Проглоти: {n} секунд всё съедобное притягивается к тебе"
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Проглоти: {n} секунд всё съедобное притягивается к тебе",
+"M☉ = Güneş kütlesi: puan değil, kara deliğinin boyutu": "M☉ = массы Солнца: это не очки, а размер твоей чёрной дыры",
+"Süpernova için {n} 💎 gerekli": "Для сверхновой нужно {n} 💎",
+"Devam için {n} 💎 gerekli": "Чтобы продолжить, нужно {n} 💎",
+"ELMASIN YETMİYOR": "НЕ ХВАТАЕТ АЛМАЗОВ",
+"Bu mıknatıs yıldızını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Проглоти эту магнитную звезду: {n} секунд всё съедобное быстро притягивается к тебе",
+"SÜPERNOVA": "СВЕРХНОВАЯ",
+"Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Нажми кнопку с алмазом сверху ({n} 💎): всё на экране взрывается и затягивается в твою чёрную дыру, а затем {n} секунды метеоры не могут тебе навредить. {n} раза за уровень",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "В игре нажми кнопку с алмазом ({n} 💎): всё на экране взрывается и затягивается в твою чёрную дыру, а затем {n} секунды метеоры не могут тебе навредить. {n} раза за уровень",
+"ELMASLA DEVAM": "ПРОДОЛЖИТЬ ЗА АЛМАЗЫ",
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Когда жизни закончатся, продолжи с того же места с {n} жизнями за алмазы. Цена каждый раз удваивается"
 }

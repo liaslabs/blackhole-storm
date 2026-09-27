@@ -734,5 +734,15 @@
 "Sesi aç": "Activer le son",
 "GEÇ": "PASSER",
 "Yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Avale-le : pendant {n} secondes, tout ce que tu peux manger est vite attiré vers toi",
-"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Avale-le : {n} secondes, tout ce que tu peux manger est attiré vers toi"
+"Yut: {n} saniye yutabileceğin her şey sana çekilir": "Avale-le : {n} secondes, tout ce que tu peux manger est attiré vers toi",
+"M☉ = Güneş kütlesi: puan değil, kara deliğinin boyutu": "M☉ = masses solaires : ce n'est pas ton score, c'est la taille de ton trou noir",
+"Süpernova için {n} 💎 gerekli": "La supernova coûte {n} 💎",
+"Devam için {n} 💎 gerekli": "Il te faut {n} 💎 pour continuer",
+"ELMASIN YETMİYOR": "PAS ASSEZ DE DIAMANTS",
+"Bu mıknatıs yıldızını yut: {n} saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir": "Avale cette étoile magnétique : pendant {n} secondes, tout ce que tu peux manger est vite attiré vers toi",
+"SÜPERNOVA": "SUPERNOVA",
+"Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Touche le bouton diamant en haut ({n} 💎) : tout ce qui est à l'écran explose et glisse dans ton trou noir, puis les météores ne peuvent plus te blesser pendant {n} secondes. {n} fois par niveau",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "En jeu, touche le bouton diamant ({n} 💎) : tout ce qui est à l'écran explose et glisse dans ton trou noir, puis les météores ne peuvent plus te blesser pendant {n} secondes. {n} fois par niveau",
+"ELMASLA DEVAM": "CONTINUER AVEC DES DIAMANTS",
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Quand tu n'as plus de vies, paie des diamants pour reprendre là où tu étais avec {n} vies. Le prix double à chaque fois"
 }
