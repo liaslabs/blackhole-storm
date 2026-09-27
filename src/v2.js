@@ -813,9 +813,9 @@ function v2DrawShield(){
   ctx.strokeStyle=`rgba(${r},${g},${b},.9)`;ctx.lineWidth=Math.max(1,s*.06);ctx.beginPath();ctx.ellipse(0,-s*.05,s*.42,s*.13,-.35,0,TAU);ctx.stroke();
   ctx.restore();
 }
-function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, the rest open as the hole grows (7 max)
+function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, the rest open as the hole grows (11 max)
   if(!SHOP.cid||!SKIN.monoOn||G2.shT>0)return;const txt=monoText();if(!txt)return;const L=[...txt],sz=v2Size();let n=G2.monoN||1;
-  const stp=(V2K.rMax/V2K.r0-1.1)/6;while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // all 7 by the largest size; a little slack against flicker
+  const stp=(V2K.rMax/V2K.r0-1.1)/(Math.max(7,L.length)-1);while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // every letter by the largest size; a little slack against flicker
   if(n!==G2.monoN){G2.monoN=n;G2.monoT=0;}G2.monoT=Math.min(1,(G2.monoT||0)+1/30);
   ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock);ctx.restore();}
 function v2DrawShard(o,sc){ // a golden third of the crest, glinting

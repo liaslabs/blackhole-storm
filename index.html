@@ -887,7 +887,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="sub">PİLOT PROFİLİ</div>
   <div class="muted">Avatarını seç</div>
   <div class="avgrid" id="avGrid"></div>
-  <input class="inp" id="nameInp" type="text" maxlength="12" autocomplete="off" placeholder="Pilot adın (en az 2 harf)">
+  <input class="inp" id="nameInp" type="text" maxlength="11" autocomplete="off" placeholder="Pilot adın (en az 2 harf)">
   <div class="box" style="display:flex;align-items:center;justify-content:center;gap:12px;">
    <div id="prevAv" style="font-size:34px;">🚀</div>
    <div style="text-align:start;"><div id="prevName" style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:14px;">PİLOT</div><div class="muted" style="font-size:12px;">Hazır mısın kaptan?</div></div>
@@ -1305,6 +1305,7 @@ new MutationObserver(ms=>{for(const m of ms){
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
 let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
+const NAME_MAX=11; // pilot name and the letters inside the black hole
 function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,hrt:HEARTS,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
@@ -1315,7 +1316,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   unlockedAch=new Set(Array.isArray(d.ach)?d.ach.filter(x=>typeof x==='string'):[]);
   localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,10):[];
   lastLogin=typeof d.lastLogin==='string'?d.lastLogin:'';loginStreak=svI(d.loginStreak,0,0,1e5);
-  rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?d.playerName.slice(0,12):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';
+  rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?[...d.playerName].slice(0,NAME_MAX).join(''):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
@@ -1789,7 +1790,7 @@ const SKINS=[{n:'KLASİK',u:'free'},{n:'MAVİ GİRDAP',u:'stage',v:1},{n:'BUZ HA
 const SKIN_TINT=['#c9c2ff','#9fd8ff','#bff6ff','#e8e6e2','#e2c8ff','#ffb3d9','#ffffff','#ffc58a','#d6ccff'];
 let SKIN={sel:0,own:[],mono:'',monoOn:true};
 function skinOwned(i){const k=SKINS[i];return !!k&&(k.u==='free'||(k.u==='stage'&&stageOf(mass)>=k.v)||(k.u==='pack'&&SHOP.cid)||SKIN.own.includes(i));}
-const monoClean=v=>[...String(v).toLocaleUpperCase('tr')].filter(ch=>/[\p{L}\p{N}]/u.test(ch)).slice(0,7).join('');
+const monoClean=v=>[...String(v).toLocaleUpperCase('tr')].filter(ch=>/[\p{L}\p{N}]/u.test(ch)).slice(0,NAME_MAX).join('');
 function monoText(){return monoClean(SKIN.mono||playerName||'');}
 function stageOf(m){let s=0;for(let i=1;i<STAGES.length;i++)if(m>=STAGES[i].m)s=i;return s;}
 function addMass(k){const s0=stageOf(mass);mass+=k;swallowed++;const s1=stageOf(mass);if(s1>s0){diamonds+=10;const k2=SKINS.findIndex(x=>x.u==='stage'&&x.v===s1);toast('🕳️','KARA DELİK EVRİMLEŞTİ',k2>0?`Yeni görünüm: ${SKINS[k2].n} · +10 💎`:'+10 💎');}saveSoon();}
@@ -1814,7 +1815,7 @@ function skinPaint(target,i,t,R){const G=skinGL(),c=target.getContext('2d');if(!
 function monoDraw(c,cx,cy,Rp,txt,tint,t=0){ // the name on a ring inside the core, tops outward; the lead letter sets off and the rest chase it, each swelling as it moves
   const L=[...txt],n=L.length;if(!n)return;const rr=Rp*(n===1?.46:n===2?.52:.62);let fs=Rp*(n===1?.7:n===2?.6:.44);
   const F=f=>`800 ${f}px "IBM Plex Sans Condensed",sans-serif`;c.save();c.font=F(fs);let w=L.map(ch=>c.measureText(ch).width),gap=fs*.22,arc=w.reduce((a,b)=>a+b,0)+gap*(n-1);
-  const max=2*Math.PI*rr*.9;if(arc>max){const k=max/arc;fs*=k;w=w.map(x=>x*k);gap*=k;arc=max;c.font=F(fs);}
+  const max=rr*Math.min(2*Math.PI*.9,2*Math.PI-1.3)/* room for the lead letter's .95 rad hop */;if(arc>max){const k=max/arc;fs*=k;w=w.map(x=>x*k);gap*=k;arc=max;c.font=F(fs);}
   const CY=2.6,ST=.95,MV=.55,LAG=.13,cyc=Math.floor(t/CY),ph=t-cyc*CY,ease=q=>q<.5?4*q*q*q:1-Math.pow(-2*q+2,3)/2;
   c.translate(cx,cy);c.textAlign='center';c.textBaseline='middle';let a=-Math.PI/2-arc/rr/2;
   for(let i=0;i<n;i++){a+=w[i]/2/rr;const q=Math.min(1,Math.max(0,(ph-(n-1-i)*LAG)/MV)),mv=Math.sin(q*Math.PI),ang=a+(cyc+ease(q))*ST;
@@ -1836,8 +1837,8 @@ function renderSkins(){
   a.parentNode.hidden=own||k.u==='stage'||(k.u==='pack'&&!monOn());a.disabled=k.u==='gem'&&diamonds<k.v;
   a.textContent=k.u==='gem'?(diamonds>=k.v?`${k.v} 💎 İLE AÇ`:`${k.v} 💎 GEREKLİ`):'🌌 KOZMİK KİMLİK';
   const m=$('skMono');
-  if(!SHOP.cid)m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>İsmin kara deliğinin içinde: en başta ilk harf, delik büyüdükçe diğerleri (7 harfe kadar). Kozmik Kimlik paketiyle açılır.</p>`+(monOn()?`<button class="btn" id="skPack" style="width:100%;">🌌 KOZMİK KİMLİK</button>`:`<p style="margin:0">Paket, oyunun Google Play sürümünde satın alınabilir.</p>`);
-  else if(!m.querySelector('input')){m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>En fazla 7 harf veya rakam. Oyunda en başta ilk harf görünür, delik büyüdükçe diğerleri açılır.</p><input id="skIn" class="notr" maxlength="7" autocomplete="off" spellcheck="false"><div class="srow"><span>Harfleri göster</span><button class="tg" id="skOn"></button></div>`;
+  if(!SHOP.cid)m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>İsmin kara deliğinin içinde: en başta ilk harf, delik büyüdükçe diğerleri (11 harfe kadar). Kozmik Kimlik paketiyle açılır.</p>`+(monOn()?`<button class="btn" id="skPack" style="width:100%;">🌌 KOZMİK KİMLİK</button>`:`<p style="margin:0">Paket, oyunun Google Play sürümünde satın alınabilir.</p>`);
+  else if(!m.querySelector('input')){m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>En fazla 11 harf veya rakam. Oyunda en başta ilk harf görünür, delik büyüdükçe diğerleri açılır.</p><input id="skIn" class="notr" maxlength="11" autocomplete="off" spellcheck="false"><div class="srow"><span>Harfleri göster</span><button class="tg" id="skOn"></button></div>`;
     const inp=$('skIn');inp.value=monoText();inp.oninput=()=>{const v=monoClean(inp.value);if(inp.value!==v)inp.value=v;SKIN.mono=v;saveSoon();};
     $('skOn').onclick=()=>{SKIN.monoOn=!SKIN.monoOn;saveG();renderSkins();};}
   if($('skOn'))$('skOn').classList.toggle('on',SKIN.monoOn);if($('skPack'))$('skPack').onclick=()=>buy('cosmic_id');
@@ -2120,7 +2121,7 @@ const IAP=[
  {id:'starter',sec:'offer',ic:'🎁',t:'BAŞLANGIÇ PAKETİ',d:'300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali. Tek sefer.',price:'₺19,99',was:'₺79,99',tag:'%75 İNDİRİM',once:true,give:{gems:300,stars:3000,lives:10,shield:5,time:3}},
  {id:'vip_monthly',sec:'offer',cls:'vip',ic:'👑',t:'VIP KULÜP · AYLIK',d:'Sınırsız 💖 can · Her günlük girişte ekstra +15 💎 +1 🛡 · Her ay otomatik paket: 300 💎 · 3.000 ⭐ · 5 kalkan · 5 yedek can · 3 zaman kristali',price:'₺39,99',per:'/ay',tag:'EN KÂRLI',sub:true},
  {id:'captain',sec:'offer',cls:'cap',ic:'🧑‍🚀',t:'KAPTAN SETİ',d:'Oyunu kolaylaştırır: 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎',price:'₺29,99',tag:'KOLAYLAŞTIR',give:{shield:5,lives:5,time:3,gems:100}},
- {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (7 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺19,99',once:true,perm:true},
+ {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (11 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺19,99',once:true,perm:true},
  {id:'no_ads',sec:'offer',cls:'noad',ic:'🚫',t:'REKLAMSIZ OYNA',d:'Araya giren reklamlar tamamen kalkar; reklamlı ödüller reklam izlemeden anında gelir. Tek sefer, kalıcı.',price:'₺99,99',once:true,perm:true},
  {id:'gems_s',sec:'gems',ic:'💎',t:'80',d:'Avuç',price:'₺9,99',give:{gems:80}},
  {id:'gems_m',sec:'gems',ic:'💎',t:'250',d:'Kese · +%25',price:'₺24,99',tag:'POPÜLER',give:{gems:250}},
@@ -2506,10 +2507,10 @@ function baseURL(){return location.href.split('#')[0];}
 function canLink(){return /^https?:$/.test(location.protocol)&&!/claudeusercontent|claude\.ai|localhost|127\.0\.0\.1/.test(location.hostname);}
 function b64u(t){return btoa(unescape(encodeURIComponent(t))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
 function ub64u(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return decodeURIComponent(escape(atob(t)));}
-function challengeLink(){const r=SPR_RUN.res;return baseURL()+'#ch='+b64u(JSON.stringify({v:1,n:playerName.slice(0,12),a:playerAvatar,s:r.score,seed:SPR_RUN.seed,dn:r.daily||0}));}
+function challengeLink(){const r=SPR_RUN.res;return baseURL()+'#ch='+b64u(JSON.stringify({v:1,n:[...playerName].slice(0,NAME_MAX).join(''),a:playerAvatar,s:r.score,seed:SPR_RUN.seed,dn:r.daily||0}));}
 function readChallenge(){
   const m=location.hash.match(/ch=([A-Za-z0-9_-]{8,400})/);if(!m)return null;
-  try{const d=JSON.parse(ub64u(m[1]));if(d&&d.v===1&&Number.isFinite(d.seed)&&Number.isFinite(d.s))return {n:String(d.n||'Pilot').slice(0,14),a:String(d.a||'🚀').slice(0,4),s:Math.max(0,Math.min(1e7,Math.floor(d.s))),seed:d.seed>>>0,dn:d.dn|0};}catch(e){}
+  try{const d=JSON.parse(ub64u(m[1]));if(d&&d.v===1&&Number.isFinite(d.seed)&&Number.isFinite(d.s))return {n:[...String(d.n||'Pilot')].slice(0,NAME_MAX).join(''),a:String(d.a||'🚀').slice(0,4),s:Math.max(0,Math.min(1e7,Math.floor(d.s))),seed:d.seed>>>0,dn:d.dn|0};}catch(e){}
   return null;
 }
 async function shareOut(text,url){
@@ -3468,9 +3469,9 @@ function v2DrawShield(){
   ctx.strokeStyle=`rgba(${r},${g},${b},.9)`;ctx.lineWidth=Math.max(1,s*.06);ctx.beginPath();ctx.ellipse(0,-s*.05,s*.42,s*.13,-.35,0,TAU);ctx.stroke();
   ctx.restore();
 }
-function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, the rest open as the hole grows (7 max)
+function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, the rest open as the hole grows (11 max)
   if(!SHOP.cid||!SKIN.monoOn||G2.shT>0)return;const txt=monoText();if(!txt)return;const L=[...txt],sz=v2Size();let n=G2.monoN||1;
-  const stp=(V2K.rMax/V2K.r0-1.1)/6;while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // all 7 by the largest size; a little slack against flicker
+  const stp=(V2K.rMax/V2K.r0-1.1)/(Math.max(7,L.length)-1);while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // every letter by the largest size; a little slack against flicker
   if(n!==G2.monoN){G2.monoN=n;G2.monoT=0;}G2.monoT=Math.min(1,(G2.monoT||0)+1/30);
   ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock);ctx.restore();}
 function v2DrawShard(o,sc){ // a golden third of the crest, glinting
