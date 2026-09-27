@@ -62,7 +62,7 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   12:['☄️','COMET','Çok hızlı geçer. Yakalarsan combo süren uzar.'],
   13:['🌋','SPLIT PLANET','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],
   14:['⚛️','ANTIMATTER','Yutma! Kara deliğini küçültür. Çekim alanından uzak tut.'],
-  15:['🧲','MAGNET','Yut: 4 saniye yutabileceğin her şey sana çekilir.'],
+  15:['🧲','MAGNET','Yut: 6 saniye yutabileceğin her şey sana çekilir.'],
   16:['💫','PULSAR','Sadece parlarken yutulur. Sönükken seker.'],
   17:['🪐','MOON PAIR','Gezegeni, sonra uydusunu yut: çift puan.'],
   18:['🌫️','DARK MATTER','Görünmez! Yıldızları bükmesinden fark edilir.'],
@@ -356,7 +356,7 @@ function v2Update(dt){
     if(o.k!=='meteor'){
       const ed=v2Edible(o)||G2.ending;
       if(d<Gr&&o.k==='bomb'&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
-      if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(1500)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(380);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
+      if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(2800)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(650);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
@@ -454,7 +454,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO TIME','+2 s','#bff6ff',.9);}
-  else if(o.k==='magnet'){G2.magT=4;v2Call('MAGNET','4 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
+  else if(o.k==='magnet'){G2.magT=6;v2Call('MAGNET','6 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
   else if(o.k==='pulsar'){v2Pop('PULSAR','#bfe6ff',17);shock=Math.max(shock,.3);}
   else if(o.k==='mpair'){const a=o.sa,d=o.r*1.9,sat=v2Obj('sat',o.x+Math.cos(a)*d,o.y+Math.sin(a)*d,o.vx-Math.sin(a)*sp2(120),o.vy+Math.cos(a)*sp2(120));sat.pair=1;G2.pairT=3;v2Call('NOW THE MOON!','3 s','#cfd6ff',1);}
   else if(o.k==='sat'&&o.pair&&G2.pairT>0){const b=Math.round((OBJ2.mpair.pts+OBJ2.sat.pts)*MULT2(G2.combo));totalScore+=b;levelScore+=b;G2.pairT=0;v2Call('PAIR ×2','+'+b,'#ffd76a',1.3);sfx('achieve',{vol:.5});}
@@ -616,7 +616,7 @@ const TIP2={
   comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
   split:['🌋','BÖLÜNEN GEZEGEN','Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!'],
   anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Rage açıkken zararsızdır.'],
-  magnet:['🧲','MIKNATIS TAŞI','Bu mıknatıs taşını yut: 4 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
+  magnet:['🧲','MIKNATIS TAŞI','Bu mıknatıs taşını yut: 6 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
   nova:['💎','SÜPERNOVA','Üstteki elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],
   pulsar:['💫','PULSAR','Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.'],
   mpair:['🪐','UYDULU GEZEGEN','Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!'],
@@ -702,10 +702,7 @@ function v2DrawField(){ // gravity field, rage aura, overload wobble, damage bli
   if(gState!=='playing'&&gState!=='paused'&&gState!=='tip')return;
   const R=G2.R,Gr=G2.G;ctx.save();ctx.translate(hX,hY);
   let pull=false;for(const o of G2.objs)if(o.st==='in'&&o.inG&&o.k!=='meteor'){pull=true;break;}
-  ctx.setLineDash([3,7]);ctx.lineDashOffset=-clock*14;ctx.lineWidth=1.2;
-  {const fg=ctx.createRadialGradient(0,0,R,0,0,Gr);fg.addColorStop(0,'rgba(150,170,255,0)');fg.addColorStop(1,'rgba(150,170,255,.07)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
-  ctx.lineWidth=1.6;ctx.strokeStyle=G2.rageT>0?`rgba(255,120,70,${.45+.2*Math.sin(clock*18)})`:pull?'rgba(210,222,255,.75)':'rgba(185,200,255,.5)';
-  ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.stroke();ctx.setLineDash([]);
+  {const fg=ctx.createRadialGradient(0,0,R,0,0,Gr);fg.addColorStop(0,'rgba(150,170,255,0)');fg.addColorStop(.85,`rgba(150,170,255,${pull?.08:.05})`);fg.addColorStop(1,'rgba(150,170,255,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
   if(G2.rageT>0){const g=ctx.createRadialGradient(0,0,R,0,0,Gr);g.addColorStop(0,'rgba(255,90,40,.28)');g.addColorStop(1,'rgba(255,90,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
   {const tn=SKIN_TINT[SKIN.sel]||'#b9a8ff';ctx.save();ctx.shadowColor=tn;ctx.shadowBlur=6;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,R+.8,0,TAU);ctx.stroke();ctx.restore();} // crisp event horizon
   if(G2.rageT>0){const q=G2.rageT/V2K.rage.dur,bl=G2.rageT<1.5?(Math.sin(clock*24)>0?1:.25):1;ctx.save();ctx.lineCap='round';ctx.lineWidth=4;ctx.strokeStyle='rgba(255,120,70,.2)';ctx.beginPath();ctx.arc(0,0,R*1.22+4,0,TAU);ctx.stroke();

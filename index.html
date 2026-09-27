@@ -863,7 +863,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="lvnext" id="lvlNext"></div>
    <div class="row"><button class="btn big" id="nextLvl">SONRAKİ SEVİYE</button></div>
    <div class="row"><button class="btn sec" id="lvlRetry" style="display:none;width:100%;">🔄 TEKRAR DENE</button></div>
-   <div class="row mon"><button class="btn sec adbtn" id="lvlAd" style="width:100%;">▶ REKLAM İZLE · +25 ⭐</button></div>
+   <div class="row mon"><button class="btn sec adbtn" id="lvlAd" style="width:100%;">▶ REKLAM İZLE · +100 ⭐</button></div>
   </div>
   <div class="modal card" id="mOver">
    <div class="h" style="color:var(--red);">OYUN BİTTİ</div>
@@ -1492,6 +1492,7 @@ precision highp float;
 precision mediump float;
 #endif
 `;
+let HALO_K=1; // outer-glow squeeze: 1 = original width, larger = tighter to the rim
 // black hole looks (skins): emission around the event horizon; q is in hole radii, x=|q|, a=angle, fc=device pixel
 const SKIN_GLSL=`
 float k_h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
@@ -1524,7 +1525,7 @@ vec3 skinEm(float s,vec2 q,float x,float a,float t,vec2 fc,float R){
 `;
 const VS_BG='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
 const FS_BG=HDR+SKIN_GLSL+`
-uniform vec2 uRes,uHole,uTexSz,uPan;uniform float uR,uRing,uT,uLock,uHeat,uShock,uFlash,uScale,uStage,uSkin;uniform vec3 uDeep,uMid;uniform sampler2D uTex,uTexB;uniform float uBlur,uDim;
+uniform vec2 uRes,uHole,uTexSz,uPan;uniform float uR,uRing,uT,uLock,uHeat,uShock,uFlash,uScale,uStage,uSkin,uHK;uniform vec3 uDeep,uMid;uniform sampler2D uTex,uTexB;uniform float uBlur,uDim;
 uniform vec3 uDM[3]; // dark-matter clumps: x,y,radius in device px (radius 0 = unused)
 float h3(vec3 p){p=fract(p*.3183099+.1);p*=17.;return fract(p.x*p.y*p.z*(p.x+p.y+p.z));}
 float n3(vec3 x){vec3 i=floor(x),f=fract(x);f=f*f*(3.-2.*f);
@@ -1540,21 +1541,22 @@ void main(){
  vec2 sp=uHole+dd*rs;
  for(int i=0;i<3;i++){if(uDM[i].z>0.){vec2 q=sp-uDM[i].xy;float qr=length(q),e2=uDM[i].z*uDM[i].z*1.2;sp-=q/max(qr,1.)*e2/max(qr,uDM[i].z*.35);}}
  vec3 bg=bgAt(sp);
- bg*=mix(1.,clamp(1.+.55*exp(-abs(x-1.55)*3.),1.,1.55),smoothstep(4.,1.2,x));
+ float xk=1.+max(x-1.,0.)*uHK; // the outer glow is squeezed toward the rim by uHK
+ bg*=mix(1.,clamp(1.+.55*exp(-abs(xk-1.55)*3.),1.,1.55),smoothstep(4.,1.2,xk));
  bg=pow(bg,vec3(1.1))*.84*uDim;
  bg*=1.-.34*uLock*smoothstep(uRing+1.5*uScale,uRing-1.5*uScale,r);
  vec3 col=bg;
  if(x<4.2){
   float ang=atan(d.y,d.x),om=.9/pow(max(x,.85),1.5),T=6.,p1=fract(uT/T),p2=fract(uT/T+.5),wb=abs(p1-.5)*2.;
   float g=mix(streak(ang-om*p1*T,x),streak(ang-om*p2*T+2.1,x),wb);
-  float edge=x-1.,e=max(edge,0.);
+  float edge=xk-1.,e=max(edge,0.);
   float halo=smoothstep(-.015,.01,edge)*(exp(-e*2.1/(1.+.28*uStage))*(.35+.8*g)+exp(-e*14.)*1.4)*(1.+.7*uHeat)*(1.+.16*uStage);
   vec3 c=mix(uDeep,uMid,exp(-e*3.));c=mix(c,vec3(1.),exp(-e*16.));
   vec3 em=c*halo*(1.+.12*cos(ang-3.14159));
-  if(uSkin>.5)em=skinEm(uSkin,d/R,x,ang,uT,fc,R)*(1.+.5*uHeat);
+  if(uSkin>.5)em=skinEm(uSkin,d/R*(xk/max(x,1e-3)),xk,ang,uT,fc,R)*(1.+.5*uHeat);
   float sh=smoothstep(.988,1.003,x),cover=clamp(dot(em,vec3(.3,.5,.2)),0.,1.);
   col=bg*sh*(1.-.6*cover)+em*sh;
-  if(uSkin<.5)col+=mix(uMid,vec3(1.),.6)*exp(-pow((x-1.035)/.022,2.))*(1.2+.25*uStage);
+  if(uSkin<.5)col+=mix(uMid,vec3(1.),.6)*exp(-pow((xk-1.035)/.022,2.))*(1.2+.25*uStage);
   if(uStage>1.5)col+=uMid*exp(-pow((x-1.13)/.018,2.))*.45*sh;
  }
  if(uStage>2.5){ // quasar: twin relativistic jets along a tilted axis, flickering
@@ -1614,7 +1616,7 @@ function glInit(){
   const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){console.error(gl.getShaderInfoLog(o));return null;}return o;};
   const prog=(vs,fs,names)=>{const v=sh(gl.VERTEX_SHADER,vs),f=sh(gl.FRAGMENT_SHADER,fs);if(!v||!f)return null;const p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);
     if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.error(gl.getProgramInfoLog(p));return null;}const u={};names.forEach(n=>u[n]=gl.getUniformLocation(p,n));return {p,u,a:gl.getAttribLocation(p,vs.indexOf('attribute vec2 a;')>=0?'a':'p')};};
-  GL.bg=prog(VS_BG,FS_BG,['uRes','uHole','uTexSz','uPan','uR','uRing','uT','uLock','uHeat','uShock','uFlash','uScale','uStage','uSkin','uDeep','uMid','uTex','uTexB','uBlur','uDim','uDM']);
+  GL.bg=prog(VS_BG,FS_BG,['uRes','uHole','uTexSz','uPan','uR','uRing','uT','uLock','uHeat','uShock','uFlash','uScale','uStage','uSkin','uHK','uDeep','uMid','uTex','uTexB','uBlur','uDim','uDM']);
   GL.body=prog(VS_BODY,FS_BODY,['uRes','uC','uRad','uAng','uSt','uSq','uPad','uTex','uCell','uAtmo','uL','uSpin','uTilt','uPitch','uFade','uRed','uEmit','uFlashW','uLightK','uHot','uEdge','uSep','uFill']);
   if(!GL.bg||!GL.body)return false;
   GL.qTri=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,GL.qTri);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
@@ -1632,8 +1634,9 @@ function glTextures(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t;};
   GL.texBg=mk(IMG.bg);GL.texBgB=mk(blurCopy(IMG.bg));GL.texAtlas=mk(IMG.atlas);GL.ready=true;
 }
+const BLUR={s:.18,mix:.85}; // in-play background: downscale factor of the blurred copy and how much of it shows
 function blurCopy(img){ // down- then up-scaling gives an even blur on every browser (canvas filters are not everywhere)
-  const w=img.width,h=img.height,s=document.createElement('canvas');s.width=Math.max(1,Math.round(w*.18));s.height=Math.max(1,Math.round(h*.18));
+  const w=img.width,h=img.height,s=document.createElement('canvas');s.width=Math.max(1,Math.round(w*BLUR.s));s.height=Math.max(1,Math.round(h*BLUR.s));
   const sg=s.getContext('2d');sg.imageSmoothingQuality='high';sg.drawImage(img,0,0,s.width,s.height);
   const o=document.createElement('canvas');o.width=w;o.height=h;const og=o.getContext('2d');og.imageSmoothingQuality='high';og.drawImage(s,0,0,w,h);return o;}
 function glSetBg(img){if(!GL.ok||!GL.texBg||!img)return;const gl=GL.gl;gl.bindTexture(gl.TEXTURE_2D,GL.texBg);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,img);
@@ -1656,12 +1659,12 @@ function glDraw(t,sx=0,sy=0){
   gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,GL.texBgB);gl.uniform1i(u.uTexB,1);
   gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,GL.texBg);gl.uniform1i(u.uTex,0);
   const inPlay=gState==='playing'||gState==='pen_blink'||gState==='pen_freeze'||gState==='rescue_play'||gState==='lvlup_anim';GL.focus+=((VIS.focus&&inPlay?1:0)-GL.focus)*.06;
-  gl.uniform1f(u.uBlur,GL.focus*.85);gl.uniform1f(u.uDim,1-.2*GL.focus);
+  gl.uniform1f(u.uBlur,GL.focus*BLUR.mix);gl.uniform1f(u.uDim,1-.2*GL.focus);
   gl.uniform2f(u.uRes,cv.width,cv.height);gl.uniform2f(u.uHole,(hX+sx)*k,(H-hY-sy)*k);gl.uniform2f(u.uTexSz,IMG.bg.width,IMG.bg.height);
   gl.uniform2f(u.uPan,(hX/W-.5)*.025+Math.sin(t*.021)*.02,(hY/H-.5)*.02+Math.cos(t*.017)*.02);
   gl.uniform1f(u.uR,curR/RING_K*k*holeK);gl.uniform1f(u.uRing,(curR+1)*k);gl.uniform1f(u.uT,t%600);gl.uniform1f(u.uLock,lockK);gl.uniform1f(u.uScale,k);
   gl.uniform1f(u.uHeat,clamp(heat,0,1));gl.uniform1f(u.uShock,clamp(shock,0,1));gl.uniform1f(u.uFlash,clamp(flash,0,1));
-  gl.uniform3fv(u.uDeep,GL.deep);gl.uniform3fv(u.uMid,GL.mid);gl.uniform1f(u.uStage,G2.on?0:stageOf(mass));gl.uniform1f(u.uSkin,SKIN.sel);
+  gl.uniform3fv(u.uDeep,GL.deep);gl.uniform3fv(u.uMid,GL.mid);gl.uniform1f(u.uStage,G2.on?0:stageOf(mass));gl.uniform1f(u.uSkin,SKIN.sel);gl.uniform1f(u.uHK,HALO_K);
   const dm=new Float32Array(9);let di=0;for(const b of G2.on?G2.objs:[]){if((b.kind==='dark'||b.k==='dark')&&b.st!=='dead'&&di<3){dm[di*3]=(b.x+sx)*k;dm[di*3+1]=(H-b.y-sy)*k;dm[di*3+2]=b.r*k*(G2.on?(b.st==='sw'?b.sc??1:1)*1.4:(b.suck?b.fade:1));di++;}}gl.uniform3fv(u.uDM,dm);
   gl.drawArrays(gl.TRIANGLES,0,3);
   // bodies
@@ -1792,11 +1795,11 @@ const SKINUI={view:0,run:false,gl:null};
 function skinGL(){ // a small separate renderer for the menu thumbnails and the big preview
   if(SKINUI.gl!==null)return SKINUI.gl;const cv=document.createElement('canvas');cv.width=cv.height=440;const gl=cv.getContext('webgl',{preserveDrawingBuffer:true});
   if(!gl)return SKINUI.gl=false;
-  const fs=HDR+SKIN_GLSL+`uniform vec2 uRes;uniform float uT,uR,uS;
-   void main(){vec2 fc=gl_FragCoord.xy,q=(fc-uRes*.5)/uR;float x=length(q),a=atan(q.y,q.x);
+  const fs=HDR+SKIN_GLSL+`uniform vec2 uRes;uniform float uT,uR,uS,uHK;
+   void main(){vec2 fc=gl_FragCoord.xy,q=(fc-uRes*.5)/uR;float x0=length(q),x=1.+max(x0-1.,0.)*uHK,a=atan(q.y,q.x);q*=x/max(x0,1e-3);
     vec3 col=vec3(.01,.012,.03)+vec3(.05,.03,.09)*k_f(q*.4+3.)*k_f(q*.8);vec2 g=floor(fc/5.);float st=k_h(g);if(st>.985)col+=vec3(.8,.85,1.)*(st-.985)*40.;
     if(uS<.5)col+=vec3(.75,.7,1.)*exp(-pow((x-1.035)/.03,2.))*1.4+vec3(.55,.45,1.)*exp(-(x-1.)*3.5)*.35*step(1.,x);else col+=skinEm(uS,q,x,a,uT,fc,uR);
-    if(x<1.)col=vec3(0.);gl_FragColor=vec4(col,1.);}`;
+    if(x0<1.)col=vec3(0.);gl_FragColor=vec4(col,1.);}`;
   const sh=(t,src)=>{const o=gl.createShader(t);gl.shaderSource(o,src);gl.compileShader(o);return o;};
   const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS_BG));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);
   if(!gl.getProgramParameter(pr,gl.LINK_STATUS))return SKINUI.gl=false;gl.useProgram(pr);
@@ -1804,7 +1807,7 @@ function skinGL(){ // a small separate renderer for the menu thumbnails and the 
   const l=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(l);gl.vertexAttribPointer(l,2,gl.FLOAT,false,0,0);
   return SKINUI.gl={gl,cv,u:k=>gl.getUniformLocation(pr,k)};}
 function skinPaint(target,i,t,R){const G=skinGL(),c=target.getContext('2d');if(!G){c.fillStyle='#000';c.fillRect(0,0,target.width,target.height);return;}
-  const {gl,cv,u}=G;gl.viewport(0,0,440,440);gl.uniform2f(u('uRes'),440,440);gl.uniform1f(u('uT'),t);gl.uniform1f(u('uR'),R);gl.uniform1f(u('uS'),i);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  const {gl,cv,u}=G;gl.viewport(0,0,440,440);gl.uniform2f(u('uRes'),440,440);gl.uniform1f(u('uT'),t);gl.uniform1f(u('uR'),R);gl.uniform1f(u('uS'),i);gl.uniform1f(u('uHK'),HALO_K);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   c.drawImage(cv,0,0,target.width,target.height);}
 function monoDraw(c,cx,cy,Rp,txt,tint,t=0){ // the name on a ring inside the core, tops outward; the lead letter sets off and the rest chase it, each swelling as it moves
   const L=[...txt],n=L.length;if(!n)return;const rr=Rp*(n===1?.46:n===2?.52:.62);let fs=Rp*(n===1?.7:n===2?.6:.44);
@@ -1915,7 +1918,7 @@ function starStr(n){n=Math.max(0,n|0);return '★'.repeat(n)+'☆'.repeat(3-n);}
 function totalStars(){return Object.values(LSTARS).reduce((a,v)=>a+Math.max(0,v),0);}
 function lvlStarsShow(n,medal){$('lvlStars').innerHTML=medal?`<span>${medal}</span>`:n<0?'':[0,1,2].map(i=>`<span class="${i<n?'':'no'}" style="animation-delay:${.15+i*.15}s">★</span>`).join('');}
 function nextTeaser(l){return gameMode!=='classic'||REPLAY?'':v2Teaser(l);}
-function lvlButtons(replay){$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=false;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel('+25 ⭐');$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
+function lvlButtons(replay){$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=0;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · 1/${LVL_AD.max}`);$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
 function v2LvlUi(replay){ // V2 level card: title with the level, stars under it, play again / continue
   $('lvlNum').style.display='none';if(!replay)$('lvlHead').textContent=`SEVİYE ${level} TAMAMLANDI`;
   $('lvlRetry').style.display=levelStars()>=3?'none':'';$('lvlRetry').textContent='🔄 TEKRAR OYNA';$('nextLvl').textContent='DEVAM ET ▶';
@@ -2092,7 +2095,7 @@ function mapSheet(l,st,k){
 const GUIDE={
  'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün.'],['step4','','Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can.']],
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×5 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
- 'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Rage açıkken zararsız.'],['🧲','MIKNATIS TAŞI','Yut: 4 saniye yutabileceğin her şey sana çekilir.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir.']],
+ 'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Rage açıkken zararsız.'],['🧲','MIKNATIS TAŞI','Yut: 6 saniye yutabileceğin her şey sana çekilir.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir.']],
  'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Boss (10, 40, 70…): koptukça parçalarını topla, küçülünce bütünüyle yut.'],['🔴','KIRMIZI DEV','Boss (20, 50, 80…): nefes alır gibi şişer; şiştikçe daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.'],['💥','SÜPERNOVA','Boss (30, 60, 90…): her 7 saniyede patlayıp enkaz saçar. Enkazı yut, küçülünce onu da yut.'],['💖','CANLAR','16. seviyeden sonra: kaybedilen her deneme 1 can harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 can dolar (en fazla 5).'],['🪶','KOLAYLAŞTIR','Aynı seviyede 3 kez olmazsa: 15 💎 ya da reklamla hedef %20 düşer.']],
  'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
@@ -2240,7 +2243,8 @@ function renderShop(){
 }
 // shield: absorbs one life loss (not in Daily Cosmos / challenges)
 function revive(n){if(G2.contUsed)return;v2Revive();lives=Math.max(1,n);updateUI();}
-let adReviveUsed=false,lvlAdUsed=false;
+let adReviveUsed=false,lvlAdUsed=0;
+const LVL_AD={stars:100,max:2}; // level-end bonus: up to two ads, 100 ⭐ each (one ad = one 100 ⭐ continue)
 
 // ══════════════════════════════════════════════════════
 // CAPTAIN'S GIFT — every 20 levels: nine boxes, two hide a black hole. Open at least three; after that
@@ -2711,7 +2715,7 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   12:['☄️','COMET','Çok hızlı geçer. Yakalarsan combo süren uzar.'],
   13:['🌋','SPLIT PLANET','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],
   14:['⚛️','ANTIMATTER','Yutma! Kara deliğini küçültür. Çekim alanından uzak tut.'],
-  15:['🧲','MAGNET','Yut: 4 saniye yutabileceğin her şey sana çekilir.'],
+  15:['🧲','MAGNET','Yut: 6 saniye yutabileceğin her şey sana çekilir.'],
   16:['💫','PULSAR','Sadece parlarken yutulur. Sönükken seker.'],
   17:['🪐','MOON PAIR','Gezegeni, sonra uydusunu yut: çift puan.'],
   18:['🌫️','DARK MATTER','Görünmez! Yıldızları bükmesinden fark edilir.'],
@@ -3005,7 +3009,7 @@ function v2Update(dt){
     if(o.k!=='meteor'){
       const ed=v2Edible(o)||G2.ending;
       if(d<Gr&&o.k==='bomb'&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
-      if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(1500)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(380);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
+      if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(2800)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(650);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
@@ -3103,7 +3107,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO TIME','+2 s','#bff6ff',.9);}
-  else if(o.k==='magnet'){G2.magT=4;v2Call('MAGNET','4 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
+  else if(o.k==='magnet'){G2.magT=6;v2Call('MAGNET','6 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
   else if(o.k==='pulsar'){v2Pop('PULSAR','#bfe6ff',17);shock=Math.max(shock,.3);}
   else if(o.k==='mpair'){const a=o.sa,d=o.r*1.9,sat=v2Obj('sat',o.x+Math.cos(a)*d,o.y+Math.sin(a)*d,o.vx-Math.sin(a)*sp2(120),o.vy+Math.cos(a)*sp2(120));sat.pair=1;G2.pairT=3;v2Call('NOW THE MOON!','3 s','#cfd6ff',1);}
   else if(o.k==='sat'&&o.pair&&G2.pairT>0){const b=Math.round((OBJ2.mpair.pts+OBJ2.sat.pts)*MULT2(G2.combo));totalScore+=b;levelScore+=b;G2.pairT=0;v2Call('PAIR ×2','+'+b,'#ffd76a',1.3);sfx('achieve',{vol:.5});}
@@ -3265,7 +3269,7 @@ const TIP2={
   comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
   split:['🌋','BÖLÜNEN GEZEGEN','Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!'],
   anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Rage açıkken zararsızdır.'],
-  magnet:['🧲','MIKNATIS TAŞI','Bu mıknatıs taşını yut: 4 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
+  magnet:['🧲','MIKNATIS TAŞI','Bu mıknatıs taşını yut: 6 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
   nova:['💎','SÜPERNOVA','Üstteki elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],
   pulsar:['💫','PULSAR','Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.'],
   mpair:['🪐','UYDULU GEZEGEN','Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!'],
@@ -3351,10 +3355,7 @@ function v2DrawField(){ // gravity field, rage aura, overload wobble, damage bli
   if(gState!=='playing'&&gState!=='paused'&&gState!=='tip')return;
   const R=G2.R,Gr=G2.G;ctx.save();ctx.translate(hX,hY);
   let pull=false;for(const o of G2.objs)if(o.st==='in'&&o.inG&&o.k!=='meteor'){pull=true;break;}
-  ctx.setLineDash([3,7]);ctx.lineDashOffset=-clock*14;ctx.lineWidth=1.2;
-  {const fg=ctx.createRadialGradient(0,0,R,0,0,Gr);fg.addColorStop(0,'rgba(150,170,255,0)');fg.addColorStop(1,'rgba(150,170,255,.07)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
-  ctx.lineWidth=1.6;ctx.strokeStyle=G2.rageT>0?`rgba(255,120,70,${.45+.2*Math.sin(clock*18)})`:pull?'rgba(210,222,255,.75)':'rgba(185,200,255,.5)';
-  ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.stroke();ctx.setLineDash([]);
+  {const fg=ctx.createRadialGradient(0,0,R,0,0,Gr);fg.addColorStop(0,'rgba(150,170,255,0)');fg.addColorStop(.85,`rgba(150,170,255,${pull?.08:.05})`);fg.addColorStop(1,'rgba(150,170,255,0)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
   if(G2.rageT>0){const g=ctx.createRadialGradient(0,0,R,0,0,Gr);g.addColorStop(0,'rgba(255,90,40,.28)');g.addColorStop(1,'rgba(255,90,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
   {const tn=SKIN_TINT[SKIN.sel]||'#b9a8ff';ctx.save();ctx.shadowColor=tn;ctx.shadowBlur=6;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,R+.8,0,TAU);ctx.stroke();ctx.restore();} // crisp event horizon
   if(G2.rageT>0){const q=G2.rageT/V2K.rage.dur,bl=G2.rageT<1.5?(Math.sin(clock*24)>0?1:.25):1;ctx.save();ctx.lineCap='round';ctx.lineWidth=4;ctx.strokeStyle='rgba(255,120,70,.2)';ctx.beginPath();ctx.arc(0,0,R*1.22+4,0,TAU);ctx.stroke();
@@ -3708,7 +3709,8 @@ $('pMenu').onclick=()=>{if(gameMode==='classic'&&!REPLAY&&G2.on&&G2.t>5)heartLos
 $('nextLvl').onclick=async e=>{e.stopPropagation();if(REPLAY){endReplay(false);selMode('classic');$('startBtn').click();return;}
   if(giftDue()===level){openGift(level,async()=>{await maybeInterstitial();level++;levelCheck();});return;} // every 20 levels: the Captain's Gift first
   if(!heartGate(level+1,()=>{level++;levelCheck();}))return;hideModals();await maybeInterstitial();level++;levelCheck();};
-$('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed)return;if(await showRewarded()){lvlAdUsed=true;$('lvlAd').disabled=true;$('lvlAd').textContent='✓ +25 ⭐ ALINDI';grant({stars:25},'BONUS');}};
+$('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed>=LVL_AD.max)return;if(await showRewarded()){lvlAdUsed++;grant({stars:LVL_AD.stars},'BONUS');
+  if(lvlAdUsed>=LVL_AD.max){$('lvlAd').disabled=true;$('lvlAd').textContent=`✓ +${LVL_AD.stars*LVL_AD.max} ⭐ ${T('ALINDI')}`;}else $('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · ${lvlAdUsed+1}/${LVL_AD.max}`);}};
 $('lvlRetry').onclick=e=>{e.stopPropagation();if(!REPLAY){startReplay(level);return;}hideModals();startReplayLevel();};
 $('againBtn').onclick=()=>{if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();SND.music('game');resetRun(true,false);};
 $('overMenu').onclick=()=>{hideModals();showMenu();};

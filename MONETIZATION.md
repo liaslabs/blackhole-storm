@@ -64,7 +64,7 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
 | Canın bitince | **▶ Reklam izle · 1 canla devam** (seviye başına 1 kez), **❤️ Yedek can kullan**, 100 ⭐ ile devam |
 | Aynı seviyede 3. başarısızlık | **🪶 Kolaylaştır** · 💎 15 veya **▶ Reklam izle** |
 | Canlar (💖) bitince | **▶ Reklam izle · +1 can**, **💎 20 · canları doldur**, bekle (geri sayım) |
-| Seviye sonu | **▶ Reklam izle · +25 ⭐** |
+| Seviye sonu | **▶ Reklam izle · +100 ⭐** (en fazla 2 kez: toplam 200 ⭐, yani 2 kez "100 ⭐ ile devam") |
 | Günlük bonus | **▶ Reklamla 2 katını al** |
 | Eve Dönüş, süre bitince | **⏱ Zaman kristali +15 sn** veya **▶ Reklam izle +15 sn** (görev başına 1 kez) |
 | Mağaza | **▶ Reklam izle +5 💎** (günde 3) |
