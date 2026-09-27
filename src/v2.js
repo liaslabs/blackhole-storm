@@ -124,6 +124,7 @@ function v2Start(mode){
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   if(mode==='level')lives=3; // every level starts with 3 lives; the stars count what is left
   if(G2.L.boss&&mode==='level')v2BossInit();
+  else if(mode==='level'&&level%10===1&&level>1&&!REPLAY){const z=zoneOf(level),Z=ZONES[z];sigShow('🌌 '+T('YENİ BÖLGE')+' · '+T(Z.n),T(Z.d),6);}
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('LEVEL '+level,nw?`NEW: ${nw[0]} ${nw[1]}`:'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv')v2Call('SURVIVE THE STORM','','#e7e3da',2);
@@ -233,12 +234,15 @@ function v2RunScript(dt){
 const BOSS2={planet:{n:'GIANT PLANET',sub:'EAT ITS FRAGMENTS',col:'#ffb35c'},red:{n:'RED GIANT',sub:'EAT ITS PLASMA',col:'#ff7a3c',pc:[255,120,40]},nova:{n:'SUPERNOVA',sub:'EAT THE BLAST DEBRIS',col:'#9fe8ff',pc:[150,235,255]}};
 function v2BossType(l){return ['planet','red','nova'][(Math.max(1,Math.floor(l/10))-1)%3];}
 const BOSSIMG={};function v2BossImg(k){if(!BOSSIMG[k]){const src=(window.ASSETS||{})[k];if(!src)return null;const im=new Image();im.src=src;BOSSIMG[k]=im;}const im=BOSSIMG[k];return im.complete&&im.naturalWidth?im:null;}
+const SIG_BOSS={planet:['Radyo teleskoplar dev bir gezegenin yörüngesinden koptuğunu doğruladı. Kütlesi hızla bu bölgeye yaklaşıyor.','Uyarı: yerel kütleçekim iki katına çıktı. Kaynak, başıboş dev bir gezegen.','Son veri: gezegenin kabuğunda çatlaklar var. Çatlaklar parlıyor.'],
+  red:['Yaşlı bir yıldız şişiyor. Yüzey sıcaklığı düşüyor, boyutu büyüyor.','Kırmızı devin plazma rüzgârı istasyonun kalkanlarını aşındırıyor. Dikkat: radyasyon dalgaları.','Son ölçüm: yıldız nefes alır gibi genişleyip daralıyor.'],
+  nova:['Çekirdek çöküşü başladı. Patlama an meselesi.','Nötrino fırtınası algılandı: bir yıldız ölüyor. Radyasyon seviyesi kritik.','Tüm kanallara: süpernova uyarısı. Dalgaların arasındaki boşlukları kullan.']};
 function v2BossInit(){
   let hp=Math.min(46,22+Math.floor(level/10)*4); // tops out at level 60 so any boss stays beatable
   if(SHOP.easyLv===level)hp=Math.round(hp*.8);const bt=v2BossType(level),B=BOSS2[bt];
   const b={k:'boss',x:W/2,y:H*.24,rr:57,r:57*G2.S,hp,max:hp,cell:[2,5,15,13][(Math.floor(level/10)+3)%4],vx:sp2(28),shed:1.4,edible:false,sw:0,
     sX:1,sY:1,gs:1,suck:null,heat:0,isBoss:false,age:0,bt,burst:4,fade:1,spots:[],spotCD:1.2,chips:[],hitFx:0,rad:{ph:'idle',t:0,cd:V2K.boss.radFirst}};if(bt==='nova')b.burst=1e9;/* the supernova's debris ring now goes off with its radiation burst */giveSpin(b);b.spinV*=.25;if(bt!=='planet'){delete b.cell;v2BossImg(bt==='red'?'bossRG':'bossSN');v2BossImg('bossRays');}G2.boss=b;
-  v2Call(B.n,B.sub,B.col,2.4,true);sfx('bossIntro',{vol:.7,rev:.4});
+  v2Call(B.n,B.sub,B.col,2.4,true);sfx('bossIntro',{vol:.7,rev:.4});if(!REPLAY){const L=SIG_BOSS[bt];sigShow('📡 '+T('SİNYAL · GÖZLEM İSTASYONU-7'),T(L[Math.floor(level/30)%L.length]),6);}
 }
 function v2BossStep(dt,tk){
   const b=G2.boss;if(!b)return;b.age+=dt;b.spinA+=b.spinV*dt;
@@ -310,14 +314,14 @@ function v2DrawRad(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;
   ctx.restore();}
 function v2BossCrack(b,P){const n=Math.max(1,Math.round(b.max/24)); // ring segments that break off with this hit
   for(let i=0;i<n*2;i++){const a=P.a+rrnd(-.25,.25);b.chips.push({a,t:0,v:rrnd(.8,1.3)});}
-  v2BossHit();b.hitFx=1;shake=Math.max(shake,9);flash=Math.max(flash,.25);vib(25);v2Sfx('boom',{vol:.5,rate:1.35});
+  v2BossHit();dmEvent('crack',1);b.hitFx=1;shake=Math.max(shake,9);flash=Math.max(flash,.25);vib(25);v2Sfx('boom',{vol:.5,rate:1.35});
   const col=b.bt==='red'?'#ffd28a':b.bt==='nova'?'#bff6ff':'#ffb35c';v2Burst(P.x,P.y,22,col,2,7,.6,2.2);v2Pop('CRACK!',col,18);
   const k=b.bt==='planet'?'frag':'plasma',o=v2Obj(k,P.x,P.y,0,0);o.fromBoss=true;o.seen=true;if(k==='plasma')o.pc=BOSS2[b.bt].pc;v2Swallow(o,null);}
 function v2BossHit(){const b=G2.boss;if(!b||b.edible)return;b.hp=Math.max(0,b.hp-1);shock=Math.max(shock,.3);
   if(b.hp===0){b.edible=true;v2Call('SWALLOW IT!','','#8dffcb',1.6,true);sfx('bell',{vol:.8});}}
 function v2BossEaten(){
   const pts=Math.round(1000*MULT2(G2.combo+1)*(G2.rageT>0?2:1));totalScore+=pts;levelScore+=pts;G2.combo++;G2.comboT=G2.L.comboT;
-  G2.rr=Math.min(V2K.rMax,G2.rr+10);G2.cap=Math.max(G2.cap,G2.rr);v2AddRage(25);G2.eaten++;bossSlain=true;
+  G2.rr=Math.min(V2K.rMax,G2.rr+10);G2.cap=Math.max(G2.cap,G2.rr);v2AddRage(25);G2.eaten++;bossSlain=true;atlasAdd('b_'+(G2.boss?G2.boss.bt:'planet'));dmEvent('boss',1);
   shake=Math.max(shake,14);flash=1;shock=1;sfx('bossDie',{vol:.9,rev:.5});sfx('swallowBig',{vol:.9,rate:.8,rev:.4});vib([60,40,120]);
   v2Call(BOSS2[G2.boss?G2.boss.bt:'planet'].n+' SWALLOWED','SIZE UP','#ffd76a',2.4,true);v2Pop('+'+pts.toLocaleString(LOC),'#ffd76a',26);
   v2Burst(hX,hY,60,'#ffcf8a',2,9,1.1,2.4);addMass(5);updateUI();
@@ -525,7 +529,7 @@ function v2Score(o,mini){
   const perf=!mini&&o.inG&&o.b<V2K.perfectK*G2.G&&!o.chain;
   const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;pts=Math.round(pts);
   const wo=v2WinOut();if(wo&&o.k!=='prey'){pts=0;if(!G2.woT||G2.t-G2.woT>1.2){G2.woT=G2.t;v2Pop(wo>0?T('ÇOK BÜYÜK · 0'):T('ÇOK KÜÇÜK · 0'),'#ff8a7a',15);}} // outside the size window nothing scores
-  totalScore+=pts;levelScore+=pts;G2.eaten++;
+  totalScore+=pts;levelScore+=pts;G2.eaten++;if(G2.mode!=='sprint')atlasAdd(o.k);
   v2AddRage((K.rage+(perf?4:0))*(G2.script?1.6:1));
   if(m>MULT2(G2.combo-1)){v2Call('COMBO ×'+m,'','#ffd76a',1,false);v2Sfx('mult',{vol:.55,rate:.8+m*.1});if(m>=4)shake=Math.max(shake,4);totalCombos++;}
   if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('PERFECT +'+pts,'#fff1b8',18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
@@ -550,7 +554,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO TIME','+2 s','#bff6ff',.9);}
-  else if(o.k==='prey'&&G2.hunt){G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('CAUGHT!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});shake=Math.max(shake,6);}
+  else if(o.k==='prey'&&G2.hunt){dmEvent('hunt',1);G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('CAUGHT!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});shake=Math.max(shake,6);}
   else if(o.k==='magnet'){G2.magT=6;v2Call('MAGNET','6 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
   else if(o.k==='pulsar'){v2Pop('PULSAR','#bfe6ff',17);shock=Math.max(shock,.3);}
   else if(o.k==='mpair'){const a=o.sa,d=o.r*1.9,sat=v2Obj('sat',o.x+Math.cos(a)*d,o.y+Math.sin(a)*d,o.vx-Math.sin(a)*sp2(120),o.vy+Math.cos(a)*sp2(120));sat.pair=1;G2.pairT=3;v2Call('NOW THE MOON!','3 s','#cfd6ff',1);}
@@ -605,6 +609,7 @@ function v2Split(o){ // a split planet cracks in two: both halves (half the mass
   v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('SPLIT!','','#ffb35c',.9);
 }
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
+  if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NEUTRALIZED +'+p,'#7dffb0',15);return;}
   G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9);flash=Math.max(flash,.4);
   v2Burst(hX,hY,30,'#7dffb0',2,7,.6,2);v2Call('ANTIMATTER!','SHRINK','#7dffb0',1.2);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
@@ -745,7 +750,7 @@ function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8
 function v2Complete(){
   if(gState!=='playing')return;
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();}
-  if(!G2.dmg)dmEvent('clean',1);
+  if(!G2.dmg)dmEvent('clean',1);if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
   if(G2.mode==='level'&&level===2&&!TIPS.gift){TIPS.gift=1;SHOP.shield++;G2.gift=1;saveG();} // the first shield is a gift
   G2.objs=G2.objs.filter(o=>o.st==='sw');
   if(gameMode==='survival'){gameOver();return;}
