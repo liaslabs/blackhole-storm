@@ -528,6 +528,31 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .res2 .r2 span{color:var(--dim);}.res2 .r2 b{font-family:var(--fm);font-weight:500;}.res2 .r2 b.hl{color:var(--gold);}
 #contMsg .k2{color:var(--dim);font-size:12px;}#contMsg b{font-family:var(--fm);font-weight:500;color:var(--gold);}
 
+#intro{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 46%,#0e1b27 0%,#070d14 62%,#020407 100%);transition:opacity .5s;}
+#intro[hidden]{display:none;}
+#intro video{width:100%;max-width:760px;max-height:100%;object-fit:contain;-webkit-mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent,#000 14%,#000 86%,transparent),linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);mask-composite:intersect;}
+#intro button{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom));padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(8,14,22,.55);color:#e8f2ff;font:600 13px "IBM Plex Sans Condensed",sans-serif;letter-spacing:.08em;}
+#introSkip{right:18px;}#introSnd{left:18px;}
+
+/* one-page main menu: map + daily side by side, tighter blocks */
+.mcard .mlogo{margin-top:10px;}
+.mcard .evo{padding:8px 11px;}
+.mcard .evo .r{display:flex;align-items:baseline;gap:8px;margin-top:5px;}
+.mcard .evo .s{flex:1;min-width:0;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px;}
+.mcard .evo .go{margin:0;white-space:nowrap;font-size:10px;}
+.mcard .ribbon{padding:8px 11px;}.mcard .ribbon span{font-size:12px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.mgrid .mapc{margin:0;padding:10px 10px 64px;min-height:0;height:100%;}
+.mgrid .mapc .t{font-size:12px;line-height:1.35;}
+.mgrid .mapc canvas{top:auto;bottom:6px;right:auto;left:50%;transform:translateX(-50%);width:80px;height:58px;}
+.mcard .mgrid .daily{margin:0;padding:10px;display:flex;flex-direction:column;gap:4px;}
+.mgrid .daily .t{flex-direction:column;align-items:flex-start;gap:2px;font-size:10.5px;}
+.mgrid .daily .s{margin:2px 0 0;font-size:11.5px;line-height:1.35;color:#b9c0d2;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.mgrid .daily .g{font-size:12px;margin:0;line-height:1.2;word-break:break-all;}
+.mgrid .daily .row{margin-top:auto;flex-direction:column;gap:6px;}
+.mgrid .daily .row .btn{width:100%;margin:0;padding:9px 4px;font-size:11.5px;}
+.mcard .dock{margin-top:10px;}
+@media (max-height:700px){.mcard .mlogo{font-size:21px;margin-top:6px;}.mcard .dock button{padding:7px 2px 6px;}.mcard #startBtn{padding-top:11px;padding-bottom:11px;}}
 </style>
 </head>
 <body>
@@ -691,12 +716,14 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="mseg"><button class="mode on" id="modeC">🪐 KLASİK</button><button class="mode" id="modeS">☠️ HAYATTA KAL</button></div>
   <div class="mdesc" id="modeDesc" hidden></div>
   <button class="ribbon mon" id="starterRib"><b>🎁</b><span><b>BAŞLANGIÇ PAKETİ</b><br>300 💎 · 3.000 ⭐ · 10 can · 5 kalkan · 3 ⏱</span><em>%75</em></button>
+  <div class="mgrid">
   <button class="mapc" id="mapBtn"><span class="k">🗺 SEVİYE HARİTASI</span><span class="t" id="mapTxt"></span><canvas id="miniMap" width="168" height="132"></canvas></button>
   <div class="daily" id="dailyCard">
    <div class="t"><span id="dcTitle">📅 GÜNLÜK KOZMOS</span><b id="dcZone"></b></div>
    <div class="s" id="dcTxt">Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!</div>
    <div class="g" id="dcGrid"></div>
    <div class="row"><button class="btn cy" id="dcPlay">OYNA · 60 SN</button><button class="btn sec" id="dcShare" style="display:none">📤 PAYLAŞ</button></div>
+  </div>
   </div>
   <div class="dock">
    <button id="dmBtn">📋<span>GÖREVLER</span><em id="dmBadge"></em></button>
@@ -844,6 +871,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
+  <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
   <div class="srow"><span>👆 Parmak mesafesi</span><div class="seg" id="sFd"><button>YAKIN</button><button>ORTA</button><button>UZAK</button></div></div>
   <div class="srow"><span>💎 Elmas butonu</span><div class="seg"><button id="sBtnL">SOL</button><button id="sBtnR">SAĞ</button></div></div>
   <div class="credits"><b>Emeği geçenler</b><br>
@@ -859,6 +887,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
  </div>
 </div>
 
+<div id="intro" hidden><video id="introV" playsinline preload="auto"></video><button id="introSnd" hidden>🔊 Sesi aç</button><button id="introSkip">GEÇ ›</button></div>
 <!--SFX_DATA-->
 <!--ASSET_DATA-->
 <!--I18N_DATA-->
@@ -1026,6 +1055,7 @@ function setLang(l,save){
   if(!LOCALES[l])l='en';LANG=l;LOC=LOCALES[l];I18.cache.clear();SET.lang=l;
   document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';
   trTree(document.body);document.querySelectorAll('.icx').forEach(icoFill);if(save)saveG();
+  if(typeof fitMenu==='function')requestAnimationFrame(fitMenu);
   if(typeof selMode==='function'&&$('sMenu').classList.contains('on'))selMode(gameMode); // the start button holds a pre-translated zone name
 }
 new MutationObserver(ms=>{for(const m of ms){
@@ -1583,10 +1613,15 @@ function skinGL(){ // a small separate renderer for the menu thumbnails and the 
 function skinPaint(target,i,t,R){const G=skinGL(),c=target.getContext('2d');if(!G){c.fillStyle='#000';c.fillRect(0,0,target.width,target.height);return;}
   const {gl,cv,u}=G;gl.viewport(0,0,440,440);gl.uniform2f(u('uRes'),440,440);gl.uniform1f(u('uT'),t);gl.uniform1f(u('uR'),R);gl.uniform1f(u('uS'),i);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   c.drawImage(cv,0,0,target.width,target.height);}
-function monoDraw(c,cx,cy,Rp,txt,tint,rot=0){ // the name letters inside the black core; the font shrinks as letters are added
-  if(!txt)return;c.save();c.font='800 100px "IBM Plex Sans Condensed",sans-serif';const w=c.measureText(txt).width||100;
-  const fs=Math.min(Rp*.9,100*Rp*1.5/w);c.translate(cx,cy);c.rotate(rot);c.font=`800 ${fs}px "IBM Plex Sans Condensed",sans-serif`;c.textAlign='center';c.textBaseline='middle';
-  c.shadowColor=tint;c.shadowBlur=fs*.35;c.fillStyle=tint;c.globalAlpha=.55;c.fillText(txt,0,fs*.05);c.shadowBlur=0;c.globalAlpha=.92;c.lineWidth=Math.max(1,fs*.035);c.strokeStyle=tint;c.strokeText(txt,0,fs*.05);c.restore();}
+function monoDraw(c,cx,cy,Rp,txt,tint,rot=0){ // the name letters on a ring inside the black core, tops outward, slowly turning
+  const L=[...txt],n=L.length;if(!n)return;const rr=Rp*(n===1?.46:n===2?.52:.62);let fs=Rp*(n===1?.7:n===2?.6:.44);
+  const F=f=>`800 ${f}px "IBM Plex Sans Condensed",sans-serif`;c.save();c.font=F(fs);let w=L.map(ch=>c.measureText(ch).width),gap=fs*.22,arc=w.reduce((a,b)=>a+b,0)+gap*(n-1);
+  const max=2*Math.PI*rr*.9;if(arc>max){const k=max/arc;fs*=k;w=w.map(x=>x*k);gap*=k;arc=max;c.font=F(fs);}
+  c.translate(cx,cy);c.textAlign='center';c.textBaseline='middle';let a=-Math.PI/2+rot-arc/rr/2;
+  for(let i=0;i<n;i++){a+=w[i]/2/rr;c.save();c.rotate(a+Math.PI/2);c.translate(0,-rr);
+    c.shadowColor=tint;c.shadowBlur=fs*.35;c.fillStyle=tint;c.globalAlpha=.6;c.fillText(L[i],0,0);c.shadowBlur=0;c.globalAlpha=.95;c.lineWidth=Math.max(1,fs*.035);c.strokeStyle=tint;c.strokeText(L[i],0,0);c.restore();
+    a+=(w[i]/2+gap)/rr;}
+  c.restore();}
 function skinLockTxt(i){const k=SKINS[i];if(skinOwned(i))return i===SKIN.sel?'✓ SEÇİLİ':'SEÇ';
   return k.u==='stage'?`🔒 ${STAGES[k.v].n}`:k.u==='gem'?`💎 ${k.v}`:'🌌 KOZMİK KİMLİK';}
 function openSkins(){SKINUI.view=SKIN.sel;$('sSkin').classList.add('on');renderSkins();SKINUI.run=true;const t0=performance.now();
@@ -1612,7 +1647,7 @@ function skinAct(){const i=SKINUI.view,k=SKINS[i];if(skinOwned(i))return;
 function renderEvo(){
   const st=stageOf(mass),nx=STAGES[st+1],pct=nx?(mass-STAGES[st].m)/(nx.m-STAGES[st].m)*100:100;
   if(V2){const nk=nx&&SKINS.find(x=>x.u==='stage'&&x.v===st+1);$('evoBox').innerHTML=`<div class="t"><span>🕳️ KARA DELİĞİN</span><b>${SKINS[SKIN.sel].n}</b></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>`+
-    `<div class="s">${nk?`Sonraki görünüm: ${nk.n} · kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)}`:`Kütle ${mass.toLocaleString(LOC)} · evrim görünümlerinin hepsi açık`}</div><div class="go">GÖRÜNÜMÜ DEĞİŞTİR ›</div>`;return;}
+    `<div class="r"><div class="s">${nk?`Sonraki görünüm: ${nk.n} · kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)}`:`Kütle ${mass.toLocaleString(LOC)} · evrim görünümlerinin hepsi açık`}</div><div class="go">GÖRÜNÜMÜ DEĞİŞTİR ›</div></div>`;fitMenu();return;}
   $('evoBox').innerHTML=`<div class="t"><span>🕳️ KARA DELİĞİN</span><b>${STAGES[st].n}</b></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>`+
     `<div class="s">${nx?`Kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)} · sonraki evre: ${nx.n}`:'Son evre: jetler fışkırıyor!'}<br>Bugüne kadar ${swallowed.toLocaleString(LOC)} gök cismi yuttun.</div>`;
 }
@@ -3406,6 +3441,14 @@ $('evoBox').onclick=()=>{if(V2)openSkins();};$('skClose').onclick=()=>{$('sSkin'
 [...$('sFd').children].forEach((b,i)=>b.onclick=()=>{SET.fd=i;saveG();syncSettingsUI();sfx('click',{vol:.4});});
 $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};
+// Lias Labs intro: plays once on the very first launch (and on demand from settings); tries sound, falls back to muted
+function playIntro(){const ov=$('intro'),v=$('introV'),snd=$('introSnd');let fin=false,tmo=0;
+  const end=()=>{if(fin)return;fin=true;clearTimeout(tmo);try{localStorage.setItem('bhs_intro','1');}catch(e){}ov.style.opacity=0;v.pause();setTimeout(()=>{ov.hidden=true;v.removeAttribute('src');v.load();},500);};
+  ov.hidden=false;ov.style.opacity=1;snd.hidden=true;v.src='intro.mp4';v.muted=!SET.sfx;v.volume=SET.sfxVol;
+  v.onended=end;v.onerror=end;$('introSkip').onclick=end;snd.onclick=()=>{v.muted=false;snd.hidden=true;};
+  tmo=setTimeout(end,16000);
+  v.play().catch(()=>{v.muted=true;v.play().then(()=>{if(SET.sfx)snd.hidden=false;}).catch(end);});}
+$('sIntro').onclick=()=>{sfx('click',{vol:.4});playIntro();};
 $('sTips').onclick=()=>{TIPS={};saveG();$('sTips').textContent='✓';sfx('click',{vol:.4});};
 if(!canLink())$('privRow').innerHTML='🔒 Oyun kişisel veri toplamaz; skorlar ve ayarlar yalnızca bu cihazda saklanır.';
 
@@ -3439,8 +3482,14 @@ function showMenu(){
   renderMapCard();monApply();
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(gameMode);updateUI();renderEvo();renderDM();renderDaily();
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();fitMenu();requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
+// the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
+function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';
+  const cs=getComputedStyle($('sMenu')),av=innerHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom),h=c.offsetHeight;
+  if(h>av){let z=Math.max(.7,Math.floor(av/h*100)/100);c.style.zoom=z;const m=$('sMenu');while(z>.7&&m.scrollHeight>m.clientHeight+1){z-=.01;c.style.zoom=z;}}}
+if(document.fonts)document.fonts.ready.then(()=>fitMenu());
+addEventListener('resize',()=>requestAnimationFrame(fitMenu));
 const capName=x=>LANG==='de'?x.toLocaleLowerCase(LOC).replace(/(^|\s)(\S)/g,(m,a,c)=>a+c.toLocaleUpperCase(LOC)):x.charAt(0)+x.slice(1).toLocaleLowerCase(LOC); // German capitalises nouns
 function selMode(m){gameMode=m;$('modeC').classList.toggle('on',m==='classic');$('modeS').classList.toggle('on',m==='survival');$('modeDesc').innerHTML=MODE_TXT[m];
   const Z=ZONES[zoneOf(savedLevel)];
@@ -3515,6 +3564,7 @@ updateUI();
 {const t=$('toast');document.body.appendChild(t);t.style.position='fixed';t.style.zIndex=400;} // toasts show above panels too
 monInit();
 if(playerName&&playerAvatar){showMenu();offerChallenge();}else $('sProfile').classList.add('on');
+{let seen=false;try{seen=!!localStorage.getItem('bhs_intro');}catch(e){}if(!seen&&(!playerName||window.BHS_INTRO))playIntro();} // first install only
 requestAnimationFrame(t=>{lastT=t;loop(t);});
 if('serviceWorker' in navigator&&canLink()&&window.top===window)navigator.serviceWorker.register('sw.js').catch(()=>{});
 let installEvt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;$('installBtn').style.display='';});

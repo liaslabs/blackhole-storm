@@ -41,7 +41,8 @@ const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,comet:.7,anti:.
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
 Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
   decay:{wait:3,k:.2,min:1.2},shield:{dur:5,cost:30}});
-Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});Object.assign(V2K.dodge,{lo:7,hi:24});
+Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
+{const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag']);
 const GL2=new Set(['moon','planet','gold','split','mpair','sat']);
 const MULT2=c=>c>=30?7:c>=20?6:c>=15?5:c>=10?4:c>=5?3:c>=3?2:1;
@@ -145,12 +146,13 @@ function v2Pop(txt,col,sz=18){ftexts.push(new FText(txt,hX+rnd(-8,8),hY-G2.R-sp2
 function v2Call(txt,sub='',col='#fff',life=1.1,top=false){G2.calls=G2.calls.filter(c=>c.top!==top);G2.calls.push({txt,sub,col,life,max:life,top});}
 
 // ── spawning ──────────────────────────────────────────
-function v2Speed(k){const K=OBJ2[k],l=G2.lv;return Math.min(K.vm,K.v+K.dv*(l-1))*(G2.L.speedK)*G2.S;}
+function v2Big(){return clamp((G2.rr/V2K.r0-1.3)/(V2K.rMax/V2K.r0-1.3),0,1);} // 0 small … 1 largest
+function v2Speed(k){const K=OBJ2[k],l=G2.lv;return Math.min(K.vm,K.v+K.dv*(l-1))*(G2.L.speedK)*G2.S*(k==='meteor'?1-.25*v2Big():1);}
 function v2Obj(k,x,y,vx,vy,opt={}){
   const K=OBJ2[k];const o={k,x,y,vx,vy,rr:K.r*(opt.scale||1),r:0,st:'in',t:0,inG:false,b:1e9,seen:false,rot:rnd(0,TAU),vr:rnd(-1.2,1.2),
     si:Math.floor(rnd(0,6)),wait:k==='meteor'?(opt.wait??.75):0,minGap:1e9,dodged:false,prevD:1e9,boss:!!opt.boss,noScore:false,age:0};
   o.r=o.rr*G2.S;
-  if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(1.25-.03*(G2.lv-2),.7,1.25);o.ramp=0;} // enters slowly, then speeds up
+  if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(1.25-.03*(G2.lv-2),.7,1.25)+.4*v2Big();o.ramp=0;} // enters slowly (longer when the hole is big), then speeds up
   if(k==='pulsar')o.ph=rng()*1.6;if(k==='mpair')o.sa=rng()*TAU;
   if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:k==='split'?13:k==='mpair'?5:k==='sat'?10:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
   G2.objs.push(o);return o;
@@ -175,6 +177,7 @@ function v2Active(){let n=0;for(const o of G2.objs)if(o.st==='in'&&!o.boss)n++;r
 function v2Spawn(){
   let k=v2Pick();const l=G2.lv;
   if(k==='meteor'&&G2.objs.filter(o=>o.k==='meteor'&&o.wait>0).length>=3)k='ast'; // never more than 3 meteors released together
+  if(k==='meteor'){const big=v2Big();if(rng()<big*.35||G2.objs.filter(o=>o.k==='meteor'&&o.st==='in').length>=(big>.6?2:3))k='ast';} // a big hole meets fewer meteors
   if(k==='bomb'&&G2.objs.some(o=>o.k==='bomb'))k='ast';
   if(k==='mini'&&(G2.minis.length||G2.objs.some(o=>o.k==='mini')))k='ast';
   if(k==='magnet'&&(G2.magT>0||G2.objs.some(o=>o.k==='magnet')))k='ast';if(k==='dark'&&G2.objs.filter(o=>o.k==='dark').length>=3)k='ast';
@@ -725,9 +728,9 @@ function v2DrawShield(){
   ctx.strokeStyle=`rgba(${r},${g},${b},.9)`;ctx.lineWidth=Math.max(1,s*.06);ctx.beginPath();ctx.ellipse(0,-s*.05,s*.42,s*.13,-.35,0,TAU);ctx.stroke();
   ctx.restore();
 }
-function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, one more every 0.4M (7 max)
+function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at the start, the rest open as the hole grows (7 max)
   if(!SHOP.cid||!SKIN.monoOn||G2.shT>0)return;const txt=monoText();if(!txt)return;const L=[...txt],sz=v2Size();let n=G2.monoN||1;
-  while(n<L.length&&sz>=1+n*.4)n++;while(n>1&&sz<1+(n-1)*.4-.07)n--; // a little slack so letters do not flicker at the edge
+  const stp=(V2K.rMax/V2K.r0-1.1)/6;while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // all 7 by the largest size; a little slack against flicker
   if(n!==G2.monoN){G2.monoN=n;G2.monoT=0;}G2.monoT=Math.min(1,(G2.monoT||0)+1/30);
   ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock*.35);ctx.restore();}
 function v2DrawShard(o,sc){ // a golden third of the crest, glinting
