@@ -754,6 +754,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .easeBox{border:1px solid rgba(120,220,200,.45);border-radius:8px;padding:8px 10px;margin:4px 0 8px;background:rgba(80,200,170,.08);text-align:center;}
 .easeBox b{display:block;font-family:var(--fd);color:#9ff0da;font-size:14px;letter-spacing:.05em;}.easeBox small{display:block;color:#c9d2e2;font-size:12px;margin:2px 0 6px;}
 .easeBox .row{display:flex;gap:6px;margin:0;}.easeBox .btn{flex:1;font-size:12px;padding:8px 4px;}
+.lnkbtn{width:100%;background:none;border:0;color:var(--dim,#9aa0b6);font:600 13px var(--fd,sans-serif);letter-spacing:.12em;padding:8px 0 2px;cursor:pointer;text-decoration:underline;text-underline-offset:4px;}.lnkbtn:hover{color:#e8ebf4;}
 #mGift{width:min(94%,380px);position:fixed;z-index:160;max-height:96vh;overflow-y:auto;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
 .gfH{color:var(--gold);text-align:center;letter-spacing:.12em;}
 .gfTxt{font-size:13px;line-height:1.45;color:#cdd3e0;text-align:center;margin:8px 0 10px;}
@@ -864,6 +865,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row"><button class="btn big" id="nextLvl">SONRAKİ SEVİYE</button></div>
    <div class="row"><button class="btn sec" id="lvlRetry" style="display:none;width:100%;">🔄 TEKRAR DENE</button></div>
    <div class="row mon"><button class="btn sec adbtn" id="lvlAd" style="width:100%;">▶ REKLAM İZLE · +100 ⭐</button></div>
+   <div class="row"><button class="lnkbtn" id="lvlMenu">ANA MENÜ</button></div>
   </div>
   <div class="modal card" id="mOver">
    <div class="h" style="color:var(--red);">OYUN BİTTİ</div>
@@ -3804,6 +3806,7 @@ $('pMenu').onclick=()=>{if(gameMode==='classic'&&!REPLAY&&G2.on&&G2.t>5)heartLos
 $('nextLvl').onclick=async e=>{e.stopPropagation();if(REPLAY){endReplay(false);selMode('classic');$('startBtn').click();return;}
   if(giftDue()===level){openGift(level,async()=>{await maybeInterstitial();level++;levelCheck();});return;} // every 20 levels: the Captain's Gift first
   if(!heartGate(level+1,()=>{level++;levelCheck();}))return;hideModals();await maybeInterstitial();level++;levelCheck();};
+$('lvlMenu').onclick=e=>{e.stopPropagation();sfx('click',{vol:.4});if(REPLAY){endReplay(false);return;}hideModals();showMenu();}; // progress is already saved when the level is won
 $('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed>=LVL_AD.max)return;if(await showRewarded()){lvlAdUsed++;grant({stars:LVL_AD.stars},'BONUS');
   if(lvlAdUsed>=LVL_AD.max){$('lvlAd').disabled=true;$('lvlAd').textContent=`✓ +${LVL_AD.stars*LVL_AD.max} ⭐ ${T('ALINDI')}`;}else $('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · ${lvlAdUsed+1}/${LVL_AD.max}`);}};
 $('lvlRetry').onclick=e=>{e.stopPropagation();if(!REPLAY){startReplay(level);return;}hideModals();startReplayLevel();};
