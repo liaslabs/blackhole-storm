@@ -494,6 +494,13 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 @media (max-height:700px){.mcard .mlogo{font-size:21px;margin-top:6px;}.mcard .dock button{padding:7px 2px 6px;}.mcard #startBtn{padding-top:11px;padding-bottom:11px;}}
 
 /* Captain's Gift: 3×3 mystery boxes */
+.hrtRow{display:flex;justify-content:center;gap:6px;font-size:30px;margin:6px 0 2px;}.hrtRow .off{filter:grayscale(1) brightness(.45);}
+.hrtTxt{text-align:center;font-size:14px;}.hrtTxt b{font-family:var(--fd);color:var(--gold);font-size:22px;letter-spacing:.04em;}
+#mHeart{width:min(92%,360px);position:fixed;z-index:165;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
+#menuHrt small{margin-left:4px;font-size:10.5px;color:var(--dim);font-family:var(--fd);}
+.easeBox{border:1px solid rgba(120,220,200,.45);border-radius:8px;padding:8px 10px;margin:4px 0 8px;background:rgba(80,200,170,.08);text-align:center;}
+.easeBox b{display:block;font-family:var(--fd);color:#9ff0da;font-size:14px;letter-spacing:.05em;}.easeBox small{display:block;color:#c9d2e2;font-size:12px;margin:2px 0 6px;}
+.easeBox .row{display:flex;gap:6px;margin:0;}.easeBox .btn{flex:1;font-size:12px;padding:8px 4px;}
 #mGift{width:min(94%,380px);position:fixed;z-index:160;max-height:96vh;overflow-y:auto;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
 .gfH{color:var(--gold);text-align:center;letter-spacing:.12em;}
 .gfTxt{font-size:13px;line-height:1.45;color:#cdd3e0;text-align:center;margin:8px 0 10px;}
@@ -540,12 +547,21 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="h">CANIN TÜKENDİ</div>
    <p class="muted" id="contMsg" style="font-size:14.5px;color:#dfe3ee;">Kaldığın yerden devam etmek ister misin?</p>
    <div class="box" id="contBox"><div style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:16px;">100 ⭐ İLE DEVAM</div><div class="muted">Puanın korunur, 3 can · Mevcut: <span id="contStars">0</span> ⭐</div></div>
+   <div class="easeBox" id="easeBox" hidden><b>🪶 BU SEVİYEYİ KOLAYLAŞTIR</b><small>3 kez olmadı. Hedef %20 düşer, seviye baştan başlar (can harcamaz).</small><div class="row"><button class="btn cy" id="contEase">💎 15 · KOLAYLAŞTIR</button><button class="btn adbtn mon" id="contEaseAd">▶ REKLAM İZLE · KOLAYLAŞTIR</button></div></div>
    <div class="row mon"><button class="btn big adbtn" id="contAd">▶ REKLAM İZLE · 1 CANLA DEVAM</button></div>
    <div class="row mon"><button class="btn big cy" id="contLife">❤️ YEDEK CAN KULLAN</button></div>
    <div class="row"><button class="btn big cy" id="contDia">💎 25 · 2 CANLA DEVAM</button></div>
    <div class="row"><button class="btn big" id="contYes">DEVAM ET · 100 ⭐</button></div>
    <div class="row"><button class="btn sec" id="contRetry" style="width:100%;">🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contNo" style="width:100%;">BİTİR</button></div>
+  </div>
+  <div class="modal card" id="mHeart">
+   <div class="h">💖 CANLARIN BİTTİ</div>
+   <div class="hrtRow" id="hrtRow"></div>
+   <p class="muted hrtTxt">Yeni can: <b id="hrtClock">20:00</b><br><small>Her 20 dakikada 1 can dolar (en fazla 5). Kazandığın seviye can harcamaz.</small></p>
+   <div class="row mon"><button class="btn big adbtn" id="hrtAd">▶ REKLAM İZLE · +1 CAN</button></div>
+   <div class="row"><button class="btn big cy" id="hrtDia">💎 20 · CANLARI DOLDUR</button></div>
+   <div class="row"><button class="btn sec" id="hrtWait" style="width:100%;">BEKLE</button></div>
   </div>
   <div class="modal card" id="mGift">
    <div class="h gfH">🎁 KAPTANIN HEDİYESİ</div>
@@ -636,7 +652,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <button class="icb" id="setBtn" aria-label="Ayarlar">⚙️</button>
   </div>
   <div class="logo mlogo">BLACKHOLE STORM</div>
-  <div class="wallet"><span>⭐ <b id="menuStars">0</b></span><span>💎 <b id="menuDia">0</b></span><span>🛡 <b id="menuSh">0</b></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
+  <div class="wallet"><span>⭐ <b id="menuStars">0</b></span><span>💎 <b id="menuDia">0</b></span><span>🛡 <b id="menuSh">0</b></span><span id="menuHrt" hidden>💖 <b id="menuHrtN">5</b><small id="menuHrtT"></small></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
   <div class="evo" id="evoBox"></div>
   <div class="box" id="dailyPrev" style="display:none;"></div>
   <button class="btn big play" id="startBtn">OYNA</button>
@@ -977,8 +993,8 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
-function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
+let SHOP={noAds:false,cid:false,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
+function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,hrt:HEARTS,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -993,11 +1009,13 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
+  {const h=svO(d.hrt)||{};HEARTS.n=svI(h.n,HRT.max,0,HRT.max);HEARTS.t=svN(h.t,0,0,Date.now());}
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
   for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);
   if(V2&&!TIPS.gift&&bestLevel>2){TIPS.gift=1;SHOP.shield++;}
-  if(!skinOwned(SKIN.sel))SKIN.sel=0; // e.g. a pack look on a save without the pack // players past level 2 before the first-shield gift existedSHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
+  if(!skinOwned(SKIN.sel))SKIN.sel=0; // e.g. a pack look on a save without the pack // players past level 2 before the first-shield gift existed
+  SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
   }catch(e){}
 }
@@ -1581,7 +1599,7 @@ function showLB(){const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','�
 // from the map for stars only: the run's saved level and total score never change during a replay.
 // ══════════════════════════════════════════════════════
 function levelStars(){return G2.on?clamp(lives,1,3):1+(lostThisLevel?0:1)+(lvCombo>=6?1:0);}
-function recordStars(l,st){const old=LSTARS[l]|0;if(st>old){LSTARS[l]=st;saveG();}return {old,gain:Math.max(0,st-old)};}
+function recordStars(l,st){if(SHOP.easyLv===l)SHOP.easyLv=0;if(SHOP.failLv===l)SHOP.failN=0;const old=LSTARS[l]|0;if(st>old){LSTARS[l]=st;saveG();}return {old,gain:Math.max(0,st-old)};}
 function starStr(n){n=Math.max(0,n|0);return '★'.repeat(n)+'☆'.repeat(3-n);}
 function totalStars(){return Object.values(LSTARS).reduce((a,v)=>a+Math.max(0,v),0);}
 function lvlStarsShow(n,medal){$('lvlStars').innerHTML=medal?`<span>${medal}</span>`:n<0?'':[0,1,2].map(i=>`<span class="${i<n?'':'no'}" style="animation-delay:${.15+i*.15}s">★</span>`).join('');}
@@ -1613,7 +1631,7 @@ function endReplay(toMap){
   showMenu();if(toMap)openMap();
 }
 // map node kinds follow the real level rules
-function levelKind(l){if(l%10===0)return {t:'boss',ic:'🪐',n:'GIANT PLANET'};const n=new2(l);return n?{t:'new',ic:n[0],n:n[1]}:null;}
+function levelKind(l){if(l%10===0){const b=v2BossType(l);return {t:'boss',ic:b==='red'?'🔴':b==='nova'?'💥':'🪐',n:BOSS2[b].n};}const n=new2(l);return n?{t:'new',ic:n[0],n:n[1]}:null;}
 const KIND_TXT={boss:'Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.',new:''};
 let mapPts=[],mapN=0,mapB=0; // mapB: levels before the first drawn node
 function renderMapCard(){
@@ -1764,7 +1782,7 @@ const GUIDE={
  'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün.'],['step4','','Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can.']],
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×5 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
  'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Rage açıkken zararsız.'],['🧲','MIKNATIS TAŞI','Yut: 4 saniye yutabileceğin her şey sana çekilir.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir.']],
- 'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB ekrandaki her şeyi sana çeker, meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.']],
+ 'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Boss (10, 40, 70…): koptukça parçalarını topla, küçülünce bütünüyle yut.'],['🔴','KIRMIZI DEV','Boss (20, 50, 80…): nefes alır gibi şişer; şiştikçe daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.'],['💥','SÜPERNOVA','Boss (30, 60, 90…): her 7 saniyede patlayıp enkaz saçar. Enkazı yut, küçülünce onu da yut.'],['💖','CANLAR','16. seviyeden sonra: kaybedilen her deneme 1 can harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 can dolar (en fazla 5).'],['🪶','KOLAYLAŞTIR','Aynı seviyede 3 kez olmazsa: 15 💎 ya da reklamla hedef %20 düşer.']],
  'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
@@ -1784,7 +1802,7 @@ function renderGuide(tab){
 // ══════════════════════════════════════════════════════
 const IAP=[
  {id:'starter',sec:'offer',ic:'🎁',t:'BAŞLANGIÇ PAKETİ',d:'300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali. Tek sefer.',price:'₺19,99',was:'₺79,99',tag:'%75 İNDİRİM',once:true,give:{gems:300,stars:3000,lives:10,shield:5,time:3}},
- {id:'vip_monthly',sec:'offer',cls:'vip',ic:'👑',t:'VIP KULÜP · AYLIK',d:'Her günlük girişte ekstra +15 💎 +1 🛡 · Her ay otomatik paket: 300 💎 · 3.000 ⭐ · 5 kalkan · 5 yedek can · 3 zaman kristali',price:'₺39,99',per:'/ay',tag:'EN KÂRLI',sub:true},
+ {id:'vip_monthly',sec:'offer',cls:'vip',ic:'👑',t:'VIP KULÜP · AYLIK',d:'Sınırsız 💖 can · Her günlük girişte ekstra +15 💎 +1 🛡 · Her ay otomatik paket: 300 💎 · 3.000 ⭐ · 5 kalkan · 5 yedek can · 3 zaman kristali',price:'₺39,99',per:'/ay',tag:'EN KÂRLI',sub:true},
  {id:'captain',sec:'offer',cls:'cap',ic:'🧑‍🚀',t:'KAPTAN SETİ',d:'Oyunu kolaylaştırır: 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎',price:'₺29,99',tag:'KOLAYLAŞTIR',give:{shield:5,lives:5,time:3,gems:100}},
  {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (7 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺19,99',once:true,perm:true},
  {id:'no_ads',sec:'offer',cls:'noad',ic:'🚫',t:'REKLAMSIZ OYNA',d:'Araya giren reklamlar tamamen kalkar; reklamlı ödüller reklam izlemeden anında gelir. Tek sefer, kalıcı.',price:'₺99,99',once:true,perm:true},
@@ -1801,6 +1819,26 @@ const MON={mode:'off',svc:null,prices:{},busy:false,lastInter:0,winsSinceInter:0
 const monOn=()=>MON.mode!=='off';
 function monApply(){const on=monOn();document.querySelectorAll('.mon').forEach(e=>e.hidden=!on);$('menuVip').hidden=$('dVip').hidden=!vipOn();if(on){$('starterRib').hidden=SHOP.starter||bestLevel<3;}}
 const vipOn=()=>monOn()&&SHOP.vipUntil>Date.now();
+// Hearts (lives between tries, from level 16): a failed level costs one, a won level costs nothing; one comes back every 20 minutes, 5 at most.
+const HRT={max:5,ms:20*60e3,from:16,dia:20};
+let HEARTS={n:5,t:0},HRT_CB=null;
+function heartTick(){if(HEARTS.n>=HRT.max){HEARTS.t=0;return;}const now=Date.now();if(!HEARTS.t||HEARTS.t>now)HEARTS.t=now;const k=Math.floor((now-HEARTS.t)/HRT.ms);
+  if(k>0){HEARTS.n=Math.min(HRT.max,HEARTS.n+k);HEARTS.t=HEARTS.n>=HRT.max?0:HEARTS.t+k*HRT.ms;saveG();}}
+const heartsOn=l=>gameMode==='classic'&&!REPLAY&&l>=HRT.from&&!vipOn();
+const heartLeft=()=>HEARTS.t?Math.max(0,HRT.ms-(Date.now()-HEARTS.t)):0;
+const mmss=ms=>{const s=Math.ceil(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+function heartLose(){if(!heartsOn(level))return;heartTick();if(HEARTS.n>=HRT.max)HEARTS.t=Date.now();HEARTS.n=Math.max(0,HEARTS.n-1);saveG();heartUI();}
+function heartGain(n){heartTick();HEARTS.n=Math.min(HRT.max,HEARTS.n+n);if(HEARTS.n>=HRT.max)HEARTS.t=0;saveG();heartUI();}
+// true = go ahead; false = out of hearts, the refill window is open and cb runs once one is back
+function heartGate(l,cb){if(!heartsOn(l))return true;heartTick();if(HEARTS.n>0)return true;HRT_CB=cb;showModal('mHeart');heartUI();sfx('buzz',{vol:.25});return false;}
+function heartUI(){heartTick();const on=bestLevel>=HRT.from&&!vipOn(),m=$('menuHrt');if(m){m.hidden=!on;$('menuHrtN').textContent=HEARTS.n;$('menuHrtT').textContent=HEARTS.n<HRT.max?mmss(heartLeft()):T('DOLU');}
+  if(!$('mHeart').classList.contains('on'))return;
+  $('hrtRow').innerHTML=Array.from({length:HRT.max},(_,i)=>`<span class="${i<HEARTS.n?'':'off'}">💖</span>`).join('');
+  $('hrtClock').textContent=HEARTS.n<HRT.max?mmss(heartLeft()):T('DOLU');
+  $('hrtAd').parentNode.hidden=!monOn()||!adReady()||HEARTS.n>0;$('hrtAd').textContent=adLabel('+1 CAN');
+  $('hrtDia').parentNode.hidden=HEARTS.n>0;$('hrtDia').textContent=`💎 ${HRT.dia} · ${T('CANLARI DOLDUR')}`;$('hrtDia').classList.toggle('dim',diamonds<HRT.dia);
+  $('hrtWait').textContent=HEARTS.n>0?T('▶ OYNA'):T('BEKLE');}
+function heartGo(){const cb=HRT_CB;HRT_CB=null;hideModals();if(cb)cb();}
 // test mode: a 30-day membership per purchase. Play mode: re-checked with Google Play at every launch (active subscriptions,
 // cancelled ones included until their paid period ends), with a 3-day offline grace
 function vipSet(until){if(SHOP.vipUntil<=Date.now()){SHOP.vipStart=Date.now();SHOP.vipPer=-1;}SHOP.vipUntil=until;saveG();vipTick();monApply();}
@@ -2016,7 +2054,7 @@ function litFrom(x,y){const dx=hX-x,dy=hY-y,d=Math.hypot(dx,dy)||1;return {x:dx/
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mCont','mNoStar','mGift','mSprint','mLvl','mOver','mTip2','mShBuy'];
+const MODALS=['mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function resetRun(full,fromSave){
@@ -2075,10 +2113,13 @@ function showCont(){
   $('contLife').parentNode.hidden=SHOP.lives<=0;$('contLife').textContent=`❤️ YEDEK CAN KULLAN (${SHOP.lives})`;
   if(REPLAY){lvlButtons(true);$('lvlHead').textContent='SEVİYE BAŞARISIZ';$('lvlNum').textContent=level;$('lvlMsg').textContent='Canların bitti. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez.';showModal('mLvl');gState='menu';return;}
   const cl=gameMode==='classic';$('contStars').textContent=stars;
+  if(cl&&G2.on&&!G2.failCounted){G2.failCounted=1;if(SHOP.failLv===level)SHOP.failN++;else{SHOP.failLv=level;SHOP.failN=1;}saveG();}
+  const ez=cl&&G2.on&&SHOP.failLv===level&&SHOP.failN>=EASE.after&&SHOP.easyLv!==level&&level>1;$('easeBox').hidden=!ez;
+  if(ez){$('contEase').textContent=`💎 ${EASE.dia} · ${T('KOLAYLAŞTIR')}`;$('contEase').classList.toggle('dim',diamonds<EASE.dia);$('contEaseAd').hidden=!monOn()||!adReady();$('contEaseAd').textContent=adLabel('KOLAYLAŞTIR');}
   $('contDia').parentNode.hidden=!(G2.on&&cl);if(G2.on&&cl){const dc=V2K.cont.dia*2**G2.diaCont;$('contDia').textContent=`💎 ${dc} · 2 CANLA DEVAM`;$('contDia').classList.toggle('dim',diamonds<dc);}
   if(G2.on){const one=!G2.contUsed;$('contYes').parentNode.hidden=!one;if(!one){$('contAd').parentNode.hidden=true;$('contLife').parentNode.hidden=true;}
     $('contBox').hidden=!one;$('contBox').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">${T('100 ⭐ İLE DEVAM')}</div><div class="cst">${T('Yıldızın')}: <b id="contStars">${stars.toLocaleString(LOC)}</b> ⭐</div>`;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+(one?`<br>${T('Devam edersen boyutun korunur: 1 can, Rage %50.')}`:`<br>${T('Bu oyunda devam hakkını kullandın.')}`);
-    $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');return;}
+    $('contRetry').style.display=cl?'':'none';$('contRetry').textContent=heartsOn(level)?T('🔄 SEVİYEYİ YENİDEN OYNA · 💖 1 CAN'):T('🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA');$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');return;}
   $('contMsg').textContent=cl?`Seviye ${level}'de canların bitti. İlerlemen kayıtlı: baştan başlamazsın.`:'Kaldığın yerden devam etmek ister misin?';
   $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');
 }
@@ -2373,7 +2414,7 @@ const MODE_TXT={
 function showMenu(){
   if(G2.on)v2Stop();
   runId++;pendingWin=false;
-  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();
+  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();
   $('menuSub').textContent=loginStreak>1?`🔥 ${loginStreak} günlük seri`:'Hoş geldin, kaptan';
   renderMapCard();monApply();
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
@@ -2391,7 +2432,7 @@ function selMode(m){gameMode=m;$('modeC').classList.toggle('on',m==='classic');$
   const Z=ZONES[zoneOf(savedLevel)];
   $('startBtn').innerHTML=m==='classic'?(savedLevel>1?`▶ DEVAM ET · SEVİYE ${savedLevel}<small><span class="notr">${capName(T(Z.n))}</span> · ${totalStars()} ⭐ yıldız</small>`:'▶ OYNA<small>Klasik · seviye 1</small>'):`▶ OYNA · HAYATTA KAL<small>En iyi: ${bestScore.toLocaleString(LOC)} puan</small>`;}
 $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('survival');
-$('startBtn').onclick=()=>{if(gameMode==='classic'&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
+$('startBtn').onclick=()=>{if(gameMode==='classic'&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(savedLevel,()=>$('startBtn').click()))return;SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=showLB;
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
@@ -2413,11 +2454,11 @@ $('lbClose').onclick=()=>$('sLB').classList.remove('on');
 $('pauseBtn').onclick=e=>{e.stopPropagation();if(gState==='paused')resumeGame();else pauseGame();};
 $('pResume').onclick=resumeGame;
 $('pLB').onclick=showLB;
-$('pRestart').onclick=()=>{if(REPLAY){$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';startReplayLevel();return;}$('sPause').classList.remove('on');SND.duck(1,0);if(gameMode==='classic')resetRun(false);else if(gameMode==='sprint')startSprint(SPR_RUN.seed,SPR_RUN.opt);else resetRun(true,false);};
-$('pMenu').onclick=()=>{if(REPLAY)endReplay(false);$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';hideModals();$('badge').className='hud-float';showMenu();};
+$('pRestart').onclick=()=>{if(gameMode==='classic'&&!REPLAY&&G2.on&&G2.t>5){heartLose();if(!heartGate(level,()=>{$('sPause').classList.remove('on');SND.duck(1,0);resetRun(false);}))return;}if(REPLAY){$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';startReplayLevel();return;}$('sPause').classList.remove('on');SND.duck(1,0);if(gameMode==='classic')resetRun(false);else if(gameMode==='sprint')startSprint(SPR_RUN.seed,SPR_RUN.opt);else resetRun(true,false);};
+$('pMenu').onclick=()=>{if(gameMode==='classic'&&!REPLAY&&G2.on&&G2.t>5)heartLose();if(REPLAY)endReplay(false);$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';hideModals();$('badge').className='hud-float';showMenu();};
 $('nextLvl').onclick=async e=>{e.stopPropagation();if(REPLAY){endReplay(false);selMode('classic');$('startBtn').click();return;}
   if(giftDue()===level){openGift(level,async()=>{await maybeInterstitial();level++;levelCheck();});return;} // every 20 levels: the Captain's Gift first
-  hideModals();await maybeInterstitial();level++;levelCheck();};
+  if(!heartGate(level+1,()=>{level++;levelCheck();}))return;hideModals();await maybeInterstitial();level++;levelCheck();};
 $('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed)return;if(await showRewarded()){lvlAdUsed=true;$('lvlAd').disabled=true;$('lvlAd').textContent='✓ +25 ⭐ ALINDI';grant({stars:25},'BONUS');}};
 $('lvlRetry').onclick=e=>{e.stopPropagation();if(!REPLAY){startReplay(level);return;}hideModals();startReplayLevel();};
 $('againBtn').onclick=()=>{if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();SND.music('game');resetRun(true,false);};
@@ -2426,10 +2467,20 @@ $('contDia').onclick=()=>{const dc=V2K.cont.dia*2**G2.diaCont;
   if(diamonds<dc){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:dc}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}
   diamonds-=dc;G2.diaCont++;G2.starCont=1;dmEvent('diamond',1);v2Revive();lives=2;updateUI();saveG();};
 $('contYes').onclick=()=>{if(G2.contUsed)return;if(stars>=100){stars-=100;G2.starCont=1;v2Revive();}else showModal('mNoStar');};
-$('contRetry').onclick=retryLevel;
+$('contRetry').onclick=()=>{heartLose();if(heartGate(level,retryLevel))retryLevel();};
+$('hrtAd').onclick=async()=>{if(await showRewarded()){heartGain(1);toast('💖','+1 CAN','');heartGo();}};
+$('hrtDia').onclick=()=>{if(diamonds<HRT.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:HRT.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}
+  diamonds-=HRT.dia;heartGain(HRT.max);updateUI();toast('💖','CANLAR DOLDU','');heartGo();};
+$('hrtWait').onclick=()=>{heartTick();if(HEARTS.n>0){heartGo();return;}HRT_CB=null;hideModals();if(!$('sMenu').classList.contains('on')){if(gameMode==='classic'&&G2.on){savedLevel=Math.max(savedLevel,level);saveG();}$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';showMenu();}};
+setInterval(()=>{if(document.hidden)return;const had=HEARTS.n;heartUI();if(had<=0&&HEARTS.n>0&&$('mHeart').classList.contains('on'))sfx('confirm',{vol:.4});},1000);
+// Ease offer: after three failed tries of the same level, make it 20% easier for 15 💎 or an ad.
+const EASE={after:3,dia:15,k:.8};
+function easeGo(){SHOP.easyLv=level;SHOP.failN=0;saveG();hideModals();retryLevel();toast('🪶','SEVİYE KOLAYLAŞTI',T('Hedef %20 düştü'));}
+$('contEase').onclick=()=>{if(diamonds<EASE.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:EASE.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}diamonds-=EASE.dia;updateUI();easeGo();};
+$('contEaseAd').onclick=async()=>{if(await showRewarded())easeGo();};
 $('contAd').onclick=async()=>{if(adReviveUsed)return;if(await showRewarded()){adReviveUsed=true;revive(1);}};
 $('contLife').onclick=()=>{if(SHOP.lives<=0)return;SHOP.lives--;revive(1);};
-$('contNo').onclick=()=>{hideModals();if(gameMode==='classic'){addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;savedLevel=level;savedScore=levelStartScore;saveG();showMenu();}else gameOver();};
+$('contNo').onclick=()=>{hideModals();if(gameMode==='classic'){heartLose();addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;savedLevel=level;savedScore=levelStartScore;saveG();showMenu();}else gameOver();};
 $('noStarOk').onclick=()=>{hideModals();if(gameMode==='classic')showCont();else gameOver();};
 $('shareBtn').onclick=async()=>{const txt=`${playerAvatar} `+T("{p}: Blackhole Storm'da {s} puan, seviye {l}! Geçebilir misin?",{p:playerName,s:nf(totalScore),l:level});
   try{await navigator.clipboard.writeText(txt);$('shareBtn').textContent='KOPYALANDI';}catch(e){$('shareBtn').textContent='KOPYALANAMADI';}setTimeout(()=>$('shareBtn').textContent='SKORU KOPYALA',1800);};
@@ -2449,7 +2500,7 @@ SND.init();
 buildProfile();
 updateUI();
 {const t=$('toast');document.body.appendChild(t);t.style.position='fixed';t.style.zIndex=400;} // toasts show above panels too
-document.body.appendChild($('mGift')); // the Captain's Gift can open over the menu too
+document.body.appendChild($('mGift'));document.body.appendChild($('mHeart')); // these can open over the menu too
 monInit();
 if(playerName&&playerAvatar){showMenu();offerChallenge();}else $('sProfile').classList.add('on');
 {let seen=false;try{seen=!!localStorage.getItem('bhs_intro');}catch(e){}if(!seen&&(!playerName||window.BHS_INTRO))playIntro();} // first install only
