@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Quanto mais você engole, mais cresce: seu campo aumenta e você pode comer corpos maiores. Pare de comer por um tempo e você encolhe devagar",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Não pode ser engolido. Entra devagar e depois acelera; as setas vermelhas mostram o caminho. Uma batida custa uma vida e zera o combo",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Aparece de vez em quando a partir do nível {n}. {n} pedaços = {n} escudo",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Toque no botão do escudo durante o jogo: por {n} segundos todo meteoro que bater se quebra. Compre na loja ou ganhe juntando {n} pedaços de escudo. Não vale no Cosmos Diário nem em desafios"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Toque no botão do escudo durante o jogo: por {n} segundos todo meteoro que bater se quebra. Compre na loja ou ganhe juntando {n} pedaços de escudo. Não vale no Cosmos Diário nem em desafios",
+"METEOR ÇARPTI": "METEORO ATINGIU",
+"Parmak mesafesi": "Distância do dedo",
+"YAKIN": "PERTO",
+"ORTA": "MÉDIA",
+"UZAK": "LONGE",
+"Dev gezegeni yuttun": "Você engoliu o planeta gigante",
+"Öfke Nöbeti": "Ataque de fúria",
+"İlk BLACK HOLE RAGE": "Primeiro BLACK HOLE RAGE",
+"Mega Bomba": "Mega bomba",
+"İlk MEGA BOMB": "Primeira MEGA BOMB",
+"Seviyeyi bitir": "Termine o nível",
+"Can kaybetme": "Não perca vidas",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "Estrelas: termine o nível, não perca vidas, faça um combo ×{n}. Jogue de novo para pegar as que faltam; cada estrela nova dá +{n}",
+"SEVİYE {n} TAMAMLANDI": "NÍVEL {n} CONCLUÍDO",
+"{n} seviye üst üste {n} yıldız": "{n} níveis seguidos com {n} estrelas",
+"{n} yıldız serisi": "Sequência de {n} estrelas",
+"HEDİYE CAN": "VIDA DE PRESENTE"
 }

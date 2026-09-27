@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "The more you swallow, the bigger you get: your field widens and you can swallow bigger bodies. Stop eating for a while and you slowly shrink",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Can't be swallowed. Enters slowly, then speeds up; the red arrows show its path. A hit costs a life and resets the combo",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Shows up now and then from level {n}. {n} pieces = {n} shield",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tap the shield button in play: for {n} seconds every meteor that hits shatters. Buy it in the shop or earn it by collecting {n} shield pieces. Not usable in Daily Cosmos or challenges"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tap the shield button in play: for {n} seconds every meteor that hits shatters. Buy it in the shop or earn it by collecting {n} shield pieces. Not usable in Daily Cosmos or challenges",
+"METEOR ÇARPTI": "METEOR HIT",
+"Parmak mesafesi": "Finger distance",
+"YAKIN": "NEAR",
+"ORTA": "MIDDLE",
+"UZAK": "FAR",
+"Dev gezegeni yuttun": "You swallowed the giant planet",
+"Öfke Nöbeti": "Rage Fit",
+"İlk BLACK HOLE RAGE": "First BLACK HOLE RAGE",
+"Mega Bomba": "Mega Bomb",
+"İlk MEGA BOMB": "First MEGA BOMB",
+"Seviyeyi bitir": "Finish the level",
+"Can kaybetme": "Lose no life",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "Stars: finish the level, lose no life, reach a ×{n} combo. Replay to collect missing stars; each new star gives +{n}",
+"SEVİYE {n} TAMAMLANDI": "LEVEL {n} COMPLETE",
+"{n} seviye üst üste {n} yıldız": "{n} levels in a row with {n} stars",
+"{n} yıldız serisi": "{n}-star streak",
+"HEDİYE CAN": "GIFT LIFE"
 }

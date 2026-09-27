@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Makin banyak kamu telan, makin besar kamu: medanmu meluas dan kamu bisa memakan benda lebih besar. Berhenti makan sebentar dan kamu perlahan mengecil",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Tidak bisa ditelan. Masuk pelan lalu melaju cepat; panah merah menunjukkan jalurnya. Tabrakan memakan satu nyawa dan mereset combo",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Sesekali muncul mulai level {n}. {n} keping = {n} perisai",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Ketuk tombol perisai saat bermain: selama {n} detik setiap meteor yang menabrak akan hancur. Beli di toko atau dapatkan dengan mengumpulkan {n} kepingan perisai. Tidak berlaku di Kosmos Harian dan tantangan"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Ketuk tombol perisai saat bermain: selama {n} detik setiap meteor yang menabrak akan hancur. Beli di toko atau dapatkan dengan mengumpulkan {n} kepingan perisai. Tidak berlaku di Kosmos Harian dan tantangan",
+"METEOR ÇARPTI": "METEOR MENABRAK",
+"Parmak mesafesi": "Jarak jari",
+"YAKIN": "DEKAT",
+"ORTA": "SEDANG",
+"UZAK": "JAUH",
+"Dev gezegeni yuttun": "Kamu menelan planet raksasa",
+"Öfke Nöbeti": "Amukan",
+"İlk BLACK HOLE RAGE": "BLACK HOLE RAGE pertama",
+"Mega Bomba": "Bom mega",
+"İlk MEGA BOMB": "MEGA BOMB pertama",
+"Seviyeyi bitir": "Selesaikan level",
+"Can kaybetme": "Jangan kehilangan nyawa",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "Bintang: selesaikan level, jangan kehilangan nyawa, capai combo ×{n}. Main lagi untuk bintang yang kurang; setiap bintang baru memberi +{n}",
+"SEVİYE {n} TAMAMLANDI": "LEVEL {n} SELESAI",
+"{n} seviye üst üste {n} yıldız": "{n} level berturut-turut dengan {n} bintang",
+"{n} yıldız serisi": "Rangkaian {n} bintang",
+"HEDİYE CAN": "NYAWA HADIAH"
 }

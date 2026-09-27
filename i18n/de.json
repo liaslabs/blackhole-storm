@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Je mehr du verschlingst, desto größer wirst du: Dein Feld wächst und du kannst größere Körper fressen. Hörst du eine Weile auf zu fressen, schrumpfst du langsam",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Kann nicht verschlungen werden. Kommt langsam herein und wird dann schnell; die roten Pfeile zeigen die Bahn. Ein Treffer kostet ein Leben und setzt die Combo zurück",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Taucht ab Level {n} ab und zu auf. {n} Teile = {n} Schild",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tippe im Spiel auf den Schild-Knopf: {n} Sekunden lang zerbricht jeder Meteor, der dich trifft. Im Shop kaufen oder durch {n} gesammelte Schildteile verdienen. Nicht im Täglichen Kosmos und in Duellen"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tippe im Spiel auf den Schild-Knopf: {n} Sekunden lang zerbricht jeder Meteor, der dich trifft. Im Shop kaufen oder durch {n} gesammelte Schildteile verdienen. Nicht im Täglichen Kosmos und in Duellen",
+"METEOR ÇARPTI": "METEOR-TREFFER",
+"Parmak mesafesi": "Fingerabstand",
+"YAKIN": "NAH",
+"ORTA": "MITTEL",
+"UZAK": "WEIT",
+"Dev gezegeni yuttun": "Du hast den Riesenplaneten verschlungen",
+"Öfke Nöbeti": "Wutanfall",
+"İlk BLACK HOLE RAGE": "Erstes BLACK HOLE RAGE",
+"Mega Bomba": "Megabombe",
+"İlk MEGA BOMB": "Erste MEGA BOMB",
+"Seviyeyi bitir": "Level beenden",
+"Can kaybetme": "Kein Leben verlieren",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "Sterne: Level beenden, kein Leben verlieren, eine ×{n}-Combo schaffen. Spiel erneut für fehlende Sterne; jeder neue Stern bringt +{n}",
+"SEVİYE {n} TAMAMLANDI": "LEVEL {n} GESCHAFFT",
+"{n} seviye üst üste {n} yıldız": "{n} Level in Folge mit {n} Sternen",
+"{n} yıldız serisi": "{n}-Sterne-Serie",
+"HEDİYE CAN": "GESCHENKTES LEBEN"
 }

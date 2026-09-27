@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Her ku daqurtînî mezin dibî: qada te fireh dibe û tu dikarî laşên mezintir bixwî. Heke demekê nexwî, hêdî hêdî biçûk dibî",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Nayê daqurtandin. Pêşî hêdî tê, paşê bilez dibe; tîrên sor rêya wê nîşan didin. Lêdan canekî dibe û combo sifir dike",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Ji asta {n} û pê ve carinan tê. {n} parçe = {n} mertal",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Di lîstikê de li bişkoka mertal bitikîne: {n} saniyeyan her meteorê ku li te dikeve dişkê. Ji dikanê tê kirîn an bi berhevkirina {n} parçeyên mertal tê qezenckirin. Di Kozmosa Rojane û pêşbirkan de nayê bikaranîn"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Di lîstikê de li bişkoka mertal bitikîne: {n} saniyeyan her meteorê ku li te dikeve dişkê. Ji dikanê tê kirîn an bi berhevkirina {n} parçeyên mertal tê qezenckirin. Di Kozmosa Rojane û pêşbirkan de nayê bikaranîn",
+"METEOR ÇARPTI": "METEOR LÊ KET",
+"Parmak mesafesi": "Dûrahiya tiliyê",
+"YAKIN": "NÊZÎK",
+"ORTA": "NAVÎN",
+"UZAK": "DÛR",
+"Dev gezegeni yuttun": "Te gerstêrka dêw daqurtand",
+"Öfke Nöbeti": "Krîza hêrsê",
+"İlk BLACK HOLE RAGE": "Yekem BLACK HOLE RAGE",
+"Mega Bomba": "Bombeya mega",
+"İlk MEGA BOMB": "Yekem MEGA BOMB",
+"Seviyeyi bitir": "Astê biqedîne",
+"Can kaybetme": "Can winda neke",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "Stêrk: astê biqedîne, tu canî winda neke, combo ×{n} bike. Dîsa bilîze da ku stêrkên kêm berhev bikî; her stêrka nû +{n} dide",
+"SEVİYE {n} TAMAMLANDI": "ASTA {n} QEDIYA",
+"{n} seviye üst üste {n} yıldız": "{n} ast li pey hev bi {n} stêrkan",
+"{n} yıldız serisi": "Rêza {n} stêrkan",
+"HEDİYE CAN": "CANÊ DIYARÎ"
 }

@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "كلما ابتلعت كبرت: يتسع حقلك وتستطيع أكل أجرام أكبر. إن توقفت عن الأكل لفترة تتقلص ببطء",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "لا يمكن ابتلاعه. يدخل ببطء ثم يتسارع، والأسهم الحمراء تُظهر مساره. الاصطدام يكلّف روحًا ويصفّر الكومبو",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "يظهر بين حين وآخر ابتداءً من المستوى {n}. {n} قطع = {n} درع",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "المس زر الدرع أثناء اللعب: لمدة {n} ثوانٍ يتحطم كل نيزك يصطدم بك. يُشترى من المتجر أو يُكسب بجمع {n} قطع درع. لا يُستخدم في الكون اليومي والتحديات"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "المس زر الدرع أثناء اللعب: لمدة {n} ثوانٍ يتحطم كل نيزك يصطدم بك. يُشترى من المتجر أو يُكسب بجمع {n} قطع درع. لا يُستخدم في الكون اليومي والتحديات",
+"METEOR ÇARPTI": "اصطدام نيزك",
+"Parmak mesafesi": "مسافة الإصبع",
+"YAKIN": "قريبة",
+"ORTA": "متوسطة",
+"UZAK": "بعيدة",
+"Dev gezegeni yuttun": "ابتلعت الكوكب العملاق",
+"Öfke Nöbeti": "نوبة غضب",
+"İlk BLACK HOLE RAGE": "أول BLACK HOLE RAGE",
+"Mega Bomba": "قنبلة ضخمة",
+"İlk MEGA BOMB": "أول MEGA BOMB",
+"Seviyeyi bitir": "أنهِ المستوى",
+"Can kaybetme": "لا تخسر روحًا",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "النجوم: أنهِ المستوى، لا تخسر أي روح، حقق كومبو ×{n}. أعد اللعب لجمع النجوم الناقصة؛ كل نجمة جديدة تمنح +{n}",
+"SEVİYE {n} TAMAMLANDI": "اكتمل المستوى {n}",
+"{n} seviye üst üste {n} yıldız": "{n} مستويات متتالية بـ{n} نجوم",
+"{n} yıldız serisi": "سلسلة {n} نجوم",
+"HEDİYE CAN": "روح هدية"
 }

@@ -32,14 +32,14 @@ const OBJ2={
 const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,planet:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
 Object.assign(V2K,{r0:V2K.r0*.6,rMax:90,rRage:120,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
-  decay:{wait:3,k:.12,min:.5},shield:{dur:5,cost:30}});
+  decay:{wait:3,k:.2,min:1.2},shield:{dur:5,cost:30}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});Object.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag']);
 const GL2=new Set(['moon','planet','gold']);
 const MULT2=c=>c>=30?7:c>=20?6:c>=15?5:c>=10?4:c>=5?3:c>=3?2:1;
 // what each level brings in (level-start banner, level-complete teaser, map)
 const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl payı geçersen PERFECT DODGE.'],
-  3:['💎','CRYSTAL','Çok değerli ama genelde bir meteorun yanında. Risk alacak mısın?'],
+  3:['🔷','CRYSTAL','Çok değerli ama genelde bir meteorun yanında. Risk alacak mısın?'],
   4:['⏱','TIME BALL','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
   5:['💣','BOMB PLANET','Çekim alanında 3 saniye tut: ekrandaki her şey sana gelir.'],
   6:['⚡','SPEED + OVERLOAD','Cisimler hızlanıyor. Sınıra kadar büyürsen 15 saniyelik OVERLOAD başlar.'],
@@ -55,6 +55,7 @@ const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[
   combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,
   eaten:0,perfA:0,perfD:0,dmg:0,acc:0,swarm:0,swarmT:0,script:null,si:0,st:0,touched:false,tut:1,contUsed:false,
   boss:null,ending:0,endT:0,pulse:0,uiT:0,sprLv:6,sprBlock:-1,hud:{}};
+const v2Ach={rage:0,mega:0}; // for achievements
 const DRAG={id:null,x:0,y:0,sx:0,sy:0,t0:0,moved:false,held:false};
 
 function v2Resize(){G2.S=Math.min(W,H*.5625)/486;}
@@ -78,11 +79,11 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();
   balls=[];blocks=[];rifts=[];PU={slow:0,magnet:0,mult:0};MIS=null;holeK=1;isRescueLevel=false;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
-  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,
+  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
-    script:mode==='level'&&level===1&&!REPLAY?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1?1:0,touched:false,contUsed:false,boss:null,ending:0,endT:0,sprBlock:-1});
+    script:mode==='level'&&level===1&&!REPLAY?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1?1:0,touched:false,contUsed:false,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0});
   comboCount=0;comboMult=1;diamTimer=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   if(G2.L.boss&&mode==='level')v2BossInit();
@@ -95,7 +96,9 @@ function v2Stop(){G2.on=false;document.body.classList.remove('v2');DRAG.id=null;
 
 // ── input ─────────────────────────────────────────────
 function v2Pt(e){const r=$('fx').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
-function v2Aim(x,y){G2.tx=x;G2.ty=y-sp2(V2K.off)-G2.R*.35;}
+const FD2=[60,90,120]; // finger → hole distance in reference px (settings: near / middle / far)
+function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
+function v2Aim(x,y){G2.tx=x;G2.ty=y-v2Off();}
 function v2Down(x,y,id){
   if(!G2.on||gState!=='playing'||DRAG.id!==null)return;
   DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;
@@ -244,8 +247,8 @@ function v2Update(dt){
   if(G2.script||G2.rageT>0||G2.hold||G2.boss||G2.overT>0||G2.ending){G2.hungry=0;G2.shrink=false;}
   else{G2.hungry+=dt;G2.shrink=G2.hungry>V2K.decay.wait&&G2.rr>V2K.r0+.05;
     if(G2.shrink){G2.rr=Math.max(V2K.r0,G2.rr-Math.max(V2K.decay.min,(G2.rr-V2K.r0)*V2K.decay.k)*dt);
-      if(!G2.shrinkOn){G2.shrinkOn=true;if(G2.shrinkN++<2)v2Call('SHRINKING','EAT TO GROW','#b9a8ff',1);if(!TIPS.shrink)v2Tip('shrink',null);}
-      if(rng()<dt*14&&G2.parts.length<150){const a=rng()*TAU,v=rrnd(.5,1.2);G2.parts.push({x:hX+Math.cos(a)*G2.R,y:hY+Math.sin(a)*G2.R,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.7,max:.7,c:'#b9a8ff',sz:1.4});}}
+      G2.shrinkFx+=dt;if(!G2.shrinkOn){G2.shrinkOn=true;G2.shrinkFx=0;v2Sfx('slow',{vol:.45,rate:.55});if(G2.shrinkN++<3)v2Call('SHRINKING','EAT TO GROW','#b9a8ff',1);if(!TIPS.shrink)v2Tip('shrink',null);}
+      if(rng()<dt*30&&G2.parts.length<150){const a=rng()*TAU,v=rrnd(.5,1.2);G2.parts.push({x:hX+Math.cos(a)*G2.R,y:hY+Math.sin(a)*G2.R,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.7,max:.7,c:'#b9a8ff',sz:1.4});}}
     else G2.shrinkOn=false;}
   if(SHOP.shield>0&&!TIPS.shield&&G2.t>1.5&&gameMode!=='sprint')v2Tip('shield',null);
   if(G2.combo>0&&!G2.hold){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
@@ -419,9 +422,14 @@ function v2Hit(o){
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
   const tutorial=level===1&&G2.mode==='level';
-  if(!(tutorial&&lives<=1)){lives--;heartFx(Math.max(0,lives),'drain');}
+  if(!(tutorial&&lives<=1)){lives--;heartFx(Math.max(0,lives),'drain');v2HitNote();}
   v2Pop('-1 ♥','#ff7a5c',20);updateUI();
   if(lives<=0){v2Fail(null);}
+}
+function v2HitNote(){ // freeze the action for a beat and say what happened
+  G2.freeze=.6;const el=$('hit2');if(!el)return;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T('METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
   if(gState!=='playing')return;gState='over';G2.failMsg=msg;SND.setDrone(.08,300);SND.duck(.35,2);
@@ -435,7 +443,7 @@ function v2Revive(){ // one continue per run (spec §42)
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';
 }
 function v2RageGo(){
-  if(!G2.ready)return;G2.firstRage=true;G2.ready=false;G2.readyT=0;G2.rageT=V2K.rage.dur;G2.rage=100;G2.swarm=16;G2.swarmT=.15;
+  if(!G2.ready)return;v2Ach.rage++;G2.firstRage=true;G2.ready=false;G2.readyT=0;G2.rageT=V2K.rage.dur;G2.rage=100;G2.swarm=16;G2.swarmT=.15;
   shake=Math.max(shake,10);flash=Math.max(flash,.8);shock=1;heat=.6;
   v2Call('BLACK HOLE RAGE!','','#ff6a3d',1.8,true);sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.6,rate:.7});sfx('boom',{vol:.5,rate:.5});SND.setDrone(.24,420);vib([40,30,90]);
   v2Burst(hX,hY,40,'#ff8a4c',2,8,.8,2.2);dmEvent('rescue',1);
@@ -459,7 +467,7 @@ function v2BombStep(o,dt){
 function v2Blast(x,y,mega){ // mega: the whole screen falls in; otherwise ~3× your radius (spec)
   G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,hit:new Set(),n:0,bonus:0});
   shake=Math.max(shake,mega?12:6);flash=Math.max(flash,mega?.9:.5);sfx('boom',{vol:mega?.9:.7,rate:mega?.7:1});
-  if(mega){shock=1;v2Call('MEGA BOMB!','','#ff8a4c',1.5,true);vib([40,30,120]);}else v2Call('BOMB!','','#ff8a4c',.8);
+  if(mega){v2Ach.mega++;shock=1;v2Call('MEGA BOMB!','','#ff8a4c',1.5,true);vib([40,30,120]);}else v2Call('BOMB!','','#ff8a4c',.8);
 }
 
 // ── golden shield: the player decides when; 5 s, meteors shatter on the bubble ──
@@ -480,7 +488,7 @@ function v2ShieldBuyOk(){const c=V2K.shield.cost;if(diamonds<c)return;diamonds-=
 const TIP2={
   rage:['🔥','RAGE','Rage barın doldu! Ekrana dokun: 5 saniye boyunca kara deliğin devleşir, her şeyi çeker, puanın ×2 olur ve meteorlar sana zarar veremez.'],
   meteor:['☄️','METEOR','Kırmızı meteor tehlikeli: çarparsa 1 can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan PERFECT DODGE!'],
-  crystal:['💎','KRİSTAL','Kristal çok değerli: +200 puan ve hızlı büyüme. Ama çoğu zaman yanında bir meteor olur, dikkat et.'],
+  crystal:['🔷','KRİSTAL','Kristal çok değerli: +200 puan ve hızlı büyüme. Ama çoğu zaman yanında bir meteor olur, dikkat et.'],
   energy:['⚡','ENERJİ','Enerji topu Rage barını hızla doldurur. Kaçırma!'],
   gold:['🌕','ALTIN GEZEGEN','Nadir ve çok hızlı: +500 puan. Yutmak için biraz büyümüş olman gerekir.'],
   time:['⏱','ZAMAN TOPU','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
@@ -501,11 +509,11 @@ function v2Tip(id,tg){
   if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched))return false;
   TIPS[id]=1;saveSoon();G2.tip={id,tg};gState='tip';DRAG.id=null;const t=TIP2[id];
   $('tip2I').textContent=t[0];$('tip2T').textContent=t[1];$('tip2D').textContent=t[2];
-  const y=id==='rage'?0:id==='shield'?H:tg?tg.y:hY,m=$('mTip2');m.classList.toggle('tTop',y>H*.5);m.classList.toggle('tBot',y<=H*.5);
-  $('rage2')&&$('rage2').classList.toggle('hl',id==='rage');$('shBtn').classList.toggle('hl',id==='shield');
+  const y=id==='rage'||id==='shield'?0:tg?tg.y:hY,m=$('mTip2');m.classList.toggle('tTop',y>H*.5);m.classList.toggle('tBot',y<=H*.5);
+  $('rage2')&&$('rage2').classList.toggle('hl',id==='rage');$('shTop').classList.toggle('hl',id==='shield');
   showModal('mTip2');SND.duck(.4,1e5);sfx('bell',{vol:.5,rate:1.25});return true;
 }
-function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8;$('rage2')&&$('rage2').classList.remove('hl');$('shBtn').classList.remove('hl');gState='playing';lastT=performance.now();SND.duck(1,0);sfx('click',{vol:.4});}
+function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8;$('rage2')&&$('rage2').classList.remove('hl');$('shTop').classList.remove('hl');gState='playing';lastT=performance.now();SND.duck(1,0);sfx('click',{vol:.4});}
 
 // ── level end ─────────────────────────────────────────
 function v2Complete(){
@@ -517,10 +525,16 @@ function v2Complete(){
   if(gameMode==='survival'){gameOver();return;}
   levelSuccess();
 }
+function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on a continue → a spare life
+  G2.lifeGift=0;if(REPLAY||gameMode!=='classic')return;
+  if(st===3&&!G2.starCont){STREAK3++;if(STREAK3>=10){STREAK3=0;SHOP.lives++;G2.lifeGift=1;later(()=>toast('🎁','HEDİYE CAN','10 seviye üst üste 3 yıldız!'),2400);}}else STREAK3=0;saveG();
+}
 function v2SizeTxt(x){return (x||0).toFixed(2)+'M';}
 function v2Result(){ // level-complete card body
   const sz=G2.peak/V2K.r0;const row=(k,v,hl)=>`<div class="r2"><span>${T(k)}</span><b${hl?' class="hl"':''}>${v}</b></div>`;
-  return `<div class="how2">HOW BIG CAN YOU GET?</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div>`+
+  const st=[[1,T('Seviyeyi bitir')],[!G2.dmg,T('Can kaybetme')],[G2.best>=10,'×10 COMBO']].map(([ok,t])=>`<span class="${ok?'ok':''}">${ok?'★':'☆'} ${t}</span>`).join('');
+  const s3=G2.lifeGift?`<div class="s3b gift"><b>🎁 +1 ❤️</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 ❤️<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;
+  return `<div class="stc2">${st}</div>${s3}<div class="how2">HOW BIG CAN YOU GET?</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div>`+
     `<div class="res2">${row('SKOR',levelScore.toLocaleString(LOC))}${row('EN İYİ COMBO','×'+G2.best)}${row('YUTULAN',G2.eaten)}${row('PERFECT ABSORB',G2.perfA)}${row('PERFECT DODGE',G2.perfD)}${row('ÖDÜL','+5 ⭐'+(level%5===0?' +3 💎':'')+(G2.gift?' +1 🛡':''),true)}</div>`;
 }
 function v2Teaser(l){const n=new2(l);return n?`<b>${T('SIRADA')}</b>LEVEL ${l} · NEW: ${n[0]} ${n[1]}`:'';}
@@ -529,7 +543,7 @@ function v2Teaser(l){const n=new2(l);return n?`<b>${T('SIRADA')}</b>LEVEL ${l} �
 function v2Frame(dt){
   const f=dt*60;clock+=dt;
   heat=Math.max(G2.rageT>0?.55:Math.min(.4,G2.combo*.02),heat-dt*.8);shock=Math.max(0,shock-dt*1.6);flash=Math.max(0,flash-dt*1.4);
-  if(gState==='playing')v2Update(dt);
+  if(gState==='playing'){if(G2.freeze>0)G2.freeze-=dt;else v2Update(dt);}
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
   v2Dims();curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;dangerK=0;
@@ -568,6 +582,8 @@ function v2DrawField(){ // gravity field, rage aura, overload wobble, damage bli
   if(G2.rageT>0){const g=ctx.createRadialGradient(0,0,R,0,0,Gr);g.addColorStop(0,'rgba(255,90,40,.28)');g.addColorStop(1,'rgba(255,90,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
   if(G2.overT>0){ctx.strokeStyle=`rgba(201,168,255,${.35+.25*Math.sin(clock*9)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,R*1.12+Math.sin(clock*11)*2,0,TAU);ctx.stroke();}
   if(G2.immT>0&&Math.sin(clock*40)>0){ctx.strokeStyle='rgba(255,90,80,.8)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,R*1.08,0,TAU);ctx.stroke();}
+  if(G2.shrink){for(let i=0;i<2;i++){const q=((G2.shrinkFx*1.4+i*.5)%1);ctx.globalAlpha=.55*(1-q)*Math.min(1,G2.shrinkFx*3);ctx.strokeStyle='#c9b4ff';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,R+(Gr-R)*(1-q),0,TAU);ctx.stroke();}
+    ctx.globalAlpha=.5+.3*Math.sin(clock*16);ctx.strokeStyle='#b9a8ff';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(0,0,R*1.04,0,TAU);ctx.stroke();ctx.globalAlpha=1;}
   if(G2.pulse>0){ctx.globalAlpha=G2.pulse*.6;ctx.strokeStyle='#e6dcff';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,0,R*(1.05+.25*(1-G2.pulse)),0,TAU);ctx.stroke();}
   ctx.restore();
 }
@@ -646,7 +662,7 @@ function v2DrawMarks(){ // what can be eaten: pull lines, too-big warnings, your
     else if(d<Gr*1.5){ctx.globalAlpha=.85;ctx.strokeStyle='#ff6a5a';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.25+3,0,TAU);ctx.stroke();ctx.setLineDash([]);
       ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';const t=v2SizeTxt(OBJ2[o.k].need),y=o.y-o.r*1.25-8;ctx.strokeText(t,o.x,y);ctx.fillStyle='#ffb3a8';ctx.fillText(t,o.x,y);}}
   ctx.globalAlpha=.8;ctx.font='700 11px "IBM Plex Mono",monospace';ctx.textAlign='center';const t=v2SizeTxt(v2Size()),y=hY+G2.R*(G2.shT>0?1.5:1)+15;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(t,hX,y);
-  ctx.fillStyle=G2.shrink?'#ffa39a':'#d9dcff';ctx.fillText(t,hX,y);ctx.restore();
+  ctx.fillStyle=G2.shrink?'#ffa39a':'#d9dcff';ctx.fillText(G2.shrink?'▼ '+t:t,hX,y);ctx.restore();
 }
 function v2DrawLinks(){ // bomb tether (turns red as the drag pulls it loose) and helper beams
   const b=G2.hold;if(b&&b.orb){const t=Math.min(1,b.orb.lag);ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.5+.4*t;
@@ -687,7 +703,7 @@ function v2DrawCalls(){
     ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';const y=Math.min(H-40,hY+G2.G+sp2(40));ctx.strokeText('TAP → RAGE',W/2,y);ctx.fillStyle=`rgb(255,${110+60*pu|0},70)`;ctx.shadowColor='#ff6a3d';ctx.shadowBlur=16;ctx.fillText('TAP → RAGE',W/2,y);ctx.restore();}
 }
 function v2DrawTut(){ // level 1: a ghost finger drags the hole until the player touches
-  if(G2.tut<=0)return;const a=Math.min(1,G2.tut);const fx=hX,fy=hY+sp2(V2K.off)+G2.R*.35+26;ctx.save();ctx.globalAlpha=a*.9;
+  if(G2.tut<=0)return;const a=Math.min(1,G2.tut);const fx=hX,fy=hY+v2Off();ctx.save();ctx.globalAlpha=a*.9;
   ctx.fillStyle='rgba(255,255,255,.18)';ctx.beginPath();ctx.arc(fx,fy,22+4*Math.sin(clock*6),0,TAU);ctx.fill();
   ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(fx,fy,10,0,TAU);ctx.fill();
   ctx.strokeStyle='rgba(255,255,255,.6)';ctx.lineWidth=2;ctx.setLineDash([4,6]);ctx.beginPath();ctx.moveTo(W/2-W*.22,fy+34);ctx.lineTo(W/2+W*.22,fy+34);ctx.stroke();ctx.setLineDash([]);
@@ -700,14 +716,19 @@ function v2Hud(){
   if(G2.hud.done)return;G2.hud.done=true;
   const sb=$('scoreBox');const rb=document.createElement('div');rb.id='rage2';rb.innerHTML='<span class="l notr">RAGE</span><div class="bar"><i></i></div>';sb.appendChild(rb);
   const tm=document.createElement('div');tm.id='tmr2';tm.className='notr';tm.innerHTML='<span>⏱</span><b id="tmr2v">60</b>';$('hdr').insertBefore(tm,$('pauseBtn'));
-  rb.addEventListener('click',()=>{if(G2.on&&gState==='playing')v2Tap();});
+  const hb=(id,ic,fn)=>{const b=document.createElement('button');b.id=id;b.className='hb2';b.innerHTML=`<span class="ic">${ic}</span><b></b>`;$('hdr').insertBefore(b,$('pauseBtn'));
+    b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn();});b.addEventListener('click',e=>e.stopPropagation());return b;};
+  hb('shTop','🛡',v2Shield);hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')useDiamond();});
+  rb.addEventListener('pointerdown',e=>{e.preventDefault();if(G2.on&&gState==='playing')v2Tap();});
 }
 function v2Ui(force){
-  const h=G2.hud,sb=$('shBtn');
-  if(sb){const inPlay=G2.on&&gameMode!=='sprint'&&(gState==='playing'||gState==='tip'||(gState==='paused'&&pausedFrom==='playing'));
-    const inc=SHOP.shield>0&&G2.shT<=0&&G2.rageT<=0&&G2.objs.some(o=>o.k==='meteor'&&o.st==='in'&&(o.wait>0||o.slow>0));
-    const c=(inPlay?'show':'')+(SET.left?' left':'')+(G2.shT>0?' on':SHOP.shield>0?(G2.rageT>0?'':' ready'):' empty')+(inc?' pulse':'')+(sb.classList.contains('hl')?' hl':'');
-    if(sb.className!==c)sb.className=c;const n=String(SHOP.shield);if(sb._n!==n){sb._n=n;$('shVal').textContent=n;}sb.style.setProperty('--p',G2.shT>0?(G2.shT/V2K.shield.dur).toFixed(3):0);}const rg=Math.round(G2.rage),rd=G2.ready,rt=G2.rageT>0;
+  const h=G2.hud,sb=$('shTop');
+  if(sb){const inc=SHOP.shield>0&&G2.shT<=0&&G2.rageT<=0&&G2.objs.some(o=>o.k==='meteor'&&o.st==='in'&&(o.wait>0||o.slow>0));
+    const c='hb2'+(gameMode==='sprint'?' off':G2.shT>0?' on':SHOP.shield>0?(G2.rageT>0?'':' ready'):' empty')+(inc?' pulse':'')+(sb.classList.contains('hl')?' hl':'');
+    if(sb.className!==c)sb.className=c;const n=G2.shT>0?Math.ceil(G2.shT)+'s':String(SHOP.shield);if(sb._n!==n){sb._n=n;sb.querySelector('b').textContent=n;}
+    sb.style.setProperty('--p',G2.shT>0?(G2.shT/V2K.shield.dur).toFixed(3):0);}
+  const db=$('diaTop');if(db){const c='hb2 dia'+(diamTimer>0?' on':diamonds>=20?' ready':' empty'),n=diamTimer>0?Math.ceil(diamTimer)+'s':String(diamonds);
+    if(db.className!==c)db.className=c;if(db._n!==n){db._n=n;db.querySelector('b').textContent=n;}}const rg=Math.round(G2.rage),rd=G2.ready,rt=G2.rageT>0;
   if(force||h.rg!==rg||h.rd!==rd||h.rt!==rt){h.rg=rg;h.rd=rd;h.rt=rt;const rb=$('rage2');if(rb){rb.querySelector('i').style.width=rg+'%';rb.className=rt?'on':rd?'ready':'';}}
   const left=G2.mode==='surv'?Math.floor(survTime):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;const tp=$('tmr2');if(tp)tp.classList.toggle('low',G2.mode==='level'&&left<=10);

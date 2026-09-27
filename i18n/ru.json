@@ -651,5 +651,22 @@
 "Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün": "Чем больше поглощаешь, тем больше становишься: поле растёт, и можно есть тела побольше. Перестанешь есть — начнёшь медленно уменьшаться",
 "Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır": "Нельзя поглотить. Входит медленно, потом ускоряется; красные стрелки показывают путь. Удар стоит жизни и сбрасывает комбо",
 "Seviye {n}’ten itibaren arada bir gelir. {n} parça = {n} kalkan": "Иногда появляется начиная с уровня {n}. {n} части = {n} щит",
-"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Нажми кнопку щита в игре: {n} секунд каждый метеор разбивается о щит. Покупается в магазине или собирается из {n} частей щита. Не действует в Ежедневном космосе и вызовах"
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Нажми кнопку щита в игре: {n} секунд каждый метеор разбивается о щит. Покупается в магазине или собирается из {n} частей щита. Не действует в Ежедневном космосе и вызовах",
+"METEOR ÇARPTI": "УДАР МЕТЕОРА",
+"Parmak mesafesi": "Расстояние до пальца",
+"YAKIN": "БЛИЗКО",
+"ORTA": "СРЕДНЕ",
+"UZAK": "ДАЛЕКО",
+"Dev gezegeni yuttun": "Ты поглотил гигантскую планету",
+"Öfke Nöbeti": "Приступ ярости",
+"İlk BLACK HOLE RAGE": "Первый BLACK HOLE RAGE",
+"Mega Bomba": "Мегабомба",
+"İlk MEGA BOMB": "Первая MEGA BOMB",
+"Seviyeyi bitir": "Пройди уровень",
+"Can kaybetme": "Не теряй жизней",
+"Yıldızlar: seviyeyi bitir, hiç can kaybetme, ×{n} combo yap. Tekrar oyna, eksik yıldızları topla; her yeni yıldız +{n}": "Звёзды: пройди уровень, не теряй жизней, сделай комбо ×{n}. Переиграй, чтобы собрать недостающие; каждая новая звезда даёт +{n}",
+"SEVİYE {n} TAMAMLANDI": "УРОВЕНЬ {n} ПРОЙДЕН",
+"{n} seviye üst üste {n} yıldız": "{n} уровней подряд на {n} звезды",
+"{n} yıldız serisi": "Серия на {n} звезды",
+"HEDİYE CAN": "ЖИЗНЬ В ПОДАРОК"
 }
