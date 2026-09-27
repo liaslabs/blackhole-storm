@@ -744,5 +744,6 @@
 "Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Ketuk tombol berlian di atas ({n} 💎): semua di layar meledak dan meluncur ke lubang hitammu, lalu meteor tak bisa melukaimu selama {n} detik. {n} kali per level",
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Saat bermain, ketuk tombol berlian ({n} 💎): semua di layar meledak dan meluncur ke lubang hitammu, lalu meteor tak bisa melukaimu selama {n} detik. {n} kali per level",
 "ELMASLA DEVAM": "LANJUT DENGAN BERLIAN",
-"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Saat nyawamu habis, bayar berlian untuk lanjut dari posisimu dengan {n} nyawa. Harganya berlipat dua setiap kali"
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Saat nyawamu habis, bayar berlian untuk lanjut dari posisimu dengan {n} nyawa. Harganya berlipat dua setiap kali",
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Capai skor target di atas untuk menyelesaikan level. Jangan tabrak meteor: tiap tabrakan mengurangi satu nyawa"
 }

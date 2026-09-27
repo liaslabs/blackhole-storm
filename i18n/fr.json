@@ -744,5 +744,6 @@
 "Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Touche le bouton diamant en haut ({n} 💎) : tout ce qui est à l'écran explose et glisse dans ton trou noir, puis les météores ne peuvent plus te blesser pendant {n} secondes. {n} fois par niveau",
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "En jeu, touche le bouton diamant ({n} 💎) : tout ce qui est à l'écran explose et glisse dans ton trou noir, puis les météores ne peuvent plus te blesser pendant {n} secondes. {n} fois par niveau",
 "ELMASLA DEVAM": "CONTINUER AVEC DES DIAMANTS",
-"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Quand tu n'as plus de vies, paie des diamants pour reprendre là où tu étais avec {n} vies. Le prix double à chaque fois"
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Quand tu n'as plus de vies, paie des diamants pour reprendre là où tu étais avec {n} vies. Le prix double à chaque fois",
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Atteins le score visé en haut pour finir le niveau. Évite les météores : chaque choc coûte une vie"
 }

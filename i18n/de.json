@@ -744,5 +744,6 @@
 "Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tippe oben auf den Diamant-Knopf ({n} 💎): Alles auf dem Bildschirm platzt und gleitet in dein Schwarzes Loch, danach können dir Meteore {n} Sekunden lang nichts anhaben. {n}-mal pro Level",
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tippe im Spiel auf den Diamant-Knopf ({n} 💎): Alles auf dem Bildschirm platzt und gleitet in dein Schwarzes Loch, danach können dir Meteore {n} Sekunden lang nichts anhaben. {n}-mal pro Level",
 "ELMASLA DEVAM": "MIT DIAMANTEN WEITER",
-"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Wenn deine Leben aufgebraucht sind, spielst du mit Diamanten an derselben Stelle mit {n} Leben weiter. Der Preis verdoppelt sich jedes Mal"
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "Wenn deine Leben aufgebraucht sind, spielst du mit Diamanten an derselben Stelle mit {n} Leben weiter. Der Preis verdoppelt sich jedes Mal",
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Erreiche die Zielpunktzahl oben, um das Level zu schaffen. Weich Meteoren aus: Jeder Treffer kostet ein Leben"
 }

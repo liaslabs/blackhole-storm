@@ -40,7 +40,7 @@ const OBJ2={
 const SZ2={ast:.7,crystal:.7,energy:.7,time:.7,frag:.7,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
 Object.assign(V2K,{r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
-  decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},cont:{...V2K.cont,dia:25}});
+  decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.85},cont:{...V2K.cont,dia:25}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag']);
@@ -79,6 +79,10 @@ function v2Resize(){G2.S=Math.min(W,H*.5625)/486;}
 const sp2=v=>v*G2.S;
 function v2Lv(){return gameMode==='survival'?Math.min(40,effLevel()):gameMode==='sprint'?G2.sprLv:level;}
 // level rules: counts, spawn odds, directions (spec §26, §36–39)
+// score needed to finish level l (boss levels end with the boss instead)
+function v2Goal(l){if(l%10===0)return 0;const g=V2K.goal;let x=g.a+g.b*Math.pow(Math.min(l-1,19),g.p)+g.mid*clamp(l-20,0,15)+g.late*Math.max(0,l-35); // steep while you learn, gentler once speeds top out
+  if(l%10===9)x*=g.storm;else if(l>=12&&l<=18)x*=g.intro; // storm levels are dense and fast; 12–18 each bring a new body to learn
+  return Math.round(x/100)*100;}
 function v2Rules(l){
   const tb=(arr,d)=>arr[l]!==undefined?arr[l]:d;
   const crystal=l===1?0:tb([0,5,7,10,10,12,12,14,15,15,18],Math.min(20,18+(l-10)*.2));
@@ -95,14 +99,15 @@ function v2Rules(l){
 // ── start / reset ─────────────────────────────────────
 function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();
-  balls=[];blocks=[];rifts=[];PU={slow:0,magnet:0,mult:0};MIS=null;holeK=1;isRescueLevel=false;
+  holeK=1;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
-  Object.assign(G2,{t:0,dur:mode==='surv'?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,
+  const goal=mode==='level'?v2Goal(l):0;
+  Object.assign(G2,{goal,t:0,dur:mode==='surv'||goal?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
     script:mode==='level'&&level===1&&!REPLAY?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1?1:0,touched:false,contUsed:false,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1});
-  comboCount=0;comboMult=1;diamTimer=0;lostThisLevel=false;lvCombo=0;
+  comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   if(mode==='level')lives=3; // every level starts with 3 lives; the stars count what is left
   if(G2.L.boss&&mode==='level')v2BossInit();
@@ -208,7 +213,7 @@ function v2RunScript(dt){
     const xx=x==='hole'?clamp(hX+rnd(-10,10),sp2(30),W-sp2(30)):W*x;const o=v2Edge(k,0,xx);o.vx=0;if(k==='ast'&&G2.si<=1)o.vy*=.75;}
   if(G2.st>=42&&!G2.firstRage&&G2.rage<100&&G2.rageT<=0&&!G2.ready)G2.rage=Math.min(100,G2.rage+dt*40); // the first Rage always arrives, once
   if(G2.ready&&G2.readyT>5)v2RageGo(); // tutorial only: nobody leaves level 1 without seeing Rage
-  if(G2.st>=G2.dur-3)G2.script=[]; // spawning stops for the finale
+  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2)G2.script=null; // the tutorial script is over: normal spawning takes it from here
 }
 
 // ── giant planet boss (every 10th level) ─────────────
@@ -228,7 +233,7 @@ function v2BossStep(dt,tk){
   if(!b.edible){b.x+=b.vx*dt*tk;if(b.x<b.r+10||b.x>W-b.r-10)b.vx*=-1;
     b.shed-=dt*tk;if(b.shed<=0){b.shed=Math.max(.75,1.5*b.hp/b.max+.35);const a=rrnd(.3,Math.PI-.3),s=rrnd(.6,1.1)*v2Speed('frag')/G2.L.speedK;
       const k=rng()<.14?'crystal':rng()<.1?'energy':'frag';const o=v2Obj(k,b.x+Math.cos(a)*b.r,b.y+Math.sin(a)*b.r,Math.cos(a)*s,Math.sin(a)*s);o.fromBoss=true;}
-    b.warn=level>=20&&b.meteorT<1.1;if(level>=20){b.meteorT-=dt*tk;if(b.meteorT<=0){b.meteorT=6;const a=Math.atan2(hY-b.y,hX-b.x),s=v2Speed('meteor')*.8;v2Obj('meteor',b.x,b.y+b.r,Math.cos(a)*s,Math.sin(a)*s,{wait:.6});}}}
+}
   // solid until it is small enough: the hole is pushed out instead of passing through
   const dx=hX-b.x,dy=hY-b.y,d=Math.hypot(dx,dy)||1,min=b.r+G2.R*.7;
   if(b.edible&&d<G2.R+b.r*.45&&G2.R/(V2K.r0*G2.S)>=1.25){b.sw=.001;v2BossEaten();}
@@ -248,7 +253,7 @@ function v2BossEaten(){
 function v2Dims(){
   const S=G2.S;let rr=G2.rr;if(G2.overT>0)rr*=V2K.over.r;if(G2.rageT>0)rr=Math.min(rr*V2K.rage.r,V2K.rRage);
   G2.R=rr*S;
-  let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;if(diamTimer>0)g*=1.5;
+  let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;
   G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S;G2.peak=Math.max(G2.peak,rr);
 }
 function v2Size(){return G2.R/(V2K.r0*G2.S);}
@@ -261,7 +266,6 @@ function v2Update(dt){
   // timers
   G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
   if(G2.timeT>0){G2.timeT-=dt;if(G2.timeT<=0)v2Call('TIME NORMAL','','#8fd0ff',.8);}
-  if(diamTimer>0){diamTimer-=dt;if(diamTimer<=0)diamTimer=0;}
   if(G2.novaT>0){G2.novaT-=dt;if(G2.novaT<=0){G2.novaT=0;v2Call('NOVA OFF','','#8fe9ff',.7);}}
   if(!TIPS.nova&&G2.mode==='level'&&level>=3&&G2.t>4&&diamonds>=V2K.nova.cost&&!G2.boss)v2Tip('nova',null);
   if(G2.overT>0){G2.overT-=dt;if(G2.overT<=0){G2.rr=V2K.r0+(G2.cap-V2K.r0)*.6;v2Call('COLLAPSE','THE HOLE SHRINKS','#b9a8ff',1.3);sfx('slow',{vol:.6,rate:.6});v2Burst(hX,hY,26,'#b9a8ff',2,6,.7);}}
@@ -279,7 +283,7 @@ function v2Update(dt){
     else G2.shrinkOn=false;}
   if(SHOP.shield>0&&!TIPS.shield&&G2.t>1.5&&gameMode!=='sprint')v2Tip('shield',null);
   if(G2.combo>0&&!G2.hold){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
-  if(gameMode==='survival'){survTime+=dt;survSpeed=survTime/60;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);}
+  if(gameMode==='survival'){survTime+=dt;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);}
     const nl=Math.min(40,effLevel());if(nl!==G2.lv){G2.lv=nl;const cap=G2.cap;G2.L=v2Rules(nl);G2.cap=Math.max(cap,V2K.r0*G2.L.capMul);v2Call('LEVEL UP','SPEED '+nl,'#ffb35c',1.2,true);const z=zoneOf(nl);if(z!==curZone)setZone(z);}}
   if(gameMode==='sprint'){const sec=Math.ceil(SPR_RUN.dur-SPR_RUN.t);SPR_RUN.t+=dt;const s2=Math.ceil(SPR_RUN.dur-SPR_RUN.t);
     if(s2!==sec&&s2<=5&&s2>0)sfx('tickHi',{vol:.6,rev:0});if(SPR_RUN.t>=SPR_RUN.dur){sprintEnd();return;}}
@@ -306,7 +310,7 @@ function v2Update(dt){
     if(G2.boss&&G2.t>=G2.dur){
       if(SHOP.time>0&&monOn()){SHOP.time--;saveG();G2.dur+=30;v2Call('TIME CRYSTAL','+30 s','#8fd0ff',1.4,true);sfx('slow',{vol:.7,rate:1.2});} // a time crystal buys the boss fight 30 s
       else{v2Fail('DEV GEZEGEN KAÇTI');return;}}
-    if(!G2.L.boss&&(G2.script?G2.st>=G2.dur:G2.t>=G2.dur)){G2.ending=1;G2.endT=.5;}
+    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('GOAL!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
   }
   if(G2.ending){G2.endT-=dt;if(G2.endT<=0&&gState==='playing'){G2.ending=2;v2Complete();}}
 
@@ -626,7 +630,7 @@ function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on 
 function v2SizeTxt(x){return (x||0).toFixed(2)+' M☉';}
 function v2Result(){ // level-complete card body
   const sz=G2.peak/V2K.r0;const row=(k,v,hl)=>`<div class="r2"><span>${T(k)}</span><b${hl?' class="hl"':''}>${v}</b></div>`;
-  const lv=clamp(lives,1,3),st=`<span class="ok">${'♥'.repeat(lv)}</span><span>${'♥'.repeat(3-lv)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span><span>${T('Kalan can kadar yıldız')}</span>`;
+  const lv=clamp(lives,1,3),st=`<span class="ok">${'♥'.repeat(lv)}</span><span>${'♥'.repeat(3-lv)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span>`;
   const s3=G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 25 💎<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;
   return `<div class="stc2">${st}</div>${s3}<div class="how2">HOW BIG CAN YOU GET?</div><div class="size2">${v2SizeTxt(sz)}${G2.rec?`<i>${T('YENİ REKOR!')}</i>`:''}</div><div class="how2u">${T('M☉ = Güneş kütlesi: puan değil, kara deliğinin boyutu')}</div>`+
     `<div class="res2">${row('SKOR',levelScore.toLocaleString(LOC))}${row('EN İYİ COMBO','×'+G2.best)}${row('YUTULAN',G2.eaten)}${row('PERFECT ABSORB',G2.perfA)}${row('PERFECT DODGE',G2.perfD)}${row('ÖDÜL','+5 ⭐'+(level%5===0?' +3 💎':'')+(G2.gift?' +1 🛡':''),true)}</div>`;
@@ -640,7 +644,7 @@ function v2Frame(dt){
   if(gState==='playing'){if(G2.mega)v2MegaStep(dt);else if(G2.freeze>0)G2.freeze-=dt;else v2Update(dt);}
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
-  v2Dims();curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;dangerK=0;
+  v2Dims();curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;
   G2.gl.length=0;for(const o of G2.objs)if(o.cell!==undefined&&o.wait<=0)G2.gl.push(o);if(G2.boss)G2.gl.push(G2.boss);
   let sx=0,sy=0;if(shake>0){sx=(Math.random()-.5)*shake;sy=(Math.random()-.5)*shake;shake*=Math.pow(.8,f);if(shake<.3)shake=0;}
   const gl=glDraw(clock,sx,sy);if(!gl)drawFallbackBG();
@@ -648,7 +652,7 @@ function v2Frame(dt){
   ctx.save();ctx.globalCompositeOperation='lighter';for(const d of dust){d.update(dt);d.draw();}ctx.restore();ctx.globalAlpha=1;
   drawScreenFx(dt);
   v2DrawField();
-  v2DrawMegaFx(dt);{const b=G2.boss;if(b&&b.warn&&!b.sw){const k=.5+.5*Math.sin(clock*20);ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(255,80,50,${.35+.5*k})`;ctx.lineWidth=4;ctx.shadowColor='#ff3a1c';ctx.shadowBlur=18;ctx.beginPath();ctx.arc(b.x,b.y,b.r*1.08,0,TAU);ctx.stroke();ctx.restore();}}
+  v2DrawMegaFx(dt);
   for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/w.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=w.mega?6:3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
   for(const q of G2.minis)v2DrawMini(q);
   v2DrawLinks();v2DrawShield();v2DrawMono();
@@ -673,7 +677,7 @@ function v2DrawField(){ // gravity field, rage aura, overload wobble, damage bli
   let pull=false;for(const o of G2.objs)if(o.st==='in'&&o.inG&&o.k!=='meteor'){pull=true;break;}
   ctx.setLineDash([3,7]);ctx.lineDashOffset=-clock*14;ctx.lineWidth=1.2;
   {const fg=ctx.createRadialGradient(0,0,R,0,0,Gr);fg.addColorStop(0,'rgba(150,170,255,0)');fg.addColorStop(1,'rgba(150,170,255,.07)');ctx.fillStyle=fg;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
-  ctx.lineWidth=1.6;ctx.strokeStyle=G2.rageT>0?`rgba(255,120,70,${.45+.2*Math.sin(clock*18)})`:diamTimer>0?'rgba(120,240,255,.55)':pull?'rgba(210,222,255,.75)':'rgba(185,200,255,.5)';
+  ctx.lineWidth=1.6;ctx.strokeStyle=G2.rageT>0?`rgba(255,120,70,${.45+.2*Math.sin(clock*18)})`:pull?'rgba(210,222,255,.75)':'rgba(185,200,255,.5)';
   ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.stroke();ctx.setLineDash([]);
   if(G2.rageT>0){const g=ctx.createRadialGradient(0,0,R,0,0,Gr);g.addColorStop(0,'rgba(255,90,40,.28)');g.addColorStop(1,'rgba(255,90,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,Gr,0,TAU);ctx.fill();}
   {const tn=SKIN_TINT[SKIN.sel]||'#b9a8ff';ctx.save();ctx.shadowColor=tn;ctx.shadowBlur=6;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.6;ctx.beginPath();ctx.arc(0,0,R+.8,0,TAU);ctx.stroke();ctx.restore();} // crisp event horizon
@@ -781,16 +785,14 @@ function v2DrawShard(o,sc){ // a golden third of the crest, glinting
   v2Heater(ctx,s);const g=ctx.createLinearGradient(-s,-s*1.1,s,s*1.3);g.addColorStop(0,'#fff7cf');g.addColorStop(.3,'#ffd84d');g.addColorStop(.62,'#e3a11c');g.addColorStop(1,'#7c4a07');ctx.fillStyle=g;ctx.fill();ctx.lineWidth=s*.13;ctx.strokeStyle='#6d4207';ctx.stroke();ctx.restore();
   ctx.strokeStyle=`rgba(255,250,220,${.6+.4*Math.sin(clock*6)})`;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-s*.05,-s*1.1);ctx.lineTo(s*.12,-s*.75);ctx.lineTo(-s*.18,-s*.3);ctx.lineTo(s*.1,s*.15);ctx.lineTo(-s*.12,s*.6);ctx.lineTo(-s*.02,s*1.1);ctx.stroke();ctx.restore();
 }
-function v2DrawMarks(){ // what can be eaten: pull lines, too-big warnings, your size under the hole
+function v2DrawMarks(){ // what can be eaten: pull lines and too-big warnings
   if(gState!=='playing'&&gState!=='tip')return;const Gr=G2.G;ctx.save();
   for(const o of G2.objs){if(o.st!=='in'||o.wait>0||o.k==='meteor'||o.orb)continue;const d=Math.hypot(o.x-hX,o.y-hY);
     if(o.k==='anti'){if(d<Gr*1.6){ctx.globalAlpha=.6+.4*Math.sin(clock*12);ctx.strokeStyle='#7dffb0';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.6+3,0,TAU);ctx.stroke();ctx.setLineDash([]);}continue;}
     if(v2Edible(o)){if(d<Gr){const k=1-d/Gr;ctx.globalAlpha=.18+.4*k;ctx.strokeStyle='#e6ecff';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(hX+(o.x-hX)/d*G2.R,hY+(o.y-hY)/d*G2.R);ctx.stroke();}}
     else if(o.k==='split'||o.k==='pulsar'){}
-    else if(d<Gr*1.5){ctx.globalAlpha=.85;ctx.strokeStyle='#ff6a5a';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.25+3,0,TAU);ctx.stroke();ctx.setLineDash([]);
-      ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';const t=v2SizeTxt(OBJ2[o.k].need),y=o.y-o.r*1.25-8;ctx.strokeText(t,o.x,y);ctx.fillStyle='#ffb3a8';ctx.fillText(t,o.x,y);}}
-  ctx.globalAlpha=.8;ctx.font='700 11px "IBM Plex Mono",monospace';ctx.textAlign='center';const t=v2SizeTxt(v2Size()),y=hY+G2.R*(G2.shT>0?1.5:1)+15;ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(t,hX,y);
-  ctx.fillStyle=G2.shrink?'#ffa39a':'#d9dcff';ctx.fillText(G2.shrink?'▼ '+t:t,hX,y);ctx.restore();
+    else if(d<Gr*1.5){ctx.globalAlpha=.85;ctx.strokeStyle='#ff6a5a';ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.25+3,0,TAU);ctx.stroke();ctx.setLineDash([]);}}
+  ctx.restore();
 }
 function v2DrawLinks(){ // bomb tether (turns red as the drag pulls it loose) and helper beams
   const b=G2.hold;if(b&&b.orb){const t=Math.min(1,b.orb.lag);ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.5+.4*t;
@@ -870,9 +872,10 @@ function v2Ui(force){
     if(db.className!==c)db.className=c;if(db._n!==n){db._n=n;db.querySelector('b').textContent=n;}}const rg=Math.round(G2.rage),rd=G2.ready,rt=G2.rageT>0;
   if(force||h.rg!==rg||h.rd!==rd||h.rt!==rt){h.rg=rg;h.rd=rd;h.rt=rt;const rb=$('rage2');if(rb){rb.querySelector('i').style.width=rg+'%';rb.className=rt?'on':rd?'ready':'';}}
   const left=G2.mode==='surv'?Math.floor(survTime):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));
-  if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;const tp=$('tmr2');if(tp)tp.classList.toggle('low',G2.mode==='level'&&left<=10);
-    const pct=G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:(G2.script?G2.st:G2.t)/G2.dur*100;$('pb').style.width=Math.min(100,pct)+'%';}
-  {const sc=G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc){h.sc=sc;$('scVal').textContent=sc.toLocaleString(LOC);}}
+  {const tp=$('tmr2'),showT=G2.mode==='sprint'||!!G2.L.boss&&G2.mode==='level';if(tp&&tp.hidden!==!showT)tp.hidden=!showT; // the clock only matters in timed runs and boss fights
+  if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',G2.mode==='level'&&left<=10);}
+  const pct=G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
+  {const sc=G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;$('scVal').innerHTML=G2.goal?`${Math.min(sc,G2.goal).toLocaleString(LOC)}<small class="gl">/${G2.goal.toLocaleString(LOC)}</small>`:sc.toLocaleString(LOC);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));

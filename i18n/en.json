@@ -744,5 +744,6 @@
 "Üstteki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tap the diamond button at the top ({n} 💎): everything on screen bursts and drifts into your black hole, then meteors can't hurt you for {n} seconds. {n} times per level",
 "Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "In play, tap the diamond button ({n} 💎): everything on screen bursts and drifts into your black hole, then meteors can't hurt you for {n} seconds. {n} times per level",
 "ELMASLA DEVAM": "CONTINUE WITH DIAMONDS",
-"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "When your lives run out, pay diamonds to carry on where you were with {n} lives. The price doubles each time"
+"Canların bitince elmasla kaldığın yerden {n} canla devam et. Her kullanımda fiyat ikiye katlanır": "When your lives run out, pay diamonds to carry on where you were with {n} lives. The price doubles each time",
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma bir can": "Reach the target score at the top to finish the level. Don't hit meteors: every hit costs a life"
 }
