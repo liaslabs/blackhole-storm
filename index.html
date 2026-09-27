@@ -2590,7 +2590,11 @@ let pausedFrom='playing';
 function pauseGame(){if(gState==='playing'){pausedFrom=gState;gState='paused';$('pRestartL').textContent=REPLAY||gameMode==='classic'?'Seviyeyi yeniden başlat':gameMode==='sprint'?'60 saniyeyi yeniden başlat':'Yeniden başla';if(REC.mr&&REC.mr.state==='recording')try{REC.mr.pause();}catch(e){}$('pauseBtn').textContent='▶';syncSettingsUI();$('sPause').classList.add('on');SND.setDrone(.05);SND.duck(.35,1e5);}}
 function resumeGame(){if(gState!=='paused')return;gState=pausedFrom;if(REC.mr&&REC.mr.state==='paused')try{REC.mr.resume();}catch(e){}$('pauseBtn').textContent='⏸';$('sPause').classList.remove('on');$('sSet').classList.remove('on');lastT=performance.now();SND.setDrone(.14);SND.duck(1,0);
   if(pendingWin){pendingWin=false;levelSuccess();}}
-document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseGame();saveG();}});
+// Going to the background (home button, another app, screen off) silences everything; coming back resumes the sound (the game itself stays paused)
+function bgSilence(){try{if(SND.ctx&&SND.ctx.state==='running')SND.ctx.suspend();}catch(e){}const v=$('introV');if(v&&!v.paused){v.pause();v._bg=1;}}
+function bgWake(){SND.resume();const v=$('introV');if(v&&v._bg){v._bg=0;if(!$('intro').hidden)v.play().catch(()=>{});}}
+document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseGame();saveG();bgSilence();}else bgWake();});
+window.addEventListener('pagehide',bgSilence);window.addEventListener('pageshow',()=>{if(!document.hidden)bgWake();});
 // Android back button / back gesture: keep one history entry of our own so "back"
 // pauses the game or closes the open panel instead of leaving the app mid-run.
 // From the plain main menu, back steps past that entry so the app closes normally.
