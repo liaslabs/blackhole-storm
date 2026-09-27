@@ -795,7 +795,7 @@
 "BU SEVİYEYİ KOLAYLAŞTIR": "MAKE THIS LEVEL EASIER",
 "{n} kez olmadı. Hedef {n} düşer, seviye baştan başlar (can harcamaz)": "{n} tries without luck. The goal drops by {n} and the level restarts (costs no life)",
 "RADYASYONA YAKALANDIN": "CAUGHT IN THE RADIATION",
-"Boss ışıma yapmadan önce kırmızı bir alan belirir ve geri sayar. Sayım bitmeden alanın dışına kaç: içinde kalırsan can kaybedersin. Kalkan ve Rage seni korur": "Before the boss radiates, a red zone appears with a countdown. Get out of it before the count ends: stay inside and you lose a life. A shield or Rage protects you",
 "CC{n} ve Lias Labs": "CC{n} and Lias Labs",
-"Müzik: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)": "Music: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)"
+"Müzik: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)": "Music: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno{n}), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA)",
+"Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Rage seni korur": "When the radiation sign appears on the boss, waves are coming. They spread along the red directions with gaps between them: sit in a gap as a wave passes. Touch one and you lose a life. A shield or Rage protects you"
 }
