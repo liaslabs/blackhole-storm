@@ -41,12 +41,13 @@ const OBJ2={
   dark:   {r:26,v:140,dv:6, vm:280,pts:120,grow:1.2,rage:5, need:1},
   cstar:  {r:14,v:0,  dv:0, vm:0,  pts:150,grow:.6, rage:4, need:0},    // a constellation star: only the next one in order can be eaten
   thr:    {r:20,v:200,dv:6, vm:380,pts:120,grow:.6, rage:4, need:1},    // Guardian level: an asteroid aimed at the living planet
-  mirror: {r:22,v:170,dv:6, vm:340,pts:80, grow:.5, rage:3, need:1}};   // mirror stone: a twin hole for 8 s   // dark matter: seen only by how it bends light
+  mirror: {r:22,v:170,dv:6, vm:340,pts:80, grow:.5, rage:3, need:1},
+  kgold:  {r:12,v:0,  dv:0, vm:0,  pts:220,grow:.9, rage:5, need:1}};   // kilonova gold: forged when two neutron stars merge   // mirror stone: a twin hole for 8 s   // dark matter: seen only by how it bends light
 // screen layout pass (play-tested): big things shrink to half, small ones less so they stay readable; everything a little slower
-const SZ2={cstar:.9,thr:.7,mirror:.7,prey:.8,ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,plasma:.75,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
+const SZ2={kgold:.9,cstar:.9,thr:.7,mirror:.7,prey:.8,ast:.7,crystal:.7,energy:.7,time:.9,frag:.7,plasma:.75,half:.55,meteor:.7,comet:.7,anti:.7,pulsar:.7,sat:.7,moon:.6,bomb:.6,mini:.6,gold:.6,shard:.6,magnet:.8,mpair:.6,dark:.6,planet:.55,split:.55};
 for(const k in OBJ2){const o=OBJ2[k];o.r*=SZ2[k]||.6;o.v*=.9;o.dv*=.9;o.vm*=.9;}
-Object.assign(V2K,{prey:{wear:2.6,tired:2.6},boss:{spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7}},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
-  bt:{k:.25,dur:.45,cd:7,max:3},decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.75},cont:{...V2K.cont,dia:25}});
+Object.assign(V2K,{prey:{hp:10,cd:.3,fast:330,faster:650},boss:{slam:500,spotCD:2.2,orbit:.45,early:.3,radFirst:4.5,radEvery:{planet:9,red:8,nova:7}},r0:V2K.r0*.6,rMax:72,rRage:90,gMax:V2K.gMax*.6,gMaxOver:V2K.gMaxOver*.6,
+  bt:{k:.25,dur:.45,cd:7,max:3},hawk:{cd:25,loss:.4,min:.55,from:15},jet:{cd:12,dur:1.4,w:26,from:20},decay:{wait:3,k:.2,min:1.2},shield:{dur:10,cost:30},nova:{cost:20,max:2,imm:3},goal:{a:1200,b:900,p:1.12,mid:800,late:300,storm:1.8,intro:.75},cont:{...V2K.cont,dia:25}});
 Object.assign(V2K.mini,{rMin:10,rMax:36,gMax:90});
 {const big=Math.max(...Object.values(OBJ2).map(o=>o.r));V2K.rMax=big*2.2;V2K.rRage=V2K.rMax*1.2;} // largest hole: 2.2× the largest ordinary bodyObject.assign(V2K.dodge,{lo:7,hi:24});
 const SMALL2=new Set(['ast','moon','crystal','energy','frag','plasma']);
@@ -82,7 +83,7 @@ function v2RuleFor(l){const t=v2LevelType(l);
   if(t==='guard')return {t,tip:'guard',guard:1,need:l>60?16:10,ic:'🛡',n:'KORUYUCU',k:0};
   if(t==='duel')return {t,tip:'duel',rival:1,duel:1,ic:'👁',n:'KARA DELİK İKİZİ',k:0};
   return null;}
-const RULE_NEW={restrict:'Yasaklı cisimler seni iter; üstlerine gidersen combo yarıya iner. Hedef puan daha düşük.',window:'Puan sadece kara delik yeşil aralıktayken gelir. Fazla büyürsen buharlaşırsın; o sırada yediğin puan getirmez.',hunt:'Altın avı çekim alanında tutarak yor; yorulunca kızarır, o an yut. Süresi dolarsa kaçar ve can götürür.',rival:'Başka bir kara delik cisimleri kapıyor. Senden büyükken kaç; onu geçince yut, seviye biter.',guard:'Yaşayan bir gezegene asteroitler yağıyor. Ona çarpmadan yut; gezegenin atmosferine giremezsin.',duel:'Senin aynan: bir kara delik ikizi. İki kez yutman gerekir ve çekim dalgasıyla yemeğini çalar.'};
+const RULE_NEW={restrict:'Yasaklı cisimler seni iter; üstlerine gidersen combo yarıya iner. Hedef puan daha düşük.',window:'Puan sadece kara delik yeşil aralıktayken gelir. Fazla büyürsen buharlaşırsın; o sırada yediğin puan getirmez.',hunt:'Altın ava kara deliğinle çarp: her çarpış kabuğunu kırar, hızlı çarpış daha çok kırar. Süresi dolarsa kaçar ve can götürür.',rival:'Başka bir kara delik cisimleri kapıyor. Senden büyükken kaç; onu geçince yut, seviye biter.',guard:'Yaşayan bir gezegene asteroitler yağıyor. Ona çarpmadan yut; gezegenin atmosferine giremezsin.',duel:'Senin aynan: bir kara delik ikizi. İki kez yutman gerekir ve çekim dalgasıyla yemeğini çalar.'};
 function new2(l){const ru=G2.mode!=='sprint'?v2RuleFor(l):null;if(ru&&!NEW2[l])return [ru.ic,ru.n,RULE_NEW[ru.t]];return NEW2[l]||(l%10===0?(v2BossType(l)==='red'?['🔴','RED GIANT','Boss: nefes alan yıldız; şişince daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.']:v2BossType(l)==='nova'?['💥','SUPERNOVA','Boss: her 7 saniyede patlar ve etrafa enkaz saçar. Enkazı yut, küçülünce onu da yut.']:NEW2[10]):null);}
 
 const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,shardAt:1e9,gift:0,
@@ -122,7 +123,7 @@ function v2Start(mode){
   const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
-  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,btM:null,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,gRec:null,ghost:null,
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,btM:null,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,gRec:null,ghost:null,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -132,9 +133,12 @@ function v2Start(mode){
   if(mode==='level')lives=3; // every level starts with 3 lives; the stars count what is left
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
+  {const pl=perkLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+.04*pl);}G2.L.comboT+=.25*perkLv('combo');} // mass tree perks (classic only)
+  if(mode==='sprint'&&SPR_RUN.opt&&SPR_RUN.opt.chal&&Array.isArray(SPR_RUN.opt.chal.g))G2.ghost={p:SPR_RUN.opt.chal.g,s:[],dt:.5,sc:255,name:SPR_RUN.opt.chal.n}; // a friend's run, from their challenge link
   if(rule&&rule.guard)G2.guard={n:0,need:rule.need,next:3,sh:2};
   G2.evPlan=mod==='dark'?{k:'eclipse',at:8,again:1}:v2EvPlan(l,mode);G2.growK=stormHas('giant')?1.3:1;if(mode==='surv')G2.modSc=stormHas('fast')?1.25:1;
-  if(mode==='level'&&level>1&&!REPLAY&&!G2.script){G2.gRec={t:0,p:[],s:[]};const gh=ghostDb()[String(level)];G2.ghost=gh&&Array.isArray(gh.p)&&Array.isArray(gh.s)?gh:null;}
+  if(EXPRUN&&EXPRUN.kind==='event'&&mode==='level'){const ks=Object.keys(EVK).filter(k=>level>=EVK[k].from);G2.evPlan={k:ks.length?ks[Math.floor(rng()*ks.length)]:'wind',at:6};} // an expedition EVENT stop always brings one
+  if(mode==='level'&&level>1&&!REPLAY&&!EXPRUN&&!G2.script){G2.gRec={t:0,p:[],s:[]};const gh=ghostDb()[String(level)];G2.ghost=gh&&Array.isArray(gh.p)&&Array.isArray(gh.s)?gh:null;}
   if(rule&&rule.duel&&!REPLAY)sigShow('📡 '+T('SİNYAL · GÖZLEM İSTASYONU-7'),T('Aynadaki gibi: senin kütlende, senin açlığında bir kara delik. Bu sefer iki kez yutman gerekecek.'),6);
   if(G2.L.boss&&mode==='level')v2BossInit();
   else if(mode==='level'&&level%10===1&&level>1&&!REPLAY){const z=zoneOf(level),Z=ZONES[z];sigShow('🌌 '+T('YENİ BÖLGE')+' · '+T(Z.n),T(Z.d),6);}
@@ -258,7 +262,7 @@ function v2BossInit(){
   v2Call(B.n,B.sub,B.col,2.4,true);sfx('bossIntro',{vol:.7,rev:.4});if(!REPLAY){const L=SIG_BOSS[bt];sigShow('📡 '+T('SİNYAL · GÖZLEM İSTASYONU-7'),T(L[Math.floor(level/30)%L.length]),6);}
 }
 function v2BossStep(dt,tk){
-  const b=G2.boss;if(!b)return;b.age+=dt;b.spinA+=b.spinV*dt;
+  const b=G2.boss;if(!b)return;b.age+=dt;b.spinA+=b.spinV*dt;if(b.slamCD>0)b.slamCD-=dt;
   if(b.sw>0){ // being swallowed
     b.sw+=dt;const p=Math.min(1,b.sw/1.2);b.fade=1-p;b.x+=(hX-b.x)*Math.min(1,dt*4);b.y+=(hY-b.y)*Math.min(1,dt*4);b.gs=1-.9*p;
     b.suck={ph:'fall'};b.radAng=Math.atan2(hY-b.y,hX-b.x);b.stretch=1+p;b.squeeze=1-.5*p;b.fade=1-p;b.sp=p;
@@ -277,7 +281,8 @@ function v2BossStep(dt,tk){
   // solid until it is small enough: the hole is pushed out instead of passing through
   const dx=hX-b.x,dy=hY-b.y,d=Math.hypot(dx,dy)||1,min=b.r+G2.R*.7;
   if(b.edible&&d<G2.R+b.r*.45&&G2.R/(V2K.r0*G2.S)>=1.25){b.sw=.001;v2BossEaten();}
-  else if(d<min){hX=b.x+dx/d*min;hY=b.y+dy/d*min;if(b.edible&&b.warnT===undefined){b.warnT=1;v2Call('GROW BIGGER','','#ffb35c',1);}}
+  else if(d<min){if(!b.edible&&b.bt!=='nova'&&!(b.slamCD>0)&&Math.hypot(G2.vx,G2.vy)>sp2(V2K.boss.slam))v2BossSlam(b,dx/d,dy/d); /* a fast ram cracks the giant planet and the red giant (never the supernova) */
+    hX=b.x+dx/d*min;hY=b.y+dy/d*min;if(b.edible&&b.warnT===undefined){b.warnT=1;v2Call('GROW BIGGER','','#ffb35c',1);}}
 }
 // Weak spots: glowing cracks on the rim that turn with the boss. Touch one with the hole to break off a chunk (2 hits: the crack, then the chunk you swallow).
 function v2BossSpots(b,dt,tk){const K=V2K.boss,want=b.hp<=b.max*.5?2:1;b.spotCD-=dt*tk;
@@ -330,6 +335,9 @@ function v2BossCrack(b,P){const n=Math.max(1,Math.round(b.max/24)); // ring segm
   v2BossHit();dmEvent('crack',1);b.hitFx=1;shake=Math.max(shake,9);flash=Math.max(flash,.25);vib(25);v2Sfx('boom',{vol:.5,rate:1.35});
   const col=b.bt==='red'?'#ffd28a':b.bt==='nova'?'#bff6ff':'#ffb35c';v2Burst(P.x,P.y,22,col,2,7,.6,2.2);v2Pop('CRACK!',col,18);
   const k=b.bt==='planet'?'frag':'plasma',o=v2Obj(k,P.x,P.y,0,0);o.fromBoss=true;o.seen=true;if(k==='plasma')o.pc=BOSS2[b.bt].pc;v2Swallow(o,null);}
+function v2BossSlam(b,ux,uy){b.slamCD=.6;const P={x:b.x+ux*b.r,y:b.y+uy*b.r,a:Math.atan2(uy,ux)};v2BossHit();b.hitFx=1;for(let i=0;i<4;i++)b.chips.push({a:P.a+rrnd(-.3,.3),t:0,v:rrnd(.8,1.3)});
+  shake=Math.max(shake,10);flash=Math.max(flash,.2);vib(30);v2Sfx('boom',{vol:.55,rate:1.1});const col=b.bt==='red'?'#ffd28a':'#ffb35c';v2Burst(P.x,P.y,20,col,2,7,.6,2);v2Pop('SLAM!',col,19);
+  const k=b.bt==='planet'?'frag':'plasma',o=v2Obj(k,P.x+ux*sp2(18),P.y+uy*sp2(18),ux*sp2(240),uy*sp2(240));o.fromBoss=true;o.seen=true;if(k==='plasma')o.pc=BOSS2[b.bt].pc;} // the chip flies off: eat it for one more hit
 function v2BossHit(){const b=G2.boss;if(!b||b.edible)return;b.hp=Math.max(0,b.hp-1);shock=Math.max(shock,.3);
   if(b.hp===0){b.edible=true;v2Call('SWALLOW IT!','','#8dffcb',1.6,true);sfx('bell',{vol:.8});}}
 function v2BossEaten(){
@@ -345,18 +353,20 @@ function v2Dims(){
   const S=G2.S;let rr=G2.rr;if(G2.overT>0)rr*=V2K.over.r;if(G2.rageT>0)rr=Math.min(rr*V2K.rage.r,V2K.rRage);
   G2.R=rr*S;
   let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;
-  G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S;G2.peak=Math.max(G2.peak,rr);
+  G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S*(1+.04*perkLv('grav'));G2.peak=Math.max(G2.peak,rr);
 }
 function v2Size(){return G2.R/(V2K.r0*G2.S);}
 function v2Banned(o){return !!(G2.rule&&G2.rule.ban&&G2.rule.ban.includes(o.k));}
-function v2Edible(o){if(o.k==='meteor'||o.boss||(o.k==='pulsar'&&!o.lit)||v2Banned(o)||(o.k==='prey'&&!(o.tiredT>0))||(o.k==='cstar'&&!(o.cons&&o.cons.stars[o.cons.next]===o)))return false;let need=OBJ2[o.k].need;if(level===1&&G2.mode==='level')need=1;return v2Size()>=need-1e-6;}
+function v2Edible(o){if(o.k==='meteor'||o.boss||(o.k==='pulsar'&&!o.lit)||v2Banned(o)||o.k==='prey'||(o.k==='cstar'&&!(o.cons&&o.cons.stars[o.cons.next]===o)))return false;let need=OBJ2[o.k].need;if(level===1&&G2.mode==='level')need=1;return v2Size()>=need-1e-6;}
 function v2AddRage(n){if(G2.rageT>0||G2.ready)return;G2.rage=Math.min(G2.script&&G2.st<42?90:100,G2.rage+n);} // level 1: the first Rage is saved for its moment (~42 s)
-function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO LOST','#9aa3b2',13);G2.combo=0;comboCount=0;}
+function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO LOST','#9aa3b2',13);G2.combo=0;comboCount=0;G2.spec=[];}
 
 function v2Update(dt){
   const S=G2.S,tk=(G2.timeT>0?V2K.time.k:1)*(G2.btT>0?V2K.bt.k:1),lv=G2.lv;
   // timers
-  G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.btT>0)G2.btT-=dt;if(G2.btCD>0)G2.btCD-=dt;ghostRec(dt);if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
+  G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;v2Pop('JET READY','#9fe8ff',14);}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;
+  if(gameMode==='sprint'){SPR_RUN.gt=(SPR_RUN.gt||0)+dt;if(SPR_RUN.gt>=.5&&(SPR_RUN.gp||(SPR_RUN.gp=[])).length<260){SPR_RUN.gt=0;SPR_RUN.gp.push(clamp(Math.round(hX/W*255),0,255),clamp(Math.round(hY/H*255),0,255));}}
+  if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);if(G2.btCD>0)G2.btCD-=dt;ghostRec(dt);if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
   if(G2.timeT>0){G2.timeT-=dt;if(G2.timeT<=0)v2Call('TIME NORMAL','','#8fd0ff',.8);}
   if(G2.novaT>0){G2.novaT-=dt;if(G2.novaT<=0){G2.novaT=0;v2Call('NOVA OFF','','#8fe9ff',.7);}}
   if(!TIPS.nova&&G2.mode==='level'&&level>=3&&G2.t>4&&diamonds>=V2K.nova.cost&&!G2.boss)v2Tip('nova',null);
@@ -439,7 +449,7 @@ function v2Update(dt){
     if(o.wait>0){o.wait-=dt*tk;continue;}
     const odt=dt*tk;
     if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;if(o.k==='prey')v2PreyStep(o,odt);
-    if(o.k==='pulsar'){o.ph+=dt;o.lit=(o.ph%1.6)<.8;}if(o.k==='mpair')o.sa+=dt*2.4;if(G2.ev)v2EvWind(o,odt);
+    if(o.k==='pulsar'){o.ph+=dt;o.lit=(o.ph%1.6)<.8;}if(o.k==='mpair')o.sa+=dt*2.4;if(G2.ev)v2EvWind(o,odt);if(o.k==='kgold'){const f=Math.pow(.3,odt);o.vx*=f;o.vy*=f;o.age=Math.min(o.age,5);}
     if(o.k==='thr'&&G2.guard&&o.st==='in'&&Math.hypot(o.x-G2.guard.px,o.y-G2.guard.py)<G2.guard.pr+o.r*.6){v2GuardImpact(o);continue;}
     // gravity of the main hole (and any mini hole) — meteors fly straight
     let dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1;
@@ -450,7 +460,7 @@ function v2Update(dt){
       if(d<Gr){
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
-        if(!ed)a*=v2Banned(o)?-.7:o.k==='prey'||o.k==='cstar'?0:.3;/* banned bodies are pushed away; a fresh prey ignores the pull */if(G2.ending)a*=3;const A=a*S*3600*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;
+        if(!ed)a*=v2Banned(o)?-.7:o.k==='prey'||o.k==='cstar'?0:.3; /* the prey ignores your pull: you ram it *//* banned bodies are pushed away; a fresh prey ignores the pull */if(G2.ending)a*=3;const A=a*S*3600*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;
         // swirl + damping so bodies fall in instead of slingshotting around
         o.vx+=-dy/d*A*.22;o.vy+=dx/d*A*.22;const damp=Math.pow(1-.9*q,odt);o.vx*=damp;o.vy*=damp;
       }else if(d>Gr*1.2)o.inG=false;
@@ -459,7 +469,7 @@ function v2Update(dt){
       if(G2.twin&&ed&&o.st==='in'&&o.k!=='anti'&&o.k!=='bomb'&&!o.boss){const q=G2.twin,mx=q.x-o.x,my=q.y-o.y,md=Math.hypot(mx,my)||1;if(md<q.g){const A=(V2K.acc.min+1.4*(1-md/q.g))*S*3600*odt*.8;o.vx+=mx/md*A;o.vy+=my/md*A;}if(md<q.r+o.r*.65)v2Swallow(o,q);}
       if(o.st!=='in')continue;
       o.x+=o.vx*odt;o.y+=o.vy*odt;dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
-      if(d<G2.R+o.r*.65&&!(o.k==='cstar'&&!ed)){ /* a star out of turn is only light: it passes through */
+      if(d<G2.R+o.r*.65&&!(o.k==='cstar'&&!ed)&&o.k!=='prey'){ /* a star out of turn is only light: it passes through */
         if(ed)v2Swallow(o,null);
         else{ // too big: bounces off the event horizon
           const nx=-dx/d,ny=-dy/d,vn=o.vx*nx+o.vy*ny;if(vn<0){o.vx-=1.8*vn*nx;o.vy-=1.8*vn*ny;}o.x=hX+nx*(G2.R+o.r*.66);o.y=hY+ny*(G2.R+o.r*.66);
@@ -522,26 +532,34 @@ function v2SwallowStep(o,dt){
 function v2HuntStep(dt){const h=G2.hunt;
   if(!h.prey){h.next-=dt;if(h.next<=0){const o=v2Edge('prey',rng()<.5?1:2);o.life=G2.rule.life;o.max=o.life;o.stam=1;o.head=Math.atan2(o.vy,o.vx);h.prey=o;v2Call('PREY!',`${h.n+1}/${h.need}`,'#ffd76a',1,false);v2Sfx('sparkle',{vol:.6,rate:.8});}}
   else if(h.prey.st!=='in'&&h.prey.st!=='sw')h.prey=null;}
-function v2PreyStep(o,dt){ // flees the hole; keep it in your pull to wear it down (then it can be caught for a moment); touched fresh, it blinks away
-  o.life-=dt;const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;o.blinkCD=Math.max(0,(o.blinkCD||0)-dt);
+function v2PreyStep(o,dt){ // flees the hole; ram it to crack its shell (a fast ram hits harder); when the shell is gone it bursts
+  const K=V2K.prey;o.life-=dt;o.hitCD=Math.max(0,(o.hitCD||0)-dt);o.daze=Math.max(0,(o.daze||0)-dt);if(o.hp===undefined){o.hp=K.hp;o.hpMax=K.hp;}
+  const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;
   if(o.life<3.5&&o.life>0&&!o.warned){o.warned=1;v2Call('ESCAPING!','','#ff7a5c',1);v2Sfx('tickHi',{vol:.5,rate:.9});}
-  if(o.tiredT>0){o.tiredT-=dt;if(o.tiredT<=0){o.tire=.35;v2Pop('RECOVERED','#ffd76a',14);}}
-  else if(d<Math.max(G2.G,sp2(110))){o.tire=Math.min(1,(o.tire||0)+dt/V2K.prey.wear);if(o.tire>=1){o.tiredT=V2K.prey.tired;v2Call('TIRED!','CATCH IT','#ff8a5c',.9);v2Sfx('bell',{vol:.5,rate:1.4});}}
-  else o.tire=Math.max(0,(o.tire||0)-dt*.2);
-  if(!(o.tiredT>0)&&d<G2.R+o.r*1.2&&o.blinkCD<=0&&o.life>0){const a=Math.atan2(dy,dx)+rrnd(-.6,.6),j=sp2(170);v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4); // blink away
-    o.x=clamp(o.x+Math.cos(a)*j,sp2(30),W-sp2(30));o.y=clamp(o.y+Math.sin(a)*j,sp2(30),H-sp2(80));o.blinkCD=1.1;v2Sfx('thrust',{vol:.45,rate:1.6});if((G2.hunt.tipN=(G2.hunt.tipN||0)+1)<=3)v2Call('TIRE IT FIRST','KEEP IT IN YOUR PULL','#ffd76a',1.1);v2Burst(o.x,o.y,14,'#ffd76a',2,6,.4);}
+  if(o.life>0&&d<G2.R+o.r*1.1&&o.hitCD<=0){const vs=Math.hypot(G2.vx,G2.vy),dmg=1+(vs>sp2(K.fast)?1:0)+(vs>sp2(K.faster)?2:0)+(G2.rageT>0?1:0);
+    o.hp-=dmg;o.hitCD=K.cd;o.daze=.35;o.life=Math.min(o.max,o.life+1.5);const ux=dx/d,uy=dy/d,kb=sp2(240+40*dmg);o.vx=ux*kb;o.vy=uy*kb;o.head=Math.atan2(uy,ux);o.x=hX+ux*(G2.R+o.r*1.2);o.y=hY+uy*(G2.R+o.r*1.2);
+    v2Burst(o.x,o.y,8+dmg*5,'#ffd76a',1.5,5,.4);shake=Math.max(shake,2+dmg*2);vib(10+dmg*8);v2Sfx('armor',{vol:.4+dmg*.1,rate:1.5-dmg*.15});
+    if(o.hp<=0){v2PreyBurst(o);return;}v2Pop(dmg>1?`SLAM ×${dmg}`:'HIT','#ffd76a',14+dmg*2);if(!G2.hunt.slamTip&&dmg===1){G2.hunt.slamTip=1;v2Call('RAM IT FASTER','FAST HITS CRACK MORE','#ffd76a',1.1);}}
+  if(o.daze>0)return; // knocked back: it tumbles for a moment
   if(flee){o.stam=Math.max(0,o.stam-dt*.08);const a=Math.atan2(dy,dx);o.head+=((a-o.head+Math.PI*3)%TAU-Math.PI)*Math.min(1,dt*4);}
   else{o.stam=Math.min(1,o.stam+dt*.05);o.head+=Math.sin(G2.t*1.7+o.si)*dt*1.2;}
   const m=sp2(40);if(o.life>0){if(o.x<m)o.head=0;else if(o.x>W-m)o.head=Math.PI;if(o.y<m)o.head=Math.PI/2;else if(o.y>H-m-50)o.head=-Math.PI/2;}
   else if(!o.esc){o.esc=1;o.head=o.x<W/2?Math.PI:0;}
-  const sp=sp2(o.esc?520:o.tiredT>0?70:(flee?190+230*o.stam:120)),k=Math.min(1,dt*4);o.vx+=(Math.cos(o.head)*sp-o.vx)*k;o.vy+=(Math.sin(o.head)*sp-o.vy)*k;
+  const hurt=.55+.45*Math.max(0,o.hp)/(o.hpMax||K.hp),sp=sp2(o.esc?520:(flee?170+200*o.stam:110)*hurt),k=Math.min(1,dt*4); /* a cracked shell slows it down */o.vx+=(Math.cos(o.head)*sp-o.vx)*k;o.vy+=(Math.sin(o.head)*sp-o.vy)*k;
   if(o.esc&&(o.x<-o.r*3||o.x>W+o.r*3)){o.st='dead';G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('PREY ESCAPED','','#ff7a5c',1.2,true);G2.hitWhy='prey';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}
-function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.hypot(o.vx,o.vy)||1;ctx.save();ctx.globalCompositeOperation='lighter';
+function v2PreyBurst(o){ // the shell shatters: gold sparks pour into the hole
+  o.st='dead';v2Score(o,null);const K=OBJ2.prey;G2.rr=Math.min(G2.cap,G2.rr+K.grow*(G2.growK||1));G2.pulse=1;addMass(1);
+  for(let i=0;i<18&&G2.parts.length<200;i++){const a=rng()*TAU,v=rrnd(1.5,4);G2.parts.push({x:o.x,y:o.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.7,max:.7,c:'#ffd76a',sz:2.2});}
+  v2Burst(o.x,o.y,30,'#ffd76a',2,8,.7,2.2);flash=Math.max(flash,.25);shake=Math.max(shake,7);
+  if(G2.hunt){dmEvent('hunt',1);G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('SHATTERED!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});}}
+function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.hypot(o.vx,o.vy)||1,hp=o.hp??V2K.prey.hp,hm=o.hpMax||V2K.prey.hp;ctx.save();ctx.globalCompositeOperation='lighter';
   const tl=r*(2+sp/sp2(120)),tx=-o.vx/sp*tl,ty=-o.vy/sp*tl,g=ctx.createLinearGradient(o.x,o.y,o.x+tx,o.y+ty);g.addColorStop(0,'rgba(255,215,110,.8)');g.addColorStop(1,'rgba(255,160,60,0)');
   ctx.strokeStyle=g;ctx.lineWidth=r*1.3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(o.x+tx,o.y+ty);ctx.stroke(); // tail
   const gl=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.4);gl.addColorStop(0,'rgba(255,250,220,1)');gl.addColorStop(.35,'rgba(255,200,80,.85)');gl.addColorStop(1,'rgba(255,170,40,0)');ctx.fillStyle=gl;ctx.beginPath();ctx.arc(o.x,o.y,r*2.4,0,TAU);ctx.fill();
-  ctx.globalCompositeOperation='source-over';if(!o.esc){ctx.strokeStyle=q<.3?'#ff6a5a':'rgba(255,215,106,.75)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(o.x,o.y,r*2.3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke(); // time left
-    const tr=o.tiredT>0?1:(o.tire||0);ctx.strokeStyle=o.tiredT>0?`rgba(255,110,80,${.6+.4*Math.sin(clock*16)})`:'#fff3c4';ctx.lineWidth=5;ctx.beginPath();ctx.arc(o.x,o.y,r*1.6,-Math.PI/2,-Math.PI/2+TAU*tr);ctx.stroke();} // wear: full = catch it
+  ctx.globalCompositeOperation='source-over';
+  if(hp<hm){ctx.strokeStyle='rgba(90,40,0,.75)';ctx.lineWidth=1.4;ctx.beginPath();for(let i=0;i<hm-hp;i++){const a=i*2.4+o.si,x0=o.x+Math.cos(a)*r*.2,y0=o.y+Math.sin(a)*r*.2;ctx.moveTo(x0,y0);ctx.lineTo(o.x+Math.cos(a+.3)*r*.9,o.y+Math.sin(a+.3)*r*.9);}ctx.stroke();} // cracks
+  if(!o.esc){ctx.strokeStyle=q<.3?'#ff6a5a':'rgba(255,215,106,.75)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(o.x,o.y,r*2.3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke(); // time left
+    const seg=TAU/hm;ctx.lineWidth=5;for(let i=0;i<hm;i++){ctx.strokeStyle=i<hp?'#fff3c4':'rgba(255,255,255,.12)';ctx.beginPath();ctx.arc(o.x,o.y,r*1.6,-Math.PI/2+i*seg+.06,-Math.PI/2+(i+1)*seg-.06);ctx.stroke();}} // shell left
   ctx.restore();}
 // ── Package C: the rival black hole ─────────────────────
 // A second hole that eats the same bodies and grows. Bigger than you: it glows red and hunts you (a touch costs a life).
@@ -613,7 +631,7 @@ function v2DrawRivalBar(y){const v=G2.rv,a=G2.R/G2.S/V2K.r0,b=v.R/G2.S/V2K.r0,ca
 // ── Package E: variety ─────────────────────────────────
 // Mid-level events (stellar wind, eclipse, constellation), the Guardian level, the mirror twin, near-miss bullet time
 // and the ghost of your best attempt. Events run in about 45% of plain score levels (fixed per level) and every 40 s in survival.
-const EVK={wind:{from:16,dur:10},cons:{from:22,dur:16},eclipse:{from:28,dur:9}};
+const EVK={wind:{from:16,dur:10},cons:{from:22,dur:16},eclipse:{from:28,dur:9},kilo:{from:30,dur:13}};
 const CONS=[{id:'cas',n:'KRALİÇE',p:[[0,.2],[.25,.75],[.5,.35],[.75,.85],[1,.3]]},
   {id:'uma',n:'BÜYÜK AYI',p:[[0,.3],[.18,.2],[.34,.28],[.5,.4],[.56,.8],[.86,.9],[.94,.5]]},
   {id:'leo',n:'ASLAN',p:[[.1,.85],[.3,.6],[.2,.3],[.42,.08],[.68,.2],[.95,.55]]}];
@@ -636,11 +654,13 @@ function v2EvStep(dt){
     else if(G2.t>=P.at){G2.evPlan=P.again?{k:P.k,at:G2.t+20}:null;v2EvGo(P.k);}}
   const e=G2.ev;if(!e)return;e.t+=dt;
   if(e.k==='cons')v2ConsStep(e,dt);
+  if(e.k==='kilo'){if(!e.merged){const p=Math.min(1,e.t/7);e.rad=e.R0*(1-p*p*.95);e.ang+=dt*(2+16*p*p);if(e.t>=7)v2KiloBoom(e);}else{const w0=e.wave;e.wave+=dt*sp2(650);const hd=Math.hypot(hX-e.cx,hY-e.cy);if(w0<hd&&e.wave>=hd){shake=Math.max(shake,8);v2Sfx('boom',{vol:.3,rate:.6});}}}
   if(e.k==='eclipse'){e.ping-=dt;e.pingT+=dt;if(e.ping<=0){e.ping=2;e.pingT=0;v2Sfx('tickHi',{vol:.35,rate:.7});}}
   if(e.t>=e.dur||G2.ending){if(e.k==='cons')v2ConsEnd(e);G2.ev=null;if(!G2.ending&&(e.k!=='cons'||e.done))spAdd(8*(seasonIs(e.k)?2:1));if(!G2.ending&&e.k!=='cons')v2Call(e.k==='wind'?'WIND CALMS':'LIGHT RETURNS','','#cfe6f5',.9);}}
 function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;
   if(k==='wind'){e.a=(rng()<.5?0:Math.PI)+rrnd(-.35,.35);e.f=sp2(170);e.st=[];v2Call('STELLAR WIND','RIDE THE STREAM','#bfe6ff',1.4,true);v2Sfx('slow',{vol:.5,rate:1.6});}
   else if(k==='eclipse'){e.ping=.6;e.pingT=9;v2Call('ECLIPSE','SCORE ×1.5 IN THE DARK','#b9a8ff',1.4,true);v2Sfx('bossIntro',{vol:.35,rate:.6});}
+  else if(k==='kilo'){e.cx=W*.5;e.cy=Math.max(sp2(190),H*.32);e.R0=sp2(100);e.ang=0;e.rad=e.R0;e.merged=false;e.wave=0;v2Call('KILONOVA','TWO NEUTRON STARS MERGE','#bfe6ff',1.5,true);v2Sfx('bossIntro',{vol:.35,rate:1.4});}
   else v2ConsGo(e);
   if(!TIPS['ev_'+k])v2Tip('ev_'+k,null);}
 function v2EvWind(o,odt){const e=G2.ev;if(!e||e.k!=='wind'||o.k==='meteor'||o.boss)return;const q=Math.min(1,e.t/1.2,(e.dur-e.t)/1.2);o.vx+=Math.cos(e.a)*e.f*q*odt;o.vy+=Math.sin(e.a)*e.f*q*odt;}
@@ -661,6 +681,7 @@ function v2DrawCStar(o,s){const e=o.cons,nx=e&&e.stars[e.next]===o,r=o.r*s*1.25;
   if(o.st==='in'){ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=nx?'#2a1a00':'rgba(20,24,40,.9)';ctx.fillText(String(o.cs+1),o.x,o.y+.5);}
   ctx.restore();}
 function v2DrawEv(){const e=G2.ev;
+  if(e&&e.k==='kilo')v2DrawKilo(e);
   if(e&&e.k==='wind'){const q=Math.min(1,e.t/1.2,(e.dur-e.t)/1.2),ux=Math.cos(e.a),uy=Math.sin(e.a);while(e.st.length<46)e.st.push({x:rng()*W,y:rng()*H,l:rrnd(20,60),v:rrnd(.7,1.3)});
     ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.strokeStyle='rgba(200,235,255,.5)';ctx.lineWidth=2;ctx.globalAlpha=q;ctx.beginPath();
     for(const s of e.st){s.x+=ux*sp2(520)*s.v/60;s.y+=uy*sp2(520)*s.v/60;if(s.x<-80||s.x>W+80||s.y<-80||s.y>H+80){s.x=ux>0?-40:W+40;s.y=rng()*H;}ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-ux*sp2(s.l),s.y-uy*sp2(s.l));}
@@ -710,14 +731,56 @@ function v2DrawMirror(o,s){const r=o.r*s;ctx.save();ctx.translate(o.x,o.y);ctx.r
 // Ghost: your best try at this level replays as a faint hole, with a live score gap.
 let GHOST=null;function ghostDb(){if(GHOST)return GHOST;try{GHOST=JSON.parse(localStorage.getItem('bhs_ghost')||'{}')||{};}catch(e){GHOST={};}if(typeof GHOST!=='object'||Array.isArray(GHOST))GHOST={};return GHOST;}
 function ghostRec(dt){const r=G2.gRec;if(!r)return;r.t+=dt;if(r.t<.25)return;r.t=0;if(r.p.length>=1200)return;r.p.push(Math.round(hX/W*999),Math.round(hY/H*999));if(r.p.length%8===0)r.s.push(levelScore);}
-function ghostSave(){const r=G2.gRec;if(!r||G2.mode!=='level'||REPLAY||level<2)return;G2.gRec=null;const db=ghostDb(),k=String(level),old=db[k];if(old&&old.f>=levelScore)return;
+function ghostSave(){const r=G2.gRec;if(!r||G2.mode!=='level'||REPLAY||EXPRUN||level<2)return;G2.gRec=null;const db=ghostDb(),k=String(level),old=db[k];if(old&&old.f>=levelScore)return;
   delete db[k];db[k]={f:levelScore,p:r.p,s:r.s};const ks=Object.keys(db);while(ks.length>40)delete db[ks.shift()];try{localStorage.setItem('bhs_ghost',JSON.stringify(db));}catch(e){}}
-function v2DrawGhost(){const g=G2.ghost;if(!g||!g.p||g.p.length<4||G2.ending||gState==='menu')return;const i=G2.t/.25,n=g.p.length/2;if(i>=n-1)return;const a=Math.floor(i),f=i-a;
-  const x=(g.p[a*2]+(g.p[a*2+2]-g.p[a*2])*f)/999*W,y=(g.p[a*2+1]+(g.p[a*2+3]-g.p[a*2+1])*f)/999*H,r=G2.R*.95;ctx.save();ctx.globalAlpha=.32;ctx.strokeStyle='#cfe3ff';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.setLineDash([]);
-  ctx.globalAlpha=.55;ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText('👻',x,y-r-8);
+function v2DrawGhost(){const g=G2.ghost;if(!g||!g.p||g.p.length<4||G2.ending||gState==='menu')return;const sc=g.sc||999,i=(G2.mode==='sprint'?SPR_RUN.t:G2.t)/(g.dt||.25),n=g.p.length/2;if(i>=n-1)return;const a=Math.floor(i),f=i-a;
+  const x=(g.p[a*2]+(g.p[a*2+2]-g.p[a*2])*f)/sc*W,y=(g.p[a*2+1]+(g.p[a*2+3]-g.p[a*2+1])*f)/sc*H,r=G2.R*.95;ctx.save();ctx.globalAlpha=.32;ctx.strokeStyle='#cfe3ff';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.setLineDash([]);
+  ctx.globalAlpha=.55;ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText('👻',x,y-r-8);if(g.name){ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.fillStyle='#cfe3ff';ctx.fillText(g.name,x,y+r+14);ctx.restore();return;}
   const gs=g.s[Math.min(g.s.length-1,Math.floor(G2.t))]||0,df=levelScore-gs,y0=sp2(G2.rule||G2.mod?60:22);ctx.globalAlpha=.9;ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.fillStyle=df>=0?'#8dffcb':'#ff9a8a';
   ctx.fillText(`👻 ${df>=0?'+':'−'}${Math.abs(df).toLocaleString(LOC)}`,W/2,y0);ctx.restore();}
 
+// Spectrum: five different kinds in a row (a repeat restarts the row, a lost combo clears it) pays a bonus.
+const SPK={sat:'mpair',half:'split',plasma:'frag',thr:'ast'},SPC={ast:'#b9b3a6',moon:'#dcd6ff',planet:'#8fb5ff',crystal:'#9ef3ff',gold:'#ffd76a',energy:'#ff7ad9',time:'#8fd0ff',bomb:'#ff8a4c',mini:'#c9a8ff',frag:'#ffb35c',shard:'#ffd84d',comet:'#bff6ff',magnet:'#ff8a8a',pulsar:'#bfe6ff',mpair:'#cfd6ff',dark:'#b9a8ff',split:'#9ff4ff',mirror:'#dfeaff',cstar:'#fff3c4',kgold:'#ffcf5a',prey:'#ffd76a'};
+function v2Spec(o){if(G2.mode==='sprint'||o.chain)return;const k=SPK[o.k]||o.k,sp=G2.spec;if(sp.includes(k)){G2.spec=[k];return;}sp.push(k);
+  if(sp.length===3&&!TIPS.spec)v2Tip('spec',null);
+  if(sp.length>=5){const b=Math.round(750*MULT2(G2.combo)*(G2.rageT>0?2:1));totalScore+=b;levelScore+=b;G2.spec=[];v2Call('SPECTRUM!','+'+b.toLocaleString(LOC),'#c9b4ff',1.4,true);sfx('achieve',{vol:.5,rate:1.25});dmEvent('spec',1);shake=Math.max(shake,4);}}
+function v2DrawSpec(){const sp=G2.spec;if(!sp||sp.length<2||gState==='menu'||G2.ending)return;const R=G2.R+sp2(14);ctx.save();
+  for(let i=0;i<5;i++){const a=Math.PI/2+(i-2)*.32,x=hX+Math.cos(a)*R,y=hY+Math.sin(a)*R;ctx.beginPath();ctx.arc(x,y,sp2(4.5),0,TAU);if(i<sp.length){ctx.fillStyle=SPC[sp[i]]||'#fff';ctx.fill();}else{ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1.2;ctx.stroke();}}
+  ctx.restore();}
+// Kilonova: two neutron stars spiral in and merge; the flash forges gold (real kilonovae make most of the universe's gold).
+function v2KiloBoom(e){e.merged=true;e.wave=0;flash=Math.max(flash,.9);shake=Math.max(shake,14);shock=1;v2Sfx('boom',{vol:.7,rate:.7});sfx('bossDie',{vol:.5,rate:1.3});v2Burst(e.cx,e.cy,50,'#dff4ff',2.4,9,1,2.4);
+  for(const o of G2.objs){if(o.st!=='in'||o.boss||o.orb||o.k==='meteor')continue;const dx=o.x-e.cx,dy=o.y-e.cy,d=Math.hypot(dx,dy)||1;o.vx+=dx/d*sp2(220);o.vy+=dy/d*sp2(220);} // the gravitational wave shoves everything out
+  for(let i=0;i<14;i++){const a=i/14*TAU+rrnd(-.15,.15),v=sp2(rrnd(160,320)),o=v2Obj('kgold',e.cx,e.cy,Math.cos(a)*v,Math.sin(a)*v);o.seen=true;}
+  if(G2.mode!=='sprint')atlasAdd('kilonova');v2Call('GOLD FORGED','EAT THE GOLD','#ffd76a',1.5,true);}
+function v2DrawKilo(e){ctx.save();ctx.globalCompositeOperation='lighter';
+  if(!e.merged){ctx.strokeStyle='rgba(190,230,255,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(e.cx,e.cy,e.rad,0,TAU);ctx.stroke();
+    for(const sgn of [1,-1]){const x=e.cx+Math.cos(e.ang)*e.rad*sgn,y=e.cy+Math.sin(e.ang)*e.rad*sgn,g=ctx.createRadialGradient(x,y,0,x,y,sp2(34));g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.3,'rgba(170,220,255,.9)');g.addColorStop(1,'rgba(120,180,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,sp2(34),0,TAU);ctx.fill();
+      ctx.strokeStyle='rgba(170,220,255,.35)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.cx,e.cy,e.rad,e.ang+(sgn<0?Math.PI:0)-.9,e.ang+(sgn<0?Math.PI:0));ctx.stroke();} // trails
+  }else{const q=Math.max(0,1-e.wave/Math.max(W,H)*.9);if(q>0){ctx.strokeStyle=`rgba(200,235,255,${.6*q})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(e.cx,e.cy,e.wave,0,TAU);ctx.stroke();ctx.strokeStyle=`rgba(255,215,106,${.35*q})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(e.cx,e.cy,e.wave*.92,0,TAU);ctx.stroke();}
+    const ag=Math.max(0,1-(e.t-7)/2.5);if(ag>0){const g=ctx.createRadialGradient(e.cx,e.cy,0,e.cx,e.cy,sp2(70));g.addColorStop(0,`rgba(255,240,200,${ag})`);g.addColorStop(1,'rgba(255,200,120,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.cx,e.cy,sp2(70),0,TAU);ctx.fill();}}
+  ctx.restore();}
+function v2DrawKGold(o,s){const r=o.r*s;ctx.save();ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.2);g.addColorStop(0,'rgba(255,250,210,1)');g.addColorStop(.35,'rgba(255,200,70,.9)');g.addColorStop(1,'rgba(255,170,40,0)');
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,r*2.2,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';ctx.fillStyle='#ffcf5a';ctx.beginPath();ctx.moveTo(o.x,o.y-r);ctx.lineTo(o.x+r*.8,o.y);ctx.lineTo(o.x,o.y+r);ctx.lineTo(o.x-r*.8,o.y);ctx.closePath();ctx.fill();ctx.restore();}
+// Hawking burst: when big, give back 40% of your growth as radiation: every meteor on screen is destroyed and everything edible is drawn in.
+function v2HawkOn(){return G2.mode!=='sprint'&&(G2.mode==='surv'||level>=V2K.hawk.from);}
+function v2HawkOk(){if(!v2HawkOn()||G2.hkCD>0||G2.rageT>0||G2.ending||G2.script)return false;const ex=G2.rr-V2K.r0;return ex>6&&G2.rr>=V2K.r0+(G2.cap-V2K.r0)*V2K.hawk.min;}
+function v2Hawking(){if(!G2.on||gState!=='playing'||!v2HawkOk())return;const loss=(G2.rr-V2K.r0)*V2K.hawk.loss;G2.rr-=loss;G2.hkCD=V2K.hawk.cd;G2.magT=Math.max(G2.magT,2.5);let n=0;
+  for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';n++;v2Burst(o.x,o.y,14,'#ffffff',2,6,.5);}
+  const pts=Math.round((loss*120+n*50)*(G2.rageT>0?2:1));totalScore+=pts;levelScore+=pts;G2.hkFx={t:0,x:hX,y:hY};flash=Math.max(flash,.7);shake=Math.max(shake,12);shock=1;
+  v2Call('HAWKING BURST','+'+pts.toLocaleString(LOC),'#ffffff',1.5,true);sfx('powerup',{vol:.7,rate:1.3});v2Sfx('boom',{vol:.5,rate:1.5});vib([30,20,60]);dmEvent('hawk',1);}
+function v2DrawHawk(){const f=G2.hkFx;if(!f||f.t>1.2)return;const q=f.t/1.2,R=Math.max(W,H)*q;ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(255,255,255,${.8*(1-q)})`;ctx.lineWidth=6*(1-q)+1;ctx.beginPath();ctx.arc(f.x,f.y,R,0,TAU);ctx.stroke();ctx.restore();}
+// Quasar jet: with the hole held, tap anywhere with a second finger: a 1.4 s jet fires that way, hauling bodies in and burning meteors.
+function v2JetOn(){return G2.mode==='surv'||G2.mode==='level'&&level>=V2K.jet.from;}
+function v2Jet(x,y){if(!G2.on||gState!=='playing'||!v2JetOn()||G2.jetCD>0||G2.jet)return;G2.jet={a:Math.atan2(y-hY,x-hX),t:0};G2.jetCD=V2K.jet.cd;G2.jetRdy=0;
+  v2Sfx('thrust',{vol:.7,rate:.7});sfx('powerup',{vol:.4,rate:1.6});shake=Math.max(shake,5);dmEvent('jet',1);}
+function v2JetStep(dt){const j=G2.jet;j.t+=dt;if(j.t>=V2K.jet.dur){G2.jet=null;return;}const ux=Math.cos(j.a),uy=Math.sin(j.a),w=sp2(V2K.jet.w);
+  for(const o of G2.objs){if(o.st!=='in'||o.boss||o.orb||o.wait>0)continue;const dx=o.x-hX,dy=o.y-hY,al=dx*ux+dy*uy;if(al<=0)continue;const pe=Math.abs(dx*uy-dy*ux);if(pe>w+o.r)continue;
+    if(o.k==='meteor'){if(!o.hit){o.st='dead';v2Burst(o.x,o.y,16,'#9fe8ff',2,6,.5);const p=25;totalScore+=p;levelScore+=p;}continue;}
+    const A=sp2(3200)*dt,push=v2Banned(o)||o.k==='anti'?1:v2Edible(o)?-1:0;if(!push)continue;o.vx+=ux*A*push;o.vy+=uy*A*push;const v=Math.hypot(o.vx,o.vy),mx=sp2(700);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}}}
+function v2DrawJet(){const j=G2.jet;if(!j)return;const q=Math.min(1,j.t/.12,(V2K.jet.dur-j.t)/.25),L=Math.hypot(W,H),w=sp2(V2K.jet.w)*(.8+.2*Math.sin(clock*60));ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+  for(const [a,len,k] of [[j.a,L,1],[j.a+Math.PI,G2.R*3,.5]]){const x1=hX+Math.cos(a)*len,y1=hY+Math.sin(a)*len,g=ctx.createLinearGradient(hX,hY,x1,y1);g.addColorStop(0,`rgba(230,250,255,${.9*q*k})`);g.addColorStop(1,'rgba(120,200,255,0)');
+    ctx.strokeStyle=g;ctx.lineWidth=w*2*k;ctx.beginPath();ctx.moveTo(hX+Math.cos(a)*G2.R,hY+Math.sin(a)*G2.R);ctx.lineTo(x1,y1);ctx.stroke();ctx.strokeStyle=`rgba(255,255,255,${.8*q*k})`;ctx.lineWidth=w*.5*k;ctx.stroke();}
+  ctx.restore();}
 function v2WinOut(){const r=G2.rule;if(!r||!r.win)return 0;const s=G2.rr/V2K.r0;return s>r.hi?1:s<r.lo?-1:0;}
 function v2Score(o,mini){
   const K=OBJ2[o.k];G2.hungry=0;G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;
@@ -725,7 +788,7 @@ function v2Score(o,mini){
   const perf=!mini&&o.inG&&o.b<V2K.perfectK*G2.G&&!o.chain;
   const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;if(G2.ev&&G2.ev.k==='eclipse')pts*=1.5;pts*=G2.modSc||1;pts=Math.round(pts);
   const wo=v2WinOut();if(wo&&o.k!=='prey'){pts=0;if(!G2.woT||G2.t-G2.woT>1.2){G2.woT=G2.t;v2Pop(wo>0?T('ÇOK BÜYÜK · 0'):T('ÇOK KÜÇÜK · 0'),'#ff8a7a',15);}} // outside the size window nothing scores
-  totalScore+=pts;levelScore+=pts;G2.eaten++;if(G2.mode!=='sprint')atlasAdd(o.k);
+  totalScore+=pts;levelScore+=pts;G2.eaten++;if(G2.mode!=='sprint')atlasAdd(o.k);v2Spec(o);
   v2AddRage((K.rage+(perf?4:0))*(G2.script?1.6:1));
   if(m>MULT2(G2.combo-1)){v2Call('COMBO ×'+m,'','#ffd76a',1,false);v2Sfx('mult',{vol:.55,rate:.8+m*.1});if(m>=4)shake=Math.max(shake,4);totalCombos++;}
   if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('PERFECT +'+pts,'#fff1b8',18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
@@ -750,11 +813,11 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO TIME','+2 s','#bff6ff',.9);}
-  else if(o.k==='prey'&&G2.hunt){dmEvent('hunt',1);G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('CAUGHT!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});shake=Math.max(shake,6);}
   else if(o.k==='cstar')v2ConsHit(o);
   else if(o.k==='thr'&&G2.guard){G2.guard.n++;dmEvent('guard',1);v2Pop(`🛡 ${G2.guard.n}/${G2.guard.need}`,'#8fe9ff',17);}
   else if(o.k==='mirror'){G2.twin={t:8,x:W-hX,y:hY,r:G2.R*.9,g:G2.G*.9};v2Call('MIRROR TWIN','8 s','#dfeaff',1.3);v2Sfx('magnet',{vol:.6,rate:1.3});}
-  else if(o.k==='magnet'){G2.magT=6;v2Call('MAGNET','6 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
+  else if(o.k==='kgold'){v2Pop('GOLD','#ffd76a',16);}
+  else if(o.k==='magnet'){G2.magT=6+perkLv('magnet');v2Call('MAGNET','6 s','#ff8a8a',1.1);v2Sfx('magnet',{vol:.6});}
   else if(o.k==='pulsar'){v2Pop('PULSAR','#bfe6ff',17);shock=Math.max(shock,.3);}
   else if(o.k==='mpair'){const a=o.sa,d=o.r*1.9,sat=v2Obj('sat',o.x+Math.cos(a)*d,o.y+Math.sin(a)*d,o.vx-Math.sin(a)*sp2(120),o.vy+Math.cos(a)*sp2(120));sat.pair=1;G2.pairT=3;v2Call('NOW THE MOON!','3 s','#cfd6ff',1);}
   else if(o.k==='sat'&&o.pair&&G2.pairT>0){const b=Math.round((OBJ2.mpair.pts+OBJ2.sat.pts)*MULT2(G2.combo));totalScore+=b;levelScore+=b;G2.pairT=0;v2Call('PAIR ×2','+'+b,'#ffd76a',1.3);sfx('achieve',{vol:.5});}
@@ -775,7 +838,7 @@ function v2Hit(o){
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
   const tutorial=level===1&&G2.mode==='level';
-  if(!(tutorial&&lives<=1)){lives--;heartFx(Math.max(0,lives),'drain');v2HitNote();}
+  if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);heartFx(Math.max(0,lives),'drain');v2HitNote();}
   v2Pop('-1 ♥','#ff7a5c',20);updateUI();
   if(lives<=0){v2Fail(null);}
 }
@@ -785,6 +848,7 @@ function v2HitNote(){ // freeze the action for a beat and say what happened
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
+  if(gState==='tip'){hideModals();G2.tip=null;gState='playing';SND.duck(1,0);} // a tip card opened earlier in the same frame must not swallow the loss
   if(gState!=='playing')return;ghostSave();gState='over';G2.failMsg=msg;SND.setDrone(.08,300);SND.duck(.35,2);
   if(msg){lives=0;v2Call(msg==='DEV GEZEGEN KAÇTI'?(G2.boss&&G2.boss.bt&&G2.boss.bt!=='planet'?'THE STAR ESCAPED':'THE PLANET ESCAPED'):msg,'','#ff7a5c',2,true);}
   setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();},850);
@@ -796,7 +860,7 @@ function v2Revive(){ // one continue per run (spec §42)
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';
 }
 function v2RageGo(){
-  if(!G2.ready)return;v2Ach.rage++;G2.firstRage=true;G2.ready=false;G2.readyT=0;G2.rageT=V2K.rage.dur;G2.rage=100;G2.swarm=16;G2.swarmT=.15;
+  if(!G2.ready)return;v2Ach.rage++;G2.firstRage=true;G2.ready=false;G2.readyT=0;G2.rageT=V2K.rage.dur+.5*perkLv('rage');G2.rage=100;G2.swarm=16;G2.swarmT=.15;
   shake=Math.max(shake,10);flash=Math.max(flash,.8);shock=1;heat=.6;
   v2Call('BLACK HOLE RAGE!','','#ff6a3d',1.8,true);sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.6,rate:.7});sfx('boom',{vol:.5,rate:.5});SND.setDrone(.24,420);vib([40,30,90]);
   v2Burst(hX,hY,40,'#ff8a4c',2,8,.8,2.2);dmEvent('rescue',1);
@@ -889,7 +953,7 @@ function v2DrawMegaFx(dt){ // a white-hot flare on every body the mega bomb deto
 function v2Shield(){
   if(!G2.on||gState!=='playing'||gameMode==='sprint'||G2.shT>0||G2.rageT>0)return;
   if(SHOP.shield<=0){if(monOn())v2ShieldBuy();else{toast('🛡','KALKANIN YOK','3 kalkan parçası topla: seviye 4’ten itibaren gelir.');v2Sfx('buzz',{vol:.25});}return;}
-  SHOP.shield--;saveG();updateUI();G2.shT=V2K.shield.dur;G2.shTick=0;
+  SHOP.shield--;saveG();updateUI();G2.shT=V2K.shield.dur+perkLv('shield');G2.shTick=0;
   v2Call('SHIELD','10 s','#ffd84d',1.1);sfx('armor',{vol:.8,rate:.9});sfx('powerup',{vol:.45,rate:1.3});vib(25);v2Burst(hX,hY,24,'#ffd84d',2,6,.6);v2Ui(true);
 }
 function v2ShieldBuy(){ // empty: offer one for diamonds, the game waits
@@ -923,11 +987,11 @@ const TIP2={
   mpair:['🪐','UYDULU GEZEGEN','Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!'],
   dark:['🌫️','KARANLIK MADDE','Görünmez! Arkasındaki yıldızları nasıl büktüğüne bak. Yakalarsan 120 puan.'],
   worm:['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri kendine çeker ve mavi kapıdan doğrudan kara deliğine gönderir.'],
-  boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut: her parça onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!'],
-  bossRed:['🔴','KIRMIZI DEV','Ölmekte olan dev bir yıldız: nefes alır gibi şişip söner, şiştikçe daha çok plazma saçar. Plazmayı yut: her biri onu küçültür. Yeşile dönünce bütünüyle yut!'],
+  boss:['🪐','DEV GEZEGEN','Dev gezegen yutulamayacak kadar büyük. Kopan parçalarını yut ya da ona hızla çarp: her ikisi de onu küçültür. Yeşile dönünce üstüne git ve bütünüyle yut!'],
+  bossRed:['🔴','KIRMIZI DEV','Ölmekte olan dev bir yıldız: nefes alır gibi şişip söner, şiştikçe daha çok plazma saçar. Plazmayı yut ya da ona hızla çarp: her ikisi de onu küçültür. Yeşile dönünce bütünüyle yut!'],
   restrict:['⛔','KISITLI SEVİYE','Bu seviyede bazı cisimler yasak: üstlerinde kırmızı işaret var. Seni iterler; üstlerine gidip çarparsan combo yarıya iner. Geri kalanını yiyerek hedefi tamamla.'],
   window:['📏','BOYUT PENCERESİ','Puan sadece kara delik üstteki yeşil aralıktayken gelir. Küçüksen büyü. Fazla büyürsen buharlaşırsın ve o sırada yediğin puan getirmez: yavaş ye, aralıkta kal.'],
-  hunt:['🎯','AV','Altın av yutulmaz, önce yorulması gerekir: onu çekim alanında tut, iç halkası dolsun. Yorulunca kızarır ve yavaşlar, o an üstüne git ve yut. Dokunursan kaçar. Dış halka süresidir; biterse av kaçar ve 1 can gider.'],
+  hunt:['🎯','AV','Altın av yutulmaz: kara deliğinle ona çarp, kabuğunu kır. İç halkadaki 10 parça kabuğudur; hızlı çarparsan 2–3 parça birden kırılır. Kabuk bitince av patlar. Dış halka süresidir; biterse av kaçar ve 1 can gider.'],
   rival:['🌑','RAKİP KARA DELİK','Başka bir kara delik de burada avlanıyor ve büyüyor. Senden büyükken kırmızı parlar ve peşine düşer: dokunursa 1 can gider. Onu geçecek kadar büyüyünce maviye döner ve kaçar: yakala ve yut, seviye biter. Meteor ve antimadde onu da küçültür. Rage açıkken her boyutta yutabilirsin.'],
   guard:['🛡','KORUYUCU','Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: çarpmadan önce yut. Gezegene çarparsa 1 can gider. Gezegenin atmosferine giremezsin, önünde dur.'],
   duel:['👁','KARA DELİK İKİZİ','Rakibin en güçlüsü. Onu iki kez yutman gerekir: ilkinde yeniden oluşur. Arada bir çekim dalgası salar ve yakınındaki cisimleri kendine çeker, dalga gelince uzak dur.'],
@@ -935,6 +999,10 @@ const TIP2={
   ev_wind:['🌬','YILDIZ RÜZGÂRI','Güçlü bir rüzgâr her şeyi yana sürüklüyor. Rüzgârın geldiği yöne geç, cisimler sana aksın. Meteorlar etkilenmez.'],
   ev_eclipse:['🌑','TUTULMA','Ekran kararıyor. Sadece çevren aydınlık; her 2 saniyede bir radar dalgası her şeyi kısa süre gösterir. Karanlıkta puan ×1,5. Meteorların közüne dikkat!'],
   ev_cons:['✨','TAKIMYILDIZ','Bir takımyıldız belirdi. Yıldızları numara sırasıyla yut: sıradaki parlar. Sırası gelmeyen yıldızın içinden geçersin. Hepsini süre bitmeden yutarsan büyük bonus.'],
+  spec:['🌈','SPEKTRUM','Arka arkaya 5 farklı türde cisim yut: SPEKTRUM bonusu! Kara deliğinin altındaki noktalar serini gösterir. Aynı türden birini yutarsan seri baştan başlar, combo biterse silinir.'],
+  ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
+  hawking:['💨','HAWKING SALINIMI','Epey büyüdün! Üst sıradaki Hawking düğmesine dokun: kütlenin bir kısmını radyasyon olarak salarsın. Ekrandaki bütün meteorlar yok olur, yutabileceğin her şey sana çekilir ve puan kazanırsın. Ama küçülürsün.'],
+  jet:['⚡','KUASAR JETİ','Kara deliği tutarken ikinci bir parmakla ekrana dokun: o yöne 1,4 saniyelik bir ışın fırlatırsın. Işın cisimleri sana çeker, meteorları yakar. 12 saniyede bir kullanılır.'],
   rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Rage seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
@@ -1002,7 +1070,7 @@ function v2Frame(dt){
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
   v2DrawRival();
-  v2DrawMarks();v2DrawEv();
+  v2DrawMarks();v2DrawEv();v2DrawSpec();v2DrawJet();v2DrawHawk();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const p of G2.parts){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.sz;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2);ctx.stroke();}
   for(let i=sparks.length-1;i>=0;i--){if(!sparks[i].update(dt,f))sparks.splice(i,1);else sparks[i].draw();}
@@ -1051,6 +1119,7 @@ function v2DrawObj(o,gl){
   ctx.save();if(o.st==='sw'||o.st==='rv')ctx.globalAlpha=Math.max(.15,s);
   if(k==='prey')v2DrawPrey(o,s);
   else if(k==='cstar')v2DrawCStar(o,s);
+  else if(k==='kgold')v2DrawKGold(o,s);
   else if(k==='mirror')v2DrawMirror(o,s);
   else if(k==='thr')v2Rock(o,s,'rgba(255,90,40,.4)');
   else if(k==='plasma'){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const c=o.pc||[255,140,50],g=ctx.createRadialGradient(0,0,0,0,0,r*1.9);
@@ -1258,10 +1327,11 @@ function v2Hud(){
   const tm=document.createElement('div');tm.id='tmr2';tm.className='notr';tm.innerHTML='<span>⏱</span><b id="tmr2v">60</b>';$('hdr').insertBefore(tm,$('pauseBtn'));
   const hb=(id,ic,fn)=>{const b=document.createElement('button');b.id=id;b.className='hb2';b.innerHTML=`<span class="ic">${ic}</span><b></b>`;$('hdr').insertBefore(b,$('pauseBtn'));
     b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn();});b.addEventListener('click',e=>e.stopPropagation());return b;};
-  hb('shTop','🛡',v2Shield);hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')v2Nova();});
+  hb('shTop','🛡',v2Shield);hb('hkTop','💨',v2Hawking);hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')v2Nova();});
   rb.addEventListener('pointerdown',e=>{e.preventDefault();if(G2.on&&gState==='playing')v2Tap();});
 }
 function v2Ui(force){
+  {const hk=$('hkTop');if(hk){const c='hb2'+(!v2HawkOn()?' off':v2HawkOk()?' ready pulse':' empty');if(hk.className!==c)hk.className=c;}} // Hawking burst: shown from level 15, lit when you are big enough
   const h=G2.hud,sb=$('shTop');
   if(sb){const inc=SHOP.shield>0&&G2.shT<=0&&G2.rageT<=0&&G2.objs.some(o=>o.k==='meteor'&&o.st==='in'&&(o.wait>0||o.slow>0));
     const c='hb2'+(gameMode==='sprint'?' off':G2.shT>0?' on':SHOP.shield>0?(G2.rageT>0?'':' ready'):' empty')+(inc?' pulse':'')+(sb.classList.contains('hl')?' hl':'');
