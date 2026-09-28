@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "المستويات الصعبة محدودة الوقت. في الثواني الأخيرة تمنحك 💎 السوبرنوفا فورًا {n} من الهدف؛ وسلسلة الكومبو الطويلة تضاعف نقاطك",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "أنجزت {p}% من الهدف. تابع لتحصل على +{n} ث، وتبقى نقاطك وحجمك",
 "HEDEFE ÇOK AZ KALDI": "اقتربت جدًا من الهدف",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "انتهى الوقت. حاول مجددًا أو عد إلى الخريطة؛ تقدمك محفوظ"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "انتهى الوقت. حاول مجددًا أو عد إلى الخريطة؛ تقدمك محفوظ",
+"GALİBİYET SERİSİ": "سلسلة انتصارات",
+"GALİBİYET SERİSİ {n}": "سلسلة انتصارات {n}",
+"{n} GÜMÜŞ KABUK": "درع فضي ×{n}",
+"Sonraki seviye": "المستوى التالي",
+"Galibiyet serin: {n}": "سلسلة انتصاراتك: {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "تابع لتحتفظ بها، وإن استسلمت تُصفَّر",
+"HAWKING": "هوكينغ",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "من المستوى {n}: عندما تكون كبيرًا، يحوّل زر هوكينغ أسفل اليمين جزءًا من كتلتك إلى إشعاع ويدمّر النيازك",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "زر هوكينغ أسفل اليمين جاهز: يحوّل جزءًا من كتلتك إلى إشعاع، ويمحو كل النيازك على الشاشة ويمنح نقاطًا. يُستخدم مرة كل {n} ثانية",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "اضغط زر الماس أسفل اليمين ({n} 💎): كل ما على الشاشة ينفجر ويدور نحو ثقبك الأسود، وتحصل على نقاط إضافية بقيمة {n} من الهدف، ثم لمدة {n} ثوانٍ لا تؤذيك النيازك. {n} مرات لكل مستوى",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "اجتز المستويات متتاليةً فتكبر سلسلتك وتبدأ المستوى التالي بدروع: {n} انتصار {n} درع فضي، {n} انتصاران {n} درعان فضيان، {n} فأكثر {n} درعان فضيان و{n} درع ذهبي. إذا خسرت وخرجت دون متابعة تُصفَّر السلسلة؛ وإن تابعت تبقى"
 }

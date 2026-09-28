@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Astên zor bi demê sînorkirî ne. Di saniyeyên dawî de 💎 Sûpernova yekser {n} ji armancê dide te; zincîreke dirêj a combo pûanan pir dike",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Armanc %{p} temam. Heke berdewam bikî +{n} s, pûan û mezinahiya te diparêzin",
 "HEDEFE ÇOK AZ KALDI": "HEMA NÊZÎKÎ ARMANCÊ",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Dem qediya. Dîsa biceribîne an vegere nexşeyê; pêşketina te parastî ye"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Dem qediya. Dîsa biceribîne an vegere nexşeyê; pêşketina te parastî ye",
+"GALİBİYET SERİSİ": "RÊZA SERKETINÊ",
+"GALİBİYET SERİSİ {n}": "RÊZA SERKETINÊ {n}",
+"{n} GÜMÜŞ KABUK": "{n} QALIKÊ ZÎVÎN",
+"Sonraki seviye": "Asta paşîn",
+"Galibiyet serin: {n}": "Rêza te ya serketinê: {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "heke berdewam bikî dimîne, heke dev berdî sifir dibe",
+"HAWKING": "HAWKING",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "Ji asta {n} pê ve: dema tu mezin î, bişkoka Hawking a li jêr-rastê beşek ji girseya te dike tîrêj û meteoran tune dike",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "Bişkoka Hawking a li jêr-rastê amade ye: beşek ji girseya te dike tîrêj, hemû meteorên li ser ekranê paqij dike û pûan dide. Her {n} saniyeyan carekê tê bikaranîn",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Bişkoka elmasê ya li jêr-rastê bitikîne ({n} 💎): her tiştê li ser ekranê diteqe û dikeve kuna te ya reş, pûanên bonus bi qasî {n} ji armancê distînî, paşê {n} saniyeyan meteor nikarin zirarê bidin te. Di her astê de {n} caran",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Astan li pey hev derbas bike û rêza te mezin dibe, ji ber vê yekê asta paşîn bi qalikan dest pê dikî: {n} serketin {n} qalikê zîvîn, {n} serketin {n} qalikên zîvîn, {n} û zêdetir {n} qalikên zîvîn û {n} qalikê zêrîn. Heke winda bikî û bêyî berdewamê derkevî, rêz sifir dibe; heke berdewam bikî, dimîne"
 }
