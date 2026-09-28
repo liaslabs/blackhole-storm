@@ -123,7 +123,7 @@ function v2Start(mode){
   const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
-  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,btM:null,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,ghost:null,
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,btM:null,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -134,7 +134,6 @@ function v2Start(mode){
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
   {const pl=perkLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+.04*pl);}G2.L.comboT+=.25*perkLv('combo');} // mass tree perks (classic only)
-  if(mode==='sprint'&&SPR_RUN.opt&&SPR_RUN.opt.chal&&Array.isArray(SPR_RUN.opt.chal.g))G2.ghost={p:SPR_RUN.opt.chal.g,s:[],dt:.5,sc:255,name:SPR_RUN.opt.chal.n}; // a friend's run, from their challenge link
   if(rule&&rule.guard)G2.guard={n:0,hp:100,t:rule.dur,dur:rule.dur,dmg:rule.dmg,next:3};
   G2.evPlan=mod==='dark'?{k:'eclipse',at:8,again:1}:v2EvPlan(l,mode);G2.growK=stormHas('giant')?1.3:1;if(mode==='surv')G2.modSc=stormHas('fast')?1.25:1;
   if(EXPRUN&&EXPRUN.kind==='event'&&mode==='level'){const ks=Object.keys(EVK).filter(k=>level>=EVK[k].from);G2.evPlan={k:ks.length?ks[Math.floor(rng()*ks.length)]:'wind',at:6};} // an expedition EVENT stop always brings one
@@ -364,7 +363,6 @@ function v2Update(dt){
   const S=G2.S,tk=(G2.timeT>0?V2K.time.k:1)*(G2.btT>0?V2K.bt.k:1),lv=G2.lv;
   // timers
   G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;v2Pop('JET HAZIR','#9fe8ff',14);}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;
-  if(gameMode==='sprint'){SPR_RUN.gt=(SPR_RUN.gt||0)+dt;if(SPR_RUN.gt>=.5&&(SPR_RUN.gp||(SPR_RUN.gp=[])).length<260){SPR_RUN.gt=0;SPR_RUN.gp.push(clamp(Math.round(hX/W*255),0,255),clamp(Math.round(hY/H*255),0,255));}}
   if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);if(G2.btCD>0)G2.btCD-=dt;if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
   if(G2.timeT>0){G2.timeT-=dt;if(G2.timeT<=0)v2Call('ZAMAN NORMALE DÖNDÜ','','#8fd0ff',.8);}
   if(G2.novaT>0){G2.novaT-=dt;if(G2.novaT<=0){G2.novaT=0;v2Call('NOVA BİTTİ','','#8fe9ff',.7);}}
@@ -739,10 +737,6 @@ function v2DrawTwin(){const q=G2.twin;if(!q||!q.r)return;const r=q.r;ctx.save();
 function v2DrawMirror(o,s){const r=o.r*s;ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot*.4);const g=ctx.createLinearGradient(-r,0,r,0);g.addColorStop(0,'#1a1f2e');g.addColorStop(.48,'#1a1f2e');g.addColorStop(.52,'#e9f1ff');g.addColorStop(1,'#9fb6dc');
   ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.strokeStyle='rgba(220,235,255,.9)';ctx.lineWidth=1.5;ctx.stroke();ctx.beginPath();ctx.moveTo(0,-r);ctx.lineTo(0,r);ctx.stroke();ctx.restore();}
 
-// Friend ghost: a challenger's Daily Cosmos run replays as a faint hole with their name (the personal record ghost was removed).
-function v2DrawGhost(){const g=G2.ghost;if(!g||!g.p||g.p.length<4||G2.ending||gState==='menu')return;const sc=g.sc||999,i=(G2.mode==='sprint'?SPR_RUN.t:G2.t)/(g.dt||.25),n=g.p.length/2;if(i>=n-1)return;const a=Math.floor(i),f=i-a;
-  const x=(g.p[a*2]+(g.p[a*2+2]-g.p[a*2])*f)/sc*W,y=(g.p[a*2+1]+(g.p[a*2+3]-g.p[a*2+1])*f)/sc*H,r=G2.R*.95;ctx.save();ctx.globalAlpha=.32;ctx.strokeStyle='#cfe3ff';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.setLineDash([]);
-  ctx.globalAlpha=.55;ctx.font='13px sans-serif';ctx.textAlign='center';ctx.fillText('👻',x,y-r-8);if(g.name){ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.fillStyle='#cfe3ff';ctx.fillText(g.name,x,y+r+14);}ctx.restore();}
 
 // Spectrum: five different kinds in a row (a repeat restarts the row, a lost combo clears it) pays a bonus.
 const SPK={sat:'mpair',half:'split',plasma:'frag',thr:'ast'},SPC={ast:'#b9b3a6',moon:'#dcd6ff',planet:'#8fb5ff',crystal:'#9ef3ff',gold:'#ffd76a',energy:'#ff7ad9',time:'#8fd0ff',bomb:'#ff8a4c',mini:'#c9a8ff',frag:'#ffb35c',shard:'#ffd84d',comet:'#bff6ff',magnet:'#ff8a8a',pulsar:'#bfe6ff',mpair:'#cfd6ff',dark:'#b9a8ff',split:'#9ff4ff',mirror:'#dfeaff',cstar:'#fff3c4',kgold:'#ffcf5a',prey:'#ffd76a'};
@@ -1069,7 +1063,7 @@ function v2Frame(dt){
   v2DrawMegaFx(dt);v2DrawEclipse();
   for(const w of G2.waves){ctx.save();ctx.globalAlpha=Math.max(0,1-w.t/w.dur);ctx.strokeStyle='#ff8a4c';ctx.lineWidth=w.mega?6:3;ctx.shadowColor='#ff6a2c';ctx.shadowBlur=14;ctx.beginPath();ctx.arc(w.x,w.y,w.rad,0,TAU);ctx.stroke();ctx.restore();}
   for(const q of G2.minis)v2DrawMini(q);
-  v2DrawTwin();v2DrawGuard();v2DrawGhost();
+  v2DrawTwin();v2DrawGuard();
   v2DrawLinks();v2DrawShield();v2DrawMono();
   v2DrawWorms();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
