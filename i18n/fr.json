@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Les niveaux difficiles ont une limite de temps. Dans les dernières secondes 💎 Supernova te donne tout de suite {n} de l'objectif ; une longue chaîne de combo multiplie tes points",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Objectif atteint à {p} %. Continue avec +{n} s ; tes points et ta taille sont conservés",
 "HEDEFE ÇOK AZ KALDI": "SI PRÈS DU BUT",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Temps écoulé. Réessaie ou retourne à la carte ; ta progression est conservée"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Temps écoulé. Réessaie ou retourne à la carte ; ta progression est conservée",
+"GALİBİYET SERİSİ": "SÉRIE DE VICTOIRES",
+"GALİBİYET SERİSİ {n}": "SÉRIE DE VICTOIRES {n}",
+"{n} GÜMÜŞ KABUK": "{n} COQUE D'ARGENT",
+"Sonraki seviye": "Niveau suivant",
+"Galibiyet serin: {n}": "Ta série de victoires : {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "continue pour la garder, abandonne et elle repart à zéro",
+"HAWKING": "HAWKING",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "Dès le niveau {n} : quand tu es grand, le bouton Hawking en bas à droite change une partie de ta masse en rayonnement et détruit les météores",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "Le bouton Hawking en bas à droite est prêt : il change une partie de ta masse en rayonnement, efface tous les météores à l'écran et donne des points. Utilisable toutes les {n} secondes",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Touche le bouton diamant en bas à droite ({n} 💎) : tout ce qui est à l'écran éclate et spirale dans ton trou noir, tu gagnes des points bonus valant {n} de l'objectif, puis pendant {n} secondes les météores ne peuvent pas te blesser. {n} fois par niveau",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Enchaîne les niveaux et ta série grandit, tu commences alors le niveau suivant avec des coques : {n} victoire {n} coque d'argent, {n} victoires {n} coques d'argent, {n} ou plus {n} coques d'argent et {n} coque d'or. Si tu perds et quittes sans continuer, la série repart à zéro ; si tu continues, elle reste"
 }

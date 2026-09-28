@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Level sulit punya batas waktu. Di detik-detik terakhir 💎 Supernova langsung memberimu {n} dari target; rantai combo panjang melipatgandakan poinmu",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Target {p}% tercapai. Lanjutkan untuk +{n} dtk; skor dan ukuranmu tetap",
 "HEDEFE ÇOK AZ KALDI": "TINGGAL SEDIKIT LAGI",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Waktu habis. Coba lagi atau kembali ke peta; kemajuanmu aman"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Waktu habis. Coba lagi atau kembali ke peta; kemajuanmu aman",
+"GALİBİYET SERİSİ": "BERUNTUN MENANG",
+"GALİBİYET SERİSİ {n}": "BERUNTUN MENANG {n}",
+"{n} GÜMÜŞ KABUK": "{n} CANGKANG PERAK",
+"Sonraki seviye": "Level berikutnya",
+"Galibiyet serin: {n}": "Beruntun menangmu: {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "lanjutkan untuk menjaganya, menyerah dan ia kembali nol",
+"HAWKING": "HAWKING",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "Mulai level {n}: saat kamu besar, tombol Hawking di kanan bawah mengubah sebagian massamu menjadi radiasi dan menghancurkan meteor",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "Tombol Hawking di kanan bawah siap: mengubah sebagian massamu menjadi radiasi, menghapus semua meteor di layar, dan memberi poin. Bisa dipakai sekali tiap {n} detik",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Ketuk tombol berlian di kanan bawah ({n} 💎): semua di layar meledak dan berputar masuk ke lubang hitammu, kamu mendapat poin bonus senilai {n} dari target, lalu selama {n} detik meteor tidak bisa melukaimu. {n} kali per level",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Selesaikan level beruntun dan rentetanmu tumbuh, jadi kamu memulai level berikutnya dengan cangkang: {n} menang {n} cangkang perak, {n} menang {n} cangkang perak, {n} atau lebih {n} cangkang perak dan {n} cangkang emas. Kalah lalu keluar tanpa melanjutkan, rentetan kembali nol; lanjutkan dan ia tetap"
 }

@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Níveis difíceis têm tempo limite. Nos últimos segundos 💎 Supernova te dá na hora {n} da meta; uma longa cadeia de combo multiplica seus pontos",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Meta {p}% concluída. Continue com +{n} s; seus pontos e seu tamanho são mantidos",
 "HEDEFE ÇOK AZ KALDI": "QUASE NA META",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "O tempo acabou. Tente de novo ou volte ao mapa; seu progresso está salvo"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "O tempo acabou. Tente de novo ou volte ao mapa; seu progresso está salvo",
+"GALİBİYET SERİSİ": "SEQUÊNCIA DE VITÓRIAS",
+"GALİBİYET SERİSİ {n}": "SEQUÊNCIA DE VITÓRIAS {n}",
+"{n} GÜMÜŞ KABUK": "{n} CAPA DE PRATA",
+"Sonraki seviye": "Próximo nível",
+"Galibiyet serin: {n}": "Sua sequência de vitórias: {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "se continuar ela fica, se desistir ela zera",
+"HAWKING": "HAWKING",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "A partir do nível {n}: quando você está grande, o botão Hawking no canto inferior direito transforma parte da sua massa em radiação e destrói meteoros",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "O botão Hawking no canto inferior direito está pronto: transforma parte da sua massa em radiação, apaga todos os meteoros da tela e dá pontos. Pode ser usado a cada {n} segundos",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Toque o botão de diamante no canto inferior direito ({n} 💎): tudo na tela explode e espirala para o seu buraco negro, você ganha pontos bônus equivalentes a {n} da meta e depois, por {n} segundos, os meteoros não te ferem. {n} vezes por nível",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Passe níveis seguidos e sua sequência cresce, assim você começa o próximo nível com capas: {n} vitória {n} capa de prata, {n} vitórias {n} capas de prata, {n} ou mais {n} capas de prata e {n} capa de ouro. Se perder e sair sem continuar, a sequência zera; se continuar, ela fica"
 }

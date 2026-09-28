@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Hard levels have a time limit. In the last seconds 💎 Supernova gives you {n} of the goal at once; a long combo chain multiplies your points",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Goal {p}% done. Continue for +{n} s; your score and size are kept",
 "HEDEFE ÇOK AZ KALDI": "SO CLOSE TO THE GOAL",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Time's up. Try again or go back to the map; your progress is safe"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Time's up. Try again or go back to the map; your progress is safe",
+"GALİBİYET SERİSİ": "WIN STREAK",
+"GALİBİYET SERİSİ {n}": "WIN STREAK {n}",
+"{n} GÜMÜŞ KABUK": "{n} SILVER SHELL",
+"Sonraki seviye": "Next level",
+"Galibiyet serin: {n}": "Your win streak: {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "continue to keep it, give up and it resets",
+"HAWKING": "HAWKING",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "From level {n}: when you are big, the Hawking button at the bottom right turns part of your mass into radiation and destroys meteors",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "The Hawking button at the bottom right is ready: it turns part of your mass into radiation, clears every meteor on screen and gives points. Usable once every {n} seconds",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tap the diamond button at the bottom right ({n} 💎): everything on screen bursts and spirals into your black hole, you get bonus points worth {n} of the goal, then for {n} seconds meteors can't hurt you. {n} times per level",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Clear levels in a row and your streak grows, so you start the next level with shells: {n} win {n} silver shell, {n} wins {n} silver shells, {n} or more {n} silver shells and {n} gold shell. Lose and leave without continuing and the streak resets; continue and it stays"
 }

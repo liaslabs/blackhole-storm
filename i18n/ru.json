@@ -1310,5 +1310,16 @@
 "Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "На сложных уровнях время ограничено. В последние секунды 💎 Сверхновая сразу даёт {n} цели; длинная цепочка комбо умножает очки",
 "Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Цель выполнена на {p}%. Продолжи: +{n} с, очки и размер сохранятся",
 "HEDEFE ÇOK AZ KALDI": "ЦЕЛЬ СОВСЕМ БЛИЗКО",
-"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Время вышло. Попробуй снова или вернись на карту; прогресс сохранён"
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Время вышло. Попробуй снова или вернись на карту; прогресс сохранён",
+"GALİBİYET SERİSİ": "СЕРИЯ ПОБЕД",
+"GALİBİYET SERİSİ {n}": "СЕРИЯ ПОБЕД {n}",
+"{n} GÜMÜŞ KABUK": "СЕРЕБРЯНАЯ ОБОЛОЧКА ×{n}",
+"Sonraki seviye": "Следующий уровень",
+"Galibiyet serin: {n}": "Твоя серия побед: {n}",
+"Devam edersen korunur, vazgeçersen sıfırlanır": "продолжишь — сохранится, сдашься — обнулится",
+"HAWKING": "ХОКИНГ",
+"{n}. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder": "С уровня {n}: когда ты большой, кнопка Хокинга внизу справа превращает часть массы в излучение и уничтожает метеоры",
+"Sağ alttaki Hawking düğmesi hazır: kütlenin bir kısmını radyasyona çevirir, ekrandaki bütün meteorları siler ve puan verir. {n} saniyede bir kullanılır": "Кнопка Хокинга внизу справа готова: превращает часть массы в излучение, стирает все метеоры на экране и даёт очки. Раз в {n} секунд",
+"Sağ alttaki elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, sonra {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Нажми кнопку с алмазом внизу справа ({n} 💎): всё на экране взрывается и затягивается в твою чёрную дыру, ты получаешь бонус в размере {n} цели, а затем {n} секунды метеоры не могут тебе навредить. {n} раза за уровень",
+"Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk ve {n} altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Проходи уровни подряд, и серия растёт: следующий уровень начинается с оболочками. {n} победа — {n} серебряная оболочка, {n} победы — {n} серебряные, {n} и больше — {n} серебряные и {n} золотая. Проиграешь и выйдешь без продолжения — серия обнулится; продолжишь — сохранится"
 }
