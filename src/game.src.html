@@ -201,8 +201,13 @@ html[lang=ar] *{letter-spacing:0!important;}
 .dock{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:7px;margin-top:12px;}
 .dock button{position:relative;padding:10px 2px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);font-size:20px;cursor:pointer;color:#fff;}
 .dock button span{display:block;font-family:var(--fd);font-size:8.5px;letter-spacing:.8px;color:#aeb3c4;margin-top:3px;}
-.dock em{position:absolute;top:5px;right:6px;font-style:normal;font-family:var(--fd);font-size:8.5px;padding:1px 5px;border-radius:8px;background:rgba(255,255,255,.12);color:#cfd4e2;}
-.dock em.hot{background:var(--mint);color:#032017;}
+.dock em{position:absolute;top:5px;right:6px;font-style:normal;font-family:var(--fd);font-size:8.5px;font-weight:700;padding:1px 5px;border-radius:8px;background:#e5484d;color:#fff;box-shadow:0 0 0 0 rgba(229,72,77,.7);animation:bdgPulse 1.5s ease-out infinite;} /* red, pulsing: an invitation to tap */
+.dock em:empty{display:none;}.dock em.hot{background:#ff3b3b;animation-duration:1s;}
+@keyframes bdgPulse{0%{transform:scale(1);box-shadow:0 0 0 0 rgba(229,72,77,.7);}50%{transform:scale(1.12);}70%{box-shadow:0 0 0 7px rgba(229,72,77,0);}100%{transform:scale(1);box-shadow:0 0 0 0 rgba(229,72,77,0);}}
+@media (prefers-reduced-motion:reduce){.dock em{animation:none;}}
+/* no lonely last words: balance short blocks, keep paragraphs from ending on one word */
+body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:balance;}.cmNote{display:block;}
+@media (max-width:380px){#hdr{gap:6px;padding:0 8px;}} /* narrow phones: give the score a little more room */
 /* ── guide ── */
 .gtabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -4px 10px;padding:0 4px 2px;}
 .gtabs button{flex:0 0 auto;padding:7px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);font-family:var(--fd);font-size:9.5px;letter-spacing:1px;color:#aeb3c4;cursor:pointer;}
@@ -352,8 +357,8 @@ html[lang=ar] *{letter-spacing:0!important;}
 #lvPill,#pauseBtn{border-radius:6px;background:var(--pan);border-color:var(--line);}
 #lvPill .l{font-family:var(--fm);letter-spacing:.12em;font-size:8px;}
 #lvPill .v,#scVal{font-family:var(--fm);font-weight:500;}
-#scVal{background:none;color:var(--ink);-webkit-text-fill-color:currentColor;}
-#scVal small.gl{font-size:.62em;color:var(--dim);margin-left:2px;}
+#scVal{background:none;color:var(--ink);-webkit-text-fill-color:currentColor;white-space:nowrap;}
+#scVal small.gl{font-size:.62em;color:var(--dim);margin-left:2px;}#scVal.stk{text-align:center;line-height:.95;}#scVal.stk small.gl{display:block;font-size:.58em;margin:0;}
 #tmr2[hidden]{display:none!important;}
 #pb{background:var(--gold);box-shadow:none;}
 .card{border-radius:12px;border-color:var(--line);box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none;}
@@ -2004,7 +2009,7 @@ const GUIDE={
  'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al. Nadiren bir kutuda BÜYÜK HAZİNE saklıdır: 1000 yıldız ve 50 elmas. Reklam izleyerek bulma şansını yarı yarıya çıkarabilirsin.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
   'HALKALAR':[['⭕','ÇEKİM ALANI','Kara deliğin etrafındaki soluk geniş halka çekim alanının sınırıdır: içine giren cisimler sana çekilir. Büyüdükçe genişler. Cismi alanın tam ortasından içeri alırsan PERFECT ABSORB.'],['🟠','TURUNCU HALKA','Rage açıkken kalan süreyi gösterir.'],['🔵','MAVİ HALKA','Süpernova koruması: meteorlar sana zarar veremez.'],['🟣','MOR TİTREYEN HALKA','Overload: daha güçlüsün ama yönetmek zor.'],['🟡','SARI HALKA','Kalkan açık: çarpan meteor parçalanır.'],['🔴','KIRMIZI YANIP SÖNEN','Darbe aldın; kısa süre dokunulmazsın.'],['💜','MOR DALGALAR','Bir süredir yemediğin için küçülüyorsun.'],['🌈','ALTTAKİ NOKTALAR','Spektrum serin: 5 farklı tür = bonus.']],
   'OLAYLAR':[['💫','KİLONOVA','İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve altın saçılır.'],['⚡','KUASAR JETİ','20. seviyeden itibaren: kara deliği tutarken ikinci parmakla dokun, o yöne ışın fırlat.'],['💨','HAWKING SALINIMI','15. seviyeden itibaren: büyükken üstteki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder.'],['🧭','HAFTALIK SEFER','Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.'],['🌳','KÜTLE AĞACI','Yuttuğun toplam kütleyle kalıcı küçük yetenekler aç (Klasik ve Sefer).'],['🪐','YÖRÜNGE BAHÇESİ','Atlas’ta incelediğin cisimler kara deliğinin etrafında döner ve günde yıldız getirir.'],['🌬','YILDIZ RÜZGÂRI','Bazı seviyelerde güçlü bir rüzgâr her şeyi yana sürükler. Rüzgârın geldiği yöne geç, cisimler sana aksın.'],['🌑','TUTULMA','Ekran kararır; her 2 saniyede bir radar dalgası her şeyi gösterir. Karanlıkta puan ×1,5.'],['✨','TAKIMYILDIZ','Numaralı yıldızları sırasıyla yut. Süre bitmeden tamamlarsan büyük bonus ve Atlas kaydı.'],['⏳','AĞIR ÇEKİM','Bir meteor çarpmak üzereyken zaman bir an yavaşlar. Seviye başına 3 kez.'],['🃏','RİSK KARTI','12. seviyeden itibaren her 5 seviyede bir: seviyeyi zorlaştıran bir kart seçebilirsin, bitirirsen ekstra elmas kazanırsın.'],['👻','HAYALET','Bir seviyeyi yeniden oynarken en iyi denemen soluk bir kara delik olarak yanında oynar. Üstteki sayı ondan ne kadar önde ya da geride olduğunu gösterir.'],['🗝','HAZİNE ANAHTARI','Mağazadan 90 elmasa: sonraki Kaptanın Hediyesi’nde Büyük Hazine kesin çıkar.']],
- 'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
+ 'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
   if(!GUIDE[tab])tab=Object.keys(GUIDE)[0];
   $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}" data-g="${k}">${k}</button>`).join('');
@@ -2494,10 +2499,10 @@ function showCont(){
   $('contDia').parentNode.hidden=!(G2.on&&cl);if(G2.on&&cl){const dc=V2K.cont.dia*2**G2.diaCont;$('contDia').textContent=`💎 ${dc} · 2 CANLA DEVAM`;$('contDia').classList.toggle('dim',diamonds<dc);}
   if(G2.on){const one=!G2.contUsed;$('contYes').parentNode.hidden=!one;if(!one){$('contAd').parentNode.hidden=true;$('contLife').parentNode.hidden=true;}
     const why=HIT_WHY[G2.lastHit]||HIT_WHY.meteor;$('contWhy').innerHTML=`<b>${why[0]} ${T(why[1])}</b><span>${T(why[2])}</span>`;$('contWhy').hidden=!G2.lastHit;
-    $('contBox').hidden=!one;$('contBox').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">${T('100 ⭐ İLE DEVAM')}</div><div class="cst">${T('Yıldızın')}: <b id="contStars">${stars.toLocaleString(LOC)}</b> ⭐</div>`;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+(one?`<br>${T('Devam edersen boyutun korunur: 1 can, Rage %50.')}`:`<br>${T('Bu oyunda devam hakkını kullandın.')}`);
-    $('contRetry').style.display=cl?'':'none';$('contRetry').textContent=heartsOn(level)?T('🔄 SEVİYEYİ YENİDEN OYNA · 💖 1 CAN'):T('🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA');$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');return;}
-  $('contMsg').textContent=cl?`Seviye ${level}'de canların bitti. İlerlemen kayıtlı: baştan başlamazsın.`:'Kaldığın yerden devam etmek ister misin?';
-  $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ (İLERLEME KAYITLI)':'BİTİR';showModal('mCont');
+    $('contBox').hidden=!one;$('contBox').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">${T('100 ⭐ İLE DEVAM')}</div><div class="cst">${T('Yıldızın')}: <b id="contStars">${stars.toLocaleString(LOC)}</b> ⭐</div>`;$('contMsg').innerHTML=`<span class="k2">${T('SON COMBO')}</span> <b>×${G2.best}</b> · <span class="k2">${T('BOYUT')}</span> <b>${v2SizeTxt(G2.peak/V2K.r0)}</b> · <span class="k2">${T('SKOR')}</span> <b>${totalScore.toLocaleString(LOC)}</b>`+`<span class="cmNote">${one?T('Devam edersen boyutun korunur: 1 can, Rage %50.'):T('Bu oyunda devam hakkını kullandın.')}</span>`;
+    $('contRetry').style.display=cl?'':'none';$('contRetry').textContent=heartsOn(level)?T('🔄 SEVİYEYİ YENİDEN OYNA · 💖 1 CAN'):T('🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA');$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');return;}
+  $('contMsg').textContent=cl?`Seviye ${level}'de canların bitti.`:'Kaldığın yerden devam etmek ister misin?';
+  $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');
 }
 function retryLevel(){hideModals();SND.duck(1,0);SND.setDrone(.14,650);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();resetRun(false);}
 function gameOver(){
