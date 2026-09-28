@@ -73,14 +73,14 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   18:['🌫️','KARANLIK MADDE','Görünmez! Yıldızları bükmesinden fark edilir.'],
   19:['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir.']};
 // Level types: most levels are "reach the score", but from level 11 every few levels one has its own rule.
-const RSETS=[{ban:['ast','frag'],ic:'🪨',n:'ASTEROİT YASAK',k:.6},{ban:['moon','planet','half','split'],ic:'🌑',n:'AY VE GEZEGEN YASAK',k:.55},{ban:['crystal','energy','gold','comet'],ic:'💎',n:'PARLAK CİSİMLER YASAK',k:.4}];
-function v2LevelType(l){if(l>=50&&l%50===0)return 'duel';if(l<11||l%10===0||l%10===9)return 'score';if(l<=20)return l%4===3?['restrict','window','hunt'][Math.floor(l/4)%3]:'score';return l%3===2?['restrict','window','hunt','rival','guard'][Math.floor(l/3)%5]:'score';} /* from level 21: five kinds take turns; every 50th level is the twin duel */
+const RSETS=[{ban:['ast','frag'],ic:'🪨',n:'ASTEROİT YASAK',k:.6},{ban:['moon','planet','half','split'],ic:'🌑',n:'AY VE GEZEGEN YASAK',k:.55},{ban:['crystal','energy','gold','comet'],ic:'💎',n:'PARLAK CİSİMLER YASAK',k:.3}];
+function v2LevelType(l){if(l>=50&&l%50===0)return 'duel';if(l<11||l%10===0||l%10===9)return 'score';if(l<=20)return l%4===3?['restrict','restrict','hunt'][Math.floor(l/4)%3]:'score';return l%3===2?['restrict','hunt','rival','guard'][Math.floor(l/3)%4]:'score';} /* from level 21: four kinds take turns; every 50th level is the twin duel */
 function v2RuleFor(l){const t=v2LevelType(l);
-  if(t==='restrict'){const s=RSETS[Math.floor(l/7)%(l<30?2:3)];/* the hardest set (no bright bodies) only from level 30 */return {t,tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+  if(t==='restrict'){const s=RSETS[Math.floor(l/7)%2];/* the no-bright-bodies set was slow and unclear: only asteroids or moons/planets are ever banned */return {t,tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(t==='window'){const late=l>30;return {t,tip:'window',win:1,lo:late?1.6:1.4,hi:late?2.3:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:late?.4:.5};}
-  if(t==='hunt')return {t,tip:'hunt',hunt:1,need:l>40?5:4,life:l>40?14:16,ic:'🎯',n:'AV',k:0};
+  if(t==='hunt')return {t,tip:'hunt',hunt:1,need:l>40?4:l>20?3:2,life:l>40?18:20,ic:'🎯',n:'AV',k:0};
   if(t==='rival')return {t,tip:'rival',rival:1,ic:'🌑',n:'RAKİP KARA DELİK',k:0};
-  if(t==='guard')return {t,tip:'guard',guard:1,dur:l>60?55:45,dmg:l>60?30:25,ic:'🛡',n:'KORUYUCU',k:0}; /* survive the time with the planet alive */
+  if(t==='guard')return {t,tip:'guard',guard:1,dur:l>60?50:l>35?45:40,dmg:l>60?30:l>35?25:20,ic:'🛡',n:'KORUYUCU',k:0}; /* survive the time with the planet alive */
   if(t==='duel')return {t,tip:'duel',rival:1,duel:1,ic:'👁',n:'KARA DELİK İKİZİ',k:0};
   return null;}
 const RULE_NEW={restrict:'Yasaklı cisimler seni iter; üstlerine gidersen combo yarıya iner. Hedef puan daha düşük.',window:'Puan sadece kara delik yeşil aralıktayken gelir. Fazla büyürsen buharlaşırsın; o sırada yediğin puan getirmez.',hunt:'Altın ava kara deliğinle çarp: her çarpış kabuğunu kırar, hızlı çarpış daha çok kırar. Süresi dolarsa kaçar ve can götürür.',rival:'Başka bir kara delik cisimleri kapıyor. Senden büyükken kaç; onu geçince yut, seviye biter.',guard:'Yaşayan bir gezegene asteroitler yağıyor. Çarpanlar gezegenin canını azaltır, yakaladıkların artırır. Süre dolana kadar gezegeni ayakta tut; yok olursa 1 can gider ve baştan başlarsın.',duel:'Senin aynan: bir kara delik ikizi. İki kez yutman gerekir ve çekim dalgasıyla yemeğini çalar.'};
@@ -305,7 +305,7 @@ function v2BossRad(b,dt,tk){const r=b.rad,K=V2K.boss,C=RAD2[b.bt]||RAD2.planet;
     const far=Math.hypot(W,H),th=sp2(16);
     for(const w of r.waves){w.r+=sp2(C.v)*dt*tk;if(w.hit)continue;const d=Math.hypot(hX-b.x,hY-b.y);
       if(Math.abs(d-w.r)<th*.5+G2.R*.55){const a=Math.atan2(hY-b.y,hX-b.x),m=Math.atan2(G2.R*.45,Math.max(d,1));
-        if(v2RadArc(b,a,w.a0)||v2RadArc(b,a-m,w.a0)||v2RadArc(b,a+m,w.a0)){w.hit=true;if(!r.hurt&&G2.shT<=0&&G2.rageT<=0&&G2.immT<=0){r.hurt=true;G2.hitWhy='rad';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}}}
+        if(v2RadArc(b,a,w.a0)||v2RadArc(b,a-m,w.a0)||v2RadArc(b,a+m,w.a0)){w.hit=true;if(!r.hurt&&G2.shT<=0&&G2.rageT<=0&&G2.immT<=0){r.hurt=true;G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.25);G2.immT=Math.max(G2.immT,1);v2ComboLost();v2Burst(hX,hY,22,'#b8ff5a',2,7,.6,2.2);shake=Math.max(shake,6);vib(50);v2Sfx('armor',{vol:.55,rate:.8});v2Call('RADYASYON','KÜÇÜLDÜN','#b8ff5a',1.1);} /* radiation burns size, not a life */}}}
     if(r.next>=C.waves&&r.waves.every(w=>w.r>far)){r.ph='idle';r.cd=K.radEvery[b.bt]||9;r.waves=[];if(b.bt==='nova')b.burst=1e9;}}}
 function v2DrawRadSign(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;const C=RAD2[b.bt]||RAD2.planet,seg=TAU/C.n,rot=r.a0+seg*C.fill/2+Math.PI/2; // the radiation sign on the boss, drawn above its body
   if(r.ph==='warn'){const q=Math.min(1,r.t/v2RadWarn()),pu=.5+.5*Math.sin(clock*(9+q*16));v2DrawTrefoil(b.x,b.y,b.r*.62,rot+(1-q)*2,C.col,.55+.45*pu);}
@@ -603,7 +603,7 @@ function v2RivalStep(dt){const v=G2.rv,S=G2.S;
   if(v.hitT>0)return;const cd=Math.hypot(v.x-hX,v.y-hY);if(cd>G2.R+v.R*.6)return;
   if(mood==='flee'){v2RivalEaten(v);return;}
   const ux=(v.x-hX)/(cd||1),uy=(v.y-hY)/(cd||1);v.vx=ux*sp2(420);v.vy=uy*sp2(420);v.hitT=1.2;v.cd=2.5;
-  if(v.R>G2.R*1.02&&!(G2.shT>0)&&!(G2.novaT>0)&&!(G2.immT>0)){G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*RIV.bite);v.rr=Math.min(cap,v.rr+1);G2.hitWhy='rival';v2Hit({x:hX+ux*G2.R,y:hY+uy*G2.R});G2.hitWhy=null;}
+  if(v.R>G2.R*1.02&&!(G2.shT>0)&&!(G2.novaT>0)&&!(G2.immT>0)){G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*RIV.bite);v.rr=Math.min(cap,v.rr+1);G2.immT=Math.max(G2.immT,1);v2ComboLost();v2Burst(hX+ux*G2.R,hY+uy*G2.R,22,'#ff7a5c',2,7,.6,2.2);shake=Math.max(shake,8);vib(60);v2Sfx('armor',{vol:.6,rate:.7});v2Call('RAKİP SENİ ISIRDI','KÜÇÜLDÜN','#ff6a5a',1.2);} /* a bite costs size and combo, never a life: only meteors take lives */
   else{v2Call(G2.shT>0||G2.novaT>0||G2.immT>0?'ENGELLENDİ':'ÇARPIŞMA','','#ffb35c',.8);v2Sfx('armor',{vol:.5,rate:.8});shake=Math.max(shake,5);}}
 function v2RivalShrink(v,f,msg){v.rr=Math.max(V2K.r0*.9,v.rr-(v.rr-V2K.r0*.9)*f-1);v.hurtT=1.5;shake=Math.max(shake,3);v2Sfx('armor',{vol:.45,rate:.7});if(G2.t-(v.hurtCall||-9)>1.2){v.hurtCall=G2.t;v2Call(msg,'RAKİP KÜÇÜLÜYOR','#8fe9ff',.9);}}
 function v2RivalSuck(o,dt){const v=G2.rv;if(!v){o.st='dead';return true;}o.t+=dt;const p=Math.min(1,o.t/.35),d=o.d0*(1-p);o.a+=dt*9;o.x=v.x+Math.cos(o.a)*d;o.y=v.y+Math.sin(o.a)*d;o.sc=Math.max(.05,1-p*.95);if(o.cell!==undefined)o.gs=o.sc;
@@ -705,7 +705,7 @@ function v2DrawEv(){const e=G2.ev;
 // Guardian: a living planet sits in the sky; asteroids are aimed at it. Eat them before they land. You can't park on the planet.
 function v2GuardStep(dt){const g=G2.guard;g.px=W*.5+Math.sin(G2.t*.3)*W*.14;g.py=H*.42;g.pr=sp2(32);g.hitT=Math.max(0,(g.hitT||0)-dt);g.healT=Math.max(0,(g.healT||0)-dt);
   if(!G2.ending)g.t=Math.max(0,g.t-dt);
-  g.next-=dt;if(g.next<=0&&!G2.ending&&g.t>1.5){const prog=1-g.t/g.dur;g.next=Math.max(1.2,2.1-G2.lv*.004-prog*.5)*rrnd(.8,1.2);g.wave=(g.wave||0)+1; /* it speeds up as the clock runs down */
+  g.next-=dt;if(g.next<=0&&!G2.ending&&g.t>1.5){const prog=1-g.t/g.dur;g.next=(Math.max(1.2,2.1-G2.lv*.004-prog*.5)+(G2.lv<=35?.35:0))*rrnd(.8,1.2); /* the first guardian level gives a little more room */g.wave=(g.wave||0)+1; /* it speeds up as the clock runs down */
     const two=g.wave%3===0&&(prog>.35||G2.lv>60),s0=Math.floor(rng()*3);for(let k=0;k<(two?2:1);k++){const side=(s0+k*(1+Math.floor(rng()*2)))%3,o=v2Edge('thr',side);const tx=g.px,ty=g.py,dx=tx-o.x,dy=ty-o.y,d=Math.hypot(dx,dy)||1,sp=v2Speed('ast')*(.6+.3*prog);o.vx=dx/d*sp;o.vy=dy/d*sp;o.seen=true;}} /* every third wave late in the defense comes from two sides at once */
   const hd=Math.hypot(hX-g.px,hY-g.py)||1,min=g.pr*1.7+G2.R;if(hd<min){hX=g.px+(hX-g.px)/hd*min;hY=g.py+(hY-g.py)/hd*min;}} // the planet's atmosphere keeps the hole out
 function v2GuardImpact(o){const g=G2.guard;o.st='dead';g.hitT=.6;v2Burst(o.x,o.y,26,'#ff9a5c',2,8,.7,2);shake=Math.max(shake,8);vib(40);
@@ -991,9 +991,9 @@ const TIP2={
   restrict:['⛔','KISITLI SEVİYE','Bu seviyede bazı cisimler yasak: üstlerinde kırmızı işaret var. Seni iterler; üstlerine gidip çarparsan combo yarıya iner. Geri kalanını yiyerek hedefi tamamla.'],
   window:['📏','BOYUT PENCERESİ','Puan sadece kara delik üstteki yeşil aralıktayken gelir. Küçüksen büyü. Fazla büyürsen buharlaşırsın ve o sırada yediğin puan getirmez: yavaş ye, aralıkta kal.'],
   hunt:['🎯','AV','Altın av yutulmaz: kara deliğinle ona çarp, kabuğunu kır. İç halkadaki 10 parça kabuğudur; hızlı çarparsan 2–3 parça birden kırılır. Kabuk bitince av patlar. Dış halka süresidir; biterse av kaçar ve 1 can gider.'],
-  rival:['🌑','RAKİP KARA DELİK','Başka bir kara delik de burada avlanıyor ve büyüyor. Senden büyükken kırmızı parlar ve peşine düşer: dokunursa 1 can gider. Onu geçecek kadar büyüyünce maviye döner ve kaçar: yakala ve yut, seviye biter. Meteor ve antimadde onu da küçültür. Vortex açıkken her boyutta yutabilirsin.'],
+  rival:['🌑','RAKİP KARA DELİK','Başka bir kara delik de burada avlanıyor ve büyüyor. Senden büyükken kırmızı parlar ve peşine düşer: dokunursa seni ısırır ve küçülürsün (can gitmez). Onu geçecek kadar büyüyünce maviye döner ve kaçar: yakala ve yut, seviye biter. Meteor ve antimadde onu da küçültür. Vortex açıkken her boyutta yutabilirsin.'],
   guard:['🛡','KORUYUCU','Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: yolunun önünde dur ve yut. Her çarpma gezegenin canını azaltır, her yakaladığın artırır. Süre dolduğunda gezegen hâlâ ayaktaysa görev tamam. Gezegen yok olursa 1 can gider ve savunma baştan başlar. Bu görevde meteor gelmez. Gezegenin atmosferine giremezsin.'],
-  duel:['👁','KARA DELİK İKİZİ','Rakibin en güçlüsü. Onu iki kez yutman gerekir: ilkinde yeniden oluşur. Arada bir çekim dalgası salar ve yakınındaki cisimleri kendine çeker, dalga gelince uzak dur.'],
+  duel:['👁','KARA DELİK İKİZİ','Rakibin en güçlüsü. Onu iki kez yutman gerekir: ilkinde yeniden oluşur. Isırırsa küçülürsün, can gitmez. Arada bir çekim dalgası salar ve yakınındaki cisimleri kendine çeker, dalga gelince uzak dur.'],
   mirror:['🪞','AYNA TAŞI','Yut: 8 saniye boyunca ekranın öbür yarısında senin ayna görüntün olan ikinci bir kara delik açılır ve senin için yer. Meteor ona değerse kaybolur.'],
   ev_wind:['🌬','YILDIZ RÜZGÂRI','Güçlü bir rüzgâr her şeyi yana sürüklüyor. Rüzgârın geldiği yöne geç, cisimler sana aksın. Meteorlar etkilenmez.'],
   ev_eclipse:['🌑','TUTULMA','Ekran kararıyor. Sadece çevren aydınlık; her 2 saniyede bir radar dalgası her şeyi kısa süre gösterir. Karanlıkta puan ×1,5. Meteorların közüne dikkat!'],
@@ -1002,7 +1002,7 @@ const TIP2={
   ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
   hawking:['💨','HAWKING SALINIMI','Epey büyüdün! Üst sıradaki Hawking düğmesine dokun: kütlenin bir kısmını radyasyon olarak salarsın. Ekrandaki bütün meteorlar yok olur, yutabileceğin her şey sana çekilir ve puan kazanırsın. Ama küçülürsün.'],
   jet:['⚡','KUASAR JETİ','Kara deliği tutarken ikinci bir parmakla ekrana dokun: o yöne 1,4 saniyelik bir ışın fırlatırsın. Işın cisimleri sana çeker, meteorları yakar. 12 saniyede bir kullanılır.'],
-  rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Vortex seni korur.'],
+  rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen küçülürsün (can gitmez). Kalkan ve Vortex seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}

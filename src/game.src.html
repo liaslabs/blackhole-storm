@@ -1766,7 +1766,7 @@ const MPOOL=[
   {id:'surv',t:n=>`Hayatta Kal'da ${n} saniye dayan`,v:[60,90,120],abs:1,r:['⭐',50]},
   {id:'edge',t:n=>`${n} KUSURSUZ KAÇIŞ yap`,v:[2,4],r:['⭐',30],need:2},
   {id:'diamond',t:()=>'Elmas gücünü bir kez kullan',v:[1],r:['⭐',25]},
-  {id:'rulelv',t:()=>'Özel bir seviyeyi bitir (Kısıtlı, Boyut, Av, Rakip ya da Koruyucu)',v:[1],r:['💎',5],need:12},
+  {id:'rulelv',t:()=>'Özel bir seviyeyi bitir (Kısıtlı, Av, Rakip ya da Koruyucu)',v:[1],r:['💎',5],need:12},
   {id:'hunt',t:n=>`${n} altın av yakala`,v:[2,4],r:['⭐',50],need:12},
   {id:'boss',t:()=>'Bir boss yut',v:[1],r:['💎',6],need:11},
   {id:'crack',t:n=>`Boss'larda ${n} zayıf nokta kır`,v:[3,5],r:['⭐',40],need:11},
@@ -2485,7 +2485,7 @@ function levelSuccess(){
 }
 // Classic never throws you back to level 1: out of lives you can pay to continue, replay the level for free, or leave with progress saved.
 // what took the last life, and how to avoid it next time
-const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek KUSURSUZ KAÇIŞ verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle.'],
+const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek KUSURSUZ KAÇIŞ verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle. Radyasyon seni küçültür.'],
   prey:['🎯','AV KAÇTI','Avın kabuğunu kırmak için ona hızla çarp: hızlı çarpış 2–3 parça birden kırar. Süresi bitmeden 10 parçayı kır.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.'],guard:['🛡','GEZEGEN YOK OLDU','Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır.'],rival:['🌑','RAKİP SENİ ISIRDI','Rakip kırmızıyken ondan uzak dur ve hızlı büyü. Maviye dönünce kaçar: o an yakala.']};
 // A short radio note over the field: zone arrivals and boss warnings (never pauses the game)
 function sigShow(h,txt,sec=5){const e=$('sig2');if(!e)return;$('sigH').textContent=h;const tt=$('sigT');tt.textContent='';e.classList.add('on');let i=0;clearInterval(e._i);clearTimeout(e._t);
