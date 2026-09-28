@@ -118,7 +118,7 @@ function v2Rules(l){
 function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
-  const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
+  const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));
   const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
@@ -133,14 +133,14 @@ function v2Start(mode){
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
   if(rule&&rule.guard)G2.guard={n:0,need:rule.need,next:3,sh:2};
-  G2.evPlan=mod==='dark'?{k:'eclipse',at:8,again:1}:v2EvPlan(l,mode);
+  G2.evPlan=mod==='dark'?{k:'eclipse',at:8,again:1}:v2EvPlan(l,mode);G2.growK=stormHas('giant')?1.3:1;if(mode==='surv')G2.modSc=stormHas('fast')?1.25:1;
   if(mode==='level'&&level>1&&!REPLAY&&!G2.script){G2.gRec={t:0,p:[],s:[]};const gh=ghostDb()[String(level)];G2.ghost=gh&&Array.isArray(gh.p)&&Array.isArray(gh.s)?gh:null;}
   if(rule&&rule.duel&&!REPLAY)sigShow('📡 '+T('SİNYAL · GÖZLEM İSTASYONU-7'),T('Aynadaki gibi: senin kütlende, senin açlığında bir kara delik. Bu sefer iki kez yutman gerekecek.'),6);
   if(G2.L.boss&&mode==='level')v2BossInit();
   else if(mode==='level'&&level%10===1&&level>1&&!REPLAY){const z=zoneOf(level),Z=ZONES[z];sigShow('🌌 '+T('YENİ BÖLGE')+' · '+T(Z.n),T(Z.d),6);}
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('LEVEL '+level,nw?`NEW: ${nw[0]} ${T(nw[1])}`:'',nw?'#ffb35c':'#e7e3da',2.2,true);
-  else if(mode==='surv')v2Call('SURVIVE THE STORM','','#e7e3da',2);
+  else if(mode==='surv'){v2Call('SURVIVE THE STORM','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
   gState='playing';lastT=performance.now();v2Ui(true);
 }
 function v2Stop(){G2.on=false;document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
@@ -376,8 +376,8 @@ function v2Update(dt){
     else G2.shrinkOn=false;}
   if(SHOP.shield>0&&!TIPS.shield&&G2.t>1.5&&gameMode!=='sprint')v2Tip('shield',null);
   if(G2.combo>0&&!G2.hold){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
-  if(gameMode==='survival'){survTime+=dt;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);}
-    const nl=Math.min(40,effLevel());if(nl!==G2.lv){G2.lv=nl;const cap=G2.cap;G2.L=v2Rules(nl);G2.cap=Math.max(cap,V2K.r0*G2.L.capMul);v2Call('LEVEL UP','SPEED '+nl,'#ffb35c',1.2,true);const z=zoneOf(nl);if(z!==curZone)setZone(z);}}
+  if(gameMode==='survival'){survTime+=dt;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);if(sc>0&&sc%15===0)spAdd(1);}
+    const nl=Math.min(40,effLevel());if(nl!==G2.lv){G2.lv=nl;const cap=G2.cap;G2.L=v2ApplyMods(v2Rules(nl));G2.cap=Math.max(cap,V2K.r0*G2.L.capMul);v2Call('LEVEL UP','SPEED '+nl,'#ffb35c',1.2,true);const z=zoneOf(nl);if(z!==curZone)setZone(z);}}
   if(gameMode==='sprint'){const sec=Math.ceil(SPR_RUN.dur-SPR_RUN.t);SPR_RUN.t+=dt;const s2=Math.ceil(SPR_RUN.dur-SPR_RUN.t);
     if(s2!==sec&&s2<=5&&s2>0)sfx('tickHi',{vol:.6,rev:0});if(SPR_RUN.t>=SPR_RUN.dur){sprintEnd();return;}}
 
@@ -617,20 +617,27 @@ const EVK={wind:{from:16,dur:10},cons:{from:22,dur:16},eclipse:{from:28,dur:9}};
 const CONS=[{id:'cas',n:'KRALİÇE',p:[[0,.2],[.25,.75],[.5,.35],[.75,.85],[1,.3]]},
   {id:'uma',n:'BÜYÜK AYI',p:[[0,.3],[.18,.2],[.34,.28],[.5,.4],[.56,.8],[.86,.9],[.94,.5]]},
   {id:'leo',n:'ASLAN',p:[[.1,.85],[.3,.6],[.2,.3],[.42,.08],[.68,.2],[.95,.55]]}];
+function v2ApplyMods(L){const w=L.w; // season theme and the Daily Storm's two rules
+  if(seasonIs('gold')){w.gold=(w.gold||0)*1.6;w.crystal*=1.3;}if(seasonIs('meteor'))w.meteor*=1.2;
+  if(gameMode==='survival'&&STORM.on)for(const m of STORM.mods){if(m.id==='gold'){w.gold=(w.gold||0)*2+2;w.crystal*=2;w.meteor*=1.3;}else if(m.id==='giant')w.planet=(w.planet||0)*2+4;
+    else if(m.id==='twin')w.mirror=4;else if(m.id==='fast')L.speedK*=1.15;else if(m.id==='dense'){L.cap+=4;L.iv*=.8;w.meteor*=1.15;}}
+  return L;}
+function v2EvPref(){const p=[];if(gameMode==='survival'&&STORM.on)for(const m of STORM.mods)if(EVK[m.id])p.push(m.id);const sk=gameMode!=='sprint'?seasonTheme().id:'';if(EVK[sk])p.push(sk);return p;}
 function v2EvPlan(l,mode){
-  if(mode==='surv')return {next:35};
+  if(mode==='surv')return {next:v2EvPref().length?20:35};
   if(mode!=='level'||l<16||l%10===0||G2.rule||G2.script)return null;
   let h=Math.imul(l,2654435761)>>>0;h=(h^(h>>>15))>>>0;const ks=Object.keys(EVK).filter(k=>l>=EVK[k].from);
-  if((h%1000)/1000>.45||!ks.length)return null;return {k:ks[(h>>>4)%ks.length],at:10+(h>>>9)%10};}
+  const fe=EVK[seasonTheme().id]&&l>=EVK[seasonTheme().id].from?seasonTheme().id:null; // the season's event shows up more often
+  if((h%1000)/1000>(fe?.6:.45)||!ks.length)return null;return {k:fe&&(h>>>12)%10<6?fe:ks[(h>>>4)%ks.length],at:10+(h>>>9)%10};}
 function v2EvStep(dt){
   const P=G2.evPlan;
   if(!G2.ev&&P&&!G2.ending&&!G2.boss&&gState==='playing'){
-    if(P.next!==undefined){P.next-=dt;if(P.next<=0){P.next=40;if(G2.lv>=3){const ks=Object.keys(EVK);v2EvGo(ks[Math.floor(rng()*ks.length)]);}}}
+    if(P.next!==undefined){P.next-=dt;if(P.next<=0){const pr=v2EvPref();P.next=pr.length?24:40;if(G2.lv>=3||pr.length){const ks=Object.keys(EVK);v2EvGo(pr.length&&rng()<.75?pr[Math.floor(rng()*pr.length)]:ks[Math.floor(rng()*ks.length)]);}}}
     else if(G2.t>=P.at){G2.evPlan=P.again?{k:P.k,at:G2.t+20}:null;v2EvGo(P.k);}}
   const e=G2.ev;if(!e)return;e.t+=dt;
   if(e.k==='cons')v2ConsStep(e,dt);
   if(e.k==='eclipse'){e.ping-=dt;e.pingT+=dt;if(e.ping<=0){e.ping=2;e.pingT=0;v2Sfx('tickHi',{vol:.35,rate:.7});}}
-  if(e.t>=e.dur||G2.ending){if(e.k==='cons')v2ConsEnd(e);G2.ev=null;if(!G2.ending&&e.k!=='cons')v2Call(e.k==='wind'?'WIND CALMS':'LIGHT RETURNS','','#cfe6f5',.9);}}
+  if(e.t>=e.dur||G2.ending){if(e.k==='cons')v2ConsEnd(e);G2.ev=null;if(!G2.ending&&(e.k!=='cons'||e.done))spAdd(8*(seasonIs(e.k)?2:1));if(!G2.ending&&e.k!=='cons')v2Call(e.k==='wind'?'WIND CALMS':'LIGHT RETURNS','','#cfe6f5',.9);}}
 function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;
   if(k==='wind'){e.a=(rng()<.5?0:Math.PI)+rrnd(-.35,.35);e.f=sp2(170);e.st=[];v2Call('STELLAR WIND','RIDE THE STREAM','#bfe6ff',1.4,true);v2Sfx('slow',{vol:.5,rate:1.6});}
   else if(k==='eclipse'){e.ping=.6;e.pingT=9;v2Call('ECLIPSE','SCORE ×1.5 IN THE DARK','#b9a8ff',1.4,true);v2Sfx('bossIntro',{vol:.35,rate:.6});}
@@ -738,7 +745,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   v2Burst(cx,cy,n,col,1.2,3.5+Math.min(3,G2.combo*.1),.45,1.6);
   if(o.anti){v2Anti();return;}
   if(o.noScore)return;
-  {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow);if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
+  {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow*(G2.growK||1));if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
   addMass(1);
   if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('TIME SLOW','6 s','#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
@@ -757,7 +764,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
 }
 function v2Dodge(o){
   G2.dodgeCD=V2K.dodge.cd;G2.perfD++;const p=50*(G2.rageT>0?2:1);totalScore+=p;levelScore+=p;v2AddRage(8);G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;if(G2.combo>G2.best)G2.best=G2.combo;
-  v2Call('PERFECT DODGE','+50','#8dffcb',1);v2Sfx('thrust',{vol:.5,rate:1.5});dmEvent('edge',1);shake=Math.max(shake,2);
+  v2Call('PERFECT DODGE','+50','#8dffcb',1);if(seasonIs('meteor'))spAdd(2);v2Sfx('thrust',{vol:.5,rate:1.5});dmEvent('edge',1);shake=Math.max(shake,2);
   v2Burst(o.x,o.y,10,'#8dffcb',1,3,.4);
 }
 function v2Hit(o){
@@ -951,6 +958,7 @@ function v2Complete(){
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();}
   if(!G2.dmg)dmEvent('clean',1);if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
   if(G2.mode==='level'&&level===2&&!TIPS.gift){TIPS.gift=1;SHOP.shield++;G2.gift=1;saveG();} // the first shield is a gift
+  if(G2.mode==='level'&&!REPLAY){let sp=10+5*clamp(lives,1,3);if(G2.rule)sp+=10*(seasonIs('rival')&&(G2.rule.rival||G2.rule.guard)?2:1);if(G2.L.boss||G2.rule&&G2.rule.duel)sp+=25;spAdd(sp);} // season points
   ghostSave();if(G2.mod&&G2.mode==='level'){const c=RISK_CARDS.find(x=>x.id===G2.mod);if(c)later(()=>grant(c.rw,'🃏 '+T(c.n)),1400);}
   G2.objs=G2.objs.filter(o=>o.st==='sw');
   if(gameMode==='survival'){gameOver();return;}

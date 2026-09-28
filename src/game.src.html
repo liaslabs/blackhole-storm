@@ -537,6 +537,16 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .wk7{display:flex;justify-content:center;gap:5px;margin:6px 0 4px;}.wk7 span{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;border:1px solid var(--line);color:var(--dim);background:rgba(255,255,255,.03);}
 .wk7 span.ok{background:rgba(127,214,176,.18);border-color:rgba(127,214,176,.6);color:#bff0dc;}.wk7 span.on{background:rgba(242,169,59,.22);border-color:var(--gold);color:#ffe6a8;box-shadow:0 0 12px rgba(242,169,59,.4);}
 .wk7t{font-size:12px;color:var(--dim);text-align:center;margin-bottom:6px;}
+.lbtabs{display:flex;gap:6px;margin:0 0 10px;}.lbtabs button{flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--line);background:var(--pan);color:var(--dim);font:600 12px var(--fd);letter-spacing:.04em;cursor:pointer;}.lbtabs button.on{border-color:var(--gold);color:#ffe6a8;background:rgba(242,169,59,.12);}
+.stormBox{border:1px solid rgba(143,216,255,.35);background:rgba(143,216,255,.06);border-radius:9px;padding:8px 10px;margin:0 0 8px;font-size:12.5px;color:#cfe6f5;text-align:center;}.stormBox b{display:block;font-family:var(--fd);letter-spacing:.08em;color:#8fd8ff;font-size:13px;margin-bottom:2px;}
+.lbprize{font-size:11.5px;color:var(--dim);text-align:center;margin:0 0 8px;}.lbwait{text-align:center;color:var(--dim);font-size:13px;padding:14px 0;}.lbrow.me2{border-color:var(--gold);background:rgba(242,169,59,.1);}
+.finRank{font-family:var(--fd);font-size:14px;color:#8fd8ff;text-align:center;margin:-2px 0 6px;letter-spacing:.04em;}
+.snHead{text-align:center;margin:-2px 0 10px;}.snHead b{display:block;font-family:var(--fd);font-size:16px;letter-spacing:.08em;color:#c9b4ff;}.snHead span{display:block;font-size:12.5px;color:#cdd3e0;margin-top:2px;}.snHead small{display:block;font-size:11.5px;color:var(--dim);margin-top:3px;}
+.snBar{margin:0 0 10px;}.snT{display:flex;justify-content:space-between;font-family:var(--fm,monospace);font-size:11px;color:var(--dim);margin-bottom:4px;}.snBar .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;}.snBar i{display:block;height:100%;background:linear-gradient(90deg,#8f6bff,#c9b4ff);}
+.sngrid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;max-height:34vh;overflow-y:auto;}.snc{border:1px solid var(--line);border-radius:7px;padding:5px 2px;text-align:center;background:var(--pan);}
+.snc i{display:block;font-style:normal;font-size:16px;line-height:1.1;}.snc b{display:block;font-family:var(--fd);font-size:9px;color:var(--dim);}.snc small{display:block;font-size:9px;color:#cdd3e0;}
+.snc.ok{border-color:rgba(127,214,176,.55);background:rgba(127,214,176,.1);}.snc.cur{border-color:#c9b4ff;box-shadow:0 0 10px rgba(201,180,255,.35);}.snc.big{border-color:rgba(255,215,106,.6);}
+.snHow{font-size:11.5px;color:var(--dim);margin:10px 0 8px;line-height:1.5;}.snHow b{color:#cdd3e0;}
 .gfJack{margin:0 0 8px;padding:7px 10px;border-radius:9px;border:1.5px solid rgba(255,215,106,.7);background:linear-gradient(90deg,rgba(255,200,80,.16),rgba(255,140,60,.1));text-align:center;}
 .gfJack b{display:block;font-family:var(--fd);color:#ffd76a;letter-spacing:.12em;font-size:14px;}.gfJack span{display:block;font-family:var(--fd);font-size:17px;color:#fff3c4;}.gfJack small{display:block;font-size:11.5px;color:#d8c9a0;margin-top:1px;}
 .gfJack.hit{animation:gfq 1s ease-in-out infinite;border-color:#fff3c4;box-shadow:0 0 22px rgba(255,215,106,.55);}
@@ -652,6 +662,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="modal card" id="mOver">
    <div class="h" style="color:var(--red);">OYUN BİTTİ</div>
    <div class="big-num" id="finScore" style="font-size:44px;">0</div>
+   <div class="finRank" id="finRank" hidden></div>
    <div class="near" id="finNear"></div>
    <div style="margin:10px 0;">
     <div class="stat"><span id="finLvLbl">Ulaşılan seviye</span><span id="finLevel">1</span></div>
@@ -707,7 +718,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   </div>
   <div class="dock">
    <button id="dmBtn">📋<span>GÖREVLER</span><em id="dmBadge"></em></button>
-   <button id="lbBtn">🏆<span>REKORLAR</span></button>
+   <button id="snBtn">🌀<span>SEZON</span><em id="snBadge"></em></button>
+   <button id="lbBtn">🏆<span>SIRALAMA</span></button>
    <button id="atBtn">📖<span>ATLAS</span><em id="atBadge"></em></button>
    <button id="guideBtn">❓<span>REHBER</span></button>
    <button id="shopBtn" class="mon">🛒<span>MAĞAZA</span></button>
@@ -793,11 +805,27 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <!-- LEADERBOARD -->
 <div class="screen" id="sLB" style="z-index:130;">
  <div class="card">
-  <div class="h">🏆 REKORLARIM</div>
+  <div class="h">🏆 SIRALAMA</div>
+  <div class="lbtabs"><button id="lbTW" class="on">🌍 GÜNÜN FIRTINASI</button><button id="lbTM">📜 REKORLARIM</button></div>
+  <div id="lbWorld"></div>
+  <div id="lbMine">
   <div class="lbstats" id="lbStats"></div>
   <div id="lbList"></div>
   <div class="lbnote">Arkadaşlarınla yarışmak için Günlük Kozmos sonucunu paylaş ya da meydan okuma linki gönder.</div>
+  </div>
   <div class="row"><button class="btn" id="lbClose">KAPAT</button></div>
+ </div>
+</div>
+
+<!-- SEASON -->
+<div class="screen" id="sSeason" style="z-index:130;">
+ <div class="card">
+  <div class="h">🌀 SEZON</div>
+  <div class="snHead" id="snHead"></div>
+  <div class="snBar"><div class="snT" id="snT"></div><div class="bar"><i id="snFill"></i></div></div>
+  <div class="sngrid" id="snGrid"></div>
+  <div class="snHow" id="snHow"></div>
+  <div class="row"><button class="btn" id="snClose">KAPAT</button></div>
  </div>
 </div>
 
@@ -852,6 +880,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow vol"><input type="range" id="sSfxV" min="0" max="1" step="0.05" aria-label="Efekt ses seviyesi"></div>
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
+  <div class="srow"><span>🌍 Dünya sıralamasına katıl</span><button class="tg" id="sLbOn"></button></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
   <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
   <div class="srow"><span>👆 Parmak mesafesi</span><div class="seg" id="sFd"><button>YAKIN</button><button>ORTA</button><button>UZAK</button></div></div>
@@ -863,7 +892,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    Ses efektleri: <a href="https://kenney.nl" target="_blank" rel="noopener">Kenney.nl</a> — CC0 ve Lias Labs<br>
    Müzik: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno99), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA) — <a href="https://opengameart.org" target="_blank" rel="noopener">OpenGameArt.org</a>, CC0<br>
    <span class="notr">© 2026 Lias Labs · <a href="mailto:liaslabs.games@gmail.com">liaslabs.games@gmail.com</a></span><br>
-   <span id="privRow">🔒 Oyun kişisel veri toplamaz; her şey cihazında saklanır. <a href="privacy.html" target="_blank" rel="noopener">Gizlilik politikası</a></span></div>
+   <span id="privRow">🔒 Oyun kişisel veri toplamaz. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir. <a href="privacy.html" target="_blank" rel="noopener">Gizlilik politikası</a></span></div>
   <div class="row"><button class="btn" id="setClose">TAMAM</button></div>
  </div>
 </div>
@@ -893,7 +922,7 @@ const SK='bhs_v7';
 let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
-const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1};
+const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,lb:true};
 // ══════════════════════════════════════════════════════
 // ICONS. Emoji in any on-screen text are drawn as these SVG icons (the strings, translations and share texts
 // keep their emoji). Colored icons use the gradients in #icoDefs; line icons follow the text color.
@@ -1046,7 +1075,7 @@ let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
 let SHOP={noAds:false,cid:false,tkey:0,lives:0,shield:0,shards:0,time:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
-function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,hrt:HEARTS,atl:COSMO,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
+function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -1062,6 +1091,9 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
   {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999)};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
+  {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};}
+  PID=typeof d.pid==='string'&&/^[a-z0-9]{12,40}$/.test(d.pid)?d.pid:newPid();
+  {const b=svO(d.stb)||{};STORMB={day:typeof b.day==='string'?b.day:'',best:svI(b.best,0,0,1e9),sp:typeof b.sp==='string'?b.sp:''};}
   {const h=svO(d.hrt)||{};HEARTS.n=svI(h.n,HRT.max,0,HRT.max);HEARTS.t=svN(h.t,0,0,Date.now());}
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
@@ -1703,7 +1735,7 @@ function renderDM(){
   box.innerHTML=h;box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>dmClaim(+b.dataset.i));
 }
 function dmClaim(i){
-  const m=DM.list[i];if(!m||!m.done||m.cl)return;const d=MPOOL.find(x=>x.id===m.id);m.cl=true;if(d.r[0]==='⭐')stars+=d.r[1];else diamonds+=d.r[1];
+  const m=DM.list[i];if(!m||!m.done||m.cl)return;const d=MPOOL.find(x=>x.id===m.id);m.cl=true;spAdd(15);if(d.r[0]==='⭐')stars+=d.r[1];else diamonds+=d.r[1];
   sfx('coin',{vol:.6});sfx('confirm',{vol:.4,delay:.08});
   if(DM.list.every(x=>x.cl)&&!DM.bonus){DM.bonus=true;diamonds+=10;sfx('achieve',{vol:.6,delay:.2});}
   saveG();renderDM();$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;
@@ -1714,7 +1746,7 @@ function dmClaim(i){
 // ══════════════════════════════════════════════════════
 const MODE_TAG={classic:'Klasik',survival:'Hayatta kalma',sprint:'60 sn'};
 function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);localLB=localLB.slice(0,10);saveG();}
-function showLB(){const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
+function showLB(){lbTab('w');const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
   const fmt=n=>n.toLocaleString(LOC);
   $('lbStats').innerHTML=[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]]
     .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
@@ -2076,6 +2108,74 @@ let GIFTS=null;
 const RISK_CARDS=[{id:'storm',ic:'☄️',n:'METEOR FIRTINASI',d:'Meteorlar 2 kat. Puan ×1,5.',rw:{gems:4}},{id:'rush',ic:'⚡',n:'HIZLI EVREN',d:'Her şey %25 daha hızlı. Puan ×1,4.',rw:{gems:4}},
   {id:'greed',ic:'💰',n:'AÇGÖZLÜ',d:'Hedef puan %25 daha yüksek.',rw:{gems:5,stars:100}},{id:'glass',ic:'💔',n:'CAM KALP',d:'Seviyeye 2 canla başla.',rw:{gems:8}},{id:'dark',ic:'🌑',n:'KARANLIK',d:'Seviyede iki tutulma olur. Puan ×1,3.',rw:{gems:4}}];
 const RISK={lv:0,mod:null};
+// ══════════════════════════════════════════════════════
+// PACKAGE D: DAILY STORM (survival's scenario of the day), SEASONS, WORLD LEADERBOARD
+// ══════════════════════════════════════════════════════
+const LB_URL=String(window.BHS_LB_URL||'').replace(/\/+$/,''); // the Cloudflare Worker from server/README.md; empty keeps the world board offline
+const utcDay=(t=Date.now())=>new Date(t).toISOString().slice(0,10);
+function daySeed(d){let h=2166136261;for(const c of d)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;return h;}
+const STORM_MODS=[{id:'wind',ic:'🌬',n:'RÜZGÂRLI GÜN',d:'Yıldız rüzgârı sık eser.'},{id:'eclipse',ic:'🌑',n:'TUTULMA GECESİ',d:'Tutulmalar sık gelir.'},{id:'cons',ic:'✨',n:'YILDIZ YAĞMURU',d:'Takımyıldızlar sık belirir.'},
+  {id:'gold',ic:'🌕',n:'ALTIN YAĞMURU',d:'Altın gezegen ve kristal 2 kat, meteor da fazla.'},{id:'giant',ic:'🪐',n:'DEVLER GÜNÜ',d:'Gezegenler sık gelir, daha hızlı büyürsün.'},{id:'twin',ic:'🪞',n:'İKİZLER GÜNÜ',d:'Ayna taşları sık gelir.'},
+  {id:'fast',ic:'⚡',n:'HIZLI GÜN',d:'Her şey %15 hızlı, puan ×1,25.'},{id:'dense',ic:'🪨',n:'KALABALIK GÜN',d:'Daha çok cisim, daha çok meteor.'}];
+function stormToday(d=utcDay()){const r=mulberry(daySeed(d));const a=Math.floor(r()*STORM_MODS.length);let b=Math.floor(r()*(STORM_MODS.length-1));if(b>=a)b++;return [STORM_MODS[a],STORM_MODS[b]];}
+let STORM={on:false,mods:[],day:''},STORMB={day:'',best:0,sp:''},PID='';
+function stormHas(id){return gameMode==='survival'&&STORM.on&&STORM.mods.some(m=>m.id===id);}
+function stormTxt(){return stormToday().map(m=>`${m.ic} ${T(m.n)}`).join(' + ');}
+function newPid(){const a='abcdefghijklmnopqrstuvwxyz0123456789';let s='';const c=window.crypto&&crypto.getRandomValues?crypto.getRandomValues(new Uint8Array(20)):null;for(let i=0;i<20;i++)s+=a[(c?c[i]:Math.floor(Math.random()*256))%36];return s;}
+async function lbFetch(path,body){if(!LB_URL)throw new Error('off');const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
+  try{const r=await fetch(LB_URL+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ac.signal}:{signal:ac.signal});const j=await r.json();if(!r.ok&&!j)throw new Error(r.status);return j;}finally{clearTimeout(tm);}}
+function lbQueue(){try{return JSON.parse(localStorage.getItem('bhs_lbq')||'null');}catch(e){return null;}}
+async function stormSubmit(score,secs){const day=STORM.day||utcDay();
+  if(STORMB.day!==day)STORMB={day,best:0,sp:STORMB.sp};if(score>STORMB.best)STORMB.best=score;if(STORMB.sp!==day){STORMB.sp=day;spAdd(10);}saveG();
+  if(!LB_URL||!SET.lb||score<=0||secs<5)return null;const body={pid:PID,name:playerName||'PİLOT',score,secs:Math.round(secs),day};
+  try{const j=await lbFetch('/score',body);try{localStorage.removeItem('bhs_lbq');}catch(e){}return j;}catch(e){try{const q=lbQueue();if(!q||q.day!==day||q.score<score)localStorage.setItem('bhs_lbq',JSON.stringify(body));}catch(e2){}return {off:true};}}
+async function lbFlush(){const q=lbQueue();if(!q||!LB_URL||!SET.lb)return;if(q.day!==utcDay()){try{localStorage.removeItem('bhs_lbq');}catch(e){}return;}try{await lbFetch('/score',q);localStorage.removeItem('bhs_lbq');}catch(e){}}
+async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day});
+  if(c&&c.ok&&c.stars>0){grant({stars:c.stars},`🏆 ${T('GÜNÜN FIRTINASI')} · ${p.rank}.`);sfx('achieve',{vol:.7});}}}catch(e){}}
+async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
+  const head=`<div class="stormBox"><b>⛈ ${T('GÜNÜN FIRTINASI')}</b>${stormTxt()}<br><small>${T('Hayatta Kal modunda herkes aynı fırtınada yarışır.')}</small></div><div class="lbprize">${T('Gün sonunda (UTC) ödül')}: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐</div>`;
+  const mine=STORMB.day===day&&STORMB.best?`<div class="lbprize">${T('Bugünkü en iyin')}: <b>${STORMB.best.toLocaleString(LOC)}</b></div>`:'';
+  if(!LB_URL){w.innerHTML=head+mine+`<div class="lbwait">${T('Dünya sıralaması çok yakında açılıyor.')}</div>`;return;}
+  if(!SET.lb){w.innerHTML=head+mine+`<div class="lbwait">${T('Dünya sıralaması Ayarlar’dan kapalı.')}</div>`;return;}
+  w.innerHTML=head+mine+`<div class="lbwait">${T('Yükleniyor…')}</div>`;
+  try{const j=await lbFetch(`/top?day=${day}&pid=${PID}`);if(!$('sLB').classList.contains('on'))return;const med=['🥇','🥈','🥉'];
+    const rows=(j.list||[]).map(e=>`<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div><div class="n notr">${String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div></div>`).join('');
+    const me=j.me&&!(j.list||[]).some(e=>e.me)?`<div class="lbrow me2"><div class="r">${j.me.rank}</div><div class="n notr">${String(playerName||'PİLOT').replace(/[<>&"]/g,'')}</div><div class="p">${j.me.score.toLocaleString(LOC)}</div></div>`:'';
+    w.innerHTML=head+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;}
+  catch(e){w.innerHTML=head+mine+`<div class="lbwait">${T('Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.')}</div>`;}}
+function lbTab(t){$('lbTW').classList.toggle('on',t==='w');$('lbTM').classList.toggle('on',t!=='w');$('lbWorld').hidden=t!=='w';$('lbMine').hidden=t==='w';if(t==='w')renderLBWorld();}
+
+// SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
+const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha sık gelir; atlatılan her tutulma 2 kat SP verir.'},{id:'wind',ic:'🌬',n:'RÜZGÂR SEZONU',d:'Yıldız rüzgârı daha sık eser; her rüzgâr 2 kat SP verir.'},
+  {id:'cons',ic:'✨',n:'TAKIMYILDIZ SEZONU',d:'Takımyıldızlar daha sık belirir; tamamlanan her biri 2 kat SP verir.'},{id:'gold',ic:'🌕',n:'ALTIN SEZON',d:'Altın gezegenler ve kristaller daha sık gelir.'},
+  {id:'rival',ic:'🌑',n:'RAKİPLER SEZONU',d:'Rakip, İkiz ve Koruyucu seviyeleri 2 kat SP verir.'},{id:'meteor',ic:'☄️',n:'METEOR SEZONU',d:'Biraz daha çok meteor; her PERFECT DODGE +2 SP.'}];
+const SEA={tiers:30,per:100};
+let SEASON={id:'',sp:0,tier:0,badges:[]};
+const seasonId=()=>utcDay().slice(0,7);
+function seasonTheme(id=seasonId()){const p=id.split('-').map(Number);return SEASON_T[((p[0]||0)*12+(p[1]||1))%SEASON_T.length];}
+function seasonIs(k){return gameMode!=='sprint'&&seasonTheme().id===k;}
+function seasonRoll(){const id=seasonId();if(SEASON.id!==id){SEASON.id=id;SEASON.sp=0;SEASON.tier=0;}}
+function seasonReward(i){if(i===SEA.tiers)return {stars:1000,gems:50,badge:1};if(i===20)return {tkey:1};if(i%10===0)return {gems:20};if(i%5===0)return {shield:1,stars:100};if(i%2===0)return {gems:3};return {stars:40+i*5};}
+function seasonRwTxt(r){const p=[];if(r.stars)p.push(`${r.stars.toLocaleString(LOC)} ⭐`);if(r.gems)p.push(`${r.gems} 💎`);if(r.shield)p.push(`${r.shield} 🛡`);if(r.tkey)p.push('🗝');if(r.badge)p.push('🏅');return p.join(' · ');}
+function seasonIcon(r){return r.badge?'🏅':r.tkey?'🗝':r.shield?'🛡':r.gems?'💎':'⭐';}
+function seasonGive(i){const r=seasonReward(i),g={stars:r.stars||0,gems:r.gems||0,shield:r.shield||0};
+  if(r.tkey){if((SHOP.tkey|0)<1)SHOP.tkey=1;else g.gems+=90;} // already holding a key: its price in diamonds instead
+  if(r.badge&&!SEASON.badges.includes(SEASON.id))SEASON.badges.push(SEASON.id);
+  stars+=g.stars;diamonds+=g.gems;SHOP.shield+=g.shield;
+  achQueue.push({i:'🌀',t:T('SEZON')+' · '+T('KADEME {k}',{k:i}),d:seasonRwTxt(r),at:performance.now()});if(!achShowing)nextAch();}
+function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;seasonRoll();SEASON.sp+=Math.round(n);let up=0;
+  while(SEASON.tier<SEA.tiers&&SEASON.sp>=(SEASON.tier+1)*SEA.per){SEASON.tier++;up++;seasonGive(SEASON.tier);}
+  if(up){saveG();updateUI();}else saveSoon();seasonBadge();}
+function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();e.textContent=`${SEASON.tier}/${SEA.tiers}`;}
+function renderSeason(){seasonRoll();const th=seasonTheme(),now=new Date(),end=Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1),left=Math.max(1,Math.ceil((end-Date.now())/864e5));
+  $('snHead').innerHTML=`<b>${th.ic} ${T(th.n)}</b><span>${T(th.d)}</span><small>${T('Sezonun bitmesine {d} gün',{d:left})}</small>`;
+  const inT=SEASON.tier>=SEA.tiers?SEA.per:SEASON.sp-SEASON.tier*SEA.per;
+  $('snT').innerHTML=`<span>${T('KADEME {k}',{k:SEASON.tier})} / ${SEA.tiers}</span><span>${SEASON.tier>=SEA.tiers?'✓':`${inT} / ${SEA.per} SP`}</span>`;$('snFill').style.width=(inT/SEA.per*100)+'%';
+  let h='';for(let i=1;i<=SEA.tiers;i++){const r=seasonReward(i);h+=`<div class="snc${i<=SEASON.tier?' ok':i===SEASON.tier+1?' cur':''}${i%10===0?' big':''}"><i>${i<=SEASON.tier?'✓':seasonIcon(r)}</i><b>${i}</b><small>${r.stars&&!r.gems?r.stars:r.gems?r.gems:''}</small></div>`;}
+  $('snGrid').innerHTML=h;
+  $('snHow').innerHTML=`<b>${T('SP nasıl kazanılır')}</b><br>${[T('Seviye bitir: +10 SP, her yıldız +5'),T('Özel seviye: +10 SP · Boss: +25 SP'),T('Günlük görev: +15 SP · Olay atlat: +8 SP'),T('Hayatta Kal: her 15 saniye +1 SP'),T('Günün Fırtınası: günde bir kez +10 SP')].join('<br>')}`+
+    (SEASON.badges.length?`<br><br><b>${T('Sezon rozetlerin')}</b><br>${SEASON.badges.map(b=>'🏅 '+b).join(' · ')}`:'');}
+
 function riskDue(l){return gameMode==='classic'&&!REPLAY&&l>=12&&l%5===2&&!v2RuleFor(l);}
 function showRisk(done){let h=Math.imul(level,2246822519)>>>0;const pool=RISK_CARDS.slice(),pick=[];while(pick.length<2){pick.push(pool.splice(h%pool.length,1)[0]);h=(h>>>3)+7;}
   $('rkList').innerHTML=pick.map(c=>`<button class="rkc" data-rk="${c.id}"><i>${c.ic}</i><b>${c.n}</b><span>${c.d}</span><em>${T('Ödül')}: ${giftTxt(c.rw)}</em></button>`).join('');
@@ -2236,7 +2336,7 @@ function initLevel(){
   if(!REPLAY){savedLevel=level;savedScore=totalScore;saveG();}
   updateUI();gState='playing';lastT=performance.now();v2Start('level');
 }
-function startSurvival(){runId++;setZone(0);gState='playing';lastT=performance.now();livesAtStart=lives;v2Start('surv');}
+function startSurvival(){runId++;STORM={on:true,mods:stormToday(),day:utcDay()};rngS=mulberry(daySeed(STORM.day)^0x5bd1e995);setZone(0);gState='playing';lastT=performance.now();livesAtStart=lives;v2Start('surv');}
 function updateCombo(){
   const el=$('combo');
   if(comboCount>=3){el.textContent=comboCount>=10?`×${comboCount} INSANE!`:comboCount>=7?`×${comboCount} FIRE!`:comboCount>=5?`×${comboCount} COMBO!`:`×${comboCount} COMBO`;
@@ -2290,11 +2390,14 @@ function showCont(){
 }
 function retryLevel(){hideModals();SND.duck(1,0);SND.setDrone(.14,650);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();resetRun(false);}
 function gameOver(){
+  rngS=null; // the daily storm's seeded spawns end with the run
   dmEvent('score',totalScore,true);
   $('finNear').textContent=totalScore>runStartBest&&totalScore>0?'🏆 YENİ REKOR!':runStartBest>0?`Rekoruna ${(runStartBest-totalScore).toLocaleString(LOC)} puan kaldı`:'';
   if(totalScore>bestScore)bestScore=totalScore;totalGames++;addLB(totalScore);if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();
   $('finScore').textContent=totalScore.toLocaleString(LOC);const sv=gameMode==='survival';$('finLvLbl').textContent=sv?'Ulaşılan hız':'Ulaşılan seviye';$('finLevel').textContent=sv?`${effLevel()} · ${Math.floor(survTime/60)}:${String(Math.floor(survTime%60)).padStart(2,'0')}`:level;
   $('finBest').textContent=bestScore.toLocaleString(LOC);$('finCombo').textContent=maxCombo;
+  {const fr=$('finRank');fr.hidden=true;if(sv&&STORM.on){const run=runId;fr.hidden=false;fr.textContent='⛈ '+T('GÜNÜN FIRTINASI');STORM.on=false;
+    stormSubmit(totalScore,survTime).then(j=>{if(run!==runId||!j)return;fr.textContent=j.off?'⛈ '+T('Çevrimdışı: skorun sonra gönderilecek'):j.ok?`🌍 ${T('Dünya sırası')}: #${j.rank} / ${j.total}`:'⛈ '+T('GÜNÜN FIRTINASI');});}}
   showModal('mOver');sfx('gameover',{vol:.8,rev:.4});gState='over';SND.music('menu');
 }
 function fillWallets(){const t=`<span>⭐ ${stars.toLocaleString(LOC)}</span><span>💎 ${diamonds.toLocaleString(LOC)}</span><span>🛡 ${SHOP.shield}${SHOP.shards?` <small>+${SHOP.shards}/3</small>`:''}</span>`;
@@ -2457,6 +2560,7 @@ addEventListener('popstate',()=>{
   else if(on('sGuide')){$('sGuide').classList.remove('on');}
   else if(on('sDM')){$('sDM').classList.remove('on');}
   else if(on('sLB')){$('sLB').classList.remove('on');}
+  else if(on('sSeason')){$('sSeason').classList.remove('on');}
   else if(on('sChal')){$('sChal').classList.remove('on');}
   else if(gState==='playing'||gState==='rescue_play'){pauseGame();}
   else if(gState==='paused'){resumeGame();}
@@ -2526,7 +2630,7 @@ document.addEventListener('keydown',e=>{if(e.code==='Space'&&gState==='playing'&
 // ══════════════════════════════════════════════════════
 function syncSettingsUI(){[...$('sFd').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.fd??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
-  $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
+  $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
   const pl=(id,on)=>{const e=$(id);e.textContent=on?'AÇIK':'KAPALI';e.className=on?'':'off';};pl('pMusicL',SET.music);pl('pSfxL',SET.sfx);
 }
@@ -2535,7 +2639,7 @@ $('sMus').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('sSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();sfx('click',{vol:.4});};
 {const ls=$('sLang');ls.innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join('');ls.onchange=()=>{setLang(ls.value,true);syncSettingsUI();if($('sMenu').classList.contains('on'))selMode(gameMode);};}
 $('sVib').onclick=()=>{SET.vib=!SET.vib;setChanged();vib(30);};
-$('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};
+$('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};$('sLbOn').onclick=()=>{SET.lb=!SET.lb;setChanged();};
 $('sMusV').oninput=e=>{SET.musicVol=+e.target.value;SND.applySettings();};$('sMusV').onchange=saveG;
 $('sSfxV').oninput=e=>{SET.sfxVol=+e.target.value;SND.applySettings();};$('sSfxV').onchange=()=>{saveG();sfx('coin',{vol:.5});};
 
@@ -2583,12 +2687,12 @@ const MODE_TXT={
 function showMenu(){
   if(G2.on)v2Stop();
   runId++;pendingWin=false;
-  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();atlasBadge();
+  setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();atlasBadge();seasonBadge();
   $('menuSub').textContent=loginStreak>1?`🔥 ${loginStreak} günlük seri`:'Hoş geldin, kaptan';
   renderMapCard();monApply();
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(gameMode);updateUI();renderEvo();renderDM();renderDaily();
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();fitMenu();requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}fitMenu();requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';
@@ -2597,13 +2701,14 @@ function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu')
 if(document.fonts)document.fonts.ready.then(()=>fitMenu());
 addEventListener('resize',()=>requestAnimationFrame(fitMenu));
 const capName=x=>LANG==='de'?x.toLocaleLowerCase(LOC).replace(/(^|\s)(\S)/g,(m,a,c)=>a+c.toLocaleUpperCase(LOC)):x.charAt(0)+x.slice(1).toLocaleLowerCase(LOC); // German capitalises nouns
-function selMode(m){gameMode=m;$('modeC').classList.toggle('on',m==='classic');$('modeS').classList.toggle('on',m==='survival');$('modeDesc').innerHTML=MODE_TXT[m];
+function selMode(m){gameMode=m;$('modeC').classList.toggle('on',m==='classic');$('modeS').classList.toggle('on',m==='survival');$('modeDesc').innerHTML=MODE_TXT[m]+(m==='survival'?`<div class="stormBox"><b>⛈ ${T('GÜNÜN FIRTINASI')}</b>${stormTxt()}</div>`:'');
   const Z=ZONES[zoneOf(savedLevel)];
-  $('startBtn').innerHTML=m==='classic'?(savedLevel>1?`▶ DEVAM ET · SEVİYE ${savedLevel}<small><span class="notr">${capName(T(Z.n))}</span> · ${totalStars()} ⭐ yıldız</small>`:'▶ OYNA<small>Klasik · seviye 1</small>'):`▶ OYNA · HAYATTA KAL<small>En iyi: ${bestScore.toLocaleString(LOC)} puan</small>`;}
+  $('startBtn').innerHTML=m==='classic'?(savedLevel>1?`▶ DEVAM ET · SEVİYE ${savedLevel}<small><span class="notr">${capName(T(Z.n))}</span> · ${totalStars()} ⭐ yıldız</small>`:'▶ OYNA<small>Klasik · seviye 1</small>'):`▶ OYNA · HAYATTA KAL<small>⛈ ${stormTxt()}</small>`;} // survival is today's Daily Storm
 $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('survival');
 $('startBtn').onclick=()=>{if(gameMode==='classic'&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(savedLevel,()=>$('startBtn').click()))return;SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
-$('lbBtn').onclick=showLB;
+$('lbBtn').onclick=showLB;$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');
+$('snBtn').onclick=()=>{sfx('click',{vol:.4});renderSeason();$('sSeason').classList.add('on');};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
 $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
