@@ -838,7 +838,7 @@ function v2Hit(o){
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
   const tutorial=level===1&&G2.mode==='level';
-  if(!(tutorial&&lives<=1)){lives--;heartFx(Math.max(0,lives),'drain');v2HitNote();}
+  if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);heartFx(Math.max(0,lives),'drain');v2HitNote();}
   v2Pop('-1 ♥','#ff7a5c',20);updateUI();
   if(lives<=0){v2Fail(null);}
 }
@@ -848,6 +848,7 @@ function v2HitNote(){ // freeze the action for a beat and say what happened
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
+  if(gState==='tip'){hideModals();G2.tip=null;gState='playing';SND.duck(1,0);} // a tip card opened earlier in the same frame must not swallow the loss
   if(gState!=='playing')return;ghostSave();gState='over';G2.failMsg=msg;SND.setDrone(.08,300);SND.duck(.35,2);
   if(msg){lives=0;v2Call(msg==='DEV GEZEGEN KAÇTI'?(G2.boss&&G2.boss.bt&&G2.boss.bt!=='planet'?'THE STAR ESCAPED':'THE PLANET ESCAPED'):msg,'','#ff7a5c',2,true);}
   setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();},850);
