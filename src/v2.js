@@ -70,13 +70,14 @@ const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa can gider. Kıl p
   19:['🌀','WORMHOLE','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan sana gönderir.']};
 // Level types: most levels are "reach the score", but from level 11 every few levels one has its own rule.
 const RSETS=[{ban:['ast','frag'],ic:'🪨',n:'ASTEROİT YASAK',k:.6},{ban:['moon','planet','half','split'],ic:'🌑',n:'AY VE GEZEGEN YASAK',k:.55},{ban:['crystal','energy','gold','comet'],ic:'💎',n:'PARLAK CİSİMLER YASAK',k:.4}];
-function v2LevelType(l){if(l<11||l%10===0||l%10===9)return 'score';const sp=l<=20?l%4===3:l%3===2;return sp?['restrict','window','hunt'][Math.floor(l/(l<=20?4:3))%3]:'score';}
+function v2LevelType(l){if(l<11||l%10===0||l%10===9)return 'score';if(l<=20)return l%4===3?['restrict','window','hunt'][Math.floor(l/4)%3]:'score';return l%3===2?['restrict','window','hunt','rival'][Math.floor(l/3)%4]:'score';} /* the rival joins the rotation from level 21 */
 function v2RuleFor(l){const t=v2LevelType(l);
   if(t==='restrict'){const s=RSETS[Math.floor(l/7)%(l<30?2:3)];/* the hardest set (no bright bodies) only from level 30 */return {t,tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(t==='window'){const late=l>30;return {t,tip:'window',win:1,lo:late?1.6:1.4,hi:late?2.3:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:late?.4:.5};}
   if(t==='hunt')return {t,tip:'hunt',hunt:1,need:l>40?5:4,life:l>40?14:16,ic:'🎯',n:'AV',k:0};
+  if(t==='rival')return {t,tip:'rival',rival:1,ic:'🌑',n:'RAKİP KARA DELİK',k:0};
   return null;}
-const RULE_NEW={restrict:'Yasaklı cisimler seni iter; üstlerine gidersen combo yarıya iner. Hedef puan daha düşük.',window:'Puan sadece kara delik yeşil aralıktayken gelir. Fazla büyürsen buharlaşırsın; o sırada yediğin puan getirmez.',hunt:'Altın avı çekim alanında tutarak yor; yorulunca kızarır, o an yut. Süresi dolarsa kaçar ve can götürür.'};
+const RULE_NEW={restrict:'Yasaklı cisimler seni iter; üstlerine gidersen combo yarıya iner. Hedef puan daha düşük.',window:'Puan sadece kara delik yeşil aralıktayken gelir. Fazla büyürsen buharlaşırsın; o sırada yediğin puan getirmez.',hunt:'Altın avı çekim alanında tutarak yor; yorulunca kızarır, o an yut. Süresi dolarsa kaçar ve can götürür.',rival:'Başka bir kara delik cisimleri kapıyor. Senden büyükken kaç; onu geçince yut, seviye biter.'};
 function new2(l){const ru=G2.mode!=='sprint'?v2RuleFor(l):null;if(ru&&!NEW2[l])return [ru.ic,ru.n,RULE_NEW[ru.t]];return NEW2[l]||(l%10===0?(v2BossType(l)==='red'?['🔴','RED GIANT','Boss: nefes alan yıldız; şişince daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.']:v2BossType(l)==='nova'?['💥','SUPERNOVA','Boss: her 7 saniyede patlar ve etrafa enkaz saçar. Enkazı yut, küçülünce onu da yut.']:NEW2[10]):null);}
 
 const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,shardAt:1e9,gift:0,
@@ -114,8 +115,8 @@ function v2Start(mode){
   holeK=1;
   const l=v2Lv();G2.lv=l;G2.L=v2Rules(l);
   const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;
-  const goal=mode==='level'&&!(rule&&rule.hunt)?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
-  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&rule.hunt)?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,
+  const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -123,10 +124,11 @@ function v2Start(mode){
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   if(mode==='level')lives=3; // every level starts with 3 lives; the stars count what is left
+  if(rule&&rule.rival)G2.rv=v2RivalNew();
   if(G2.L.boss&&mode==='level')v2BossInit();
   else if(mode==='level'&&level%10===1&&level>1&&!REPLAY){const z=zoneOf(level),Z=ZONES[z];sigShow('🌌 '+T('YENİ BÖLGE')+' · '+T(Z.n),T(Z.d),6);}
   const nw=mode==='level'?new2(level):null;
-  if(mode==='level'&&level>1)v2Call('LEVEL '+level,nw?`NEW: ${nw[0]} ${nw[1]}`:'',nw?'#ffb35c':'#e7e3da',2.2,true);
+  if(mode==='level'&&level>1)v2Call('LEVEL '+level,nw?`NEW: ${nw[0]} ${T(nw[1])}`:'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv')v2Call('SURVIVE THE STORM','','#e7e3da',2);
   gState='playing';lastT=performance.now();v2Ui(true);
 }
@@ -386,6 +388,7 @@ function v2Update(dt){
     if(G2.swarm>0){G2.swarmT-=dt;if(G2.swarmT<=0&&v2Active()<20){G2.swarmT=.09;G2.swarm--;const q=rng();v2Edge(q<.08?'crystal':q<.25?'moon':'ast',rng()<.75?0:null);}}
   }
   if(G2.hunt&&!G2.ending)v2HuntStep(dt);
+  if(G2.rv)v2RivalStep(dt);
   // level timer
   if(G2.mode==='level'&&!G2.ending){
     if(G2.hunt&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('GOAL!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
@@ -419,6 +422,7 @@ function v2Update(dt){
   for(let i=G2.objs.length-1;i>=0;i--){const o=G2.objs[i];o.age+=dt;o.r=o.rr*S;
     if(o.st==='dead'){G2.objs.splice(i,1);continue;}
     if(o.st==='sw'){if(v2SwallowStep(o,dt)){G2.objs.splice(i,1);}continue;}
+    if(o.st==='rv'){if(v2RivalSuck(o,dt))G2.objs.splice(i,1);continue;}
     if(o.spinA!==undefined)o.spinA+=o.spinV*dt;o.rot+=o.vr*dt;
     if(o.wait>0){o.wait-=dt*tk;continue;}
     const odt=dt*tk;
@@ -522,6 +526,66 @@ function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.h
   ctx.globalCompositeOperation='source-over';if(!o.esc){ctx.strokeStyle=q<.3?'#ff6a5a':'rgba(255,215,106,.75)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(o.x,o.y,r*2.3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke(); // time left
     const tr=o.tiredT>0?1:(o.tire||0);ctx.strokeStyle=o.tiredT>0?`rgba(255,110,80,${.6+.4*Math.sin(clock*16)})`:'#fff3c4';ctx.lineWidth=5;ctx.beginPath();ctx.arc(o.x,o.y,r*1.6,-Math.PI/2,-Math.PI/2+TAU*tr);ctx.stroke();} // wear: full = catch it
   ctx.restore();}
+// ── Package C: the rival black hole ─────────────────────
+// A second hole that eats the same bodies and grows. Bigger than you: it glows red and hunts you (a touch costs a life).
+// Outgrow it (or light Rage) and it turns blue and runs: swallow it to finish the level. Meteors and antimatter shrink it too.
+const RIV={r0:1.35,cap:.86,grow:1.2,eat:1.15,lead:1.15,catch:.18,max:1.7,chase:4.5,rest:3,v:{hunt:150,feed:175,flee:200},fade:.35,retarget:.4,bite:.2};
+function v2RivalNew(){const rr=V2K.r0*RIV.r0;return {x:W*.5,y:H*.22,vx:0,vy:0,rr,R:rr*G2.S,G:0,mood:'',tg:null,rt:0,cd:0,t:0,ate:0,hitT:0,callT:-9,inT:1.2,hurtT:0,sw:0,dead:false};}
+function v2RivalCan(v,o){return o.st==='in'&&!(o.wait>0)&&!o.orb&&!o.boss&&o.k!=='meteor'&&o.k!=='prey'&&o.k!=='split'&&o.k!=='shard'&&o.r<v.R*.95;}
+function v2RivalMood(v){if(G2.rageT>0||G2.novaT>0&&G2.R>=v.R||G2.R>=v.R*RIV.eat)return 'flee';return v.R>G2.R*1.02&&!(v.cd>0)?'hunt':'feed';}
+function v2RivalStep(dt){const v=G2.rv,S=G2.S;
+  if(v.dead){if(v.sw<1){v.sw=Math.min(1,v.sw+dt/.6);v.x+=(hX-v.x)*Math.min(1,dt*6);v.y+=(hY-v.y)*Math.min(1,dt*6);}return;}
+  v.t+=dt;if(v.inT>0)v.inT-=dt;if(v.cd>0)v.cd-=dt;if(v.hitT>0)v.hitT-=dt;if(v.hurtT>0)v.hurtT-=dt;
+  v.R=v.rr*S;v.G=v.R*2.3;const cap=Math.max(V2K.r0*RIV.r0,G2.cap*RIV.cap);
+  const mood=G2.ending?'feed':v2RivalMood(v);
+  if(mood!=='flee'&&!G2.ending&&v.inT<=0){const tg=Math.min(cap,G2.rr*RIV.lead);if(v.rr<tg)v.rr+=(tg-v.rr)*RIV.catch*dt;} /* it keeps pace with you: a burst (combo, Rage, Overload) is what gets you past it */
+  if(mood!==v.mood){v.mood=mood;if(v.inT<=0&&G2.t-v.callT>2.2){v.callT=G2.t;
+    if(mood==='flee'){v2Call('IT FEARS YOU!','CATCH THE RIVAL','#8fe9ff',1.2,true);v2Sfx('bell',{vol:.5,rate:1.3});}
+    else if(mood==='hunt'){v2Call('RIVAL HUNTS YOU','OUTGROW IT','#ff6a5a',1.2,true);v2Sfx('bossIntro',{vol:.35,rate:1.8});}}}
+  // steering: chase you, flee from you, or go for the nearest body it can eat
+  const dx=v.x-hX,dy=v.y-hY,d=Math.hypot(dx,dy)||1;let ax=0,ay=0,sp=RIV.v.feed;
+  if(mood==='hunt'&&d<H*.5){ax=-dx/d;ay=-dy/d;sp=RIV.v.hunt;v.chT=(v.chT||0)+dt;if(v.chT>RIV.chase){v.chT=0;v.cd=RIV.rest;}} /* it hunts in bursts, then goes back to feeding */
+  else if(mood==='flee'){sp=RIV.v.flee;let bv=-1e9;for(let i=0;i<12;i++){const a=i/12*TAU,px=v.x+Math.cos(a)*sp2(120),py=v.y+Math.sin(a)*sp2(120);
+      const m=Math.min(px-v.R,W-v.R-px,py-v.R-sp2(60),H-v.R-sp2(56)-py),sc=Math.hypot(px-hX,py-hY)+Math.min(0,m)*3+Math.min(m,sp2(60))*.6;if(sc>bv){bv=sc;ax=Math.cos(a);ay=Math.sin(a);}}
+    v.rr=Math.max(V2K.r0,v.rr-.5*dt);} /* a scared hole bleeds a little mass, so it can always be caught */
+  if(!(ax||ay)){v.rt-=dt;if(v.rt<=0||!v.tg||!v2RivalCan(v,v.tg)){v.rt=RIV.retarget;v.tg=null;let bd=1e9;for(const o of G2.objs){if(!v2RivalCan(v,o)||o.x<0||o.x>W||o.y<0||o.y>H)continue;if(o.k==='anti'||o.k==='bomb')continue;/* it never goes for poison, but eats it if it drifts in */const q=Math.hypot(o.x-v.x,o.y-v.y);if(q<bd){bd=q;v.tg=o;}}}
+    if(v.tg){const tx=v.tg.x+v.tg.vx*.3-v.x,ty=v.tg.y+v.tg.vy*.3-v.y,td=Math.hypot(tx,ty)||1;ax=tx/td;ay=ty/td;}
+    else{ax=Math.cos(v.t*.7);ay=Math.sin(v.t*.9)*.6+(H*.35-v.y)/(H*.5);const n=Math.hypot(ax,ay)||1;ax/=n;ay/=n;sp*=.6;}}
+  if(v.inT>0)sp*=.3;const k=Math.min(1,dt*3);v.vx+=(ax*sp2(sp)-v.vx)*k;v.vy+=(ay*sp2(sp)-v.vy)*k;
+  v.x=clamp(v.x+v.vx*dt,v.R+6,W-v.R-6);v.y=clamp(v.y+v.vy*dt,v.R+sp2(60),H-v.R-sp2(56));
+  if(v.inT>0)return;
+  // its pull and its meals; meteors that cross it bite a chunk off
+  for(const o of G2.objs){if(o.st!=='in'||o.wait>0||o.orb||o.boss)continue;const ox=v.x-o.x,oy=v.y-o.y,od=Math.hypot(ox,oy)||1;
+    if(o.k==='meteor'){if(!o.hit&&od<v.R+o.r*.6){o.st='dead';v2Burst(o.x,o.y,18,'#ff8a4c',2,7,.55);if(!(v.hurtT>0))v2RivalShrink(v,.12,'RIVAL HIT');}continue;}
+    if(!v2RivalCan(v,o))continue;
+    if(od<v.G){const A=sp2(1500)*(1-od/v.G)*dt;o.vx+=ox/od*A;o.vy+=oy/od*A;}
+    if(od<v.R+o.r*.5){o.st='rv';o.t=0;o.sc=1;o.a=Math.atan2(o.y-v.y,o.x-v.x);o.d0=od;if(o.cell!==undefined){o.suck=null;o.gs=1;}
+      if(o.k==='anti')v2RivalShrink(v,.35,'ANTIMATTER!');else if(o.k==='bomb'){v2Burst(v.x,v.y,30,'#ff8a4c',2,8,.7,2);v2RivalShrink(v,.3,'BOOM!');}
+      else{v.rr=Math.min(cap,Math.max(v.rr,G2.rr*RIV.max),v.rr+OBJ2[o.k].grow*RIV.grow);v.ate++;v.pulse=1;if(o.k==='gold'||o.k==='crystal'||o.k==='planet')ftexts.push(new FText('STOLEN',o.x,o.y-o.r-sp2(8),'#ff9a8a',14));}}}
+  // contact with you
+  if(v.hitT>0)return;const cd=Math.hypot(v.x-hX,v.y-hY);if(cd>G2.R+v.R*.6)return;
+  if(mood==='flee'){v2RivalEaten(v);return;}
+  const ux=(v.x-hX)/(cd||1),uy=(v.y-hY)/(cd||1);v.vx=ux*sp2(420);v.vy=uy*sp2(420);v.hitT=1.2;v.cd=2.5;
+  if(v.R>G2.R*1.02&&!(G2.shT>0)&&!(G2.novaT>0)&&!(G2.immT>0)){G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*RIV.bite);v.rr=Math.min(cap,v.rr+1);G2.hitWhy='rival';v2Hit({x:hX+ux*G2.R,y:hY+uy*G2.R});G2.hitWhy=null;}
+  else{v2Call(G2.shT>0||G2.novaT>0||G2.immT>0?'BLOCKED':'CLASH','','#ffb35c',.8);v2Sfx('armor',{vol:.5,rate:.8});shake=Math.max(shake,5);}}
+function v2RivalShrink(v,f,msg){v.rr=Math.max(V2K.r0*.9,v.rr-(v.rr-V2K.r0*.9)*f-1);v.hurtT=1.5;shake=Math.max(shake,3);v2Sfx('armor',{vol:.45,rate:.7});if(G2.t-(v.hurtCall||-9)>1.2){v.hurtCall=G2.t;v2Call(msg,'RIVAL SHRINKS','#8fe9ff',.9);}}
+function v2RivalSuck(o,dt){const v=G2.rv;if(!v){o.st='dead';return true;}o.t+=dt;const p=Math.min(1,o.t/.35),d=o.d0*(1-p);o.a+=dt*9;o.x=v.x+Math.cos(o.a)*d;o.y=v.y+Math.sin(o.a)*d;o.sc=Math.max(.05,1-p*.95);if(o.cell!==undefined)o.gs=o.sc;
+  if(p>=1){v2Burst(v.x,v.y,8,'#ff9a8a',1,3,.35);return true;}return false;}
+function v2RivalEaten(v){v.dead=true;v.sw=0;const pts=Math.round((2500+250*v.ate)*(G2.rageT>0?V2K.rage.score:1));totalScore+=pts;levelScore+=pts;G2.rr=Math.min(G2.cap,G2.rr+4);G2.pulse=1;
+  if(G2.mode!=='sprint')atlasAdd('rival');dmEvent('rival',1);v2Call('RIVAL DEVOURED!','+'+pts.toLocaleString(LOC),'#8fe9ff',1.6,true);sfx('swallowBig',{vol:.9});sfx('achieve',{vol:.6});shake=Math.max(shake,12);flash=Math.max(flash,.5);vib([60,40,120]);
+  v2Burst(v.x,v.y,40,'#8fe9ff',2,9,.8,2.4);if(!G2.ending){G2.ending=1;G2.endT=1;}}
+function v2DrawRival(){const v=G2.rv;if(!v||v.dead&&v.sw>=1)return;const s=v.dead?1-v.sw:1,R=v.R*s,al=v.inT>0?1-v.inT/1.2:1;if(R<1)return;
+  const col=v.mood==='flee'?'120,225,255':v.mood==='hunt'?'255,80,70':'255,150,90',t=clock;ctx.save();ctx.globalAlpha=al;ctx.translate(v.x,v.y);
+  {const g=ctx.createRadialGradient(0,0,R*.9,0,0,R*2.4);g.addColorStop(0,`rgba(${col},.55)`);g.addColorStop(.4,`rgba(${col},.18)`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,R*2.4,0,TAU);ctx.fill();} // glow
+  ctx.globalCompositeOperation='lighter';ctx.lineCap='round';for(let i=0;i<5;i++){const a=t*(2.2-i*.25)+i*1.3,rr=R*(1.12+.13*i);ctx.strokeStyle=`rgba(${col},${.7-.12*i})`;ctx.lineWidth=Math.max(1.5,R*(.2-.03*i));ctx.beginPath();ctx.arc(0,0,rr,a,a+1.9-.2*i);ctx.stroke();ctx.beginPath();ctx.arc(0,0,rr,a+Math.PI,a+Math.PI+1.2-.15*i);ctx.stroke();} // accretion swirl: arms spiral one way, unlike your hole
+  ctx.globalCompositeOperation='source-over';ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,R,0,TAU);ctx.fill();
+  ctx.strokeStyle=v.hurtT>1.2?'#ffffff':`rgba(${col},.95)`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,R+1,0,TAU);ctx.stroke();
+  if(v.pulse>0){v.pulse=Math.max(0,v.pulse-.06);ctx.strokeStyle=`rgba(${col},${v.pulse})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,R*(1.2+.5*(1-v.pulse)),0,TAU);ctx.stroke();}
+  if(!v.dead&&v.inT<=0){if(v.mood==='flee'){ctx.globalAlpha=al*(.6+.4*Math.sin(t*10));ctx.strokeStyle='#8dffcb';ctx.lineWidth=2.5;ctx.setLineDash([6,5]);ctx.lineDashOffset=-t*30;ctx.beginPath();ctx.arc(0,0,R*1.75,0,TAU);ctx.stroke();ctx.setLineDash([]);} // catch me: green target ring
+    else if(v.mood==='hunt'){ctx.globalAlpha=al*(.5+.5*Math.sin(t*8));ctx.fillStyle='#ff6a5a';for(let i=0;i<4;i++){const a=i*Math.PI/2+t*.8;ctx.save();ctx.rotate(a);ctx.beginPath();ctx.moveTo(R*1.55,0);ctx.lineTo(R*1.8,-5);ctx.lineTo(R*1.8,5);ctx.closePath();ctx.fill();ctx.restore();}}} // danger: red spikes
+  ctx.restore();}
+function v2DrawRivalBar(y){const v=G2.rv,a=G2.R/G2.S/V2K.r0,b=v.R/G2.S/V2K.r0,can=v2RivalMood(v)==='flee',by=y+19;ctx.save();ctx.font='800 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';
+  ctx.fillStyle=can?'#8dffcb':v.R>G2.R*1.02?'#ff9a8a':'#ffd7a0';ctx.fillText(`${T('SEN')} ${a.toFixed(2)}  ·  ${T('RAKİP')} ${b.toFixed(2)}${can?'  ·  '+T('YUT!'):''}`,W/2,by+4);ctx.restore();}
 function v2WinOut(){const r=G2.rule;if(!r||!r.win)return 0;const s=G2.rr/V2K.r0;return s>r.hi?1:s<r.lo?-1:0;}
 function v2Score(o,mini){
   const K=OBJ2[o.k];G2.hungry=0;G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;
@@ -582,7 +646,7 @@ function v2Hit(o){
 }
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.6;const el=$('hit2');if(!el)return;
-  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
@@ -729,6 +793,7 @@ const TIP2={
   restrict:['⛔','KISITLI SEVİYE','Bu seviyede bazı cisimler yasak: üstlerinde kırmızı işaret var. Seni iterler; üstlerine gidip çarparsan combo yarıya iner. Geri kalanını yiyerek hedefi tamamla.'],
   window:['📏','BOYUT PENCERESİ','Puan sadece kara delik üstteki yeşil aralıktayken gelir. Küçüksen büyü. Fazla büyürsen buharlaşırsın ve o sırada yediğin puan getirmez: yavaş ye, aralıkta kal.'],
   hunt:['🎯','AV','Altın av yutulmaz, önce yorulması gerekir: onu çekim alanında tut, iç halkası dolsun. Yorulunca kızarır ve yavaşlar, o an üstüne git ve yut. Dokunursan kaçar. Dış halka süresidir; biterse av kaçar ve 1 can gider.'],
+  rival:['🌑','RAKİP KARA DELİK','Başka bir kara delik de burada avlanıyor ve büyüyor. Senden büyükken kırmızı parlar ve peşine düşer: dokunursa 1 can gider. Onu geçecek kadar büyüyünce maviye döner ve kaçar: yakala ve yut, seviye biter. Meteor ve antimadde onu da küçültür. Rage açıkken her boyutta yutabilirsin.'],
   rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Rage seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
@@ -792,6 +857,7 @@ function v2Frame(dt){
   v2DrawWorms();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
+  v2DrawRival();
   v2DrawMarks();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const p of G2.parts){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.sz;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2);ctx.stroke();}
@@ -836,9 +902,9 @@ function v2Rock(o,s,tint){
   ctx.restore();
 }
 function v2DrawObj(o,gl){
-  const s=o.st==='sw'?(o.sc??1):1,r=o.r*s;if(!(r>=.6))return;const k=o.k;
+  const s=o.st==='sw'||o.st==='rv'?(o.sc??1):1,r=o.r*s;if(!(r>=.6))return;const k=o.k;
   if(o.wait>0){v2DrawWarn(o);return;}
-  ctx.save();if(o.st==='sw')ctx.globalAlpha=Math.max(.15,s);
+  ctx.save();if(o.st==='sw'||o.st==='rv')ctx.globalAlpha=Math.max(.15,s);
   if(k==='prey')v2DrawPrey(o,s);
   else if(k==='plasma'){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const c=o.pc||[255,140,50],g=ctx.createRadialGradient(0,0,0,0,0,r*1.9);
     g.addColorStop(0,'rgba(255,255,240,1)');g.addColorStop(.3,`rgba(${c[0]},${c[1]},${c[2]},.95)`);g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*1.9*(1+.08*Math.sin(clock*9+o.si)),0,TAU);ctx.fill();ctx.restore();}
@@ -934,7 +1000,7 @@ function v2DrawShard(o,sc){ // a golden third of the crest, glinting
   ctx.strokeStyle=`rgba(255,250,220,${.6+.4*Math.sin(clock*6)})`;ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-s*.05,-s*1.1);ctx.lineTo(s*.12,-s*.75);ctx.lineTo(-s*.18,-s*.3);ctx.lineTo(s*.1,s*.15);ctx.lineTo(-s*.12,s*.6);ctx.lineTo(-s*.02,s*1.1);ctx.stroke();ctx.restore();
 }
 function v2DrawRule(){const r=G2.rule;if(!r||gState==='menu'||G2.ending)return;const y=sp2(20);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
-  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
+  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
   const w=ctx.measureText(txt).width+22,out=v2WinOut();ctx.fillStyle='rgba(10,12,18,.72)';ctx.strokeStyle=r.ban?'rgba(255,90,74,.8)':r.win?(out?'rgba(255,120,100,.9)':'rgba(141,255,203,.8)'):'rgba(255,215,106,.85)';ctx.lineWidth=1.5;
   const x0=W/2-w/2;ctx.beginPath();ctx.roundRect(x0,y-11,w,22,11);ctx.fill();ctx.stroke();ctx.fillStyle='#e8ebf4';ctx.fillText(txt,W/2,y+1);
   if(r.win){const bw=Math.min(W*.6,sp2(220)),bx=W/2-bw/2,by=y+19,s0=1,s1=Math.max(r.hi+.6,2.6),X=s=>bx+bw*clamp((s-s0)/(s1-s0),0,1),s=G2.rr/V2K.r0; // the size bar: green = scoring range
@@ -1060,7 +1126,7 @@ function v2Ui(force){
   const left=G2.mode==='surv'?Math.floor(survTime):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));
   {const tp=$('tmr2'),showT=G2.mode==='sprint'||!!G2.L.boss&&G2.mode==='level';if(tp&&tp.hidden!==!showT)tp.hidden=!showT; // the clock only matters in timed runs and boss fights
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',G2.mode==='level'&&left<=10);}
-  const pct=G2.hunt?G2.hunt.n/G2.hunt.need*100:G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
+  const pct=G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt?G2.hunt.n/G2.hunt.need*100:G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
   {const sc=G2.hunt?-1-G2.hunt.n:G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;$('scVal').innerHTML=G2.hunt?`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`:G2.goal?`${Math.min(sc,G2.goal).toLocaleString(LOC)}<small class="gl">/${G2.goal.toLocaleString(LOC)}</small>`:sc.toLocaleString(LOC);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}

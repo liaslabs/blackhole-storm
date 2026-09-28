@@ -529,6 +529,11 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .gfb.bad .bh{width:44%;aspect-ratio:1;border-radius:50%;background:#000;box-shadow:0 0 0 2px rgba(255,190,150,.85),0 0 18px 6px rgba(255,90,60,.55);}
 .gfb.bad small{font-size:9.5px;letter-spacing:.1em;color:#ff9a8a;}
 .gfb.peek{opacity:.42;animation:none;}
+.gfJack{margin:0 0 8px;padding:7px 10px;border-radius:9px;border:1.5px solid rgba(255,215,106,.7);background:linear-gradient(90deg,rgba(255,200,80,.16),rgba(255,140,60,.1));text-align:center;}
+.gfJack b{display:block;font-family:var(--fd);color:#ffd76a;letter-spacing:.12em;font-size:14px;}.gfJack span{display:block;font-family:var(--fd);font-size:17px;color:#fff3c4;}.gfJack small{display:block;font-size:11.5px;color:#d8c9a0;margin-top:1px;}
+.gfJack.hit{animation:gfq 1s ease-in-out infinite;border-color:#fff3c4;box-shadow:0 0 22px rgba(255,215,106,.55);}
+.gfb.jack{border-color:#ffd76a;background:radial-gradient(circle at 50% 38%,rgba(255,215,106,.45),rgba(40,26,6,.96) 72%);box-shadow:0 0 18px rgba(255,215,106,.55),inset 0 0 14px rgba(255,215,106,.3);}
+.gfb.jack .rw{color:#fff3c4;}
 .gfMsg{text-align:center;font-family:var(--fd);font-size:13.5px;min-height:18px;margin-bottom:6px;color:var(--dim);}
 .gfMsg.bad{color:#ff9a8a;}.gfMsg.ok{color:var(--mint);}
 .gfb .gfx{font-size:10px;letter-spacing:.06em;color:var(--gold);}
@@ -581,6 +586,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="modal card" id="mGift">
    <div class="h gfH">🎁 KAPTANIN HEDİYESİ</div>
    <p class="gfTxt">Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al.</p>
+   <div class="gfJack" id="gfJack"><b>🏆 BÜYÜK HAZİNE</b><span>1000 ⭐ + 50 💎</span><small id="gfJackP"></small></div>
+   <div class="row"><button class="btn big adbtn" id="gfBoost" hidden>▶ REKLAM İZLE</button></div>
    <div class="gfBar"><span id="gfCount"></span><span class="gfBag" id="gfBag"></span></div>
    <div class="gfGrid" id="gfGrid"></div>
    <div class="gfMsg" id="gfMsg"></div>
@@ -1614,8 +1621,9 @@ const ATLAS_DEF=[
  ['anti','🟢','ANTİMADDE','Madde ile karşılaşınca yok olur. Yutma: kara deliğini küçültür.'],
  ['b_planet','🪐','DEV GEZEGEN','Yörüngesinden kopmuş dev bir gezegen. Kopan parçaları onu zayıflatır.'],
  ['b_red','🔴','KIRMIZI DEV','Ölmekte olan yaşlı bir yıldız. Nefes alır gibi şişip söner.'],
- ['b_nova','💥','SÜPERNOVA','Çekirdeği çöken bir yıldızın son patlaması.']];
-const ATLAS_ALIAS={half:'split',sat:'mpair',plasma:'frag'},ATLAS_TIERS={b_planet:[1,3,6],b_red:[1,3,6],b_nova:[1,3,6],prey:[1,8,25],anti:[1,5,15]},ATLAS_RARE=new Set(['gold','mini','shard','dark','pulsar','mpair','split','magnet','bomb','time','comet']);
+ ['b_nova','💥','SÜPERNOVA','Çekirdeği çöken bir yıldızın son patlaması.'],
+ ['rival','🌑','RAKİP KARA DELİK','Başka bir galaksiden gelen aç bir kara delik. Senden büyükken kaç, küçükken yut.']];
+const ATLAS_ALIAS={half:'split',sat:'mpair',plasma:'frag'},ATLAS_TIERS={rival:[1,3,8],b_planet:[1,3,6],b_red:[1,3,6],b_nova:[1,3,6],prey:[1,8,25],anti:[1,5,15]},ATLAS_RARE=new Set(['gold','mini','shard','dark','pulsar','mpair','split','magnet','bomb','time','comet']);
 const ATLAS_RW=[['⭐',10],['⭐',25],['💎',5]],ATLAS_TN=['GÖRÜLDÜ','İNCELENDİ','USTALAŞTI'];
 let COSMO={c:{},seenAll:0,masterAll:0,newT:0};
 function atlasTiers(k){return ATLAS_TIERS[k]||(ATLAS_RARE.has(k)?[1,5,20]:[1,10,50]);}
@@ -1646,11 +1654,12 @@ const MPOOL=[
   {id:'surv',t:n=>`Hayatta Kal'da ${n} saniye dayan`,v:[60,90,120],abs:1,r:['⭐',50]},
   {id:'edge',t:n=>`${n} PERFECT DODGE yap`,v:[2,4],r:['⭐',30],need:2},
   {id:'diamond',t:()=>'Elmas gücünü bir kez kullan',v:[1],r:['⭐',25]},
-  {id:'rulelv',t:()=>'Özel bir seviyeyi bitir (Kısıtlı, Boyut ya da Av)',v:[1],r:['💎',5],need:12},
+  {id:'rulelv',t:()=>'Özel bir seviyeyi bitir (Kısıtlı, Boyut, Av ya da Rakip)',v:[1],r:['💎',5],need:12},
   {id:'hunt',t:n=>`${n} altın av yakala`,v:[2,4],r:['⭐',50],need:12},
   {id:'boss',t:()=>'Bir boss yut',v:[1],r:['💎',6],need:11},
   {id:'crack',t:n=>`Boss'larda ${n} zayıf nokta kır`,v:[3,5],r:['⭐',40],need:11},
   {id:'atlas',t:n=>`Atlas'ta ${n} yeni kademe aç`,v:[1,2],r:['⭐',30]},
+  {id:'rival',t:()=>'Bir rakip kara delik yut',v:[1],r:['💎',6],need:24},
 ];
 function dmRoll(){
   const today=new Date().toDateString();if(DM.date===today&&DM.list&&DM.list.length)return;
@@ -1884,11 +1893,12 @@ const GUIDE={
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×5 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','PERFECT ABSORB','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','PERFECT DODGE','Bir meteorun kıl payı yanından geç: +50 puan, Rage ve combo.'],['💢','RAGE','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
  'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Rage barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Rage açıkken zararsız.'],['🧲','MIKNATIS TAŞI','Yut: 6 saniye yutabileceğin her şey sana çekilir.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir.']],
  'GÜÇLER':[['⏱','ZAMAN TOPU','Her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMB yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','OVERLOAD','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Boss (10, 40, 70…): koptukça parçalarını topla, küçülünce bütünüyle yut.'],['🔴','KIRMIZI DEV','Boss (20, 50, 80…): nefes alır gibi şişer; şiştikçe daha çok plazma saçar. Plazmayı yut, küçülünce onu da yut.'],['💥','SÜPERNOVA','Boss (30, 60, 90…): her 7 saniyede patlayıp enkaz saçar. Enkazı yut, küçülünce onu da yut.'],['💖','CANLAR','16. seviyeden sonra: kaybedilen her deneme 1 can harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 can dolar (en fazla 5).'],['🪶','KOLAYLAŞTIR','Aynı seviyede 3 kez olmazsa: 15 💎 ya da reklamla hedef %20 düşer.']],
- 'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
+ 'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al. Nadiren bir kutuda BÜYÜK HAZİNE saklıdır: 1000 yıldız ve 50 elmas. Reklam izleyerek bulma şansını yarı yarıya çıkarabilirsin.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
  'MODLAR':[['🪐','KLASİK','Seviye seviye ilerle, her seviyede yeni bir şey. Canın bitse de ilerlemen kayıtlı.'],['☠️','HAYATTA KAL','Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.'],['📅','GÜNLÜK KOZMOS','Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
-  $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}">${k}</button>`).join('');
-  [...$('gTabs').children].forEach(b=>b.onclick=()=>{sfx('click',{vol:.3});renderGuide(b.textContent);});
+  if(!GUIDE[tab])tab=Object.keys(GUIDE)[0];
+  $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}" data-g="${k}">${k}</button>`).join('');
+  [...$('gTabs').children].forEach(b=>b.onclick=()=>{sfx('click',{vol:.3});renderGuide(b.dataset.g);}); // the label is translated; the key is not
   $('gBody').innerHTML=GUIDE[tab].map(([ic,h,tx])=>{
     const icon=ic.startsWith('step')?`<div class="step">${ic.slice(4)}</div>`:ic.startsWith('ring:')?`<div class="ring" style="color:${ic.slice(5)};border-color:${ic.slice(5)}"></div>`:`<div class="i">${ic}</div>`;
     return `<div class="gc">${icon}<div>${h?`<b>${h}</b>`:''}<span>${tx}</span></div></div>`;}).join('');
@@ -2037,7 +2047,7 @@ const LVL_AD={stars:100,max:2}; // level-end bonus: up to two ads, 100 ⭐ each 
 // CAPTAIN'S GIFT — every 20 levels: nine boxes, two hide a black hole. Open at least three; after that
 // cash out whenever you like. A black hole swallows everything gathered so far. One try per milestone.
 // ══════════════════════════════════════════════════════
-const GIFT={bad:2,min:3,step:.5,adBonus:{gems:10},pool:[{stars:60},{stars:100},{stars:150},{gems:8},{gems:15},{shield:1},{stars:50,gems:5},{shield:1,stars:40},{gems:10,shield:1}]};
+const GIFT={bad:2,min:3,step:.5,adBonus:{gems:10},jack:{stars:1000,gems:50},jackP:.12,jackAd:.5,/* the Big Treasure: in about 1 gift in 8; a rewarded ad raises the odds to 1 in 2 */pool:[{stars:60},{stars:100},{stars:150},{gems:8},{gems:15},{shield:1},{stars:50,gems:5},{shield:1,stars:40},{gems:10,shield:1}]};
 let GIFTS=null;
 function giftDue(){const m=Math.floor((Math.max(1,savedLevel,level)-1)/20)*20;const l=gameMode==='classic'&&!REPLAY&&level%20===0?level:m;return l>=20&&(SHOP.giftLv|0)<l?l:0;}
 function giftTxt(g){const p=[];if(g.stars)p.push(`⭐ ${g.stars}`);if(g.gems)p.push(`💎 ${g.gems}`);if(g.shield)p.push(`🛡 ${g.shield}`);return p.join(' · ');}
@@ -2045,12 +2055,14 @@ function openGift(lv,done){
   SHOP.giftLv=lv;saveG(); // one try per milestone, even if the app is closed halfway
   const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const safe=sh(GIFT.pool.slice()).slice(0,9-GIFT.bad).map(g=>({g}));
-  GIFTS={boxes:sh([...safe,...Array.from({length:GIFT.bad},()=>({bad:true}))]),got:{stars:0,gems:0,shield:0},n:0,over:false,done};
+  if(Math.random()<GIFT.jackP)safe[0]={g:GIFT.jack,jack:true};
+  GIFTS={boxes:sh([...safe,...Array.from({length:GIFT.bad},()=>({bad:true}))]),got:{stars:0,gems:0,shield:0},n:0,over:false,done,boost:monOn()&&adReady()};
   const grid=$('gfGrid');grid.innerHTML='';
   GIFTS.boxes.forEach((b,i)=>{const e=document.createElement('button');e.className='gfb';e.innerHTML='<span class="q notr">?</span>';e.onclick=ev=>{ev.stopPropagation();giftPick(i);};b.el=e;grid.appendChild(e);});
   $('gfMsg').className='gfMsg';$('gfTake').hidden=true;giftHud();showModal('mGift');gState='menu';sfx('achieve',{vol:.5});
 }
-function giftHud(){const S=GIFTS;$('gfCount').textContent=`${T('AÇILAN KUTU')}: ${S.n}`;$('gfBag').textContent=S.n&&giftTxt(S.got)?`${T('KAZANÇ')}: ${giftTxt(S.got)}`:'';
+function giftHud(){const S=GIFTS;{const p=Math.round((S.boosted?GIFT.jackAd:GIFT.jackP)*100),J=$('gfJack');$('gfJackP').textContent=S.jackGot?T('BULDUN!'):T('Bu hediyede olma şansı %{p}',{p});J.classList.toggle('hit',!!S.jackGot);
+    $('gfBoost').hidden=!(S.boost&&!S.boosted&&S.n===0);$('gfBoost').textContent=adLabel(T('HAZİNE ŞANSI %{p}',{p:Math.round(GIFT.jackAd*100)}));}$('gfCount').textContent=`${T('AÇILAN KUTU')}: ${S.n}`;$('gfBag').textContent=S.n&&giftTxt(S.got)?`${T('KAZANÇ')}: ${giftTxt(S.got)}`:'';
   if(!S.over)$('gfMsg').textContent=S.n<GIFT.min?T('En az üç kutu aç'):`${T('Devam et ya da hemen al')} · ${T('sonraki kutu')} ×${(1+GIFT.step*(S.n+1-GIFT.min)).toLocaleString(LOC)}`;
   $('gfAd').hidden=!S.canAd;$('gfAd').textContent=adLabel(T('1 HAK DAHA'));
   $('gfTake').hidden=S.over?false:S.n<GIFT.min;$('gfTake').textContent=S.over?T('TAMAM'):`${T('HEMEN AL')} · ${giftTxt(S.got)}`;}
@@ -2059,11 +2071,18 @@ function giftPick(i){const S=GIFTS;if(!S||S.over)return;const b=S.boxes[i];if(b.
     S.lost=S.got;S.got={stars:0,gems:0,shield:0};S.canAd=!S.adUsed&&monOn()&&adReady();sfx('boom',{vol:.6,rate:.8});vib([40,40,80]);
     $('gfMsg').className='gfMsg bad';$('gfMsg').textContent=S.canAd?T('Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner.'):T('Bu sefer olmadı… Bir dahaki sefere!');
     if(!S.canAd)giftReveal();giftHud();return;}
-  const m=S.n>GIFT.min?1+GIFT.step*(S.n-GIFT.min):1,g={};for(const k in b.g)g[k]=Math.max(1,Math.round(b.g[k]*m)); // every box past the third pays more
+  const m=b.jack?1:S.n>GIFT.min?1+GIFT.step*(S.n-GIFT.min):1,g={};for(const k in b.g)g[k]=Math.max(1,Math.round(b.g[k]*m)); // every box past the third pays more (the treasure is fixed)
+  if(b.jack){S.jackGot=true;for(const k in g)S.got[k]+=g[k];b.el.className='gfb open jack';b.el.innerHTML=`<span class="rw">🏆<br>${giftTxt(g)}</span>`;sfx('achieve',{vol:.8});sfx('coin',{vol:.7,rate:.8});vib([30,30,60]);
+    $('gfMsg').className='gfMsg ok';giftHud();$('gfMsg').textContent=T('BÜYÜK HAZİNE! Kara deliğe dikkat: çıkarsa hazine de yutulur.');
+    if(S.boxes.every(x=>x.bad||x.open)){S.over=true;S.win=true;giftHud();$('gfTake').textContent=`${T('HEMEN AL')} · ${giftTxt(S.got)}`;}return;}
   for(const k in g)S.got[k]+=g[k];b.el.className='gfb open';b.el.innerHTML=`<span class="rw">${giftTxt(g)}</span>${m>1?`<small class="gfx">×${m.toLocaleString(LOC)}</small>`:''}`;sfx('coin',{vol:.55,rate:1+S.n*.06});vib(12);
   if(S.boxes.every(x=>x.bad||x.open)){$('gfMsg').className='gfMsg ok';$('gfMsg').textContent=T('Bütün hediyeleri buldun!');S.over=true;giftHud();$('gfTake').textContent=`${T('HEMEN AL')} · ${giftTxt(S.got)}`;S.win=true;return;}
   giftHud();}
-function giftReveal(){GIFTS.boxes.forEach(x=>{if(!x.open){x.el.className='gfb peek'+(x.bad?' bad':'');x.el.innerHTML=x.bad?'<span class="bh"></span>':`<span class="rw">${giftTxt(x.g)}</span>`;}});}
+function giftReveal(){GIFTS.boxes.forEach(x=>{if(!x.open){x.el.className='gfb peek'+(x.bad?' bad':x.jack?' jack':'');x.el.innerHTML=x.bad?'<span class="bh"></span>':`<span class="rw">${x.jack?'🏆<br>':''}${giftTxt(x.g)}</span>`;}});}
+$('gfBoost').onclick=async e=>{e.stopPropagation();const S=GIFTS;if(!S||S.boosted||S.n>0)return;S.boost=false;$('gfBoost').hidden=true;
+  if(!(await showRewarded())){giftHud();return;}S.boosted=true;
+  if(!S.boxes.some(x=>x.jack)&&Math.random()<(GIFT.jackAd-GIFT.jackP)/(1-GIFT.jackP)){const c=S.boxes.filter(x=>!x.bad&&!x.open);const b=c[Math.floor(Math.random()*c.length)];b.g=GIFT.jack;b.jack=true;} // same odds as if it had been there from the start
+  $('gfMsg').className='gfMsg ok';sfx('powerup',{vol:.5});giftHud();$('gfMsg').textContent=T('Hazine şansı arttı! Şimdi kutuları aç.');};
 $('gfAd').onclick=async e=>{e.stopPropagation();const S=GIFTS;if(!S||!S.canAd)return;S.canAd=false;S.adUsed=true;$('gfAd').hidden=true;
   if(!(await showRewarded())){giftReveal();$('gfMsg').textContent=T('Bu sefer olmadı… Bir dahaki sefere!');giftHud();return;}
   const b=S.badBox;S.got=S.lost;for(const k in GIFT.adBonus)S.got[k]+=GIFT.adBonus[k];S.over=false; // second chance: winnings back, and the black hole becomes a bonus
@@ -2212,7 +2231,7 @@ function levelSuccess(){
 // Classic never throws you back to level 1: out of lives you can pay to continue, replay the level for free, or leave with progress saved.
 // what took the last life, and how to avoid it next time
 const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek PERFECT DODGE verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle.'],
-  prey:['🎯','AV KAÇTI','Avı çekim alanında tut ki yorulsun; kızarınca hemen üstüne git. Dokunursan sıçrayıp kaçar.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.']};
+  prey:['🎯','AV KAÇTI','Avı çekim alanında tut ki yorulsun; kızarınca hemen üstüne git. Dokunursan sıçrayıp kaçar.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.'],rival:['🌑','RAKİP SENİ ISIRDI','Rakip kırmızıyken ondan uzak dur ve hızlı büyü. Maviye dönünce kaçar: o an yakala.']};
 // A short radio note over the field: zone arrivals and boss warnings (never pauses the game)
 function sigShow(h,txt,sec=5){const e=$('sig2');if(!e)return;$('sigH').textContent=h;const tt=$('sigT');tt.textContent='';e.classList.add('on');let i=0;clearInterval(e._i);clearTimeout(e._t);
   e._i=setInterval(()=>{i+=2;tt.textContent=txt.slice(0,i);if(i>=txt.length)clearInterval(e._i);},28);e._t=setTimeout(()=>e.classList.remove('on'),sec*1000);}
