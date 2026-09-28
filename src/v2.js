@@ -371,7 +371,7 @@ function v2Update(dt){
   if(G2.novaT>0){G2.novaT-=dt;if(G2.novaT<=0){G2.novaT=0;v2Call('NOVA BİTTİ','','#8fe9ff',.7);}}
   if(!TIPS.nova&&G2.mode==='level'&&level>=3&&G2.t>4&&diamonds>=V2K.nova.cost&&!G2.boss)v2Tip('nova',null);
   if(G2.overT>0){G2.overT-=dt;if(G2.overT<=0){G2.rr=V2K.r0+(G2.cap-V2K.r0)*.6;v2Call('ÇÖKÜŞ','KARA DELİK KÜÇÜLÜYOR','#b9a8ff',1.3);sfx('slow',{vol:.6,rate:.6});v2Burst(hX,hY,26,'#b9a8ff',2,6,.7);}}
-  if(G2.rageT>0){const was=G2.rageT;G2.rageT-=dt;if(G2.rageT>0&&Math.ceil(was)!==Math.ceil(G2.rageT)&&G2.rageT<3){v2Call(String(Math.ceil(G2.rageT)),'RAGE','#ff8a4c',.5);sfx('tickHi',{vol:.5,rate:.9});}if(G2.rageT<=0){v2Call('RAGE BİTTİ','','#ffb35c',1);sfx('slow',{vol:.5,rate:.7});v2Burst(hX,hY,26,'#ff8a4c',1.5,5,.6);}G2.rage=Math.max(0,G2.rageT/V2K.rage.dur*100);heat=Math.max(heat,.55);if(G2.rageT<=0){G2.rage=0;G2.rageT=0;SND.setDrone(.14,650);}}
+  if(G2.rageT>0){const was=G2.rageT;G2.rageT-=dt;if(G2.rageT>0&&Math.ceil(was)!==Math.ceil(G2.rageT)&&G2.rageT<3){v2Call(String(Math.ceil(G2.rageT)),'VORTEX','#ff8a4c',.5);sfx('tickHi',{vol:.5,rate:.9});}if(G2.rageT<=0){v2Call('VORTEX BİTTİ','','#ffb35c',1);sfx('slow',{vol:.5,rate:.7});v2Burst(hX,hY,26,'#ff8a4c',1.5,5,.6);}G2.rage=Math.max(0,G2.rageT/V2K.rage.dur*100);heat=Math.max(heat,.55);if(G2.rageT<=0){G2.rage=0;G2.rageT=0;SND.setDrone(.14,650);}}
   if(G2.ready)G2.readyT+=dt;if(G2.tipCD>0)G2.tipCD-=dt;if(G2.magT>0)G2.magT-=dt;if(G2.pairT>0)G2.pairT-=dt;
   v2Worms(dt);
   if(G2.shT>0){G2.shT-=dt;if(G2.shT<1.5&&G2.shT>0){const k=Math.ceil(G2.shT*2);if(k!==G2.shTick){G2.shTick=k;v2Sfx('tickHi',{vol:.5,rate:1.3});vib(8);}}
@@ -803,7 +803,7 @@ function v2Score(o,mini){
   dmEvent('catch',1);dmEvent('combo',G2.combo,true);if(o.k==='crystal')dmEvent('comet',1);dmEvent('score',totalScore,true);
   if(gameMode==='sprint'){const bi=Math.min(9,Math.floor(SPR_RUN.t/6));SPR_RUN.blocks[bi].c++;if(perf)SPR_RUN.blocks[bi].p++;SPR_RUN.caught++;}
   if(o.fromBoss)v2BossHit();
-  if(o.k==='energy')v2Call('+15 RAGE','','#ff7ad9',.8);
+  if(o.k==='energy')v2Call('+15 VORTEX','','#ff7ad9',.8);
   vib(o.k==='ast'?8:15);
 }
 function v2Eaten(o){ // the body has crossed the event horizon
@@ -866,7 +866,7 @@ function v2Revive(){ // one continue per run (spec §42)
 function v2RageGo(){
   if(!G2.ready)return;v2Ach.rage++;G2.firstRage=true;G2.ready=false;G2.readyT=0;G2.rageT=V2K.rage.dur+.5*perkLv('rage');G2.rage=100;G2.swarm=16;G2.swarmT=.15;
   shake=Math.max(shake,10);flash=Math.max(flash,.8);shock=1;heat=.6;
-  v2Call('RAGE BAŞLADI!','','#ff6a3d',1.8,true);sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.6,rate:.7});sfx('boom',{vol:.5,rate:.5});SND.setDrone(.24,420);vib([40,30,90]);
+  v2Call('VORTEX BAŞLADI!','','#ff6a3d',1.8,true);sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.6,rate:.7});sfx('boom',{vol:.5,rate:.5});SND.setDrone(.24,420);vib([40,30,90]);
   v2Burst(hX,hY,40,'#ff8a4c',2,8,.8,2.2);dmEvent('rescue',1);
 }
 
@@ -969,10 +969,10 @@ function v2ShieldBuyOk(){const c=V2K.shield.cost;if(diamonds<c)return;diamonds-=
 
 // ── first-encounter tips: one card per thing, once per player, the game waits for ANLADIM ──
 const TIP2={
-  rage:['🔥','RAGE','Rage barın doldu! Ekrana dokun: 5 saniye boyunca kara deliğin devleşir, her şeyi çeker, puanın ×2 olur ve meteorlar sana zarar veremez.'],
+  rage:['🔥','VORTEX','Vortex barın doldu! Ekrana dokun: 5 saniye boyunca kara deliğin devleşir, her şeyi çeker, puanın ×2 olur ve meteorlar sana zarar veremez.'],
   meteor:['☄️','METEOR','Kırmızı meteor tehlikeli: çarparsa 1 can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ!'],
   crystal:['🔷','KRİSTAL','Kristal çok değerli: +200 puan ve hızlı büyüme. Ama çoğu zaman yanında bir meteor olur, dikkat et.'],
-  energy:['⚡','ENERJİ','Enerji topu Rage barını hızla doldurur. Kaçırma!'],
+  energy:['⚡','ENERJİ','Enerji topu Vortex barını hızla doldurur. Kaçırma!'],
   gold:['🌕','ALTIN GEZEGEN','Nadir ve çok hızlı: +500 puan. Yutmak için biraz büyümüş olman gerekir.'],
   time:['⏱','ZAMAN TOPU','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
   bomb:['💣','BOMBA GEZEGEN','Bombayı çekim alanına al: etrafında döner, fitili yanar. 3 saniye alanında tutarsan MEGA BOMBA ekrandaki her şeyi sana çeker. Çok hızlı hareket edersen bomba kaçar.'],
@@ -984,7 +984,7 @@ const TIP2={
   shrink:['💨','KÜÇÜLÜYOR','Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.'],
   comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
   split:['🌋','BÖLÜNEN GEZEGEN','Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!'],
-  anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Rage açıkken zararsızdır.'],
+  anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır.'],
   magnet:['🧲','MIKNATIS TAŞI','Bu mıknatıs taşını yut: 6 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.'],
   nova:['💎','SÜPERNOVA','Üstteki elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, sonra 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],
   pulsar:['💫','PULSAR','Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.'],
@@ -996,7 +996,7 @@ const TIP2={
   restrict:['⛔','KISITLI SEVİYE','Bu seviyede bazı cisimler yasak: üstlerinde kırmızı işaret var. Seni iterler; üstlerine gidip çarparsan combo yarıya iner. Geri kalanını yiyerek hedefi tamamla.'],
   window:['📏','BOYUT PENCERESİ','Puan sadece kara delik üstteki yeşil aralıktayken gelir. Küçüksen büyü. Fazla büyürsen buharlaşırsın ve o sırada yediğin puan getirmez: yavaş ye, aralıkta kal.'],
   hunt:['🎯','AV','Altın av yutulmaz: kara deliğinle ona çarp, kabuğunu kır. İç halkadaki 10 parça kabuğudur; hızlı çarparsan 2–3 parça birden kırılır. Kabuk bitince av patlar. Dış halka süresidir; biterse av kaçar ve 1 can gider.'],
-  rival:['🌑','RAKİP KARA DELİK','Başka bir kara delik de burada avlanıyor ve büyüyor. Senden büyükken kırmızı parlar ve peşine düşer: dokunursa 1 can gider. Onu geçecek kadar büyüyünce maviye döner ve kaçar: yakala ve yut, seviye biter. Meteor ve antimadde onu da küçültür. Rage açıkken her boyutta yutabilirsin.'],
+  rival:['🌑','RAKİP KARA DELİK','Başka bir kara delik de burada avlanıyor ve büyüyor. Senden büyükken kırmızı parlar ve peşine düşer: dokunursa 1 can gider. Onu geçecek kadar büyüyünce maviye döner ve kaçar: yakala ve yut, seviye biter. Meteor ve antimadde onu da küçültür. Vortex açıkken her boyutta yutabilirsin.'],
   guard:['🛡','KORUYUCU','Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: çarpmadan önce yut. Gezegene çarparsa 1 can gider. Gezegenin atmosferine giremezsin, önünde dur.'],
   duel:['👁','KARA DELİK İKİZİ','Rakibin en güçlüsü. Onu iki kez yutman gerekir: ilkinde yeniden oluşur. Arada bir çekim dalgası salar ve yakınındaki cisimleri kendine çeker, dalga gelince uzak dur.'],
   mirror:['🪞','AYNA TAŞI','Yut: 8 saniye boyunca ekranın öbür yarısında senin ayna görüntün olan ikinci bir kara delik açılır ve senin için yer. Meteor ona değerse kaybolur.'],
@@ -1007,7 +1007,7 @@ const TIP2={
   ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
   hawking:['💨','HAWKING SALINIMI','Epey büyüdün! Üst sıradaki Hawking düğmesine dokun: kütlenin bir kısmını radyasyon olarak salarsın. Ekrandaki bütün meteorlar yok olur, yutabileceğin her şey sana çekilir ve puan kazanırsın. Ama küçülürsün.'],
   jet:['⚡','KUASAR JETİ','Kara deliği tutarken ikinci bir parmakla ekrana dokun: o yöne 1,4 saniyelik bir ışın fırlatırsın. Işın cisimleri sana çeker, meteorları yakar. 12 saniyede bir kullanılır.'],
-  rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Rage seni korur.'],
+  rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen can kaybedersin. Kalkan ve Vortex seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}
@@ -1313,7 +1313,7 @@ function v2DrawCalls(){
     ctx.font=`900 ${c.top?28:22}px "IBM Plex Sans Condensed",sans-serif`;ctx.lineWidth=5;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(c.txt,0,0);ctx.shadowColor=c.col;ctx.shadowBlur=18;ctx.fillStyle=c.col;ctx.fillText(c.txt,0,0);
     if(c.sub){ctx.shadowBlur=0;ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';ctx.lineWidth=3;ctx.strokeText(c.sub,0,20);ctx.fillStyle='#e7e3da';ctx.fillText(c.sub,0,20);}ctx.restore();}
   if(G2.ready&&gState==='playing'){const pu=.6+.4*Math.sin(clock*8);ctx.save();ctx.textAlign='center';ctx.globalAlpha=.8+.2*pu;ctx.font='900 20px "IBM Plex Sans Condensed",sans-serif';
-    ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';const y=Math.min(H-40,hY+G2.G+sp2(40));ctx.strokeText(T('DOKUN → RAGE'),W/2,y);ctx.fillStyle=`rgb(255,${110+60*pu|0},70)`;ctx.shadowColor='#ff6a3d';ctx.shadowBlur=16;ctx.fillText(T('DOKUN → RAGE'),W/2,y);ctx.restore();}
+    ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';const y=Math.min(H-40,hY+G2.G+sp2(40));ctx.strokeText(T('DOKUN → VORTEX'),W/2,y);ctx.fillStyle=`rgb(255,${110+60*pu|0},70)`;ctx.shadowColor='#ff6a3d';ctx.shadowBlur=16;ctx.fillText(T('DOKUN → VORTEX'),W/2,y);ctx.restore();}
 }
 function v2DrawTut(){ // level 1: a ghost finger drags the hole until the player touches
   if(G2.tut<=0)return;const a=Math.min(1,G2.tut);const fx=hX,fy=hY+v2Off();ctx.save();ctx.globalAlpha=a*.9;
@@ -1327,7 +1327,7 @@ function v2DrawTut(){ // level 1: a ghost finger drags the hole until the player
 // ── HUD ───────────────────────────────────────────────
 function v2Hud(){
   if(G2.hud.done)return;G2.hud.done=true;
-  const sb=$('scoreBox');const rb=document.createElement('div');rb.id='rage2';rb.innerHTML='<span class="l notr">RAGE</span><div class="bar"><i></i></div>';sb.appendChild(rb);
+  const sb=$('scoreBox');const rb=document.createElement('div');rb.id='rage2';rb.innerHTML='<span class="l notr">VORTEX</span><div class="bar"><i></i></div>';sb.appendChild(rb);
   const tm=document.createElement('div');tm.id='tmr2';tm.className='notr';tm.innerHTML='<span>⏱</span><b id="tmr2v">60</b>';$('hdr').insertBefore(tm,$('pauseBtn'));
   const hb=(id,ic,fn)=>{const b=document.createElement('button');b.id=id;b.className='hb2';b.innerHTML=`<span class="ic">${ic}</span><b></b>`;$('hdr').insertBefore(b,$('pauseBtn'));
     b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn();});b.addEventListener('click',e=>e.stopPropagation());return b;};
@@ -1353,5 +1353,5 @@ function v2Ui(force){
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));
-  if(!G2.ready&&G2.rage>=100&&G2.rageT<=0&&gState==='playing'){G2.ready=true;G2.readyT=0;v2Call('RAGE HAZIR','HERHANGİ BİR YERE DOKUN','#ff8a4c',1.4);sfx('bell',{vol:.7,rate:.8});vib(30);}
+  if(!G2.ready&&G2.rage>=100&&G2.rageT<=0&&gState==='playing'){G2.ready=true;G2.readyT=0;v2Call('VORTEX HAZIR','HERHANGİ BİR YERE DOKUN','#ff8a4c',1.4);sfx('bell',{vol:.7,rate:.8});vib(30);}
 }
