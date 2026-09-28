@@ -1293,5 +1293,22 @@
 "Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Зарабатывается, когда ломаешь слабые места босса. Принимает один удар и взрывается, стирая метеоры вокруг",
 "Meteorlardan kaç: çarparsa bir yay kopar, {n} yay {n} can. Kıl payı geçersen KUSURSUZ KAÇIŞ": "Уклоняйся от метеоров: удар ломает дугу, {n} дуги — это {n} жизнь. Проскочить впритык — ИДЕАЛЬНОЕ УКЛОНЕНИЕ",
 "Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; {n} yay giderse {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ": "Красные метеоры опасны: удар ломает одну из дуг вокруг чёрной дыры; когда исчезнут {n} дуги, теряешь {n} жизнь. Сначала они входят медленно, потом ускоряются. Красные стрелки показывают путь — уйди с него. Проскочить впритык — ИДЕАЛЬНОЕ УКЛОНЕНИЕ",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Набери целевые очки вверху, чтобы пройти уровень. Не врезайся в метеоры: каждый удар ломает дугу вокруг чёрной дыры, {n} дуги = {n} жизнь"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Набери целевые очки вверху, чтобы пройти уровень. Не врезайся в метеоры: каждый удар ломает дугу вокруг чёрной дыры, {n} дуги = {n} жизнь",
+"ZOR": "СЛОЖНО",
+"ÇOK ZOR": "ОЧЕНЬ СЛОЖНО",
+"ZOR SEVİYE": "СЛОЖНЫЙ УРОВЕНЬ",
+"ÇOK ZOR SEVİYE": "ОЧЕНЬ СЛОЖНЫЙ УРОВЕНЬ",
+"YAYLAR TAMİR": "ДУГИ ВОССТАНОВЛЕНЫ",
+"KALKAN YAYLARI TAMİR EDER": "ЩИТ ЧИНИТ ДУГИ",
+"HAWKING METEORLARI SİLER": "ХОКИНГ СТИРАЕТ МЕТЕОРЫ",
+"SÜPERNOVA HEDEFE YETİŞTİRİR": "СВЕРХНОВАЯ ДОВЕДЁТ ДО ЦЕЛИ",
+"Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın": "Уровни с красным кольцом и пламенем на карте: достигни цели, пока не кончилось время, и метеоры летят чаще. Щит, Сверхновая и Хокинг здесь важнее всего. Пройди — получишь дополнительные звёзды",
+"Hedefe süre dolmadan ulaşmalısın ve meteorlar daha sık gelir. Zorlanırsan: 🛡 Kalkan {n} saniye korur ve kopan yaylarını tamir eder. 💎 Süpernova ekrandaki her şeyi yutar ve hedefin {n}’ini hemen verir. 💨 Hawking ekrandaki meteorları siler": "Достигни цели, пока не кончилось время, и метеоры летят чаще. Если трудно: 🛡 Щит защищает {n} секунд и чинит сломанные дуги. 💎 Сверхновая поглощает всё на экране и сразу даёт {n} цели. 💨 Хокинг стирает метеоры на экране",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Нажми в игре кнопку с алмазом ({n} 💎): всё на экране взрывается и затягивается в твою чёрную дыру, ты получаешь бонус в размере {n} цели, а затем {n} секунды метеоры не могут тебе навредить. {n} раза за уровень",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Нажми в игре кнопку щита: {n} секунд каждый ударивший метеор разбивается, а сломанные дуги чинятся. Покупается в магазине или собирается из {n} частей щита. Не работает в Ежедневном космосе и вызовах",
+"Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır": "Сложный уровень: достигни цели за {n} секунд, метеоры летят чаще. Щит, Сверхновая и Хокинг здесь решают",
+"Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "На сложных уровнях время ограничено. В последние секунды 💎 Сверхновая сразу даёт {n} цели; длинная цепочка комбо умножает очки",
+"Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Цель выполнена на {p}%. Продолжи: +{n} с, очки и размер сохранятся",
+"HEDEFE ÇOK AZ KALDI": "ЦЕЛЬ СОВСЕМ БЛИЗКО",
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Время вышло. Попробуй снова или вернись на карту; прогресс сохранён"
 }

@@ -1293,5 +1293,22 @@
 "Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Earned by breaking the boss's weak spots. It takes one hit and bursts, wiping out the meteors around you",
 "Meteorlardan kaç: çarparsa bir yay kopar, {n} yay {n} can. Kıl payı geçersen KUSURSUZ KAÇIŞ": "Dodge meteors: a hit breaks an arc, {n} arcs make {n} life. Scrape past one for a PERFECT DODGE",
 "Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; {n} yay giderse {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ": "Red meteors are dangerous: a hit breaks one of the arcs around your black hole; when {n} arcs are gone you lose {n} life. They enter slowly, then speed up. Red arrows show their path, so get out of the way. Scrape past for a PERFECT DODGE",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Reach the target score at the top to finish the level. Don't hit meteors: each hit breaks an arc around the black hole, {n} arcs = {n} life"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Reach the target score at the top to finish the level. Don't hit meteors: each hit breaks an arc around the black hole, {n} arcs = {n} life",
+"ZOR": "HARD",
+"ÇOK ZOR": "SUPER HARD",
+"ZOR SEVİYE": "HARD LEVEL",
+"ÇOK ZOR SEVİYE": "SUPER HARD LEVEL",
+"YAYLAR TAMİR": "ARCS MENDED",
+"KALKAN YAYLARI TAMİR EDER": "SHIELD MENDS YOUR ARCS",
+"HAWKING METEORLARI SİLER": "HAWKING CLEARS METEORS",
+"SÜPERNOVA HEDEFE YETİŞTİRİR": "SUPERNOVA GETS YOU THERE",
+"Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın": "Levels with a red ring and a flame on the map: reach the goal before the clock runs out, and meteors come more often. Shield, Supernova and Hawking matter most here. Clear one for extra stars",
+"Hedefe süre dolmadan ulaşmalısın ve meteorlar daha sık gelir. Zorlanırsan: 🛡 Kalkan {n} saniye korur ve kopan yaylarını tamir eder. 💎 Süpernova ekrandaki her şeyi yutar ve hedefin {n}’ini hemen verir. 💨 Hawking ekrandaki meteorları siler": "Reach the goal before the clock runs out, and meteors come more often. If it gets tough: 🛡 Shield protects you for {n} seconds and mends broken arcs. 💎 Supernova swallows everything on screen and gives you {n} of the goal at once. 💨 Hawking clears the meteors on screen",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tap the diamond button in game ({n} 💎): everything on screen bursts and spirals into your black hole, you get bonus points worth {n} of the goal, then for {n} seconds meteors can't hurt you. {n} times per level",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tap the shield button in game: for {n} seconds every meteor that hits you shatters, and your broken arcs are mended. Buy it in the shop or earn it by collecting {n} shield pieces. Not usable in Daily Cosmos or challenges",
+"Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır": "Hard level: reach the goal in {n} seconds, meteors come more often. Shield, Supernova and Hawking make the difference here",
+"Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Hard levels have a time limit. In the last seconds 💎 Supernova gives you {n} of the goal at once; a long combo chain multiplies your points",
+"Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Goal {p}% done. Continue for +{n} s; your score and size are kept",
+"HEDEFE ÇOK AZ KALDI": "SO CLOSE TO THE GOAL",
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Time's up. Try again or go back to the map; your progress is safe"
 }
