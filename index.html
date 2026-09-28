@@ -3579,12 +3579,16 @@ function v2SwallowStep(o,dt){
 function v2HuntStep(dt){const h=G2.hunt;
   if(!h.prey){h.next-=dt;if(h.next<=0){const o=v2Edge('prey',rng()<.5?1:2);o.life=G2.rule.life;o.max=o.life;o.stam=1;o.head=Math.atan2(o.vy,o.vx);h.prey=o;v2Call('AV!',`${h.n+1}/${h.need}`,'#ffd76a',1,false);v2Sfx('sparkle',{vol:.6,rate:.8});}}
   else if(h.prey.st!=='in'&&h.prey.st!=='sw')h.prey=null;}
+function v2PreyWall(o){const p=o.r*1.3;if(o.esc)return;if(!o.inside){if(o.x>p&&o.x<W-p&&o.y>p&&o.y<H-p)o.inside=1;return;} /* once it has entered, until its time runs out it stays on screen: a ram near the edge bounces it off the wall instead of knocking it out of sight */
+  if(o.x<p){o.x=p;o.vx=Math.abs(o.vx)*.7;}else if(o.x>W-p){o.x=W-p;o.vx=-Math.abs(o.vx)*.7;}
+  if(o.y<p){o.y=p;o.vy=Math.abs(o.vy)*.7;}else if(o.y>H-p){o.y=H-p;o.vy=-Math.abs(o.vy)*.7;}}
 function v2PreyStep(o,dt){ // flees the hole; ram it to crack its shell (a fast ram hits harder); when the shell is gone it bursts
   const K=V2K.prey;o.life-=dt;o.hitCD=Math.max(0,(o.hitCD||0)-dt);o.daze=Math.max(0,(o.daze||0)-dt);if(o.hp===undefined){o.hp=K.hp;o.hpMax=K.hp;}
+  v2PreyWall(o);
   const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;
   if(o.life<3.5&&o.life>0&&!o.warned){o.warned=1;v2Call('KAÇIYOR!','','#ff7a5c',1);v2Sfx('tickHi',{vol:.5,rate:.9});}
   if(o.life>0&&d<G2.R+o.r*1.1&&o.hitCD<=0){const vs=Math.hypot(G2.vx,G2.vy),dmg=1+(vs>sp2(K.fast)?1:0)+(vs>sp2(K.faster)?2:0)+(G2.rageT>0?1:0);
-    o.hp-=dmg;o.hitCD=K.cd;o.daze=.35;o.life=Math.min(o.max,o.life+1.5);const ux=dx/d,uy=dy/d,kb=sp2(240+40*dmg);o.vx=ux*kb;o.vy=uy*kb;o.head=Math.atan2(uy,ux);o.x=hX+ux*(G2.R+o.r*1.2);o.y=hY+uy*(G2.R+o.r*1.2);
+    o.hp-=dmg;o.hitCD=K.cd;o.daze=.35;o.life=Math.min(o.max,o.life+1.5);const ux=dx/d,uy=dy/d,kb=sp2(240+40*dmg);o.vx=ux*kb;o.vy=uy*kb;o.head=Math.atan2(uy,ux);o.x=hX+ux*(G2.R+o.r*1.2);o.y=hY+uy*(G2.R+o.r*1.2);v2PreyWall(o);
     v2Burst(o.x,o.y,8+dmg*5,'#ffd76a',1.5,5,.4);shake=Math.max(shake,2+dmg*2);vib(10+dmg*8);v2Sfx('armor',{vol:.4+dmg*.1,rate:1.5-dmg*.15});
     if(o.hp<=0){v2PreyBurst(o);return;}v2Pop(dmg>1?`DARBE ×${dmg}`:'VURUŞ','#ffd76a',14+dmg*2);if(!G2.hunt.slamTip&&dmg===1){G2.hunt.slamTip=1;v2Call('DAHA HIZLI ÇARP','HIZLI ÇARPIŞ DAHA ÇOK KIRAR','#ffd76a',1.1);}}
   if(o.daze>0)return; // knocked back: it tumbles for a moment
