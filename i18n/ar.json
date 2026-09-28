@@ -1260,5 +1260,11 @@
 "VORTEX BİTTİ": "انتهى VORTEX",
 "VORTEX HAZIR": "VORTEX جاهز",
 "Girdap Efendisi": "سيد الدوامة",
-"{n} VORTEX": "{n} VORTEX"
+"{n} VORTEX": "{n} VORTEX",
+"GEZEGEN YOK OLDU": "ضاع الكوكب",
+"REKORUN": "رقمك القياسي",
+"Rekor hayaleti (en iyi denemen)": "شبح الرقم القياسي (أفضل محاولة لك)",
+"Yaşayan bir gezegene asteroitler yağıyor. Çarpanlar gezegenin canını azaltır, yakaladıkların artırır. Süre dolana kadar gezegeni ayakta tut": "تمطر الكويكبات على كوكب حي. التي تصيبه تنقص صحته، والتي تمسكها ترفعها. أبقِ الكوكب حيًا حتى ينتهي الوقت",
+"Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: yolunun önünde dur ve yut. Her çarpma gezegenin canını azaltır, her yakaladığın artırır. Süre dolduğunda gezegen hâlâ ayaktaysa görev tamam. Bu görevde meteor gelmez. Gezegenin atmosferine giremezsin": "على الكوكب الأزرق حياة. كويكبات ذات خط أحمر تتجه نحوه: قف في طريقها وابتلعها. كل إصابة تنقص صحة الكوكب وكل كويكب تمسكه يرفعها. إذا بقي الكوكب صامدًا حين ينتهي الوقت تنجح المهمة. لا تأتي نيازك في هذه المهمة. لا يمكنك دخول غلافه الجوي",
+"Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır": "ابتلع الكويكبات ذات الخط الأحمر قبل أن تصل إلى الكوكب. قف في طريقها أمام الكوكب. كل كويكب تمسكه يشفي الكوكب"
 }

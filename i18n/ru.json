@@ -1260,5 +1260,11 @@
 "VORTEX BİTTİ": "VORTEX ЗАКОНЧИЛСЯ",
 "VORTEX HAZIR": "VORTEX ГОТОВ",
 "Girdap Efendisi": "Повелитель вихря",
-"{n} VORTEX": "{n} VORTEX"
+"{n} VORTEX": "{n} VORTEX",
+"GEZEGEN YOK OLDU": "ПЛАНЕТА ПОГИБЛА",
+"REKORUN": "ТВОЙ РЕКОРД",
+"Rekor hayaleti (en iyi denemen)": "Призрак рекорда (твоя лучшая попытка)",
+"Yaşayan bir gezegene asteroitler yağıyor. Çarpanlar gezegenin canını azaltır, yakaladıkların artırır. Süre dolana kadar gezegeni ayakta tut": "На живую планету падают астероиды. Попадания снижают её здоровье, пойманные — восстанавливают. Сохрани планету, пока не выйдет время",
+"Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: yolunun önünde dur ve yut. Her çarpma gezegenin canını azaltır, her yakaladığın artırır. Süre dolduğunda gezegen hâlâ ayaktaysa görev tamam. Bu görevde meteor gelmez. Gezegenin atmosferine giremezsin": "На синей планете есть жизнь. К ней летят астероиды с красной линией: встань на их пути и проглоти. Каждое попадание снижает её здоровье, каждый пойманный — восстанавливает. Если к концу времени планета цела, задание выполнено. Метеоров в этом задании нет. В атмосферу планеты войти нельзя",
+"Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır": "Глотай астероиды с красной линией, пока они не долетели до планеты. Вставай на их пути, перед планетой. Каждый пойманный лечит планету"
 }

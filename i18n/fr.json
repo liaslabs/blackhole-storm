@@ -1260,5 +1260,11 @@
 "VORTEX BİTTİ": "VORTEX TERMINÉ",
 "VORTEX HAZIR": "VORTEX PRÊT",
 "Girdap Efendisi": "Maître du vortex",
-"{n} VORTEX": "{n} VORTEX"
+"{n} VORTEX": "{n} VORTEX",
+"GEZEGEN YOK OLDU": "LA PLANÈTE EST PERDUE",
+"REKORUN": "TON RECORD",
+"Rekor hayaleti (en iyi denemen)": "Fantôme du record (ton meilleur essai)",
+"Yaşayan bir gezegene asteroitler yağıyor. Çarpanlar gezegenin canını azaltır, yakaladıkların artırır. Süre dolana kadar gezegeni ayakta tut": "Des astéroïdes pleuvent sur une planète vivante. Ceux qui la frappent lui ôtent de la vie, ceux que tu attrapes lui en rendent. Garde la planète en vie jusqu'à la fin du temps",
+"Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: yolunun önünde dur ve yut. Her çarpma gezegenin canını azaltır, her yakaladığın artırır. Süre dolduğunda gezegen hâlâ ayaktaysa görev tamam. Bu görevde meteor gelmez. Gezegenin atmosferine giremezsin": "Il y a de la vie sur la planète bleue. Des astéroïdes à trait rouge foncent vers elle : place-toi sur leur trajectoire et avale-les. Chaque impact lui ôte de la vie, chaque prise lui en rend. Si la planète tient encore à la fin du temps, mission réussie. Pas de météores dans cette mission. Tu ne peux pas entrer dans son atmosphère",
+"Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır": "Avale les astéroïdes à trait rouge avant qu'ils n'atteignent la planète. Place-toi sur leur trajectoire, devant la planète. Chaque prise soigne la planète"
 }
