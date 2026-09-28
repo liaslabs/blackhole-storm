@@ -1293,5 +1293,22 @@
 "Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Bi şikandina xalên qels ên bossê tê qezenckirin. Derbekê digire û diteqe, meteorên dora te paqij dike",
 "Meteorlardan kaç: çarparsa bir yay kopar, {n} yay {n} can. Kıl payı geçersen KUSURSUZ KAÇIŞ": "Ji meteoran bireve: lêdan kevanekê dişkîne, {n} kevan {n} can e. Bi zorê derbasbûn REVÎNA BÊKÊMASÎ ye",
 "Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; {n} yay giderse {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ": "Meteorên sor xeternak in: lêdan yek ji kevanên dora kuna te dişkîne; dema {n} kevan biçin {n} can diçe. Pêşî hêdî tên, paşê bilez dibin. Tîrên sor rêya wan nîşan didin, ji rê derkeve. Bi zorê derbasbûn REVÎNA BÊKÊMASÎ ye",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Ji bo ku ast biqede bigihîje pûana armanc a jorîn. Li meteoran nekeve: her lêdan kevanekê li dora kuna reş dişkîne, {n} kevan = {n} can"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Ji bo ku ast biqede bigihîje pûana armanc a jorîn. Li meteoran nekeve: her lêdan kevanekê li dora kuna reş dişkîne, {n} kevan = {n} can",
+"ZOR": "ZOR",
+"ÇOK ZOR": "PIR ZOR",
+"ZOR SEVİYE": "ASTA ZOR",
+"ÇOK ZOR SEVİYE": "ASTA PIR ZOR",
+"YAYLAR TAMİR": "KEVAN SERAST BÛN",
+"KALKAN YAYLARI TAMİR EDER": "MERTAL KEVANAN SERAST DIKE",
+"HAWKING METEORLARI SİLER": "HAWKING METEORAN PAQIJ DIKE",
+"SÜPERNOVA HEDEFE YETİŞTİRİR": "SÛPERNOVA TE DIGIHÎNE ARMANCÊ",
+"Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın": "Astên bi xeleka sor û agir li ser nexşeyê: berî ku dem biqede bigihîje armancê, û meteor pirtir tên. Mertal, Sûpernova û Hawking herî zêde li vir kêr tên. Derbas bike, stêrkên zêde bistîne",
+"Hedefe süre dolmadan ulaşmalısın ve meteorlar daha sık gelir. Zorlanırsan: 🛡 Kalkan {n} saniye korur ve kopan yaylarını tamir eder. 💎 Süpernova ekrandaki her şeyi yutar ve hedefin {n}’ini hemen verir. 💨 Hawking ekrandaki meteorları siler": "Berî ku dem biqede bigihîje armancê, û meteor pirtir tên. Heke zor bibe: 🛡 Mertal {n} saniyeyan te diparêze û kevanên şikestî serast dike. 💎 Sûpernova her tiştê li ser ekranê daqurtîne û yekser {n} ji armancê dide te. 💨 Hawking meteorên li ser ekranê paqij dike",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Di lîstikê de bişkoka elmasê bitikîne ({n} 💎): her tiştê li ser ekranê diteqe û dikeve kuna te ya reş, pûanên bonus bi qasî {n} ji armancê distînî, paşê {n} saniyeyan meteor nikarin zirarê bidin te. Di her astê de {n} caran",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Di lîstikê de bişkoka mertalê bitikîne: {n} saniyeyan her meteora ku li te dikeve hûr dibe û kevanên te yên şikestî serast dibin. Ji firoşgehê tê kirîn an bi berhevkirina {n} perçeyên mertalê tê qezenckirin. Di Kozmosa Rojane û hevrikiyan de nayê bikaranîn",
+"Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır": "Asta zor: di {n} saniyeyan de bigihîje armancê, meteor pirtir tên. Mertal, Sûpernova û Hawking li vir ferqê çêdikin",
+"Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Astên zor bi demê sînorkirî ne. Di saniyeyên dawî de 💎 Sûpernova yekser {n} ji armancê dide te; zincîreke dirêj a combo pûanan pir dike",
+"Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Armanc %{p} temam. Heke berdewam bikî +{n} s, pûan û mezinahiya te diparêzin",
+"HEDEFE ÇOK AZ KALDI": "HEMA NÊZÎKÎ ARMANCÊ",
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Dem qediya. Dîsa biceribîne an vegere nexşeyê; pêşketina te parastî ye"
 }

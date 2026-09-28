@@ -1293,5 +1293,22 @@
 "Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Se gana rompiendo los puntos débiles del jefe. Recibe un golpe y estalla, borrando los meteoros a tu alrededor",
 "Meteorlardan kaç: çarparsa bir yay kopar, {n} yay {n} can. Kıl payı geçersen KUSURSUZ KAÇIŞ": "Esquiva los meteoros: un golpe rompe un arco, {n} arcos son {n} vida. Pasar rozando es un ESQUIVE PERFECTO",
 "Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; {n} yay giderse {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ": "Los meteoros rojos son peligrosos: un golpe rompe uno de los arcos de tu agujero negro; si se van {n} arcos pierdes {n} vida. Entran despacio y luego aceleran. Las flechas rojas muestran su ruta, apártate. Pasar rozando es un ESQUIVE PERFECTO",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Alcanza la puntuación objetivo de arriba para terminar el nivel. No choques con meteoros: cada choque rompe un arco del agujero negro, {n} arcos = {n} vida"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Alcanza la puntuación objetivo de arriba para terminar el nivel. No choques con meteoros: cada choque rompe un arco del agujero negro, {n} arcos = {n} vida",
+"ZOR": "DIFÍCIL",
+"ÇOK ZOR": "MUY DIFÍCIL",
+"ZOR SEVİYE": "NIVEL DIFÍCIL",
+"ÇOK ZOR SEVİYE": "NIVEL MUY DIFÍCIL",
+"YAYLAR TAMİR": "ARCOS REPARADOS",
+"KALKAN YAYLARI TAMİR EDER": "EL ESCUDO REPARA TUS ARCOS",
+"HAWKING METEORLARI SİLER": "HAWKING BORRA LOS METEOROS",
+"SÜPERNOVA HEDEFE YETİŞTİRİR": "SUPERNOVA TE LLEVA A LA META",
+"Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın": "Niveles con anillo rojo y llama en el mapa: alcanza la meta antes de que se acabe el tiempo, y los meteoros llegan más a menudo. Escudo, Supernova y Hawking valen más aquí. Supéralo y ganas estrellas extra",
+"Hedefe süre dolmadan ulaşmalısın ve meteorlar daha sık gelir. Zorlanırsan: 🛡 Kalkan {n} saniye korur ve kopan yaylarını tamir eder. 💎 Süpernova ekrandaki her şeyi yutar ve hedefin {n}’ini hemen verir. 💨 Hawking ekrandaki meteorları siler": "Alcanza la meta antes de que se acabe el tiempo, y los meteoros llegan más a menudo. Si se complica: 🛡 el Escudo te protege {n} segundos y repara los arcos rotos. 💎 Supernova se traga todo lo que hay en pantalla y te da al instante el {n} de la meta. 💨 Hawking borra los meteoros de la pantalla",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Toca el botón de diamante en el juego ({n} 💎): todo lo que hay en pantalla estalla y cae en espiral a tu agujero negro, recibes puntos extra por el {n} de la meta y luego durante {n} segundos los meteoros no te dañan. {n} veces por nivel",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Toca el botón de escudo en el juego: durante {n} segundos cada meteoro que te golpea se rompe y tus arcos rotos se reparan. Se compra en la tienda o se gana reuniendo {n} piezas de escudo. No se usa en Cosmos Diario ni en desafíos",
+"Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır": "Nivel difícil: alcanza la meta en {n} segundos, los meteoros llegan más a menudo. Escudo, Supernova y Hawking marcan la diferencia aquí",
+"Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Los niveles difíciles tienen tiempo límite. En los últimos segundos 💎 Supernova te da al instante el {n} de la meta; una cadena de combo larga multiplica tus puntos",
+"Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Meta al {p} %. Continúa con +{n} s; se conservan tus puntos y tu tamaño",
+"HEDEFE ÇOK AZ KALDI": "MUY CERCA DE LA META",
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Se acabó el tiempo. Inténtalo de nuevo o vuelve al mapa; tu progreso está a salvo"
 }

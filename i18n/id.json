@@ -1293,5 +1293,22 @@
 "Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Didapat dengan memecahkan titik lemah bos. Menahan satu pukulan lalu meledak, menghapus meteor di sekitarmu",
 "Meteorlardan kaç: çarparsa bir yay kopar, {n} yay {n} can. Kıl payı geçersen KUSURSUZ KAÇIŞ": "Hindari meteor: tabrakan mematahkan satu busur, {n} busur = {n} nyawa. Lewat tipis adalah HINDARAN SEMPURNA",
 "Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; {n} yay giderse {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ": "Meteor merah berbahaya: tabrakan mematahkan salah satu busur di sekitar lubang hitammu; jika {n} busur hilang kamu kehilangan {n} nyawa. Masuk pelan lalu makin cepat. Panah merah menunjukkan jalurnya, menyingkirlah. Lewat tipis adalah HINDARAN SEMPURNA",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Capai skor target di atas untuk menyelesaikan level. Jangan tabrak meteor: tiap tabrakan mematahkan busur di sekitar lubang hitam, {n} busur = {n} nyawa"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Capai skor target di atas untuk menyelesaikan level. Jangan tabrak meteor: tiap tabrakan mematahkan busur di sekitar lubang hitam, {n} busur = {n} nyawa",
+"ZOR": "SULIT",
+"ÇOK ZOR": "SANGAT SULIT",
+"ZOR SEVİYE": "LEVEL SULIT",
+"ÇOK ZOR SEVİYE": "LEVEL SANGAT SULIT",
+"YAYLAR TAMİR": "BUSUR PULIH",
+"KALKAN YAYLARI TAMİR EDER": "PERISAI MEMULIHKAN BUSURMU",
+"HAWKING METEORLARI SİLER": "HAWKING MENGHAPUS METEOR",
+"SÜPERNOVA HEDEFE YETİŞTİRİR": "SUPERNOVA MEMBAWAMU KE TARGET",
+"Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın": "Level dengan cincin merah dan api di peta: capai target sebelum waktu habis, dan meteor datang lebih sering. Perisai, Supernova, dan Hawking paling berguna di sini. Lewati untuk bintang ekstra",
+"Hedefe süre dolmadan ulaşmalısın ve meteorlar daha sık gelir. Zorlanırsan: 🛡 Kalkan {n} saniye korur ve kopan yaylarını tamir eder. 💎 Süpernova ekrandaki her şeyi yutar ve hedefin {n}’ini hemen verir. 💨 Hawking ekrandaki meteorları siler": "Capai target sebelum waktu habis, dan meteor datang lebih sering. Jika sulit: 🛡 Perisai melindungimu {n} detik dan memulihkan busur yang patah. 💎 Supernova menelan semua di layar dan langsung memberimu {n} dari target. 💨 Hawking menghapus meteor di layar",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Ketuk tombol berlian dalam permainan ({n} 💎): semua di layar meledak dan berputar masuk ke lubang hitammu, kamu mendapat poin bonus senilai {n} dari target, lalu selama {n} detik meteor tidak bisa melukaimu. {n} kali per level",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Ketuk tombol perisai dalam permainan: selama {n} detik setiap meteor yang mengenaimu hancur dan busurmu yang patah dipulihkan. Beli di toko atau dapatkan dengan mengumpulkan {n} kepingan perisai. Tidak bisa dipakai di Kosmos Harian dan tantangan",
+"Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır": "Level sulit: capai target dalam {n} detik, meteor datang lebih sering. Perisai, Supernova, dan Hawking jadi pembeda di sini",
+"Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Level sulit punya batas waktu. Di detik-detik terakhir 💎 Supernova langsung memberimu {n} dari target; rantai combo panjang melipatgandakan poinmu",
+"Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Target {p}% tercapai. Lanjutkan untuk +{n} dtk; skor dan ukuranmu tetap",
+"HEDEFE ÇOK AZ KALDI": "TINGGAL SEDIKIT LAGI",
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Waktu habis. Coba lagi atau kembali ke peta; kemajuanmu aman"
 }

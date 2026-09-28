@@ -1293,5 +1293,22 @@
 "Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Wird durch das Brechen der Schwachstellen des Bosses verdient. Sie fängt einen Treffer ab und platzt, wobei sie die Meteore um dich herum auslöscht",
 "Meteorlardan kaç: çarparsa bir yay kopar, {n} yay {n} can. Kıl payı geçersen KUSURSUZ KAÇIŞ": "Weich Meteoren aus: Ein Treffer bricht einen Bogen, {n} Bögen sind {n} Leben. Knapp vorbei ist ein PERFEKTES AUSWEICHEN",
 "Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; {n} yay giderse {n} can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ": "Rote Meteore sind gefährlich: Ein Treffer bricht einen der Bögen um dein Schwarzes Loch; sind {n} Bögen weg, verlierst du {n} Leben. Sie kommen langsam herein und werden dann schneller. Rote Pfeile zeigen ihren Weg, geh ihm aus dem Weg. Knapp vorbei ist ein PERFEKTES AUSWEICHEN",
-"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Erreiche die Zielpunktzahl oben, um das Level zu schaffen. Triff keine Meteore: Jeder Treffer bricht einen Bogen um das Schwarze Loch, {n} Bögen = {n} Leben"
+"Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, {n} yay = {n} can": "Erreiche die Zielpunktzahl oben, um das Level zu schaffen. Triff keine Meteore: Jeder Treffer bricht einen Bogen um das Schwarze Loch, {n} Bögen = {n} Leben",
+"ZOR": "SCHWER",
+"ÇOK ZOR": "SEHR SCHWER",
+"ZOR SEVİYE": "SCHWERES LEVEL",
+"ÇOK ZOR SEVİYE": "SEHR SCHWERES LEVEL",
+"YAYLAR TAMİR": "BÖGEN REPARIERT",
+"KALKAN YAYLARI TAMİR EDER": "SCHILD REPARIERT DEINE BÖGEN",
+"HAWKING METEORLARI SİLER": "HAWKING LÖSCHT METEORE",
+"SÜPERNOVA HEDEFE YETİŞTİRİR": "SUPERNOVA BRINGT DICH ANS ZIEL",
+"Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın": "Level mit rotem Ring und Flamme auf der Karte: Erreiche das Ziel, bevor die Zeit abläuft, und Meteore kommen häufiger. Schild, Supernova und Hawking zählen hier am meisten. Schaffst du es, gibt es Extrasterne",
+"Hedefe süre dolmadan ulaşmalısın ve meteorlar daha sık gelir. Zorlanırsan: 🛡 Kalkan {n} saniye korur ve kopan yaylarını tamir eder. 💎 Süpernova ekrandaki her şeyi yutar ve hedefin {n}’ini hemen verir. 💨 Hawking ekrandaki meteorları siler": "Erreiche das Ziel, bevor die Zeit abläuft, und Meteore kommen häufiger. Wird es eng: 🛡 Der Schild schützt dich {n} Sekunden und repariert gebrochene Bögen. 💎 Supernova verschlingt alles auf dem Bildschirm und gibt dir sofort {n} des Ziels. 💨 Hawking löscht die Meteore auf dem Bildschirm",
+"Oyunda elmas butonuna dokun ({n} 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin {n}’i kadar bonus puan gelir, ardından {n} saniye meteorlar sana zarar veremez. Seviye başına {n} kez": "Tippe im Spiel auf den Diamant-Knopf ({n} 💎): Alles auf dem Bildschirm platzt und strudelt in dein Schwarzes Loch, du bekommst Bonuspunkte im Wert von {n} des Ziels, danach können dir Meteore {n} Sekunden lang nichts anhaben. {n}-mal pro Level",
+"Oyunda kalkan butonuna dokun: {n} saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da {n} kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz": "Tippe im Spiel auf den Schild-Knopf: {n} Sekunden lang zerschellt jeder Meteor, der dich trifft, und deine gebrochenen Bögen werden repariert. Im Shop kaufen oder durch {n} gesammelte Schildteile verdienen. Nicht in Täglicher Kosmos oder Herausforderungen nutzbar",
+"Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır": "Schweres Level: Erreiche das Ziel in {n} Sekunden, Meteore kommen häufiger. Schild, Supernova und Hawking machen hier den Unterschied",
+"Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin {n}’ini hemen verir; uzun combo zinciri puanı katlar": "Schwere Level haben ein Zeitlimit. In den letzten Sekunden gibt dir 💎 Supernova sofort {n} des Ziels; eine lange Combo-Kette vervielfacht deine Punkte",
+"Hedefin %{p} tamam. Devam edersen +{n} sn, puanın ve boyutun korunur": "Ziel zu {p} % erreicht. Mach weiter für +{n} s; Punkte und Größe bleiben",
+"HEDEFE ÇOK AZ KALDI": "SO KNAPP AM ZIEL",
+"Süre doldu. Tekrar dene ya da haritaya dön; ilerlemen etkilenmez": "Die Zeit ist um. Versuch es nochmal oder geh zurück zur Karte; dein Fortschritt bleibt"
 }
