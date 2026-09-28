@@ -1260,5 +1260,11 @@
 "VORTEX BİTTİ": "VORTEX VORBEI",
 "VORTEX HAZIR": "VORTEX BEREIT",
 "Girdap Efendisi": "Wirbelmeister",
-"{n} VORTEX": "{n} VORTEX"
+"{n} VORTEX": "{n} VORTEX",
+"GEZEGEN YOK OLDU": "DER PLANET IST VERLOREN",
+"REKORUN": "DEIN REKORD",
+"Rekor hayaleti (en iyi denemen)": "Rekord-Geist (dein bester Versuch)",
+"Yaşayan bir gezegene asteroitler yağıyor. Çarpanlar gezegenin canını azaltır, yakaladıkların artırır. Süre dolana kadar gezegeni ayakta tut": "Auf einen lebenden Planeten regnen Asteroiden. Treffer senken seine Gesundheit, gefangene erhöhen sie. Halte den Planeten am Leben, bis die Zeit abläuft",
+"Mavi gezegende hayat var. Kırmızı çizgili asteroitler ona doğru geliyor: yolunun önünde dur ve yut. Her çarpma gezegenin canını azaltır, her yakaladığın artırır. Süre dolduğunda gezegen hâlâ ayaktaysa görev tamam. Bu görevde meteor gelmez. Gezegenin atmosferine giremezsin": "Auf dem blauen Planeten gibt es Leben. Rot markierte Asteroiden fliegen auf ihn zu: Stell dich in ihren Weg und schluck sie. Jeder Treffer senkt seine Gesundheit, jeder Fang erhöht sie. Steht der Planet noch, wenn die Zeit abläuft, ist die Mission geschafft. In dieser Mission kommen keine Meteore. In seine Atmosphäre kannst du nicht eindringen",
+"Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır": "Schluck die rot markierten Asteroiden, bevor sie den Planeten erreichen. Stell dich in ihren Weg, vor den Planeten. Jeder gefangene heilt den Planeten"
 }

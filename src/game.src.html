@@ -936,6 +936,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
   <div class="srow"><span>🌍 Dünya sıralamasına katıl</span><button class="tg" id="sLbOn"></button></div>
+  <div class="srow"><span>👻 Rekor hayaleti (en iyi denemen)</span><button class="tg" id="sGhost"></button></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
   <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
   <div class="srow"><span>👆 Parmak mesafesi</span><div class="seg" id="sFd"><button>YAKIN</button><button>ORTA</button><button>UZAK</button></div></div>
@@ -977,7 +978,7 @@ const SK='bhs_v7';
 let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
-const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,lb:true};
+const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,lb:true,gh:true};
 // ══════════════════════════════════════════════════════
 // ICONS. Emoji in any on-screen text are drawn as these SVG icons (the strings, translations and share texts
 // keep their emoji). Colored icons use the gradients in #icoDefs; line icons follow the text color.
@@ -2485,7 +2486,7 @@ function levelSuccess(){
 // Classic never throws you back to level 1: out of lives you can pay to continue, replay the level for free, or leave with progress saved.
 // what took the last life, and how to avoid it next time
 const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek KUSURSUZ KAÇIŞ verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle.'],
-  prey:['🎯','AV KAÇTI','Avın kabuğunu kırmak için ona hızla çarp: hızlı çarpış 2–3 parça birden kırar. Süresi bitmeden 10 parçayı kır.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.'],guard:['🛡','GEZEGEN VURULDU','Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur.'],rival:['🌑','RAKİP SENİ ISIRDI','Rakip kırmızıyken ondan uzak dur ve hızlı büyü. Maviye dönünce kaçar: o an yakala.']};
+  prey:['🎯','AV KAÇTI','Avın kabuğunu kırmak için ona hızla çarp: hızlı çarpış 2–3 parça birden kırar. Süresi bitmeden 10 parçayı kır.'],anti:['🟢','ANTİMADDE','Yeşil halkalı cisimleri yutma: kara deliğini küçültür.'],guard:['🛡','GEZEGEN YOK OLDU','Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır.'],rival:['🌑','RAKİP SENİ ISIRDI','Rakip kırmızıyken ondan uzak dur ve hızlı büyü. Maviye dönünce kaçar: o an yakala.']};
 // A short radio note over the field: zone arrivals and boss warnings (never pauses the game)
 function sigShow(h,txt,sec=5){const e=$('sig2');if(!e)return;$('sigH').textContent=h;const tt=$('sigT');tt.textContent='';e.classList.add('on');let i=0;clearInterval(e._i);clearTimeout(e._t);
   e._i=setInterval(()=>{i+=2;tt.textContent=txt.slice(0,i);if(i>=txt.length)clearInterval(e._i);},28);e._t=setTimeout(()=>e.classList.remove('on'),sec*1000);}
@@ -2755,7 +2756,7 @@ document.addEventListener('keydown',e=>{if(e.code==='Space'&&gState==='playing'&
 // ══════════════════════════════════════════════════════
 function syncSettingsUI(){[...$('sFd').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.fd??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
-  $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
+  $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);tg('sGhost',SET.gh!==false);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
   const pl=(id,on)=>{const e=$(id);e.textContent=on?'AÇIK':'KAPALI';e.className=on?'':'off';};pl('pMusicL',SET.music);pl('pSfxL',SET.sfx);
 }
@@ -2764,7 +2765,7 @@ $('sMus').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('sSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();sfx('click',{vol:.4});};
 {const ls=$('sLang');ls.innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join('');ls.onchange=()=>{setLang(ls.value,true);syncSettingsUI();if($('sMenu').classList.contains('on'))selMode(gameMode);};}
 $('sVib').onclick=()=>{SET.vib=!SET.vib;setChanged();vib(30);};
-$('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};$('sLbOn').onclick=()=>{SET.lb=!SET.lb;setChanged();};
+$('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};$('sLbOn').onclick=()=>{SET.lb=!SET.lb;setChanged();};$('sGhost').onclick=()=>{SET.gh=SET.gh===false;setChanged();};
 $('sMusV').oninput=e=>{SET.musicVol=+e.target.value;SND.applySettings();};$('sMusV').onchange=saveG;
 $('sSfxV').oninput=e=>{SET.sfxVol=+e.target.value;SND.applySettings();};$('sSfxV').onchange=()=>{saveG();sfx('coin',{vol:.5});};
 
