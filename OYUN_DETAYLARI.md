@@ -148,7 +148,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 - **🛡 KALKAN PARÇASI**: Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.
 - **☄️ KUYRUKLU YILDIZ**: Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.
 - **🌋 BÖLÜNEN GEZEGEN**: Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.
-- **⚛️ ANTİMADDE**: Yutma: kara deliğini küçültür. Vortex açıkken zararsız.
+- **⚛️ ANTİMADDE**: Yutma: kara deliğini küçültür ve 3 saniye boyunca cisimleri iter; o sürede hiçbir şey yutulamaz (üstte yeşil süre çubuğu). Vortex açıkken zararsız.
 - **🧲 MIKNATIS TAŞI**: Yut: 6 saniye yutabileceğin her şey sana çekilir.
 - **💫 PULSAR**: Sadece parlarken yutulur: 150 puan.
 - **🪐 UYDULU GEZEGEN**: Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.
@@ -167,7 +167,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 - **🪐 DEV GEZEGEN**: Boss (10, 40, 70…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut.
 - **🔴 KIRMIZI DEV**: Boss (20, 80, 110…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut.
 - **💥 SÜPERNOVA**: Boss (30, 60, 90…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut.
-- **☢ RADYASYON**: 40. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur.
+- **☢ RADYASYON**: 40. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur. Radyasyon sürerken meteor gelmez.
 - **👁 KARA DELİK İKİZİ**: Boss (50, 100…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek.
 - **⛽ YAKIT**: 16. seviyeden sonra her deneme yakıtla yapılır: kaybedilen deneme 1 yakıt harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 yakıt dolar (en fazla 5). Seviye içindeki kalpler (canlar) ayrıdır: yakıt oyuna girme hakkın, can ise o seviyede kaç darbe kaldırabileceğin.
 - **🪶 KOLAYLAŞTIR**: Aynı seviyede 3 kez olmazsa: 15 💎 ya da reklamla hedef %20 düşer.
@@ -191,8 +191,8 @@ Sayısal değerler: kalkan 10 sn (30 💎) · Süpernova 20 💎, seviye başın
 - **💎 ELMASLA DEVAM**: Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.
 
 ## 7. Olaylar ve sistemler
-- **💫 KİLONOVA**: İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve altın saçılır.
-- **🔥 KUASAR JETİ**: 28. seviyeden itibaren: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder, parmak kalkınca kesilir, süre dolmadan yeniden basınca devam eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara hasar verir. 15 saniyede yeniden dolar.
+- **💫 KİLONOVA**: İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve 14 altın ekrana birbirinden uzak noktalara saçılır. Her üç altından biri önce kameraya doğru gelir gibi büyüyüp yarı saydamlaşır, sonra başka bir yere konar. Altınlar güç düğmelerinin ve kara deliğin üstüne düşmez.
+- **🔥 KUASAR JETİ**: 28. seviyeden itibaren: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder, parmak kalkınca kesilir, süre dolmadan yeniden basınca devam eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara hasar verir. 15 saniyede yeniden dolar. Dolum: her kullanımdan sonra 15 saniyede dolar. Üst bardaki 🔥 halkası dolumu gösterir; dolunca parlar, üç kez nabız atar, "JET HAZIR" yazar ve zil çalar. Ateşlerken halka boşalarak kalan süreyi gösterir.
 - **💨 HAWKING SALINIMI**: 24. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder.
 - **🧭 HAFTALIK SEFER**: Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.
 - **🌳 KÜTLE AĞACI**: Yuttuğun toplam kütleyle kalıcı küçük yetenekler aç (Klasik ve Sefer).
@@ -239,7 +239,13 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 - ⏱ **SÜRE DOLDU PENCERESİ**: Boss ya da zor seviyede süre bitince can gitmez; pencere yalnızca süre satar: ⏱ zaman kristali, 💎 20 (aynı seviyede her alımda iki katı: 20 → 40 → 80) ya da seviye başına 1 reklam (+15 sn). Yıldızla süre alınmaz.
 - ⭐ **YILDIZLA DEVAM**: Canın bitince 300 ⭐ (zor seviyede 450 ⭐), günde en fazla 3 kez.
 - 🕳️ **ARŞİVCİ GÖRÜNÜMLERİ**: Atlas'ta 10 cisimde ustalaşınca Arşiv Usturlabı, 20'de Yıldız Haritası, 29'un hepsinde Kozmik Koleksiyon kara delik görünümü açılır.
-- 🔬 **LABORATUVAR DENGESİ**: Seviyenin önerdiği gücün üstündeki geliştirmeler yarım etki verir; 30 ve 60'tan sonra temel zorluk artmaya devam eder. 24/28'i geçmiş eski oyunculara Hawking/Jet modülü 1. seviyede verilir.
+- 🔬 **LABORATUVAR DENGESİ**: Seviyenin önerdiği gücün üstündeki geliştirmeler yarım etki verir; 30 ve 60'tan sonra temel zorluk artmaya devam eder. Hawking ve Kuasar Jeti yalnızca laboratuvarda inşa edilince çalışır. Yeni özellikler evrime bağlıdır: Hawking 24. seviye + SÜPER KÜTLELİ evre (600 M), Kuasar Jeti 28. seviye + KUASAR evresi (1.500 M, evrimin sonu). İnşa süreleri: 5 dk, 20 dk, 1,5 sa, 4,5 sa, 10 sa, 18 sa, 30 sa, 2 gün, 3 gün, 4 gün.
+- ⏩ **LAB HIZLANDIRMA**: İnşaları kısaltan dakika bakiyesi. Kaynaklar: her günlük giriş +10 dk (reklamla ×2), haftalık sandık +60 dk, üç günlük görevin tamamı +15 dk, Kaptanın Hediyesi kutularında 30/60 dk, seferde Hazine +30 dk ve Sefer Bossu +2 sa, Atlas'ta çok nadir cisimde ustalaşma +1 sa. Haftada yaklaşık 5–6 saat.
+- 📐 **LABORATUVAR EKRANI**: Kaydırmadan tek ekrana sığar; sahne ekrana göre küçülür, seçili modülün inşası kendi kartında görünür, 2. yuva üstteki YUVA etiketinin yanındaki + ile (iki dokunuşla) alınır.
+- 🔔 **LABORATUVAR BİLDİRİMİ**: Ana menüde (oyun sırasında asla) üstten kayan bir kart: yeni açılan özellik (Hawking 24, Jet 28), yaklaşan güç isteyen seviye ya da boşta duran laboratuvar. En fazla 3 seviyede ve 12 dakikada bir; yeni özellik her zaman söylenir.
+- 👾 **BOSS DENGESİ**: Boss canı 10. seviyede 40, her evrende +10 (50'de 80, sonra yavaş artar). Hızlı çarpma 2 saniyede bir kırar; Süpernova her 9 saniyede 5 enkaz saçar; boss canının %20'sine inince ve sen onun boyuna ulaşınca yutulabilir. Kabuk halkası tamamen kırılınca kaybolur, yerine yeşil bir parıltı kalır. Radyasyonsuz bosslarda meteor fırtınası sürer.
+- 🧲 **MIKNATIS**: 3 saniye; laboratuvarda her seviye +0,5 sn (en fazla 8 sn).
+- ❤️ **KALPLER**: Üst barda; can gidince kalp eriyip damlayarak söner.
 - ⚪ **GÜMÜŞ KABUK**: Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.
 - ⚡ **YAY ONARILDI**: Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.
 - ☄️ **METEOR VE YAYLAR**: Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.
@@ -257,8 +263,8 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 - 💨 **KÜÇÜLÜYOR**: Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.
 - ☄️ **KUYRUKLU YILDIZ**: Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.
 - 🌋 **BÖLÜNEN GEZEGEN**: Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!
-- ⚛️ **ANTİMADDE**: Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır.
-- 🧲 **MIKNATIS TAŞI**: Bu mıknatıs taşını yut: 6 saniye boyunca ekranda yutabileceğin her şey hızla sana çekilir.
+- ⚛️ **ANTİMADDE**: Yutma! Antimadde kara deliğini hemen küçültür ve 3 saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır.
+- 🧲 **MIKNATIS TAŞI**: Bu mıknatıs taşını yut: 3 saniye boyunca (laboratuvarda 8 saniyeye kadar uzar) ekranda yutabileceğin her şey hızla sana çekilir.
 - 💎 **SÜPERNOVA**: Elmas düğmesine dokun (20 💎): ekrandaki her şey sana akar, hedefin %15’i hemen gelir.
 - 💫 **PULSAR**: Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.
 - 🪐 **UYDULU GEZEGEN**: Önce gezegeni yut, 3 saniye içinde uydusunu da yutarsan çift puan!
@@ -279,7 +285,7 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 - 🌈 **SPEKTRUM**: Arka arkaya 5 farklı türde cisim yut: SPEKTRUM bonusu! Kara deliğinin altındaki noktalar serini gösterir. Aynı türden birini yutarsan seri baştan başlar, combo biterse silinir.
 - 💫 **KİLONOVA**: İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.
 - 💨 **HAWKING SALINIMI**: Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir.
-- 🔥 **KUASAR JETİ**: Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur.
+- 🔥 **KUASAR JETİ**: Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır.
 - ☢ **RADYASYON**: Boss dalga saçar. Dalgaların arasındaki boşlukta dur; kalkan seni korur.
 - 💥 **SÜPERNOVA**: Her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut!
 
