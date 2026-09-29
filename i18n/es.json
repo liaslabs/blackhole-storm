@@ -1441,7 +1441,7 @@
 "Ustalaştı": "Dominado",
 "Sıradan {n} ⭐": "Común {n} ⭐",
 "Nadir {n} 💎": "Raro {n} 💎",
-"Çok nadir ⏱ {n} saat hızlandırma": "Muy raro ⏱ {n} hora de aceleración",
+"Çok nadir ⏩ {n} saat hızlandırma": "Muy raro ⏩ {n} hora de aceleración",
 "Hepsinde ustalaş: +{n} 💎 ve Kozmik Arşivci unvanı": "Domínalos todos: +{n} 💎 y el título Archivero Cósmico",
 "Altın gezegenler ×{n} daha fazla gelir ve ×{n} puan verir": "Los planetas de oro llegan ×{n} más y dan ×{n} puntos",
 "{n} DAHA FAZLA": "{n} MÁS",
@@ -1492,5 +1492,12 @@
 "{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} S SIN PODER TRAGAR NADA",
 "Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "¡No lo tragues! Encoge tu agujero negro y aleja los cuerpos durante {n} segundos. Mantenlo fuera de tu atracción",
 "Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "¡No la tragues! La antimateria encoge tu agujero negro al instante y aleja los cuerpos durante {n} segundos: mientras tanto no puedes tragar nada. Si entra en tu atracción, cae dentro; mantenla lejos. Con el Vórtice activo es inofensiva",
-"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Mientras sujetas el agujero negro, pulsa con un segundo dedo y barre: durante {n} segundos el rayo golpea todo lo que cruza. Cuando el anillo 🔥 de la barra superior se llena, el chorro vuelve a estar listo"
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Mientras sujetas el agujero negro, pulsa con un segundo dedo y barre: durante {n} segundos el rayo golpea todo lo que cruza. Cuando el anillo 🔥 de la barra superior se llena, el chorro vuelve a estar listo",
+"YENİ ÖZELLİK YAKLAŞIYOR": "NUEVA FUNCIÓN EN CAMINO",
+"Kara deliğin {s} evresine ulaşınca açılır": "Se desbloquea cuando tu agujero negro llega a la etapa {s}",
+"{n} M daha": "faltan {n} M",
+"LAB HIZLANDIRMA": "ACELERACIÓN DE LABORATORIO",
+"Üçünü de bitir: +{n}": "Completa las tres: +{n}",
+"+{n} dk": "+{n} min",
+"+{n} dk ⏩": "+{n} min ⏩"
 }

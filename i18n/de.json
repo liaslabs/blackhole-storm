@@ -1441,7 +1441,7 @@
 "Ustalaştı": "Gemeistert",
 "Sıradan {n} ⭐": "Häufig {n} ⭐",
 "Nadir {n} 💎": "Selten {n} 💎",
-"Çok nadir ⏱ {n} saat hızlandırma": "Sehr selten ⏱ {n} Std. Beschleunigung",
+"Çok nadir ⏩ {n} saat hızlandırma": "Sehr selten ⏩ {n} Std. Beschleunigung",
 "Hepsinde ustalaş: +{n} 💎 ve Kozmik Arşivci unvanı": "Meistere alle: +{n} 💎 und der Titel Kosmischer Archivar",
 "Altın gezegenler ×{n} daha fazla gelir ve ×{n} puan verir": "Goldplaneten kommen ×{n} öfter und bringen ×{n} Punkte",
 "{n} DAHA FAZLA": "{n} MEHR",
@@ -1492,5 +1492,12 @@
 "{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} S LANG KANNST DU NICHTS VERSCHLUCKEN",
 "Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Nicht verschlucken! Es lässt dein Schwarzes Loch schrumpfen und stößt {n} Sekunden lang Himmelskörper ab. Halte es aus deinem Sog fern",
 "Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Nicht verschlucken! Antimaterie lässt dein Schwarzes Loch sofort schrumpfen und stößt {n} Sekunden lang Himmelskörper ab: So lange kannst du nichts verschlucken. Gerät sie in deinen Sog, wird sie hineingezogen, also halte sie fern. Mit aktivem Vortex ist sie harmlos",
-"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Halte das Schwarze Loch, drücke mit einem zweiten Finger und schwenke: {n} Sekunden lang trifft der Strahl alles, was er überstreicht. Ist der 🔥-Ring oben voll, ist der Jet wieder bereit"
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Halte das Schwarze Loch, drücke mit einem zweiten Finger und schwenke: {n} Sekunden lang trifft der Strahl alles, was er überstreicht. Ist der 🔥-Ring oben voll, ist der Jet wieder bereit",
+"YENİ ÖZELLİK YAKLAŞIYOR": "NEUE FUNKTION IN SICHT",
+"Kara deliğin {s} evresine ulaşınca açılır": "Wird freigeschaltet, wenn dein Schwarzes Loch die Stufe {s} erreicht",
+"{n} M daha": "noch {n} M",
+"LAB HIZLANDIRMA": "LABOR-BESCHLEUNIGUNG",
+"Üçünü de bitir: +{n}": "Schaffe alle drei: +{n}",
+"+{n} dk": "+{n} Min.",
+"+{n} dk ⏩": "+{n} Min. ⏩"
 }

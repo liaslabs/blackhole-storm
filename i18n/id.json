@@ -1441,7 +1441,7 @@
 "Ustalaştı": "Dikuasai",
 "Sıradan {n} ⭐": "Umum {n} ⭐",
 "Nadir {n} 💎": "Langka {n} 💎",
-"Çok nadir ⏱ {n} saat hızlandırma": "Sangat langka ⏱ percepatan {n} jam",
+"Çok nadir ⏩ {n} saat hızlandırma": "Sangat langka ⏩ percepatan {n} jam",
 "Hepsinde ustalaş: +{n} 💎 ve Kozmik Arşivci unvanı": "Kuasai semuanya: +{n} 💎 dan gelar Arsiparis Kosmik",
 "Altın gezegenler ×{n} daha fazla gelir ve ×{n} puan verir": "Planet emas datang ×{n} lebih sering dan memberi poin ×{n}",
 "{n} DAHA FAZLA": "{n} LEBIH BANYAK",
@@ -1492,5 +1492,12 @@
 "{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} DTK TAK BISA MENELAN APA PUN",
 "Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Jangan ditelan! Mengecilkan lubang hitammu dan mendorong benda menjauh selama {n} detik. Jauhkan dari tarikanmu",
 "Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Jangan ditelan! Antimateri langsung mengecilkan lubang hitammu dan mendorong benda menjauh selama {n} detik: selama itu kamu tak bisa menelan apa pun. Jika masuk tarikanmu, ia terseret masuk; jauhkan. Saat Vortex aktif ia tidak berbahaya",
-"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Sambil menahan lubang hitam, tekan dengan jari kedua dan sapukan: selama {n} detik sinar mengenai semua yang dilewatinya. Saat cincin 🔥 di bilah atas penuh, jet siap lagi"
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Sambil menahan lubang hitam, tekan dengan jari kedua dan sapukan: selama {n} detik sinar mengenai semua yang dilewatinya. Saat cincin 🔥 di bilah atas penuh, jet siap lagi",
+"YENİ ÖZELLİK YAKLAŞIYOR": "FITUR BARU SEGERA",
+"Kara deliğin {s} evresine ulaşınca açılır": "Terbuka saat lubang hitammu mencapai tahap {s}",
+"{n} M daha": "{n} M lagi",
+"LAB HIZLANDIRMA": "PERCEPATAN LAB",
+"Üçünü de bitir: +{n}": "Selesaikan ketiganya: +{n}",
+"+{n} dk": "+{n} mnt",
+"+{n} dk ⏩": "+{n} mnt ⏩"
 }

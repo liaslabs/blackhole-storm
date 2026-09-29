@@ -1441,7 +1441,7 @@
 "Ustalaştı": "Mastered",
 "Sıradan {n} ⭐": "Common {n} ⭐",
 "Nadir {n} 💎": "Rare {n} 💎",
-"Çok nadir ⏱ {n} saat hızlandırma": "Very rare ⏱ {n} hour speed-up",
+"Çok nadir ⏩ {n} saat hızlandırma": "Very rare ⏩ {n} hour speed-up",
 "Hepsinde ustalaş: +{n} 💎 ve Kozmik Arşivci unvanı": "Master them all: +{n} 💎 and the Cosmic Archivist title",
 "Altın gezegenler ×{n} daha fazla gelir ve ×{n} puan verir": "Gold planets come ×{n} more often and pay ×{n} points",
 "{n} DAHA FAZLA": "{n} MORE",
@@ -1492,5 +1492,12 @@
 "{n} SN HİÇBİR ŞEY YUTAMAZSIN": "NOTHING CAN BE SWALLOWED FOR {n} S",
 "Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Don't swallow it! It shrinks your black hole and pushes bodies away for {n} seconds. Keep it out of your pull",
 "Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Don't swallow it! Antimatter shrinks your black hole at once and pushes bodies away for {n} seconds: you can swallow nothing meanwhile. If it enters your pull it gets drawn in, so keep it away. It is harmless while Vortex is on",
-"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "While holding the black hole, press with a second finger and sweep: for {n} seconds the beam hits everything it crosses. When the 🔥 ring in the top bar fills, the jet is ready again"
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "While holding the black hole, press with a second finger and sweep: for {n} seconds the beam hits everything it crosses. When the 🔥 ring in the top bar fills, the jet is ready again",
+"YENİ ÖZELLİK YAKLAŞIYOR": "NEW FEATURE COMING",
+"Kara deliğin {s} evresine ulaşınca açılır": "Unlocks when your black hole reaches the {s} stage",
+"{n} M daha": "{n} M to go",
+"LAB HIZLANDIRMA": "LAB SPEED-UP",
+"Üçünü de bitir: +{n}": "Finish all three: +{n}",
+"+{n} dk": "+{n} min",
+"+{n} dk ⏩": "+{n} min ⏩"
 }

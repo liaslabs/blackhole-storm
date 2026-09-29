@@ -1441,7 +1441,7 @@
 "Ustalaştı": "Maîtrisé",
 "Sıradan {n} ⭐": "Commun {n} ⭐",
 "Nadir {n} 💎": "Rare {n} 💎",
-"Çok nadir ⏱ {n} saat hızlandırma": "Très rare ⏱ {n} h d'accélération",
+"Çok nadir ⏩ {n} saat hızlandırma": "Très rare ⏩ {n} h d'accélération",
 "Hepsinde ustalaş: +{n} 💎 ve Kozmik Arşivci unvanı": "Maîtrise-les tous : +{n} 💎 et le titre d'Archiviste cosmique",
 "Altın gezegenler ×{n} daha fazla gelir ve ×{n} puan verir": "Les planètes d'or viennent ×{n} plus souvent et rapportent ×{n} points",
 "{n} DAHA FAZLA": "{n} PLUS",
@@ -1492,5 +1492,12 @@
 "{n} SN HİÇBİR ŞEY YUTAMAZSIN": "RIEN À AVALER PENDANT {n} S",
 "Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Ne l'avale pas ! Il rétrécit ton trou noir et repousse les corps pendant {n} secondes. Garde-le hors de ton attraction",
 "Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Ne l'avale pas ! L'antimatière rétrécit aussitôt ton trou noir et repousse les corps pendant {n} secondes : pendant ce temps tu ne peux rien avaler. Si elle entre dans ton attraction, elle est aspirée : garde-la loin. Elle est inoffensive quand le Vortex est actif",
-"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "En tenant le trou noir, appuie avec un deuxième doigt et balaie : pendant {n} secondes le rayon frappe tout ce qu'il traverse. Quand l'anneau 🔥 de la barre du haut est plein, le jet est de nouveau prêt"
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "En tenant le trou noir, appuie avec un deuxième doigt et balaie : pendant {n} secondes le rayon frappe tout ce qu'il traverse. Quand l'anneau 🔥 de la barre du haut est plein, le jet est de nouveau prêt",
+"YENİ ÖZELLİK YAKLAŞIYOR": "NOUVELLE FONCTION EN VUE",
+"Kara deliğin {s} evresine ulaşınca açılır": "Se débloque quand ton trou noir atteint le stade {s}",
+"{n} M daha": "encore {n} M",
+"LAB HIZLANDIRMA": "ACCÉLÉRATION DU LABO",
+"Üçünü de bitir: +{n}": "Termine les trois : +{n}",
+"+{n} dk": "+{n} min",
+"+{n} dk ⏩": "+{n} min ⏩"
 }

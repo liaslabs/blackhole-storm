@@ -617,6 +617,10 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .lq.slot{cursor:pointer;color:#ffe2a8;font-family:var(--fd);letter-spacing:.08em;font-size:13px;border-color:rgba(242,169,59,.5);background:linear-gradient(90deg,rgba(242,169,59,.12),rgba(10,12,24,.9));text-align:start;}
 .lq.slot small{display:block;font-family:var(--fb);letter-spacing:0;font-size:11.5px;color:var(--dim);margin-top:3px;}
 .labnote{font-size:11px;color:var(--dim);text-align:center;padding:0 8px 6px;}
+.labpow .lslot{pointer-events:auto;margin-left:5px;min-width:18px;height:18px;padding:0 5px;border:0;border-radius:9px;background:#f2a93b;color:#1c1405;font:800 11px var(--fm);cursor:pointer;vertical-align:1px;}
+.labpow .lslot.sure{background:#ffd27a;box-shadow:0 0 10px rgba(255,200,90,.8);}
+.lq.in{padding:9px 0 0;border:0;border-top:1px dashed rgba(var(--c),.4);border-radius:0;background:none;}
+@media (max-height:760px){.labw{gap:7px;}.labtop small{display:none;}.labsel{padding:9px 10px;gap:6px;}.lsh i{width:36px;height:36px;font-size:22px;}.labnote{padding-bottom:2px;}}
 @media (prefers-reduced-motion:reduce){.lchip.bld::after,.lpips s.bld,.lbar i::after,.lgem.sure{animation:none;}}
 /* Main menu hub: a live black hole behind, menus around it, one gold call to action */
 #sMenu{background:#02030a;align-items:stretch;padding-left:12px;padding-right:12px;}
@@ -982,7 +986,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <button class="btn atcol" id="atCollect" hidden></button>
   <div class="atgrid" id="atGrid"></div>
   <div class="atnote" id="atNote">Bir cisme dokun: gözlem notunu oku.</div>
-  <div class="atrw"><span>Görüldü: +10 ⭐ · İncelendi: +25 ⭐</span><br><span>Ustalaştı: <i class="lg lc"></i>Sıradan 50 ⭐ · <i class="lg lr"></i>Nadir 3 💎 · <i class="lg lv"></i>Çok nadir ⏱ 1 saat hızlandırma</span><br><span>Hepsini gör: +50 💎 · Hepsinde ustalaş: +100 💎 ve Kozmik Arşivci unvanı</span></div>
+  <div class="atrw"><span>Görüldü: +10 ⭐ · İncelendi: +25 ⭐</span><br><span>Ustalaştı: <i class="lg lc"></i>Sıradan 50 ⭐ · <i class="lg lr"></i>Nadir 3 💎 · <i class="lg lv"></i>Çok nadir ⏩ 1 saat hızlandırma</span><br><span>Hepsini gör: +50 💎 · Hepsinde ustalaş: +100 💎 ve Kozmik Arşivci unvanı</span></div>
   <div class="row"><button class="btn" id="atClose">KAPAT</button></div>
  </div>
 </div>
@@ -1016,7 +1020,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="wk7" id="dWeek"></div><div class="wk7t" id="dWeekT"></div>
   <div class="box"><div class="muted" style="font-size:11px;letter-spacing:1px;">BUGÜNÜN ÖDÜLÜ</div>
    <div style="font-family:"IBM Plex Sans Condensed",sans-serif;font-size:24px;color:#ffe6a8;margin-top:4px;">+<span id="dStars">100</span> ⭐</div>
-   <div style="font-family:"IBM Plex Sans Condensed",sans-serif;font-size:17px;color:var(--cyan);">+<span id="dDia">5</span> 💎</div><div class="vipline" id="dVip" hidden>👑 VIP · +15 💎 +1 🛡 ekstra</div></div>
+   <div style="font-family:"IBM Plex Sans Condensed",sans-serif;font-size:17px;color:var(--cyan);">+<span id="dDia">5</span> 💎</div><div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;color:#b9ecff;margin-top:2px;">+<span id="dBoost">10 dk</span> ⏩ <span style="font-size:12px;opacity:.8">LAB HIZLANDIRMA</span></div><div class="vipline" id="dVip" hidden>👑 VIP · +15 💎 +1 🛡 ekstra</div></div>
   <button class="btn big" id="claimBtn">AL</button>
   <div class="row mon"><button class="btn sec adbtn" id="claimAd" style="width:100%;">▶ REKLAMLA 2 KATINI AL</button></div>
  </div>
@@ -2030,7 +2034,7 @@ function renderDM(){
   dmRoll();const box=$('dmBox');{const hot=DM.list.some(m=>m.done&&!m.cl),bd=$('dmBadge');if(bd){bd.textContent=hot?'AL!':'';bd.className=hot?'hot':''; /* nothing to take: no badge */}}let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`;
   DM.list.forEach((m,i)=>{const d=MPOOL.find(x=>x.id===m.id),rw=d?d.r:['⭐',0];
     h+=`<div class="dmr"><div class="x">${dmText(m)}<small>${Math.floor(m.p).toLocaleString(LOC)} / ${m.n.toLocaleString(LOC)} · ödül ${rw[1]} ${rw[0]}</small><div class="bar"><i style="width:${Math.min(100,m.p/m.n*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button data-i="${i}" ${m.done?'':'disabled'}>AL</button>`}</div>`;});
-  h+=`<div class="muted" style="margin-top:6px;font-size:12px;">${DM.list.every(m=>m.cl)?'Hepsi tamam, bonus alındı. Yarın yeni görevler!':'Üçünü de bitir: +5 💎 bonus'}</div>`;
+  h+=`<div class="muted" style="margin-top:6px;font-size:12px;">${DM.list.every(m=>m.cl)?'Hepsi tamam, bonus alındı. Yarın yeni görevler!':'Üçünü de bitir: +5 💎 · +15 dk ⏩'}</div>`;
   box.innerHTML=h;box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>dmClaim(+b.dataset.i));
 }
 function dmClaim(i){
@@ -2038,7 +2042,7 @@ function dmClaim(i){
   if(d.r[0]==='🟡'){if(SHOP.gold>0){stars+=60;g={stars:60};}else{SHOP.gold=1;g={};toast('🟡',T('ALTIN KABUK'),T('Bir evrenin son üç seviyesinde kendiliğinden takılır.'));}}
   else if(d.r[0]==='⭐'){stars+=d.r[1];g={stars:d.r[1]};}else{diamonds+=d.r[1];g={gems:d.r[1]};}
   sfx('confirm',{vol:.4,delay:.08});
-  if(DM.list.every(x=>x.cl)&&!DM.bonus){DM.bonus=true;diamonds+=5;g.gems=(g.gems||0)+5;sfx('achieve',{vol:.6,delay:.2});}
+  if(DM.list.every(x=>x.cl)&&!DM.bonus){DM.bonus=true;diamonds+=5;g.gems=(g.gems||0)+5;LAB.boost=(LAB.boost|0)+15;toast('⏩',T('LAB HIZLANDIRMA'),'+'+labMin(15));sfx('achieve',{vol:.6,delay:.2});}
   saveG();flyReward(src,g);renderDM(); /* the reward flies to the wallet and counts in as it lands */
 }
 
@@ -2343,9 +2347,9 @@ async function maybeInterstitial(){
 function fakeAd(reward){return new Promise(res=>{const o=$('adOv');$('adK').textContent=reward?'ÖDÜLLÜ REKLAM · TEST':'REKLAM ARASI · TEST';$('adTx').textContent=reward?'Ödülün birazdan hazır…':'Oyun birazdan devam ediyor…';
   $('adClose').hidden=true;o.classList.add('on');let n=3;$('adCd').textContent=n;const iv=setInterval(()=>{n--;$('adCd').textContent=Math.max(n,0);if(n<=0){clearInterval(iv);$('adTx').textContent=reward?'✓ Ödül kazanıldı':'Reklam bitti';$('adClose').hidden=false;}},1000);
   $('adClose').onclick=()=>{o.classList.remove('on');res(true);};});}
-function grant(g,src){if(!g)return;stars+=g.stars||0;diamonds+=g.gems||0;SHOP.lives+=g.lives||0;SHOP.shield+=g.shield||0;SHOP.time+=g.time||0;saveG();updateUI();
+function grant(g,src){if(!g)return;stars+=g.stars||0;diamonds+=g.gems||0;SHOP.lives+=g.lives||0;SHOP.shield+=g.shield||0;SHOP.time+=g.time||0;if(g.boost)LAB.boost=(LAB.boost|0)+g.boost;saveG();updateUI();if(g.boost)walletsRefresh();
   flyReward(null,{stars:g.stars,gems:g.gems,shield:g.shield});sfx('achieve',{vol:.5,delay:.1});
-  const parts=[];if(g.gems)parts.push(`+${g.gems} 💎`);if(g.stars)parts.push(`+${g.stars.toLocaleString(LOC)} ⭐`);if(g.lives)parts.push(`+${g.lives} ❤️`);if(g.shield)parts.push(`+${g.shield} 🛡`);if(g.time)parts.push(`+${g.time} ⏱`);
+  const parts=[];if(g.gems)parts.push(`+${g.gems} 💎`);if(g.stars)parts.push(`+${g.stars.toLocaleString(LOC)} ⭐`);if(g.lives)parts.push(`+${g.lives} ❤️`);if(g.shield)parts.push(`+${g.shield} 🛡`);if(g.time)parts.push(`+${g.time} ⏱`);if(g.boost)parts.push(`+${labMin(g.boost)} ⏩`);
   toast('🎁',src||'ALINDI',parts.join('  '));}
 function toast(i,t,d){$('tI').textContent=i;$('tT').textContent=t;$('tD').textContent=d;const e=$('toast');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600);}
 function owned(p){return (p.id==='no_ads'&&SHOP.noAds)||(p.id==='cosmic_id'&&SHOP.cid)||(p.id==='starter'&&SHOP.starter)||(p.sub&&vipOn());}
@@ -2405,7 +2409,7 @@ const LVL_AD={stars:100,max:1}; // level-end bonus: one ad, 100 ⭐ (a third of 
 // CAPTAIN'S GIFT — every 20 levels: nine boxes, two hide a black hole. Open at least three; after that
 // cash out whenever you like. A black hole swallows everything gathered so far. One try per milestone.
 // ══════════════════════════════════════════════════════
-const GIFT={bad:2,min:3,step:.5,adBonus:{gems:10},jack:{stars:1000,gems:50},jackP:.12,jackAd:.5,/* the Big Treasure: in about 1 gift in 8; a rewarded ad raises the odds to 1 in 2 */pool:[{stars:60},{stars:100},{stars:150},{gems:8},{gems:15},{shield:1},{stars:50,gems:5},{shield:1,stars:40},{gems:10,shield:1}]};
+const GIFT={bad:2,min:3,step:.5,adBonus:{gems:10},jack:{stars:1000,gems:50},jackP:.12,jackAd:.5,/* the Big Treasure: in about 1 gift in 8; a rewarded ad raises the odds to 1 in 2 */pool:[{stars:60},{stars:100},{stars:150},{gems:8},{gems:15},{shield:1},{stars:50,gems:5},{shield:1,stars:40},{gems:10,shield:1},{boost:30},{boost:60,stars:40}]}; // ⏩ = Laboratory speed-up minutes
 let GIFTS=null;
 // RISK CARD: every 5th level from 12 (plain score levels) offers two cards that make the level harder for a bonus, or none.
 const RISK_CARDS=[{id:'storm',ic:'☄️',n:'METEOR FIRTINASI',d:'Meteorlar 2 kat. Puan ×1,5.',rw:{gems:4}},{id:'rush',ic:'⚡',n:'HIZLI EVREN',d:'Her şey %25 daha hızlı. Puan ×1,4.',rw:{gems:4}},
@@ -2499,9 +2503,9 @@ const LABT=[
   {id:'shield',ic:'🛡',n:'KALKAN JENERATÖRÜ',col:'255,216,77'},
   {id:'rage',ic:'💢',n:'VORTEX ÇEKİRDEĞİ',col:'255,95,110'},
   {id:'magnet',ic:'🧲',n:'MIKNATIS BOBİNİ',col:'255,140,160'},
-  {id:'hawk',ic:'💨',n:'HAWKING REAKTÖRÜ',col:'225,235,255',from:24},
-  {id:'jet',ic:'🌠',n:'KUASAR JETİ',col:'140,225,255',from:28}];
-const LAB_MAX=10,LAB_T=[5,15,60,180,480,720,1440,2160,2880,4320],LAB_M=[30,60,100,160,240,340,460,600,760,950],LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
+  {id:'hawk',ic:'💨',n:'HAWKING REAKTÖRÜ',col:'225,235,255',from:24,st:2},
+  {id:'jet',ic:'🌠',n:'KUASAR JETİ',col:'140,225,255',from:28,st:3}]; // new features also need the black hole's evolution: Hawking the supermassive stage, the jet the full quasar
+const LAB_MAX=10,LAB_T=[5,20,90,270,600,1080,1800,2880,4320,5760],LAB_M=[30,60,100,160,240,340,460,600,760,950],LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
 let LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[]};
 const labRaw=id=>Math.min(LAB_MAX,LAB.lv[id]|0);
 function labLv(id){return gameMode==='classic'?labRaw(id):0;} // the lab works in Classic and the Expedition; Survival and the Daily Race stay equal for everyone
@@ -2510,7 +2514,7 @@ const labPower=()=>LABT.reduce((n,m)=>n+labRaw(m.id),0);
 const labRecAll=l=>Math.max(6,Math.floor((l-20)/5)*2);
 function labEffLv(id){const lv=labLv(id);if(!lv)return 0;const p=labPower(),r=labRecAll(level);return p<=r?lv:lv*(r+(p-r)*.5)/p;}
 const labSlots=()=>Math.min(2,1+(LAB.slot2||vipOn()?1:0));
-const labOpen=m=>!m.from||Math.max(savedLevel,bestLevel|0)>=m.from;
+const labLvOk=m=>!m.from||Math.max(savedLevel,bestLevel|0)>=m.from,labStOk=m=>!m.st||stageOf(mass)>=m.st,labOpen=m=>labLvOk(m)&&labStOk(m);
 const labBusy=id=>LAB.q.find(b=>b.id===id);
 function labGem(ms,lv){const m=Math.max(0,ms)/6e4;return m<=0?0:Math.max(1,Math.ceil(2.6*Math.sqrt(m)*(1+.05*lv)));} // cheaper per minute the longer it is, dearer the higher the level
 function labDur(sec){sec=Math.max(0,Math.ceil(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;
@@ -2548,6 +2552,7 @@ function labContHint(){labTickQuiet();const gap=labGap(level),b=LAB.q.slice().so
 const LN_GAP=12*6e4,LN_LV=3;
 function labNoteNext(){const lv=Math.max(savedLevel,bestLevel|0);if(lv<7)return null;
   for(const m of LABT)if(m.from&&labOpen(m)&&!labRaw(m.id)&&!labBusy(m.id)&&!(LAB.nf&&LAB.nf[m.id]))return {once:m.id,ic:m.ic,t:T('YENİ ÖZELLİK')+' · '+T(m.n),d:T(m.id==='jet'?'Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle.':'Laboratuvarda inşa et; meteorları tek dokunuşla sil.')};
+  {const m=LABT.find(m=>m.st&&labLvOk(m)&&!labStOk(m));if(m)return {ic:m.ic,t:T('YENİ ÖZELLİK YAKLAŞIYOR')+' · '+T(m.n),d:T('Kara deliğin {s} evresine ulaşınca açılır · {n} M daha',{s:T(STAGES[m.st].n),n:Math.max(0,STAGES[m.st].m-Math.floor(mass)).toLocaleString(LOC)})};}
   const p=labPower();for(let l=lv;l<=lv+4;l++){const r=labRec(l);if(r>p)return {ic:'⚡',t:T('SEVİYE {k} GÜÇ İSTİYOR',{k:l}),d:T('Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen.',{r,p})};}
   if(LAB.q.length<labSlots()){const m=LABT.find(m=>labOpen(m)&&!labBusy(m.id)&&labRaw(m.id)<LAB_MAX&&massFree()>=LAB_M[labRaw(m.id)]&&stars>=LAB_S[labRaw(m.id)]);
     if(m)return {ic:m.ic,t:T('LABORATUVAR BOŞ'),d:T('{m} için kaynağın hazır: seviye {k} geliştirmesini başlat.',{m:T(m.n),k:labRaw(m.id)+1})};}
@@ -2573,38 +2578,42 @@ function labClose(){$('sLab').classList.remove('on');LV.on=false;LV.conf=null;la
 const labRotFor=i=>Math.PI/2-i*TAU/LABT.length; // the selected pod swings round to the front
 function labSelect(i){LV.sel=i;let t=labRotFor(i);while(t-LV.rot>Math.PI)t-=TAU;while(t-LV.rot<-Math.PI)t+=TAU;LV.rotT=t;LV.conf=null;labRender();sfx('click',{vol:.3,rate:1.2});}
 function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),max=lv>=LAB_MAX;
-  $('labPow').innerHTML=`<span>⚡ ${T('GÜÇ')} <b>${labPower()}</b></span><span>⚫ ${T('KÜTLE')} <b>${massFree().toLocaleString(LOC)} M</b></span><span>🔧 ${T('YUVA')} <b>${LAB.q.length}/${labSlots()}</b></span>`;
+  $('labPow').innerHTML=`<span>⚡ ${T('GÜÇ')} <b>${labPower()}</b></span><span>⚫ ${T('KÜTLE')} <b>${massFree().toLocaleString(LOC)} M</b></span><span>🔧 ${T('YUVA')} <b>${LAB.q.length}/${labSlots()}</b>${!LAB.slot2&&!vipOn()?`<button class="lslot${LV.conf==='slot2'?' sure':''}" id="labSlot2">${LV.conf==='slot2'?`💎 ${LAB_SLOT2} · ${T('AL')}`:'+'}</button>`:''}</span>`;labSlotBind();
   $('labStrip').innerHTML=LABT.map((x,i)=>{const l=labRaw(x.id),bb=labBusy(x.id),op=labOpen(x);return `<button class="lchip${i===LV.sel?' on':''}${op?'':' lock'}${bb?' bld':''}" data-i="${i}" style="--c:${x.col}"><i>${op?x.ic:'🔒'}</i><b>${op?l:'—'}</b></button>`;}).join('');
   $('labStrip').querySelectorAll('.lchip').forEach(e=>e.onclick=()=>labSelect(+e.dataset.i));
   let act='',why='';
-  if(!open)why=T('Seviye {n}\'te açılır',{n:m.from});else if(max)why=T('MAKSİMUM SEVİYE');else if(b)why=T('İnşa ediliyor');
+  if(b)why='';else if(!open)why=!labLvOk(m)?T('Seviye {n}\'te açılır',{n:m.from}):T('Kara deliğin {s} evresine ulaşınca açılır · {n} M daha',{s:T(STAGES[m.st].n),n:Math.max(0,STAGES[m.st].m-Math.floor(mass)).toLocaleString(LOC)});else if(max)why=T('MAKSİMUM SEVİYE');
   else if(LAB.q.length>=labSlots())why=T('Tüm yuvalar dolu');else if(massFree()<LAB_M[lv])why=T('Kütle yetmiyor: {n} M daha yut',{n:(LAB_M[lv]-massFree()).toLocaleString(LOC)});else if(stars<LAB_S[lv])why=T('Yıldız yetmiyor');
-  act=!why?`<button class="btn big lgo" id="labGo">🔬 ${T('GELİŞTİR')} · ${T('SEVİYE {k}',{k:lv+1})}</button>`:`<div class="lwhy">${why}</div>`;
+  act=b?`<div class="lq in">${lqBody(b)}</div>`:!why?`<button class="btn big lgo" id="labGo">🔬 ${T('GELİŞTİR')} · ${T('SEVİYE {k}',{k:lv+1})}</button>`:`<div class="lwhy">${why}</div>`;
   $('labSel').style.setProperty('--c',m.col);
   $('labSel').innerHTML=`<div class="lsh"><i>${m.ic}</i><div><b>${T(m.n)}</b><small>${T('SEVİYE {k}',{k:lv})} / ${LAB_MAX}</small></div></div>
     <div class="lpips">${Array.from({length:LAB_MAX},(_,k)=>`<s class="${k<lv?'on':b&&k===lv?'bld':''}"></s>`).join('')}</div>
     <div class="leff"><span>${T('Şimdi')}</span><b>${labEff(m.id,lv)}</b></div>${max?'':`<div class="leff nx"><span>${T('Sonraki')}</span><b>${labEff(m.id,lv+1)}</b></div>
     <div class="lcost"><span>⚫ ${LAB_M[lv].toLocaleString(LOC)} M</span>${LAB_S[lv]?`<span>⭐ ${LAB_S[lv].toLocaleString(LOC)}</span>`:''}<span>⏱ ${labMin(LAB_T[lv])}</span></div>`}${act}`;
   const g=$('labGo');if(g)g.onclick=e=>{if(labStart(m.id)){sfx('powerup',{vol:.6,rate:.8});sfx('capture',{vol:.45,rate:.8});LV.fx.push({k:'launch',i:LV.sel,t:0});LV.flash=Math.max(LV.flash,.25);labRender();}};
-  labQueue();}
-function labQueue(){const now=Date.now(),sl=labSlots();let h='';
-  for(let k=0;k<2;k++){const b=LAB.q[k];
-    if(b){const m=LABT.find(x=>x.id===b.id),left=b.end-now,p=1-Math.max(0,left)/b.dur,g=labGem(left,b.to),cf=LV.conf===b.id;
-      h+=`<div class="lq" style="--c:${m.col}"><div class="lqh"><i>${m.ic}</i><b>${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})}</b><em data-t="${b.id}">${labDur(left/1000)}</em></div>
+  labQueue();labFit();}
+function lqBody(b){const now=Date.now(),m=LABT.find(x=>x.id===b.id),left=b.end-now,p=1-Math.max(0,left)/b.dur,g=labGem(left,b.to),cf=LV.conf===b.id;
+  return `<div class="lqh"><i>${m.ic}</i><b>${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})}</b><em data-t="${b.id}">${labDur(left/1000)}</em></div>
         <div class="lbar"><i data-p="${b.id}" style="width:${(p*100).toFixed(1)}%"></i></div>
-        <div class="lqb"><button class="btn lgem${cf?' sure':''}" data-g="${b.id}">${cf?T('EMİN MİSİN?')+' ':''}💎 ${g} · ${T('HEMEN BİTİR')}</button>${monOn()&&adReady()&&!b.ad?`<button class="btn sec lad mon" data-a="${b.id}">▶ −${LAB_AD} ${T('dk')}</button>`:''}${LAB.boost>0?`<button class="btn sec lbo" data-b="${b.id}">⏱ ${T('KULLAN')}</button>`:''}</div></div>`;}
-    else if(k<sl)h+=`<div class="lq empty">${T('BOŞ YUVA')} · ${T('bir modül seç ve geliştir')}</div>`;
-    else h+=`<button class="lq slot" id="labSlot2">🔓 ${T('2. YUVA')} · 💎 ${LAB_SLOT2}<small>${T('İki modülü aynı anda geliştir. VIP üyelikte de açık.')}</small></button>`;}
-  $('labQ').innerHTML=h;
-  $('labQ').querySelectorAll('[data-g]').forEach(e=>e.onclick=()=>{const id=e.dataset.g;if(LV.conf!==id){LV.conf=id;labQueue();later(()=>{if(LV.conf===id){LV.conf=null;if(LV.on)labQueue();}},2600);return;}
+        <div class="lqb"><button class="btn lgem${cf?' sure':''}" data-g="${b.id}">${cf?T('EMİN MİSİN?')+' ':''}💎 ${g} · ${T('HEMEN BİTİR')}</button>${monOn()&&adReady()&&!b.ad?`<button class="btn sec lad mon" data-a="${b.id}">▶ −${LAB_AD} ${T('dk')}</button>`:''}${LAB.boost>0?`<button class="btn sec lbo" data-b="${b.id}">⏩ ${labMin(Math.min(LAB.boost,Math.ceil(Math.max(0,left)/6e4)))}</button>`:''}</div>`;}
+function labQueue(){const sel=LABT[LV.sel].id;let h=''; // the selected module's build sits in its own card; the list shows only the other one
+  for(const b of LAB.q){if(b.id===sel)continue;const m=LABT.find(x=>x.id===b.id);h+=`<div class="lq" style="--c:${m.col}">${lqBody(b)}</div>`;}
+  $('labQ').innerHTML=h;labQBind($('labQ'));labQBind($('labSel'));}
+function labQBind(root){
+  root.querySelectorAll('[data-g]').forEach(e=>e.onclick=()=>{const id=e.dataset.g;if(LV.conf!==id){LV.conf=id;labQueue();later(()=>{if(LV.conf===id){LV.conf=null;if(LV.on)labQueue();}},2600);return;}
     const b=labBusy(id),g=b&&labGem(b.end-Date.now(),b.to);if(diamonds<g){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:g}));sfx('buzz',{vol:.3});return;}
     LV.conf=null;sfx('coin',{vol:.5});labFinish(id,'gem');labAfterFinish();});
-  $('labQ').querySelectorAll('[data-a]').forEach(e=>e.onclick=async()=>{const id=e.dataset.a;e.disabled=true;if(await showRewarded()){labFinish(id,'ad');labAfterFinish();}else labQueue();});
-  $('labQ').querySelectorAll('[data-b]').forEach(e=>e.onclick=()=>{if(labFinish(e.dataset.b,'boost')){sfx('powerup',{vol:.4,rate:1.4});labAfterFinish();}});
-  const s2=$('labSlot2');if(s2)s2.onclick=()=>{if(diamonds<LAB_SLOT2){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:LAB_SLOT2}));return;}diamonds-=LAB_SLOT2;LAB.slot2=1;saveG();walletsRefresh();sfx('achieve',{vol:.6});LV.flash=.4;labRender();};}
+  root.querySelectorAll('[data-a]').forEach(e=>e.onclick=async()=>{const id=e.dataset.a;e.disabled=true;if(await showRewarded()){labFinish(id,'ad');labAfterFinish();}else labQueue();});
+  root.querySelectorAll('[data-b]').forEach(e=>e.onclick=()=>{if(labFinish(e.dataset.b,'boost')){sfx('powerup',{vol:.4,rate:1.4});labAfterFinish();}});
+}
+function labSlotBind(){const s2=$('labSlot2');if(!s2)return;s2.onclick=e=>{e.stopPropagation();if(LV.conf!=='slot2'){LV.conf='slot2';toast('🔧',T('2. YUVA'),T('İki modülü aynı anda geliştir. VIP üyelikte de açık.'));labRender();later(()=>{if(LV.conf==='slot2'){LV.conf=null;if(LV.on)labRender();}},3000);return;} /* first tap explains and shows the price, the second buys */
+  if(diamonds<LAB_SLOT2){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:LAB_SLOT2}));return;}LV.conf=null;diamonds-=LAB_SLOT2;LAB.slot2=1;saveG();walletsRefresh();sfx('achieve',{vol:.6});LV.flash=.4;labRender();};}
+// the whole screen fits without scrolling: the scene gives up height first
+function labFit(){const s=$('sLab'),c=$('labCv');if(!s||!c||!s.classList.contains('on'))return;c.style.height='';const h0=c.getBoundingClientRect().height,over=s.scrollHeight-s.clientHeight;
+  if(over>0)c.style.height=Math.max(130,Math.floor(h0-over-1))+'px';if(Math.abs(c.getBoundingClientRect().height-LV.H)>1)labSize();}
 function labAfterFinish(){const d=LAB.done.splice(0);saveG();d.forEach(labCelebrate);labRender();}
 function labLive(){if(!LV.on)return;const now=Date.now();if(LAB.q.some(b=>b.end<=now)){labTick();labAfterFinish();return;}
-  for(const b of LAB.q){const e=$('labQ').querySelector(`[data-t="${b.id}"]`),p=$('labQ').querySelector(`[data-p="${b.id}"]`),g=$('labQ').querySelector(`[data-g="${b.id}"]`);
+  const S=$('sLab');for(const b of LAB.q){const e=S.querySelector(`[data-t="${b.id}"]`),p=S.querySelector(`[data-p="${b.id}"]`),g=S.querySelector(`[data-g="${b.id}"]`);
     if(e)e.textContent=labDur((b.end-now)/1000);if(p)p.style.width=((1-Math.max(0,b.end-now)/b.dur)*100).toFixed(1)+'%';
     if(g&&LV.conf!==b.id)g.textContent=`💎 ${labGem(b.end-now,b.to)} · ${T('HEMEN BİTİR')}`;}}
 function labCelebrate(id){if(LV.on)LV.celQ.push(id);} // one celebration at a time, in order
@@ -2719,7 +2728,7 @@ $('gdClaim').onclick=()=>{const n=gardenBodies().length;if(!n||GARDEN.day===utcD
 
 // WEEKLY EXPEDITION: one branching run a week (UTC, from Monday). Pick one of two stops at each step; 3 expedition lives; the boss ends it.
 const EXP_STEPS=6,EXP_NODES={fight:{ic:'⚔️',n:'ÇATIŞMA',d:'Normal bir seviye.',rw:{stars:60}},elite:{ic:'💀',n:'SEÇKİN',d:'Risk kartıyla zorlaşmış seviye.',rw:{stars:100,gems:6}},event:{ic:'🌀',n:'OLAY',d:'Bir kozmik olay kesin gelir.',rw:{stars:80}},
-  rest:{ic:'⛺',n:'MOLA',d:'Seviye yok: +1 sefer canı.',rw:{}},treasure:{ic:'💰',n:'HAZİNE',d:'Seviye yok: bedava ödül.',rw:{stars:150,gems:5}},boss:{ic:'👑',n:'SEFER BOSSU',d:'Son durak.',rw:{stars:1000,gems:30}}};
+  rest:{ic:'⛺',n:'MOLA',d:'Seviye yok: +1 sefer canı.',rw:{}},treasure:{ic:'💰',n:'HAZİNE',d:'Seviye yok: bedava ödül.',rw:{stars:150,gems:5,boost:30}},boss:{ic:'👑',n:'SEFER BOSSU',d:'Son durak.',rw:{stars:1000,gems:30,boost:120}}};
 let EXP={w:'',step:0,lives:3,path:[],done:0,badges:0},EXPRUN=null;
 function expWeek(){const d=new Date(),t=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate());return utcDay(t-((new Date(t).getUTCDay()+6)%7)*864e5);}
 function expRoll(){const w=expWeek();if(EXP.w!==w){EXP={w,step:0,lives:3,path:[],done:0,badges:EXP.badges|0};}}
@@ -2756,14 +2765,14 @@ function showRisk(done){let h=Math.imul(level,2246822519)>>>0;const pool=RISK_CA
   $('rkNone').onclick=e=>{e.stopPropagation();RISK.mod=null;sfx('click',{vol:.4});hideModals();done();};
   showModal('mRisk');gState='menu';sfx('bell',{vol:.5});}
 function giftDue(){const m=Math.floor((Math.max(1,savedLevel,level)-1)/20)*20;const l=gameMode==='classic'&&!REPLAY&&level%20===0?level:m;return l>=20&&(SHOP.giftLv|0)<l?l:0;}
-function giftTxt(g){const p=[];if(g.stars)p.push(`⭐ ${g.stars}`);if(g.gems)p.push(`💎 ${g.gems}`);if(g.shield)p.push(`🛡 ${g.shield}`);return p.join(' · ');}
+function giftTxt(g){const p=[];if(g.stars)p.push(`⭐ ${g.stars}`);if(g.gems)p.push(`💎 ${g.gems}`);if(g.shield)p.push(`🛡 ${g.shield}`);if(g.boost)p.push(`⏩ ${labMin(g.boost)}`);return p.join(' · ');}
 function openGift(lv,done){
   SHOP.giftLv=lv;saveG(); // one try per milestone, even if the app is closed halfway
   const sh=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
   const safe=sh(GIFT.pool.slice()).slice(0,9-GIFT.bad).map(g=>({g}));
   const key=SHOP.tkey>0;if(key){SHOP.tkey--;saveG();} // a treasure key from the shop guarantees the treasure
   if(key||Math.random()<GIFT.jackP)safe[0]={g:GIFT.jack,jack:true};
-  GIFTS={boxes:sh([...safe,...Array.from({length:GIFT.bad},()=>({bad:true}))]),got:{stars:0,gems:0,shield:0},n:0,over:false,done,key,boost:!key&&monOn()&&adReady()};
+  GIFTS={boxes:sh([...safe,...Array.from({length:GIFT.bad},()=>({bad:true}))]),got:{stars:0,gems:0,shield:0,boost:0},n:0,over:false,done,key,boost:!key&&monOn()&&adReady()};
   const grid=$('gfGrid');grid.innerHTML='';
   GIFTS.boxes.forEach((b,i)=>{const e=document.createElement('button');e.className='gfb';e.innerHTML='<span class="q notr">?</span>';e.onclick=ev=>{ev.stopPropagation();giftPick(i);};b.el=e;grid.appendChild(e);});
   $('gfMsg').className='gfMsg';$('gfTake').hidden=true;giftHud();showModal('mGift');gState='menu';sfx('achieve',{vol:.5});
@@ -2775,7 +2784,7 @@ function giftHud(){const S=GIFTS;{const p=Math.round((S.boosted?GIFT.jackAd:GIFT
   $('gfTake').hidden=S.over?false:S.n<GIFT.min;$('gfTake').textContent=S.over?T('TAMAM'):`${T('HEMEN AL')} · ${giftTxt(S.got)}`;}
 function giftPick(i){const S=GIFTS;if(!S||S.over)return;const b=S.boxes[i];if(b.open)return;b.open=true;S.n++;
   if(b.bad){S.over=true;S.badBox=b;b.el.className='gfb open bad';b.el.innerHTML=`<span class="bh"></span><small>${T('KARA DELİK')}</small>`;
-    S.lost=S.got;S.got={stars:0,gems:0,shield:0};S.canAd=!S.adUsed&&monOn()&&adReady();sfx('boom',{vol:.6,rate:.8});vib([40,40,80]);
+    S.lost=S.got;S.got={stars:0,gems:0,shield:0,boost:0};S.canAd=!S.adUsed&&monOn()&&adReady();sfx('boom',{vol:.6,rate:.8});vib([40,40,80]);
     $('gfMsg').className='gfMsg bad';$('gfMsg').textContent=S.canAd?T('Kara delik! Reklam izlersen kazancın korunur ve kara delik ödüle döner.'):T('Bu sefer olmadı… Bir dahaki sefere!');
     if(!S.canAd)giftReveal();giftHud();return;}
   const m=b.jack?1:S.n>GIFT.min?1+GIFT.step*(S.n-GIFT.min):1,g={};for(const k in b.g)g[k]=Math.max(1,Math.round(b.g[k]*m)); // every box past the third pays more (the treasure is fixed)
@@ -2806,12 +2815,12 @@ function checkDaily(){
   if(!clockOk()){if(!clockOk.warned){clockOk.warned=1;later(()=>toast('🕒','CİHAZ SAATİ GERİ ALINMIŞ','Günlük ödüller saat düzelince açılır'),600);}return;}
   const yest=new Date(Date.now()-864e5).toDateString();
   loginStreak=lastLogin===yest?loginStreak+1:1;lastLogin=today;
-  const sr=Math.min(50+loginStreak*50,500),dr=Math.min(Math.floor(loginStreak/3)*5+5,10),wd=(loginStreak-1)%7+1; // day 7 of every week opens the weekly chest
+  const sr=Math.min(50+loginStreak*50,500),dr=Math.min(Math.floor(loginStreak/3)*5+5,10),wd=(loginStreak-1)%7+1,bm=10; // + Laboratory speed-up minutes every day // day 7 of every week opens the weekly chest
   $('dWeek').innerHTML=Array.from({length:7},(_,i)=>`<span class="${i+1<wd?'ok':i+1===wd?'on':''}">${i===6?'🎁':i+1}</span>`).join('');
   $('dWeekT').textContent=wd===7?T('Bugün haftalık sandık açılıyor!'):T('Haftalık sandığa {d} gün',{d:7-wd});
-  $('dStreak').textContent=loginStreak;$('dStars').textContent=sr;$('dDia').textContent=dr;
+  $('dStreak').textContent=loginStreak;$('dStars').textContent=sr;$('dDia').textContent=dr;$('dBoost').textContent=labMin(bm);
   const vip=vipOn();$('dVip').hidden=!vip;
-  const claim=k=>{SND.resume();sfx('daily',{vol:.6,rev:.3});stars+=sr*k;diamonds+=dr*k;flyReward(document.activeElement,{stars:sr*k,gems:dr*k});if(wd===7){const jack=Math.random()<.25;later(()=>grant({stars:150,gems:10},T('HAFTALIK SANDIK')),700);if(jack)later(()=>grant(GIFT.jack,'🏆 '+T('BÜYÜK HAZİNE')),2600);}if(vipOn())grant(VIP.daily,'👑 VIP GÜNLÜK ÖDÜL');saveG();$('sDaily').classList.remove('on');$('dailyPrev').style.display='none';};
+  const claim=k=>{SND.resume();sfx('daily',{vol:.6,rev:.3});stars+=sr*k;diamonds+=dr*k;LAB.boost=(LAB.boost|0)+bm*k;flyReward(document.activeElement,{stars:sr*k,gems:dr*k});if(wd===7){const jack=Math.random()<.25;later(()=>grant({stars:150,gems:10,boost:60},T('HAFTALIK SANDIK')),700);if(jack)later(()=>grant(GIFT.jack,'🏆 '+T('BÜYÜK HAZİNE')),2600);}if(vipOn())grant(VIP.daily,'👑 VIP GÜNLÜK ÖDÜL');saveG();$('sDaily').classList.remove('on');$('dailyPrev').style.display='none';};
   $('claimBtn').onclick=()=>claim(1);$('claimAd').textContent=SHOP.noAds?'🎁 2 KATINI AL':'▶ REKLAMLA 2 KATINI AL';$('claimAd').parentNode.hidden=!monOn()||!adReady();
   $('claimAd').onclick=async()=>{if(await showRewarded())claim(2);};
   $('dailyPrev').style.display='block';
@@ -2987,7 +2996,7 @@ function gameOver(){
     stormSubmit(totalScore,survTime).then(j=>{if(run!==runId||!j)return;fr.textContent=j.off?'⛈ '+T('Çevrimdışı: skorun sonra gönderilecek'):j.ok?`🌍 ${T('Dünya sırası')}: #${j.rank} / ${j.total}`:'⛈ '+T('GÜNÜN FIRTINASI');});}}
   showModal('mOver');sfx('gameover',{vol:.8,rev:.4});gState='over';SND.music('menu');
 }
-function fillWallets(){const t=`<span data-w="stars">⭐ ${stars.toLocaleString(LOC)}</span><span data-w="gems">💎 ${diamonds.toLocaleString(LOC)}</span><span data-w="shield">🛡 ${SHOP.shield}${SHOP.shards?` <small>+${SHOP.shards}/3</small>`:''}</span>`+(LAB.boost>0||COSMO.pend.some(k=>!k.startsWith('*')&&atlasRar(k)==='v')?`<span data-w="boost">⏱ ${labMin(LAB.boost)}</span>`:'');
+function fillWallets(){const t=`<span data-w="stars">⭐ ${stars.toLocaleString(LOC)}</span><span data-w="gems">💎 ${diamonds.toLocaleString(LOC)}</span><span data-w="shield">🛡 ${SHOP.shield}${SHOP.shards?` <small>+${SHOP.shards}/3</small>`:''}</span>`+(LAB.boost>0||COSMO.pend.some(k=>!k.startsWith('*')&&atlasRar(k)==='v')?`<span data-w="boost">⏩ ${labMin(LAB.boost)}</span>`:'');
   document.querySelectorAll('.wal2').forEach(e=>{if(e._t!==t){e._t=t;e.innerHTML=t;}});const m=$('menuSh');if(m)m.textContent=SHOP.shield;}
 // REWARD FLIGHT — won things fly: each icon arcs from where it was won to its counter, which bumps as it lands.
 function flyTarget(k){const L=[...document.querySelectorAll(`[data-w="${k}"]`)].filter(e=>e.offsetParent&&e.getBoundingClientRect().width>0);
@@ -3350,7 +3359,7 @@ $('startBtn').onclick=()=>{if(gameMode==='classic'&&giftDue()){openGift(giftDue(
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=showLB;$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');
 $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp();$('sExp').classList.add('on');};$('exClose').onclick=()=>$('sExp').classList.remove('on');
-$('treeBtn').onclick=()=>labOpenScr();$('labX').onclick=labClose;$('labCv').addEventListener('pointerdown',labHit);addEventListener('resize',()=>{if(LV.on)labSize();});
+$('treeBtn').onclick=()=>labOpenScr();$('labX').onclick=labClose;$('labCv').addEventListener('pointerdown',labHit);addEventListener('resize',()=>{if(LV.on){labSize();labFit();}});
 $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$('gdClose').onclick=()=>{$('sGarden').classList.remove('on');gdRun=false;};
 $('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.tier;saveG();seasonBadge();renderSeason();$('sSeason').classList.add('on');};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
 $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();fillWallets();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');$('atCollect').onclick=atlasCollect;

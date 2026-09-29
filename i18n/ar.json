@@ -1441,7 +1441,7 @@
 "Ustalaştı": "أتقنته",
 "Sıradan {n} ⭐": "شائع {n} ⭐",
 "Nadir {n} 💎": "نادر {n} 💎",
-"Çok nadir ⏱ {n} saat hızlandırma": "نادر جدًا ⏱ تسريع {n} ساعة",
+"Çok nadir ⏩ {n} saat hızlandırma": "نادر جدًا ⏩ تسريع {n} ساعة",
 "Hepsinde ustalaş: +{n} 💎 ve Kozmik Arşivci unvanı": "أتقنها كلها: +{n} 💎 ولقب أمين الأرشيف الكوني",
 "Altın gezegenler ×{n} daha fazla gelir ve ×{n} puan verir": "الكواكب الذهبية تأتي أكثر ×{n} وتمنح نقاطًا ×{n}",
 "{n} DAHA FAZLA": "{n} أكثر",
@@ -1492,5 +1492,12 @@
 "{n} SN HİÇBİR ŞEY YUTAMAZSIN": "لا ابتلاع لمدة {n} ث",
 "Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "لا تبتلعها! تُصغّر ثقبك الأسود وتدفع الأجرام بعيدًا لمدة {n} ثوانٍ. أبعِدها عن مجال جذبك",
 "Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "لا تبتلعها! المادة المضادة تُصغّر ثقبك الأسود فورًا وتدفع الأجرام بعيدًا لمدة {n} ثوانٍ: لا يمكنك ابتلاع شيء خلالها. إن دخلت مجال جذبك سُحبت إلى الداخل، فأبعِدها. وهي غير ضارة أثناء الدوامة",
-"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "وأنت تمسك الثقب الأسود اضغط بإصبع ثانٍ وحرّكه: لمدة {n} ثوانٍ يضرب الشعاع كل ما يمر به. عندما تمتلئ حلقة 🔥 في الشريط العلوي يصبح النفّاث جاهزًا مجددًا"
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "وأنت تمسك الثقب الأسود اضغط بإصبع ثانٍ وحرّكه: لمدة {n} ثوانٍ يضرب الشعاع كل ما يمر به. عندما تمتلئ حلقة 🔥 في الشريط العلوي يصبح النفّاث جاهزًا مجددًا",
+"YENİ ÖZELLİK YAKLAŞIYOR": "ميزة جديدة قادمة",
+"Kara deliğin {s} evresine ulaşınca açılır": "يُفتح عندما يبلغ ثقبك الأسود مرحلة {s}",
+"{n} M daha": "بقي {n} M",
+"LAB HIZLANDIRMA": "تسريع المختبر",
+"Üçünü de bitir: +{n}": "أنجز الثلاث: +{n}",
+"+{n} dk": "+{n} د",
+"+{n} dk ⏩": "+{n} د ⏩"
 }
