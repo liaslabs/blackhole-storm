@@ -235,10 +235,25 @@ body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:ba
 .mtile{position:absolute;left:0;width:100%;display:block;pointer-events:none;}
 .zb{position:absolute;left:0;right:0;background-size:cover;background-position:center;filter:brightness(.8);-webkit-mask-image:linear-gradient(180deg,transparent,#000 120px,#000 calc(100% - 120px),transparent);mask-image:linear-gradient(180deg,transparent,#000 120px,#000 calc(100% - 120px),transparent);}
 .zlabel{position:absolute;left:14px;right:14px;display:flex;pointer-events:none;z-index:2;}
+.zvoid{position:absolute;left:0;right:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0),#000 40px,#000 calc(100% - 40px),rgba(0,0,0,0)),repeating-linear-gradient(90deg,transparent 0 37px,rgba(160,205,255,.08) 37px 38px);}
+.zwarp{position:absolute;left:50%;z-index:3;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 14px;border-radius:999px;background:rgba(6,10,22,.9);border:1px solid rgba(159,216,255,.45);white-space:nowrap;pointer-events:none;box-shadow:0 0 22px rgba(120,190,255,.22);}
+.zwarp b{font-family:var(--fd);font-size:11px;letter-spacing:.14em;color:#9fd8ff;}.zwarp small{font-family:var(--fm);font-size:9.5px;color:#c7d6ee;}
+.mwarp{fill:none;stroke:#9fd8ff;stroke-width:3;stroke-dasharray:3 14;stroke-linecap:round;animation:mwarp 1.1s linear infinite;}.mwarp.off{stroke:rgba(150,165,200,.45);animation:none;}
+@keyframes mwarp{to{stroke-dashoffset:-34;}}
+.mport{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;z-index:2;pointer-events:none;}
+.zcard{position:absolute;left:12px;right:12px;z-index:3;box-sizing:border-box;display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;padding:9px 11px;border-radius:12px;background:rgba(6,8,15,.84);border:1px solid rgba(255,255,255,.12);pointer-events:none;}
+.zcard .zi{font-style:normal;width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-family:var(--fm);font-weight:700;font-size:14px;color:#0b0d14;flex:0 0 auto;}
+.zcard .zt{flex:1;min-width:0;overflow-wrap:anywhere;display:flex;flex-direction:column;gap:1px;}.zcard .zt b{font-family:var(--fd);font-size:12.5px;line-height:1.15;letter-spacing:.08em;color:#eef0f6;}
+.zcard .zt small{font-family:var(--fd);font-size:9.5px;letter-spacing:.06em;color:#9aa3b5;}
+.zcard .zs{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:5px;}.zcard .zs span{white-space:nowrap;font-family:var(--fm);font-size:11px;color:#ffc94d;}
+.zcard .zs em{font-style:normal;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fd);font-size:9.5px;letter-spacing:.08em;padding:2px 7px;border-radius:999px;border:1px solid rgba(150,160,190,.4);color:#9aa3b5;}
+.zcard.ok .zs em{color:#8dffcb;border-color:rgba(141,255,203,.5);}.zcard.on .zs em{color:#6fe3f0;border-color:rgba(111,227,240,.5);}.zcard.lk{opacity:.85;}
+.zwarpfx{position:absolute;inset:0;z-index:60;cursor:pointer;}.zwarpfx canvas{position:absolute;inset:0;width:100%;height:100%;}
+@media (prefers-reduced-motion:reduce){.mwarp{animation:none;}}
 .zlabel div{padding:6px 12px;border-radius:8px;background:rgba(3,4,10,.72);border:1px solid rgba(150,160,190,.45);}
 .zlabel b{display:block;font-family:var(--fd);font-size:10.5px;letter-spacing:2px;color:#e7e3da;}
 .zlabel small{font-family:var(--fd);font-size:8.5px;letter-spacing:1px;color:#9aa3b5;}
-#mapSvg{position:absolute;left:0;top:0;z-index:1;pointer-events:none;}
+#mapSvg{position:absolute;left:0;top:0;z-index:2;pointer-events:none;}
 .nd{position:absolute;z-index:2;width:52px;height:52px;margin:-26px 0 0 -26px;border-radius:50%;border:none;padding:0;display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:900;font-size:15px;cursor:pointer;}
 .nd.done{background:radial-gradient(circle at 35% 30%,#f7c77a,#f2a93b 55%,#c07a22);color:#2a1a04;box-shadow:0 0 0 3px rgba(3,4,10,.8),0 0 16px rgba(242,169,59,.45);}
 .nd.cur{background:radial-gradient(circle at 35% 30%,#cfe3ee,#6fb7d8 55%,#3d7a99);color:#02141a;box-shadow:0 0 0 3px rgba(3,4,10,.85),0 0 0 7px rgba(111,183,216,.45),0 0 26px rgba(111,183,216,.8);animation:ndPulse 1.4s ease-in-out infinite;}
@@ -2120,7 +2135,7 @@ function renderMapCard(){
   c.setLineDash([2,8]);c.strokeStyle='rgba(255,255,255,.35)';c.beginPath();P.slice(5).forEach((p,i)=>i?c.lineTo(...p):c.moveTo(...p));c.stroke();c.setLineDash([]);
   P.forEach((p,i)=>{c.fillStyle=i<5?'#f2c46d':i===5?'#3fd8e8':'#2a2e44';c.beginPath();c.arc(p[0],p[1],i===5?9:7,0,TAU);c.fill();});
 }
-function openMap(){$('sMap').classList.add('on');$('mSheet').classList.remove('on');buildMap();requestAnimationFrame(()=>{const sc=$('mapScroll'),cp=mapPts[Math.max(1,savedLevel)-1-mapB];if(cp)sc.scrollTop=cp.y-sc.clientHeight*.55;});}
+function openMap(){$('sMap').classList.add('on');$('mSheet').classList.remove('on');buildMap();requestAnimationFrame(()=>{const sc=$('mapScroll'),cp=mapPts[Math.min(mapN,Math.max(1,savedLevel))-1];if(cp)sc.scrollTop=cp.y-sc.clientHeight*.55;setTimeout(()=>{if($('sMap').classList.contains('on'))mapTravel();},350);});} // opens on your level, never on level 1
 function closeMap(){$('sMap').classList.remove('on');MSKY.job++;MSKY.ensure=null;$('mapInner').querySelectorAll('.mtile').forEach(e=>e.remove());} // tile canvases hold tens of MB: free them for gameplay
 // ── Map sky: a procedural nebula drawn at the screen's own resolution in 460 px tiles. Noise and
 // stars use world coordinates, zones blend into each other across their boundaries, and the hash
@@ -2149,7 +2164,7 @@ vec3 star(vec2 w,float cell,float dens,float rMin,float rMax,float br){
   return (t<.3?vec3(.7,.82,1.):t<.8?vec3(1.):vec3(1.,.82,.62))*k;}
 void main(){
   vec2 w=vec2(gl_FragCoord.x/uD,uTop+(uSize.y-gl_FragCoord.y)/uD);
-  float t=smoothstep(uBy+170.,uBy-170.,w.y);
+  float t=smoothstep(uBy+60.,uBy-60.,w.y);
   vec3 bg=mix(aBg,bBg,t),c1=mix(aC1,bC1,t),c2=mix(aC2,bC2,t),c3=mix(aC3,bC3,t);vec4 K=mix(aK,bK,t);float cl=mix(aCl,bCl,t);
   vec2 uv=w/520.;
   vec2 q=vec2(fbm(uv*1.6),fbm(uv*1.6+vec2(5.2,1.3)));
@@ -2180,7 +2195,7 @@ function mapSky(W0,H0,GAP,cur){
   const inner=$('mapInner'),svg=$('mapSvg'),d=Math.min(devicePixelRatio||1,1.5),key=[W0,H0,d].join('|'),TILE=460;
   if(MSKY.key===key&&inner.querySelector('.mtile,.zb'))return;
   inner.querySelectorAll('.mtile,.zb').forEach(e=>e.remove());MSKY.key=key;const job=++MSKY.job;
-  const bands=[];for(let b=0;b*10<mapN;b++)bands.push({z:zoneOf(mapB+b*10+1),top:b*10+9>=mapN-1?0:mapPts[b*10+9].y-GAP/2,bot:b===0?H0:mapPts[b*10].y+GAP/2});
+  const bands=MAPBANDS;
   const G=mapSkyGL();
   if(!G){const bgs=(window.ASSETS||{}).bgs||[]; // no WebGL: fall back to the zone photos
     for(const bd of bands){const e=document.createElement('div');e.className='zb';e.style.top=Math.max(0,bd.top-120)+'px';e.style.height=(Math.min(H0,bd.bot+120)-Math.max(0,bd.top-120))+'px';if(bgs[bd.z])e.style.backgroundImage=`url(${bgs[bd.z]})`;inner.insertBefore(e,svg);}return;}
@@ -2219,22 +2234,39 @@ function mapSky(W0,H0,GAP,cur){
     clearTimeout(MSKY.more);if(pre>1)MSKY.more=setTimeout(()=>{if(MSKY.ensure)MSKY.ensure();},16);};
   MSKY.ensure();
 }
+// The map is built zone by zone from level 1 up: each block of ten levels sits on its own sky, and between two blocks a black
+// warp gap with a wormhole at each end — the hole leaves one zone through the exit portal and arrives in the next through the entry one.
+let MAPBANDS=[],MAPPORT=[];
+const MAP_G={GAP:92,PADB:200,PADT:150,VOID:210,ENT:300,EXIT:112};
 function buildMap(){
-  const sc=$('mapScroll'),inner=$('mapInner'),svg=$('mapSvg'),cur=Math.max(1,savedLevel);
-  const GAP=92,PADB=120,PADT=150,W0=sc.clientWidth||360;mapB=Math.max(0,Math.floor((cur-1)/10)*10-40);mapN=Math.max(30,Math.ceil((cur+12)/10)*10-mapB);
-  const H0=PADB+PADT+(mapN-1)*GAP;inner.style.height=H0+'px';svg.setAttribute('width',W0);svg.setAttribute('height',H0);svg.setAttribute('viewBox',`0 0 ${W0} ${H0}`);
-  const amp=Math.min(115,W0*.29);mapPts=[];for(let i=0;i<mapN;i++)mapPts.push({l:mapB+i+1,x:W0/2+Math.sin(i*.72)*amp,y:H0-PADB-i*GAP});
-  inner.querySelectorAll('.zb,.zlabel,.nd,.me').forEach(e=>e.remove());
-  for(let b=0;b*10<mapN;b++){const l0=mapB+b*10+1,z=zoneOf(l0),cyc=cycleOf(l0);
-    const lab=document.createElement('div');lab.className='zlabel';const my=b===0?mapPts[0].y+56:(mapPts[b*10].y+mapPts[b*10-1].y)/2-18,mx=b===0?mapPts[0].x:(mapPts[b*10].x+mapPts[b*10-1].x)/2;lab.style.top=my+'px';lab.style.justifyContent=mx>W0/2?'flex-start':'flex-end';
-    lab.innerHTML=`<div><b>BÖLGE ${z+1} · ${ZONES[z].n}</b><small>${cyc>1?`DÖNGÜ ${cyc} · `:''}SEVİYE ${l0}–${l0+9}</small></div>`;inner.appendChild(lab);}
+  const sc=$('mapScroll'),inner=$('mapInner'),svg=$('mapSvg'),cur=Math.max(1,savedLevel),K=MAP_G,GAP=K.GAP,W0=sc.clientWidth||360;
+  mapB=0;mapN=Math.max(30,Math.ceil((cur+12)/10)*10);const NB=mapN/10,amp=Math.min(115,W0*.29);
+  const blk=[];let d=0;for(let b=0;b<NB;b++){const base=d,first=base+(b?K.ENT:K.PADB),last=first+9*GAP,top=last+(b<NB-1?K.EXIT+60:K.PADT);blk.push({base,first,last,top});d=top+(b<NB-1?K.VOID:0);}
+  const H0=d,Y=v=>H0-v;inner.style.height=H0+'px';svg.setAttribute('width',W0);svg.setAttribute('height',H0);svg.setAttribute('viewBox',`0 0 ${W0} ${H0}`);
+  mapPts=[];for(let l=1;l<=mapN;l++){const b=Math.floor((l-1)/10);mapPts.push({l,x:W0/2+Math.sin((l-1)*.72)*amp,y:Y(blk[b].first+((l-1)%10)*GAP)});}
+  MAPPORT=[];MAPBANDS=[];
+  inner.querySelectorAll('.zb,.zlabel,.zcard,.zvoid,.zwarp,.mport,.nd,.me').forEach(e=>e.remove());
+  for(let b=0;b<NB;b++){const B=blk[b],l0=b*10+1,z=zoneOf(l0),cyc=cycleOf(l0),Z=MAPZ[z];
+    MAPBANDS.push({z,top:b<NB-1?Y(B.top+K.VOID/2):0,bot:b?Y(B.base-K.VOID/2):H0});
+    if(b)MAPPORT.push({x:W0/2,y:Y(B.base+60),b,k:'in'});if(b<NB-1)MAPPORT.push({x:W0/2,y:Y(B.last+K.EXIT),b,k:'out'});
+    if(b<NB-1){const v=document.createElement('div');v.className='zvoid';v.style.top=(Y(B.top+K.VOID)-40)+'px';v.style.height=(K.VOID+80)+'px';inner.insertBefore(v,svg);
+      const nz=ZONES[zoneOf(l0+10)],w=document.createElement('div');w.className='zwarp';w.style.top=Y(B.top+K.VOID/2)+'px';
+      w.innerHTML=`<b>⚡ ${T('IŞINLANMA')} → ${T(nz.n)}</b><small>${T(nz.s)}</small>`;inner.appendChild(w);}
+    let st=0;for(let l=l0;l<l0+10;l++)st+=Math.max(0,LSTARS[l]|0);const done=cur>l0+9,on=cur>=l0&&!done;
+    const card=document.createElement('div');card.className='zcard'+(done?' ok':on?' on':' lk');const rgb=a=>`rgb(${a.map(x=>Math.round(Math.min(1,x*1.4)*255)).join(',')})`;
+    card.innerHTML=`<i class="zi" style="background:linear-gradient(135deg,${rgb(Z.c3)},${rgb(Z.c1)})">${z+1}</i><div class="zt"><b>${T(ZONES[z].n)}</b><small>${cyc>1?T('DÖNGÜ {n}',{n:cyc})+' · ':''}${T('SEVİYE')} ${l0}–${l0+9}</small></div><div class="zs"><span>★ ${st} / 30</span><em>${done?'✓ '+T('TAMAMLANDI'):on?T('DEVAM EDİYOR'):'🔒 '+T('KİLİTLİ')}</em></div>`;
+    if(!b)card.style.bottom='24px';else{const fx=mapPts[l0-1].x,room=Math.max(120,Math.round(W0/2-12-18)); /* the path rises from the portal in the middle to the first level: the card keeps to its own half */card.style.bottom=(B.base+125)+'px';card.style.width=room+'px';card.style[fx>W0/2?'right':'left']='auto';} /* never on the path */
+    inner.appendChild(card);}
   mapSky(W0,H0,GAP,cur);
-  const seg=(a,b)=>{let d='';for(let i=a;i<=b;i++){const p=mapPts[i];if(i===a)d+=`M${p.x},${p.y}`;else{const q=mapPts[i-1],my=(p.y+q.y)/2;d+=` C${q.x},${my} ${p.x},${my} ${p.x},${p.y}`;}}return d;};
-  const ci=Math.min(mapN-1,cur-1-mapB);
+  // the path runs node to node inside a zone; from an exit portal to the next entry portal it is a warp line
+  const P=[];for(let b=0;b<NB;b++){if(b)P.push(MAPPORT.find(q=>q.b===b&&q.k==='in'));for(let i=0;i<10;i++)P.push(mapPts[b*10+i]);if(b<NB-1)P.push(MAPPORT.find(q=>q.b===b&&q.k==='out'));}
+  const ci=P.indexOf(mapPts[Math.min(mapN,cur)-1]);let dn='',fu='',wd='',wf='';
+  for(let i=1;i<P.length;i++){const a=P[i-1],q=P[i];if(a.k==='out'){const L=`M${a.x},${a.y} L${q.x},${q.y}`;if(i<=ci)wd+=L;else wf+=L;continue;}const my=(a.y+q.y)/2,c=`M${a.x},${a.y} C${a.x},${my} ${q.x},${my} ${q.x},${q.y}`;if(i<=ci)dn+=c;else fu+=c;}
   svg.innerHTML=`<defs><linearGradient id="mpg" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ffd76a"/><stop offset="1" stop-color="#3fd8e8"/></linearGradient></defs>
-   <path d="${seg(ci,mapN-1)}" fill="none" stroke="rgba(0,0,0,.5)" stroke-width="9" stroke-linecap="round"/>
-   <path d="${seg(ci,mapN-1)}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round"/>
-   ${ci>0?`<path d="${seg(0,ci)}" fill="none" stroke="rgba(0,0,0,.6)" stroke-width="13" stroke-linecap="round"/><path d="${seg(0,ci)}" fill="none" stroke="url(#mpg)" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(255,215,106,.8))"/>`:''}`;
+   <path d="${fu}" fill="none" stroke="rgba(0,0,0,.5)" stroke-width="9" stroke-linecap="round"/><path d="${fu}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="5" stroke-dasharray="2 12" stroke-linecap="round"/>
+   <path d="${wf}" class="mwarp off"/><path d="${wd}" class="mwarp"/>
+   ${dn?`<path d="${dn}" fill="none" stroke="rgba(0,0,0,.6)" stroke-width="13" stroke-linecap="round"/><path d="${dn}" fill="none" stroke="url(#mpg)" stroke-width="5" stroke-linecap="round" style="filter:drop-shadow(0 0 6px rgba(255,215,106,.8))"/>`:''}`;
+  for(const q of MAPPORT){const c=document.createElement('canvas');c.className='mport';c.width=c.height=240;c.style.left=q.x+'px';c.style.top=q.y+'px';inner.appendChild(c);q.cv=c;q.lit=blk[q.b]&&(q.k==='out'?cur>q.b*10+10:cur>q.b*10);}
   for(const p of mapPts){const k=levelKind(p.l),st=p.l<cur?'done':p.l===cur?'cur':'lock',ls=LSTARS[p.l];
     const b=document.createElement('button'),dg=String(p.l).length;const hd=v2Hard(p.l);b.className=`nd ${st}${k?' sp':''}${hd?' hd':''}${dg>=7?' d7':dg>=5?' d5':''}`;b.style.left=p.x+'px';b.style.top=p.y+'px';b.setAttribute('aria-label','Seviye '+p.l);
     b.innerHTML=k?`${k.ic}<span class="num">${p.l}</span>`:(st==='lock'?'🔒':p.l);
@@ -2242,9 +2274,28 @@ function buildMap(){
     if(hd)b.insertAdjacentHTML('beforeend','<span class="hdb">🔥</span>'); /* hard levels: a red ring and a flame, so the peak is expected, not a surprise */
     if(k||hd){const tg=document.createElement('span');tg.className='tag';tg.textContent=k&&hd?k.n+' · '+(hd>1?'ÇOK ZOR':'ZOR'):k?k.n:hd>1?'ÇOK ZOR':'ZOR';tg.style[p.x>W0/2?'right':'left']='calc(100% + 8px)';tg.style.color=k&&k.t==='boss'||hd?'#ff9a8a':'#8fe9ff';b.appendChild(tg);}
     b.onclick=()=>mapSheet(p.l,st,k);inner.appendChild(b);}
-  const me=document.createElement('div');me.className='me';setAv(me,playerAvatar||'🚀');me.style.left=mapPts[ci].x+'px';me.style.top=mapPts[ci].y+'px';inner.appendChild(me);
+  const me=document.createElement('div');me.className='me';setAv(me,playerAvatar||'🚀');const cp=mapPts[Math.min(mapN,cur)-1];me.style.left=cp.x+'px';me.style.top=cp.y+'px';inner.appendChild(me);
   $('mapStarsTxt').textContent=`⭐ ${totalStars()} / ${(cur-1)*3}`;
+  mapPortLoop();
 }
+// wormholes: drawn only while the map is open and only the ones near the screen
+function mapPortDraw(q,t){const x=q.cv.getContext('2d'),C=120,dir=q.k==='out'?1:-1;x.clearRect(0,0,240,240);x.save();x.translate(C,C);
+  const g=x.createRadialGradient(0,0,8,0,0,116);g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.28,'rgba(0,0,0,1)');g.addColorStop(.35,q.lit?'rgba(159,216,255,.95)':'rgba(120,135,170,.55)');g.addColorStop(.52,q.lit?'rgba(90,120,255,.35)':'rgba(70,80,110,.2)');g.addColorStop(1,'rgba(40,60,160,0)');
+  x.fillStyle=g;x.beginPath();x.arc(0,0,116,0,TAU);x.fill();x.globalCompositeOperation='lighter';
+  for(let k=0;k<3;k++){x.save();x.rotate(dir*t*(1.1+k*.45)+k*2);x.strokeStyle=q.lit?`rgba(${k===1?'255,214,150':'159,216,255'},${.55-k*.12})`:`rgba(150,165,200,${.3-k*.07})`;x.lineWidth=2.6-k*.5;
+    for(let a=0;a<4;a++){x.beginPath();for(let s=0;s<=1.001;s+=.05){const r=34+s*66,an=a*Math.PI/2+s*2.6;x.lineTo(Math.cos(an)*r,Math.sin(an)*r*.62);}x.stroke();}x.restore();}
+  x.restore();}
+function mapPortLoop(){if(mapPortLoop.on)return;mapPortLoop.on=1;const sc=$('mapScroll'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const f=ts=>{if(!$('sMap').classList.contains('on')){mapPortLoop.on=0;return;}const y=sc.scrollTop,h=sc.clientHeight;for(const q of MAPPORT)if(q.cv&&q.y>y-140&&q.y<y+h+140)mapPortDraw(q,rm?0:ts/1000);requestAnimationFrame(f);};requestAnimationFrame(f);}
+// the first time the map opens in a new zone, your marker travels there through the portals and the view follows
+function mapTravel(){const cur=Math.max(1,savedLevel),b=Math.floor((cur-1)/10);if(cur<11||cur%10!==1||TIPS['zw'+b]||!LSTARS[cur-1])return false;TIPS['zw'+b]=1;saveSoon();
+  const me=$('mapInner').querySelector('.me'),sc=$('mapScroll'),A=mapPts[cur-2],B=mapPts[cur-1],po=MAPPORT.find(q=>q.b===b-1&&q.k==='out'),pi=MAPPORT.find(q=>q.b===b&&q.k==='in');if(!me||!po||!pi)return false;
+  const legs=[[A,po,850,'in'],[po,pi,1000,'warp'],[pi,B,850,'out']],ease=q=>q<.5?2*q*q:1-Math.pow(-2*q+2,2)/2;let i=0,t0=null;
+  const put=(x,y)=>{me.style.left=x+'px';me.style.top=y+'px';sc.scrollTop=y-sc.clientHeight*.55;};put(A.x,A.y);me.style.animation='none';sfx('powerup',{vol:.45,rate:.7});
+  const step=ts=>{if(!$('sMap').classList.contains('on')){me.style.transform='';me.style.opacity='';return;}if(t0===null)t0=ts;const [p,q,d,k]=legs[i],f=Math.min(1,(ts-t0)/d),e=ease(f);put(p.x+(q.x-p.x)*e,p.y+(q.y-p.y)*e);
+    me.style.transform=k==='in'?`scale(${1-.8*e}) rotate(${e*540}deg)`:k==='warp'?'scale(.2)':`scale(${.2+.8*e}) rotate(${(1-e)*-540}deg)`;me.style.opacity=k==='warp'?'.35':'1';
+    if(f>=1){i++;t0=ts;if(i===2)sfx('bell',{vol:.5,rate:1.3});if(i>=legs.length){me.style.transform='';me.style.animation='';return;}}requestAnimationFrame(step);};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){put(B.x,B.y);return true;}requestAnimationFrame(step);return true;}
 // kind text and state text as separate spans, so each is translated on its own
 function shPT(a,b){const e=$('shP');e.textContent='';for(const t of [a,b]){const x=document.createElement('span');x.textContent=t;e.appendChild(x);}}
 function mapSheet(l,st,k){
@@ -2926,8 +2977,26 @@ function resetRun(full,fromSave){
 function levelCheck(){
   hideModals();
   if(gameMode==='classic'&&level>bestLevel){bestLevel=level;saveSoon();}
+  const zb=Math.floor((level-1)/10);
+  if(gameMode==='classic'&&!REPLAY&&!EXPRUN&&level>1&&level%10===1&&!TIPS['zt'+zb]){TIPS['zt'+zb]=1;saveSoon();zoneWarp(()=>setZone(zoneOf(level)),initLevel);return;} // first arrival in a zone
   setZone(zoneOf(level));initLevel();
 }
+// Teleport into a new zone: the hole spins up, the stars stretch into streaks, a flash, and the new zone's sky is there. A tap skips it.
+function zoneWarp(mid,done){const gw=$('gw'),box=document.createElement('div');box.className='zwarpfx';const c=document.createElement('canvas');box.appendChild(c);gw.appendChild(box);
+  const w=gw.clientWidth,h=gw.clientHeight,dpr=Math.min(2,devicePixelRatio||1);c.width=w*dpr;c.height=h*dpr;const x=c.getContext('2d');x.scale(dpr,dpr);gState='menu';
+  const st=[];for(let i=0;i<200;i++)st.push({a:Math.random()*TAU,r:12+Math.random()*Math.max(w,h)*.7,s:Math.random()});
+  let t0=null,midDone=false,end=false;const fin=()=>{if(end)return;end=true;if(!midDone){midDone=true;mid();}box.remove();done();};box.onclick=fin;box.addEventListener('pointerdown',e=>e.stopPropagation());
+  sfx('powerup',{vol:.55,rate:.6});SND.duck(.5,1.2);
+  const fr=ts=>{if(end)return;if(t0===null)t0=ts;const t=(ts-t0)/1000,cx=w/2,cy=h*.55,pre=Math.min(1,t/1.05),fl=t>1.05?Math.max(0,1-(t-1.05)/.4):0,post=t>1.05?Math.min(1,(t-1.05)/.7):0;
+    if(t>1.05&&!midDone){midDone=true;mid();sfx('boom',{vol:.5,rate:.7});vib([20,30,40]);}
+    x.clearRect(0,0,w,h);x.globalAlpha=1-post;x.fillStyle='#04050b';x.fillRect(0,0,w,h);
+    x.strokeStyle='rgba(215,235,255,.9)';x.lineCap='round';const stretch=post>0?(1-post)*80:pre*pre*160;
+    for(const s of st){const r=s.r*(1-pre*.25),x1=cx+Math.cos(s.a)*r,y1=cy+Math.sin(s.a)*r,l=1+stretch*(r/(h*.7));x.globalAlpha=(1-post)*(.4+s.s*.6);x.lineWidth=.8+s.s;x.beginPath();x.moveTo(x1,y1);x.lineTo(x1+Math.cos(s.a)*l,y1+Math.sin(s.a)*l);x.stroke();}
+    const R=24+pre*10;x.globalAlpha=1-post;x.save();x.translate(cx,cy);x.rotate(t*(2+pre*14));const dg=x.createRadialGradient(0,0,R*.9,0,0,R*2.4);dg.addColorStop(0,'rgba(255,190,110,.95)');dg.addColorStop(1,'rgba(255,120,40,0)');x.fillStyle=dg;x.scale(1,.45);x.beginPath();x.arc(0,0,R*2.4,0,TAU);x.fill();x.restore();
+    x.fillStyle='#000';x.beginPath();x.arc(cx,cy,R,0,TAU);x.fill();
+    if(fl>0){x.globalAlpha=1;x.fillStyle=`rgba(235,245,255,${fl})`;x.fillRect(0,0,w,h);}
+    if(t>1.9){fin();return;}requestAnimationFrame(fr);};
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches){fin();return;}requestAnimationFrame(fr);}
 function initLevel(){
   if(riskDue(level)&&RISK.lv!==level){RISK.lv=level;RISK.mod=null;showRisk(initLevel);return;} // the card is offered once per level; a retry keeps it
   runId++;pendingWin=false;levelStartScore=totalScore;levelScore=0;comboCount=0;curR=BASE_R;tgtR=BASE_R;
