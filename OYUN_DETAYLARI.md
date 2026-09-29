@@ -149,7 +149,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 - **☄️ KUYRUKLU YILDIZ**: Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.
 - **🌋 BÖLÜNEN GEZEGEN**: Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.
 - **⚛️ ANTİMADDE**: Yutma: kara deliğini küçültür ve 3 saniye boyunca cisimleri iter; o sürede hiçbir şey yutulamaz (üstte yeşil süre çubuğu). Vortex açıkken zararsız.
-- **🧲 MIKNATIS TAŞI**: Yut: 6 saniye yutabileceğin her şey sana çekilir.
+- **🧲 MIKNATIS TAŞI**: Yut: 3 saniye yutabileceğin her şey sana çekilir. Laboratuvardaki Mıknatıs Bobini bu süreyi 8 saniyeye kadar uzatır.
 - **💫 PULSAR**: Sadece parlarken yutulur: 150 puan.
 - **🪐 UYDULU GEZEGEN**: Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.
 - **🌫️ KARANLIK MADDE**: Görünmez, yıldızları bükmesinden fark edilir: 120 puan.
