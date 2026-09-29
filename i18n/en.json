@@ -1356,5 +1356,11 @@
 "UZAK DUR": "KEEP AWAY",
 "YAKALA": "CATCH IT",
 "ilk yutuş: yeniden oluşur": "first swallow: it re-forms",
-"ikinci yutuş: kazandın": "second swallow: you win"
+"ikinci yutuş: kazandın": "second swallow: you win",
+"Çekim alanında {n} saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Hold it in your pull for {n} seconds: the MEGA BOMB bursts every body you can swallow and draws it to you in an eclipse; meteors shatter. Move too fast and it escapes",
+"Boss ({n}, {n}, {n}…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut": "Boss ({n}, {n}, {n}…): ram it fast or swallow the chunks that break off. When it turns green, swallow it whole",
+"Boss ({n}, {n}, {n}…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut": "Boss ({n}, {n}, {n}…): it swells as if breathing and sprays plasma as it swells. Swallow the plasma; when it turns green, swallow it too",
+"Boss ({n}, {n}, {n}…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut": "Boss ({n}, {n}, {n}…): every blast scatters debris. Swallow the debris; when it turns green, swallow it too",
+"{n}. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur": "From level {n}, bosses send out radiation waves. Stay in the gap between them; if one touches you, you shrink. The shield and Vortex protect you",
+"Boss ({n}, {n}…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek": "Boss ({n}, {n}…): a black hole with your own mass. Keep away while it's red, catch it when it turns blue. You must swallow it twice"
 }
