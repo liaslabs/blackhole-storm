@@ -458,7 +458,13 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 /* small corner buttons keep their look but get a 48px touch area (Android guideline) */
 #pauseBtn,.icb{position:relative;}#pauseBtn::after,.icb::after{content:'';position:absolute;inset:-5px;}
 /* ── V2 HUD: top LEVEL · SCORE · RAGE, bottom lives · combo (spec §23) ── */
-#rage2,#tmr2{display:none;}
+#rage2,#tmr2,#jet2{display:none;}
+body.v2 #jet2{position:relative;flex:0 0 auto;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(#ff8a3c calc(var(--p,0)*1turn),rgba(255,255,255,.08) 0);pointer-events:none;}
+body.v2 #jet2[hidden]{display:none;}body.v2 #jet2::before{content:'';position:absolute;inset:3px;border-radius:50%;background:#0b0e12;}
+#jet2 i{position:relative;font-style:normal;font-size:17px;line-height:1;filter:grayscale(.9) brightness(.7);transition:filter .3s;}#jet2 i .ico{width:18px;height:18px;}
+#jet2.rdy{box-shadow:0 0 0 1px rgba(255,160,70,.8),0 0 14px rgba(255,120,40,.55);}#jet2.rdy i,#jet2.on i{filter:none;}
+#jet2.go{animation:jetGo .5s ease-out 3;}@keyframes jetGo{50%{transform:scale(1.25);box-shadow:0 0 0 2px #ffd27a,0 0 26px rgba(255,140,40,.95);}}
+#jet2.on{background:conic-gradient(#ffd27a calc(var(--p,0)*1turn),rgba(255,255,255,.08) 0);}#jet2.on i{animation:jetOn .25s infinite alternate;}@keyframes jetOn{to{transform:scale(1.15);}}
 body.v2 #rage2{display:flex;align-items:center;gap:6px;width:min(170px,88%);margin-top:4px;cursor:pointer;}
 #rage2 .l{font-family:var(--fd);font-size:8.5px;font-weight:700;letter-spacing:.14em;color:var(--dim);}
 #rage2 .bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--line);}

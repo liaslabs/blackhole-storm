@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "ASTA {k} HÊZ DIXWAZE",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Hêza pêşniyarkirî {r}, ya te {p} e. Li Laboratuarê xurt bibe",
 "LABORATUVAR BOŞ": "LABORATUAR VALA YE",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Çavkaniyên te ji bo {m} amade ne: pêşxistina asta {k} dest pê bike"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Çavkaniyên te ji bo {m} amade ne: pêşxistina asta {k} dest pê bike",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} Ç TU NIKARÎ TIŞTEKÎ DAQURÎNÎ",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Daneqûrîne! Kuna te ya reş piçûk dike û {n} çirkeyan tenan dûr dixe. Ji qada kişandinê dûr bigire",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Daneqûrîne! Antimadde kuna te ya reş yekser piçûk dike û {n} çirkeyan tenan dûr dixe: di wê demê de tu nikarî tiştekî daqurînî. Heke bikeve qada kişandinê, tê kişandin; dûr bigire. Dema Vortex vekirî be bê zirar e",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Dema kuna reş digirî, bi tiliya duyem bitikîne û bigerîne: {n} çirkeyan tîrêj li her tiştê ku derbas dike dixe. Dema xeleka 🔥 li barê jorîn tije bibe, jet dîsa amade ye"
 }

@@ -148,7 +148,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 - **🛡 KALKAN PARÇASI**: Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.
 - **☄️ KUYRUKLU YILDIZ**: Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.
 - **🌋 BÖLÜNEN GEZEGEN**: Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.
-- **⚛️ ANTİMADDE**: Yutma: kara deliğini küçültür. Vortex açıkken zararsız.
+- **⚛️ ANTİMADDE**: Yutma: kara deliğini küçültür ve 3 saniye boyunca cisimleri iter; o sürede hiçbir şey yutulamaz (üstte yeşil süre çubuğu). Vortex açıkken zararsız.
 - **🧲 MIKNATIS TAŞI**: Yut: 6 saniye yutabileceğin her şey sana çekilir.
 - **💫 PULSAR**: Sadece parlarken yutulur: 150 puan.
 - **🪐 UYDULU GEZEGEN**: Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.
@@ -191,8 +191,8 @@ Sayısal değerler: kalkan 10 sn (30 💎) · Süpernova 20 💎, seviye başın
 - **💎 ELMASLA DEVAM**: Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.
 
 ## 7. Olaylar ve sistemler
-- **💫 KİLONOVA**: İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve altın saçılır.
-- **🔥 KUASAR JETİ**: 28. seviyeden itibaren: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder, parmak kalkınca kesilir, süre dolmadan yeniden basınca devam eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara hasar verir. 15 saniyede yeniden dolar.
+- **💫 KİLONOVA**: İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve 14 altın ekrana birbirinden uzak noktalara saçılır. Her üç altından biri önce kameraya doğru gelir gibi büyüyüp yarı saydamlaşır, sonra başka bir yere konar. Altınlar güç düğmelerinin ve kara deliğin üstüne düşmez.
+- **🔥 KUASAR JETİ**: 28. seviyeden itibaren: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder, parmak kalkınca kesilir, süre dolmadan yeniden basınca devam eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara hasar verir. 15 saniyede yeniden dolar. Dolum: her kullanımdan sonra 15 saniyede dolar. Üst bardaki 🔥 halkası dolumu gösterir; dolunca parlar, üç kez nabız atar, "JET HAZIR" yazar ve zil çalar. Ateşlerken halka boşalarak kalan süreyi gösterir.
 - **💨 HAWKING SALINIMI**: 24. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder.
 - **🧭 HAFTALIK SEFER**: Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.
 - **🌳 KÜTLE AĞACI**: Yuttuğun toplam kütleyle kalıcı küçük yetenekler aç (Klasik ve Sefer).
@@ -261,7 +261,7 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 - 💨 **KÜÇÜLÜYOR**: Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.
 - ☄️ **KUYRUKLU YILDIZ**: Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.
 - 🌋 **BÖLÜNEN GEZEGEN**: Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!
-- ⚛️ **ANTİMADDE**: Yutma! Antimadde kara deliğini hemen küçültür. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır.
+- ⚛️ **ANTİMADDE**: Yutma! Antimadde kara deliğini hemen küçültür ve 3 saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır.
 - 🧲 **MIKNATIS TAŞI**: Bu mıknatıs taşını yut: 3 saniye boyunca (laboratuvarda 8 saniyeye kadar uzar) ekranda yutabileceğin her şey hızla sana çekilir.
 - 💎 **SÜPERNOVA**: Elmas düğmesine dokun (20 💎): ekrandaki her şey sana akar, hedefin %15’i hemen gelir.
 - 💫 **PULSAR**: Yanıp söner. Sadece parlarken yutulur ve 150 puan verir; sönükken kara deliğinden seker.
@@ -283,7 +283,7 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 - 🌈 **SPEKTRUM**: Arka arkaya 5 farklı türde cisim yut: SPEKTRUM bonusu! Kara deliğinin altındaki noktalar serini gösterir. Aynı türden birini yutarsan seri baştan başlar, combo biterse silinir.
 - 💫 **KİLONOVA**: İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.
 - 💨 **HAWKING SALINIMI**: Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir.
-- 🔥 **KUASAR JETİ**: Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur.
+- 🔥 **KUASAR JETİ**: Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır.
 - ☢ **RADYASYON**: Boss dalga saçar. Dalgaların arasındaki boşlukta dur; kalkan seni korur.
 - 💥 **SÜPERNOVA**: Her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut!
 

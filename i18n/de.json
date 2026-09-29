@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "LEVEL {k} VERLANGT KRAFT",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Empfohlene Kraft {r}, deine ist {p}. Werde im Labor stärker",
 "LABORATUVAR BOŞ": "DAS LABOR STEHT STILL",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Du hast alles für {m}: starte die Verbesserung auf Level {k}"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Du hast alles für {m}: starte die Verbesserung auf Level {k}",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} S LANG KANNST DU NICHTS VERSCHLUCKEN",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Nicht verschlucken! Es lässt dein Schwarzes Loch schrumpfen und stößt {n} Sekunden lang Himmelskörper ab. Halte es aus deinem Sog fern",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Nicht verschlucken! Antimaterie lässt dein Schwarzes Loch sofort schrumpfen und stößt {n} Sekunden lang Himmelskörper ab: So lange kannst du nichts verschlucken. Gerät sie in deinen Sog, wird sie hineingezogen, also halte sie fern. Mit aktivem Vortex ist sie harmlos",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Halte das Schwarze Loch, drücke mit einem zweiten Finger und schwenke: {n} Sekunden lang trifft der Strahl alles, was er überstreicht. Ist der 🔥-Ring oben voll, ist der Jet wieder bereit"
 }

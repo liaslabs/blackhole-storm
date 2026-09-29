@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "LE NIVEAU {k} EXIGE DE LA PUISSANCE",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Puissance conseillée {r}, la tienne est {p}. Renforce-toi au Laboratoire",
 "LABORATUVAR BOŞ": "LE LABORATOIRE EST LIBRE",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Tu as de quoi améliorer {m} : lance l'amélioration niveau {k}"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Tu as de quoi améliorer {m} : lance l'amélioration niveau {k}",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "RIEN À AVALER PENDANT {n} S",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Ne l'avale pas ! Il rétrécit ton trou noir et repousse les corps pendant {n} secondes. Garde-le hors de ton attraction",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Ne l'avale pas ! L'antimatière rétrécit aussitôt ton trou noir et repousse les corps pendant {n} secondes : pendant ce temps tu ne peux rien avaler. Si elle entre dans ton attraction, elle est aspirée : garde-la loin. Elle est inoffensive quand le Vortex est actif",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "En tenant le trou noir, appuie avec un deuxième doigt et balaie : pendant {n} secondes le rayon frappe tout ce qu'il traverse. Quand l'anneau 🔥 de la barre du haut est plein, le jet est de nouveau prêt"
 }

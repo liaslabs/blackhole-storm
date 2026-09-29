@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "LEVEL {k} BUTUH KEKUATAN",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Kekuatan disarankan {r}, milikmu {p}. Jadi lebih kuat di Laboratorium",
 "LABORATUVAR BOŞ": "LABORATORIUM MENGANGGUR",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Sumber dayamu cukup untuk {m}: mulai peningkatan level {k}"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Sumber dayamu cukup untuk {m}: mulai peningkatan level {k}",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} DTK TAK BISA MENELAN APA PUN",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Jangan ditelan! Mengecilkan lubang hitammu dan mendorong benda menjauh selama {n} detik. Jauhkan dari tarikanmu",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Jangan ditelan! Antimateri langsung mengecilkan lubang hitammu dan mendorong benda menjauh selama {n} detik: selama itu kamu tak bisa menelan apa pun. Jika masuk tarikanmu, ia terseret masuk; jauhkan. Saat Vortex aktif ia tidak berbahaya",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Sambil menahan lubang hitam, tekan dengan jari kedua dan sapukan: selama {n} detik sinar mengenai semua yang dilewatinya. Saat cincin 🔥 di bilah atas penuh, jet siap lagi"
 }

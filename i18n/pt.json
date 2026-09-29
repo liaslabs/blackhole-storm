@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "A FASE {k} PEDE PODER",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Poder recomendado {r}, o seu é {p}. Fique mais forte no Laboratório",
 "LABORATUVAR BOŞ": "O LABORATÓRIO ESTÁ PARADO",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Você tem o necessário para {m}: comece a melhoria para o nível {k}"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Você tem o necessário para {m}: comece a melhoria para o nível {k}",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} S SEM ENGOLIR NADA",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Não engula! Encolhe seu buraco negro e empurra os corpos por {n} segundos. Mantenha fora da sua atração",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Não engula! A antimatéria encolhe seu buraco negro na hora e empurra os corpos por {n} segundos: enquanto isso você não engole nada. Se entrar na sua atração, é puxada para dentro; mantenha longe. Com o Vórtice ativo é inofensiva",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Segurando o buraco negro, toque com um segundo dedo e arraste: por {n} segundos o raio atinge tudo o que cruza. Quando o anel 🔥 na barra superior enche, o jato está pronto de novo"
 }

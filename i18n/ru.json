@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "УРОВЕНЬ {k} ТРЕБУЕТ СИЛЫ",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Рекомендуемая сила {r}, у тебя {p}. Усилься в Лаборатории",
 "LABORATUVAR BOŞ": "ЛАБОРАТОРИЯ ПРОСТАИВАЕТ",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Ресурсов хватает на {m}: начни улучшение до уровня {k}"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Ресурсов хватает на {m}: начни улучшение до уровня {k}",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "{n} С НИЧЕГО НЕЛЬЗЯ ПОГЛОТИТЬ",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Не глотай! Уменьшает чёрную дыру и {n} секунды отталкивает тела. Держи вне поля притяжения",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Не глотай! Антиматерия сразу уменьшает чёрную дыру и {n} секунды отталкивает тела: в это время ничего нельзя поглотить. Попав в поле притяжения, она втянется — держи её подальше. При включённом Вихре она безвредна",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "Удерживая чёрную дыру, нажми вторым пальцем и веди: {n} секунд луч бьёт всё, что пересекает. Когда кольцо 🔥 на верхней панели заполнится, джет снова готов"
 }

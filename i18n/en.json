@@ -1488,5 +1488,9 @@
 "SEVİYE {k} GÜÇ İSTİYOR": "LEVEL {k} NEEDS POWER",
 "Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Recommended power {r}, yours is {p}. Get stronger in the Laboratory",
 "LABORATUVAR BOŞ": "THE LABORATORY IS IDLE",
-"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "You have what {m} needs: start the level {k} upgrade"
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "You have what {m} needs: start the level {k} upgrade",
+"{n} SN HİÇBİR ŞEY YUTAMAZSIN": "NOTHING CAN BE SWALLOWED FOR {n} S",
+"Yutma! Kara deliğini küçültür ve {n} saniye boyunca cisimleri iter. Çekim alanından uzak tut": "Don't swallow it! It shrinks your black hole and pushes bodies away for {n} seconds. Keep it out of your pull",
+"Yutma! Antimadde kara deliğini hemen küçültür ve {n} saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır": "Don't swallow it! Antimatter shrinks your black hole at once and pushes bodies away for {n} seconds: you can swallow nothing meanwhile. If it enters your pull it gets drawn in, so keep it away. It is harmless while Vortex is on",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır": "While holding the black hole, press with a second finger and sweep: for {n} seconds the beam hits everything it crosses. When the 🔥 ring in the top bar fills, the jet is ready again"
 }
