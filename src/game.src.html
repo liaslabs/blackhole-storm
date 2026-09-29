@@ -235,9 +235,9 @@ body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:ba
 .mtile{position:absolute;left:0;width:100%;display:block;pointer-events:none;}
 .zb{position:absolute;left:0;right:0;background-size:cover;background-position:center;filter:brightness(.8);-webkit-mask-image:linear-gradient(180deg,transparent,#000 120px,#000 calc(100% - 120px),transparent);mask-image:linear-gradient(180deg,transparent,#000 120px,#000 calc(100% - 120px),transparent);}
 .zlabel{position:absolute;left:14px;right:14px;display:flex;pointer-events:none;z-index:2;}
-.zvoid{position:absolute;left:0;right:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0),#000 40px,#000 calc(100% - 40px),rgba(0,0,0,0)),repeating-linear-gradient(90deg,transparent 0 37px,rgba(160,205,255,.08) 37px 38px);}
-.zwarp{position:absolute;left:50%;z-index:3;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 14px;border-radius:999px;background:rgba(6,10,22,.9);border:1px solid rgba(159,216,255,.45);white-space:nowrap;pointer-events:none;box-shadow:0 0 22px rgba(120,190,255,.22);}
-.zwarp b{font-family:var(--fd);font-size:11px;letter-spacing:.14em;color:#9fd8ff;}.zwarp small{font-family:var(--fm);font-size:9.5px;color:#c7d6ee;}
+.zvoid{position:absolute;left:0;right:0;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,0),#000 40px,#000 calc(100% - 40px),rgba(0,0,0,0));}.zvoid canvas{position:absolute;inset:0;width:100%;height:100%;}
+.zwarp{position:absolute;left:50%;z-index:3;transform:translate(-50%,-50%);width:max-content;max-width:calc(100% - 24px);box-sizing:border-box;text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 14px;border-radius:999px;background:rgba(6,10,22,.9);border:1px solid rgba(159,216,255,.45);white-space:nowrap;pointer-events:none;box-shadow:0 0 22px rgba(120,190,255,.22);}
+.zwarp b{font-family:var(--fd);font-size:11px;letter-spacing:.14em;color:#9fd8ff;}.zwarp small{display:block;text-align:center;white-space:normal;font-family:var(--fm);font-size:9.5px;color:#c7d6ee;}
 .mwarp{fill:none;stroke:#9fd8ff;stroke-width:3;stroke-dasharray:3 14;stroke-linecap:round;animation:mwarp 1.1s linear infinite;}.mwarp.off{stroke:rgba(150,165,200,.45);animation:none;}
 @keyframes mwarp{to{stroke-dashoffset:-34;}}
 .mport{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;z-index:2;pointer-events:none;}
@@ -2236,7 +2236,7 @@ function mapSky(W0,H0,GAP,cur){
 }
 // The map is built zone by zone from level 1 up: each block of ten levels sits on its own sky, and between two blocks a black
 // warp gap with a wormhole at each end — the hole leaves one zone through the exit portal and arrives in the next through the entry one.
-let MAPBANDS=[],MAPPORT=[];
+let MAPBANDS=[],MAPPORT=[],MAPVOID=[];
 const MAP_G={GAP:92,PADB:200,PADT:150,VOID:210,ENT:300,EXIT:112};
 function buildMap(){
   const sc=$('mapScroll'),inner=$('mapInner'),svg=$('mapSvg'),cur=Math.max(1,savedLevel),K=MAP_G,GAP=K.GAP,W0=sc.clientWidth||360;
@@ -2244,12 +2244,12 @@ function buildMap(){
   const blk=[];let d=0;for(let b=0;b<NB;b++){const base=d,first=base+(b?K.ENT:K.PADB),last=first+9*GAP,top=last+(b<NB-1?K.EXIT+60:K.PADT);blk.push({base,first,last,top});d=top+(b<NB-1?K.VOID:0);}
   const H0=d,Y=v=>H0-v;inner.style.height=H0+'px';svg.setAttribute('width',W0);svg.setAttribute('height',H0);svg.setAttribute('viewBox',`0 0 ${W0} ${H0}`);
   mapPts=[];for(let l=1;l<=mapN;l++){const b=Math.floor((l-1)/10);mapPts.push({l,x:W0/2+Math.sin((l-1)*.72)*amp,y:Y(blk[b].first+((l-1)%10)*GAP)});}
-  MAPPORT=[];MAPBANDS=[];
+  MAPPORT=[];MAPBANDS=[];MAPVOID=[];
   inner.querySelectorAll('.zb,.zlabel,.zcard,.zvoid,.zwarp,.mport,.nd,.me').forEach(e=>e.remove());
   for(let b=0;b<NB;b++){const B=blk[b],l0=b*10+1,z=zoneOf(l0),cyc=cycleOf(l0),Z=MAPZ[z];
     MAPBANDS.push({z,top:b<NB-1?Y(B.top+K.VOID/2):0,bot:b?Y(B.base-K.VOID/2):H0});
     if(b)MAPPORT.push({x:W0/2,y:Y(B.base+60),b,k:'in'});if(b<NB-1)MAPPORT.push({x:W0/2,y:Y(B.last+K.EXIT),b,k:'out'});
-    if(b<NB-1){const v=document.createElement('div');v.className='zvoid';v.style.top=(Y(B.top+K.VOID)-40)+'px';v.style.height=(K.VOID+80)+'px';inner.insertBefore(v,svg);
+    if(b<NB-1){const v=document.createElement('div');v.className='zvoid';v.style.top=(Y(B.top+K.VOID)-40)+'px';v.style.height=(K.VOID+80)+'px';const vc=document.createElement('canvas');v.appendChild(vc);inner.insertBefore(v,svg);MAPVOID.push({v,cv:vc,y:Y(B.top+K.VOID)-40,h:K.VOID+80,st:Array.from({length:46},()=>({x:Math.random(),y:Math.random(),v:.25+Math.random()*.9,l:10+Math.random()*34}))});
       const nz=ZONES[zoneOf(l0+10)],w=document.createElement('div');w.className='zwarp';w.style.top=Y(B.top+K.VOID/2)+'px';
       w.innerHTML=`<b>⚡ ${T('IŞINLANMA')} → ${T(nz.n)}</b><small>${T(nz.s)}</small>`;inner.appendChild(w);}
     let st=0;for(let l=l0;l<l0+10;l++)st+=Math.max(0,LSTARS[l]|0);const done=cur>l0+9,on=cur>=l0&&!done;
@@ -2285,8 +2285,13 @@ function mapPortDraw(q,t){const x=q.cv.getContext('2d'),C=120,dir=q.k==='out'?1:
   for(let k=0;k<3;k++){x.save();x.rotate(dir*t*(1.1+k*.45)+k*2);x.strokeStyle=q.lit?`rgba(${k===1?'255,214,150':'159,216,255'},${.55-k*.12})`:`rgba(150,165,200,${.3-k*.07})`;x.lineWidth=2.6-k*.5;
     for(let a=0;a<4;a++){x.beginPath();for(let s=0;s<=1.001;s+=.05){const r=34+s*66,an=a*Math.PI/2+s*2.6;x.lineTo(Math.cos(an)*r,Math.sin(an)*r*.62);}x.stroke();}x.restore();}
   x.restore();}
+// the gap between two zones: star streaks rushing past, fading out at both edges into the zones' skies
+function mapVoidDraw(v,t){const c=v.cv,w=c.clientWidth,h=v.h,d=Math.min(2,devicePixelRatio||1);if(!w)return;if(c.width!==Math.round(w*d)){c.width=Math.round(w*d);c.height=Math.round(h*d);}
+  const x=c.getContext('2d');x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,w,h);x.lineCap='round';
+  for(const s of v.st){const yy=((s.y-t*s.v*.25)%1+1)%1*h,e=Math.min(1,yy/50,(h-yy-s.l)/50);if(e<=0)continue;x.globalAlpha=e*(.25+s.v*.55);x.strokeStyle='rgb(170,210,255)';x.lineWidth=1+s.v;x.beginPath();x.moveTo(s.x*w,yy);x.lineTo(s.x*w,yy+s.l);x.stroke();}
+  x.globalAlpha=1;}
 function mapPortLoop(){if(mapPortLoop.on)return;mapPortLoop.on=1;const sc=$('mapScroll'),rm=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const f=ts=>{if(!$('sMap').classList.contains('on')){mapPortLoop.on=0;return;}const y=sc.scrollTop,h=sc.clientHeight;for(const q of MAPPORT)if(q.cv&&q.y>y-140&&q.y<y+h+140)mapPortDraw(q,rm?0:ts/1000);requestAnimationFrame(f);};requestAnimationFrame(f);}
+  const f=ts=>{if(!$('sMap').classList.contains('on')){mapPortLoop.on=0;return;}const y=sc.scrollTop,h=sc.clientHeight;for(const q of MAPPORT)if(q.cv&&q.y>y-140&&q.y<y+h+140)mapPortDraw(q,rm?0:ts/1000);for(const v of MAPVOID)if(v.y+v.h>y-40&&v.y<y+h+40)mapVoidDraw(v,rm?0:ts/1000);requestAnimationFrame(f);};requestAnimationFrame(f);}
 // the first time the map opens in a new zone, your marker travels there through the portals and the view follows
 function mapTravel(){const cur=Math.max(1,savedLevel),b=Math.floor((cur-1)/10);if(cur<11||cur%10!==1||TIPS['zw'+b]||!LSTARS[cur-1])return false;TIPS['zw'+b]=1;saveSoon();
   const me=$('mapInner').querySelector('.me'),sc=$('mapScroll'),A=mapPts[cur-2],B=mapPts[cur-1],po=MAPPORT.find(q=>q.b===b-1&&q.k==='out'),pi=MAPPORT.find(q=>q.b===b&&q.k==='in');if(!me||!po||!pi)return false;
