@@ -46,7 +46,7 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
 
 - **🛡 Kalkan:** Can kaybedeceğin anda kendiliğinden devreye girer, can gitmez. Günlük Kozmos ve meydan okumalarda çalışmaz (adil yarış).
 - **❤️ Yedek can:** Canların bitince "Yedek can kullan" ile 1 canla devam.
-- **⏱ Zaman kristali:** Eve Dönüş görevinde süre bitince +15 saniye.
+- **⏱ Zaman kristali:** Boss ya da zor seviyede süre bitince açılan pencerede +30 sn (boss) / +15 sn (zor seviye); Eve Dönüş görevinde +15 sn. Kendiliğinden harcanmaz, oyuncu seçer.
 - **💖 Canlar (deneme hakkı):** 16. seviyeden itibaren Klasik modda. En fazla 5; kaybedilen her deneme (yeniden oyna,
   ana menüye dön ya da başlamış seviyeyi duraklatıp bırakma) 1 can harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 can dolar
   (boştan doluya 100 dakika; Candy Crush 30 dk, benzer oyunlar 20–30 dk). Canlar bitince pencere: **▶ reklam +1 can**,
@@ -61,10 +61,11 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
 | Ana menü | 🛒 Mağaza düğmesi; 3. seviyeden sonra Başlangıç Paketi şeridi (alınınca kaybolur); VIP üyelerde 👑 VIP rozeti |
 | Günlük bonus penceresi | VIP üyelerde "👑 VIP · +15 💎 +1 🛡 ekstra" satırı |
 | Duraklatma menüsü | 🛒 Mağaza |
-| Canın bitince | **▶ Reklam izle · 1 canla devam** (seviye başına 1 kez), **❤️ Yedek can kullan**, 100 ⭐ ile devam |
+| Canın bitince | **▶ Reklam izle · 1 canla devam** (seviye başına 1 kez), **❤️ Yedek can kullan**, 300 ⭐ ile devam (zor seviyede 450 ⭐; günde en fazla 3) |
+| Boss / zor seviyede süre bitince | Can gitmez; yalnızca süre satılır: **⏱ zaman kristali**, **💎 20** (aynı seviyede her alımda ×2) veya **▶ reklam +15 sn** (seviye başına 1). Yıldızla süre alınmaz |
 | Aynı seviyede 3. başarısızlık | **🪶 Kolaylaştır** · 💎 15 veya **▶ Reklam izle** |
 | Canlar (💖) bitince | **▶ Reklam izle · +1 can**, **💎 20 · canları doldur**, bekle (geri sayım) |
-| Seviye sonu | **▶ Reklam izle · +100 ⭐** (en fazla 2 kez: toplam 200 ⭐, yani 2 kez "100 ⭐ ile devam") |
+| Seviye sonu | **▶ Reklam izle · +100 ⭐** (seviye başına 1 kez) |
 | Günlük bonus | **▶ Reklamla 2 katını al** |
 | Eve Dönüş, süre bitince | **⏱ Zaman kristali +15 sn** veya **▶ Reklam izle +15 sn** (görev başına 1 kez) |
 | Mağaza | **▶ Reklam izle +5 💎** (günde 3) |
@@ -146,3 +147,9 @@ hesabı ile) onaylanabilir. Google aynı sunucuda satın alma jetonunun doğrula
 
 Ayrıntı: https://developer.chrome.com/docs/android/trusted-web-activity/receive-payments-play-billing
 - İleride çevrimiçi sıralama veya düello eklenirse skorları da sunucuda doğrulamak gerekir.
+
+### Ücretsiz kaynak sınırları
+
+- Günlük giriş: en fazla 10 💎/gün (yıldızlar serinin uzunluğuyla artar).
+- Günlük görevler: ödüller ⭐; boss, rakip ve takımyıldızı görevleri 🟡 altın kabuk verir (zaten saklı biri varsa +60 ⭐). Üçü bitince +5 💎.
+- Galibiyet serisi en fazla 2 gümüş kabuk verir; altın kabuk yalnızca evrenin son üç seviyesinde oyun içi başarılarla kazanılır.
