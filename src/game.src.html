@@ -1164,7 +1164,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
   {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999)};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
-  {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};}
+  {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),seen:svI(a.seen,svI(a.tier,0,0,SEA.tiers),0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};}
   {const k=svO(d.prk)||{},o=svO(k.own)||{};PERK={own:{},spent:svI(k.spent,0,0,1e9)};for(const p of PERKS)PERK.own[p.id]=svI(o[p.id],0,0,3);}
   {const g=svO(d.gdn)||{};GARDEN={day:typeof g.day==='string'?g.day:''};}
   {const e=svO(d.exp)||{};EXP={w:typeof e.w==='string'?e.w:'',step:svI(e.step,0,0,EXP_STEPS),lives:svI(e.lives,3,0,3),path:Array.isArray(e.path)?e.path.filter(k=>EXP_NODES[k]).slice(0,EXP_STEPS):[],done:svI(e.done,0,-1,1),badges:svI(e.badges,0,0,1e4)};}
@@ -1807,7 +1807,7 @@ function dmEvent(id,v,abs){
     if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m),at:performance.now()});if(!achShowing)nextAch();}saveSoon();}
 }
 function renderDM(){
-  dmRoll();const box=$('dmBox');{const cl=DM.list.filter(m=>m.cl).length,hot=DM.list.some(m=>m.done&&!m.cl),bd=$('dmBadge');if(bd){bd.textContent=hot?'AL!':`${cl}/${DM.list.length}`;bd.className=hot?'hot':'';}}let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`;
+  dmRoll();const box=$('dmBox');{const hot=DM.list.some(m=>m.done&&!m.cl),bd=$('dmBadge');if(bd){bd.textContent=hot?'AL!':'';bd.className=hot?'hot':''; /* nothing to take: no badge */}}let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`;
   DM.list.forEach((m,i)=>{const d=MPOOL.find(x=>x.id===m.id),rw=d?d.r:['⭐',0];
     h+=`<div class="dmr"><div class="x">${dmText(m)}<small>${Math.floor(m.p).toLocaleString(LOC)} / ${m.n.toLocaleString(LOC)} · ödül ${rw[1]} ${rw[0]}</small><div class="bar"><i style="width:${Math.min(100,m.p/m.n*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button data-i="${i}" ${m.done?'':'disabled'}>AL</button>`}</div>`;});
   h+=`<div class="muted" style="margin-top:6px;font-size:12px;">${DM.list.every(m=>m.cl)?'Hepsi tamam, bonus alındı. Yarın yeni görevler!':'Üçünü de bitir: +10 💎 bonus'}</div>`;
@@ -2231,11 +2231,11 @@ const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha s�
   {id:'cons',ic:'✨',n:'TAKIMYILDIZ SEZONU',d:'Takımyıldızlar daha sık belirir; tamamlanan her biri 2 kat SP verir.'},{id:'gold',ic:'🌕',n:'ALTIN SEZON',d:'Altın gezegenler ve kristaller daha sık gelir.'},
   {id:'rival',ic:'🌑',n:'RAKİPLER SEZONU',d:'Rakip, İkiz ve Koruyucu seviyeleri 2 kat SP verir.'},{id:'meteor',ic:'☄️',n:'METEOR SEZONU',d:'Biraz daha çok meteor; her KUSURSUZ KAÇIŞ +2 SP.'}];
 const SEA={tiers:30,per:100};
-let SEASON={id:'',sp:0,tier:0,badges:[]};
+let SEASON={id:'',sp:0,tier:0,seen:0,badges:[]};
 const seasonId=()=>utcDay().slice(0,7);
 function seasonTheme(id=seasonId()){const p=id.split('-').map(Number);return SEASON_T[((p[0]||0)*12+(p[1]||1))%SEASON_T.length];}
 function seasonIs(k){return gameMode!=='sprint'&&seasonTheme().id===k;}
-function seasonRoll(){const id=seasonId();if(SEASON.id!==id){SEASON.id=id;SEASON.sp=0;SEASON.tier=0;}}
+function seasonRoll(){const id=seasonId();if(SEASON.id!==id){SEASON.id=id;SEASON.sp=0;SEASON.tier=0;SEASON.seen=0;}}
 function seasonReward(i){if(i===SEA.tiers)return {stars:1000,gems:50,badge:1};if(i===20)return {tkey:1};if(i%10===0)return {gems:20};if(i%5===0)return {shield:1,stars:100};if(i%2===0)return {gems:3};return {stars:40+i*5};}
 function seasonRwTxt(r){const p=[];if(r.stars)p.push(`${r.stars.toLocaleString(LOC)} ⭐`);if(r.gems)p.push(`${r.gems} 💎`);if(r.shield)p.push(`${r.shield} 🛡`);if(r.tkey)p.push('🗝');if(r.badge)p.push('🏅');return p.join(' · ');}
 function seasonIcon(r){return r.badge?'🏅':r.tkey?'🗝':r.shield?'🛡':r.gems?'💎':'⭐';}
@@ -2247,7 +2247,7 @@ function seasonGive(i){const r=seasonReward(i),g={stars:r.stars||0,gems:r.gems||
 function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;seasonRoll();SEASON.sp+=Math.round(n);let up=0;
   while(SEASON.tier<SEA.tiers&&SEASON.sp>=(SEASON.tier+1)*SEA.per){SEASON.tier++;up++;seasonGive(SEASON.tier);}
   if(up){saveG();updateUI();}else saveSoon();seasonBadge();}
-function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();e.textContent=`${SEASON.tier}/${SEA.tiers}`;}
+function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();const n=Math.max(0,SEASON.tier-(SEASON.seen|0));e.textContent=n?'+'+n:'';e.className=n?'hot':'';} // only tiers reached since the season screen was last opened
 function renderSeason(){seasonRoll();const th=seasonTheme(),now=new Date(),end=Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1),left=Math.max(1,Math.ceil((end-Date.now())/864e5));
   $('snHead').innerHTML=`<b>${th.ic} ${T(th.n)}</b><span>${T(th.d)}</span><small>${T('Sezonun bitmesine {d} gün',{d:left})}</small>`;
   const inT=SEASON.tier>=SEA.tiers?SEA.per:SEASON.sp-SEASON.tier*SEA.per;
@@ -2857,7 +2857,7 @@ $('lbBtn').onclick=showLB;$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=
 $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp();$('sExp').classList.add('on');};$('exClose').onclick=()=>$('sExp').classList.remove('on');
 $('treeBtn').onclick=()=>{renderTree();$('sTree').classList.add('on');};$('trClose').onclick=()=>$('sTree').classList.remove('on');
 $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$('gdClose').onclick=()=>{$('sGarden').classList.remove('on');gdRun=false;};
-$('snBtn').onclick=()=>{sfx('click',{vol:.4});renderSeason();$('sSeason').classList.add('on');};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
+$('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.tier;saveG();seasonBadge();renderSeason();$('sSeason').classList.add('on');};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
 $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
