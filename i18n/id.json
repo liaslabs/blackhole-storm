@@ -1499,5 +1499,13 @@
 "LAB HIZLANDIRMA": "PERCEPATAN LAB",
 "Üçünü de bitir: +{n}": "Selesaikan ketiganya: +{n}",
 "+{n} dk": "+{n} mnt",
-"+{n} dk ⏩": "+{n} mnt ⏩"
+"+{n} dk ⏩": "+{n} mnt ⏩",
+"Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir": "Medan tarik lubang hitammu melebar: benda tertarik dari jarak lebih jauh",
+"Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin": "Kamu memulai setiap level dengan lubang hitam lebih besar: sejak detik pertama bisa menelan benda lebih besar",
+"Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır": "Rantai kombo bertahan lebih lama: lebih banyak waktu antar telanan, poin berlipat lebih banyak",
+"Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez": "Perisaimu bertahan lebih lama: meteor tak bisa melukaimu lebih lama",
+"Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın": "Vortex bertahan lebih lama: saat penuh kamu menelan semua di layar dengan cepat lebih lama",
+"Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir": "Batu magnet bekerja lebih lama: semua yang bisa kamu telan tertarik padamu lebih lama",
+"Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır": "Saat besar, mengubah sebagian massamu jadi radiasi dan menghapus meteor dari layar. Level lebih tinggi memperpendek jedanya",
+"İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar": "Sinar plasma yang ditembakkan dengan jari kedua: mengenai semua yang disapunya dan melukai bos juga. Level lebih tinggi memperpanjangnya dan menambah damage ke bos"
 }

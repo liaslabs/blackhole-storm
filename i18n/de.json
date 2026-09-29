@@ -1499,5 +1499,13 @@
 "LAB HIZLANDIRMA": "LABOR-BESCHLEUNIGUNG",
 "Üçünü de bitir: +{n}": "Schaffe alle drei: +{n}",
 "+{n} dk": "+{n} Min.",
-"+{n} dk ⏩": "+{n} Min. ⏩"
+"+{n} dk ⏩": "+{n} Min. ⏩",
+"Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir": "Das Sogfeld deines Schwarzen Lochs wird größer: Himmelskörper werden aus größerer Entfernung angezogen",
+"Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin": "Du startest jedes Level mit einem größeren Schwarzen Loch: Schon in den ersten Sekunden kannst du größere Körper verschlucken",
+"Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır": "Deine Combo-Kette hält länger: mehr Zeit zwischen dem Verschlucken, die Punkte vervielfachen sich stärker",
+"Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez": "Dein Schild hält länger: Meteore können dir länger nichts anhaben",
+"Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın": "Vortex hält länger: Ist er voll, verschluckst du länger alles auf dem Bildschirm im Eiltempo",
+"Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir": "Der Magnetstein wirkt länger: Alles, was du verschlucken kannst, wird länger zu dir gezogen",
+"Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır": "Wenn du groß bist, verwandelt er einen Teil deiner Masse in Strahlung und löscht die Meteore auf dem Bildschirm. Höhere Stufen verkürzen die Abklingzeit",
+"İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar": "Ein Plasmastrahl, den du mit einem zweiten Finger abfeuerst: Er trifft alles, was er überstreicht, auch Bosse. Höhere Stufen verlängern ihn und verstärken den Bossschaden"
 }
