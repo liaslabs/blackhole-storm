@@ -1329,5 +1329,12 @@
 "Kara deliği tutarken ikinci bir parmakla ekrana bas ve gezdir: {n} saniye boyunca kara delikten parmağına doğru bir plazma ışını çıkar ve taradığı her şeyi vurur. Meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara da hasar verir. Parmağını kaldırınca ışın kesilir; {n} saniye dolmadan yeniden basarsan kaldığı yerden devam eder. Sonra {n} saniyede dolar": "Удерживая чёрную дыру, прижми экран вторым пальцем и веди им: {n} секунд от чёрной дыры к пальцу бьёт плазменный луч и поражает всё, что проходит. Он сжигает метеоры, разбивает тела, дающие очки, и приносит их очки, а ещё ранит боссов. Уберёшь палец — луч погаснет; нажми снова, пока не прошли {n} секунд, и он продолжится. Потом он заряжается {n} секунд",
 "{n}. seviyeden itibaren: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. {n} saniye boyunca plazma ışını parmağını takip eder, parmak kalkınca kesilir, süre dolmadan yeniden basınca devam eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara hasar verir. {n} saniyede yeniden dolar": "С уровня {n}: удерживая чёрную дыру, прижми и веди второй палец по экрану. {n} секунд плазменный луч следует за пальцем, гаснет, когда палец поднят, и продолжается, если нажать снова до конца времени; он сжигает метеоры, разбивает тела, дающие очки, приносит их очки и ранит боссов. Заряжается {n} секунд",
 "Cam Kalp seviyesi 3 yıldız serisine sayılmaz": "Уровни со Стеклянным сердцем не идут в серию из 3 звёзд",
-"SERBEST": "СВОБОДЕН"
+"SERBEST": "СВОБОДЕН",
+"METEOR VE YAYLAR": "МЕТЕОРЫ И ДУГИ",
+"Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil": "Метеор ломает дугу. Потеряешь все три — уйдёт сердце. Уходи с их пути",
+"İlk kalkanın hediye! Sağ alttaki kalkana dokun: {n} saniye meteorlar parçalanır, yayların onarılır": "Первый щит — в подарок! Нажми щит внизу справа: {n} секунд метеоры разбиваются, а дуги чинятся",
+"Elmas düğmesine dokun ({n} 💎): ekrandaki her şey sana akar, hedefin {n}’i hemen gelir": "Нажми кнопку с алмазом ({n} 💎): всё на экране летит к тебе, и сразу приходит {n} цели",
+"Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir": "Когда ты большой, нажми кнопку Хокинга: отдаёшь немного массы, и все метеоры на экране исчезают",
+"Kara deliği tutarken ikinci parmakla bas ve gezdir: {n} saniye boyunca ışın taradığı her şeyi vurur": "Удерживая чёрную дыру, прижми и веди второй палец: {n} секунд луч бьёт всё, что проходит",
+"Süre dolmadan hedefe ulaş; meteorlar daha sık gelir. Güçlerini burada kullan": "Достигни цели, пока не кончилось время; метеоры летят чаще. Используй здесь свои силы"
 }
