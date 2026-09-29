@@ -1356,5 +1356,11 @@
 "UZAK DUR": "ابتعد",
 "YAKALA": "أمسكه",
 "ilk yutuş: yeniden oluşur": "الابتلاع الأول: يتشكل من جديد",
-"ikinci yutuş: kazandın": "الابتلاع الثاني: فزت"
+"ikinci yutuş: kazandın": "الابتلاع الثاني: فزت",
+"Çekim alanında {n} saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "أبقها في مجال جاذبيتك {n} ثوانٍ: تفجّر القنبلة الكبرى كل جسم يمكنك ابتلاعه وتسحبه إليك بتأثير الكسوف، وتتحطم النيازك. إذا تحركت بسرعة كبيرة تهرب",
+"Boss ({n}, {n}, {n}…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut": "زعيم ({n}، {n}، {n}…): اصطدم به بسرعة أو ابتلع القطع المتساقطة. عندما يصبح أخضر، ابتلعه كاملًا",
+"Boss ({n}, {n}, {n}…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut": "زعيم ({n}، {n}، {n}…): ينتفخ كأنه يتنفس وينثر البلازما كلما انتفخ. ابتلع البلازما، وعندما يصبح أخضر ابتلعه هو أيضًا",
+"Boss ({n}, {n}, {n}…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut": "زعيم ({n}، {n}، {n}…): كل انفجار ينثر الحطام. ابتلع الحطام، وعندما يصبح أخضر ابتلعه هو أيضًا",
+"{n}. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur": "من المستوى {n} يطلق الزعماء موجات إشعاع. قف في الفجوة بينها؛ إذا لمستك موجة تصغر. الدرع والدوامة يحميانك",
+"Boss ({n}, {n}…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek": "زعيم ({n}، {n}…): ثقب أسود بكتلتك نفسها. ابتعد عنه وهو أحمر، وأمسكه عندما يصبح أزرق. عليك ابتلاعه مرتين"
 }

@@ -1356,5 +1356,11 @@
 "UZAK DUR": "RESTE LOIN",
 "YAKALA": "ATTRAPE-LE",
 "ilk yutuş: yeniden oluşur": "première fois : il se reforme",
-"ikinci yutuş: kazandın": "deuxième fois : tu gagnes"
+"ikinci yutuş: kazandın": "deuxième fois : tu gagnes",
+"Çekim alanında {n} saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Garde-la {n} secondes dans ton attraction : la MÉGA BOMBE fait éclater tout corps que tu peux avaler et l'attire vers toi dans une éclipse ; les météores se brisent. Si tu bouges trop vite, elle s'échappe",
+"Boss ({n}, {n}, {n}…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut": "Boss ({n}, {n}, {n}…) : percute-la vite ou avale les morceaux qui se détachent. Quand elle devient verte, avale-la entière",
+"Boss ({n}, {n}, {n}…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut": "Boss ({n}, {n}, {n}…) : elle gonfle comme si elle respirait et projette du plasma. Avale le plasma ; quand elle devient verte, avale-la aussi",
+"Boss ({n}, {n}, {n}…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut": "Boss ({n}, {n}, {n}…) : chaque explosion projette des débris. Avale les débris ; quand elle devient verte, avale-la aussi",
+"{n}. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur": "Dès le niveau {n}, les boss envoient des ondes de radiation. Reste dans l'espace entre elles ; si l'une te touche, tu rétrécis. Le bouclier et le Vortex te protègent",
+"Boss ({n}, {n}…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek": "Boss ({n}, {n}…) : un trou noir de ta masse. Reste à distance tant qu'il est rouge, attrape-le quand il devient bleu. Tu dois l'avaler deux fois"
 }

@@ -1356,5 +1356,11 @@
 "UZAK DUR": "ДЕРЖИСЬ ПОДАЛЬШЕ",
 "YAKALA": "ЛОВИ",
 "ilk yutuş: yeniden oluşur": "первый раз: он возрождается",
-"ikinci yutuş: kazandın": "второй раз: победа"
+"ikinci yutuş: kazandın": "второй раз: победа",
+"Çekim alanında {n} saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Удерживай её в поле притяжения {n} секунды: МЕГАБОМБА взрывает все тела, которые ты можешь проглотить, и затмением притягивает их к тебе; метеоры разбиваются. Двигаешься слишком быстро — она ускользает",
+"Boss ({n}, {n}, {n}…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut": "Босс ({n}, {n}, {n}…): бей с разгона или глотай отколотые куски. Когда он позеленеет, проглоти его целиком",
+"Boss ({n}, {n}, {n}…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut": "Босс ({n}, {n}, {n}…): раздувается, словно дышит, и выбрасывает плазму. Глотай плазму; когда он позеленеет, проглоти и его",
+"Boss ({n}, {n}, {n}…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut": "Босс ({n}, {n}, {n}…): каждый взрыв разбрасывает обломки. Глотай обломки; когда она позеленеет, проглоти и её",
+"{n}. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur": "С уровня {n} боссы испускают радиационные волны. Стой в промежутке между ними; если волна заденет, ты уменьшишься. Щит и Вихрь защищают тебя",
+"Boss ({n}, {n}…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek": "Босс ({n}, {n}…): чёрная дыра с твоей массой. Держись подальше, пока он красный, лови, когда станет синим. Проглотить нужно дважды"
 }

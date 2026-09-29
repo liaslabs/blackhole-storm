@@ -1356,5 +1356,11 @@
 "UZAK DUR": "FIQUE LONGE",
 "YAKALA": "PEGUE",
 "ilk yutuş: yeniden oluşur": "primeira engolida: ele se refaz",
-"ikinci yutuş: kazandın": "segunda engolida: você vence"
+"ikinci yutuş: kazandın": "segunda engolida: você vence",
+"Çekim alanında {n} saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Segure-a na sua atração por {n} segundos: a MEGA BOMBA explode todo corpo que você pode engolir e o puxa até você num eclipse; os meteoros se despedaçam. Se você se mover rápido demais, ela escapa",
+"Boss ({n}, {n}, {n}…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut": "Chefe ({n}, {n}, {n}…): bata nele com força ou engula os pedaços que se soltam. Quando ficar verde, engula-o inteiro",
+"Boss ({n}, {n}, {n}…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut": "Chefe ({n}, {n}, {n}…): incha como se respirasse e lança plasma ao inchar. Engula o plasma; quando ficar verde, engula-a também",
+"Boss ({n}, {n}, {n}…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut": "Chefe ({n}, {n}, {n}…): cada explosão espalha destroços. Engula os destroços; quando ficar verde, engula-a também",
+"{n}. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur": "A partir do nível {n}, os chefes lançam ondas de radiação. Fique no espaço entre elas; se uma tocar em você, você encolhe. O escudo e o Vórtice protegem você",
+"Boss ({n}, {n}…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek": "Chefe ({n}, {n}…): um buraco negro com a sua massa. Fique longe enquanto estiver vermelho; pegue-o quando ficar azul. Você precisa engoli-lo duas vezes"
 }

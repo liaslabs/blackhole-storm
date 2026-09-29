@@ -1356,5 +1356,11 @@
 "UZAK DUR": "ABSTAND",
 "YAKALA": "FANG IHN",
 "ilk yutuş: yeniden oluşur": "erstes Verschlingen: er bildet sich neu",
-"ikinci yutuş: kazandın": "zweites Verschlingen: gewonnen"
+"ikinci yutuş: kazandın": "zweites Verschlingen: gewonnen",
+"Çekim alanında {n} saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar": "Halte sie {n} Sekunden in deinem Sog: Die MEGABOMBE sprengt jeden Körper, den du verschlingen kannst, und zieht ihn in einer Finsternis zu dir; Meteore zerbrechen. Bewegst du dich zu schnell, entkommt sie",
+"Boss ({n}, {n}, {n}…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut": "Boss ({n}, {n}, {n}…): Ramme ihn schnell oder verschlinge die abbrechenden Stücke. Wird er grün, verschling ihn ganz",
+"Boss ({n}, {n}, {n}…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut": "Boss ({n}, {n}, {n}…): Er schwillt an, als würde er atmen, und versprüht dabei Plasma. Verschling das Plasma; wird er grün, verschling auch ihn",
+"Boss ({n}, {n}, {n}…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut": "Boss ({n}, {n}, {n}…): Jede Explosion schleudert Trümmer. Verschling die Trümmer; wird sie grün, verschling auch sie",
+"{n}. seviyeden itibaren boss'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur": "Ab Level {n} senden Bosse Strahlungswellen aus. Bleib in der Lücke dazwischen; berührt dich eine, schrumpfst du. Schild und Vortex schützen dich",
+"Boss ({n}, {n}…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek": "Boss ({n}, {n}…): ein Schwarzes Loch mit deiner Masse. Halte Abstand, solange er rot ist, fang ihn, wenn er blau wird. Du musst ihn zweimal verschlingen"
 }
