@@ -1481,5 +1481,12 @@
 "KOZMİK KOLEKSİYON": "COSMIC COLLECTION",
 "Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye gümüş kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Win levels in a row and your streak grows, so you start the next level with silver shells: {n} win gives {n} silver shell, {n} or more give {n} silver shells. Lose and quit without continuing and the streak resets; continue and it stays",
 "Altın kabuk kazandın. Bir sonraki darbeyi o karşılar ve patlayıp etrafındaki meteorları siler": "You earned a gold shell. It takes the next hit, then bursts and wipes out the meteors around you",
-"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Earned in the last three levels of each universe with perfect dodges (fewer needed as the boss nears), from daily mission rewards, when a shield runs out, when Hawking wipes {n} meteors at once, or by breaking a boss's weak spots. It takes one hit, then bursts and wipes out the meteors around you"
+"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Earned in the last three levels of each universe with perfect dodges (fewer needed as the boss nears), from daily mission rewards, when a shield runs out, when Hawking wipes {n} meteors at once, or by breaking a boss's weak spots. It takes one hit, then bursts and wipes out the meteors around you",
+"YENİ ÖZELLİK": "NEW FEATURE",
+"Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle": "Build it in the Laboratory; in play, tap with a second finger to fire",
+"Laboratuvarda inşa et; meteorları tek dokunuşla sil": "Build it in the Laboratory; wipe out meteors with one tap",
+"SEVİYE {k} GÜÇ İSTİYOR": "LEVEL {k} NEEDS POWER",
+"Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Recommended power {r}, yours is {p}. Get stronger in the Laboratory",
+"LABORATUVAR BOŞ": "THE LABORATORY IS IDLE",
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "You have what {m} needs: start the level {k} upgrade"
 }

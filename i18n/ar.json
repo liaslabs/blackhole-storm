@@ -1481,5 +1481,12 @@
 "KOZMİK KOLEKSİYON": "المجموعة الكونية",
 "Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye gümüş kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "كلما فزت بالمستويات تواليًا كبرت سلسلتك وبدأت المستوى التالي بقشور فضية: فوز واحد ({n}) يمنح {n} قشرة فضية، و{n} فأكثر تمنح {n} قشرة. إن خسرت وخرجت دون متابعة تُصفَّر السلسلة؛ وإن تابعت تبقى",
 "Altın kabuk kazandın. Bir sonraki darbeyi o karşılar ve patlayıp etrafındaki meteorları siler": "ربحت قشرة ذهبية. تتلقى الضربة التالية ثم تنفجر وتمحو النيازك من حولك",
-"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "تُكسب في آخر ثلاثة مستويات من كل كون بالمراوغات المثالية (يقل عددها كلما اقترب الزعيم)، وبمكافآت المهام اليومية، وعند انتهاء الدرع، وعندما يمحو هوكينغ {n} نيازك دفعة واحدة، أو بكسر نقاط ضعف الزعيم. تتلقى ضربة ثم تنفجر وتمحو النيازك من حولك"
+"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "تُكسب في آخر ثلاثة مستويات من كل كون بالمراوغات المثالية (يقل عددها كلما اقترب الزعيم)، وبمكافآت المهام اليومية، وعند انتهاء الدرع، وعندما يمحو هوكينغ {n} نيازك دفعة واحدة، أو بكسر نقاط ضعف الزعيم. تتلقى ضربة ثم تنفجر وتمحو النيازك من حولك",
+"YENİ ÖZELLİK": "ميزة جديدة",
+"Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle": "ابنِه في المختبر؛ وأثناء اللعب المس بإصبع ثانٍ لتُطلق",
+"Laboratuvarda inşa et; meteorları tek dokunuşla sil": "ابنِه في المختبر؛ وامحُ النيازك بلمسة واحدة",
+"SEVİYE {k} GÜÇ İSTİYOR": "المستوى {k} يحتاج قوة",
+"Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "القوة الموصى بها {r}، وقوتك {p}. تقوَّ في المختبر",
+"LABORATUVAR BOŞ": "المختبر متوقف",
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "لديك ما يلزم لـ{m}: ابدأ تطوير المستوى {k}"
 }

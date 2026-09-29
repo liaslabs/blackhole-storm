@@ -1481,5 +1481,12 @@
 "KOZMİK KOLEKSİYON": "COLEÇÃO CÓSMICA",
 "Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye gümüş kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Vença fases seguidas e sua sequência cresce, e você começa a próxima fase com cascas de prata: {n} vitória dá {n} casca de prata; {n} ou mais dão {n}. Se perder e sair sem continuar, a sequência zera; se continuar, ela fica",
 "Altın kabuk kazandın. Bir sonraki darbeyi o karşılar ve patlayıp etrafındaki meteorları siler": "Você ganhou uma casca de ouro. Ela aguenta o próximo golpe, depois explode e apaga os meteoros ao redor",
-"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Ganha nas três últimas fases de cada universo com esquivas perfeitas (menos conforme o chefão se aproxima), com prêmios de missões diárias, quando um escudo acaba, quando o Hawking apaga {n} meteoros de uma vez ou ao quebrar pontos fracos de um chefão. Aguenta um golpe, depois explode e apaga os meteoros ao redor"
+"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Ganha nas três últimas fases de cada universo com esquivas perfeitas (menos conforme o chefão se aproxima), com prêmios de missões diárias, quando um escudo acaba, quando o Hawking apaga {n} meteoros de uma vez ou ao quebrar pontos fracos de um chefão. Aguenta um golpe, depois explode e apaga os meteoros ao redor",
+"YENİ ÖZELLİK": "NOVO RECURSO",
+"Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle": "Construa no Laboratório; na partida, toque com um segundo dedo para disparar",
+"Laboratuvarda inşa et; meteorları tek dokunuşla sil": "Construa no Laboratório; apague meteoros com um toque",
+"SEVİYE {k} GÜÇ İSTİYOR": "A FASE {k} PEDE PODER",
+"Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Poder recomendado {r}, o seu é {p}. Fique mais forte no Laboratório",
+"LABORATUVAR BOŞ": "O LABORATÓRIO ESTÁ PARADO",
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Você tem o necessário para {m}: comece a melhoria para o nível {k}"
 }

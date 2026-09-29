@@ -1481,5 +1481,12 @@
 "KOZMİK KOLEKSİYON": "COLECCIÓN CÓSMICA",
 "Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye gümüş kabuklarla başlarsın: {n} galibiyet {n} gümüş kabuk, {n} ve üstü {n} gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur": "Si ganas niveles seguidos, tu racha crece y empiezas el siguiente nivel con caparazones de plata: {n} victoria da {n} caparazón de plata; {n} o más dan {n}. Si pierdes y sales sin continuar, la racha se reinicia; si continúas, se mantiene",
 "Altın kabuk kazandın. Bir sonraki darbeyi o karşılar ve patlayıp etrafındaki meteorları siler": "Ganaste un caparazón de oro. Recibe el próximo golpe, luego estalla y borra los meteoros a tu alrededor",
-"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Se gana en los tres últimos niveles de cada universo con esquives perfectos (menos cuanto más cerca del jefe), con premios de misiones diarias, cuando se acaba un escudo, cuando Hawking borra {n} meteoros de una vez o al romper puntos débiles de un jefe. Recibe un golpe, luego estalla y borra los meteoros a tu alrededor"
+"Her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde {n} meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler": "Se gana en los tres últimos niveles de cada universo con esquives perfectos (menos cuanto más cerca del jefe), con premios de misiones diarias, cuando se acaba un escudo, cuando Hawking borra {n} meteoros de una vez o al romper puntos débiles de un jefe. Recibe un golpe, luego estalla y borra los meteoros a tu alrededor",
+"YENİ ÖZELLİK": "NUEVA FUNCIÓN",
+"Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle": "Constrúyelo en el Laboratorio; en partida, toca con un segundo dedo para disparar",
+"Laboratuvarda inşa et; meteorları tek dokunuşla sil": "Constrúyelo en el Laboratorio; borra meteoros con un toque",
+"SEVİYE {k} GÜÇ İSTİYOR": "EL NIVEL {k} PIDE PODER",
+"Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen": "Poder recomendado {r}, el tuyo es {p}. Hazte más fuerte en el Laboratorio",
+"LABORATUVAR BOŞ": "EL LABORATORIO ESTÁ LIBRE",
+"{m} için kaynağın hazır: seviye {k} geliştirmesini başlat": "Tienes lo necesario para {m}: empieza la mejora al nivel {k}"
 }
