@@ -790,16 +790,16 @@ function v2DrawHawk(){const f=G2.hkFx;if(!f||f.t>1.2)return;const q=f.t/1.2,R=Ma
 // Quasar jet: with the hole held, tap anywhere with a second finger: a 1.4 s jet fires that way, hauling bodies in and burning meteors.
 function v2JetOn(){return G2.mode==='surv'||G2.mode==='level'&&level>=V2K.jet.from;}
 // quasar jet: a second finger opens a 5 s window; the beam follows that finger (a little heavy, so it sweeps rather than jumps),
-// keeps burning along its last line when the finger lifts, and takes aim again when a finger comes back inside the window
+// goes out when the finger lifts (the 5 s keep running), and lights again where a finger presses inside the window
 const JET_SHATTER=new Set(['ast','moon','planet','crystal','gold','frag','comet','plasma','half','pulsar','mpair','sat','dark','thr','kgold']); // bodies that give points: the beam breaks them and pays their points
 function v2Jet(x,y){if(!G2.on||gState!=='playing'||!v2JetOn())return;
-  if(G2.jet){G2.jet.tx=x;G2.jet.ty=y;G2.jet.held=1;return;}
-  if(G2.jetCD>0)return;G2.jet={a:Math.atan2(y-hY,x-hX),t:0,tx:x,ty:y,held:1,bh:0,bt:0,pt:0,hist:[],n:0};G2.jetCD=V2K.jet.cd+V2K.jet.dur;G2.jetRdy=0;
+  if(G2.jet){const j=G2.jet;j.tx=x;j.ty=y;if(!j.held){j.held=1;j.ht=0;j.hist=[];j.a=Math.atan2(y-hY,x-hX);v2Sfx('thrust',{vol:.5,rate:.8});}return;}
+  if(G2.jetCD>0)return;G2.jet={a:Math.atan2(y-hY,x-hX),t:0,ht:0,tx:x,ty:y,held:1,bh:0,bt:0,pt:0,hist:[],n:0};G2.jetCD=V2K.jet.cd+V2K.jet.dur;G2.jetRdy=0;
   v2Sfx('thrust',{vol:.7,rate:.7});sfx('powerup',{vol:.4,rate:1.6});shake=Math.max(shake,5);dmEvent('jet',1);}
 function v2JetAim(x,y){const j=G2.jet;if(j&&j.held){j.tx=x;j.ty=y;}}
 function v2JetLift(){if(G2.jet)G2.jet.held=0;}
 function v2JetStep(dt){const j=G2.jet,J=V2K.jet;j.t+=dt;if(j.t>=J.dur||G2.ending){if(j.n>=3)v2Pop(T('JET')+' ×'+j.n,'#ffb347',17);G2.jet=null;return;}
-  if(j.held){const d=((Math.atan2(j.ty-hY,j.tx-hX)-j.a+Math.PI*3)%TAU)-Math.PI,mx=J.turn*dt;j.a+=clamp(d,-mx,mx);}
+  if(!j.held)return; /* finger up: no beam, but the window keeps counting */j.ht+=dt;{const d=((Math.atan2(j.ty-hY,j.tx-hX)-j.a+Math.PI*3)%TAU)-Math.PI,mx=J.turn*dt;j.a+=clamp(d,-mx,mx);}
   j.hist.push({a:j.a,t:j.t});while(j.hist.length&&j.t-j.hist[0].t>.35)j.hist.shift();
   const ux=Math.cos(j.a),uy=Math.sin(j.a),w=sp2(J.w),on=(x,y,r)=>{const dx=x-hX,dy=y-hY;return dx*ux+dy*uy>0&&Math.abs(dx*uy-dy*ux)<=w+r;};
   for(const o of G2.objs){if(o.st!=='in'||o.boss||o.orb||o.wait>0||!on(o.x,o.y,o.r))continue;
@@ -811,7 +811,8 @@ function v2JetStep(dt){const j=G2.jet,J=V2K.jet;j.t+=dt;if(j.t>=J.dur||G2.ending
     if(j.bt<=0&&j.bh<cap){j.bt=J.bossIv;j.bh++;v2BossHit();b.hitFx=1;const d=Math.hypot(b.x-hX,b.y-hY)-b.r;v2Burst(hX+ux*d,hY+uy*d,12,'#ffb347',2,6,.45,2);shake=Math.max(shake,4);if(j.bh===cap)v2Pop(T('JET')+' −'+Math.round(J.boss*100)+'%','#ffb347',17);}}
   if(G2.parts.length<220&&Math.random()<.9){const L=Math.hypot(W,H),r=G2.R+Math.random()*L*.7,px=hX+ux*r,py=hY+uy*r,sa=j.a+(Math.random()<.5?1:-1)*(Math.PI/2+rrnd(-.5,.5)),v=rrnd(1,3.5);
     G2.parts.push({x:px,y:py,vx:Math.cos(sa)*v,vy:Math.sin(sa)*v,life:.5,max:.5,c:Math.random()<.5?'#ffb347':'#ff6a2a',sz:1.6});}} // embers thrown off the beam
-function v2DrawJet(){const j=G2.jet;if(!j)return;const J=V2K.jet,q=Math.min(1,j.t/.12,(J.dur-j.t)/.3),L=Math.hypot(W,H),w=sp2(J.w),R=G2.R,c=clock;ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
+function v2DrawJet(){const j=G2.jet;if(!j)return;const J=V2K.jet;if(!j.held){ctx.save();ctx.strokeStyle='rgba(255,140,50,.45)';ctx.lineWidth=3;ctx.setLineDash([5,5]);ctx.beginPath();ctx.arc(hX,hY,G2.R*1.5+27,-Math.PI/2,-Math.PI/2+TAU*(1-j.t/J.dur));ctx.stroke();ctx.restore();return;} /* finger up: only the countdown, dimmed */
+  const q=Math.min(1,j.ht/.12,(J.dur-j.t)/.3),L=Math.hypot(W,H),w=sp2(J.w),R=G2.R,c=clock;ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineJoin='round';
   if(j.hist.length>1){const a0=j.hist[0].a,d=((j.a-a0+Math.PI*3)%TAU)-Math.PI;if(Math.abs(d)>.02){ctx.fillStyle=`rgba(255,110,40,${.07*q})`;ctx.beginPath();ctx.moveTo(hX,hY);ctx.arc(hX,hY,L,a0,a0+d,d<0);ctx.closePath();ctx.fill();}} // the swept wedge
   ctx.translate(hX,hY);ctx.rotate(j.a);
   const g0=ctx.createRadialGradient(R,0,0,R,0,R*1.6);g0.addColorStop(0,`rgba(255,240,200,${.9*q})`);g0.addColorStop(.4,`rgba(255,120,40,${.55*q})`);g0.addColorStop(1,'rgba(255,60,20,0)');ctx.fillStyle=g0;ctx.beginPath();ctx.arc(R,0,R*1.6,0,TAU);ctx.fill(); // the hot mouth at the rim
@@ -1064,7 +1065,7 @@ const TIP2={
   spec:['🌈','SPEKTRUM','Arka arkaya 5 farklı türde cisim yut: SPEKTRUM bonusu! Kara deliğinin altındaki noktalar serini gösterir. Aynı türden birini yutarsan seri baştan başlar, combo biterse silinir.'],
   ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
   hawking:['💨','HAWKING SALINIMI','Epey büyüdün! Sağ alttaki Hawking düğmesine dokun: kütlenin bir kısmını radyasyon olarak salarsın. Ekrandaki bütün meteorlar yok olur, yutabileceğin her şey sana çekilir ve puan kazanırsın. Ama küçülürsün.'],
-  jet:['🔥','KUASAR JETİ','Kara deliği tutarken ikinci bir parmakla ekrana bas ve gezdir: 5 saniye boyunca kara delikten parmağına doğru bir plazma ışını çıkar ve taradığı her şeyi vurur. Meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss\'lara da hasar verir. Parmağını kaldırsan da ışın 5 saniye dolana kadar yanar; yeniden basınca tekrar yönlendirirsin. Sonra 15 saniyede dolar.'],
+  jet:['🔥','KUASAR JETİ','Kara deliği tutarken ikinci bir parmakla ekrana bas ve gezdir: 5 saniye boyunca kara delikten parmağına doğru bir plazma ışını çıkar ve taradığı her şeyi vurur. Meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss\'lara da hasar verir. Parmağını kaldırınca ışın kesilir; 5 saniye dolmadan yeniden basarsan kaldığı yerden devam eder. Sonra 15 saniyede dolar.'],
   rad:['☢','RADYASYON','Boss üstünde radyasyon işareti belirince dalgalar geliyor demektir. Kırmızı yönlerden dalgalar yayılır, aralarında boşluk vardır: dalga geçerken boşlukta dur. Değersen küçülürsün (can gitmez). Kalkan ve Vortex seni korur.'],
   bossNova:['💥','SÜPERNOVA','Patlayan yıldız: her 7 saniyede bir parlayıp etrafa enkaz saçar. Enkazı yut: her parça onu küçültür. Yeşile dönünce bütünüyle yut!']};
 function v2TipFor(o){let id=null;
