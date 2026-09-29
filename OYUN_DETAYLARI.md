@@ -156,7 +156,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 - **🌀 SOLUCAN DELİĞİ**: Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir.
 
 ## 5. Güçler, kabuklar ve bosslar
-- **⚡ GALİBİYET SERİSİ**: Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: 1 galibiyet 1 gümüş kabuk, 2 galibiyet 2 gümüş kabuk, 3 ve üstü 2 gümüş kabuk ve 1 altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.
+- **⚡ GALİBİYET SERİSİ**: Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: 1 galibiyet 1 gümüş kabuk, 2 ve üstü 2 gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.
 - **🔴 YAYLAR**: Kara deliğin etrafındaki üç kırmızı yay, o anki canın darbe hakkı. Her çarpma bir yay koparır; üçü de giderse bir kalp söner ve yaylar yenilenir. Enerji topu kopan bir yayı onarır.
 - **⚪ GÜMÜŞ KABUK**: Üst üste 3 kusursuz kaçış bir yaya gümüş kabuk giydirir. Kabuk bir darbeyi emer. Aynı seviyede 2 kez kaybedersen seviyeye bir kabukla başlarsın.
 - **🟡 ALTIN KABUK**: Boss'un zayıf noktalarını kırdıkça kazanılır. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler.
@@ -186,7 +186,7 @@ Sayısal değerler: kalkan 10 sn (30 💎) · Süpernova 20 💎, seviye başın
 - **🎁 KAPTANIN HEDİYESİ**: Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al. Nadiren bir kutuda BÜYÜK HAZİNE saklıdır: 1000 yıldız ve 50 elmas. Reklam izleyerek bulma şansını yarı yarıya çıkarabilirsin.
 - **🛡 KALKAN**: Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Kozmos ve meydan okumalarda kullanılmaz.
 - **❤️ YEDEK CAN**: Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).
-- **⏱ ZAMAN KRİSTALİ**: Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.
+- **⏱ ZAMAN KRİSTALİ**: Boss ya da zor seviyede süre dolunca açılan pencerede kullanılır: bossta +30 sn, zor seviyede +15 sn. Kendiliğinden harcanmaz.
 - **💎 SÜPERNOVA**: Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin %15’i kadar bonus puan gelir, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.
 - **💎 ELMASLA DEVAM**: Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.
 
@@ -233,9 +233,13 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 ## 9. Tanıtım kartları (ilk karşılaşmada)
 
 - 🔥 **VORTEX**: Vortex barın doldu! Ekrana dokun: 5 saniye boyunca kara deliğin devleşir, her şeyi çeker, puanın ×2 olur ve meteorlar sana zarar veremez.
-- ⚡ **GALİBİYET SERİSİ**: Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: 1 galibiyet 1 gümüş kabuk, 2 galibiyet 2 gümüş kabuk, 3 ve üstü 2 gümüş kabuk ve 1 altın kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.
+- ⚡ **GALİBİYET SERİSİ**: Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: 1 galibiyet 1 gümüş kabuk, 2 ve üstü 2 gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.
 - 🔥 **ZOR SEVİYE**: Süre dolmadan hedefe ulaş; meteorlar daha sık gelir. Güçlerini burada kullan.
-- 🟡 **ALTIN KABUK**: Boss'un zayıf noktalarını kırarak altın kabuk kazandın. Bir sonraki darbeyi o karşılar ve patlayıp etrafındaki meteorları siler.
+- 🟡 **ALTIN KABUK**: Her evrenin son üç seviyesinde (x8, x9, x0) kazanılır: kusursuz kaçışlarla (x8'de 5, x9'da 4, boss'ta 3), boss / rakip / takımyıldızı günlük görevlerinin ödülüyle (saklanır, en fazla 1; bu seviyelerde kendiliğinden takılır), kalkanın süresi bitince, Hawking tek seferde 3+ meteor silince ya da boss'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler. Galibiyet serisi artık altın kabuk vermez.
+- ⏱ **SÜRE DOLDU PENCERESİ**: Boss ya da zor seviyede süre bitince can gitmez; pencere yalnızca süre satar: ⏱ zaman kristali, 💎 20 (aynı seviyede her alımda iki katı: 20 → 40 → 80) ya da seviye başına 1 reklam (+15 sn). Yıldızla süre alınmaz.
+- ⭐ **YILDIZLA DEVAM**: Canın bitince 300 ⭐ (zor seviyede 450 ⭐), günde en fazla 3 kez.
+- 🕳️ **ARŞİVCİ GÖRÜNÜMLERİ**: Atlas'ta 10 cisimde ustalaşınca Arşiv Usturlabı, 20'de Yıldız Haritası, 29'un hepsinde Kozmik Koleksiyon kara delik görünümü açılır.
+- 🔬 **LABORATUVAR DENGESİ**: Seviyenin önerdiği gücün üstündeki geliştirmeler yarım etki verir; 30 ve 60'tan sonra temel zorluk artmaya devam eder. 24/28'i geçmiş eski oyunculara Hawking/Jet modülü 1. seviyede verilir.
 - ⚪ **GÜMÜŞ KABUK**: Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.
 - ⚡ **YAY ONARILDI**: Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.
 - ☄️ **METEOR VE YAYLAR**: Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.
