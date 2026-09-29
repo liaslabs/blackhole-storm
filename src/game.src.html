@@ -576,8 +576,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .labtop b{display:block;font-family:var(--fd);font-size:17px;letter-spacing:.16em;color:#dfe9ff;text-shadow:0 0 14px rgba(140,210,255,.5);}
 .labtop small{display:block;font-size:12px;color:var(--dim);margin-top:2px;}
 .labwal{justify-content:flex-start;margin:0;flex-wrap:wrap;}
-.labcvw{position:relative;border-radius:16px;overflow:hidden;border:1px solid rgba(140,210,255,.22);box-shadow:0 0 40px rgba(90,140,255,.12),inset 0 0 30px rgba(0,0,0,.6);}
-#labCv{display:block;width:100%;height:clamp(230px,38vh,330px);touch-action:manipulation;cursor:pointer;}
+.labcvw{position:relative;z-index:2;border-radius:16px;overflow:visible;border:1px solid rgba(140,210,255,.22);box-shadow:0 0 40px rgba(90,140,255,.12),inset 0 0 30px rgba(0,0,0,.6);}
+#labCv{display:block;border-radius:15px;width:100%;height:clamp(230px,38vh,330px);touch-action:manipulation;cursor:pointer;}
 .labpow{position:absolute;left:8px;right:8px;top:8px;display:flex;gap:6px;justify-content:space-between;pointer-events:none;}
 .labpow>span{font-family:var(--fm);font-size:11px;color:#cfe3ff;background:rgba(6,10,24,.72);border:1px solid rgba(140,210,255,.25);border-radius:8px;padding:3px 7px;white-space:nowrap;}
 .labpow b{color:#fff;}
@@ -619,6 +619,15 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .labnote{font-size:11px;color:var(--dim);text-align:center;padding:0 8px 6px;}
 .labpow .lslot{pointer-events:auto;margin-left:5px;min-width:18px;height:18px;padding:0 5px;border:0;border-radius:9px;background:#f2a93b;color:#1c1405;font:800 11px var(--fm);cursor:pointer;vertical-align:1px;}
 .labpow .lslot.sure{background:#ffd27a;box-shadow:0 0 10px rgba(255,200,90,.8);}
+.lslotpop{position:absolute;right:0;top:32px;z-index:3;pointer-events:auto;width:min(250px,calc(100% - 16px));display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:12px;background:rgba(10,12,24,.96);border:1px solid rgba(242,169,59,.7);box-shadow:0 10px 26px rgba(0,0,0,.6);animation:lpop .18s ease-out;}
+.lslotpop::before{content:'';position:absolute;top:-6px;right:14px;width:10px;height:10px;background:rgba(10,12,24,.96);border-left:1px solid rgba(242,169,59,.7);border-top:1px solid rgba(242,169,59,.7);transform:rotate(45deg);}
+.lslotpop b{font-family:var(--fd);font-size:12px;letter-spacing:.08em;color:#ffe2a8;}.lslotpop span{font-size:12px;line-height:1.35;color:#cfd6e6;}
+.lslotpop .btn{padding:8px;font-size:12px;background:#f2a93b;color:#1c1405;border:0;font-weight:800;}
+@keyframes lpop{from{opacity:0;transform:translateY(-4px);}}
+.ldesc{margin:0;font-size:12.5px;line-height:1.4;color:#c9d2e3;}
+@media (max-height:700px){.lpips{display:none;}.labnote{display:none;}.lsh i{width:30px;height:30px;font-size:18px;}.lsh b{font-size:14px;}.ldesc{font-size:12px;line-height:1.3;}.leff{font-size:12px;}.labsel{gap:5px;}.labstrip .lchip{padding:4px 0 3px;}}
+#labPow .lpl{font-style:normal;}#labPow.tight .lpl{display:none;}
+@media (max-width:380px){.labpow{gap:4px;left:6px;right:6px;}.labpow>span{padding:3px 5px;font-size:10px;}}
 .lq.in{padding:9px 0 0;border:0;border-top:1px dashed rgba(var(--c),.4);border-radius:0;background:none;}
 @media (max-height:760px){.labw{gap:7px;}.labtop small{display:none;}.labsel{padding:9px 10px;gap:6px;}.lsh i{width:36px;height:36px;font-size:22px;}.labnote{padding-bottom:2px;}}
 @media (prefers-reduced-motion:reduce){.lchip.bld::after,.lpips s.bld,.lbar i::after,.lgem.sure{animation:none;}}
@@ -2505,6 +2514,14 @@ const LABT=[
   {id:'magnet',ic:'🧲',n:'MIKNATIS BOBİNİ',col:'255,140,160'},
   {id:'hawk',ic:'💨',n:'HAWKING REAKTÖRÜ',col:'225,235,255',from:24,st:2},
   {id:'jet',ic:'🌠',n:'KUASAR JETİ',col:'140,225,255',from:28,st:3}]; // new features also need the black hole's evolution: Hawking the supermassive stage, the jet the full quasar
+const LAB_DESC={grav:'Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir.',
+  start:'Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin.',
+  combo:'Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır.',
+  shield:'Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez.',
+  rage:'Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın.',
+  magnet:'Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir.',
+  hawk:'Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır.',
+  jet:'İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss\'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar.'};
 const LAB_MAX=10,LAB_T=[5,20,90,270,600,1080,1800,2880,4320,5760],LAB_M=[30,60,100,160,240,340,460,600,760,950],LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
 let LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[]};
 const labRaw=id=>Math.min(LAB_MAX,LAB.lv[id]|0);
@@ -2578,7 +2595,7 @@ function labClose(){$('sLab').classList.remove('on');LV.on=false;LV.conf=null;la
 const labRotFor=i=>Math.PI/2-i*TAU/LABT.length; // the selected pod swings round to the front
 function labSelect(i){LV.sel=i;let t=labRotFor(i);while(t-LV.rot>Math.PI)t-=TAU;while(t-LV.rot<-Math.PI)t+=TAU;LV.rotT=t;LV.conf=null;labRender();sfx('click',{vol:.3,rate:1.2});}
 function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),max=lv>=LAB_MAX;
-  $('labPow').innerHTML=`<span>⚡ ${T('GÜÇ')} <b>${labPower()}</b></span><span>⚫ ${T('KÜTLE')} <b>${massFree().toLocaleString(LOC)} M</b></span><span>🔧 ${T('YUVA')} <b>${LAB.q.length}/${labSlots()}</b>${!LAB.slot2&&!vipOn()?`<button class="lslot${LV.conf==='slot2'?' sure':''}" id="labSlot2">${LV.conf==='slot2'?`💎 ${LAB_SLOT2} · ${T('AL')}`:'+'}</button>`:''}</span>`;labSlotBind();
+  $('labPow').innerHTML=`<span>⚡ <em class="lpl">${T('GÜÇ')}</em> <b>${labPower()}</b></span><span>⚫ <em class="lpl">${T('KÜTLE')}</em> <b>${massFree().toLocaleString(LOC)} M</b></span><span>🔧 <em class="lpl">${T('YUVA')}</em> <b>${LAB.q.length}/${labSlots()}</b>${!LAB.slot2&&!vipOn()?`<button class="lslot${LV.conf==='slot2'?' sure':''}" id="labSlot2">+</button>`:''}</span>`+(LV.conf==='slot2'&&!LAB.slot2?`<div class="lslotpop"><b>🔧 ${T('2. YUVA')}</b><span>${T('İki modülü aynı anda geliştir. VIP üyelikte de açık.')}</span><button class="btn" id="labSlot2Buy">💎 ${LAB_SLOT2} · ${T('SATIN AL')}</button></div>`:'');{const pw=$('labPow');pw.classList.remove('tight');if(pw.scrollWidth>pw.clientWidth+1)pw.classList.add('tight');}labSlotBind(); /* too narrow for the words: icons only */
   $('labStrip').innerHTML=LABT.map((x,i)=>{const l=labRaw(x.id),bb=labBusy(x.id),op=labOpen(x);return `<button class="lchip${i===LV.sel?' on':''}${op?'':' lock'}${bb?' bld':''}" data-i="${i}" style="--c:${x.col}"><i>${op?x.ic:'🔒'}</i><b>${op?l:'—'}</b></button>`;}).join('');
   $('labStrip').querySelectorAll('.lchip').forEach(e=>e.onclick=()=>labSelect(+e.dataset.i));
   let act='',why='';
@@ -2586,7 +2603,7 @@ function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=l
   else if(LAB.q.length>=labSlots())why=T('Tüm yuvalar dolu');else if(massFree()<LAB_M[lv])why=T('Kütle yetmiyor: {n} M daha yut',{n:(LAB_M[lv]-massFree()).toLocaleString(LOC)});else if(stars<LAB_S[lv])why=T('Yıldız yetmiyor');
   act=b?`<div class="lq in">${lqBody(b)}</div>`:!why?`<button class="btn big lgo" id="labGo">🔬 ${T('GELİŞTİR')} · ${T('SEVİYE {k}',{k:lv+1})}</button>`:`<div class="lwhy">${why}</div>`;
   $('labSel').style.setProperty('--c',m.col);
-  $('labSel').innerHTML=`<div class="lsh"><i>${m.ic}</i><div><b>${T(m.n)}</b><small>${T('SEVİYE {k}',{k:lv})} / ${LAB_MAX}</small></div></div>
+  $('labSel').innerHTML=`<div class="lsh"><i>${m.ic}</i><div><b>${T(m.n)}</b><small>${T('SEVİYE {k}',{k:lv})} / ${LAB_MAX}</small></div></div><p class="ldesc">${T(LAB_DESC[m.id])}</p>
     <div class="lpips">${Array.from({length:LAB_MAX},(_,k)=>`<s class="${k<lv?'on':b&&k===lv?'bld':''}"></s>`).join('')}</div>
     <div class="leff"><span>${T('Şimdi')}</span><b>${labEff(m.id,lv)}</b></div>${max?'':`<div class="leff nx"><span>${T('Sonraki')}</span><b>${labEff(m.id,lv+1)}</b></div>
     <div class="lcost"><span>⚫ ${LAB_M[lv].toLocaleString(LOC)} M</span>${LAB_S[lv]?`<span>⭐ ${LAB_S[lv].toLocaleString(LOC)}</span>`:''}<span>⏱ ${labMin(LAB_T[lv])}</span></div>`}${act}`;
@@ -2606,11 +2623,11 @@ function labQBind(root){
   root.querySelectorAll('[data-a]').forEach(e=>e.onclick=async()=>{const id=e.dataset.a;e.disabled=true;if(await showRewarded()){labFinish(id,'ad');labAfterFinish();}else labQueue();});
   root.querySelectorAll('[data-b]').forEach(e=>e.onclick=()=>{if(labFinish(e.dataset.b,'boost')){sfx('powerup',{vol:.4,rate:1.4});labAfterFinish();}});
 }
-function labSlotBind(){const s2=$('labSlot2');if(!s2)return;s2.onclick=e=>{e.stopPropagation();if(LV.conf!=='slot2'){LV.conf='slot2';toast('🔧',T('2. YUVA'),T('İki modülü aynı anda geliştir. VIP üyelikte de açık.'));labRender();later(()=>{if(LV.conf==='slot2'){LV.conf=null;if(LV.on)labRender();}},3000);return;} /* first tap explains and shows the price, the second buys */
-  if(diamonds<LAB_SLOT2){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:LAB_SLOT2}));return;}LV.conf=null;diamonds-=LAB_SLOT2;LAB.slot2=1;saveG();walletsRefresh();sfx('achieve',{vol:.6});LV.flash=.4;labRender();};}
+function labSlotBind(){const s2=$('labSlot2');if(!s2)return;s2.onclick=e=>{e.stopPropagation();LV.conf=LV.conf==='slot2'?null:'slot2';labRender();if(LV.conf==='slot2')later(()=>{if(LV.conf==='slot2'){LV.conf=null;if(LV.on)labRender();}},6000);}; /* "+" opens a confirm bubble; tapping it again closes it */
+  const by=$('labSlot2Buy');if(by)by.onclick=e=>{e.stopPropagation();if(diamonds<LAB_SLOT2){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:LAB_SLOT2}));return;}LV.conf=null;diamonds-=LAB_SLOT2;LAB.slot2=1;saveG();walletsRefresh();sfx('achieve',{vol:.6});LV.flash=.4;labRender();};}
 // the whole screen fits without scrolling: the scene gives up height first
 function labFit(){const s=$('sLab'),c=$('labCv');if(!s||!c||!s.classList.contains('on'))return;c.style.height='';const h0=c.getBoundingClientRect().height,over=s.scrollHeight-s.clientHeight;
-  if(over>0)c.style.height=Math.max(130,Math.floor(h0-over-1))+'px';if(Math.abs(c.getBoundingClientRect().height-LV.H)>1)labSize();}
+  if(over>0)c.style.height=Math.max(110,Math.floor(h0-over-1))+'px';if(Math.abs(c.getBoundingClientRect().height-LV.H)>1)labSize();}
 function labAfterFinish(){const d=LAB.done.splice(0);saveG();d.forEach(labCelebrate);labRender();}
 function labLive(){if(!LV.on)return;const now=Date.now();if(LAB.q.some(b=>b.end<=now)){labTick();labAfterFinish();return;}
   const S=$('sLab');for(const b of LAB.q){const e=S.querySelector(`[data-t="${b.id}"]`),p=S.querySelector(`[data-p="${b.id}"]`),g=S.querySelector(`[data-g="${b.id}"]`);

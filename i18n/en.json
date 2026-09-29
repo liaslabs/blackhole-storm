@@ -1499,5 +1499,13 @@
 "LAB HIZLANDIRMA": "LAB SPEED-UP",
 "Üçünü de bitir: +{n}": "Finish all three: +{n}",
 "+{n} dk": "+{n} min",
-"+{n} dk ⏩": "+{n} min ⏩"
+"+{n} dk ⏩": "+{n} min ⏩",
+"Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir": "Your black hole's pull field widens: bodies are drawn in from farther away",
+"Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin": "You start every level with a bigger black hole: you can swallow larger bodies from the first seconds",
+"Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır": "Your combo chain lasts longer: more time between swallows, so points multiply more",
+"Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez": "Your shield lasts longer: meteors can't hurt you for longer",
+"Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın": "Vortex lasts longer: once it's full you swallow everything on screen fast for longer",
+"Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir": "The magnet stone works longer: everything you can swallow is pulled to you for longer",
+"Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır": "When you're big, it turns part of your mass into radiation and wipes the meteors off the screen. Higher levels shorten its cooldown",
+"İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar": "A plasma beam fired with a second finger: it hits everything it sweeps and damages bosses too. Higher levels make it last longer and hit bosses harder"
 }

@@ -1499,5 +1499,13 @@
 "LAB HIZLANDIRMA": "УСКОРЕНИЕ ЛАБОРАТОРИИ",
 "Üçünü de bitir: +{n}": "Выполни все три: +{n}",
 "+{n} dk": "+{n} мин",
-"+{n} dk ⏩": "+{n} мин ⏩"
+"+{n} dk ⏩": "+{n} мин ⏩",
+"Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir": "Поле притяжения чёрной дыры расширяется: тела притягиваются издалека",
+"Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin": "Каждый уровень начинается с более крупной чёрной дырой: с первых секунд можно глотать тела побольше",
+"Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır": "Цепочка комбо гаснет позже: больше времени между поглощениями, очки множатся сильнее",
+"Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez": "Щит держится дольше: метеоры дольше не могут навредить",
+"Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın": "Вихрь длится дольше: когда он заполнен, ты дольше быстро поглощаешь всё на экране",
+"Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir": "Магнитный камень действует дольше: всё, что можно поглотить, дольше тянется к тебе",
+"Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır": "Когда ты большой, превращает часть массы в излучение и стирает метеоры с экрана. С уровнем перезарядка короче",
+"İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar": "Плазменный луч, который запускается вторым пальцем: бьёт всё, что пересекает, и ранит боссов. С уровнем длится дольше и сильнее бьёт боссов"
 }

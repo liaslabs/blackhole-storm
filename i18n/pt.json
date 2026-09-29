@@ -1499,5 +1499,13 @@
 "LAB HIZLANDIRMA": "ACELERAÇÃO DO LABORATÓRIO",
 "Üçünü de bitir: +{n}": "Complete as três: +{n}",
 "+{n} dk": "+{n} min",
-"+{n} dk ⏩": "+{n} min ⏩"
+"+{n} dk ⏩": "+{n} min ⏩",
+"Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir": "O campo de atração do seu buraco negro aumenta: os corpos são puxados de mais longe",
+"Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin": "Você começa cada fase com um buraco negro maior: desde os primeiros segundos pode engolir corpos maiores",
+"Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır": "Sua sequência de combo dura mais: mais tempo entre engolidas, os pontos se multiplicam mais",
+"Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez": "Seu escudo dura mais: os meteoros não podem te ferir por mais tempo",
+"Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın": "O Vórtice dura mais: quando enche, você engole tudo na tela rapidamente por mais tempo",
+"Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir": "A pedra-ímã funciona por mais tempo: tudo o que você pode engolir é puxado até você por mais tempo",
+"Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır": "Quando você está grande, transforma parte da massa em radiação e apaga os meteoros da tela. Níveis maiores encurtam a recarga",
+"İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar": "Um raio de plasma disparado com um segundo dedo: atinge tudo o que varre e também fere os chefões. Níveis maiores aumentam a duração e o dano ao chefão"
 }

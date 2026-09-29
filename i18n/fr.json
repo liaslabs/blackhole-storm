@@ -1499,5 +1499,13 @@
 "LAB HIZLANDIRMA": "ACCÉLÉRATION DU LABO",
 "Üçünü de bitir: +{n}": "Termine les trois : +{n}",
 "+{n} dk": "+{n} min",
-"+{n} dk ⏩": "+{n} min ⏩"
+"+{n} dk ⏩": "+{n} min ⏩",
+"Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir": "Le champ d'attraction de ton trou noir s'élargit : les corps sont attirés de plus loin",
+"Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin": "Tu commences chaque niveau avec un trou noir plus grand : dès les premières secondes tu avales des corps plus gros",
+"Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır": "Ta chaîne de combo dure plus longtemps : plus de temps entre deux avalements, les points se multiplient davantage",
+"Kalkan daha uzun sürer: meteorlar sana daha uzun süre zarar veremez": "Ton bouclier dure plus longtemps : les météores ne peuvent pas te blesser plus longtemps",
+"Vortex daha uzun sürer: dolunca ekrandaki her şeyi daha uzun süre hızla yutarsın": "Le Vortex dure plus longtemps : une fois plein, tu avales tout à l'écran à toute vitesse plus longtemps",
+"Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir": "La pierre aimantée agit plus longtemps : tout ce que tu peux avaler est attiré vers toi plus longtemps",
+"Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır": "Quand tu es gros, il change une partie de ta masse en rayonnement et efface les météores de l'écran. Les niveaux supérieurs raccourcissent la recharge",
+"İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar": "Un rayon de plasma tiré avec un deuxième doigt : il frappe tout ce qu'il balaie, boss compris. Les niveaux supérieurs l'allongent et renforcent les dégâts aux boss"
 }
