@@ -5,7 +5,7 @@ compatibility_date = "2026-09-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "blackhole-storm"
-database_id = "PASTE-THE-ID-FROM-wrangler-d1-create"
+database_id = "dc0f3d04-51d0-400b-aff3-be53eaa1d586"
 
 # once a day, a few minutes after midnight UTC: settle yesterday's prizes and drop old rows
 [triggers]
