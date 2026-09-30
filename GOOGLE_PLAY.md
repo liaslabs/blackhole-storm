@@ -82,7 +82,7 @@ Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğ
 
 1. **Geliştirici hesabı**: [play.google.com/console](https://play.google.com/console) (tek seferlik kayıt ücreti).
 2. **Uygulama oluştur**: ad "Blackhole Storm", varsayılan dil Türkçe, **Oyun**, **Ücretsiz**.
-3. **Kapalı test zorunluluğu**: 13 Kasım 2023'ten sonra açılan kişisel hesaplarda üretime çıkmadan önce
+3. **Kapalı test zorunluluğu (bizim hesap bireysel, bu şart geçerli)**: 13 Kasım 2023'ten sonra açılan kişisel hesaplarda üretime çıkmadan önce
    **en az 12 test kullanıcısı 14 gün kesintisiz** kapalı teste katılmış olmalı. Kapalı test kanalı
    oluştur, test kullanıcılarının e-postalarını ekle, `.aab` dosyasını yükle, katılım linkini paylaş.
 4. **Mağaza girişi** (aşağıdaki metinler hazır): ikon `icons/icon-512.png`, tanıtım görseli
@@ -96,8 +96,18 @@ Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğ
 | Reklamlar | Reklam ağı eklenene kadar **Hayır**; eklenince **Evet** (bkz. MONETIZATION.md) |
 | İçerik derecelendirme | Kategori: Oyun. Şiddet, korku, kumar, cinsellik, küfür yok; kullanıcılar arası iletişim yok; **dijital ürün satın alma var**. Beklenen sonuç: 3+ / Herkes |
 | Hedef kitle | **13 yaş ve üzeri** önerilir (13 yaş altını seçmek "Aileler" politikasının ek şartlarını getirir) |
-| Veri güvenliği | Veri **toplanmıyor** ve **paylaşılmıyor**. Skorlar, ayarlar ve kayıtlı klipler yalnızca cihazda kalır; paylaşım sadece kullanıcı "Paylaş"a bastığında telefonun paylaşım menüsüyle yapılır |
+| Veri güvenliği | **Veri toplanıyor: Evet · Paylaşılıyor: Hayır.** Aşağıdaki "Veri güvenliği formu" bölümüne bak |
 | Kamu sağlığı, haber, finans, devlet | Hayır |
+
+**Veri güvenliği formu (ayrıntı).** Sıralama sunucusu (Cloudflare) ve satın alma onayı yüzünden form "veri toplanıyor" diye doldurulur:
+
+- Veri aktarımda şifreleniyor mu? **Evet** (HTTPS). Kullanıcı veri silinmesini isteyebilir mi? **Evet**: `liaslabs.games@gmail.com` adresine yazarak (kayıtlar zaten 90 günde silinir).
+- **Kişisel bilgiler › Ad:** toplanıyor, paylaşılmıyor, isteğe bağlı (oyuncu adı; kullanıcı Ayarlar'dan sıralamayı kapatabilir), amaç **Uygulama işlevleri**, kişiyle ilişkilendirilmiyor.
+- **Cihaz veya diğer kimlikler:** toplanıyor (oyunun ürettiği rastgele kurulum numarası), paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
+- **Uygulama etkinliği › Diğer kullanıcı tarafından oluşturulan içerik / Uygulama içi etkileşimler:** günlük fırtına skoru ve süresi; toplanıyor, paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
+- **Finansal bilgiler › Satın alma geçmişi:** toplanıyor (satın alma jetonu, yalnızca Google'da doğrulayıp onaylamak için sunucudan geçer, saklanmaz), paylaşılmıyor, amaç **Uygulama işlevleri**. Kart ve ödeme bilgileri Google'da kalır.
+- Konum, kişiler, fotoğraf/video, ses, dosya, sağlık, mesaj, tarama geçmişi: **toplanmıyor**. Kayıtlı klipler cihazda kalır.
+
 
 6. **Uygulama içi ürünler:** Play Console → Para kazanma → Ürünler → Uygulama içi ürünler. Ürün kimlikleri, içerikleri ve önerilen fiyatlar `MONETIZATION.md` içinde. `vip_monthly` aboneliği ayrıca **Abonelikler** bölümünde, aylık otomatik yenilenen bir temel planla oluşturulur. Bunun için önce Ödemeler profili (banka hesabı) oluşturulmalı.
 7. **Sürüm**: yeni bir `.aab` her zaman daha büyük bir sürüm koduyla yüklenir (adım 3).
@@ -121,43 +131,43 @@ Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğ
 **Uygulama adı (30):** Blackhole Storm
 
 **Kısa açıklama (80):**
-> Kara deliği yönet: gök cismi halkaya girince dokun, yut ve evrimleş!
+> Kara deliği sürükle, gezegenleri yut, büyü ve kuasara dönüş!
 
 **Uzun açıklama:**
-> Gerçek Hubble ve James Webb fotoğraflarıyla kurulmuş beş bölgede, ışığı büken bir kara deliği yönetiyorsun. Bir gök cismi halkaya girince halka yeşil yanar: dokun ve yut. Merkeze ne kadar yakınsa o kadar puan.
+> Gerçek Hubble ve James Webb fotoğraflarıyla kurulmuş bir evrende kara deliğini parmağınla sürükle. Kendinden küçük gök cisimlerini yut ve büyü, meteorlardan kaç, kara deliğini kuasara dönüşene kadar evrimleştir.
 >
-> • 5 bölge: Derin Uzay, Westerlund 2, Orion, Karina ve Webb'in Kozmik Uçurumları
-> • Bosslar: nefes alan Kızıl Dev ve radyasyon ışınları saçan Magnetar
-> • Eve Dönüş görevleri: kara deliğe çekilen filoyu kurtar, tek şansın var
-> • Sapan Kurtarma: mekiği tam zamanında fırlat
-> • Kuyruklu yıldız, pulsar, antimadde, nötron yıldızı, görünmez karanlık madde ve daha fazlası
-> • Kara deliğin büyüdükçe evrimleşir, sonunda jetler fışkıran bir kuasara dönüşür
+> • Tek parmakla oynanır: sürükle, yut, büyü
+> • 5 bölge ve aralarında ışınlanma: Derin Uzay, Westerlund 2, Orion, Karina ve Webb'in Kozmik Uçurumları
+> • Her 10 seviyede bir boss: Dev Gezegen, Kırmızı Dev, Süpernova ve dahası
+> • Güçler: kalkan, süpernova, mıknatıs, Hawking salınımı ve kuasar jeti
+> • Laboratuvar: kara deliğini geliştir; evrimleştikçe yeni modüller açılır
+> • Kuyruklu yıldız, pulsar, antimadde, nötron yıldızı, kilonova, karanlık madde ve daha fazlası
 > • Seviye haritası ve yıldızlar: eski seviyeleri tekrar oyna, üç yıldızın peşine düş
-> • Günlük Kozmos: herkes aynı evrende 60 saniye yarışır; sonucunu paylaş, arkadaşına meydan oku
+> • Günün Fırtınası: herkes aynı fırtınada hayatta kalmaya çalışır; dünya sıralaması ve günlük ödüller
+> • Günlük Yarış ve meydan okuma linkleri: sonucunu paylaş, arkadaşını yarışa çağır
 > • Kozmik Atlas: yuttuğun her cismin gerçek bilimsel bilgisi
->
-> Reklam yok, hesap yok, veri toplama yok. İnternetsiz de oynanır.
+> • 9 dil, hesap gerekmez, internetsiz de oynanır
 >
 > Görseller: NASA, ESA, CSA, STScI (CC BY 4.0) · Gezegen dokuları: Solar System Scope (CC BY 4.0) · Ses: Kenney.nl, OpenGameArt (CC0)
 
 ### English
 
 **Short description (80):**
-> Guide a black hole: tap when a world enters the ring, swallow it and evolve!
+> Drag your black hole, swallow worlds, grow and become a quasar!
 
 **Full description:**
-> Command a light-bending black hole across five regions built from real Hubble and James Webb images. When a body enters the ring it glows green: tap to swallow it. The closer to the centre, the higher the score.
+> Drag a black hole with your finger through a universe built from real Hubble and James Webb images. Swallow anything smaller than you, dodge meteors, and evolve your black hole all the way into a quasar.
 >
-> • 5 regions: Deep Field, Westerlund 2, Orion, Carina and Webb's Cosmic Cliffs
-> • Bosses: a breathing Red Giant and a Magnetar sweeping radiation beams
-> • Homecoming missions: save a fleet caught in the pull, one chance only
-> • Slingshot Rescue: release the shuttle at exactly the right moment
-> • Comets, pulsars, antimatter, neutron stars, invisible dark matter and more
-> • Your black hole evolves as it grows, until it becomes a jet-blasting quasar
+> • One-finger play: drag, swallow, grow
+> • 5 regions linked by warp gates: Deep Field, Westerlund 2, Orion, Carina and Webb's Cosmic Cliffs
+> • A boss every 10 levels: Giant Planet, Red Giant, Supernova and more
+> • Powers: shield, supernova, magnet, Hawking burst and quasar jet
+> • Laboratory: upgrade your black hole; new modules open as it evolves
+> • Comets, pulsars, antimatter, neutron stars, kilonovae, dark matter and more
 > • Level map with stars: replay levels and chase three stars
-> • Daily Cosmos: everyone plays the same 60-second universe; share your result and challenge friends
+> • Storm of the Day: everyone survives the same storm, with a world ranking and daily prizes
+> • Daily Race and challenge links: share your result and dare a friend
 > • Cosmic Atlas: real science about every body you swallow
->
-> No ads, no account, no data collection. Plays offline.
+> • 9 languages, no account needed, plays offline
 >
 > Images: NASA, ESA, CSA, STScI (CC BY 4.0) · Planet textures: Solar System Scope (CC BY 4.0) · Audio: Kenney.nl, OpenGameArt (CC0)
