@@ -136,7 +136,7 @@ function v2Start(mode){
   const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
-  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -167,7 +167,7 @@ function v2Start(mode){
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
   gState='playing';lastT=performance.now();v2Ui(true);
 }
-function v2Stop(){G2.on=false;document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
+function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
 
 // ── input ─────────────────────────────────────────────
 function v2Pt(e){const r=$('fx').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
@@ -419,7 +419,7 @@ function v2Update(dt){
   if(G2.mode==='surv'&&G2.arcs<3&&gState==='playing'){G2.regT+=dt;if(G2.regT>=25){G2.regT=0;G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2Pop(T('YAY ONARILDI'),'#ff8a8a',15);}}else G2.regT=0; /* survival: a broken arc mends every 25 s */
   const S=G2.S,tk=(G2.timeT>0?V2K.time.k:1)*(G2.btT>0?V2K.bt.k:1)*(G2.killFx&&G2.killFx.boom===undefined?.35:1),lv=G2.lv;
   // timers
-  G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.tipGap>0)G2.tipGap-=dt;if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
+  G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
   if(G2.mode==='surv'){if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);} /* in levels the powers are introduced by the level-start cards */
   if(G2.featCard&&G2.t>.6&&gState==='playing'&&!G2.tip){const f=G2.featCard;if(f==='shield'&&!TIPS.gift){TIPS.gift=1;SHOP.shield++;saveG();updateUI();}if(f==='arcs')TIPS.meteor=1;if(TIPS[f]||v2Tip(f,null)){G2.featCard=null;G2.featShown=1;}}if(G2.btCD>0)G2.btCD-=dt;if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
   if(G2.timeT>0){G2.timeT-=dt;if(G2.timeT<=0)v2Call('ZAMAN NORMALE DÖNDÜ','','#8fd0ff',.8);}
@@ -1134,7 +1134,7 @@ const TIP2={
   rad:['☢','RADYASYON','Boss dalga saçar. Dalgaların arasındaki boşlukta dur; kalkan seni korur.'],
   bossNova:['💥','SÜPERNOVA','Her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut!']};
 // info cards never pile up: 8 s apart and at most two a level (the rest come later). Level, boss, event and danger cards are not held back.
-const TIP_SOFT=new Set(['crystal','energy','gold','time','bomb','mini','shard','comet','split','magnet','pulsar','mpair','dark','mirror','big','shrink','spec','over','worm','gold2','shell','repair']);
+const TIP_SOFT=new Set(['crystal','energy','gold','time','bomb','mini','shard','comet','split','magnet','pulsar','mpair','dark','mirror','big','shrink','spec','over','worm','gold2','shell','repair','wstreak']);
 function v2TipFor(o){let id=null;
   if(o.k==='meteor'){if(!(o.slow>0||o.ramp<V2K.met.ramp)){o.tipd=1;return;}id='meteor';}
   else if(['crystal','energy','gold','time','bomb','mini','shard','comet','split','anti','magnet','pulsar','mpair','dark','mirror'].includes(o.k))id=o.k;
@@ -1143,13 +1143,23 @@ function v2TipFor(o){let id=null;
   if(!id||TIPS[id]||v2Tip(id,o))o.tipd=1;}
 function v2Tip(id,tg){
   if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched))return false;
-  if(TIP_SOFT.has(id)&&!G2.tut&&(G2.tipGap>0||G2.tipN>=2))return false;
+  if(TIP_SOFT.has(id)&&!G2.tut&&(G2.tipGap>0||G2.tipN>=2||G2.tipF))return false;
+  if(TIP_SOFT.has(id)&&v2TipFlowOn())return v2TipFlow(id,tg);
+  v2TipFlowEnd();
   TIPS[id]=1;saveSoon();G2.tip={id,tg};G2.tipN=(G2.tipN||0)+1;gState='tip';DRAG.id=null;const t=TIP2[id];
   $('tip2I').textContent=t[0];$('tip2T').textContent=t[1];$('tip2D').textContent=t[2];
   const y=id==='rage'?0:id==='shield'||id==='nova'||id==='hawking'?H:tg?tg.y:hY,m=$('mTip2');m.classList.toggle('tTop',y>H*.5);m.classList.toggle('tBot',y<=H*.5);
   $('rage2')&&$('rage2').classList.toggle('hl',id==='rage');$('shTop').classList.toggle('hl',id==='shield');$('diaTop').classList.toggle('hl',id==='nova');$('hkTop').classList.toggle('hl',id==='hawking');
   v2TipAnim(id);showModal('mTip2');SND.duck(.4,1e5);sfx('bell',{vol:.5,rate:1.25});return true;
 }
+// First levels: info tips flow as a strip under the top bar while play goes on; danger, power and boss cards still pause.
+const TIP_FLOW_LV=5;
+const v2TipFlowOn=()=>G2.mode==='level'&&gameMode==='classic'&&!REPLAY&&level<=TIP_FLOW_LV;
+function v2TipFlow(id,tg){const t=TIP2[id];if(!t)return false;
+  TIPS[id]=1;saveSoon();G2.tipN=(G2.tipN||0)+1;G2.tipGap=8;const d=clamp(2.6+T(t[2]).length/45,3,7);G2.tipF={id,tg,t:d};
+  const el=$('tipFlow');$('tfI').textContent=t[0];$('tfT').textContent=t[1];$('tfD').textContent=t[2];el.style.setProperty('--d',d+'s');
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');sfx('bell',{vol:.3,rate:1.4});return true;}
+function v2TipFlowEnd(){G2.tipF=null;const el=$('tipFlow');if(el)el.classList.remove('on');}
 // power cards play a short loop in the tip card, so each power is shown, not just described
 const TIPANIM={
   arcs:(c,t,H)=>{const x=130,y=96,R=16,hits=[.9,2,3.1].filter(h=>t>h).length,arcs=t>3.9?3:3-hits,lost=t>3.1&&t<3.9||t>=3.9;
@@ -1497,7 +1507,9 @@ function v2DrawLinks(){ // bomb tether (turns red as the drag pulls it loose) an
       ctx.strokeStyle='rgba(201,168,255,.85)';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,3,0,TAU);ctx.fill();}
     ctx.restore();}
 }
-function v2DrawTipMark(){ // points at what the open tip card is about
+function v2DrawTipMark(){ // points at what the open tip card (or the flowing tip strip) is about
+  const f=G2.tipF;if(f&&f.tg&&G2.objs.includes(f.tg)){const o=f.tg,p=(clock*1.1)%1,r=o.r*1.5+sp2(8);ctx.save();ctx.globalCompositeOperation='lighter';
+    ctx.strokeStyle=`rgba(143,233,255,${.85*(1-p)})`;ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(o.x,o.y,r+p*sp2(26),0,TAU);ctx.stroke();ctx.strokeStyle='rgba(143,233,255,.55)';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(o.x,o.y,r,0,TAU);ctx.stroke();ctx.restore();}
   const t=G2.tip;if(!t||t.id==='rage'||t.id==='shield'||t.id==='buy')return;const o=t.tg,x=o?o.x:hX,y=o?o.y:hY,r=(o?o.r:G2.R)*1.5+sp2(10)+4*Math.sin(clock*6);
   ctx.save();ctx.strokeStyle='#ffd76a';ctx.lineWidth=3;ctx.shadowColor='#ffb35c';ctx.shadowBlur=14;ctx.setLineDash([8,6]);ctx.lineDashOffset=-clock*30;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.restore();}
 function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(a)*d,r=Math.max(2,o.r*.34);ctx.save();

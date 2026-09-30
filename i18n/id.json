@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "Cara membuka: capai level {n}, biarkan lubang hitammu mencapai tahap {s} ({n} massa), lalu bangun Reaktor Hawking di Laboratorium. Cara pakai: saat besar, tombol Hawking di kanan bawah mengubah sebagian massamu jadi radiasi dan menghancurkan meteor di layar",
 "IŞINLANMA": "TELEPORTASI",
 "IŞINLANMA → {s}": "TELEPORTASI → {s}",
-"DEVAM EDİYOR": "BERLANGSUNG"
+"DEVAM EDİYOR": "BERLANGSUNG",
+"BİR YILDIZ ÇÖKÜYOR": "SEBUAH BINTANG RUNTUH",
+"SEN BİR KARA DELİKSİN": "KAMU ADALAH LUBANG HITAM",
+"HOŞ GELDİN HEDİYESİ": "HADIAH SAMBUTAN",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Rangkaian login dimulai: datang setiap hari, peti terbuka di hari ke-{n}",
+"ADINI KOY": "BERI NAMAMU",
+"SONRA": "NANTI",
+"KAYDET": "SIMPAN"
 }

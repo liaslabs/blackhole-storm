@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "Pour le débloquer : atteins le niveau {n}, laisse ton trou noir atteindre le stade {s} ({n} de masse), puis construis le Réacteur Hawking au Laboratoire. Utilisation : quand tu es gros, le bouton Hawking en bas à droite change une partie de ta masse en rayonnement et détruit les météores à l'écran",
 "IŞINLANMA": "TÉLÉPORTATION",
 "IŞINLANMA → {s}": "TÉLÉPORTATION → {s}",
-"DEVAM EDİYOR": "EN COURS"
+"DEVAM EDİYOR": "EN COURS",
+"BİR YILDIZ ÇÖKÜYOR": "UNE ÉTOILE S'EFFONDRE",
+"SEN BİR KARA DELİKSİN": "TU ES UN TROU NOIR",
+"HOŞ GELDİN HEDİYESİ": "CADEAU DE BIENVENUE",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Ta série a commencé : reviens chaque jour, le coffre s'ouvre le jour {n}",
+"ADINI KOY": "CHOISIS TON NOM",
+"SONRA": "PLUS TARD",
+"KAYDET": "ENREGISTRER"
 }

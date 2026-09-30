@@ -232,6 +232,11 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 
 ## 9. Tanıtım kartları (ilk karşılaşmada)
 
+**İlk açılış akışı:** Oyun ilk kurulduğunda 3,5 saniyelik kısa bir açılış oynar: bir yıldız çöker ve kara delik doğar. Açılış dokununca geçilir; tam Lias Labs videosu Ayarlar'da kalır. Ardından doğrudan 1. seviye başlar; profil ekranı ve menü araya girmez. Oyuncuya otomatik bir isim (PİLOT-4821 gibi) ve rastgele bir avatar verilir. İlk üç seviyenin sonuç kartında "✏️ ADINI KOY" düğmesi çıkar. Skor tablosu ilk kez açıldığında isim bir kez daha sorulur; "SONRA" ile geçilebilir. İlk oturumda günlük ödül penceresi açılmaz: 1. günün ödülü 2. seviye kazanılınca "HOŞ GELDİN HEDİYESİ" olarak gelir ve 7 günlük seri orada başlar.
+
+**Akan ipuçları (1.–5. seviye):** Bilgi kartları bu seviyelerde oyunu durdurmaz. Üst barın altında 3–7 saniyelik bir şerit çıkar, ilgili cismin etrafında mavi bir halka parlar. Meteor/yaylar, kalkan, güç ve boss kartları yine oyunu durdurur. 6. seviyeden sonra bütün kartlar eskisi gibi durdurur.
+
+
 - 🔥 **VORTEX**: Vortex barın doldu! Ekrana dokun: 5 saniye boyunca kara deliğin devleşir, her şeyi çeker, puanın ×2 olur ve meteorlar sana zarar veremez.
 - ⚡ **GALİBİYET SERİSİ**: Seviyeleri üst üste geçtikçe serin büyür ve sonraki seviyeye kabuklarla başlarsın: 1 galibiyet 1 gümüş kabuk, 2 ve üstü 2 gümüş kabuk. Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.
 - 🔥 **ZOR SEVİYE**: Süre dolmadan hedefe ulaş; meteorlar daha sık gelir. Güçlerini burada kullan.
