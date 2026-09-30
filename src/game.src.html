@@ -822,7 +822,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="contRes" id="contRes"></div>
    <div class="ctime" id="contTime" hidden></div>
    <p class="muted" id="contMsg" style="font-size:14.5px;color:#dfe3ee;">Kaldığın yerden devam etmek ister misin?</p>
-   <div class="box" id="contBox"><div style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:16px;">100 ⭐ İLE DEVAM</div><div class="muted">Puanın korunur, 3 can · Mevcut: <span id="contStars">0</span> ⭐</div></div>
+   <div class="box" id="contBox"><div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:16px;">100 ⭐ İLE DEVAM</div><div class="muted">Puanın korunur, 3 can · Mevcut: <span id="contStars">0</span> ⭐</div></div>
    <div class="easeBox" id="easeBox" hidden><b>🪶 BU SEVİYEYİ KOLAYLAŞTIR</b><small>3 kez olmadı. Hedef %20 düşer, seviye baştan başlar (can harcamaz).</small><div class="row"><button class="btn cy" id="contEase">💎 15 · KOLAYLAŞTIR</button><button class="btn adbtn mon" id="contEaseAd">▶ REKLAM İZLE · KOLAYLAŞTIR</button></div></div>
    <div class="row mon"><button class="btn big adbtn" id="contAd">▶ REKLAM İZLE · 1 CANLA DEVAM</button></div>
    <div class="row mon"><button class="btn big cy" id="contLife">❤️ YEDEK CAN KULLAN</button></div>
@@ -876,7 +876,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   </div>
  <div class="modal card" id="mSprint" style="border-color:rgba(63,216,232,.45);">
    <div class="h" id="spHead" style="color:var(--cyan);">GÜNLÜK YARIŞ</div>
-   <div class="muted" id="spZone" style="font-family:"IBM Plex Sans Condensed",sans-serif;font-size:10px;letter-spacing:1px;"></div>
+   <div class="muted" id="spZone" style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:10px;letter-spacing:1px;"></div>
    <div class="big-num" id="spScore" style="font-size:44px;">0</div>
    <div class="verdict" id="spVerdict"></div>
    <div class="grid" id="spGrid"></div>
@@ -925,7 +925,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <input class="inp" id="nameInp" type="text" maxlength="11" autocomplete="off" placeholder="Pilot adın (en az 2 harf)">
   <div class="box" style="display:flex;align-items:center;justify-content:center;gap:12px;">
    <div id="prevAv" style="font-size:34px;">🚀</div>
-   <div style="text-align:start;"><div id="prevName" style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:14px;">PİLOT</div><div class="muted" style="font-size:12px;">Hazır mısın kaptan?</div></div>
+   <div style="text-align:start;"><div id="prevName" style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:14px;">PİLOT</div><div class="muted" style="font-size:12px;">Hazır mısın kaptan?</div></div>
   </div>
   <button class="btn big" id="profOk" disabled>GÖREVE BAŞLA</button>
   <button class="lnkbtn" id="profLater" hidden>SONRA</button>
@@ -1055,8 +1055,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="big-num" id="dStreak">1</div>
   <div class="wk7" id="dWeek"></div><div class="wk7t" id="dWeekT"></div>
   <div class="box"><div class="muted" style="font-size:11px;letter-spacing:1px;">BUGÜNÜN ÖDÜLÜ</div>
-   <div style="font-family:"IBM Plex Sans Condensed",sans-serif;font-size:24px;color:#ffe6a8;margin-top:4px;">+<span id="dStars">100</span> ⭐</div>
-   <div style="font-family:"IBM Plex Sans Condensed",sans-serif;font-size:17px;color:var(--cyan);">+<span id="dDia">5</span> 💎</div><div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;color:#b9ecff;margin-top:2px;">+<span id="dBoost">10 dk</span> ⏩ <span style="font-size:12px;opacity:.8">LAB HIZLANDIRMA</span></div><div class="vipline" id="dVip" hidden>👑 VIP · +15 💎 +1 🛡 ekstra</div></div>
+   <div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:24px;color:#ffe6a8;margin-top:4px;">+<span id="dStars">100</span> ⭐</div>
+   <div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:17px;color:var(--cyan);">+<span id="dDia">5</span> 💎</div><div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;color:#b9ecff;margin-top:2px;">+<span id="dBoost">10 dk</span> ⏩ <span style="font-size:12px;opacity:.8">LAB HIZLANDIRMA</span></div><div class="vipline" id="dVip" hidden>👑 VIP · +15 💎 +1 🛡 ekstra</div></div>
   <button class="btn big" id="claimBtn">AL</button>
   <div class="row mon"><button class="btn sec adbtn" id="claimAd" style="width:100%;">▶ REKLAMLA 2 KATINI AL</button></div>
  </div>
@@ -1371,7 +1371,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,qh:false,tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={noAds:false,cid:false,qh:false,ackd:[],tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 function saveG(){try{localStorage.setItem(SK,JSON.stringify({stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
@@ -1774,6 +1774,7 @@ function holeTint(){ // target halo colours: [deep, mid]
   if(bossActive())return [[.62,.12,.08],[1,.62,.48]];
   return [[.33,.29,.6],[.9,.84,1]];
 }
+const GL_DM=new Float32Array(9);
 function glDraw(t,sx=0,sy=0){
   if(!GL.ok||!GL.ready)return false;const gl=GL.gl,cv=$('bg'),k=cv.width/W;
   const tt=holeTint(),kk=.06;for(let i=0;i<3;i++){GL.deep[i]+=(tt[0][i]-GL.deep[i])*kk;GL.mid[i]+=(tt[1][i]-GL.mid[i])*kk;}
@@ -1788,7 +1789,7 @@ function glDraw(t,sx=0,sy=0){
   gl.uniform1f(u.uR,curR/RING_K*k*holeK);gl.uniform1f(u.uRing,(curR+1)*k);gl.uniform1f(u.uT,t%600);gl.uniform1f(u.uLock,lockK);gl.uniform1f(u.uScale,k);
   gl.uniform1f(u.uHeat,clamp(heat,0,1));gl.uniform1f(u.uShock,clamp(shock,0,1));gl.uniform1f(u.uFlash,clamp(flash,0,1));
   gl.uniform3fv(u.uDeep,GL.deep);gl.uniform3fv(u.uMid,GL.mid);gl.uniform1f(u.uStage,G2.on?0:stageOf(mass));gl.uniform1f(u.uSkin,SKIN.sel);gl.uniform1f(u.uHK,SKIN_HK[SKIN.sel]||1);gl.uniform1f(u.uArm,CLASSIC_ARM);
-  const dm=new Float32Array(9);let di=0;for(const b of G2.on?G2.objs:[]){if((b.kind==='dark'||b.k==='dark')&&b.st!=='dead'&&di<3){dm[di*3]=(b.x+sx)*k;dm[di*3+1]=(H-b.y-sy)*k;dm[di*3+2]=b.r*k*(G2.on?(b.st==='sw'?b.sc??1:1)*1.4:(b.suck?b.fade:1));di++;}}gl.uniform3fv(u.uDM,dm);
+  const dm=GL_DM.fill(0);let di=0;for(const b of G2.on?G2.objs:[]){if((b.kind==='dark'||b.k==='dark')&&b.st!=='dead'&&di<3){dm[di*3]=(b.x+sx)*k;dm[di*3+1]=(H-b.y-sy)*k;dm[di*3+2]=b.r*k*(G2.on?(b.st==='sw'?b.sc??1:1)*1.4:(b.suck?b.fade:1));di++;}}gl.uniform3fv(u.uDM,dm);
   gl.drawArrays(gl.TRIANGLES,0,3);
   // bodies
   const Bb=GL.body;gl.useProgram(Bb.p);gl.bindBuffer(gl.ARRAY_BUFFER,GL.qStrip);gl.enableVertexAttribArray(Bb.a);gl.vertexAttribPointer(Bb.a,2,gl.FLOAT,false,0,0);
@@ -2448,13 +2449,15 @@ function applyPurchase(p,tok){
   else{if(p.id==='starter')SHOP.starter=true;grant(p.give,p.t);}
   monApply();renderShop();return true;
 }
+function ackPurchase(p,tok){if(!LB_URL||!tok||!(p.once||p.sub)||SHOP.ackd.includes(tok))return;
+  fetch(LB_URL+'/ack',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sku:p.id,token:tok,sub:!!p.sub})}).then(r=>r.json()).then(j=>{if(j&&j.ok){SHOP.ackd.push(tok);if(SHOP.ackd.length>30)SHOP.ackd.shift();saveG();}}).catch(()=>{});} // not acknowledged yet: retried on the next launch by restorePurchases
 async function buy(id){
   const p=IAP.find(x=>x.id===id);if(!p||owned(p)||MON.busy)return;
   if(MON.mode==='test'){const ok=await fakePay(p);if(ok)applyPurchase(p,'test-'+Date.now());return;}
   if(MON.mode!=='play')return;MON.busy=true;
   try{const req=new PaymentRequest([{supportedMethods:'https://play.google.com/billing',data:{sku:p.id}}]);
     const res=await req.show();const tok=res.details&&res.details.purchaseToken;
-    if(tok){applyPurchase(p,tok);if(!p.once&&!p.sub&&MON.svc.consume)try{await MON.svc.consume(tok);}catch(e){}} // a failed consume is retried by restorePurchases
+    if(tok){applyPurchase(p,tok);ackPurchase(p,tok);if(!p.once&&!p.sub&&MON.svc.consume)try{await MON.svc.consume(tok);}catch(e){}} // a failed consume is retried by restorePurchases
     await res.complete('success');
   }catch(e){if(!(e&&e.name==='AbortError'))toast('⚠️','SATIN ALMA','Tamamlanamadı, ücret alınmadı.');}
   finally{MON.busy=false;}
@@ -2465,6 +2468,7 @@ function fakePay(p){return new Promise(res=>{$('payT').textContent=p.t;$('payD')
 async function restorePurchases(silent){
   if(MON.mode!=='play'||!MON.svc)return;
   try{let n=0,vip=false;for(const pu of await MON.svc.listPurchases()){const p=IAP.find(x=>x.id===pu.itemId);if(!p)continue;
+      if(p.sub||p.once)ackPurchase(p,pu.purchaseToken);
       if(p.sub){vip=true;vipSet(Date.now()+3*864e5);}
       else if(p.once){if(!owned(p)){applyPurchase(p,pu.purchaseToken);n++;}}
       else{if(applyPurchase(p,pu.purchaseToken))n++;try{await MON.svc.consume(pu.purchaseToken);}catch(e){}}}
@@ -2923,7 +2927,7 @@ function checkDaily(after){
   $('claimBtn').onclick=()=>claim(1);$('claimAd').textContent=SHOP.noAds?'🎁 2 KATINI AL':'▶ REKLAMLA 2 KATINI AL';$('claimAd').parentNode.hidden=!monOn()||!adReady();
   $('claimAd').onclick=async()=>{if(await showRewarded())claim(2);};
   $('dailyPrev').style.display='block';
-  $('dailyPrev').innerHTML=`<div style="font-family:"IBM Plex Sans Condensed",sans-serif;color:var(--gold);font-size:11px;letter-spacing:1px;">🔥 GÜNLÜK BONUS HAZIR</div><div class="muted">${loginStreak} günlük seri · +${sr} ⭐ +${dr} 💎${vip?' · 👑 +15 💎 +1 🛡':''}</div>`;
+  $('dailyPrev').innerHTML=`<div style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:11px;letter-spacing:1px;">🔥 GÜNLÜK BONUS HAZIR</div><div class="muted">${loginStreak} günlük seri · +${sr} ⭐ +${dr} 💎${vip?' · 👑 +15 💎 +1 🛡':''}</div>`;
   $('sDaily').classList.add('on');saveG();return true;
 }
 
@@ -3356,7 +3360,7 @@ $('gw').addEventListener('mousedown',e=>{if(uiTarget(e)||!G2.on)return;const [x,
 addEventListener('mousemove',e=>{if(!G2.on)return;const [x,y]=v2Pt(e);if(DRAG.id==='m')v2Move(x,y,'m');if(e.buttons&2)v2JetAim(x,y);});
 addEventListener('mouseup',e=>{if(e.button===2){v2JetLift();return;}if(DRAG.id==='m')v2Up('m');});
 $('gw').addEventListener('touchstart',e=>{if(uiTarget(e)||!G2.on)return;
-  e.preventDefault();for(const t of e.changedTouches){const [x,y]=v2Pt(t);if(DRAG.id!==null&&DRAG.id!==t.identifier){JETF=t.identifier;v2Jet(x,y);}else v2Down(x,y,t.identifier);}},{passive:false}); // one finger steers; a second finger fires the quasar jet and sweeps it
+  e.preventDefault();if(JETF!==null&&![...e.touches].some(t=>t.identifier===JETF))JETF=null;for(const t of e.changedTouches){const [x,y]=v2Pt(t);if(DRAG.id!==null&&DRAG.id!==t.identifier){if(JETF===null){JETF=t.identifier;v2Jet(x,y);}}else v2Down(x,y,t.identifier);}},{passive:false}); // one finger steers; a second finger fires the quasar jet and sweeps it
 $('gw').addEventListener('contextmenu',e=>{if(G2.on)e.preventDefault();});let JETF=null;
 $('gw').addEventListener('touchmove',e=>{if(!G2.on)return;e.preventDefault();for(const t of e.changedTouches){const [x,y]=v2Pt(t);if(t.identifier===DRAG.id)v2Move(x,y,t.identifier);else if(t.identifier===JETF)v2JetAim(x,y);}},{passive:false});
 const v2End=e=>{if(!G2.on)return;for(const t of e.changedTouches){if(t.identifier===DRAG.id)v2Up(t.identifier);else if(t.identifier===JETF){JETF=null;v2JetLift();}}}; /* a lifted jet finger leaves the beam burning on its last line */
@@ -3417,6 +3421,7 @@ if(!canLink())$('privRow').innerHTML='🔒 Oyun kişisel veri toplamaz; skorlar 
 // ══════════════════════════════════════════════════════
 // UI WIRING
 // ══════════════════════════════════════════════════════
+{const wake=()=>{if(!SND.ctx||SND.ctx.state!=='running')SND.resume();};addEventListener('pointerup',wake,true);addEventListener('keydown',wake,true);addEventListener('pointerdown',wake,true);} // browsers start audio suspended until a gesture
 document.addEventListener('click',e=>{if(e.target.closest('button,.av,.mode,.popt'))sfx('click',{vol:.35,rev:0});},true);
 const AVATARS=['🚀','👽','👾','🧠','🎯','⚡','🪐','☄️','🌌','💫','🤖','🔭','🦾','🌠','🛸'];let selAv=null;
 function buildProfile(){
@@ -3586,7 +3591,8 @@ monInit();
     if(pendingChal){showMenu();offerChallenge();if(!seen)introShort(null);}
     else{const go=()=>{selMode('classic');SND.resume();SND.startDrone();SND.music('game');resize();resetRun(true,false);};if(seen)go();else introShort(go);}}}
 requestAnimationFrame(t=>{lastT=t;loop(t);});
-if('serviceWorker' in navigator&&canLink()&&window.top===window)navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator&&canLink()&&window.top===window){navigator.serviceWorker.register('sw.js').catch(()=>{});
+  later(()=>{if(navigator.serviceWorker.controller&&navigator.onLine!==false)['z1','z2','z3','z4','boss'].forEach((k,i)=>later(()=>fetch('music/'+k+'.mp3').catch(()=>{}),i*2000));},25000);} // the worker caches what passes through
 let installEvt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;$('installBtn').style.display='';});
 $('installBtn').onclick=async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice;}catch(e){}installEvt=null;$('installBtn').style.display='none';};
 const Z0=zoneOf(savedLevel);curZone=Z0;

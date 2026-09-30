@@ -6,3 +6,7 @@ compatibility_date = "2026-09-01"
 binding = "DB"
 database_name = "blackhole-storm"
 database_id = "PASTE-THE-ID-FROM-wrangler-d1-create"
+
+# once a day, a few minutes after midnight UTC: settle yesterday's prizes and drop old rows
+[triggers]
+crons = ["7 0 * * *"]

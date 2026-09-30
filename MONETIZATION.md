@@ -135,16 +135,24 @@ edilir ve ürün geri alınır. Kurallar:
 | Ürün | Oyun şu an ne yapıyor | Eksik |
 |---|---|---|
 | Elmas/yıldız paketleri (tüketilebilir) | `consume()` çağırıyor; bu Google tarafından onay sayılır. Başarısız olursa açılışta tekrar dener. | Yok |
-| Başlangıç paketi, Kozmik Kimlik, Reklamsız (tek seferlik) | Ürünü veriyor ama onaylamıyor | Sunucu tarafı onay |
-| VIP (abonelik) | Ürünü veriyor ama onaylamıyor | Sunucu tarafı onay |
+| Kuasar Hazinesi, Başlangıç paketi, Kozmik Kimlik, Reklamsız (tek seferlik) | Ürünü verir, jetonu sunucunun `/ack` ucuna gönderir; sunucu Google'da doğrulayıp onaylar. Onaylanamazsa her açılışta tekrar dener. | Sunucuya iki gizli bilgi girmek (aşağıda) |
+| VIP (abonelik) | Aynı yol: `/ack` aboneliği doğrulayıp onaylar | Aynı |
 
-Tek seferlik ürünler ve abonelik, TWA'da yalnızca bir **sunucu** üzerinden (Google Play Developer API ve bir hizmet
-hesabı ile) onaylanabilir. Google aynı sunucuda satın alma jetonunun doğrulanmasını da önerir. Seçenekler:
+Onay, sıralama sunucusuyla aynı Cloudflare Worker'da (`server/worker.js`, `POST /ack`). Çalışması için bir kez:
 
-1. **Küçük bir sunucu fonksiyonu** (ör. Cloudflare Worker veya Firebase Functions, ücretsiz katman yeterli): oyun
-   jetonu gönderir, sunucu Google'a doğrulatıp onaylar, oyun ürünü ancak "onaylandı" cevabı gelince verir.
-2. **Sunucu kurulana kadar** yalnızca tüketilebilir paketleri satmak; Başlangıç paketi, Kozmik Kimlik, Reklamsız ve VIP'i Play
-   Console'da etkinleştirmemek.
+1. Play Console › Kurulum › API erişimi: bir Google Cloud projesi bağla, bir **hizmet hesabı** oluştur, ona
+   "Finansal verileri görüntüleme" ve "Siparişleri ve abonelikleri yönetme" izinlerini ver, JSON anahtarını indir.
+2. `server/` klasöründe:
+   ```
+   npx wrangler secret put GP_PKG   # uygulamanın paket adı, ör. io.github.liaslabs.blackholestorm
+   npx wrangler secret put GP_SA    # indirilen JSON anahtar dosyasının tüm içeriği
+   npx wrangler deploy
+   ```
+3. Oyunda `window.BHS_LB_URL` Worker adresini göstermeli (sıralama için zaten gerekli).
+
+Bu kurulmadan tek seferlik ürünler ve VIP satılırsa Google 3 gün sonra iade eder. O zamana kadar ya bunları Play
+Console'da etkinleştirme ya da yukarıdaki kurulumu yayından önce bitir. Şu an oyun ürünü onayı beklemeden verir;
+sahte jeton riskine karşı "önce onay, sonra ürün" sırası ileride sıkılaştırılabilir.
 
 Ayrıntı: https://developer.chrome.com/docs/android/trusted-web-activity/receive-payments-play-billing
 - İleride çevrimiçi sıralama veya düello eklenirse skorları da sunucuda doğrulamak gerekir.
