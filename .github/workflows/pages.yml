@@ -25,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Oyunu kaynaktan derle
+        run: python3 src/build.py   # index.html always matches src/ and i18n/, even if a local build was forgotten
+
       - name: Site klasörünü hazırla
         run: |
           mkdir -p _site

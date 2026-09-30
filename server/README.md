@@ -37,6 +37,11 @@ This matches `privacy.html`; update both together.
 | GET | `/top` | `?day=YYYY-MM-DD&pid=` | top 50 + your rank |
 | GET | `/prizes` | `?pid=` | unclaimed prizes (last 7 days) |
 | POST | `/claim` | `{pid,day}` | `{ok,stars}` once |
+| POST | `/ack` | `{sku,token,sub}` | `{ok}`: checks a Google Play purchase and acknowledges it (needs `GP_PKG` and `GP_SA` secrets, see `MONETIZATION.md`) |
+
+## Daily housekeeping
+`wrangler.toml` has a cron trigger (00:07 UTC): it settles the finished days' prizes and deletes rows older than 90 days.
+`GET /prizes` only reads, so opening the menu costs almost nothing. `npx wrangler deploy` installs the cron with the Worker.
 
 Checks: allowed origins (`ALLOWED` in `worker.js`), a points-per-second ceiling, 40 submissions per install per day.
 A determined cheater can still post a fake score (there are no accounts); if that happens, delete the row with

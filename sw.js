@@ -1,7 +1,7 @@
 // Offline support: the game is one self-contained index.html, so caching it plus the
 // manifest and icons is enough. Navigations try the network first so updates arrive,
 // and fall back to the cached copy when offline.
-const CACHE = 'bhs-v6';
+const CACHE = 'bhs-v7';
 const CORE = ['./', 'index.html', 'privacy.html', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png'];
 
 self.addEventListener('install', e => {
@@ -20,12 +20,12 @@ self.addEventListener('fetch', e => {
   if (req.url.endsWith('.mp4')) return; // the one-time intro video streams straight from the network (range requests)
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req)
-      .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put('index.html', copy)); return res; })
+      .then(res => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put('index.html', copy)); } return res; })
       .catch(() => caches.match('index.html')));
     return;
   }
   e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(res => {
     if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
     return res;
-  })));
+  }).catch(() => new Response('', { status: 503, statusText: 'Offline' }))));
 });

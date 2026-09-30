@@ -6,6 +6,10 @@
 //   GET  /top?day=YYYY-MM-DD&pid=...             -> {day,list:[{r,name,score,me}],me:{rank,score}|null,total}
 //   GET  /prizes?pid=...                         -> {list:[{day,rank,stars}]}   (unclaimed, last 7 days)
 //   POST /claim   {pid,day}                      -> {ok,stars}
+//   POST /ack     {sku,token,sub}                -> {ok}   checks a Google Play purchase and acknowledges it
+// Cron (wrangler.toml [triggers]): once a day settles the finished days and drops rows older than 90 days,
+// so reading prizes costs nothing extra.
+// Purchase checks need two secrets: GP_PKG (the app's package name) and GP_SA (the Play service account JSON key).
 const PRIZE = [1000, 500, 250];
 const ALLOWED = ['https://liaslabs.github.io', 'http://localhost:8766', 'http://127.0.0.1:8766'];
 const MAX_SUBS = 40;          // submissions per install per day
@@ -26,6 +30,42 @@ function cors(req) {
 }
 const json = (req, body, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...cors(req) } });
 
+// one-time products and the subscription that the app sends for acknowledgement
+const ACK_SKUS = ['quasar_hoard', 'starter', 'cosmic_id', 'no_ads', 'vip_monthly'];
+const GP = 'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/';
+let gpTok = null; // cached OAuth token for the Play Developer API
+const b64u = b => btoa(typeof b === 'string' ? b : String.fromCharCode(...new Uint8Array(b))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+async function gpToken(env) {
+  if (gpTok && gpTok.exp > Date.now() + 6e4) return gpTok.t;
+  const sa = JSON.parse(env.GP_SA), now = Math.floor(Date.now() / 1000);
+  const head = b64u(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
+  const body = b64u(JSON.stringify({ iss: sa.client_email, scope: 'https://www.googleapis.com/auth/androidpublisher', aud: 'https://oauth2.googleapis.com/token', iat: now, exp: now + 3600 }));
+  const der = Uint8Array.from(atob(sa.private_key.replace(/-----[^-]+-----|\s/g, '')), c => c.charCodeAt(0));
+  const key = await crypto.subtle.importKey('pkcs8', der, { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' }, false, ['sign']);
+  const sig = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key, new TextEncoder().encode(head + '.' + body));
+  const r = await fetch('https://oauth2.googleapis.com/token', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=' + head + '.' + body + '.' + b64u(sig) });
+  const j = await r.json(); if (!j.access_token) throw new Error('token');
+  gpTok = { t: j.access_token, exp: Date.now() + (j.expires_in || 3600) * 1000 }; return gpTok.t;
+}
+// valid purchase -> acknowledged (a no-op when it already is); anything else -> ok:false
+async function gpAck(env, sku, token, sub) {
+  const t = await gpToken(env), h = { Authorization: 'Bearer ' + t };
+  const base = GP + encodeURIComponent(env.GP_PKG) + (sub ? '/purchases/subscriptions/' : '/purchases/products/') + encodeURIComponent(sku) + '/tokens/' + encodeURIComponent(token);
+  const r = await fetch(base, { headers: h }); if (!r.ok) return false;
+  const p = await r.json();
+  const paid = sub ? (p.paymentState === 1 || p.paymentState === 2) && +p.expiryTimeMillis > Date.now() : p.purchaseState === 0;
+  if (!paid) return false;
+  if (p.acknowledgementState === 1) return true;
+  const a = await fetch(base + ':acknowledge', { method: 'POST', headers: { ...h, 'Content-Type': 'application/json' }, body: '{}' });
+  return a.ok;
+}
+async function housekeeping(DB) {
+  for (let i = 1; i <= 7; i++) await settle(DB, day(Date.now() - i * 864e5));
+  const old = day(Date.now() - 90 * 864e5); // keep at most 90 days (privacy policy)
+  await DB.prepare('DELETE FROM scores WHERE day < ?').bind(old).run(); await DB.prepare('DELETE FROM prizes WHERE day < ?').bind(old).run();
+}
+
 // Settle a finished day once: its top 3 get prize rows.
 async function settle(DB, d) {
   if (d >= day()) return;
@@ -38,6 +78,7 @@ async function settle(DB, d) {
 }
 
 export default {
+  async scheduled(evt, env, ctx) { ctx.waitUntil(housekeeping(env.DB)); },
   async fetch(req, env) {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(req) });
     const url = new URL(req.url), DB = env.DB;
@@ -72,9 +113,7 @@ export default {
       }
       if (url.pathname === '/prizes' && req.method === 'GET') {
         const pid = url.searchParams.get('pid'); if (!okPid(pid)) return json(req, { list: [] });
-        for (let i = 1; i <= 7; i++) await settle(DB, day(Date.now() - i * 864e5));
-        const old = day(Date.now() - 90 * 864e5); // keep at most 90 days (privacy policy)
-        await DB.prepare('DELETE FROM scores WHERE day < ?').bind(old).run(); await DB.prepare('DELETE FROM prizes WHERE day < ?').bind(old).run();
+        await settle(DB, day(Date.now() - 864e5)); // yesterday, in case the daily cron has not run yet (one cheap read once it has)
         const r = await DB.prepare('SELECT day, rank, stars FROM prizes WHERE pid = ? AND claimed = 0 AND day >= ? ORDER BY day').bind(pid, day(Date.now() - 7 * 864e5)).all();
         return json(req, { list: r.results || [] });
       }
@@ -85,6 +124,12 @@ export default {
         if (!p || p.claimed) return json(req, { ok: false, stars: 0 });
         const u = await DB.prepare('UPDATE prizes SET claimed = 1 WHERE day = ? AND pid = ? AND claimed = 0').bind(b.day, b.pid).run();
         return json(req, { ok: !!(u.meta && u.meta.changes), stars: u.meta && u.meta.changes ? p.stars : 0 });
+      }
+      if (url.pathname === '/ack' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({}));
+        if (!ACK_SKUS.includes(b.sku) || typeof b.token !== 'string' || b.token.length < 10 || b.token.length > 600) return json(req, { ok: false }, 400);
+        if (!env.GP_SA || !env.GP_PKG) return json(req, { ok: false, err: 'not configured' }, 503);
+        return json(req, { ok: await gpAck(env, b.sku, b.token, !!b.sub) });
       }
       if (url.pathname === '/' ) return json(req, { ok: true, service: 'blackhole-storm-leaderboard', day: day() });
       return json(req, { ok: false, err: 'not found' }, 404);
