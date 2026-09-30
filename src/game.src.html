@@ -2509,7 +2509,7 @@ const RISK={lv:0,mod:null};
 // ══════════════════════════════════════════════════════
 // PACKAGE D: DAILY STORM (survival's scenario of the day), SEASONS, WORLD LEADERBOARD
 // ══════════════════════════════════════════════════════
-const LB_URL=String(window.BHS_LB_URL||'').replace(/\/+$/,''); // the Cloudflare Worker from server/README.md; empty keeps the world board offline
+const LB_URL=String(window.BHS_LB_URL??(location.hostname==='liaslabs.github.io'?'https://blackhole-storm-lb.liaslabs-games.workers.dev':'')).replace(/\/+$/,''); // the Cloudflare Worker from server/README.md (world board, daily prizes, purchase acknowledgement); only the published site talks to it, so local tests never post scores
 const utcDay=(t=Date.now())=>new Date(t).toISOString().slice(0,10);
 function daySeed(d){let h=2166136261;for(const c of d)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;return h;}
 const STORM_MODS=[{id:'wind',ic:'🌬',n:'RÜZGÂRLI GÜN',d:'Yıldız rüzgârı sık eser.'},{id:'eclipse',ic:'🌑',n:'TUTULMA GECESİ',d:'Tutulmalar sık gelir.'},{id:'cons',ic:'✨',n:'YILDIZ YAĞMURU',d:'Takımyıldızlar sık belirir.'},
