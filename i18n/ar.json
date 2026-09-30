@@ -1531,5 +1531,9 @@
 "Yeni görünüm takıldı": "تم تفعيل المظهر الجديد",
 "{n}. lab yuvası açıldı": "تم فتح خانة المختبر {n}",
 "{n}. yuvan vardı: +{n}": "كانت لديك الخانة {n}: +{n}",
-"Kuasar Hazinesi paketiyle açılır": "يُفتح بحزمة كنز الكوازار"
+"Kuasar Hazinesi paketiyle açılır": "يُفتح بحزمة كنز الكوازار",
+"Yıldızın: {n}": "نجومك: {n}",
+"seviye başına {n} hak": "{n} لكل مستوى",
+"seviye başına son hak": "الأخيرة في هذا المستوى",
+"yetersiz · {a} gerekli (sende {b})": "غير كافية · مطلوب {a} (لديك {b})"
 }

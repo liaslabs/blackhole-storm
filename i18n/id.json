@@ -1531,5 +1531,9 @@
 "Yeni görünüm takıldı": "Tampilan baru dipasang",
 "{n}. lab yuvası açıldı": "Slot lab ke-{n} terbuka",
 "{n}. yuvan vardı: +{n}": "Kamu sudah punya slot {n}: +{n}",
-"Kuasar Hazinesi paketiyle açılır": "Terbuka dengan paket Harta Quasar"
+"Kuasar Hazinesi paketiyle açılır": "Terbuka dengan paket Harta Quasar",
+"Yıldızın: {n}": "Bintangmu: {n}",
+"seviye başına {n} hak": "{n} per level",
+"seviye başına son hak": "terakhir di level ini",
+"yetersiz · {a} gerekli (sende {b})": "tidak cukup · perlu {a} (kamu punya {b})"
 }
