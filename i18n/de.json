@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "So schaltest du ihn frei: Erreiche Level {n}, lass dein Schwarzes Loch die Stufe {s} erreichen ({n} Masse) und baue dann im Labor den Hawking-Reaktor. So benutzt du ihn: Wenn du groß bist, verwandelt die Hawking-Taste unten rechts einen Teil deiner Masse in Strahlung und zerstört die Meteore auf dem Bildschirm",
 "IŞINLANMA": "SPRUNG",
 "IŞINLANMA → {s}": "SPRUNG → {s}",
-"DEVAM EDİYOR": "LÄUFT"
+"DEVAM EDİYOR": "LÄUFT",
+"BİR YILDIZ ÇÖKÜYOR": "EIN STERN KOLLABIERT",
+"SEN BİR KARA DELİKSİN": "DU BIST EIN SCHWARZES LOCH",
+"HOŞ GELDİN HEDİYESİ": "WILLKOMMENSGESCHENK",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Deine Login-Serie hat begonnen: komm jeden Tag, an Tag {n} öffnet sich die Truhe",
+"ADINI KOY": "GIB DIR EINEN NAMEN",
+"SONRA": "SPÄTER",
+"KAYDET": "SPEICHERN"
 }

@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "Как открыть: дойди до уровня {n}, дай чёрной дыре достичь стадии {s} ({n} массы), затем построй Реактор Хокинга в Лаборатории. Как пользоваться: когда ты большой, кнопка Хокинга справа внизу превращает часть массы в излучение и уничтожает метеоры на экране",
 "IŞINLANMA": "ТЕЛЕПОРТ",
 "IŞINLANMA → {s}": "ТЕЛЕПОРТ → {s}",
-"DEVAM EDİYOR": "В ПРОЦЕССЕ"
+"DEVAM EDİYOR": "В ПРОЦЕССЕ",
+"BİR YILDIZ ÇÖKÜYOR": "ЗВЕЗДА КОЛЛАПСИРУЕТ",
+"SEN BİR KARA DELİKSİN": "ТЫ — ЧЁРНАЯ ДЫРА",
+"HOŞ GELDİN HEDİYESİ": "ПРИВЕТСТВЕННЫЙ ПОДАРОК",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Серия входов началась: заходи каждый день, на {n}-й день откроется сундук",
+"ADINI KOY": "ВЫБЕРИ ИМЯ",
+"SONRA": "ПОЗЖЕ",
+"KAYDET": "СОХРАНИТЬ"
 }

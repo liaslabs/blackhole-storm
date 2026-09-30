@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "Como desbloquear: chegue à fase {n}, deixe seu buraco negro alcançar o estágio {s} ({n} de massa) e construa o Reator Hawking no Laboratório. Como usar: quando você está grande, o botão Hawking no canto inferior direito transforma parte da massa em radiação e destrói os meteoros da tela",
 "IŞINLANMA": "SALTO",
 "IŞINLANMA → {s}": "SALTO → {s}",
-"DEVAM EDİYOR": "EM ANDAMENTO"
+"DEVAM EDİYOR": "EM ANDAMENTO",
+"BİR YILDIZ ÇÖKÜYOR": "UMA ESTRELA ESTÁ COLAPSANDO",
+"SEN BİR KARA DELİKSİN": "VOCÊ É UM BURACO NEGRO",
+"HOŞ GELDİN HEDİYESİ": "PRESENTE DE BOAS-VINDAS",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Sua sequência começou: volte todo dia, o baú abre no dia {n}",
+"ADINI KOY": "DÊ SEU NOME",
+"SONRA": "DEPOIS",
+"KAYDET": "SALVAR"
 }

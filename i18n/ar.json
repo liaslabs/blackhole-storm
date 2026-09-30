@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "كيف يُفتح: بلغ المستوى {n}، ودع ثقبك الأسود يصل إلى مرحلة {s} ({n} كتلة)، ثم ابنِ مفاعل هوكينغ في المختبر. طريقة الاستخدام: عندما تكون كبيرًا يحوّل زر هوكينغ أسفل اليمين جزءًا من كتلتك إلى إشعاع ويدمّر النيازك على الشاشة",
 "IŞINLANMA": "انتقال",
 "IŞINLANMA → {s}": "انتقال ← {s}",
-"DEVAM EDİYOR": "جارٍ"
+"DEVAM EDİYOR": "جارٍ",
+"BİR YILDIZ ÇÖKÜYOR": "نجمٌ ينهار",
+"SEN BİR KARA DELİKSİN": "أنت ثقب أسود",
+"HOŞ GELDİN HEDİYESİ": "هدية الترحيب",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "بدأت سلسلة دخولك: عُد كل يوم، يُفتح الصندوق في اليوم {n}",
+"ADINI KOY": "اختر اسمك",
+"SONRA": "لاحقًا",
+"KAYDET": "حفظ"
 }

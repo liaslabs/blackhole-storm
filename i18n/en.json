@@ -1513,5 +1513,12 @@
 "Nasıl açılır: {n}. seviyeye gel, kara deliğin {s} evresine ulaşsın ({n} kütle), sonra Laboratuvarda Hawking Reaktörü'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder": "How to unlock: reach level {n}, let your black hole reach the {s} stage ({n} mass), then build the Hawking Reactor in the Laboratory. How to use: when you're big, the Hawking button at the bottom right turns part of your mass into radiation and destroys the meteors on screen",
 "IŞINLANMA": "WARP",
 "IŞINLANMA → {s}": "WARP → {s}",
-"DEVAM EDİYOR": "IN PROGRESS"
+"DEVAM EDİYOR": "IN PROGRESS",
+"BİR YILDIZ ÇÖKÜYOR": "A STAR IS COLLAPSING",
+"SEN BİR KARA DELİKSİN": "YOU ARE A BLACK HOLE",
+"HOŞ GELDİN HEDİYESİ": "WELCOME GIFT",
+"Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Your login streak has begun: come back every day, the chest opens on day {n}",
+"ADINI KOY": "NAME YOURSELF",
+"SONRA": "LATER",
+"KAYDET": "SAVE"
 }
