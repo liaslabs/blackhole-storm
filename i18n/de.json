@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Deine Login-Serie hat begonnen: komm jeden Tag, an Tag {n} öffnet sich die Truhe",
 "ADINI KOY": "GIB DIR EINEN NAMEN",
 "SONRA": "SPÄTER",
-"KAYDET": "SPEICHERN"
+"KAYDET": "SPEICHERN",
+"EN AVANTAJLI": "TOP-WERT",
+"KUASAR HAZİNESİ": "QUASAR-SCHATZ",
+"KUASAR TACI": "QUASAR-KRONE",
+"kalıcı {n}. lab yuvası": "dauerhafter Labor-Slot {n}",
+"{n} saat lab hızlandırma": "{n} Std. Labor-Beschleunigung",
+"yalnızca bu pakette {s} görünümü": "Aussehen {s}, nur in diesem Paket",
+"değeri ₺{n}": "Wert ₺{n}",
+"Yeni görünüm takıldı": "Neues Aussehen angelegt",
+"{n}. lab yuvası açıldı": "Labor-Slot {n} freigeschaltet",
+"{n}. yuvan vardı: +{n}": "Slot {n} hattest du schon: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Mit dem Quasar-Schatz-Paket freigeschaltet"
 }

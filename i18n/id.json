@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Rangkaian login dimulai: datang setiap hari, peti terbuka di hari ke-{n}",
 "ADINI KOY": "BERI NAMAMU",
 "SONRA": "NANTI",
-"KAYDET": "SIMPAN"
+"KAYDET": "SIMPAN",
+"EN AVANTAJLI": "PALING UNTUNG",
+"KUASAR HAZİNESİ": "HARTA QUASAR",
+"KUASAR TACI": "MAHKOTA QUASAR",
+"kalıcı {n}. lab yuvası": "slot lab ke-{n} permanen",
+"{n} saat lab hızlandırma": "{n} jam percepatan lab",
+"yalnızca bu pakette {s} görünümü": "tampilan {s}, hanya di paket ini",
+"değeri ₺{n}": "senilai ₺{n}",
+"Yeni görünüm takıldı": "Tampilan baru dipasang",
+"{n}. lab yuvası açıldı": "Slot lab ke-{n} terbuka",
+"{n}. yuvan vardı: +{n}": "Kamu sudah punya slot {n}: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Terbuka dengan paket Harta Quasar"
 }

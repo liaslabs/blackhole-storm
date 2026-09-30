@@ -12,6 +12,7 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 
 | Ürün kimliği | Ad | İçerik | Tür (oyunun davranışı) | Önerilen fiyat |
 |---|---|---|---|---|
+| `quasar_hoard` | Kuasar Hazinesi (çapa paketi; mağazada en üstte, 6. seviyeye gelince görünür, "değeri ₺235+") | 2.400 💎 · kalıcı 2. lab yuvası (zaten varsa +300 💎) · 24 saat lab hızlandırma · yalnızca bu pakette Kuasar Tacı görünümü · 10 kalkan · 10 yedek can · 5 zaman kristali | Tek sefer (tüketilmez) | ₺199,99 |
 | `starter` | Başlangıç Paketi | 300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali | Tek sefer (tüketilmez) | ₺19,99 |
 | `captain` | Kaptan Seti | 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎 | Tekrar alınabilir | ₺29,99 |
 | `cosmic_id` | Kozmik Kimlik | Oyuncunun ismi kara deliğin içinde (11 harfe kadar, delik büyüdükçe açılır) + Pembe Fırtına ve Piksel Nebula görünümleri | Tek sefer, kalıcı | ₺19,99 |
@@ -75,7 +76,7 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
 
 - **Satın almalar:** Google Play Billing, Digital Goods API ile bağlandı (`android/twa-manifest.json` → `playBilling`).
   Android paketi bu ayarla derlendi (izin: `com.android.vending.BILLING`, en düşük Android 6.0).
-  Kalıcı ürünler (`starter`, `cosmic_id`, `no_ads`) ve aktif VIP aboneliği cihaz değişince **Satın alımları geri yükle** ile geri gelir.
+  Kalıcı ürünler (`quasar_hoard`, `starter`, `cosmic_id`, `no_ads`) ve aktif VIP aboneliği cihaz değişince **Satın alımları geri yükle** ile geri gelir.
   Elmas, yıldız ve eşya bakiyesi ise cihazda durur (hesap sistemi yok); uygulama silinirse gider.
 - **Reklamlar:** Oyun, reklamları `window.BHS_ADS` adında bir bağlantı üzerinden istiyor
   (`rewarded()` ve `interstitial()`). Bu bağlantıyı sağlayacak reklam ağı **henüz seçilmedi** (aşağıya bak).

@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Tu racha ha comenzado: vuelve cada día, el cofre se abre el día {n}",
 "ADINI KOY": "PONTE NOMBRE",
 "SONRA": "MÁS TARDE",
-"KAYDET": "GUARDAR"
+"KAYDET": "GUARDAR",
+"EN AVANTAJLI": "MEJOR VALOR",
+"KUASAR HAZİNESİ": "TESORO CUÁSAR",
+"KUASAR TACI": "CORONA CUÁSAR",
+"kalıcı {n}. lab yuvası": "ranura {n} del laboratorio permanente",
+"{n} saat lab hızlandırma": "{n} h de aceleración del laboratorio",
+"yalnızca bu pakette {s} görünümü": "aspecto {s}, solo en este paquete",
+"değeri ₺{n}": "valor ₺{n}",
+"Yeni görünüm takıldı": "Nuevo aspecto equipado",
+"{n}. lab yuvası açıldı": "Ranura {n} del laboratorio desbloqueada",
+"{n}. yuvan vardı: +{n}": "Ya tenías la ranura {n}: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Se desbloquea con el paquete Tesoro Cuásar"
 }

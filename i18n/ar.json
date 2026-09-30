@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "بدأت سلسلة دخولك: عُد كل يوم، يُفتح الصندوق في اليوم {n}",
 "ADINI KOY": "اختر اسمك",
 "SONRA": "لاحقًا",
-"KAYDET": "حفظ"
+"KAYDET": "حفظ",
+"EN AVANTAJLI": "الأكثر توفيرًا",
+"KUASAR HAZİNESİ": "كنز الكوازار",
+"KUASAR TACI": "تاج الكوازار",
+"kalıcı {n}. lab yuvası": "خانة المختبر {n} دائمة",
+"{n} saat lab hızlandırma": "{n} ساعة تسريع للمختبر",
+"yalnızca bu pakette {s} görünümü": "مظهر {s} في هذه الحزمة فقط",
+"değeri ₺{n}": "قيمته ₺{n}",
+"Yeni görünüm takıldı": "تم تفعيل المظهر الجديد",
+"{n}. lab yuvası açıldı": "تم فتح خانة المختبر {n}",
+"{n}. yuvan vardı: +{n}": "كانت لديك الخانة {n}: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "يُفتح بحزمة كنز الكوازار"
 }
