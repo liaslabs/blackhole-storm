@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Серия входов началась: заходи каждый день, на {n}-й день откроется сундук",
 "ADINI KOY": "ВЫБЕРИ ИМЯ",
 "SONRA": "ПОЗЖЕ",
-"KAYDET": "СОХРАНИТЬ"
+"KAYDET": "СОХРАНИТЬ",
+"EN AVANTAJLI": "ВЫГОДНЕЕ ВСЕГО",
+"KUASAR HAZİNESİ": "СОКРОВИЩЕ КВАЗАРА",
+"KUASAR TACI": "КОРОНА КВАЗАРА",
+"kalıcı {n}. lab yuvası": "постоянный {n}-й слот лаборатории",
+"{n} saat lab hızlandırma": "{n} ч ускорения лаборатории",
+"yalnızca bu pakette {s} görünümü": "облик «{s}» только в этом наборе",
+"değeri ₺{n}": "ценность ₺{n}",
+"Yeni görünüm takıldı": "Новый облик установлен",
+"{n}. lab yuvası açıldı": "Открыт {n}-й слот лаборатории",
+"{n}. yuvan vardı: +{n}": "{n}-й слот уже был: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Открывается набором «Сокровище квазара»"
 }

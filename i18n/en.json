@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Your login streak has begun: come back every day, the chest opens on day {n}",
 "ADINI KOY": "NAME YOURSELF",
 "SONRA": "LATER",
-"KAYDET": "SAVE"
+"KAYDET": "SAVE",
+"EN AVANTAJLI": "TOP VALUE",
+"KUASAR HAZİNESİ": "QUASAR HOARD",
+"KUASAR TACI": "QUASAR CROWN",
+"kalıcı {n}. lab yuvası": "permanent lab slot {n}",
+"{n} saat lab hızlandırma": "{n} h lab speed-up",
+"yalnızca bu pakette {s} görünümü": "{s} look, only in this pack",
+"değeri ₺{n}": "worth ₺{n}",
+"Yeni görünüm takıldı": "New look equipped",
+"{n}. lab yuvası açıldı": "Lab slot {n} unlocked",
+"{n}. yuvan vardı: +{n}": "You already had slot {n}: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Unlocked with the Quasar Hoard pack"
 }

@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Ta série a commencé : reviens chaque jour, le coffre s'ouvre le jour {n}",
 "ADINI KOY": "CHOISIS TON NOM",
 "SONRA": "PLUS TARD",
-"KAYDET": "ENREGISTRER"
+"KAYDET": "ENREGISTRER",
+"EN AVANTAJLI": "MEILLEURE AFFAIRE",
+"KUASAR HAZİNESİ": "TRÉSOR DU QUASAR",
+"KUASAR TACI": "COURONNE DU QUASAR",
+"kalıcı {n}. lab yuvası": "emplacement de labo n°{n} permanent",
+"{n} saat lab hızlandırma": "{n} h d'accélération du labo",
+"yalnızca bu pakette {s} görünümü": "apparence {s}, uniquement dans ce pack",
+"değeri ₺{n}": "valeur ₺{n}",
+"Yeni görünüm takıldı": "Nouvelle apparence équipée",
+"{n}. lab yuvası açıldı": "Emplacement de labo n°{n} débloqué",
+"{n}. yuvan vardı: +{n}": "Tu avais déjà l'emplacement {n} : +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Débloqué avec le pack Trésor du Quasar"
 }

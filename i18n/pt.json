@@ -1520,5 +1520,16 @@
 "Giriş serin başladı: her gün gel, {n}. günde sandık açılır": "Sua sequência começou: volte todo dia, o baú abre no dia {n}",
 "ADINI KOY": "DÊ SEU NOME",
 "SONRA": "DEPOIS",
-"KAYDET": "SALVAR"
+"KAYDET": "SALVAR",
+"EN AVANTAJLI": "MELHOR VALOR",
+"KUASAR HAZİNESİ": "TESOURO QUASAR",
+"KUASAR TACI": "COROA QUASAR",
+"kalıcı {n}. lab yuvası": "vaga {n} do laboratório permanente",
+"{n} saat lab hızlandırma": "{n} h de aceleração do laboratório",
+"yalnızca bu pakette {s} görünümü": "visual {s}, só neste pacote",
+"değeri ₺{n}": "valor ₺{n}",
+"Yeni görünüm takıldı": "Novo visual equipado",
+"{n}. lab yuvası açıldı": "Vaga {n} do laboratório liberada",
+"{n}. yuvan vardı: +{n}": "Você já tinha a vaga {n}: +{n}",
+"Kuasar Hazinesi paketiyle açılır": "Liberado com o pacote Tesouro Quasar"
 }
