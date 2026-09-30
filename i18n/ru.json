@@ -1531,5 +1531,9 @@
 "Yeni görünüm takıldı": "Новый облик установлен",
 "{n}. lab yuvası açıldı": "Открыт {n}-й слот лаборатории",
 "{n}. yuvan vardı: +{n}": "{n}-й слот уже был: +{n}",
-"Kuasar Hazinesi paketiyle açılır": "Открывается набором «Сокровище квазара»"
+"Kuasar Hazinesi paketiyle açılır": "Открывается набором «Сокровище квазара»",
+"Yıldızın: {n}": "Твои звёзды: {n}",
+"seviye başına {n} hak": "{n} на уровень",
+"seviye başına son hak": "последняя на этом уровне",
+"yetersiz · {a} gerekli (sende {b})": "не хватает · нужно {a} (у тебя {b})"
 }

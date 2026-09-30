@@ -1531,5 +1531,9 @@
 "Yeni görünüm takıldı": "New look equipped",
 "{n}. lab yuvası açıldı": "Lab slot {n} unlocked",
 "{n}. yuvan vardı: +{n}": "You already had slot {n}: +{n}",
-"Kuasar Hazinesi paketiyle açılır": "Unlocked with the Quasar Hoard pack"
+"Kuasar Hazinesi paketiyle açılır": "Unlocked with the Quasar Hoard pack",
+"Yıldızın: {n}": "Your stars: {n}",
+"seviye başına {n} hak": "{n} per level",
+"seviye başına son hak": "last one this level",
+"yetersiz · {a} gerekli (sende {b})": "not enough · {a} needed (you have {b})"
 }

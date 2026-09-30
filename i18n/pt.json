@@ -1531,5 +1531,9 @@
 "Yeni görünüm takıldı": "Novo visual equipado",
 "{n}. lab yuvası açıldı": "Vaga {n} do laboratório liberada",
 "{n}. yuvan vardı: +{n}": "Você já tinha a vaga {n}: +{n}",
-"Kuasar Hazinesi paketiyle açılır": "Liberado com o pacote Tesouro Quasar"
+"Kuasar Hazinesi paketiyle açılır": "Liberado com o pacote Tesouro Quasar",
+"Yıldızın: {n}": "Suas estrelas: {n}",
+"seviye başına {n} hak": "{n} por nível",
+"seviye başına son hak": "última deste nível",
+"yetersiz · {a} gerekli (sende {b})": "insuficientes · precisa de {a} (você tem {b})"
 }
