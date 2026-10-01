@@ -1628,7 +1628,7 @@ const LANGS=[['tr','Türkçe'],['en','English'],['ku','Kurdî (Kurmancî)'],['es
 const LOCALES={tr:'tr-TR',en:'en-US',ku:'tr-TR',es:'es-ES',pt:'pt-BR',fr:'fr-FR',de:'de-DE',ru:'ru-RU',ar:'ar-u-nu-latn',id:'id-ID'};
 let LANG='tr',LOC='tr-TR';
 const I18={cache:new Map(),miss:null,nameRe:null,nodes:new WeakMap(),done:new Set()};
-const NUMRE=/%?\d+(?:[.,]\d+)*/g,PCTRE=/%\d+/g,SEPRE=/( · |\n)/;
+const NUMRE=/%?\d+(?:[.,\u00a0\u202f]\d+)*/g,PCTRE=/%\d+/g,SEPRE=/( · |\n)/;
 function detectLang(){
   for(const x of (navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||'en'])){
     const b=String(x).toLowerCase().split(/[-_]/)[0];if(b==='kmr'||b==='ku'||b==='ckb')return 'ku';if(LANGS.some(l=>l[0]===b))return b;}
