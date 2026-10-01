@@ -2601,6 +2601,8 @@ const PERKS=[{id:'grav',ic:'🌀',n:'GENİŞ ÇEKİM',d:'Çekim alanı +%4'},{id
   {id:'rage',ic:'💥',n:'UZUN VORTEX',d:'Vortex süresi +0,5 sn'},{id:'start',ic:'⚫',n:'BÜYÜK DOĞUM',d:'Başlangıç boyutu +%4'},{id:'magnet',ic:'🧲',n:'GÜÇLÜ MIKNATIS',d:'Mıknatıs süresi +1 sn'}];
 let PERK={own:{},spent:0}; // mass spent so far (the old Mass Tree levels move into the Laboratory)
 const massFree=()=>Math.max(0,Math.floor(mass)-PERK.spent);
+/* big mass reads short (11,9 bin · 11.9K): "11.896" was being read as eleven-point-something */
+function fmtM(n){n=Math.floor(n);if(n<10000)return n.toLocaleString(LOC);try{return new Intl.NumberFormat(LOC,{notation:'compact',compactDisplay:/^(tr|de)/.test(LOC)?'long':'short',maximumFractionDigits:1}).format(n);}catch(e){return n.toLocaleString(LOC);}}
 // BLACK HOLE LABORATORY — permanent upgrades that take real time to build. Mass and stars start a build; the clock does the rest.
 // A build can be finished at once with diamonds (more the longer it has left and the higher the level), shortened once by an ad,
 // or by hour tokens from the Atlas. One build slot; a second one for 250 diamonds or while VIP (never more than two for anyone).
@@ -2624,7 +2626,7 @@ const LAB_DESC={grav:'Kara deliğinin çekim alanı genişler: cisimler sana dah
   time:'Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar.',
   hawk:'Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır.',
   jet:'İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss\'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar.'};
-const LAB_MAX=10,LAB_T=[5,20,90,270,600,1080,1800,2880,4320,5760],LAB_M=[30,60,100,160,240,340,460,600,760,950],LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
+const LAB_MAX=10,LAB_T=[5,20,90,270,600,1080,1800,2880,4320,5760],LAB_M=[90,180,300,480,720,1020,1380,1800,2280,2850], /* mass x3: it piles up at ~100 a level, so building should make you choose */LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
 let LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[]};
 const labRaw=id=>Math.min(LAB_MAX,LAB.lv[id]|0);
 function labLv(id){return gameMode==='classic'?labRaw(id):0;} // the lab works in Classic and the Expedition; Survival and the Daily Race stay equal for everyone
@@ -2698,7 +2700,7 @@ function labClose(){$('sLab').classList.remove('on');LV.on=false;LV.conf=null;la
 const labRotFor=i=>Math.PI/2-i*TAU/LABT.length; // the selected pod swings round to the front
 function labSelect(i){LV.sel=i;let t=labRotFor(i);while(t-LV.rot>Math.PI)t-=TAU;while(t-LV.rot<-Math.PI)t+=TAU;LV.rotT=t;LV.conf=null;labRender();sfx('click',{vol:.3,rate:1.2});}
 function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),max=lv>=LAB_MAX;
-  $('labPow').innerHTML=`<span>⚡ <em class="lpl">${T('GÜÇ')}</em> <b>${labPower()}</b></span><span>⚫ <em class="lpl">${T('KÜTLE')}</em> <b>${massFree().toLocaleString(LOC)} M</b></span><span>🔧 <em class="lpl">${T('YUVA')}</em> <b>${LAB.q.length}/${labSlots()}</b>${!LAB.slot2&&!vipOn()?`<button class="lslot${LV.conf==='slot2'?' sure':''}" id="labSlot2">+</button>`:''}</span>`+(LV.conf==='slot2'&&!LAB.slot2?`<div class="lslotpop"><b>🔧 ${T('2. YUVA')}</b><span>${T('İki modülü aynı anda geliştir. VIP üyelikte de açık.')}</span><button class="btn" id="labSlot2Buy">💎 ${LAB_SLOT2} · ${T('SATIN AL')}</button></div>`:'');{const pw=$('labPow');pw.classList.remove('tight');if(pw.scrollWidth>pw.clientWidth+1)pw.classList.add('tight');}labSlotBind(); /* too narrow for the words: icons only */
+  $('labPow').innerHTML=`<span>⚡ <em class="lpl">${T('GÜÇ')}</em> <b>${labPower()}</b></span><span>⚫ <em class="lpl">${T('KÜTLE')}</em> <b>${fmtM(massFree())} M</b></span><span>🔧 <em class="lpl">${T('YUVA')}</em> <b>${LAB.q.length}/${labSlots()}</b>${!LAB.slot2&&!vipOn()?`<button class="lslot${LV.conf==='slot2'?' sure':''}" id="labSlot2">+</button>`:''}</span>`+(LV.conf==='slot2'&&!LAB.slot2?`<div class="lslotpop"><b>🔧 ${T('2. YUVA')}</b><span>${T('İki modülü aynı anda geliştir. VIP üyelikte de açık.')}</span><button class="btn" id="labSlot2Buy">💎 ${LAB_SLOT2} · ${T('SATIN AL')}</button></div>`:'');{const pw=$('labPow');pw.classList.remove('tight');if(pw.scrollWidth>pw.clientWidth+1)pw.classList.add('tight');}labSlotBind(); /* too narrow for the words: icons only */
   $('labStrip').innerHTML=LABT.map((x,i)=>{const l=labRaw(x.id),bb=labBusy(x.id),op=labOpen(x);return `<button class="lchip${i===LV.sel?' on':''}${op?'':' lock'}${bb?' bld':''}" data-i="${i}" style="--c:${x.col}"><i>${op?x.ic:'🔒'}</i><b>${op?l:'—'}</b></button>`;}).join('');
   $('labStrip').querySelectorAll('.lchip').forEach(e=>e.onclick=()=>labSelect(+e.dataset.i));
   let act='',why='';
