@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "Your stars: {n}",
 "seviye başına {n} hak": "{n} per level",
 "seviye başına son hak": "last one this level",
-"yetersiz · {a} gerekli (sende {b})": "not enough · {a} needed (you have {b})"
+"yetersiz · {a} gerekli (sende {b})": "not enough · {a} needed (you have {b})",
+"kilitli": "locked",
+"sıradaki seviye": "next level",
+"MALİYET": "COST",
+"bedava": "free",
+"{n} yıldız eksik": "{n} stars short",
+"seviye kazan, günlük ödül, görevler": "win levels, daily reward, missions",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "Upgrades cost mass and stars, and finish when the time is up"
 }

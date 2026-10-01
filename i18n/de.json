@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "Deine Sterne: {n}",
 "seviye başına {n} hak": "{n} pro Level",
 "seviye başına son hak": "letzte in diesem Level",
-"yetersiz · {a} gerekli (sende {b})": "nicht genug · {a} nötig (du hast {b})"
+"yetersiz · {a} gerekli (sende {b})": "nicht genug · {a} nötig (du hast {b})",
+"kilitli": "gesperrt",
+"sıradaki seviye": "nächstes Level",
+"MALİYET": "KOSTEN",
+"bedava": "gratis",
+"{n} yıldız eksik": "{n} Sterne fehlen",
+"seviye kazan, günlük ödül, görevler": "Level gewinnen, Tagesbonus, Missionen",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "Upgrades kosten Masse und Sterne und sind fertig, wenn die Zeit um ist"
 }

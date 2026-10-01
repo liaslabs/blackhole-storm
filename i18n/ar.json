@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "نجومك: {n}",
 "seviye başına {n} hak": "{n} لكل مستوى",
 "seviye başına son hak": "الأخيرة في هذا المستوى",
-"yetersiz · {a} gerekli (sende {b})": "غير كافية · مطلوب {a} (لديك {b})"
+"yetersiz · {a} gerekli (sende {b})": "غير كافية · مطلوب {a} (لديك {b})",
+"kilitli": "مقفل",
+"sıradaki seviye": "المستوى التالي",
+"MALİYET": "التكلفة",
+"bedava": "مجاناً",
+"{n} yıldız eksik": "ينقصك {n} نجمة",
+"seviye kazan, günlük ödül, görevler": "اربح المستويات، المكافأة اليومية، المهام",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "التطويرات تكلّف كتلة ونجوماً وتكتمل عند انتهاء الوقت"
 }
