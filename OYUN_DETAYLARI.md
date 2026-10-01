@@ -41,6 +41,14 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 - **💨 HIZLI KÜÇÜLME** (6, 16, 22; sonra x4 seviyeleri): cisim sayısı 1,5 kat, yemeyi bırakınca kara delik 3 kat hızlı küçülür (Zor Mod'da 4 kat). Küçülme halkası kırmızıdır.
 - **☄ METEOR KUŞAĞI** (8, 18, 28; sonra x7 seviyeleri ve 31'den itibaren rastgele olay): 2,8 sn uyarı ("⚠ DİKKAT · METEOR KUŞAĞINA GİRDİN"), sonra ~12 sn yalnızca meteor; hepsi aynı açıyla paralel şeritlerde akar, bir şerit hep boş kalır ve 4 dalgada bir kayar. Kuşak boyunca küçülme durur. Hasarsız geçiş: +500 puan ve +25 ⭐ (Zor Mod'da +50 ⭐).
 
+### Ağırlaştıran engeller
+- **🌫 YAPIŞKAN NEBULA** (35. seviyeden sonra rastgele olay, 15 sn; Zor Mod'da daha sık; Günün Fırtınası'nın olay havuzunda da var): şekil değiştiren mor bir bulut ekranın bir yanından girip öbür yanından çıkar. İçindeyken kara delik sisin içinde silüet olarak görünür ve parmağı ağır takip eder (takip katsayısı 0,97 → 0,07). Yemeye devam edilir; meteorlar buluttan etkilenmez ve sisin içinde de kor gibi görünür.
+- **❄ DONMUŞ KUYRUKLU YILDIZ** (25. seviyeden sonra): yutulunca puanı ×2 (120 taban), ama kara delik 3 sn buz tutar: kırağı, buz dikenleri, geri sayım halkası ve üstte ❄ çubuğu; bu sürede ağır hareket eder.
+- **⚛️ ANTİMADDE** artık macenta hale ve beyaz "eksi" çizgisiyle çizilir; yeşil yalnızca "yenebilir" anlamına gelir.
+
+### Geliştirici linki
+- `https://liaslabs.github.io/blackhole-storm/dev.html` (ya da `?dev=1`): ayrı kayıt alanı (`bhs_dev`), ilk 1000 seviye açık, 50.000 ⭐ ve 5.000 💎 ile başlar, yakıt yok, Kaptanın Hediyesi araya girmez, haritadaki her seviye "BU SEVİYEDEN OYNA" ile gerçek seviye olarak oynanır, sıralamaya skor gönderilmez. Oyuncunun normal kaydına dokunmaz.
+
 ### Kademeli yardımlar
 - **⏳ Ağır çekim**: 21. seviyeden itibaren (Zor Mod ve Günün Fırtınası'nda yok).
 - **⚪ Gümüş kabuk**: 51. seviyeden itibaren kusursuz kaçışla (60'a kadar aynı anda en fazla 1) ve iki kayıptan sonraki yardım olarak; 61'den itibaren galibiyet serisi de verir (1 kabuk), 71'den itibaren 2 kabuk.
