@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} مستوى مفتوح",
 "BU SEVİYEDEN OYNA": "العب من هذا المستوى",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "من حين لآخر بدءاً من المستوى {n}: سحابة متغيرة الشكل تعبر الشاشة. في داخلها يظهر الثقب الأسود كظل في الضباب ويتبع إصبعك بثقل. يمكنك مواصلة الأكل؛ احذر النيازك",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "من المستوى {n}: نقاط ×{n}، لكن بعد ابتلاعه يتجمد الثقب الأسود {n} ثوانٍ ويصبح ثقيل الحركة"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "من المستوى {n}: نقاط ×{n}، لكن بعد ابتلاعه يتجمد الثقب الأسود {n} ثوانٍ ويصبح ثقيل الحركة",
+"Günün kuralı": "قاعدة اليوم",
+"GÜNÜN KURALI": "قاعدة اليوم",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "حزام نيازك في الثانية {n} وسديم في الثانية {n}",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "الحركة البطيئة وكرة الزمن تبطئان الزمن أكثر: يصبح لديك وقت أطول للتفاعل مع النيازك. تطول مدة التباطؤ كلما تطور ثقبك الأسود",
+"ZAMAN BÜKÜCÜ": "ثانِي الزمن",
+"Ağır çekim %{a} hız": "الحركة البطيئة بسرعة {a}%",
+"Zaman Topu %{b} hız": "كرة الزمن بسرعة {b}%",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "ابتلعها: يتباطأ كل شيء {n} ثوانٍ وتبقى أنت سريعاً. تطول المدة كلما تطور ثقبك الأسود",
+"YASAKLI CİSİMLER": "أجسام محظورة",
+"KALKANLA GEÇİLDİ": "عبرت بالدرع",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "يتباطأ كل شيء وتبقى أنت سريعاً. تطول المدة مع تطور ثقبك الأسود ({n}–{n} ث)؛ وثانِي الزمن في المختبر يقوّي التباطؤ",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "الجميع يلعب الكون نفسه لمدة {n} ثانية، بسرعة عالية ومع قاعدة اليوم (أجسام محظورة، نافذة الحجم، رياح أو كسوف). يأتي حزام نيازك في الثانية {n} وسديم في الثانية {n}؛ والكومبو الطويل يضاعف النقاط حتى ×{n}. شارك نتيجتك وتحدَّ صديقاً"
 }

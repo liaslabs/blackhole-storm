@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} níveis abertos",
 "BU SEVİYEDEN OYNA": "JOGAR DESTE NÍVEL",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "De vez em quando a partir do nível {n}: uma nuvem que muda de forma atravessa a tela. Dentro dela o buraco negro vira uma silhueta na névoa e segue seu dedo pesado. Você pode continuar comendo; cuidado com os meteoros",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "A partir do nível {n}: pontos ×{n}, mas ao engolir o buraco negro congela por {n} segundos e se move pesado"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "A partir do nível {n}: pontos ×{n}, mas ao engolir o buraco negro congela por {n} segundos e se move pesado",
+"Günün kuralı": "Regra do dia",
+"GÜNÜN KURALI": "REGRA DO DIA",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "cinturão de meteoros no segundo {n}, nebulosa no {n}",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "A câmera lenta e a Bola do tempo desaceleram mais o tempo: você tem mais tempo para reagir aos meteoros. A duração cresce conforme seu buraco negro evolui",
+"ZAMAN BÜKÜCÜ": "DOBRADOR DO TEMPO",
+"Ağır çekim %{a} hız": "Câmera lenta a {a}%",
+"Zaman Topu %{b} hız": "Bola do tempo a {b}%",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Engula: tudo fica lento por {n} segundos e você continua rápido. O tempo cresce conforme seu buraco negro evolui",
+"YASAKLI CİSİMLER": "CORPOS PROIBIDOS",
+"KALKANLA GEÇİLDİ": "VENCIDO COM ESCUDO",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Tudo fica lento e você continua rápido. Dura mais conforme seu buraco negro evolui ({n}–{n} s); o Dobrador do tempo no Laboratório deixa a lentidão mais forte",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Todos jogam o mesmo universo por {n} segundos, em alta velocidade e com a regra do dia (corpos proibidos, janela de tamanho, vento ou eclipse). No segundo {n} chega um cinturão de meteoros e no {n} uma nebulosa; um combo longo multiplica os pontos até ×{n}. Compartilhe seu resultado e desafie um amigo"
 }

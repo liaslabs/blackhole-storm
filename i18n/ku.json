@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} ast vekirî",
 "BU SEVİYEDEN OYNA": "JI VÊ ASTÊ BILÎZE",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "Ji asta {n} pê ve carinan: ewrekî ku şiklê xwe diguherîne di ekranê re derbas dibe. Di hundir de kuna reş wek siya di mijê de xuya dike û giran li pey tiliya te tê. Dikarî bixwî; hay ji meteoran hebe",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Ji asta {n} pê ve: puan {n} qat, lê piştî xwarinê kuna reş {n} çirkeyan dicemide û giran diçe"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Ji asta {n} pê ve: puan {n} qat, lê piştî xwarinê kuna reş {n} çirkeyan dicemide û giran diçe",
+"Günün kuralı": "Qaydeya rojê",
+"GÜNÜN KURALI": "QAYDEYA ROJÊ",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "kembera meteoran di çirkeya {n}. de, nebula di çirkeya {n}. de",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "Hêdîkirin û Goga Demê demê bêtir hêdî dikin: ji bo bersivdana meteoran wextê te zêdetir dibe. Dirêjiya hêdîbûnê her ku kuna te ya reş pêş dikeve zêde dibe",
+"ZAMAN BÜKÜCÜ": "XWARKERA DEMÊ",
+"Ağır çekim %{a} hız": "Hêdîkirin %{a} lez",
+"Zaman Topu %{b} hız": "Goga Demê %{b} lez",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Bixwe: her tişt {n} çirkeyan hêdî dibe, tu bilez dimînî. Her ku kuna te ya reş pêş dikeve, dem dirêj dibe",
+"YASAKLI CİSİMLER": "LAŞÊN QEDEXE",
+"KALKANLA GEÇİLDİ": "BI MERTALÊ DERBAS BÛ",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Her tişt hêdî dibe, tu bilez dimînî. Her ku kuna te ya reş pêş dikeve dirêjtir dibe ({n}–{n} ç); Xwarkera Demê ya Laboratuwarê hêdîbûnê xurtir dike",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Herkes {n} çirkeyan di heman gerdûnê de dilîze, bi leza bilind û bi qaydeya rojê (laşên qedexe, pencereya mezinahiyê, ba yan girtin). Di çirkeya {n}. de kembera meteoran, di çirkeya {n}. de nebula tê; komboya dirêj puanan heta {n} qat zêde dike. Encama xwe parve bike, hevalê xwe vexwîne"
 }

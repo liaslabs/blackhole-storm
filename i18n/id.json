@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} level terbuka",
 "BU SEVİYEDEN OYNA": "MAIN DARI LEVEL INI",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "Sesekali mulai level {n}: awan yang berubah bentuk melintasi layar. Di dalamnya lubang hitam tampak seperti siluet dalam kabut dan mengikuti jarimu dengan berat. Kamu tetap bisa makan; awas meteor",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Mulai level {n}: poin ×{n}, tapi setelah ditelan lubang hitam membeku {n} detik dan bergerak berat"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Mulai level {n}: poin ×{n}, tapi setelah ditelan lubang hitam membeku {n} detik dan bergerak berat",
+"Günün kuralı": "Aturan hari ini",
+"GÜNÜN KURALI": "ATURAN HARI INI",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "sabuk meteor di detik {n}, nebula di detik {n}",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "Gerak lambat dan Bola Waktu memperlambat waktu lebih kuat: kamu punya lebih banyak waktu untuk bereaksi pada meteor. Durasinya bertambah seiring lubang hitammu berevolusi",
+"ZAMAN BÜKÜCÜ": "PEMBENGKOK WAKTU",
+"Ağır çekim %{a} hız": "Gerak lambat {a}% kecepatan",
+"Zaman Topu %{b} hız": "Bola Waktu {b}% kecepatan",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Telan: semua melambat {n} detik, kamu tetap cepat. Waktunya bertambah seiring lubang hitammu berevolusi",
+"YASAKLI CİSİMLER": "BENDA TERLARANG",
+"KALKANLA GEÇİLDİ": "DILEWATI DENGAN PERISAI",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Semua melambat, kamu tetap cepat. Durasinya makin lama seiring lubang hitammu berevolusi ({n}–{n} dtk); Pembengkok Waktu di Laboratorium memperkuat perlambatan",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Semua memainkan alam semesta yang sama selama {n} detik, dengan kecepatan tinggi dan aturan hari ini (benda terlarang, jendela ukuran, angin atau gerhana). Sabuk meteor datang di detik {n} dan nebula di detik {n}; combo panjang melipatgandakan poin hingga ×{n}. Bagikan hasilmu dan tantang temanmu"
 }
