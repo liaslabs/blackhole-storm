@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "Suas estrelas: {n}",
 "seviye başına {n} hak": "{n} por nível",
 "seviye başına son hak": "última deste nível",
-"yetersiz · {a} gerekli (sende {b})": "insuficientes · precisa de {a} (você tem {b})"
+"yetersiz · {a} gerekli (sende {b})": "insuficientes · precisa de {a} (você tem {b})",
+"kilitli": "bloqueado",
+"sıradaki seviye": "próximo nível",
+"MALİYET": "CUSTO",
+"bedava": "grátis",
+"{n} yıldız eksik": "faltam {n} estrelas",
+"seviye kazan, günlük ödül, görevler": "vença níveis, prêmio diário, missões",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "Melhorias custam massa e estrelas e terminam quando o tempo acaba"
 }

@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "Stêrkên te: {n}",
 "seviye başına {n} hak": "{n} ji bo her astê",
 "seviye başına son hak": "ya dawî ya vê astê",
-"yetersiz · {a} gerekli (sende {b})": "ne bes e · {a} pêwîst e (te {b} hene)"
+"yetersiz · {a} gerekli (sende {b})": "ne bes e · {a} pêwîst e (te {b} hene)",
+"kilitli": "girtî",
+"sıradaki seviye": "asta pêş",
+"MALİYET": "BIHA",
+"bedava": "belaş",
+"{n} yıldız eksik": "{n} stêrk kêm in",
+"seviye kazan, günlük ödül, görevler": "astan bi ser bixe, xelata rojane, peywir",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "Pêşveçûn bi girseyî û stêrkan in, dema wext qediya diqedin"
 }

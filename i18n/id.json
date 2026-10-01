@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "Bintangmu: {n}",
 "seviye başına {n} hak": "{n} per level",
 "seviye başına son hak": "terakhir di level ini",
-"yetersiz · {a} gerekli (sende {b})": "tidak cukup · perlu {a} (kamu punya {b})"
+"yetersiz · {a} gerekli (sende {b})": "tidak cukup · perlu {a} (kamu punya {b})",
+"kilitli": "terkunci",
+"sıradaki seviye": "level berikutnya",
+"MALİYET": "BIAYA",
+"bedava": "gratis",
+"{n} yıldız eksik": "kurang {n} bintang",
+"seviye kazan, günlük ödül, görevler": "menangkan level, hadiah harian, misi",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "Peningkatan memakai massa dan bintang, selesai saat waktunya habis"
 }

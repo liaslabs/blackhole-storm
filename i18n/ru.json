@@ -1535,5 +1535,12 @@
 "Yıldızın: {n}": "Твои звёзды: {n}",
 "seviye başına {n} hak": "{n} на уровень",
 "seviye başına son hak": "последняя на этом уровне",
-"yetersiz · {a} gerekli (sende {b})": "не хватает · нужно {a} (у тебя {b})"
+"yetersiz · {a} gerekli (sende {b})": "не хватает · нужно {a} (у тебя {b})",
+"kilitli": "закрыт",
+"sıradaki seviye": "следующий уровень",
+"MALİYET": "ЦЕНА",
+"bedava": "бесплатно",
+"{n} yıldız eksik": "не хватает {n} звёзд",
+"seviye kazan, günlük ödül, görevler": "проходи уровни, ежедневная награда, задания",
+"Geliştirmeler kütle ve yıldız harcar, süre dolunca biter": "Улучшения стоят массу и звёзды и завершаются по истечении времени"
 }

@@ -173,12 +173,13 @@ function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2'
 function v2Pt(e){const r=$('fx').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
 const FD2=[60,90,120]; // finger → hole distance in reference px (settings: near / middle / far)
 function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
-function v2Aim(x,y){G2.tx=x;G2.ty=y-v2Off();}
+function v2Aim(x,y){let tx=DRAG.hx+(x-DRAG.sx),ty=DRAG.hy+(y-DRAG.sy);const cx=clamp(tx,0,W),cy=clamp(ty,0,H);
+  if(cx!==tx)DRAG.sx+=tx-cx;if(cy!==ty)DRAG.sy+=ty-cy; /* held at an edge: pulling back moves it straight away */
+  G2.tx=cx;G2.ty=cy;}
 function v2Down(x,y,id){
   if(!G2.on||gState!=='playing'||DRAG.id!==null)return;
-  DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;
+  DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;DRAG.hx=hX;DRAG.hy=hY; /* the hole moves by the finger's travel from here: touching the screen never makes it jump */
   if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);}
-  if(!G2.ready)v2Aim(x,y); // with Rage ready, a tap must not yank the hole across the screen
 }
 function v2Move(x,y,id){
   if(id!==DRAG.id||!G2.on)return;DRAG.x=x;DRAG.y=y;
@@ -514,7 +515,8 @@ function v2Update(dt){
     let dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1;
     if(o.k!=='meteor'){
       const anti=G2.antiT>0&&!G2.ending&&!o.boss,ed=!anti&&(v2Edible(o)||G2.ending);
-      if(anti){if(d<Gr*1.7){const q=1-d/(Gr*1.7),A=sp2(2200)*q*odt;o.vx-=dx/d*A;o.vy-=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(320);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}}else{const f=Math.pow(.2,odt);o.vx*=f;o.vy*=f;}} // antimatter: the hole repels; pushed bodies coast to a stop instead of leaving the screen
+      if(anti){if(o.v0x===undefined){o.v0x=o.vx;o.v0y=o.vy;}if(d<Gr*1.7){const q=1-d/(Gr*1.7),A=sp2(2200)*q*odt;o.vx-=dx/d*A;o.vy-=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(320);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}}else{const f=Math.pow(.2,odt);o.vx*=f;o.vy*=f;}} // antimatter: the hole repels; pushed bodies coast to a stop instead of leaving the screen
+      else if(o.v0x!==undefined){if(d>Gr){const k=Math.min(1,odt*2.2);o.vx+=(o.v0x-o.vx)*k;o.vy+=(o.v0y-o.vy)*k;}if(Math.hypot(o.vx-o.v0x,o.vy-o.v0y)<sp2(6)||d<=Gr)o.v0x=o.v0y=undefined;} /* the push is over: bodies pick their old speed back up within half a second */
       if(d<Gr&&o.k==='bomb'&&!anti&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
       if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(2800)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(650);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
       if(d<Gr&&!anti){
@@ -995,7 +997,7 @@ function v2Split(o){ // a split planet cracks in two: both halves (half the mass
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NÖTRLENDİ +'+p,'#7dffb0',15);return;}
-  G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9);flash=Math.max(flash,.4);G2.antiT=3; // for 3 s the hole pushes everything away and can swallow nothing
+  G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9);flash=Math.max(flash,.4);G2.antiT=3;for(const q of G2.objs)if(q.k!=='meteor'&&!q.boss&&q.v0x===undefined){q.v0x=q.vx;q.v0y=q.vy;} // for 3 s the hole pushes everything away and can swallow nothing; each body remembers its cruise speed
   v2Burst(hX,hY,30,'#7dffb0',2,7,.6,2);v2Call('ANTİMADDE!','3 SN HİÇBİR ŞEY YUTAMAZSIN','#7dffb0',1.4);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
 }
 function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the screen, a blue one above the hole
