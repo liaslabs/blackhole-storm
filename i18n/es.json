@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} niveles abiertos",
 "BU SEVİYEDEN OYNA": "JUGAR DESDE ESTE NIVEL",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "De vez en cuando desde el nivel {n}: una nube que cambia de forma cruza la pantalla. Dentro, el agujero negro es una silueta en la niebla y sigue tu dedo con pesadez. Puedes seguir comiendo; cuidado con los meteoros",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Desde el nivel {n}: puntos ×{n}, pero al tragarlo el agujero negro se congela {n} segundos y se mueve pesado"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Desde el nivel {n}: puntos ×{n}, pero al tragarlo el agujero negro se congela {n} segundos y se mueve pesado",
+"Günün kuralı": "Regla del día",
+"GÜNÜN KURALI": "REGLA DEL DÍA",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "cinturón de meteoros en el segundo {n}, nebulosa en el {n}",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "La cámara lenta y la Bola del tiempo frenan más el tiempo: tienes más tiempo para reaccionar a los meteoros. La duración crece a medida que tu agujero negro evoluciona",
+"ZAMAN BÜKÜCÜ": "DOBLADOR DEL TIEMPO",
+"Ağır çekim %{a} hız": "Cámara lenta al {a}%",
+"Zaman Topu %{b} hız": "Bola del tiempo al {b}%",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Trágala: todo se ralentiza {n} segundos y tú sigues rápido. El tiempo crece a medida que evoluciona tu agujero negro",
+"YASAKLI CİSİMLER": "CUERPOS PROHIBIDOS",
+"KALKANLA GEÇİLDİ": "SUPERADO CON ESCUDO",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Todo se ralentiza y tú sigues rápido. Dura más según evoluciona tu agujero negro ({n}–{n} s); el Doblador del tiempo del Laboratorio la hace más fuerte",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Todos juegan el mismo universo {n} segundos, a gran velocidad y con la regla del día (cuerpos prohibidos, ventana de tamaño, viento o eclipse). En el segundo {n} llega un cinturón de meteoros y en el {n} una nebulosa; un combo largo multiplica los puntos hasta ×{n}. Comparte tu resultado y reta a un amigo"
 }

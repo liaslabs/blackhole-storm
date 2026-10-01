@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} niveaux ouverts",
 "BU SEVİYEDEN OYNA": "JOUER À PARTIR D'ICI",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "De temps en temps dès le niveau {n} : un nuage qui change de forme traverse l'écran. Dedans, le trou noir n'est qu'une silhouette dans la brume et suit ton doigt lourdement. Tu peux continuer à manger ; attention aux météores",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Dès le niveau {n} : points ×{n}, mais une fois avalée, le trou noir gèle {n} secondes et devient lourd"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Dès le niveau {n} : points ×{n}, mais une fois avalée, le trou noir gèle {n} secondes et devient lourd",
+"Günün kuralı": "Règle du jour",
+"GÜNÜN KURALI": "RÈGLE DU JOUR",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "ceinture de météores à la {n}e seconde, nébuleuse à la {n}e",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "Le ralenti et la Boule du temps ralentissent davantage le temps : tu as plus de temps pour réagir aux météores. La durée augmente à mesure que ton trou noir évolue",
+"ZAMAN BÜKÜCÜ": "PLIEUR DE TEMPS",
+"Ağır çekim %{a} hız": "Ralenti à {a} %",
+"Zaman Topu %{b} hız": "Boule du temps à {b} %",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Avale-la : tout ralentit pendant {n} secondes, toi tu restes rapide. La durée augmente quand ton trou noir évolue",
+"YASAKLI CİSİMLER": "CORPS INTERDITS",
+"KALKANLA GEÇİLDİ": "FRANCHI AVEC BOUCLIER",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Tout ralentit, toi tu restes rapide. Cela dure plus longtemps à mesure que ton trou noir évolue ({n}–{n} s) ; le Plieur de temps du Laboratoire renforce le ralentissement",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Tout le monde joue le même univers pendant {n} secondes, à grande vitesse et avec la règle du jour (corps interdits, fenêtre de taille, vent ou éclipse). Une ceinture de météores arrive à la {n}e seconde et une nébuleuse à la {n}e ; un long combo multiplie les points jusqu'à ×{n}. Partage ton résultat et défie un ami"
 }

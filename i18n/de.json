@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} Level offen",
 "BU SEVİYEDEN OYNA": "AB DIESEM LEVEL SPIELEN",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "Ab Level {n} ab und zu: Eine formwandelnde Wolke zieht über den Bildschirm. Darin ist das Schwarze Loch nur als Silhouette im Nebel zu sehen und folgt deinem Finger schwerfällig. Du kannst weiterfressen; pass auf Meteore auf",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Ab Level {n}: ×{n} Punkte, aber danach friert das Schwarze Loch {n} Sekunden ein und lenkt schwerfällig"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "Ab Level {n}: ×{n} Punkte, aber danach friert das Schwarze Loch {n} Sekunden ein und lenkt schwerfällig",
+"Günün kuralı": "Regel des Tages",
+"GÜNÜN KURALI": "REGEL DES TAGES",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "Meteoritengürtel in Sekunde {n}, Nebel in Sekunde {n}",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "Zeitlupe und Zeitkugel verlangsamen die Zeit stärker: Du hast mehr Zeit, auf Meteore zu reagieren. Wie lange die Verlangsamung dauert, wächst mit der Entwicklung deines Schwarzen Lochs",
+"ZAMAN BÜKÜCÜ": "ZEITBIEGER",
+"Ağır çekim %{a} hız": "Zeitlupe {a}% Tempo",
+"Zaman Topu %{b} hız": "Zeitkugel {b}% Tempo",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Verschlucke sie: Alles wird {n} Sekunden langsamer, du bleibst schnell. Die Zeit wächst mit der Entwicklung deines Schwarzen Lochs",
+"YASAKLI CİSİMLER": "VERBOTENE KÖRPER",
+"KALKANLA GEÇİLDİ": "MIT SCHILD GESCHAFFT",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Alles wird langsamer, du bleibst schnell. Es dauert länger, je weiter dein Schwarzes Loch entwickelt ist ({n}–{n} s); der Zeitbieger im Labor verstärkt die Verlangsamung",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Alle spielen {n} Sekunden im selben Universum, schnell und mit der Regel des Tages (verbotene Körper, Größenfenster, Wind oder Finsternis). In Sekunde {n} kommt ein Meteoritengürtel, in Sekunde {n} ein Nebel; eine lange Combo vervielfacht die Punkte bis ×{n}. Teile dein Ergebnis und fordere Freunde heraus"
 }

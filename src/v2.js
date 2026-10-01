@@ -10,7 +10,7 @@ const V2K={r0:34,rMax:180,rRage:240,gK:2.2,gMax:450,gMaxOver:500,off:50,follow:.
   acc:{min:.15,max:1.8,rage:3},
   rage:{dur:5,r:1.2,g:1.5,acc:1.67,score:2},time:{dur:6,k:.45},over:{dur:15,r:1.15,g:1.4,ctl:1.15},
   mini:{dur:6,k:.6,rMin:17,rMax:60,gK:2.4,gMax:150},bomb:{r:3,hold:3,pts:25,max:500},imm:.8,
-  met:{slow:.3,ramp:.3},cont:{imm:3,rage:50},
+  met:{slow:.5,ramp:.3},cont:{imm:3,rage:50},
   dodge:{lo:10,hi:35,cd:1.5},perfectK:.2,swallow:.35,
   dur:[0,60,65,70,70,75,75,80,80,90,90],comboT:[0,3,2.7,2.5,2.3]};
 // r: radius, v/dv/vm: speed at level 1, per-level increase, maximum (ref px/s); pts: score; grow: radius gain;
@@ -57,7 +57,7 @@ const MULT2=c=>c>=20?5:c>=10?4:c>=5?3:c>=3?2:1;
 // what each level brings in (level-start banner, level-complete teaser, map)
 const NEW2={2:['☄️','METEOR','Meteorlardan kaç: çarparsa bir yay kopar, 3 yay 1 can. Kıl payı geçersen KUSURSUZ KAÇIŞ.'],
   3:['🔷','KRİSTAL','Çok değerli ama genelde bir meteorun yanında. Risk alacak mısın?'],
-  4:['⏱','ZAMAN TOPU','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
+  4:['⏱','ZAMAN TOPU','Yut: her şey 4 saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar.'],
   5:['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: ekrandaki her şey sana gelir.'],
   6:['⚡','HIZ + AŞIRI YÜK','Cisimler hızlanıyor. Sınıra kadar büyürsen 15 saniyelik AŞIRI YÜK başlar.'],
   7:['↔️','YAN AKINTILAR','Cisimler artık yanlardan da geliyor.'],
@@ -82,6 +82,9 @@ const v2GoldZone=l=>l>6&&(l%10>=8||l%10===0); // the last three levels of each u
 /* shells arrive in steps after level 50: 51+ silver from near misses (one at a time until 60) and help after two misses, 61+ the win streak's silver, 71+ gold */
 const shTier=l=>l<=50?0:l<=60?1:l<=70?2:3,v2ShT=()=>G2.mode==='level'?shTier(level):0;
 function v2GoldEarn(why){if(G2.gold||G2.mode!=='level'||v2ShT()<3)return;G2.gold=1;G2.goldT=G2.t;v2Pop(T('ALTIN KABUK')+' · '+T(why),'#ffd76a',17);v2Sfx('bell',{vol:.5,rate:1.6});if(!TIPS.gold2)later(()=>v2Tip('gold2',null),700);}
+/* slowing time: slow motion runs at 50% and the time ball at 65%; each level of the Laboratory's Time Bender slows it a little more (25% / 35% at 10);
+   how long it lasts grows with the hole's evolution: star-mass, intermediate, supermassive, quasar */
+const v2Stage=()=>typeof stageOf==='function'?stageOf(mass):0,v2BtK=()=>.5-.025*labEffLv('time'),v2TimeK=()=>.65-.03*labEffLv('time'),v2BtDur=()=>[.35,.45,.55,.7][v2Stage()],v2TimeDur=()=>[4,5,6,7][v2Stage()];
 const v2BtOn=()=>!G2.hm&&!G2.dstorm&&(G2.mode==='level'?level>20:G2.lv>20); /* slow motion is a late-game help: from level 21, never in Hard Mode or the daily storm */
 const FEAT=[['arcs',2],['shield',7],['nova',21],['hawking',24],['jet',28]];
 const v2FeatReady=id=>id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
@@ -137,7 +140,7 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));
-  const rule=mode==='level'?v2RuleFor(l):null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
+  const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
   Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,iceT:0,nebIn:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,starTime:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
@@ -217,7 +220,7 @@ function v2Obj(k,x,y,vx,vy,opt={}){
   const K=OBJ2[k];const o={k,x,y,vx,vy,rr:K.r*(opt.scale||1),r:0,st:'in',t:0,inG:false,b:1e9,seen:false,rot:rnd(0,TAU),vr:rnd(-1.2,1.2),
     si:Math.floor(rnd(0,6)),wait:k==='meteor'?(opt.wait??.75):0,minGap:1e9,dodged:false,prevD:1e9,boss:!!opt.boss,noScore:false,age:0};
   o.r=o.rr*G2.S;
-  if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(1.25-.03*(G2.lv-2),.7,1.25)+.4*v2Big();o.ramp=0;} // enters slowly (longer when the hole is big), then speeds up
+  if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(.8-.02*(G2.lv-2),.45,.8)+.25*v2Big();o.ramp=0;} // enters slowly (longer when the hole is big), then speeds up
   if(k==='pulsar')o.ph=rng()*1.6;if(k==='mpair')o.sa=rng()*TAU;
   if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:k==='split'||k==='half'?14:k==='mpair'?5:k==='sat'?10:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
   G2.objs.push(o);return o;
@@ -426,7 +429,7 @@ function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO BİTTİ','#9aa3b2',13);G2.com
 function v2Update(dt){
   G2.arcFill+=dt;if(G2.lastArcT>0)G2.lastArcT-=dt;
   if(G2.mode==='surv'&&!G2.dstorm&&G2.arcs<3&&gState==='playing'){G2.regT+=dt;if(G2.regT>=25){G2.regT=0;G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2Pop(T('YAY ONARILDI'),'#ff8a8a',15);}}else G2.regT=0; /* survival: a broken arc mends every 25 s */
-  const S=G2.S,tk=(G2.timeT>0?V2K.time.k:1)*(G2.btT>0?V2K.bt.k:1)*(G2.killFx&&G2.killFx.boom===undefined?.35:1),lv=G2.lv;
+  const S=G2.S,tk=(G2.timeT>0?v2TimeK():1)*(G2.btT>0?v2BtK():1)*(G2.killFx&&G2.killFx.boom===undefined?.35:1),lv=G2.lv;
   // timers
   G2.t+=dt;if(G2.immT>0)G2.immT-=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.iceT>0){G2.iceT-=dt;if(G2.iceT<=0){G2.iceT=0;v2Pop(T('BUZ ÇÖZÜLDÜ'),'#8dffcb',16);}}if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
   if(G2.mode==='surv'){if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);} /* in levels the powers are introduced by the level-start cards */
@@ -555,7 +558,7 @@ function v2Update(dt){
       if(o.st==='dead')continue;
       if(G2.twin&&Math.hypot(o.x-G2.twin.x,o.y-G2.twin.y)<G2.twin.r+o.r*.6){o.st='dead';v2Burst(o.x,o.y,20,'#cfe3ff',2,6,.6);G2.twin=null;v2Call('İKİZ KAYBOLDU','','#cfe3ff',1);v2Sfx('armor',{vol:.5,rate:.9});continue;}
       if(!(G2.btT>0)&&!(G2.btCD>0)&&G2.btN<V2K.bt.max&&!o.btd&&!o.hit&&!(G2.shT>0)&&!(G2.rageT>0)&&!(G2.immT>0)&&!(G2.novaT>0)&&!G2.script&&G2.mode!=='sprint'&&v2BtOn()){ // near miss coming: a beat of slow motion to react
-        const px=o.x-hX,py=o.y-hY,vv=o.vx*o.vx+o.vy*o.vy||1,tc=-(px*o.vx+py*o.vy)/vv;if(tc>0&&tc<.3&&Math.hypot(px+o.vx*tc,py+o.vy*tc)<G2.R+o.r*.5){o.btd=1;G2.btT=V2K.bt.dur;G2.btCD=V2K.bt.cd;G2.btN++;G2.btM=o;v2Sfx('slow',{vol:.5,rate:1.8});}}
+        const px=o.x-hX,py=o.y-hY,vv=o.vx*o.vx+o.vy*o.vy||1,tc=-(px*o.vx+py*o.vy)/vv;if(tc>0&&tc<.3&&Math.hypot(px+o.vx*tc,py+o.vy*tc)<G2.R+o.r*.5){o.btd=1;G2.btT=G2.btDur=v2BtDur();G2.btCD=V2K.bt.cd;G2.btN++;G2.btM=o;v2Sfx('slow',{vol:.5,rate:1.8});}}
       if((G2.shT>0&&d<G2.R*1.5+o.r*.6||G2.novaT>0&&d<G2.R*1.3+o.r*.6)&&!o.hit){o.st='dead';v2Burst(o.x,o.y,18,'#ffd84d',2,7,.55);const p=25;totalScore+=p;levelScore+=p;
         ftexts.push(new FText('ENGELLENDİ',o.x,o.y-o.r-sp2(10),'#ffd84d',15));v2Sfx('armor',{vol:.55,rate:1.2});vib(15);continue;}
       const gap=d-G2.R-o.r;
@@ -707,18 +710,20 @@ function v2DrawRivalBar(y){const v=G2.rv,a=G2.R/G2.S/V2K.r0,b=v.R/G2.S/V2K.r0,ca
 // ── Package E: variety ─────────────────────────────────
 // Mid-level events (stellar wind, eclipse, constellation), the Guardian level, the mirror twin, near-miss bullet time
 // and the ghost of your best attempt. Events run in about 45% of plain score levels (fixed per level) and every 40 s in survival.
-const EVK={wind:{from:16,dur:10},cons:{from:22,dur:16},eclipse:{from:28,dur:9},kilo:{from:30,dur:13},belt:{from:31,dur:16},neb:{from:35,dur:15}};
+const EVK={wind:{from:16,dur:10},cons:{from:22,dur:6},eclipse:{from:28,dur:9},kilo:{from:30,dur:13},belt:{from:31,dur:16},neb:{from:35,dur:15}};
 const CONS=[{id:'cas',n:'KRALİÇE',p:[[0,.2],[.25,.75],[.5,.35],[.75,.85],[1,.3]]},
   {id:'uma',n:'BÜYÜK AYI',p:[[0,.3],[.18,.2],[.34,.28],[.5,.4],[.56,.8],[.86,.9],[.94,.5]]},
   {id:'leo',n:'ASLAN',p:[[.1,.85],[.3,.6],[.2,.3],[.42,.08],[.68,.2],[.95,.55]]}];
 function v2ApplyMods(L){const w=L.w; // season theme and the Daily Storm's two rules
   if(seasonIs('gold')){w.gold=(w.gold||0)*2;w.crystal*=1.5;}if(seasonIs('meteor'))w.meteor*=1.2;
+  if(gameMode==='sprint'){w.meteor*=1.4;if(L.metIv)L.metIv/=1.3;} /* the race is a sprint through a storm */
   if(gameMode==='survival'&&STORM.on){w.meteor*=1.5;if(L.metIv)L.metIv/=1.35;else L.metIv=3.2;} /* the daily storm is the hard race: more meteors and no arc mending */
   if(gameMode==='survival'&&STORM.on)for(const m of STORM.mods){if(m.id==='gold'){w.gold=(w.gold||0)*2+2;w.crystal*=2;w.meteor*=1.3;}else if(m.id==='giant')w.planet=(w.planet||0)*2+4;
     else if(m.id==='twin')w.mirror=4;else if(m.id==='fast')L.speedK*=1.15;else if(m.id==='dense'){L.cap+=4;L.iv*=.8;w.meteor*=1.15;}}
   return L;}
 function v2EvPref(){const p=[];if(gameMode==='survival'&&STORM.on)for(const m of STORM.mods)if(EVK[m.id])p.push(m.id);const sk=gameMode!=='sprint'?seasonTheme().id:'';if(EVK[sk])p.push(sk);return p;}
 function v2EvPlan(l,mode){
+  if(mode==='sprint')return v2SprPlan();
   if(mode==='surv')return {next:v2EvPref().length?20:35}; /* the daily storm's belts come on their own clock (v2StormStep) */
   if(mode==='level'&&v2Chal(l)==='belt')return {k:'belt',at:12};
   if(mode!=='level'||l<16||l%10===0||G2.rule||G2.script)return null;
@@ -729,14 +734,15 @@ function v2EvStep(dt){
   const P=G2.evPlan;
   if(!G2.ev&&P&&!G2.ending&&!G2.boss&&gState==='playing'){
     if(P.next!==undefined){P.next-=dt;if(P.next<=0){const pr=v2EvPref();P.next=pr.length?24:40;if(G2.lv>=3||pr.length){const ks=Object.keys(EVK).filter(k=>k!=='belt');v2EvGo(pr.length&&rng()<.75?pr[Math.floor(rng()*pr.length)]:ks[Math.floor(rng()*ks.length)]);}}}
+    else if(P.list){if(P.list.length&&G2.t>=P.list[0][0])v2EvGo(P.list.shift()[1]);}
     else if(G2.t>=P.at){G2.evPlan=P.again?{k:P.k,at:G2.t+20}:null;v2EvGo(P.k);}}
   const e=G2.ev;if(!e)return;e.t+=dt;
   if(e.k==='cons')v2ConsStep(e,dt);
   if(e.k==='kilo'){if(!e.merged){const p=Math.min(1,e.t/7);e.rad=e.R0*(1-p*p*.95);e.ang+=dt*(2+16*p*p);if(e.t>=7)v2KiloBoom(e);}else{const w0=e.wave;e.wave+=dt*sp2(650);const hd=Math.hypot(hX-e.cx,hY-e.cy);if(w0<hd&&e.wave>=hd){shake=Math.max(shake,8);v2Sfx('boom',{vol:.3,rate:.6});}}}
   if(e.k==='eclipse'){e.ping-=dt;e.pingT+=dt;if(e.ping<=0){e.ping=2;e.pingT=0;v2Sfx('tickHi',{vol:.35,rate:.7});}}
-  if(e.k==='belt')v2BeltStep(e,dt);if(e.k==='neb')v2NebStep(e,dt);
+  if(e.k==='belt'){v2BeltStep(e,dt);if(e.t>=BELT.warn&&(G2.shT>0||G2.novaT>0))e.sh=1;} /* got through behind a shield or Supernova */if(e.k==='neb')v2NebStep(e,dt);
   if(e.t>=e.dur||G2.ending){if(e.k==='cons')v2ConsEnd(e);if(e.k==='belt'){G2.ev=null;v2BeltEnd(e);return;}if(e.k==='neb'){G2.ev=null;if(G2.nebIn){G2.nebIn=0;if(!G2.ending)v2Pop(T('AĞIRLIK GEÇTİ'),'#8dffcb',16);}return;}G2.ev=null;if(!G2.ending&&(e.k!=='cons'||e.done))spAdd(8*(seasonIs(e.k)?2:1));if(!G2.ending&&e.k!=='cons')v2Call(e.k==='wind'?'RÜZGÂR DİNDİ':'IŞIK GERİ GELDİ','','#cfe6f5',.9);}}
-function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;
+function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;if(k==='belt'&&G2.mode==='sprint')e.dur=BELT.warn+8+BELT.end; /* the race's belt is a short one */
   if(k==='wind'){e.a=(rng()<.5?0:Math.PI)+rrnd(-.35,.35);e.f=sp2(170);e.st=[];v2Call('YILDIZ RÜZGÂRI','AKINTIYA KAPIL','#bfe6ff',1.4,true);v2Sfx('slow',{vol:.5,rate:1.6});}
   else if(k==='eclipse'){e.ping=.6;e.pingT=9;v2Call('TUTULMA','KARANLIKTA PUAN ×1,5','#b9a8ff',1.4,true);v2Sfx('bossIntro',{vol:.35,rate:.6});}
   else if(k==='kilo'){e.cx=W*.5;e.cy=Math.max(sp2(190),H*.32);e.R0=sp2(100);e.ang=0;e.rad=e.R0;e.merged=false;e.wave=0;v2Call('KİLONOVA','İKİ NÖTRON YILDIZI BİRLEŞİYOR','#bfe6ff',1.5,true);v2Sfx('bossIntro',{vol:.35,rate:1.4});}
@@ -750,6 +756,12 @@ function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;
 function v2Chal(l){if(l<6||l%10===0||v2LevelType(l)!=='score'||v2Hard(l))return null;if(l===6||l===16||l===22||(l>30&&l%10===4))return 'shrink';if(l===8||l===18||l===28||(l>30&&l%10===7))return 'belt';return null;}
 const BELT={warn:2.8,end:1.4};
 // ── the Daily Storm: 180 s, the same storm for everyone, fiercer every 30 s, a meteor belt at 60 s and 120 s ──
+// ── the Daily Race: the same 60 s for everyone, at speed 16–25, with the day's rule, a short meteor belt at 20 s and a nebula at 40 s ──
+const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'📏',n:'BOYUT PENCERESİ'},{id:'wind',ic:'🌬',n:'YILDIZ RÜZGÂRI'},{id:'eclipse',ic:'🌑',n:'TUTULMA'}];
+const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
+function v2SprRule(){const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+  if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
+function v2SprPlan(){const r=sprRuleOf(SPR_RUN.seed),L=[];if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);L.push([20,'belt'],[40,'neb']);return {list:L};}
 const DSTORM={dur:180,belts:[60,120],sec:20,done:3000,life:1500};
 function v2StormStep(){const t=survTime;
   if(G2.beltN<DSTORM.belts.length&&t>=DSTORM.belts[G2.beltN]){if(G2.ev&&G2.ev.k!=='belt'){if(G2.ev.k==='cons')v2ConsEnd(G2.ev);G2.ev=null;}if(!G2.ev){G2.beltN++;v2EvGo('belt');}}
@@ -799,7 +811,8 @@ function v2BeltStep(e,dt){if(e.t<e.next||e.t>e.dur-BELT.end)return;const L=v2Bel
     const sp=v2Speed('meteor')*(.78+.08*hard)*rrnd(.95,1.08),x=W/2+L.nx*off-L.ux*back,y=H/2+L.ny*off-L.uy*back;
     const o=v2Obj('meteor',x,y,L.ux*sp,L.uy*sp,{wait:0,scale:rrnd(.8,1.15)});o.slow=0;o.ramp=V2K.met.ramp;o.belt=1;o.seen=false;o.side=0;}}
 function v2BeltEnd(e){if(G2.ending)return;const ok=G2.dmg===e.dmg0;
-  if(ok){const p=500;totalScore+=p;levelScore+=p;const sw=25*(G2.hm?2:1);if(G2.mode==='level'&&!REPLAY){stars+=sw;saveG();updateUI();}v2Call('✓ KUŞAK HASARSIZ GEÇİLDİ',G2.mode==='level'&&!REPLAY?'+500 puan · +'+sw+' ⭐':'+500 puan','#57c78a',2,true);sfx('achieve',{vol:.6});dmEvent('belt',1);}
+  if(ok&&e.sh){const p=500;totalScore+=p;levelScore+=p;v2Call('🛡 KALKANLA GEÇİLDİ','+500 puan','#ffd84d',1.8,true);} /* the stars are for skill: a shield or Supernova pass earns only the points */
+  else if(ok){const p=500;totalScore+=p;levelScore+=p;const sw=25*(G2.hm?2:1);if(G2.mode==='level'&&!REPLAY){stars+=sw;saveG();updateUI();}v2Call('✓ KUŞAK HASARSIZ GEÇİLDİ',G2.mode==='level'&&!REPLAY?'+500 puan · +'+sw+' ⭐':'+500 puan','#57c78a',2,true);sfx('achieve',{vol:.6});dmEvent('belt',1);}
   else v2Call('KUŞAKTAN ÇIKTIN','','#ffb4a8',1.2,true);
   G2.acc=Math.min(G2.acc,.3);} /* bodies come back right away */
 function v2DrawBelt(e){const t=e.t,ux=Math.cos(e.a),uy=Math.sin(e.a);ctx.save();
@@ -865,7 +878,7 @@ function v2DrawEv(){const e=G2.ev;
       ctx.strokeStyle='rgba(255,110,60,.8)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(o.x-o.vx/sp*o.r*4,o.y-o.vy/sp*o.r*4);ctx.stroke();ctx.fillStyle='#ffb07a';ctx.beginPath();ctx.arc(o.x,o.y,Math.max(2,o.r*.5),0,TAU);ctx.fill();}
     ctx.restore();}
   v2DrawKill();
-  if(G2.btT>0){const q=G2.btT/V2K.bt.dur;ctx.save();const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'rgba(120,180,255,0)');g.addColorStop(1,`rgba(120,180,255,${.35*q})`);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  if(G2.btT>0){const q=G2.btT/(G2.btDur||V2K.bt.dur);ctx.save();const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*.35,W/2,H/2,Math.max(W,H)*.75);g.addColorStop(0,'rgba(120,180,255,0)');g.addColorStop(1,`rgba(120,180,255,${.35*q})`);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
     const m=G2.btM;if(m&&m.st==='in'){ctx.strokeStyle=`rgba(255,120,90,${.9*q})`;ctx.lineWidth=3;ctx.beginPath();ctx.arc(m.x,m.y,m.r*2.2,0,TAU);ctx.stroke();}ctx.restore();}
 }
 
@@ -993,7 +1006,7 @@ function v2Score(o,mini){
   const K=OBJ2[o.k];G2.hungry=0;G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;
   if(G2.combo>G2.best){G2.best=G2.combo;lvCombo=G2.best;}if(G2.combo>maxCombo)maxCombo=G2.combo;
   const perf=!mini&&o.inG&&o.b<V2K.perfectK*G2.G&&!o.chain;
-  const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;if(G2.ev&&G2.ev.k==='eclipse')pts*=1.5;pts*=G2.modSc||1;const gs=o.k==='gold'&&G2.mode!=='sprint'&&seasonIs('gold');if(gs){pts*=2;spAdd(2);}if(o.k==='icec')pts*=2;pts=Math.round(pts);
+  const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;if(G2.ev&&G2.ev.k==='eclipse')pts*=1.5;pts*=G2.modSc||1;const gs=o.k==='gold'&&G2.mode!=='sprint'&&seasonIs('gold');if(gs){pts*=2;spAdd(2);}if(o.k==='icec')pts*=2;if(G2.mode==='sprint')pts*=1+Math.min(G2.combo,20)*.05; /* in the race a long combo counts double */pts=Math.round(pts);
   const wo=v2WinOut();if(wo&&o.k!=='prey'){pts=0;if(!G2.woT||G2.t-G2.woT>1.2){G2.woT=G2.t;v2Pop(wo>0?T('ÇOK BÜYÜK · 0'):T('ÇOK KÜÇÜK · 0'),'#ff8a7a',15);}} // outside the size window nothing scores
   totalScore+=pts;levelScore+=pts;G2.eaten++;if(G2.mode!=='sprint')atlasAdd(o.k);v2Spec(o);
   if(o.k==='icec'){G2.iceT=ICE.dur;v2Pop('×2 · +'+pts,'#bfe6ff',19);v2Call('❄ BUZ TUTTU','3 SN AĞIR HAREKET','#bfe6ff',1.2);v2Burst(hX,hY,26,'#dff4ff',1.5,6,.7,2);v2Sfx('gem',{vol:.6,rate:.7});vib(25);}
@@ -1019,7 +1032,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.noScore)return;
   {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow*(G2.growK||1));if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
   addMass(1);
-  if(o.k==='time'){G2.timeT=V2K.time.dur;v2Call('ZAMAN YAVAŞ','6 sn','#8fd0ff',1.2);}
+  if(o.k==='time'){G2.timeT=v2TimeDur();v2Call('ZAMAN YAVAŞ',T('{n} sn',{n:G2.timeT}),'#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO SÜRESİ','+2 sn','#bff6ff',.9);}
   else if(o.k==='cstar')v2ConsHit(o);
@@ -1198,7 +1211,7 @@ const TIP2={
   crystal:['🔷','KRİSTAL','Kristal çok değerli: +200 puan ve hızlı büyüme. Ama çoğu zaman yanında bir meteor olur, dikkat et.'],
   energy:['⚡','ENERJİ','Enerji topu Vortex barını hızla doldurur. Kaçırma!'],
   gold:['🌕','ALTIN GEZEGEN','Nadir ve çok hızlı: +500 puan. Yutmak için biraz büyümüş olman gerekir.'],
-  time:['⏱','ZAMAN TOPU','Yut: her şey 6 saniye yavaşlar, sen hızlı kalırsın.'],
+  time:['⏱','ZAMAN TOPU','Yut: her şey 4 saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar.'],
   bomb:['💣','BOMBA GEZEGEN','Bombayı çekim alanına al: etrafında döner, fitili yanar. 3 saniye alanında tutarsan MEGA BOMBA ekrandaki her şeyi sana çeker. Çok hızlı hareket edersen bomba kaçar.'],
   mini:['🌀','MİNİ KARA DELİK','Yut: 6 saniye boyunca etrafında dönen yardımcı bir kara delik açılır. Onun yuttukları sana akar. Meteor ona çarparsa can gitmez.'],
   big:['🪐','ÇOK BÜYÜK','Bu cisim şimdilik senden büyük: çarpınca seker. Küçük cisimleri yiyerek büyü, sonra onu da yut.'],
@@ -1713,7 +1726,7 @@ function v2Ui(force){
   {const hk=$('hkTop');if(hk){const ok=v2HawkOk(),mets=ok?G2.objs.reduce((n,o)=>n+(o.k==='meteor'&&o.st==='in'&&o.x>0&&o.x<W&&o.y>0&&o.y<H),0):0; /* it pulses when there is something to clear */
     if(mets>=2&&G2.hard&&!G2.hkHint){G2.hkHint=1;v2Pop(T('HAWKING METEORLARI SİLER'),'#ffffff',15);}const c='hb2'+(!v2HawkOn()?' off':ok?(mets>=2?' ready pulse':' ready'):' empty')+(hk.classList.contains('hl')?' hl':'');if(hk.className!==c)hk.className=c;}} // Hawking burst: shown from level 24, lit when you are big enough
   const h=G2.hud,sb=$('shTop');
-  if(sb){const inc=G2.shT<=0&&G2.rageT<=0&&(SHOP.shield>0&&G2.objs.some(o=>o.k==='meteor'&&o.st==='in'&&(o.wait>0||o.slow>0))||G2.arcs===1&&gameMode!=='sprint'&&(SHOP.shield>0||monOn()&&diamonds>=V2K.shield.cost)); /* incoming meteor, or on the last arc (where it also mends the arcs) */
+  if(sb){const beltW=G2.ev&&G2.ev.k==='belt'&&G2.ev.t<BELT.warn+2&&gameMode!=='sprint',inc=G2.shT<=0&&G2.rageT<=0&&(beltW||SHOP.shield>0&&G2.objs.some(o=>o.k==='meteor'&&o.st==='in'&&(o.wait>0||o.slow>0))||G2.arcs===1&&gameMode!=='sprint'&&(SHOP.shield>0||monOn()&&diamonds>=V2K.shield.cost)); /* incoming meteor, or on the last arc (where it also mends the arcs) */
     const c='hb2'+(gameMode==='sprint'?' off':G2.shT>0?' on':SHOP.shield>0?(G2.rageT>0?'':' ready'):' empty')+(inc?' pulse':'')+(sb.classList.contains('hl')?' hl':'');
     if(sb.className!==c)sb.className=c;const n=SHOP.shield>0?String(SHOP.shield):monOn()&&gameMode!=='sprint'?'+':'0';if(sb._n!==n){sb._n=n;sb.querySelector('b').textContent=n;} /* empty: a plus, tapping it offers one */
     sb.style.setProperty('--p',G2.shT>0?(G2.shT/V2K.shield.dur).toFixed(3):0);}

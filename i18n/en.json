@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "{n} levels open",
 "BU SEVİYEDEN OYNA": "PLAY FROM THIS LEVEL",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "Now and then from level {n}: a shape-shifting cloud drifts across the screen. Inside it the black hole shows as a silhouette in the fog and follows your finger heavily. You can keep eating; watch out for meteors",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "From level {n}: ×{n} points, but once swallowed the black hole freezes for {n} seconds and steers heavily"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "From level {n}: ×{n} points, but once swallowed the black hole freezes for {n} seconds and steers heavily",
+"Günün kuralı": "Today's rule",
+"GÜNÜN KURALI": "TODAY'S RULE",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "meteor belt at second {n}, nebula at second {n}",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "Slow motion and the Time Ball slow time down more: you get more time to react to meteors. How long the slowdown lasts grows as your black hole evolves",
+"ZAMAN BÜKÜCÜ": "TIME BENDER",
+"Ağır çekim %{a} hız": "Slow motion {a}% speed",
+"Zaman Topu %{b} hız": "Time Ball {b}% speed",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Swallow it: everything slows down for {n} seconds while you stay fast. The time grows as your black hole evolves",
+"YASAKLI CİSİMLER": "BANNED BODIES",
+"KALKANLA GEÇİLDİ": "CLEARED WITH A SHIELD",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Everything slows down while you stay fast. It lasts longer as your black hole evolves ({n}–{n} s); the Time Bender in the Laboratory makes the slowdown stronger",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Everyone plays the same universe for {n} seconds, at high speed and with today's rule (banned bodies, size window, wind or eclipse). A meteor belt comes at second {n} and a nebula at second {n}; a long combo multiplies points up to ×{n}. Share your result and challenge a friend"
 }

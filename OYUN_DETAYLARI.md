@@ -46,6 +46,13 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 - **❄ DONMUŞ KUYRUKLU YILDIZ** (25. seviyeden sonra): yutulunca puanı ×2 (120 taban), ama kara delik 3 sn buz tutar: kırağı, buz dikenleri, geri sayım halkası ve üstte ❄ çubuğu; bu sürede ağır hareket eder.
 - **⚛️ ANTİMADDE** artık macenta hale ve beyaz "eksi" çizgisiyle çizilir; yeşil yalnızca "yenebilir" anlamına gelir.
 
+### Son ayarlar
+- **📅 GÜNLÜK YARIŞ**: 60 sn, hız 16–25, meteor ×1,4, günün kuralı (yasaklı cisimler / boyut penceresi / yıldız rüzgârı / tutulma, tarihten belirlenir, herkes için aynı), 20. saniyede kısa meteor kuşağı (8 sn), 40. saniyede Yapışkan Nebula. 3 can biterse yarış erken biter. Combo puanı yarışta 2 kata kadar artırır.
+- **✨ TAKIMYILDIZ**: süre 16 sn'den 6 sn'ye indi.
+- **☄ Meteor kuşağında kalkan**: kalkan ya da Süpernova ile geçilen kuşak +500 puan verir ama +25 ⭐ vermez ("KALKANLA GEÇİLDİ"). Kuşak uyarısı sırasında kalkan düğmesi yanıp söner; kalkanı olmayan dokununca satın alma çıkar.
+- **Meteor girişi**: yavaş giriş hızı %30 → %50, yavaş faz en fazla 0,8 sn (eskiden 1,25 sn).
+- **⏳ Zaman yavaşlatma**: ağır çekim zamanı %50'ye (eskiden %25), Zaman Topu %65'e (eskiden %45) düşürür. Laboratuvardaki yeni **ZAMAN BÜKÜCÜ** (10 seviye) her seviyede yavaşlatmayı güçlendirir: 10. seviyede ağır çekim %25, Zaman Topu %35. Süre kara deliğin evresiyle uzar: ağır çekim 0,35 / 0,45 / 0,55 / 0,7 sn, Zaman Topu 4 / 5 / 6 / 7 sn (Yıldız kütleli → Kuasar).
+
 ### Geliştirici linki
 - `https://liaslabs.github.io/blackhole-storm/dev.html` (ya da `?dev=1`): ayrı kayıt alanı (`bhs_dev`), ilk 1000 seviye açık, 50.000 ⭐ ve 5.000 💎 ile başlar, yakıt yok, Kaptanın Hediyesi araya girmez, haritadaki her seviye "BU SEVİYEDEN OYNA" ile gerçek seviye olarak oynanır, sıralamaya skor gönderilmez. Oyuncunun normal kaydına dokunmaz.
 

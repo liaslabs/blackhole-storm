@@ -1595,5 +1595,17 @@
 "{n} seviye açık": "открыто {n} уровней",
 "BU SEVİYEDEN OYNA": "ИГРАТЬ С ЭТОГО УРОВНЯ",
 "{n}. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat": "Время от времени с уровня {n}: через экран проплывает облако, меняющее форму. Внутри чёрная дыра видна как силуэт в тумане и тяжело следует за пальцем. Есть можно; берегись метеоров",
-"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "С уровня {n}: очки ×{n}, но после неё чёрная дыра замерзает на {n} секунды и тяжело управляется"
+"{n}. seviyeden sonra: puanı {n} kat ama yutunca kara delik {n} saniye buz tutar ve ağır hareket eder": "С уровня {n}: очки ×{n}, но после неё чёрная дыра замерзает на {n} секунды и тяжело управляется",
+"Günün kuralı": "Правило дня",
+"GÜNÜN KURALI": "ПРАВИЛО ДНЯ",
+"{n}. saniyede meteor kuşağı, {n}. saniyede nebula": "метеорный пояс на {n}-й секунде, туманность на {n}-й",
+"Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar": "Замедление и Шар времени сильнее замедляют время: больше времени, чтобы среагировать на метеоры. Длительность растёт по мере эволюции чёрной дыры",
+"ZAMAN BÜKÜCÜ": "ИСКРИВИТЕЛЬ ВРЕМЕНИ",
+"Ağır çekim %{a} hız": "Замедление: {a}% скорости",
+"Zaman Topu %{b} hız": "Шар времени: {b}% скорости",
+"Yut: her şey {n} saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar": "Проглоти: всё замедляется на {n} секунды, а ты остаёшься быстрым. Время растёт по мере эволюции чёрной дыры",
+"YASAKLI CİSİMLER": "ЗАПРЕЩЁННЫЕ ТЕЛА",
+"KALKANLA GEÇİLDİ": "ПРОЙДЕНО СО ЩИТОМ",
+"Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Всё замедляется, а ты остаёшься быстрым. Длится дольше по мере эволюции чёрной дыры ({n}–{n} с); Искривитель времени в Лаборатории усиливает замедление",
+"Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Все играют в одной вселенной {n} секунд, на высокой скорости и с правилом дня (запрещённые тела, окно размера, ветер или затмение). На {n}-й секунде идёт метеорный пояс, на {n}-й — туманность; длинное комбо умножает очки до ×{n}. Поделись результатом и брось вызов другу"
 }
