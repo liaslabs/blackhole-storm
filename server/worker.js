@@ -13,6 +13,7 @@
 const PRIZE = [1000, 500, 250];
 const ALLOWED = ['https://liaslabs.github.io', 'http://localhost:8766', 'http://127.0.0.1:8766'];
 const MAX_SUBS = 40;          // submissions per install per day
+const MAX_SECS = 200;         // the Daily Storm lasts 180 s: a longer run is not a real one
 const MAX_RATE = 4000;        // points per second no real run reaches (Rage ×2 and ×5 combos top out well below this)
 
 const day = (t = Date.now()) => new Date(t).toISOString().slice(0, 10);
@@ -89,7 +90,7 @@ export default {
         if (d !== today && d !== day(Date.now() - 36e5 * 2)) return json(req, { ok: false, err: 'day' }, 400); // a run that started just before midnight still counts
         if (!okPid(b.pid)) return json(req, { ok: false, err: 'pid' }, 400);
         const score = Math.floor(+b.score), secs = Math.floor(+b.secs);
-        if (!(score > 0 && score < 5e7) || !(secs >= 5 && secs < 36000) || score / secs > MAX_RATE) return json(req, { ok: false, err: 'score' }, 400);
+        if (!(score > 0 && score < 5e7) || !(secs >= 5 && secs <= MAX_SECS) || score / secs > MAX_RATE) return json(req, { ok: false, err: 'score' }, 400);
         const name = cleanName(b.name), now = Date.now();
         const cur = await DB.prepare('SELECT score, subs FROM scores WHERE day = ? AND pid = ?').bind(d, b.pid).first();
         if (cur && cur.subs >= MAX_SUBS) return json(req, { ok: false, err: 'rate' }, 429);

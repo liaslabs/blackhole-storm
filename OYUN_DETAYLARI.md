@@ -34,7 +34,17 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 ## 2. Modlar
 - **🪐 KLASİK**: Seviye seviye ilerle, her seviyede yeni bir şey.
 - **🔥 ZOR SEVİYE**: Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın.
-- **☠️ HAYATTA KAL**: Seviye yok: her 30 saniyede hızlanır. 3 canın bitince oyun biter, rekor kovala.
+- **🔥 ZOR MOD**: 30. seviyeyi geçince açılır. Seviye 1'den, klasikten ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp (1 kalp kaybıyla da 3 yıldız alınabilir), ağır çekim yok, ilk seviyede öğretici yok. Yıldız ödülleri 2 kat; Kaptanın Hediyesi ve risk kartı yok.
+- **☠️ HAYATTA KAL · GÜNÜN FIRTINASI**: 180 saniye, herkes için aynı fırtına. Hız 8'den başlar, her 30 saniyede 5 artar; meteorlar 1,5 kat, yaylar onarılmaz, ağır çekim yok. 60. ve 120. saniyede meteor kuşağı gelir. Hayatta kalınan her saniye +20 puan; sonuna kadar dayanırsan +3.000 ve kalan her kalp için +1.500. Dünya sıralaması bu skora göre; sunucu 200 saniyeden uzun koşuları reddeder.
+
+### Meydan okuma seviyeleri
+- **💨 HIZLI KÜÇÜLME** (6, 16, 22; sonra x4 seviyeleri): cisim sayısı 1,5 kat, yemeyi bırakınca kara delik 3 kat hızlı küçülür (Zor Mod'da 4 kat). Küçülme halkası kırmızıdır.
+- **☄ METEOR KUŞAĞI** (8, 18, 28; sonra x7 seviyeleri ve 31'den itibaren rastgele olay): 2,8 sn uyarı ("⚠ DİKKAT · METEOR KUŞAĞINA GİRDİN"), sonra ~12 sn yalnızca meteor; hepsi aynı açıyla paralel şeritlerde akar, bir şerit hep boş kalır ve 4 dalgada bir kayar. Kuşak boyunca küçülme durur. Hasarsız geçiş: +500 puan ve +25 ⭐ (Zor Mod'da +50 ⭐).
+
+### Kademeli yardımlar
+- **⏳ Ağır çekim**: 21. seviyeden itibaren (Zor Mod ve Günün Fırtınası'nda yok).
+- **⚪ Gümüş kabuk**: 51. seviyeden itibaren kusursuz kaçışla (60'a kadar aynı anda en fazla 1) ve iki kayıptan sonraki yardım olarak; 61'den itibaren galibiyet serisi de verir (1 kabuk), 71'den itibaren 2 kabuk.
+- **🟡 Altın kabuk**: 71. seviyeden itibaren.
 - **📅 GÜNLÜK KOZMOS**: Herkes aynı evrende 60 saniye. Sonucunu paylaş, arkadaşına meydan oku.
 
 ## 3. Seviye planı (1–60)
