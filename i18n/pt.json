@@ -1608,5 +1608,10 @@
 "KALKANLA GEÇİLDİ": "VENCIDO COM ESCUDO",
 "Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Tudo fica lento e você continua rápido. Dura mais conforme seu buraco negro evolui ({n}–{n} s); o Dobrador do tempo no Laboratório deixa a lentidão mais forte",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Todos jogam o mesmo universo por {n} segundos, em alta velocidade e com a regra do dia (corpos proibidos, janela de tamanho, vento ou eclipse). No segundo {n} chega um cinturão de meteoros e no {n} uma nebulosa; um combo longo multiplica os pontos até ×{n}. Compartilhe seu resultado e desafie um amigo",
-"SEVİYEYE GİT": "IR AO NÍVEL"
+"SEVİYEYE GİT": "IR AO NÍVEL",
+"{n} gün üst üste": "{n} dias seguidos",
+"Ödül için en az {n} puan": "Pelo menos {n} pontos para um prêmio",
+"{n} gün üst üste: +{g}": "{n} dias seguidos: +{g}",
+"{n} gün üst üste: +{n}": "{n} dias seguidos: +{n}",
+"{n} gün üst üste +{n}": "{n} dias seguidos +{n}"
 }

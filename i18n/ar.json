@@ -1608,5 +1608,10 @@
 "KALKANLA GEÇİLDİ": "عبرت بالدرع",
 "Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "يتباطأ كل شيء وتبقى أنت سريعاً. تطول المدة مع تطور ثقبك الأسود ({n}–{n} ث)؛ وثانِي الزمن في المختبر يقوّي التباطؤ",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "الجميع يلعب الكون نفسه لمدة {n} ثانية، بسرعة عالية ومع قاعدة اليوم (أجسام محظورة، نافذة الحجم، رياح أو كسوف). يأتي حزام نيازك في الثانية {n} وسديم في الثانية {n}؛ والكومبو الطويل يضاعف النقاط حتى ×{n}. شارك نتيجتك وتحدَّ صديقاً",
-"SEVİYEYE GİT": "اذهب إلى المستوى"
+"SEVİYEYE GİT": "اذهب إلى المستوى",
+"{n} gün üst üste": "{n} أيام متتالية",
+"Ödül için en az {n} puan": "{n} نقطة على الأقل للحصول على جائزة",
+"{n} gün üst üste: +{g}": "{n} أيام متتالية: +{g}",
+"{n} gün üst üste: +{n}": "{n} أيام متتالية: +{n}",
+"{n} gün üst üste +{n}": "{n} أيام متتالية +{n}"
 }

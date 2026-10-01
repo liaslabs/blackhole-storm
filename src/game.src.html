@@ -3191,11 +3191,18 @@ function startSprint(seed,opt={}){
   gState='playing';lastT=performance.now();updateUI();
   G2.sprLv=S.lvl;v2Start('sprint');{const r=sprRuleOf(seed);later(()=>{if(G2.on&&gameMode==='sprint')v2Call(T('GÜNÜN KURALI'),r.ic+' '+T(r.n),'#ffd76a',1.8,true);},400);}
 }
+/* Daily Race prize, for the day's one official run only: three score tiers (a size-window day scores far lower, so its bar is lower too), and 10 diamonds for every 7 days in a row */
+const RACE_TIER=[[15000,15,0,'🥉'],[35000,30,1,'🥈'],[70000,60,3,'🥇']],RACE_STREAK={days:7,gems:10};
+const raceK=n=>sprRuleOf(dailySeed(n)).id==='window'?.3:1;
+function raceReward(score,n,sk){let t=null;for(const r of RACE_TIER)if(score>=r[0]*raceK(n))t=r;const st=sk>0&&sk%RACE_STREAK.days===0;return {tier:t,stars:t?t[1]:0,gems:(t?t[2]:0)+(st?RACE_STREAK.gems:0),sk,streak:st};}
+function raceRwTxt(rw){if(!rw)return '';const g=[];if(rw.tier)g.push(`${rw.tier[3]} +${rw.tier[1]} ⭐${rw.tier[2]?' +'+rw.tier[2]+' 💎':''}`);if(rw.streak)g.push(`🔥 ${T('{n} gün üst üste',{n:rw.sk})} +${RACE_STREAK.gems} 💎`);
+  const nx=RACE_TIER.find(r=>!rw.tier||r[0]>rw.tier[0]);return (g.length?g.join(' · ')+' · ':'')+(nx&&!rw.tier?T('Ödül için en az {n} puan',{n:Math.round(nx[0]*raceK(DAILY.n)).toLocaleString(LOC)})+' · ':'');}
+function raceTiersTxt(n){return T('Ödül')+': '+RACE_TIER.map(r=>`${r[3]} ${Math.round(r[0]*raceK(n)/1000)}K → ${r[1]} ⭐${r[2]?' + '+r[2]+' 💎':''}`).join(' · ')+' · '+T('{n} gün üst üste: +{g} 💎',{n:RACE_STREAK.days,g:RACE_STREAK.gems});}
 function sprintGrid(){return SPR_RUN.blocks.map(b=>b.p?'⭐':b.c>=3?'🟡':b.c?'🟣':'⚫').join('');}
 function sprintEnd(){
   if(SPR_RUN.ended)return;SPR_RUN.ended=true;runId++;rngS=null;gState='over';SND.music('menu');
   const opt=SPR_RUN.opt,res={score:totalScore,combo:maxCombo,perf:perfectCount,caught:SPR_RUN.caught,grid:sprintGrid(),zone:SPR_RUN.zone,daily:opt.daily||0,chal:opt.chal||null};
-  let official=false;if(opt.daily&&DAILY.n!==opt.daily){official=true;DAILY={n:opt.daily,score:res.score,grid:res.grid,combo:res.combo,perf:res.perf};}
+  let official=false,rw=null;if(opt.daily&&DAILY.n!==opt.daily){official=true;const sk=DAILY.n===opt.daily-1?(DAILY.sk|0)+1:1;DAILY={n:opt.daily,score:res.score,grid:res.grid,combo:res.combo,perf:res.perf,sk};rw=raceReward(res.score,opt.daily,sk);if(rw.stars||rw.gems)grant({stars:rw.stars,gems:rw.gems},'🏁 '+T('GÜNLÜK YARIŞ'));}
   res.official=official;const newBest=res.score>sprintBest;if(newBest)sprintBest=res.score;SPR_RUN.res=res;
   dmEvent('score',totalScore,true);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();
   $('spHead').textContent=res.chal?'⚔️ MEYDAN OKUMA':res.daily?`🏁 GÜNLÜK YARIŞ #${res.daily}`:'⏱ 60 SANİYE';
@@ -3205,7 +3212,7 @@ function sprintEnd(){
   if(res.chal){const d=res.score-res.chal.s;v=d>0?T('🏆 {p} geçildi! (+{d})',{p:res.chal.n,d:nf(d)}):d===0?T('🤝 {p} ile berabere!',{p:res.chal.n}):T('Az kaldı! Rakibin {p} {d} puan önde',{p:res.chal.n,d:nf(-d)});col=d>0?'var(--mint)':'#ff8a98';}
   else if(newBest)v='🏆 YENİ 60 SN REKORU!';else v=`En iyi: ${sprintBest.toLocaleString(LOC)}`;
   $('spVerdict').textContent=v;$('spVerdict').style.color=col;
-  $('spNote').textContent=res.daily?(official?'Bugünkü resmi sonucun kaydedildi. Yarın yeni kozmos!':'Antrenman turu: resmi sonucun değişmez.'):'';
+  $('spNote').textContent=res.daily?(official?raceRwTxt(rw)+T('Bugünkü resmi sonucun kaydedildi. Yarın yeni kozmos!'):'Antrenman turu: resmi sonucun değişmez.'):'';
   $('spChal').textContent=res.chal?'⚔️ GERİ MEYDAN OKU':'⚔️ MEYDAN OKU';
   sfx(res.chal&&res.score>res.chal.s||newBest?'levelup':'gameover',{vol:.8,rev:.4});
   recStop().then(()=>{$('spClip').style.display=REC.blob?'':'none';});
@@ -3238,7 +3245,7 @@ function resultText(r,chal){
 function renderDaily(){
   const n=dailyNo(),S=sprintSetup(dailySeed(n)),done=DAILY.n===n;
   $('dcTitle').textContent=`🏁 GÜNLÜK YARIŞ #${n}`;$('dcZone').textContent=ZONES[S.zone].n;
-  $('dcTxt').textContent=done?`Bugünkü sonucun: ${DAILY.score.toLocaleString(LOC)} puan · ×${DAILY.combo} combo. Yarın yeni kozmos!`:T('Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!')+' '+T('Günün kuralı')+': '+sprRuleOf(dailySeed(dailyNo())).ic+' '+T(sprRuleOf(dailySeed(dailyNo())).n)+' · '+T('20. saniyede meteor kuşağı, 40. saniyede nebula');
+  $('dcTxt').textContent=done?`Bugünkü sonucun: ${DAILY.score.toLocaleString(LOC)} puan · ×${DAILY.combo} combo. Yarın yeni kozmos!`:T('Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!')+' '+T('Günün kuralı')+': '+sprRuleOf(dailySeed(dailyNo())).ic+' '+T(sprRuleOf(dailySeed(dailyNo())).n)+' · '+T('20. saniyede meteor kuşağı, 40. saniyede nebula')+'. '+raceTiersTxt(dailyNo());
   $('dcGrid').textContent=done?DAILY.grid:'';$('dcPlay').textContent=done?'🔁 ANTRENMAN':'OYNA · 60 SN';$('dcShare').style.display=done?'':'none';
 }
 let pendingChal=readChallenge();
