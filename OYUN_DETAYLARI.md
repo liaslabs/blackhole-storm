@@ -53,6 +53,8 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 - **Meteor girişi**: yavaş giriş hızı %30 → %50, yavaş faz en fazla 0,8 sn (eskiden 1,25 sn).
 - **⏳ Zaman yavaşlatma**: ağır çekim zamanı %50'ye (eskiden %25), Zaman Topu %65'e (eskiden %45) düşürür. Laboratuvardaki yeni **ZAMAN BÜKÜCÜ** (10 seviye) her seviyede yavaşlatmayı güçlendirir: 10. seviyede ağır çekim %25, Zaman Topu %35. Süre kara deliğin evresiyle uzar: ağır çekim 0,35 / 0,45 / 0,55 / 0,7 sn, Zaman Topu 4 / 5 / 6 / 7 sn (Yıldız kütleli → Kuasar).
 
+- **🔬 Laboratuvar kütle maliyeti** ×3 (her cisim +1, boss +5 kütle; seviye başına ~100 kütle birikiyor): 90 / 180 / 300 / 480 / 720 / 1.020 / 1.380 / 1.800 / 2.280 / 2.850 M. Laboratuvardaki kütle 10.000'i geçince kısaltılmış yazılır ("12 bin M").
+
 ### Geliştirici linki
 - `https://liaslabs.github.io/blackhole-storm/dev.html` (ya da `?dev=1`): ayrı kayıt alanı (`bhs_dev`), ilk 1000 seviye açık, 50.000 ⭐ ve 5.000 💎 ile başlar, yakıt yok, Kaptanın Hediyesi araya girmez, haritadaki her seviye "BU SEVİYEDEN OYNA" ile gerçek seviye olarak oynanır, sıralamaya skor gönderilmez. Oyuncunun normal kaydına dokunmaz.
 
