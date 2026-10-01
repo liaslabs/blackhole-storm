@@ -47,7 +47,7 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 - **⚛️ ANTİMADDE** artık macenta hale ve beyaz "eksi" çizgisiyle çizilir; yeşil yalnızca "yenebilir" anlamına gelir.
 
 ### Son ayarlar
-- **📅 GÜNLÜK YARIŞ**: 60 sn, hız 16–25, meteor ×1,4, günün kuralı (yasaklı cisimler / boyut penceresi / yıldız rüzgârı / tutulma, tarihten belirlenir, herkes için aynı), 20. saniyede kısa meteor kuşağı (8 sn), 40. saniyede Yapışkan Nebula. 3 can biterse yarış erken biter. Combo puanı yarışta 2 kata kadar artırır.
+- **📅 GÜNLÜK YARIŞ**: 60 sn, hız 16–25, meteor ×1,4, günün kuralı (yasaklı cisimler / boyut penceresi / yıldız rüzgârı / tutulma, tarihten belirlenir, herkes için aynı), 20. saniyede kısa meteor kuşağı (8 sn), 40. saniyede Yapışkan Nebula. 3 can biterse yarış erken biter. Combo puanı yarışta 2 kata kadar artırır. **Ödül** (sadece günün resmi denemesi): 🥉 15.000 puan +15 ⭐ · 🥈 35.000 +30 ⭐ +1 💎 · 🥇 70.000 +60 ⭐ +3 💎 (boyut penceresi günlerinde eşikler ×0,3); her 7 gün üst üste yarışta +10 💎.
 - **✨ TAKIMYILDIZ**: süre 16 sn'den 6 sn'ye indi.
 - **☄ Meteor kuşağında kalkan**: kalkan ya da Süpernova ile geçilen kuşak +500 puan verir ama +25 ⭐ vermez ("KALKANLA GEÇİLDİ"). Kuşak uyarısı sırasında kalkan düğmesi yanıp söner; kalkanı olmayan dokununca satın alma çıkar.
 - **Meteor girişi**: yavaş giriş hızı %30 → %50, yavaş faz en fazla 0,8 sn (eskiden 1,25 sn).

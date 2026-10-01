@@ -1608,5 +1608,10 @@
 "KALKANLA GEÇİLDİ": "CLEARED WITH A SHIELD",
 "Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar ({n}–{n} sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir": "Everything slows down while you stay fast. It lasts longer as your black hole evolves ({n}–{n} s); the Time Bender in the Laboratory makes the slowdown stronger",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Everyone plays the same universe for {n} seconds, at high speed and with today's rule (banned bodies, size window, wind or eclipse). A meteor belt comes at second {n} and a nebula at second {n}; a long combo multiplies points up to ×{n}. Share your result and challenge a friend",
-"SEVİYEYE GİT": "GO TO LEVEL"
+"SEVİYEYE GİT": "GO TO LEVEL",
+"{n} gün üst üste": "{n} days in a row",
+"Ödül için en az {n} puan": "At least {n} points for a prize",
+"{n} gün üst üste: +{g}": "{n} days in a row: +{g}",
+"{n} gün üst üste: +{n}": "{n} days in a row: +{n}",
+"{n} gün üst üste +{n}": "{n} days in a row +{n}"
 }
