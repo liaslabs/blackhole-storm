@@ -4423,7 +4423,7 @@ function v2EvPlan(l,mode){
   if(mode==='surv')return {next:v2EvPref().length?20:35}; /* the daily storm's belts come on their own clock (v2StormStep) */
   if(mode==='level'&&v2Chal(l)==='belt')return {k:'belt',at:12};
   if(mode!=='level'||l<16||l%10===0||G2.rule||G2.script)return null;
-  let h=Math.imul(l,2654435761)>>>0;h=(h^(h>>>15))>>>0;const ks=Object.keys(EVK).filter(k=>l>=EVK[k].from);
+  let h=Math.imul(l,2654435761)>>>0;h=(h^(h>>>15))>>>0;const ks=Object.keys(EVK).filter(k=>l>=EVK[k].from&&!(v2Hard(l)&&(k==='belt'||k==='neb'))); /* a timed peak never loses a third of its clock to a meteors-only belt or a heavy nebula */
   const fe=EVK[seasonTheme().id]&&l>=EVK[seasonTheme().id].from?seasonTheme().id:null; // the season's event shows up more often
   if((h%1000)/1000>(fe?.6:HMODE?.65:.45)||!ks.length)return null;return {k:fe&&(h>>>12)%10<6?fe:ks[(h>>>4)%ks.length],at:10+(h>>>9)%10};}
 function v2EvStep(dt){
