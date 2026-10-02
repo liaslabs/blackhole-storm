@@ -108,7 +108,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 | 36 | Hedef puan |  |  |  |  | KARİNA BULUTSUSU |
 | 37 | Hedef puan |  |  |  |  | KARİNA BULUTSUSU |
 | 38 | Kısıtlı |  |  |  |  | KARİNA BULUTSUSU |
-| 39 | Hedef puan |  |  |  | 🔥🔥 45 sn | KARİNA BULUTSUSU |
+| 39 | Hedef puan |  |  |  | 🔥🔥 55 sn | KARİNA BULUTSUSU |
 | 40 | Hedef puan | ☢ RADYASYON | RADYASYON | DEV GEZEGEN ☢ |  | KARİNA BULUTSUSU |
 | 41 | Av |  |  |  |  | KOZMİK UÇURUMLAR |
 | 42 | Hedef puan |  |  |  |  | KOZMİK UÇURUMLAR |
@@ -118,7 +118,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 | 46 | Hedef puan |  |  |  |  | KOZMİK UÇURUMLAR |
 | 47 | Koruyucu |  |  |  |  | KOZMİK UÇURUMLAR |
 | 48 | Hedef puan |  |  |  |  | KOZMİK UÇURUMLAR |
-| 49 | Hedef puan |  |  |  | 🔥🔥 45 sn | KOZMİK UÇURUMLAR |
+| 49 | Hedef puan |  |  |  | 🔥🔥 55 sn | KOZMİK UÇURUMLAR |
 | 50 | Düello (boss) | 👁 KARA DELİK İKİZİ | KARA DELİK İKİZİ | KARA DELİK İKİZİ |  | KOZMİK UÇURUMLAR |
 | 51 | Hedef puan |  |  |  |  | DERİN UZAY |
 | 52 | Hedef puan |  |  |  |  | DERİN UZAY |
@@ -128,7 +128,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 | 56 | Rakip |  |  |  |  | DERİN UZAY |
 | 57 | Hedef puan |  |  |  |  | DERİN UZAY |
 | 58 | Hedef puan |  |  |  |  | DERİN UZAY |
-| 59 | Hedef puan |  |  |  | 🔥🔥 45 sn | DERİN UZAY |
+| 59 | Hedef puan |  |  |  | 🔥🔥 55 sn | DERİN UZAY |
 | 60 | Hedef puan |  |  | SÜPERNOVA ☢ |  | DERİN UZAY |
 
 ☢ = boss radyasyon dalgası saçar (40. seviyeden itibaren). 60'tan sonra aynı döngü sürer: her 10. seviye boss, her 50. seviye Kara Delik İkizi düellosu, aradaki seviyelerde kurallı seviyeler ve olaylar.
@@ -365,6 +365,6 @@ Türkçe (kaynak dil) + İngilizce, Almanca, İspanyolca, Portekizce, Fransızca
 - **İki farklı "SÜPERNOVA":** 💎 elmas gücü ile 30, 60, 90… seviyelerdeki boss aynı adı taşıyor.
 - **Elmas gücü baştan açık:** 💎 Süpernova düğmesi 1. seviyeden görünür ve kullanılabilir, tanıtım kartı ise 21. seviyede gelir.
 - **İki yenilik bir arada:** 11. seviyede 360° + Av kuralı, 15. seviyede Mıknatıs + Asteroit Yasak kuralı aynı anda tanıtılıyor.
-- **Çok zor seviyeler:** 39, 49 ve 59 (45 sn) insan benzeri bot tarafından güç kullanılmadan nadiren geçiliyor. Kalkan, Süpernova ve Hawking bu seviyeler için tasarlandı.
+- **Çok zor seviyeler:** 39, 49, 59 ve sonraki her x9 seviyesi 55 sn (eskiden 45). Güç kullanmayan insan benzeri bot 24 denemede 9 kez geçiyor (45 sn ile 3), ortalama hedefin %89’una ulaşıyor. Kalkan, Süpernova ve Hawking bu seviyeler için tasarlandı.
 
 
