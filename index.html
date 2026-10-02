@@ -3784,7 +3784,7 @@ const v2Stage=()=>typeof stageOf==='function'?stageOf(mass):0,v2BtK=()=>.5-.025*
 const v2BtOn=()=>!G2.hm&&!G2.dstorm&&(G2.mode==='level'?level>20:G2.lv>20); /* slow motion is a late-game help: from level 21, never in Hard Mode or the daily storm */
 const FEAT=[['arcs',2],['shield',7],['nova',21],['hawking',24],['jet',28]];
 const v2FeatReady=id=>id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
-const HARD={t:[0,50,45],first:60,met:[1,.7,.6],stars:[0,10,20]};
+const HARD={t:[0,50,55],first:60,met:[1,.7,.6],stars:[0,10,20]};
 function v2Hard(l){if(l<9||l%10===0||v2LevelType(l)!=='score')return 0;if(l%10===9)return l>=39?2:1;return l>20&&l%10===5?1:0;}
 function v2HardT(l){const h=v2Hard(l);return h?(l===9?HARD.first:HARD.t[h]):0;}
 function v2RuleFor(l){const t=v2LevelType(l);
