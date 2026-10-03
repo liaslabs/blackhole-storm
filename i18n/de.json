@@ -1613,5 +1613,8 @@
 "Ödül için en az {n} puan": "Mindestens {n} Punkte für einen Preis",
 "{n} gün üst üste: +{g}": "{n} Tage in Folge: +{g}",
 "{n} gün üst üste: +{n}": "{n} Tage in Folge: +{n}",
-"{n} gün üst üste +{n}": "{n} Tage in Folge +{n}"
+"{n} gün üst üste +{n}": "{n} Tage in Folge +{n}",
+"NORMAL": "NORMAL",
+"Normal": "Normal",
+"Laboratuvar Normal modda ve Sefer'de çalışır. Hayatta Kal ve Günlük Yarış herkes için eşit kalır": "Das Labor wirkt im Normal-Modus und in der Expedition. Überleben und das Tagesrennen bleiben für alle gleich"
 }
