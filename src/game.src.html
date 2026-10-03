@@ -3706,8 +3706,13 @@ $('shareBtn').onclick=async()=>{const txt=`${playerAvatar} `+T("{p}: Blackhole S
 // BOOT
 // ══════════════════════════════════════════════════════
 loadG();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
-  const d=document.createElement('div');d.id='devBar';d.innerHTML=`<span>🛠 ${T('SEVİYEYE GİT')}</span><input id="devLv" type="number" min="1" max="${DEV_LV}" value="${savedLevel}" inputmode="numeric" aria-label="Seviye"><button id="devGo" class="btn">▶ ${T('OYNA')}</button>`;
-  $('starterRib').before(d);$('devGo').onclick=()=>{const n=clamp(parseInt($('devLv').value,10)||1,1,DEV_LV);savedLevel=n;savedScore=0;saveG();selMode('classic');$('startBtn').click();};} /* jump straight to any of the first 1000 levels */
+  const d=document.createElement('div');d.id='devBar';d.innerHTML=`<span>🛠 ${T('SEVİYEYE GİT')}</span><input id="devLv" type="number" min="1" max="${DEV_LV}" value="${savedLevel}" inputmode="numeric" aria-label="Seviye"><button id="devGo" class="btn">▶ ${T('OYNA')}</button><small id="devKit"></small>`;
+  $('starterRib').before(d);devKit(savedLevel);$('devGo').onclick=()=>{const n=clamp(parseInt($('devLv').value,10)||1,1,DEV_LV);savedLevel=n;savedScore=0;saveG();selMode('classic');$('startBtn').click();};} /* jump straight to any of the first 1000 levels */
+// developer link: every level is played as a real player would meet it there: the Laboratory at that level's recommended power
+// (spread over the modules that level allows) and the hole at the quasar stage
+function devKit(l){if(!DEV)return;const ms=LABT.filter(m=>!m.from||l>=m.from),r=labRecAll(l);let left=r,i=0;for(const m of LABT)LAB.lv[m.id]=0;
+  while(left>0&&ms.some(m=>LAB.lv[m.id]<LAB_MAX)){const m=ms[i++%ms.length];if(LAB.lv[m.id]<LAB_MAX){LAB.lv[m.id]++;left--;}}
+  LAB.q=[];mass=Math.max(mass,STAGES[STAGES.length-1].m*2);saveG();const k=$('devKit');if(k)k.textContent=`🔬 ${labPower()} · ${T(STAGES[stageOf(mass)].n)}`;}
 icoDefs();
 setLang(SET.lang||detectLang());
 syncSettingsUI();

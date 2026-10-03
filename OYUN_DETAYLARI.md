@@ -61,6 +61,7 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 
 ### Geliştirici linki
 - `https://liaslabs.github.io/blackhole-storm/dev.html` (ya da `?dev=1`): ayrı kayıt alanı (`bhs_dev`), ilk 1000 seviye açık, 50.000 ⭐ ve 5.000 💎 ile başlar, yakıt yok, Kaptanın Hediyesi araya girmez, haritadaki her seviye "BU SEVİYEDEN OYNA" ile gerçek seviye olarak oynanır, sıralamaya skor gönderilmez. Oyuncunun normal kaydına dokunmaz.
+- Gerçek oyuncu gibi: seçilen her seviyede (ve oradan devam ederken her seviyenin başında) Laboratuvar o seviyede önerilen güce ayarlanır (seviye 109'da 34; o seviyede açılmamış Hawking ve Jet hariç modüllere eşit dağıtılır) ve kara delik kuasar aşamasındadır. Böylece hedef puan, gerçek oyuncunun göreceği değerdir (109'da 81.100). Ana ekrandaki geliştirici çubuğunda o anki güç yazar (🔬 34 · KUASAR).
 
 ### Kademeli yardımlar
 - **⏳ Ağır çekim**: 21. seviyeden itibaren (Zor Mod ve Günün Fırtınası'nda yok).
