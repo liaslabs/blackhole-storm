@@ -32,10 +32,12 @@ Oyuncu bir kara deliği parmağıyla sürükler, uzaydaki cisimleri yutarak büy
 - **🌈 ALTTAKİ NOKTALAR**: Spektrum serin: 5 farklı tür = bonus.
 
 ## 2. Modlar
-- **🪐 KLASİK**: Seviye seviye ilerle, her seviyede yeni bir şey.
+- **🌀 NORMAL** (eski adı Klasik): Seviye seviye ilerle, her seviyede yeni bir şey.
 - **🔥 ZOR SEVİYE**: Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın.
-- **🔥 ZOR MOD**: 30. seviyeyi geçince açılır. Seviye 1'den, klasikten ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp (1 kalp kaybıyla da 3 yıldız alınabilir), ağır çekim yok, ilk seviyede öğretici yok. Yıldız ödülleri 2 kat; Kaptanın Hediyesi ve risk kartı yok.
+- **🔥 ZOR MOD**: 30. seviyeyi geçince açılır. Seviye 1'den, Normal moddan ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp (1 kalp kaybıyla da 3 yıldız alınabilir), ağır çekim yok, ilk seviyede öğretici yok. Yıldız ödülleri 2 kat; Kaptanın Hediyesi ve risk kartı yok.
 - **☠️ HAYATTA KAL · GÜNÜN FIRTINASI**: 180 saniye, herkes için aynı fırtına. Hız 8'den başlar, her 30 saniyede 5 artar; meteorlar 1,5 kat, yaylar onarılmaz, ağır çekim yok. 60. ve 120. saniyede meteor kuşağı gelir. Hayatta kalınan her saniye +20 puan; sonuna kadar dayanırsan +3.000 ve kalan her kalp için +1.500. Dünya sıralaması bu skora göre; sunucu 200 saniyeden uzun koşuları reddeder.
+
+- **Ana ekran**: Başlık üstte, kara delik ortada; solda Sezon, Görevler, Sefer ve Günlük Yarış, sağda Laboratuvar, Atlas, Sıralama ve Rehber. Altta üç mod kartı yan yana (Zor · Normal · Hayatta Kal); her kartta dönen pembe bir girdap var: Zor'da ortasında yanan alev, Hayatta Kal'da büyüyüp küçülen, en büyükken gözleri macenta yanan bir kafatası. OYNA düğmesinin alt satırı tek satıra sığdırılır; sığmazsa seviye üstte kalacak şekilde ikiye bölünür. Harita, OYNA'nın altında.
 
 ### Meydan okuma seviyeleri
 - **💨 HIZLI KÜÇÜLME** (6, 16, 22; sonra x4 seviyeleri): cisim sayısı 1,5 kat, yemeyi bırakınca kara delik 3 kat hızlı küçülür (Zor Mod'da 4 kat). Küçülme halkası kırmızıdır.
@@ -222,7 +224,7 @@ Sayısal değerler: kalkan 10 sn (30 💎) · Süpernova 20 💎, seviye başın
 - **🔥 KUASAR JETİ**: 28. seviyeden itibaren: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder, parmak kalkınca kesilir, süre dolmadan yeniden basınca devam eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss'lara hasar verir. 15 saniyede yeniden dolar. Dolum: her kullanımdan sonra 15 saniyede dolar. Üst bardaki 🔥 halkası dolumu gösterir; dolunca parlar, üç kez nabız atar, "JET HAZIR" yazar ve zil çalar. Ateşlerken halka boşalarak kalan süreyi gösterir.
 - **💨 HAWKING SALINIMI**: 24. seviyeden itibaren: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, meteorları yok eder.
 - **🧭 HAFTALIK SEFER**: Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.
-- **🌳 KÜTLE AĞACI**: Yuttuğun toplam kütleyle kalıcı küçük yetenekler aç (Klasik ve Sefer).
+- **🌳 KÜTLE AĞACI**: Yuttuğun toplam kütleyle kalıcı küçük yetenekler aç (Normal mod ve Sefer).
 - **🪐 YÖRÜNGE BAHÇESİ**: Atlas’ta incelediğin cisimler kara deliğinin etrafında döner ve günde yıldız getirir.
 - **🌬 YILDIZ RÜZGÂRI**: Bazı seviyelerde güçlü bir rüzgâr her şeyi yana sürükler. Rüzgârın geldiği yöne geç, cisimler sana aksın.
 - **🌑 TUTULMA**: Ekran kararır; her 2 saniyede bir radar dalgası her şeyi gösterir. Karanlıkta puan ×1,5.

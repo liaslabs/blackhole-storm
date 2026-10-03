@@ -1613,5 +1613,8 @@
 "Ödül için en az {n} puan": "Для награды нужно минимум {n} очков",
 "{n} gün üst üste: +{g}": "{n} дней подряд: +{g}",
 "{n} gün üst üste: +{n}": "{n} дней подряд: +{n}",
-"{n} gün üst üste +{n}": "{n} дней подряд +{n}"
+"{n} gün üst üste +{n}": "{n} дней подряд +{n}",
+"NORMAL": "ОБЫЧНЫЙ",
+"Normal": "Обычный",
+"Laboratuvar Normal modda ve Sefer'de çalışır. Hayatta Kal ve Günlük Yarış herkes için eşit kalır": "Лаборатория работает в Обычном режиме и Экспедиции. Выживание и Гонка дня равны для всех"
 }

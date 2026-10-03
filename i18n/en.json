@@ -1613,5 +1613,8 @@
 "Ödül için en az {n} puan": "At least {n} points for a prize",
 "{n} gün üst üste: +{g}": "{n} days in a row: +{g}",
 "{n} gün üst üste: +{n}": "{n} days in a row: +{n}",
-"{n} gün üst üste +{n}": "{n} days in a row +{n}"
+"{n} gün üst üste +{n}": "{n} days in a row +{n}",
+"NORMAL": "NORMAL",
+"Normal": "Normal",
+"Laboratuvar Normal modda ve Sefer'de çalışır. Hayatta Kal ve Günlük Yarış herkes için eşit kalır": "The Laboratory works in Normal mode and the Expedition. Survival and the Daily Race stay equal for everyone"
 }

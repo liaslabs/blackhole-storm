@@ -1613,5 +1613,8 @@
 "Ödül için en az {n} puan": "Ji bo xelatê herî kêm {n} puan",
 "{n} gün üst üste: +{g}": "{n} roj li pey hev: +{g}",
 "{n} gün üst üste: +{n}": "{n} roj li pey hev: +{n}",
-"{n} gün üst üste +{n}": "{n} roj li pey hev +{n}"
+"{n} gün üst üste +{n}": "{n} roj li pey hev +{n}",
+"NORMAL": "ASAYÎ",
+"Normal": "Asayî",
+"Laboratuvar Normal modda ve Sefer'de çalışır. Hayatta Kal ve Günlük Yarış herkes için eşit kalır": "Laboratuar di moda Asayî û Seferê de dixebite. Bijî û Pêşbaziya Rojane ji bo her kesî wekhev dimînin"
 }
