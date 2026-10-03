@@ -722,8 +722,14 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 #mHole{flex:1;min-height:120px;width:100%;}
 .mhub .mlogo{font-size:clamp(22px,7vw,30px);letter-spacing:.24em;line-height:1.2;}
 .mhub .mlogo::after{content:'';display:block;width:56px;height:3px;background:var(--gold);margin:10px auto 0;border-radius:2px;}
-.mhub .evo{background:none;border:0;padding:4px 0 0;backdrop-filter:none;-webkit-backdrop-filter:none;}.mhub .evo .bar{display:none;}
-.mhub .evo .t{justify-content:center;flex-wrap:wrap;gap:2px 8px;color:#9fb3e8;letter-spacing:.2em;text-align:center;}.mhub .evo .t>*{white-space:nowrap;}.mhub .evo .t b{color:#9fb3e8;font-size:9.5px;letter-spacing:.2em;font-weight:600;}
+.mcen{min-width:0;}.mhub .evo{background:none;border:0;padding:6px 0 0;max-width:100%;text-align:center;backdrop-filter:none;-webkit-backdrop-filter:none;}
+.mhub .evo .lb{display:block;font-family:var(--fd);font-size:9px;letter-spacing:.2em;color:#8f9cc4;margin-bottom:5px;}
+.mhub .evo .pl{position:relative;display:inline-flex;align-items:center;gap:7px;max-width:100%;padding:5px 6px 5px 10px;border-radius:14px;border:1px solid rgba(242,169,59,.55);background:rgba(242,169,59,.08);}
+.mhub .evo .pl b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--fd);font-weight:700;font-size:11px;letter-spacing:.16em;color:#e8ecff;}
+.mhub .evo .sw{flex:none;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle,#000 38%,var(--c) 44%,color-mix(in srgb,var(--c) 60%,#000) 70%,transparent 74%);box-shadow:0 0 6px color-mix(in srgb,var(--c) 70%,transparent);}
+.mhub .evo .ed{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--gold);font-style:normal;font-size:11px;}
+.mhub .evo .nw{position:absolute;top:-8px;right:-8px;font-style:normal;font-family:var(--fd);font-weight:700;font-size:8.5px;letter-spacing:.06em;background:#e5484d;color:#fff;border-radius:8px;padding:1px 5px;box-shadow:0 0 8px rgba(229,72,77,.6);animation:bdgPulse 1.2s ease-out infinite;}
+.mhub .evo:focus-visible .pl{outline:2px solid #9fd8ff;outline-offset:2px;}.mhub .evo .t b{color:#9fb3e8;font-size:9.5px;letter-spacing:.2em;font-weight:600;}
 .sb.race i{border-color:rgba(242,169,59,.75);color:#ffe1a6;}.sb.race span{white-space:normal;max-width:64px;text-align:center;line-height:1.25;}
 .mm{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .mm .mode{height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0 2px;border-radius:12px;border:1px solid rgba(185,200,255,.18);background:rgba(18,22,40,.9);color:#e8ecff;box-shadow:none;font:inherit;cursor:pointer;}
@@ -1000,7 +1006,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    </div>
    <div class="mcen">
     <div class="logo mlogo">BLACKHOLE STORM</div>
-    <div class="evo" id="evoBox"></div>
+    <div class="evo" id="evoBox" role="button" tabindex="0"></div>
     <div id="mHole"></div>
    </div>
    <div class="mside">
@@ -1442,7 +1448,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
-  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);{const h=svO(d.hm);if(h)HM={lv:svI(h.lv,1,1,1e9),sc:svI(h.sc,0),best:svI(h.best,1,1,1e9),ls:svO(h.ls)||{},ws:svI(h.ws,0,0,9999),s3:svI(h.s3,0,0,9)};}bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false};}
+  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);{const h=svO(d.hm);if(h)HM={lv:svI(h.lv,1,1,1e9),sc:svI(h.sc,0),best:svI(h.best,1,1,1e9),ls:svO(h.ls)||{},ws:svI(h.ws,0,0,9999),s3:svI(h.s3,0,0,9)};}bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false,seen:Array.isArray(k.seen)?k.seen.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):null};}
   {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999),pend:Array.isArray(a.pend)?a.pend.filter(x=>typeof x==='string').slice(0,40):[]};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
   {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),seen:svI(a.seen,svI(a.tier,0,0,SEA.tiers),0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};}
   {const k=svO(d.prk)||{},o=svO(k.own)||{};PERK={own:{},spent:svI(k.spent,0,0,1e9)};for(const p of PERKS)PERK.own[p.id]=svI(o[p.id],0,0,3);}
@@ -1968,7 +1974,7 @@ const SKINS=[{n:'ALTIN DİSK',u:'free'},{n:'MAVİ GİRDAP',u:'stage',v:1},{n:'BU
   {n:'PEMBE FIRTINA',u:'pack'},{n:'PİKSEL NEBULA',u:'pack'},{n:'KOR HALKASI',u:'stage',v:3},{n:'HİLAL YAYLARI',u:'gem',v:80},
   {n:'ARŞİV USTURLABI',u:'atlas',v:10},{n:'YILDIZ HARİTASI',u:'atlas',v:20},{n:'KOZMİK KOLEKSİYON',u:'atlas',v:29},{n:'KUASAR TACI',u:'qh'}]; // Cosmic Archivist looks: mastered Atlas bodies
 const SKIN_TINT=['#c9c2ff','#9fd8ff','#bff6ff','#e8e6e2','#e2c8ff','#ffb3d9','#ffffff','#ffc58a','#d6ccff','#ffd9a0','#bff0ff','#e0d2ff','#ffd98a'];
-let SKIN={sel:0,own:[],mono:'',monoOn:true};
+let SKIN={sel:0,own:[],mono:'',monoOn:true,seen:null};
 const atlasMastered=()=>ATLAS_DEF.filter(x=>atlasTier(x[0])>=3).length;
 function skinOwned(i){const k=SKINS[i];return !!k&&(k.u==='free'||(k.u==='stage'&&stageOf(mass)>=k.v)||(k.u==='pack'&&SHOP.cid)||(k.u==='qh'&&SHOP.qh)||(k.u==='atlas'&&atlasMastered()>=k.v)||SKIN.own.includes(i));}
 const monoClean=v=>[...String(v).toLocaleUpperCase('tr')].filter(ch=>/[\p{L}\p{N}]/u.test(ch)).slice(0,NAME_MAX).join('');
@@ -2007,7 +2013,7 @@ function monoDraw(c,cx,cy,Rp,txt,tint,t=0){ // the name on a ring inside the cor
   c.restore();}
 function skinLockTxt(i){const k=SKINS[i];if(skinOwned(i))return i===SKIN.sel?'✓ SEÇİLİ':'SEÇ';
   return k.u==='stage'?`🔒 ${STAGES[k.v].n}`:k.u==='gem'?`💎 ${k.v}`:k.u==='atlas'?`📖 ${atlasMastered()}/${k.v}`:k.u==='qh'?'👑 KUASAR HAZİNESİ':'🌌 KOZMİK KİMLİK';}
-function openSkins(){SKINUI.view=SKIN.sel;$('sSkin').classList.add('on');renderSkins();SKINUI.run=true;const t0=performance.now();
+function openSkins(){SKIN.seen=SKINS.map((_,i)=>i).filter(skinOwned);saveG();SKINUI.view=SKIN.sel;$('sSkin').classList.add('on');renderSkins();SKINUI.run=true;const t0=performance.now();
   const tick=now=>{if(!SKINUI.run)return;skinBig((now-t0)/1000);requestAnimationFrame(tick);};requestAnimationFrame(tick);}
 function skinBig(t){const cv=$('skBig');skinPaint(cv,SKINUI.view,t,105);const txt=SHOP.cid&&SKIN.monoOn?monoText():'';if(txt)monoDraw(cv.getContext('2d'),220,220,105,txt,SKIN_TINT[SKINUI.view],t);}
 function renderSkins(){
@@ -2030,8 +2036,11 @@ function skinAct(){const i=SKINUI.view,k=SKINS[i];if(skinOwned(i))return;
   else if(k.u==='qh'&&monOn())buy('quasar_hoard');}
 function renderEvo(){
   const st=stageOf(mass),nx=STAGES[st+1],pct=nx?(mass-STAGES[st].m)/(nx.m-STAGES[st].m)*100:100;
-  if(V2){const nk=nx&&SKINS.find(x=>x.u==='stage'&&x.v===st+1);$('evoBox').innerHTML=`<div class="t"><span>🕳️ KARA DELİĞİN</span><b>${SKINS[SKIN.sel].n}</b></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>`+
-    `<div class="r"><div class="s">${nk?`Sonraki görünüm: ${nk.n} · kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)}`:`Kütle ${mass.toLocaleString(LOC)} · evrim görünümlerinin hepsi açık`}</div><div class="go">GÖRÜNÜMÜ DEĞİŞTİR ›</div></div>`;fitMenu();return;}
+  if(V2){ // home: a tappable pill with the look's colour, its name and a palette button; NEW when a look was unlocked since the Looks screen was last opened
+    if(!SKIN.seen)SKIN.seen=SKINS.map((_,i)=>i).filter(skinOwned); /* players from before this start with nothing new */
+    const nw=SKINS.some((_,i)=>skinOwned(i)&&!SKIN.seen.includes(i));
+    $('evoBox').innerHTML=`<span class="lb">${T('KARA DELİĞİN')}</span><span class="pl"><i class="sw" style="--c:${SKIN.sel?SKIN_TINT[SKIN.sel]||'#ffd9a0':'#ffcf7a'}"></i><b>${SKINS[SKIN.sel].n}</b><i class="ed">🎨</i>${nw?`<i class="nw">${T('YENİ')}</i>`:''}</span>`;
+    $('evoBox').setAttribute('aria-label',T('GÖRÜNÜMÜ DEĞİŞTİR'));fitMenu();return;}
   $('evoBox').innerHTML=`<div class="t"><span>🕳️ KARA DELİĞİN</span><b>${STAGES[st].n}</b></div><div class="bar"><i style="width:${pct.toFixed(1)}%"></i></div>`+
     `<div class="s">${nx?`Kütle ${mass.toLocaleString(LOC)} / ${nx.m.toLocaleString(LOC)} · sonraki evre: ${nx.n}`:'Son evre: jetler fışkırıyor!'}<br>Bugüne kadar ${swallowed.toLocaleString(LOC)} gök cismi yuttun.</div>`;
 }
@@ -3464,7 +3473,7 @@ $('pMusic').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('pSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();};
 $('pSet').onclick=$('setBtn').onclick=()=>{syncSettingsUI();$('sSet').classList.add('on');};
 $('setClose').onclick=()=>$('sSet').classList.remove('on');
-$('evoBox').onclick=()=>{if(V2)openSkins();};$('skClose').onclick=()=>{$('sSkin').classList.remove('on');SKINUI.run=false;renderEvo();};$('skAct').onclick=()=>skinAct();
+$('evoBox').onclick=()=>{if(V2)openSkins();};$('skClose').onclick=()=>{$('sSkin').classList.remove('on');SKINUI.run=false;SKIN.seen=SKINS.map((_,i)=>i).filter(skinOwned);saveG();renderEvo();};$('evoBox').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('evoBox').click();}};$('skAct').onclick=()=>skinAct();
 [...$('sFd').children].forEach((b,i)=>b.onclick=()=>{SET.fd=i;saveG();syncSettingsUI();sfx('click',{vol:.4});});
 $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};
