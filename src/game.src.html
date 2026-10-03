@@ -3711,8 +3711,8 @@ $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp(
 $('treeBtn').onclick=()=>labOpenScr();$('labX').onclick=labClose;$('labCv').addEventListener('pointerdown',labHit);addEventListener('resize',()=>{if(LV.on){labSize();labFit();}});
 $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$('gdClose').onclick=()=>{$('sGarden').classList.remove('on');gdRun=false;};
 $('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.tier;saveG();seasonBadge();renderSeason();$('sSeason').classList.add('on');};$('snGrid').onclick=e=>{const b=e.target.closest('.snc.rdy');if(b)seasonClaim([+b.dataset.i],b);};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
-{const mo=new MutationObserver(ms=>{for(const m of ms){const sc=m.target;if(sc.id==='sMap'||!sc.classList.contains('on')||/\bon\b/.test(m.oldValue||''))continue;sc.scrollTop=0;for(const e of sc.querySelectorAll('*'))if(e.scrollTop)e.scrollTop=0;}}); // every screen opens from the top; the map centres itself
-  document.querySelectorAll('.screen').forEach(sc=>mo.observe(sc,{attributes:true,attributeFilter:['class'],attributeOldValue:true}));}
+{const mo=new MutationObserver(ms=>{for(const m of ms){const sc=m.target;if(sc.id==='sMap'||!sc.classList.contains('on')||/\bon\b/.test(m.oldValue||''))continue;sc.scrollTop=0;for(const e of sc.querySelectorAll('*'))if(e.scrollTop)e.scrollTop=0;}}); // every screen and pop-up opens from the top; the map centres itself
+  document.querySelectorAll('.screen,.modal').forEach(sc=>mo.observe(sc,{attributes:true,attributeFilter:['class'],attributeOldValue:true}));}
 $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();fillWallets();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');$('atCollect').onclick=atlasCollect;
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
