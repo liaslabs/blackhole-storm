@@ -312,6 +312,7 @@ const SIG_BOSS={planet:['Radyo teleskoplar dev bir gezegenin yörüngesinden kop
   nova:['Çekirdek çöküşü başladı. Patlama an meselesi.','Nötrino fırtınası algılandı: bir yıldız ölüyor. Radyasyon seviyesi kritik.','Tüm kanallara: süpernova uyarısı. Dalgaların arasındaki boşlukları kullan.']};
 function v2BossInit(){
   let hp=Math.min(80,30+Math.floor(level/10)*10)+Math.min(20,Math.max(0,Math.floor(level/10)-12)*2); // a boss is the peak of its universe: 40 at level 10, 80 by level 50, then slowly from 130 on (the Laboratory fills up late, so it waits)
+  if(level>=110&&level<150)hp=Math.round(hp*.88); // 110–149: the Lab is still filling up, so these bosses go a little easier
   if(SHOP.easyLv===level)hp=Math.round(hp*.8);if(!REPLAY)hp=Math.round(hp*labBossK(level));const bt=v2BossType(level),B=BOSS2[bt];
   const b={k:'boss',x:W/2,y:H*.24,rr:57,r:57*G2.S,hp,max:hp,cell:[2,5,15,13][(Math.floor(level/10)+3)%4],vx:sp2(28),shed:1.4,edible:false,sw:0,
     sX:1,sY:1,gs:1,suck:null,heat:0,isBoss:false,age:0,bt,burst:4,fade:1,spots:[],spotCD:1.2,chips:[],hitFx:0,rad:{ph:'idle',t:0,cd:V2K.boss.radFirst},radOn:level>=V2K.boss.radFrom};if(bt==='nova'&&b.radOn)b.burst=1e9;/* the supernova's debris ring now goes off with its radiation burst */giveSpin(b);b.spinV*=.25;if(bt!=='planet'){delete b.cell;v2BossImg(bt==='red'?'bossRG':'bossSN');v2BossImg('bossRays');}G2.boss=b;
