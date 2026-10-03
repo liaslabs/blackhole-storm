@@ -609,7 +609,17 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .labpow{position:absolute;left:8px;right:8px;top:8px;display:flex;gap:6px;justify-content:space-between;pointer-events:none;}
 .labpow>span{font-family:var(--fm);font-size:11px;color:#cfe3ff;background:rgba(6,10,24,.72);border:1px solid rgba(140,210,255,.25);border-radius:8px;padding:3px 7px;white-space:nowrap;}
 .labpow b{color:#fff;}
-.labstrip{display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:4px;}
+.labstrip{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:3px;}
+.lchip .ltr{position:absolute;top:-6px;left:-3px;font-style:normal;font-family:var(--fd);font-weight:700;font-size:8px;line-height:1;padding:2px 3px;border-radius:5px;background:linear-gradient(90deg,#b98cff,#ffd76a);color:#1a1206;}
+.lupg{margin-top:4px;padding:10px;border-radius:10px;border:1px dashed rgba(201,160,255,.6);background:linear-gradient(135deg,rgba(185,140,255,.14),rgba(255,215,106,.08));font-size:12.5px;color:#e4dcff;line-height:1.45;text-align:start;}
+.lgo.lup{background:linear-gradient(90deg,#9c6bff,#f2a93b);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);box-shadow:0 0 18px rgba(185,140,255,.45);}
+#labUpCv{position:absolute;inset:0;width:100%;height:100%;z-index:5;}
+.labUpCard{position:absolute;inset:0;z-index:20;display:grid;place-items:center;background:rgba(3,4,10,.72);animation:lucIn .35s ease-out;}
+.labUpCard .luc{width:min(320px,88%);padding:18px 16px;border-radius:18px;background:#100e22;border:2px solid transparent;background-image:linear-gradient(#100e22,#100e22),linear-gradient(90deg,#b98cff,#ffd76a);background-origin:border-box;background-clip:padding-box,border-box;text-align:center;}
+.labUpCard i{font-style:normal;font-size:36px;display:block;}.labUpCard b{display:block;margin:6px 0 10px;font-family:var(--fd);font-size:20px;letter-spacing:.08em;background:linear-gradient(90deg,#c9a6ff,#ffd76a);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.labUpCard ul{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-direction:column;gap:7px;font-size:13px;color:#dfe3f5;}.labUpCard li::before{content:'✦ ';color:#c9a6ff;}.labUpCard li.g{color:#ffd76a;}
+@keyframes lucIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.labUpCard{animation:none;}}
 .lchip{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 0 4px;border-radius:10px;border:1px solid rgba(var(--c),.35);background:rgba(var(--c),.07);color:#fff;cursor:pointer;font:inherit;}
 .lchip i{font-style:normal;font-size:18px;line-height:1.1;}.lchip i .ico{width:18px;height:18px;}
 .lchip b{font-family:var(--fm);font-size:10.5px;}
@@ -1485,7 +1495,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   {const a=svO(d.lab);LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[]};
     if(a){const lv=svO(a.lv)||{};for(const m of LABT)LAB.lv[m.id]=svI(lv[m.id],0,0,LAB_MAX);
       LAB.q=(Array.isArray(a.q)?a.q:[]).filter(b=>b&&LABT.some(m=>m.id===b.id)).slice(0,2).map(b=>({id:b.id,to:svI(b.to,1,1,LAB_MAX),end:svI(b.end,0,0,9e15),dur:svI(b.dur,6e4,1,9e15),ad:b.ad?1:0}));
-      LAB.slot2=a.slot2?1:0;LAB.boost=svI(a.boost,0,0,1e6);LAB.nt=svI(a.nt,0,0,9e15);LAB.nl=svI(a.nl,0,0,1e6);{const nf=svO(a.nf)||{};LAB.nf={};for(const m of LABT)if(nf[m.id])LAB.nf[m.id]=1;}const sn=svO(a.seen)||{};for(const m of LABT)if(sn[m.id])LAB.seen[m.id]=1;LAB.done=(Array.isArray(a.done)?a.done:[]).filter(x=>LABT.some(m=>m.id===x)).slice(0,16);}
+      LAB.slot2=a.slot2?1:0;LAB.tier=svI(a.tier,1,1,99);LAB.boost=svI(a.boost,0,0,1e6);LAB.nt=svI(a.nt,0,0,9e15);LAB.nl=svI(a.nl,0,0,1e6);{const nf=svO(a.nf)||{};LAB.nf={};for(const m of LABT)if(nf[m.id])LAB.nf[m.id]=1;}const sn=svO(a.seen)||{};for(const m of LABT)if(sn[m.id])LAB.seen[m.id]=1;LAB.done=(Array.isArray(a.done)?a.done:[]).filter(x=>LABT.some(m=>m.id===x)).slice(0,16);}
     else for(const p of PERKS)LAB.lv[p.id]=Math.min(LAB_MAX,(PERK.own[p.id]|0)*2);}
   {const g=svO(d.gdn)||{};GARDEN={day:typeof g.day==='string'?g.day:''};}
   {const e=svO(d.exp)||{};EXP={w:typeof e.w==='string'?e.w:'',step:svI(e.step,0,0,EXP_STEPS),lives:svI(e.lives,3,0,3),path:Array.isArray(e.path)?e.path.filter(k=>EXP_NODES[k]).slice(0,EXP_STEPS):[],done:svI(e.done,0,-1,1),badges:svI(e.badges,0,0,1e4)};}
@@ -2437,7 +2447,7 @@ const GUIDE={
  'TEMEL':[['step1','','Kara deliği parmağınla sürükle. Parmağını kaldırınca olduğu yerde kalır.'],['step2','','Bir cisim kesikli çekim alanına girince içeri çekilir, spiral çizerek yutulur.'],['step3','','Yuttukça büyürsün: çekim alanın genişler, daha büyük cisimleri yutabilirsin. Bir süre yemezsen yavaşça küçülürsün.'],['step4','','Üstteki hedef puana ulaşınca seviye tamamlanır. Meteorlara çarpma: her çarpışma kara deliğin etrafındaki bir yayı koparır, 3 yay = 1 can.']],
  'SKOR':[['🔥','COMBO','Arka arkaya yut: ×2 ile ×5 arası çarpan. Birkaç saniye yutmazsan combo sıfırlanır.'],['🎯','KUSURSUZ YUTUŞ','Cismi çekim alanına tam ortadan sokarsan puanın ×1,5.'],['☄️','KUSURSUZ KAÇIŞ','Bir meteorun kıl payı yanından geç: +50 puan, Vortex ve combo.'],['💢','VORTEX','Bar dolunca ekrana dokun: 5 saniye dev çekim, puan ×2, meteorlar sana zarar veremez.']],
  'CİSİMLER':[['🪨','ASTEROİT · +10','En sık gelen cisim. Hep yutulabilir.'],['🌑','AY · +25','Kara deliğin 1,15M olunca yutulur. Küçükken seker.'],['🪐','GEZEGEN · +100','1,35M olunca yutulur.'],['🔷','KRİSTAL · +200','Değerli ama genelde bir meteorun yanından gelir.'],['🌕','ALTIN GEZEGEN · +500','Nadir ve hızlı, çoğu zaman meteorlarla birlikte.'],['⚡','ENERJİ','Vortex barını hızla doldurur.'],['☄️','METEOR','Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.'],['🛡','KALKAN PARÇASI','Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.'],['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],['❄','DONMUŞ KUYRUKLU YILDIZ · ×2','25. seviyeden sonra: puanı 2 kat ama yutunca kara delik 3 saniye buz tutar ve ağır hareket eder.'],['🌋','BÖLÜNEN GEZEGEN','Yutulmaz; çarpınca ikiye bölünür, yarım kütleli iki parça hızla uzaklaşır: yakala.'],['⚛️','ANTİMADDE','Yutma: kara deliğini küçültür. Vortex açıkken zararsız.'],['🧲','MIKNATIS TAŞI','Yut: 3 saniye yutabileceğin her şey sana çekilir. Laboratuvardaki Mıknatıs Bobini bu süreyi 8 saniyeye kadar uzatır.'],['💫','PULSAR','Sadece parlarken yutulur: 150 puan.'],['🪐','UYDULU GEZEGEN','Gezegeni, sonra 3 saniye içinde uydusunu yut: çift puan.'],['🌫️','KARANLIK MADDE','Görünmez, yıldızları bükmesinden fark edilir: 120 puan.'],['🌀','SOLUCAN DELİĞİ','Turuncu kapı yakındaki cisimleri çeker, mavi kapıdan kara deliğine gönderir.']],
- 'GÜÇLER':[['🔥','KUASAR JETİ','Nasıl açılır: 28. seviyeye gel, kara deliğin KUASAR evresine ulaşsın (1.500 kütle), sonra Laboratuvarda Kuasar Jeti\'ni inşa et. Kullanım: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss\'lara hasar verir. Üst bardaki 🔥 halkası 15 saniyede dolar; dolunca parlar ve JET HAZIR yazar.'],['💨','HAWKING SALINIMI','Nasıl açılır: 24. seviyeye gel, kara deliğin SÜPER KÜTLELİ evresine ulaşsın (600 kütle), sonra Laboratuvarda Hawking Reaktörü\'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder.'],['⚡','GALİBİYET SERİSİ','61. seviyeden sonra: seviyeleri üst üste geçtikçe sonraki seviyeye gümüş kabukla başlarsın (71. seviyeden sonra 2 galibiyet ve üstü 2 kabuk). Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.'],['🔴','YAYLAR','Kara deliğin etrafındaki üç kırmızı yay, o anki canın darbe hakkı. Her çarpma bir yay koparır; üçü de giderse bir kalp söner ve yaylar yenilenir. Enerji topu kopan bir yayı onarır.'],['⚪','GÜMÜŞ KABUK','51. seviyeden sonra açılır. Üst üste 3 kusursuz kaçış bir yaya gümüş kabuk giydirir (60. seviyeye kadar aynı anda en fazla 1). Kabuk bir darbeyi emer. Aynı seviyede 2 kez kaybedersen seviyeye bir kabukla başlarsın.'],['🟡','ALTIN KABUK','71. seviyeden sonra, her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss\'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde 3 meteor silince ya da boss\'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler.'],['⏱','ZAMAN TOPU','Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar (4–7 sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','AŞIRI YÜK','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Boss (10, 40, 70…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut.'],['🔴','KIRMIZI DEV','Boss (20, 80, 110…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut.'],['💥','SÜPERNOVA','Boss (30, 60, 90…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut.'],['☢','RADYASYON','40. seviyeden itibaren boss\'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur.'],['👁','KARA DELİK İKİZİ','Boss (50, 100…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek.'],['⛽','YAKIT','16. seviyeden sonra her deneme yakıtla yapılır: kaybedilen deneme 1 yakıt harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 yakıt dolar (en fazla 5). Seviye içindeki kalpler (canlar) ayrıdır: yakıt oyuna girme hakkın, can ise o seviyede kaç darbe kaldırabileceğin.'],['🪶','KOLAYLAŞTIR','Aynı seviyede 3 kez olmazsa: 15 💎 ya da reklamla hedef %20 düşer.']],
+ 'GÜÇLER':[['🔥','KUASAR JETİ','Nasıl açılır: 180. seviyeye gel, kara deliğin KUASAR evresine ulaşsın (1.500 kütle), sonra Laboratuvarda Kuasar Jeti\'ni inşa et. Kullanım: kara deliği tutarken ikinci parmakla ekrana bas ve gezdir. 5 saniye boyunca plazma ışını parmağını takip eder; meteorları yakar, puan veren cisimleri parçalayıp puanlarını verir, boss\'lara hasar verir. Üst bardaki 🔥 halkası 15 saniyede dolar; dolunca parlar ve JET HAZIR yazar.'],['💨','HAWKING SALINIMI','Nasıl açılır: 140. seviyeye gel, kara deliğin SÜPER KÜTLELİ evresine ulaşsın (600 kütle), sonra Laboratuvarda Hawking Reaktörü\'nü inşa et. Kullanım: büyükken sağ alttaki Hawking düğmesi kütlenin bir kısmını radyasyona çevirir, ekrandaki meteorları yok eder.'],['🌌','SOLUCAN DELİĞİ','250. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.'],['♾️','İKİNCİ UFUK','350. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.'],['⚡','GALİBİYET SERİSİ','61. seviyeden sonra: seviyeleri üst üste geçtikçe sonraki seviyeye gümüş kabukla başlarsın (71. seviyeden sonra 2 galibiyet ve üstü 2 kabuk). Kaybedip devam etmeden çıkarsan seri sıfırlanır; devam edersen korunur.'],['🔴','YAYLAR','Kara deliğin etrafındaki üç kırmızı yay, o anki canın darbe hakkı. Her çarpma bir yay koparır; üçü de giderse bir kalp söner ve yaylar yenilenir. Enerji topu kopan bir yayı onarır.'],['⚪','GÜMÜŞ KABUK','51. seviyeden sonra açılır. Üst üste 3 kusursuz kaçış bir yaya gümüş kabuk giydirir (60. seviyeye kadar aynı anda en fazla 1). Kabuk bir darbeyi emer. Aynı seviyede 2 kez kaybedersen seviyeye bir kabukla başlarsın.'],['🟡','ALTIN KABUK','71. seviyeden sonra, her evrenin son üç seviyesinde kazanılır: kusursuz kaçışlarla (boss\'a yaklaştıkça daha az), günlük görev ödülüyle, kalkanın süresi bitince, Hawking tek seferde 3 meteor silince ya da boss\'un zayıf noktalarını kırınca. Bir darbeyi karşılar ve patlayıp etrafındaki meteorları siler.'],['⏱','ZAMAN TOPU','Her şey yavaşlar, sen hızlı kalırsın. Süre kara deliğin evresiyle uzar (4–7 sn); Laboratuvardaki Zaman Bükücü yavaşlamayı güçlendirir.'],['💣','BOMBA GEZEGEN','Çekim alanında 3 saniye tut: MEGA BOMBA yutabileceğin her cismi patlatır, tutulma efektiyle sana çeker; meteorlar parçalanır. Çok hızlı hareket edersen kaçar.'],['🌀','MİNİ KARA DELİK','6 saniye etrafında dönen yardımcı kara delik. Yuttukları sana akar, meteorları durdurur.'],['🟣','AŞIRI YÜK','Sınıra kadar büyüyünce 15 saniye daha güçlü ama zor yönetilen bir kara delik. Sonunda çöker.'],['🪐','DEV GEZEGEN','Boss (10, 40, 70…): hızla çarp ya da kopan parçaları yut. Yeşile dönünce bütünüyle yut.'],['🔴','KIRMIZI DEV','Boss (20, 80, 110…): nefes alır gibi şişer, şiştikçe plazma saçar. Plazmayı yut; yeşile dönünce onu da yut.'],['💥','SÜPERNOVA','Boss (30, 60, 90…): her patlamada enkaz saçar. Enkazı yut; yeşile dönünce onu da yut.'],['☢','RADYASYON','40. seviyeden itibaren boss\'lar radyasyon dalgası saçar. Dalgaların arasındaki boşlukta dur; değersen küçülürsün. Kalkan ve Vortex seni korur.'],['👁','KARA DELİK İKİZİ','Boss (50, 100…): senin kütlende bir kara delik. Kırmızıyken uzak dur, maviye dönünce yakala. İki kez yutman gerek.'],['⛽','YAKIT','16. seviyeden sonra her deneme yakıtla yapılır: kaybedilen deneme 1 yakıt harcar, kazanılan seviye harcamaz. Her 20 dakikada 1 yakıt dolar (en fazla 5). Seviye içindeki kalpler (canlar) ayrıdır: yakıt oyuna girme hakkın, can ise o seviyede kaç darbe kaldırabileceğin.'],['🪶','KOLAYLAŞTIR','Aynı seviyede 3 kez olmazsa: 15 💎 ya da reklamla hedef %20 düşer.']],
  'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al. Nadiren bir kutuda BÜYÜK HAZİNE saklıdır: 1000 yıldız ve 50 elmas. Reklam izleyerek bulma şansını yarı yarıya çıkarabilirsin.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Yarış ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin %15’i kadar bonus puan gelir, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
   'HALKALAR':[['⭕','ÇEKİM ALANI','Kara deliğin etrafındaki soluk geniş halka çekim alanının sınırıdır: içine giren cisimler sana çekilir. Büyüdükçe genişler. Cismi alanın tam ortasından içeri alırsan KUSURSUZ YUTUŞ.'],['🟠','TURUNCU HALKA','Vortex açıkken kalan süreyi gösterir.'],['🔵','MAVİ HALKA','Süpernova koruması: meteorlar sana zarar veremez.'],['🟣','MOR TİTREYEN HALKA','Overload: daha güçlüsün ama yönetmek zor.'],['🟡','SARI HALKA','Kalkan açık: çarpan meteor parçalanır.'],['🔴','KIRMIZI YANIP SÖNEN','Darbe aldın; kısa süre dokunulmazsın.'],['💜','MOR DALGALAR','Bir süredir yemediğin için küçülüyorsun.'],['🌈','ALTTAKİ NOKTALAR','Spektrum serin: 5 farklı tür = bonus.']],
   'OLAYLAR':[['💫','KİLONOVA','İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve altın saçılır.'],['🧭','HAFTALIK SEFER','Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.'],['🔬','LABORATUVAR','Kütle ve yıldızla kalıcı geliştirmeler başlat; her biri zaman alır, elmasla hemen bitirilebilir. Aynı anda bir geliştirme; ikinci yuva elmasla ya da VIP ile açılır. Hawking ve Kuasar Jeti burada inşa edilir. Klasik ve Sefer\'de çalışır.'],['🪐','YÖRÜNGE BAHÇESİ','Atlas’ta incelediğin cisimler kara deliğinin etrafında döner ve günde yıldız getirir.'],['🌬','YILDIZ RÜZGÂRI','Bazı seviyelerde güçlü bir rüzgâr her şeyi yana sürükler. Rüzgârın geldiği yöne geç, cisimler sana aksın.'],['🌑','TUTULMA','Ekran kararır; her 2 saniyede bir radar dalgası her şeyi gösterir. Karanlıkta puan ×1,5.'],['✨','TAKIMYILDIZ','Numaralı yıldızları sırasıyla yut. Süre bitmeden tamamlarsan büyük bonus ve Atlas kaydı.'],['🌫','YAPIŞKAN NEBULA','35. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat.'],['⏳','AĞIR ÇEKİM','21. seviyeden sonra: bir meteor çarpmak üzereyken zaman bir an yavaşlar. Seviye başına 3 kez. Zor Mod\'da ve Günün Fırtınası\'nda yok.'],['☄','METEOR KUŞAĞI','Uyarıdan sonra 13 saniye sadece meteor gelir; hepsi aynı açıyla, şerit şerit akar. Boş şeridi takip et. Hasarsız geçersen +500 puan ve +25 ⭐. 8, 18 ve 28. seviyelerde, sonra arada bir; Günün Fırtınası\'nda 60. ve 120. saniyede.'],['💨','HIZLI KÜÇÜLME','6, 16 ve 22. seviyelerde (sonra arada bir): ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür.'],['🃏','RİSK KARTI','12. seviyeden itibaren her 5 seviyede bir: seviyeyi zorlaştıran bir kart seçebilirsin, bitirirsen ekstra elmas kazanırsın.'],['🗝','HAZİNE ANAHTARI','Mağazadan 90 elmasa: sonraki Kaptanın Hediyesi’nde Büyük Hazine kesin çıkar.']],
@@ -2699,15 +2709,17 @@ function fmtM(n){n=Math.floor(n);if(n<10000)return n.toLocaleString(LOC);try{ret
 // or by hour tokens from the Atlas. One build slot; a second one for 250 diamonds or while VIP (never more than two for anyone).
 // The Hawking reactor and the quasar jet only work once built. Boss and very hard levels past 30 name a recommended power.
 const LABT=[
-  {id:'grav',ic:'🌀',n:'ÇEKİM ALANI',col:'111,183,216'},
-  {id:'start',ic:'⚫',n:'OLAY UFKU',col:'185,167,255'},
-  {id:'combo',ic:'🔥',n:'COMBO KRİSTALİ',col:'255,150,70'},
-  {id:'shield',ic:'🛡',n:'KALKAN JENERATÖRÜ',col:'255,216,77'},
-  {id:'rage',ic:'💢',n:'VORTEX ÇEKİRDEĞİ',col:'255,95,110'},
-  {id:'magnet',ic:'🧲',n:'MIKNATIS BOBİNİ',col:'255,140,160'},
-  {id:'time',ic:'⏳',n:'ZAMAN BÜKÜCÜ',col:'143,208,255'},
-  {id:'hawk',ic:'💨',n:'HAWKING REAKTÖRÜ',col:'225,235,255',from:24,st:2},
-  {id:'jet',ic:'🌠',n:'KUASAR JETİ',col:'140,225,255',from:28,st:3}]; // new features also need the black hole's evolution: Hawking the supermassive stage, the jet the full quasar
+  {id:'grav',ic:'🌀',n:'ÇEKİM ALANI',col:'111,183,216',from:10},
+  {id:'magnet',ic:'🧲',n:'MIKNATIS BOBİNİ',col:'255,140,160',from:20},
+  {id:'combo',ic:'🔥',n:'COMBO KRİSTALİ',col:'255,150,70',from:35},
+  {id:'start',ic:'⚫',n:'OLAY UFKU',col:'185,167,255',from:50},
+  {id:'rage',ic:'💢',n:'VORTEX ÇEKİRDEĞİ',col:'255,95,110',from:70},
+  {id:'shield',ic:'🛡',n:'KALKAN JENERATÖRÜ',col:'255,216,77',from:90},
+  {id:'time',ic:'⏳',n:'ZAMAN BÜKÜCÜ',col:'143,208,255',from:110},
+  {id:'hawk',ic:'💨',n:'HAWKING REAKTÖRÜ',col:'225,235,255',from:140,st:2},
+  {id:'jet',ic:'🌠',n:'KUASAR JETİ',col:'140,225,255',from:180,st:3},
+  {id:'worm',ic:'🌌',n:'SOLUCAN DELİĞİ',col:'159,123,255',from:250,st:3},
+  {id:'hor',ic:'♾️',n:'İKİNCİ UFUK',col:'255,215,106',from:350,st:3}]; // modules open later the stronger they are; the late ones also need the black hole's evolution
 const LAB_DESC={grav:'Kara deliğinin çekim alanı genişler: cisimler sana daha uzaktan çekilir.',
   start:'Her seviyeye daha büyük bir kara delikle başlarsın: ilk saniyelerden daha iri cisimleri yutabilirsin.',
   combo:'Combo zinciri daha geç söner: yutmalar arasında daha çok zamanın olur, puan daha çok katlanır.',
@@ -2716,39 +2728,52 @@ const LAB_DESC={grav:'Kara deliğinin çekim alanı genişler: cisimler sana dah
   magnet:'Mıknatıs taşı daha uzun çalışır: yutabileceğin her şey daha uzun süre sana çekilir.',
   time:'Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar.',
   hawk:'Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır.',
-  jet:'İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss\'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar.'};
+  jet:'İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss\'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar.',
+  worm:'Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Seviye arttıkça bekleme kısalır.',
+  hor:'Seviye başına bir kez, son yay da kopacakken darbe karşılanır: zaman yavaşlar, ufuk dalgası meteorları siler, yaylar yenilenir ve kalkan açılır.'};
 const LAB_MAX=10,LAB_T=[5,20,90,270,600,1080,1800,2880,4320,5760],LAB_M=[90,180,300,480,720,1020,1380,1800,2280,2850], /* mass x3: it piles up at ~100 a level, so building should make you choose */LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
-let LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[]};
+let LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[],tier:1};
+const LAB_TK={m:2.5,s:2,t:1.25},LAB_UP={m:30000,s:10000}; // per tier: mass, stars and time grow; the Laboratory's own upgrade too
+const labTier=()=>Math.max(1,LAB.tier|0),labK=k=>Math.pow(k,labTier()-1);
+const labCM=lv=>Math.round(LAB_M[Math.min(lv,LAB_MAX-1)]*labK(LAB_TK.m)/10)*10,labCS=lv=>Math.round((LAB_S[Math.min(lv,LAB_MAX-1)]||(labTier()>1?20:0))*labK(LAB_TK.s)),labCT=lv=>Math.round(LAB_T[Math.min(lv,LAB_MAX-1)]*labK(LAB_TK.t));
+const labUpM=()=>Math.round(LAB_UP.m*labK(LAB_TK.m)),labUpS=()=>Math.round(LAB_UP.s*labK(LAB_TK.s));
+const ROMAN=['','I','II','III','IV','V','VI','VII','VIII','IX','X'],roman=n=>ROMAN[n]||String(n);
 const labRaw=id=>Math.min(LAB_MAX,LAB.lv[id]|0);
-function labLv(id){return gameMode==='classic'?labRaw(id):0;} // the lab works in Classic and the Expedition; Survival and the Daily Race stay equal for everyone
-const labPower=()=>LABT.reduce((n,m)=>n+labRaw(m.id),0);
+function labLv(id){return gameMode==='classic'?(labTier()>1?LAB_MAX:labRaw(id)):0;} // the lab works in Classic and the Expedition; Survival and the Daily Race stay equal for everyone
+const labPower=()=>LABT.reduce((n,m)=>n+(labTier()-1)*LAB_MAX+labRaw(m.id),0);
+// what a module really gives: the first tier counts in full, each later tier half the one before (a module never passes twice its first tier)
+function labBase(id){const t=labTier(),l=labRaw(id);let e=0;for(let k=1;k<t;k++)e+=LAB_MAX/Math.pow(2,k-1);return e+l/Math.pow(2,t-1);}
+const labReady=()=>LABT.every(m=>labLvOk(m)&&labRaw(m.id)>=LAB_MAX)&&!LAB.q.length; // every module open and at 10: the Laboratory can level up
 // every level expects some power; upgrades beyond that count half, so a maxed Laboratory keeps up with late levels rather than trivialising them
-const labRecAll=l=>Math.max(6,Math.floor((l-20)/5)*2);
-function labEffLv(id){const lv=labLv(id);if(!lv)return 0;const p=labPower(),r=labRecAll(level);return p<=r?lv:lv*(r+(p-r)*.5)/p;}
+const labOpenAt=l=>LABT.filter(m=>!m.from||l>=m.from).length;
+const labRecAll=l=>{const b=Math.max(6,Math.floor((l-20)/5)*2),cap=Math.floor(labOpenAt(l)*LAB_MAX*.8);return l<400?Math.min(b,cap):Math.min(b,cap+Math.floor((l-400)*.3));};
+function labEffLv(id){if(!labLv(id))return 0;const lv=labBase(id),p=labPower(),r=labRecAll(level);return p<=r?lv:lv*(r+(p-r)*.5)/p;}
 const labSlots=()=>Math.min(2,1+(LAB.slot2||vipOn()?1:0));
-const labLvOk=m=>!m.from||Math.max(savedLevel,bestLevel|0)>=m.from,labStOk=m=>!m.st||stageOf(mass)>=m.st,labOpen=m=>labLvOk(m)&&labStOk(m);
+const labLvOk=m=>!m.from||Math.max(savedLevel,bestLevel|0)>=m.from||labRaw(m.id)>0||labTier()>1,labStOk=m=>!m.st||stageOf(mass)>=m.st||labRaw(m.id)>0||labTier()>1,labOpen=m=>labLvOk(m)&&labStOk(m);
 const labBusy=id=>LAB.q.find(b=>b.id===id);
 function labGem(ms,lv){const m=Math.max(0,ms)/6e4;return m<=0?0:Math.max(1,Math.ceil(2.6*Math.sqrt(m)*(1+.05*lv)));} // cheaper per minute the longer it is, dearer the higher the level
 function labDur(sec){sec=Math.max(0,Math.ceil(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;
   return h?T('{h} sa {m} dk',{h,m}):m?T('{m} dk {s} sn',{m,s:String(s).padStart(2,'0')}):T('{s} sn',{s});}
 function labMin(m){m=Math.max(0,Math.round(m));const h=Math.floor(m/60),r=m%60;return h?(r?T('{h} sa {m} dk',{h,m:r}):T('{h} sa',{h})):T('{m} dk',{m});}
-function labEff(id,lv){const f=x=>x.toLocaleString(LOC,{maximumFractionDigits:2});
-  switch(id){case 'grav':return T('Çekim alanı +%{n}',{n:2*lv});case 'start':return T('Başlangıç boyutu +%{n}',{n:2*lv});
-    case 'combo':return T('Combo süresi +{s} sn',{s:f(.12*lv)});case 'shield':return T('Kalkan süresi +{s} sn',{s:f(.5*lv)});
+function labEff(id,lv){const f=x=>x.toLocaleString(LOC,{maximumFractionDigits:2});{const t=labTier();if(t>1){let e=0;for(let k=1;k<t;k++)e+=LAB_MAX/Math.pow(2,k-1);lv=e+lv/Math.pow(2,t-1);}}const r1=x=>Math.round(x*10)/10;
+  switch(id){case 'grav':return T('Çekim alanı +%{n}',{n:f(r1(2*lv))});case 'start':return T('Başlangıç boyutu +%{n}',{n:f(r1(Math.min(30,2*lv)))});
+    case 'combo':return T('Combo süresi +{s} sn',{s:f(.12*lv)});case 'shield':return T('Kalkan süresi +{s} sn',{s:f(Math.min(8,.5*lv))});
     case 'rage':return T('Vortex süresi +{s} sn',{s:f(.25*lv)});case 'magnet':return T('Mıknatıs süresi +{s} sn',{s:f(.5*lv)});
-    case 'time':return T('Ağır çekim %{a} hız · Zaman Topu %{b} hız',{a:Math.round(100*(.5-.025*lv)),b:Math.round(100*(.65-.03*lv))});
-    case 'hawk':return lv?T('Hawking açık · bekleme {s} sn',{s:25-(lv-1)}):T('Hawking kapalı');
-    case 'jet':return lv?T('Jet açık · süre {s} sn',{s:f(5+.2*(lv-1))}):T('Jet kapalı');}return '';}
+    case 'time':return T('Ağır çekim %{a} hız · Zaman Topu %{b} hız',{a:Math.round(100*Math.max(.25,.5-.025*lv)),b:Math.round(100*Math.max(.3,.65-.03*lv))});
+    case 'hawk':return lv?T('Hawking açık · bekleme {s} sn',{s:f(r1(Math.max(12,25-(lv-1))))}):T('Hawking kapalı');
+    case 'jet':return lv?T('Jet açık · süre {s} sn',{s:f(r1(5+.2*(lv-1)))}):T('Jet kapalı');
+    case 'worm':return lv?T('Işınlanma · bekleme {s} sn',{s:f(r1(Math.max(8,20-(lv-1))))}):T('Solucan Deliği kapalı');
+    case 'hor':return lv?T('Seviye başına 1 kez · kalkan {s} sn',{s:f(r1(Math.min(6,2+.3*lv)))}):T('İkinci Ufuk kapalı');}return '';}
 // recommended power for boss and very hard levels from 30 on; below it they push back harder
-function labRec(l){return l>=30&&(l%10===0||v2Hard(l)===2)?Math.min(60,Math.floor((l-20)/5)*2):0;}
+function labRec(l){return l>=30&&(l%10===0||v2Hard(l)===2)?Math.min(60,labRecAll(l)):0;}
 function labGap(l){const r=labRec(l);return r?Math.max(0,r-labPower()):0;}
 const labBossK=l=>1+Math.min(.3,.03*labGap(l)),labGoalK=l=>1+Math.min(.2,.02*labGap(l));
 function labTick(){const now=Date.now();let n=0;for(let i=LAB.q.length-1;i>=0;i--){const b=LAB.q[i];if(b.end<=now){LAB.q.splice(i,1);LAB.lv[b.id]=Math.max(labRaw(b.id),b.to);LAB.done.push(b.id);n++;
     const m=LABT.find(x=>x.id===b.id);if(m&&!$('sLab').classList.contains('on')){achQueue.push({i:m.ic,t:T('LABORATUVAR')+' · '+T(m.n),d:T('SEVİYE {k} HAZIR',{k:b.to}),at:performance.now()});if(!achShowing)nextAch();}}}
   if(n){saveG();labBadge();}return n;}
 function labStart(id){const m=LABT.find(x=>x.id===id),lv=labRaw(id);if(!m||lv>=LAB_MAX||!labOpen(m)||labBusy(id)||LAB.q.length>=labSlots())return false;
-  if(massFree()<LAB_M[lv]||stars<LAB_S[lv])return false;
-  PERK.spent+=LAB_M[lv];stars-=LAB_S[lv];const d=LAB_T[lv]*6e4;LAB.q.push({id,to:lv+1,end:Date.now()+d,dur:d,ad:0});saveG();walletsRefresh();labBadge();return true;}
+  if(massFree()<labCM(lv)||stars<labCS(lv))return false;
+  PERK.spent+=labCM(lv);stars-=labCS(lv);const d=labCT(lv)*6e4;LAB.q.push({id,to:lv+1,end:Date.now()+d,dur:d,ad:0});saveG();walletsRefresh();labBadge();return true;}
 function labFinish(id,how){const b=labBusy(id);if(!b)return false;const left=b.end-Date.now();
   if(how==='gem'){const g=labGem(left,b.to);if(diamonds<g)return false;diamonds-=g;b.end=Date.now();}
   else if(how==='ad'){if(b.ad)return false;b.ad=1;b.end-=LAB_AD*6e4;}
@@ -2764,10 +2789,10 @@ function labContHint(){labTickQuiet();const gap=labGap(level),b=LAB.q.slice().so
 // Laboratory notes: now and then, on the menu (never during play), a card points the way to getting stronger
 const LN_GAP=12*6e4,LN_LV=3;
 function labNoteNext(){const lv=Math.max(savedLevel,bestLevel|0);if(lv<7)return null;
-  for(const m of LABT)if(m.from&&labOpen(m)&&!labRaw(m.id)&&!labBusy(m.id)&&!(LAB.nf&&LAB.nf[m.id]))return {once:m.id,ic:m.ic,t:T('YENİ ÖZELLİK')+' · '+T(m.n),d:T(m.id==='jet'?'Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle.':'Laboratuvarda inşa et; meteorları tek dokunuşla sil.')};
+  for(const m of LABT)if(m.from&&labOpen(m)&&!labRaw(m.id)&&!labBusy(m.id)&&!(LAB.nf&&LAB.nf[m.id]))return {once:m.id,ic:m.ic,t:T('YENİ ÖZELLİK')+' · '+T(m.n),d:T(m.id==='jet'?'Laboratuvarda inşa et; oyunda ikinci parmakla dokunup ateşle.':m.id==='hawk'?'Laboratuvarda inşa et; meteorları tek dokunuşla sil.':m.id==='worm'?'Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan.':m.id==='hor'?'Laboratuvarda inşa et; seviye başına bir kez kalbini korur.':LAB_DESC[m.id])};
   {const m=LABT.find(m=>m.st&&labLvOk(m)&&!labStOk(m));if(m)return {ic:m.ic,t:T('YENİ ÖZELLİK YAKLAŞIYOR')+' · '+T(m.n),d:T('Kara deliğin {s} evresine ulaşınca açılır · {n} M daha',{s:T(STAGES[m.st].n),n:Math.max(0,STAGES[m.st].m-Math.floor(mass)).toLocaleString(LOC)})};}
   const p=labPower();for(let l=lv;l<=lv+4;l++){const r=labRec(l);if(r>p)return {ic:'⚡',t:T('SEVİYE {k} GÜÇ İSTİYOR',{k:l}),d:T('Önerilen güç {r}, seninki {p}. Laboratuvarda güçlen.',{r,p})};}
-  if(LAB.q.length<labSlots()){const m=LABT.find(m=>labOpen(m)&&!labBusy(m.id)&&labRaw(m.id)<LAB_MAX&&massFree()>=LAB_M[labRaw(m.id)]&&stars>=LAB_S[labRaw(m.id)]);
+  if(LAB.q.length<labSlots()){const m=LABT.find(m=>labOpen(m)&&!labBusy(m.id)&&labRaw(m.id)<LAB_MAX&&massFree()>=labCM(labRaw(m.id))&&stars>=labCS(labRaw(m.id)));
     if(m)return {ic:m.ic,t:T('LABORATUVAR BOŞ'),d:T('{m} için kaynağın hazır: seviye {k} geliştirmesini başlat.',{m:T(m.n),k:labRaw(m.id)+1})};}
   return null;}
 function labNoteMaybe(){if(!$('sMenu').classList.contains('on')||document.querySelector('.modal.on')||LV.on||gState==='playing')return;
@@ -2787,22 +2812,55 @@ function labOpenScr(){labTick();LAB.seen=LAB.seen||{};for(const m of LABT)if(m.f
   else{const b=LAB.q[0];const i=b?LABT.findIndex(m=>m.id===b.id):LABT.findIndex(m=>labOpen(m)&&labRaw(m.id)<LAB_MAX);LV.sel=Math.max(0,i);}
   LV.rotT=LV.rot=labRotFor(LV.sel);labRender();labSize();if(!LV.on){LV.on=true;LV.last=performance.now();requestAnimationFrame(labFrame);}
   const d=LAB.done.splice(0);if(d.length){saveG();later(()=>d.forEach(labCelebrate),500);}labBadge();}
+// the Laboratory levels up: pay, then the modules spin round the core, flash, and land with their new tier; a card says what changed
+function labLevelUp(){if(!labReady())return;const uM=labUpM(),uS=labUpS();if(massFree()<uM||stars<uS)return;
+  PERK.spent+=uM;stars-=uS;LAB.tier=labTier()+1;for(const m of LABT)LAB.lv[m.id]=0;saveG();walletsRefresh();labBadge();dmEvent&&dmEvent('labup',1);
+  sfx('powerup',{vol:.8,rate:.6});vib([40,30,80,30,120]);labUpShow(LAB.tier);}
+function labUpShow(tr){const host=document.querySelector('#sLab .labcvw'),still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const done=()=>{const o=$('labUpCv');if(o)o.remove();labUpCard(tr);labRender();};if(!host||still){done();return;}
+  const cv=document.createElement('canvas');cv.id='labUpCv';host.appendChild(cv);const R0=host.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1),W=R0.width,H=R0.height;cv.width=W*d;cv.height=H*d;
+  const x=cv.getContext('2d'),cx=W/2,cy=H*.5,pods=(LV.pods||[]).map(p=>({m:p.m,x:p.x,y:p.y,s:p.s})),ps=[];let T0=performance.now(),land=pods.map(()=>null),fin=false;
+  const hexP=(px,py,r)=>{x.beginPath();for(let i=0;i<6;i++){const a=Math.PI/6+i*TAU/6;x.lineTo(px+Math.cos(a)*r,py+Math.sin(a)*r);}x.closePath();};
+  const pod=(p,px,py,s,glow,nt,ld)=>{const r=24*s;x.save();if(glow>0){x.shadowColor=`rgba(${p.m.col},${glow})`;x.shadowBlur=22*glow;}hexP(px,py,r);x.fillStyle='rgba(20,24,46,.96)';x.fill();x.shadowBlur=0;x.lineWidth=2*s;x.strokeStyle=`rgba(${p.m.col},.95)`;x.stroke();
+    if(nt)labTierFrame(x,px,py,r,s*(ld!=null&&ld<.25?1+(.25-ld)*3:1),tr,(performance.now()-T0)/1000,rr=>hexP(px,py,rr));
+    x.font=`${Math.round(20*s)}px sans-serif`;x.textAlign='center';x.textBaseline='middle';x.fillText(p.m.ic,px,py+1);x.restore();};
+  const burst=(X,Y,n,c,sp)=>{for(let i=0;i<n;i++){const a=Math.random()*TAU,v=sp*(.3+Math.random());ps.push({x:X,y:Y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,l:1,c});}};
+  cv.onpointerdown=()=>{fin=true;};let last=T0;
+  const frame=now=>{if(fin||!$('sLab').classList.contains('on')){done();return;}const T=(now-T0)/1000,dt=Math.min(.05,(now-last)/1000);last=now;x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);
+    const s1=Math.min(1,T/.6),s2=Math.max(0,Math.min(1,(T-.6)/1.4)),s3=Math.max(0,Math.min(1,(T-2)/.4)),s4=Math.max(0,T-2.4);
+    x.fillStyle=`rgba(2,3,10,${.55*s1})`;x.fillRect(0,0,W,H);
+    const heat=Math.min(1,s2*1.2+s3),Rc=Math.min(W,H)*.11*(1+.4*s2);const g=x.createRadialGradient(cx,cy,Rc*.8,cx,cy,Rc*3.2);g.addColorStop(0,`rgba(255,${200+40*heat|0},${130+110*heat|0},${.4+.5*heat})`);g.addColorStop(1,'rgba(255,120,40,0)');x.fillStyle=g;x.beginPath();x.arc(cx,cy,Rc*3.2,0,TAU);x.fill();
+    pods.forEach((p,i)=>{if(T<2.4){const a0=Math.atan2(p.y-cy,p.x-cx),d0=Math.hypot(p.x-cx,p.y-cy),ang=a0+(s2*s2*9+s3*14)*Math.max(0,T-.6)*.6,dd=d0*(1-.35*s2)*(1-s3),px=cx+Math.cos(ang)*dd,py=cy+Math.sin(ang)*dd*.62,ss=p.s*(1-.3*s2)*(1-.8*s3)+.05;
+        if(s2>0&&s3<1){x.strokeStyle=`rgba(${p.m.col},${.25+.5*s2})`;x.lineWidth=2+3*s2;x.beginPath();x.moveTo(px,py);x.lineTo(cx,cy);x.stroke();}pod(p,px,py,ss,.4+.6*s1,false);}
+      else{const ti=s4-i*.08;if(ti<0)return;const k=Math.min(1,ti/.35),e=1-Math.pow(1-k,3);if(k>=1&&land[i]==null){land[i]=0;burst(p.x,p.y,18,'255,215,106',150);sfx('coin',{vol:.25,rate:1.2+i*.04});}if(land[i]!=null)land[i]+=dt;pod(p,cx+(p.x-cx)*e,cy+(p.y-cy)*e,p.s*(.4+.6*e),.8,true,land[i]);}});
+    if(T>2.25&&T<2.9){const q=(T-2.25)/.65;if(q<.06&&!frame.boom){frame.boom=1;burst(cx,cy,70,'230,210,255',360);sfx('boom',{vol:.6,rate:.8});LV.flash=1;}x.fillStyle=`rgba(255,250,235,${(1-q)*.85})`;x.fillRect(0,0,W,H);x.strokeStyle=`rgba(255,215,106,${1-q})`;x.lineWidth=8*(1-q)+1;x.beginPath();x.arc(cx,cy,30+q*Math.max(W,H),0,TAU);x.stroke();}
+    for(let i=ps.length-1;i>=0;i--){const p=ps[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.l-=dt*1.4;if(p.l<=0){ps.splice(i,1);continue;}x.fillStyle=`rgba(${p.c},${p.l})`;x.fillRect(p.x-1.5,p.y-1.5,3,3);}
+    if(T>2.4+pods.length*.08+.6){done();return;}requestAnimationFrame(frame);};
+  requestAnimationFrame(frame);}
+function labUpCard(tr){const e=document.createElement('div');e.className='labUpCard';e.innerHTML=`<div class="luc"><i>🔬</i><b>${T('LABORATUVAR · SEVİYE {n}',{n:tr})}</b><ul><li>${T('Bütün modüller {n}. aşamaya geçti',{n:tr})}</li><li>${T('Her modülde 10 yeni seviye açıldı')}</li><li>${T('Kazandığın güçler korunur, üstüne eklenir')}</li><li class="g">${T('Güç tavanı {a} → {b}',{a:(tr-1)*LAB_MAX*LABT.length,b:tr*LAB_MAX*LABT.length})}</li></ul><button class="btn big" id="labUpOk">${T('DEVAM')}</button></div>`;
+  $('sLab').appendChild(e);sfx('achieve',{vol:.7});$('labUpOk').onclick=()=>{e.remove();sfx('click',{vol:.4});};}
 function labClose(){$('sLab').classList.remove('on');LV.on=false;LV.conf=null;labBadge();}
 const labRotFor=i=>Math.PI/2-i*TAU/LABT.length; // the selected pod swings round to the front
 function labSelect(i){LV.sel=i;let t=labRotFor(i);while(t-LV.rot>Math.PI)t-=TAU;while(t-LV.rot<-Math.PI)t+=TAU;LV.rotT=t;LV.conf=null;labRender();sfx('click',{vol:.3,rate:1.2});}
-function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),max=lv>=LAB_MAX;
+function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),max=lv>=LAB_MAX,tr=labTier(),tn=tr>1?' '+roman(tr):'',cM=labCM(lv),cS=labCS(lv),cT=labCT(lv);
   $('labPow').innerHTML=`<span>⚡ <em class="lpl">${T('GÜÇ')}</em> <b>${labPower()}</b></span><span>⚫ <em class="lpl">${T('KÜTLE')}</em> <b>${fmtM(massFree())} M</b></span><span>🔧 <em class="lpl">${T('YUVA')}</em> <b>${LAB.q.length}/${labSlots()}</b>${!LAB.slot2&&!vipOn()?`<button class="lslot${LV.conf==='slot2'?' sure':''}" id="labSlot2">+</button>`:''}</span>`+(LV.conf==='slot2'&&!LAB.slot2?`<div class="lslotpop"><b>🔧 ${T('2. YUVA')}</b><span>${T('İki modülü aynı anda geliştir. VIP üyelikte de açık.')}</span><button class="btn" id="labSlot2Buy">💎 ${LAB_SLOT2} · ${T('SATIN AL')}</button></div>`:'');{const pw=$('labPow');pw.classList.remove('tight');if(pw.scrollWidth>pw.clientWidth+1)pw.classList.add('tight');}labSlotBind(); /* too narrow for the words: icons only */
-  $('labStrip').innerHTML=LABT.map((x,i)=>{const l=labRaw(x.id),bb=labBusy(x.id),op=labOpen(x);return `<button class="lchip${i===LV.sel?' on':''}${op?'':' lock'}${bb?' bld':''}" data-i="${i}" style="--c:${x.col}"><i>${op?x.ic:'🔒'}</i><b>${op?l:'—'}</b></button>`;}).join('');
+  $('labStrip').innerHTML=LABT.map((x,i)=>{const l=labRaw(x.id),bb=labBusy(x.id),op=labOpen(x);return `<button class="lchip${i===LV.sel?' on':''}${op?'':' lock'}${bb?' bld':''}" data-i="${i}" style="--c:${x.col}">${tr>1&&op?`<em class="ltr">${roman(tr)}</em>`:''}<i>${op?x.ic:'🔒'}</i><b>${op?l:'—'}</b></button>`;}).join('');
   $('labStrip').querySelectorAll('.lchip').forEach(e=>e.onclick=()=>labSelect(+e.dataset.i));
   let act='',why='';
-  if(b)why='';else if(!open)why=!labLvOk(m)?T('Seviye {n}\'te açılır',{n:m.from}):T('Kara deliğin {s} evresine ulaşınca açılır · {n} M daha',{s:T(STAGES[m.st].n),n:Math.max(0,STAGES[m.st].m-Math.floor(mass)).toLocaleString(LOC)});else if(max)why=T('MAKSİMUM SEVİYE');
-  else if(LAB.q.length>=labSlots())why=T('Tüm yuvalar dolu');else if(massFree()<LAB_M[lv])why=T('Kütle yetmiyor: {n} M daha yut',{n:(LAB_M[lv]-massFree()).toLocaleString(LOC)});else if(stars<LAB_S[lv])why=`<b>⭐ ${T('{n} yıldız eksik',{n:(LAB_S[lv]-stars).toLocaleString(LOC)})}</b> · ${T('seviye kazan, günlük ödül, görevler')}`;
-  act=b?`<div class="lq in">${lqBody(b)}</div>`:!why?`<button class="btn big lgo" id="labGo">🔬 ${T('GELİŞTİR')} · ${LAB_S[lv]?`⭐ ${LAB_S[lv].toLocaleString(LOC)} · `:''}⚫ ${LAB_M[lv].toLocaleString(LOC)} M</button>`:`<div class="lwhy${stars<LAB_S[lv]&&open&&!max&&LAB.q.length<labSlots()&&massFree()>=LAB_M[lv]?' short':''}">${why}</div>`;
+  if(b)why='';else if(!open)why=!labLvOk(m)?T('Seviye {n}\'te açılır',{n:m.from}):T('Kara deliğin {s} evresine ulaşınca açılır · {n} M daha',{s:T(STAGES[m.st].n),n:Math.max(0,STAGES[m.st].m-Math.floor(mass)).toLocaleString(LOC)});else if(max)why=T('MAKSİMUM SEVİYE')+' · '+T('Laboratuvar, bütün modüller 10 olunca yükselir');
+  else if(LAB.q.length>=labSlots())why=T('Tüm yuvalar dolu');else if(massFree()<cM)why=T('Kütle yetmiyor: {n} M daha yut',{n:(cM-massFree()).toLocaleString(LOC)});else if(stars<cS)why=`<b>⭐ ${T('{n} yıldız eksik',{n:(cS-stars).toLocaleString(LOC)})}</b> · ${T('seviye kazan, günlük ödül, görevler')}`;
+  act=b?`<div class="lq in">${lqBody(b)}</div>`:!why?`<button class="btn big lgo" id="labGo">🔬 ${T('GELİŞTİR')} · ${cS?`⭐ ${cS.toLocaleString(LOC)} · `:''}⚫ ${cM.toLocaleString(LOC)} M</button>`:`<div class="lwhy${stars<cS&&open&&!max&&LAB.q.length<labSlots()&&massFree()>=cM?' short':''}">${why}</div>`;
   $('labSel').style.setProperty('--c',m.col);
-  $('labSel').innerHTML=`<div class="lsh"><i>${m.ic}</i><div><b>${T(m.n)}</b><small>${T('SEVİYE {k}',{k:lv})} / ${LAB_MAX}</small></div></div><p class="ldesc">${T(LAB_DESC[m.id])}</p>
+  $('labSel').innerHTML=`<div class="lsh"><i>${m.ic}</i><div><b>${T(m.n)}${tn}</b><small>${T('SEVİYE {k}',{k:lv})} / ${LAB_MAX}${tr>1?' · '+T('{n}. AŞAMA',{n:tr}):''}</small></div></div><p class="ldesc">${T(LAB_DESC[m.id])}</p>
     <div class="lpips">${Array.from({length:LAB_MAX},(_,k)=>`<s class="${k<lv?'on':b&&k===lv?'bld':''}"></s>`).join('')}</div>
     <div class="leff"><span>${T('Şimdi')}</span><b>${labEff(m.id,lv)}</b></div>${max?'':`<div class="leff nx"><span>${T('Sonraki')}</span><b>${labEff(m.id,lv+1)}</b></div>
-    <div class="lcost"><em class="lch">${T('MALİYET')}</em><span class="${massFree()<LAB_M[lv]?'no':''}">⚫ ${LAB_M[lv].toLocaleString(LOC)} M</span><span class="${stars<LAB_S[lv]?'no':''}">⭐ ${LAB_S[lv].toLocaleString(LOC)}${LAB_S[lv]?'':`<i>${T('bedava')}</i>`}</span><span>⏱ ${labMin(LAB_T[lv])}</span></div>`}${act}`;
+    <div class="lcost"><em class="lch">${T('MALİYET')}</em><span class="${massFree()<cM?'no':''}">⚫ ${cM.toLocaleString(LOC)} M</span><span class="${stars<cS?'no':''}">⭐ ${cS.toLocaleString(LOC)}${cS?'':`<i>${T('bedava')}</i>`}</span><span>⏱ ${labMin(cT)}</span></div>`}${act}`;
+  if(labReady()&&!b){const uM=labUpM(),uS=labUpS(),ok=massFree()>=uM&&stars>=uS;
+    $('labSel').style.setProperty('--c','185,140,255');
+    $('labSel').innerHTML=`<div class="lsh"><i>🔬</i><div><b>${T('TÜM MODÜLLER 10 / 10')}</b><small>${T('LABORATUVAR SEVİYE {n} HAZIR',{n:tr+1})}</small></div></div><div class="lupg">${T('Laboratuvarı yükselt: her modül {n}. aşamaya geçer ve 10 yeni seviye açılır. Kazandığın güçler korunur; yeni seviyeler biraz daha az ekler ve daha pahalıdır.',{n:tr+1})}</div>
+      <div class="lcost"><em class="lch">${T('MALİYET')}</em><span class="${massFree()<uM?'no':''}">⚫ ${uM.toLocaleString(LOC)} M</span><span class="${stars<uS?'no':''}">⭐ ${uS.toLocaleString(LOC)}</span></div>
+      ${ok?`<button class="btn big lgo lup" id="labUp">🔬 ${T('LABORATUVARI YÜKSELT')}</button>`:`<div class="lwhy">${massFree()<uM?T('Kütle yetmiyor: {n} M daha yut',{n:(uM-massFree()).toLocaleString(LOC)}):T('{n} yıldız eksik',{n:(uS-stars).toLocaleString(LOC)})}</div>`}`;
+    const u=$('labUp');if(u)u.onclick=()=>labLevelUp();}
   const g=$('labGo');if(g)g.onclick=e=>{if(labStart(m.id)){sfx('powerup',{vol:.6,rate:.8});sfx('capture',{vol:.45,rate:.8});LV.fx.push({k:'launch',i:LV.sel,t:0});LV.flash=Math.max(LV.flash,.25);labRender();}};
   labQueue();labFit();}
 function lqBody(b){const now=Date.now(),m=LABT.find(x=>x.id===b.id),left=b.end-now,p=1-Math.max(0,left)/b.dur,g=labGem(left,b.to),cf=LV.conf===b.id;
@@ -2832,7 +2890,7 @@ function labLive(){if(!LV.on)return;const now=Date.now();if(LAB.q.some(b=>b.end<
 function labCelebrate(id){if(LV.on)LV.celQ.push(id);} // one celebration at a time, in order
 function labCelGo(id){const i=LABT.findIndex(m=>m.id===id);if(i<0||!LV.on)return;labSelect(i);const m=LABT[i];
   LV.cel.push({i,t:0,k:labRaw(id),n:T(m.n)});LV.flash=.7;sfx('achieve',{vol:.7});sfx('bell',{vol:.5,rate:1.3,delay:.15});vib([30,40,60]);
-  if(id==='hawk'&&labRaw(id)===1||id==='jet'&&labRaw(id)===1)later(()=>toast(m.ic,T(m.n),T('Artık oyunda kullanabilirsin!')),900);}
+  if(['hawk','jet','worm','hor'].includes(id)&&labRaw(id)===1&&labTier()===1)later(()=>toast(m.ic,T(m.n),T('Artık oyunda kullanabilirsin!')),900);}
 
 // ── the show ──
 function labSize(){const c=$('labCv');if(!c)return;const r=c.getBoundingClientRect();LV.dpr=Math.min(2,devicePixelRatio||1);LV.W=r.width;LV.H=r.height;c.width=Math.round(r.width*LV.dpr);c.height=Math.round(r.height*LV.dpr);}
@@ -2891,6 +2949,14 @@ function labCore(c,cx,cy,R,t,dt){if(!LV.tex)LV.tex=labTex();const D=R*4.4,busy=L
   c.restore();}
 function labBolt(c,x0,y0,x1,y1,col,n){c.strokeStyle=col;c.lineWidth=1.4;c.shadowColor=col;c.shadowBlur=8;c.beginPath();c.moveTo(x0,y0);const dx=x1-x0,dy=y1-y0,L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L;
   for(let k=1;k<n;k++){const q=k/n,j=(Math.random()-.5)*L*.22;c.lineTo(x0+dx*q+nx*j,y0+dy*q+ny*j);}c.lineTo(x1,y1);c.stroke();c.shadowBlur=0;}
+// a module's tier shows on its pod: II violet-gold, III cyan-white, IV red-gold with sparks, then the colours again with a star per round
+const TIER_COL=[['185,140,255','255,215,106'],['140,230,255','255,255,255'],['255,90,90','255,215,106']];
+function labTierFrame(c,x,y,r,s,tr,t,hex){const k=(tr-2)%3,[a,b]=TIER_COL[k],g=c.createLinearGradient(x-r,y,x+r,y);g.addColorStop(0,`rgba(${a},.95)`);g.addColorStop(1,`rgba(${b},.95)`);
+  c.save();c.strokeStyle=g;c.lineWidth=1.6*s;hex(r+7*s);c.stroke();if(k>=1){c.globalAlpha=.6+.3*Math.sin(t*3);hex(r+10*s);c.stroke();c.globalAlpha=1;}
+  if(k===2)for(let q=0;q<3;q++){const an=t*2.2+q*TAU/3;c.fillStyle=`rgba(${b},.9)`;c.beginPath();c.arc(x+Math.cos(an)*(r+10*s),y+Math.sin(an)*(r+10*s),1.6*s,0,TAU);c.fill();}
+  const rounds=Math.floor((tr-2)/3);for(let q=0;q<Math.min(4,rounds);q++){c.fillStyle='#ffd76a';c.font=`${Math.round(8*s)}px sans-serif`;c.textAlign='center';c.fillText('★',x-(rounds-1)*4*s+q*8*s,y+r+20*s);}
+  const bx=x-r*.95,by=y-r*.85;c.fillStyle=`rgb(${a})`;c.beginPath();if(c.roundRect)c.roundRect(bx-8*s,by-6*s,16*s,12*s,4*s);else c.rect(bx-8*s,by-6*s,16*s,12*s);c.fill();
+  c.fillStyle='#1a1206';c.font=`700 ${Math.round(8*s)}px "IBM Plex Sans Condensed",sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillText(roman(tr),bx,by+.5*s);c.restore();}
 function labPod(c,p,t,cx,cy,R){const {m,x,y,s,i}=p,lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),sel=i===LV.sel,r=24*s,col=m.col,dim=.45+.55*(p.z+1)/2;
   c.save();
   if(b){ // a build: a live beam from the core, pulses running along it
@@ -2904,6 +2970,7 @@ function labPod(c,p,t,cx,cy,R){const {m,x,y,s,i}=p,lv=labRaw(m.id),b=labBusy(m.i
   const fill=c.createLinearGradient(x,y-r,x,y+r);fill.addColorStop(0,open?'rgba(40,48,78,.97)':'rgba(30,32,40,.95)');fill.addColorStop(1,'rgba(8,10,20,.97)');hex(r);c.fillStyle=fill;c.fill();
   c.lineWidth=sel?2.4:1.5;c.strokeStyle=open?`rgba(${col},${sel?1:.75})`:'rgba(140,145,160,.5)';c.shadowColor=`rgba(${col},.9)`;c.shadowBlur=sel?14:6;c.stroke();c.shadowBlur=0;
   if(lv>=LAB_MAX){hex(r+4*s);c.strokeStyle='rgba(255,215,106,.9)';c.lineWidth=1.4;c.stroke();}
+  {const tr=labTier();if(tr>1&&open)labTierFrame(c,x,y,r,s,tr,t,hex);}
   if(b){ // scaffold brackets turning both ways and a progress arc
     const pr=1-Math.max(0,b.end-Date.now())/b.dur;c.strokeStyle=`rgba(${col},.9)`;c.lineWidth=2*s;for(let k=0;k<3;k++){const a=t*2+k*TAU/3;c.beginPath();c.arc(x,y,r*1.28,a,a+.55);c.stroke();}
     c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1;for(let k=0;k<4;k++){const a=-t*1.4+k*TAU/4;c.beginPath();c.arc(x,y,r*1.45,a,a+.3);c.stroke();}
@@ -3710,9 +3777,10 @@ loadG();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000
   $('starterRib').before(d);devKit(savedLevel);$('devGo').onclick=()=>{const n=clamp(parseInt($('devLv').value,10)||1,1,DEV_LV);savedLevel=n;savedScore=0;saveG();selMode('classic');$('startBtn').click();};} /* jump straight to any of the first 1000 levels */
 // developer link: every level is played as a real player would meet it there: the Laboratory at that level's recommended power
 // (spread over the modules that level allows) and the hole at the quasar stage
-function devKit(l){if(!DEV)return;const ms=LABT.filter(m=>!m.from||l>=m.from),r=labRecAll(l);let left=r,i=0;for(const m of LABT)LAB.lv[m.id]=0;
-  while(left>0&&ms.some(m=>LAB.lv[m.id]<LAB_MAX)){const m=ms[i++%ms.length];if(LAB.lv[m.id]<LAB_MAX){LAB.lv[m.id]++;left--;}}
-  LAB.q=[];mass=Math.max(mass,STAGES[STAGES.length-1].m*2);saveG();const k=$('devKit');if(k)k.textContent=`🔬 ${labPower()} · ${T(STAGES[stageOf(mass)].n)}`;}
+function devKit(l){if(!DEV)return;const ms=LABT.filter(m=>!m.from||l>=m.from),r=labRecAll(l),all=LABT.length*LAB_MAX;let left=r,i=0;
+  LAB.tier=ms.length===LABT.length&&r>=all?1+Math.floor(r/all):1;if(LAB.tier>1)left=r%all; /* past every module at 10 the Laboratory levels up, the rest spreads over the new tier */
+  for(const m of LABT)LAB.lv[m.id]=0;while(left>0&&ms.some(m=>LAB.lv[m.id]<LAB_MAX)){const m=ms[i++%ms.length];if(LAB.lv[m.id]<LAB_MAX){LAB.lv[m.id]++;left--;}}
+  LAB.q=[];mass=Math.max(mass,STAGES[STAGES.length-1].m*2);saveG();const k=$('devKit');if(k)k.textContent=`🔬 ${labPower()}${LAB.tier>1?' · '+roman(LAB.tier):''} · ${T(STAGES[stageOf(mass)].n)}`;}
 icoDefs();
 setLang(SET.lang||detectLang());
 syncSettingsUI();
