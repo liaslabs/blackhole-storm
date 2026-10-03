@@ -139,6 +139,7 @@ function v2Rules(l){
 function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
+  if(DEV&&mode==='level'&&gameMode==='classic'&&!HMODE)devKit(v2Lv()); // the developer link keeps the Laboratory at each level's recommended power
   const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));
   const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
