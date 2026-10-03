@@ -172,7 +172,7 @@ Her seviyede en fazla bir yeni şey tanıtılır. Seviye başı kartı olan sevi
 - **🪐 GEZEGEN · +100**: 1,35M olunca yutulur.
 - **🔷 KRİSTAL · +200**: Değerli ama genelde bir meteorun yanından gelir.
 - **🌕 ALTIN GEZEGEN · +500**: Nadir ve hızlı, çoğu zaman meteorlarla birlikte.
-- **⚡ ENERJİ**: Vortex barını hızla doldurur.
+- **⚡ ENERJİ**: Limon yeşili parlayan top (antimaddenin macentasıyla karışmasın diye). Vortex barını hızla doldurur.
 - **☄️ METEOR**: Yutulmaz. Önce yavaş girer, sonra hızlanır; kırmızı oklar yolunu gösterir. Çarparsa can gider, combo sıfırlanır.
 - **🛡 KALKAN PARÇASI**: Seviye 4’ten itibaren arada bir gelir. 3 parça = 1 kalkan.
 - **☄️ KUYRUKLU YILDIZ**: Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.
