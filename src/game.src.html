@@ -785,6 +785,34 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .snFinal{display:flex;gap:8px;align-items:center;text-align:start;padding:7px 10px;margin-bottom:8px;border-radius:10px;border:1px dashed rgba(255,215,106,.5);background:linear-gradient(90deg,rgba(255,215,106,.14),transparent);font-family:var(--fd);font-size:12px;letter-spacing:.03em;color:#ffe9b8;}
 .snFinal small{display:block;font-family:var(--fb);letter-spacing:0;font-size:11px;color:#d9c49a;margin-top:1px;}
 @media (prefers-reduced-motion:reduce){#sSeason .snHero::after,#sSeason .snOrb{animation:none;}}
+/* season, one screen: compact hero, wallet on top for the flying rewards, 6×5 tiles, tap the glowing ones; how-to folds away */
+#sSeason .card{max-height:calc(100dvh - 16px);display:flex;flex-direction:column;gap:6px;padding-top:12px;padding-bottom:12px;}
+#sSeason .card>.h{margin:0;}
+#sSeason .snWal{margin:0;justify-content:center;gap:8px;}
+#sSeason .snHero{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;text-align:start;padding:8px 10px;margin:0;}
+#sSeason .snHero .snOrb{font-size:30px;}#sSeason .snHero .snOrb .ico{width:32px;height:32px;}
+#sSeason .snHero b{font-size:16px;margin:0;}#sSeason .snHero span{font-size:12px;margin-top:1px;line-height:1.3;}#sSeason .snHero em{margin-top:4px;font-size:10.5px;}
+#sSeason .snPerks{margin:0;gap:5px;}#sSeason .snPerks div{padding:4px 7px;}#sSeason .snPerks b{font-size:12px;}#sSeason .snPerks small{font-size:10px;}
+#sSeason .snFinal{margin:0;padding:5px 9px;font-size:11.5px;}#sSeason .snFinal small{font-size:10.5px;}
+#sSeason .snT{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.snAll{border:0;border-radius:10px;padding:4px 10px;background:var(--gold);color:#1a1206;font-family:var(--fd);font-weight:700;font-size:11px;letter-spacing:.08em;cursor:pointer;animation:snRdy 1.8s ease-in-out infinite;}
+#sSeason .sngrid{gap:5px;margin:0;max-height:none;overflow:visible;}
+#sSeason .snc{min-height:0;height:46px;padding:3px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;font:inherit;color:inherit;}
+#sSeason .snc i{font-size:15px;line-height:1.1;}#sSeason .snc i .ico{width:17px;height:17px;}#sSeason .snc b{font-size:11px;line-height:1.1;}#sSeason .snc small{font-size:10px;line-height:1.1;}
+#sSeason .snc.rdy{cursor:pointer;border-color:var(--gold);background:radial-gradient(circle at 50% 30%,rgba(255,215,106,.35),rgba(242,169,59,.1));box-shadow:0 0 12px rgba(242,169,59,.45);animation:snRdy 1.8s ease-in-out infinite;}
+#sSeason .snc.rdy small{color:#ffe1a6;font-family:var(--fd);font-weight:700;letter-spacing:.1em;}
+#sSeason .snc.pop{animation:snPop .45s ease-out forwards;}
+@keyframes snRdy{0%,100%{transform:scale(1);box-shadow:0 0 8px rgba(242,169,59,.35);}50%{transform:scale(1.05);box-shadow:0 0 16px rgba(242,169,59,.7);}}
+@keyframes snPop{0%{transform:scale(1);}35%{transform:scale(1.25);filter:brightness(1.6);}100%{transform:scale(1);}}
+.snHow{margin:0;font-size:12px;color:var(--dim);text-align:center;}.snHow summary{cursor:pointer;font-family:var(--fd);font-size:12px;letter-spacing:.06em;color:#c9d2ee;list-style:none;}.snHow summary::-webkit-details-marker{display:none;}.snHow summary::after{content:' ▾';}.snHow[open] summary::after{content:' ▴';}
+.snHow>div{margin-top:4px;line-height:1.5;}
+#sSeason .card>.row{margin-top:2px;}
+@media (max-height:700px){#sSeason .card{gap:4px;padding-top:8px;padding-bottom:8px;}#sSeason .snc{height:37px;}#sSeason .snc small{display:none;}#sSeason .snc.rdy small{display:block;}#sSeason .snHero{padding:6px 10px;}#sSeason .snHero span,#sSeason .snFinal small,#sSeason .snPerks small{display:none;}#sSeason .snPerks div{padding:3px 7px;}#sSeason .card>.row .btn{padding-top:8px;padding-bottom:8px;}}
+/* home: rewards waiting in the season, a soft pulse */
+.sb em.rdy{background:var(--gold);color:#1a1206;animation:snBdg 2s ease-in-out infinite;}
+.sb.rdy i{box-shadow:0 0 0 1px rgba(242,169,59,.6),0 0 14px rgba(242,169,59,.35),0 6px 16px rgba(0,0,0,.5);}
+@keyframes snBdg{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(242,169,59,.6);}50%{transform:scale(1.15);box-shadow:0 0 0 5px rgba(242,169,59,0);}}
+@media (prefers-reduced-motion:reduce){#sSeason .snc.rdy,.snAll,.sb em.rdy{animation:none;}}
 .atnote{margin:10px 0 6px;padding:8px 10px;border-radius:8px;background:rgba(143,216,255,.07);border:1px solid rgba(143,216,255,.25);font-size:13px;color:#d9e6f2;min-height:2.6em;text-align:start;}
 .atnote b{color:var(--cyan,#8fd8ff);font-family:var(--fd);letter-spacing:.05em;}.atrw{font-size:11.5px;color:var(--dim);text-align:center;margin-bottom:8px;}
 #sig2{position:absolute;left:50%;top:64px;transform:translateX(-50%) translateY(-8px);width:min(88%,360px);padding:9px 12px;border-radius:8px;border:1px solid rgba(143,216,255,.45);background:rgba(6,10,18,.84);
@@ -1170,10 +1198,11 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <div class="screen" id="sSeason" style="z-index:130;">
  <div class="card">
   <div class="h">🌀 SEZON</div>
+  <div class="wallet wal2 snWal"></div>
   <div class="snHead" id="snHead"></div>
   <div class="snBar"><div class="snT" id="snT"></div><div class="bar"><i id="snFill"></i></div></div>
   <div class="sngrid" id="snGrid"></div>
-  <div class="snHow" id="snHow"></div>
+  <details class="snHow"><summary>SP nasıl kazanılır</summary><div id="snHow"></div></details>
   <div class="row"><button class="btn" id="snClose">KAPAT</button></div>
  </div>
 </div>
@@ -1450,7 +1479,8 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);{const h=svO(d.hm);if(h)HM={lv:svI(h.lv,1,1,1e9),sc:svI(h.sc,0),best:svI(h.best,1,1,1e9),ls:svO(h.ls)||{},ws:svI(h.ws,0,0,9999),s3:svI(h.s3,0,0,9)};}bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false,seen:Array.isArray(k.seen)?k.seen.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):null};}
   {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999),pend:Array.isArray(a.pend)?a.pend.filter(x=>typeof x==='string').slice(0,40):[]};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
-  {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),seen:svI(a.seen,svI(a.tier,0,0,SEA.tiers),0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};}
+  {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),seen:svI(a.seen,svI(a.tier,0,0,SEA.tiers),0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};
+    SEASON.cl=Array.isArray(a.cl)?[...new Set(a.cl.filter(i=>Number.isInteger(i)&&i>=1&&i<=SEASON.tier))]:Array.from({length:SEASON.tier},(_,i)=>i+1);}
   {const k=svO(d.prk)||{},o=svO(k.own)||{};PERK={own:{},spent:svI(k.spent,0,0,1e9)};for(const p of PERKS)PERK.own[p.id]=svI(o[p.id],0,0,3);}
   {const a=svO(d.lab);LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[]};
     if(a){const lv=svO(a.lv)||{};for(const m of LABT)LAB.lv[m.id]=svI(lv[m.id],0,0,LAB_MAX);
@@ -2619,33 +2649,42 @@ const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha s�
   {id:'rival',ic:'🌑',n:'RAKİPLER SEZONU',d:'Rakip, İkiz ve Koruyucu seviyeleri 2 kat SP verir.'},{id:'meteor',ic:'☄️',n:'METEOR SEZONU',d:'Biraz daha çok meteor; her KUSURSUZ KAÇIŞ +2 SP.'}];
 const SEA={tiers:30,per:100};
 const SEASON_P={gold:[['🌕','×2 DAHA FAZLA','altın gezegen'],['💰','×2 PUAN','her altın gezegen'],['🔷','×1,5 KRİSTAL','daha sık düşer'],['🌀','+2 SP','her altın gezegen için']]}; // what the golden season really gives, spelled out
-let SEASON={id:'',sp:0,tier:0,seen:0,badges:[]};
+let SEASON={id:'',sp:0,tier:0,seen:0,badges:[],cl:[]};
 const seasonId=()=>utcDay().slice(0,7);
 function seasonTheme(id=seasonId()){const p=id.split('-').map(Number);return SEASON_T[((p[0]||0)*12+(p[1]||1))%SEASON_T.length];}
 function seasonIs(k){return gameMode!=='sprint'&&seasonTheme().id===k;}
-function seasonRoll(){const id=seasonId();if(SEASON.id!==id){SEASON.id=id;SEASON.sp=0;SEASON.tier=0;SEASON.seen=0;}}
+function seasonRoll(){const id=seasonId();if(SEASON.id!==id){if(SEASON.id)for(const i of seasonReady())seasonGive(i);SEASON.id=id;SEASON.sp=0;SEASON.tier=0;SEASON.seen=0;SEASON.cl=[];}}
+const seasonReady=()=>{const c=SEASON.cl||[];const r=[];for(let i=1;i<=SEASON.tier;i++)if(!c.includes(i))r.push(i);return r;}; // reached tiers whose reward is still waiting to be tapped
 function seasonReward(i){if(i===SEA.tiers)return {stars:1000,gems:50,badge:1};if(i===20)return {tkey:1};if(i%10===0)return {gems:20};if(i%5===0)return {shield:1,stars:100};if(i%2===0)return {gems:3};return {stars:40+i*5};}
 function seasonRwTxt(r){const p=[];if(r.stars)p.push(`${r.stars.toLocaleString(LOC)} ⭐`);if(r.gems)p.push(`${r.gems} 💎`);if(r.shield)p.push(`${r.shield} 🛡`);if(r.tkey)p.push('🗝');if(r.badge)p.push('🏅');return p.join(' · ');}
 function seasonIcon(r){return r.badge?'🏅':r.tkey?'🗝':r.shield?'🛡':r.gems?'💎':'⭐';}
-function seasonGive(i){const r=seasonReward(i),g={stars:r.stars||0,gems:r.gems||0,shield:r.shield||0};
+function seasonGive(i,quiet){const r=seasonReward(i),g={stars:r.stars||0,gems:r.gems||0,shield:r.shield||0};(SEASON.cl||(SEASON.cl=[])).includes(i)||SEASON.cl.push(i);
   if(r.tkey){if((SHOP.tkey|0)<1)SHOP.tkey=1;else g.gems+=90;} // already holding a key: its price in diamonds instead
   if(r.badge&&!SEASON.badges.includes(SEASON.id))SEASON.badges.push(SEASON.id);
   stars+=g.stars;diamonds+=g.gems;SHOP.shield+=g.shield;
-  achQueue.push({i:'🌀',t:T('SEZON')+' · '+T('KADEME {k}',{k:i}),d:seasonRwTxt(r),at:performance.now()});if(!achShowing)nextAch();}
+  if(!quiet){achQueue.push({i:'🌀',t:T('SEZON')+' · '+T('KADEME {k}',{k:i}),d:seasonRwTxt(r),at:performance.now()});if(!achShowing)nextAch();}return g;}
+// tap a glowing tier (or take them all): the reward flies from its tile to the wallet at the top of the card
+function seasonClaim(list,src){list=list.filter(i=>seasonReady().includes(i));if(!list.length)return;const g={stars:0,gems:0,shield:0};let key=0,badge=0;
+  for(const i of list){const r=seasonReward(i);key|=r.tkey?1:0;badge|=r.badge?1:0;const x=seasonGive(i,true);g.stars+=x.stars;g.gems+=x.gems;g.shield+=x.shield;}
+  saveG();sfx('achieve',{vol:.5});vib(20);if(src){src.classList.add('pop');}
+  if(key)toast('🗝',T('HAZİNE ANAHTARI'),T('Sezon ödülü'));if(badge)toast('🏅',T('SEZON ROZETİ'),SEASON.id);
+  flyReward(src,g,()=>{renderSeason();seasonBadge();});seasonBadge();}
 function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;seasonRoll();SEASON.sp+=Math.round(n);let up=0;
-  while(SEASON.tier<SEA.tiers&&SEASON.sp>=(SEASON.tier+1)*SEA.per){SEASON.tier++;up++;seasonGive(SEASON.tier);}
+  while(SEASON.tier<SEA.tiers&&SEASON.sp>=(SEASON.tier+1)*SEA.per){SEASON.tier++;up++;const k=SEASON.tier;achQueue.push({i:'🌀',t:T('SEZON')+' · '+T('KADEME {k}',{k}),d:seasonRwTxt(seasonReward(k))+' · '+T('Sezon ekranından al'),at:performance.now()});if(!achShowing)nextAch();}
   if(up){saveG();updateUI();}else saveSoon();seasonBadge();}
-function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();const n=Math.max(0,SEASON.tier-(SEASON.seen|0));e.textContent=n?'+'+n:'';e.className=n?'hot':'';} // only tiers reached since the season screen was last opened
+function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();const n=seasonReady().length;e.textContent=n?String(n):'';e.className=n?'rdy':'';$('snBtn').classList.toggle('rdy',n>0);} // rewards waiting to be taken
 function renderSeason(){seasonRoll();const th=seasonTheme(),now=new Date(),end=Date.UTC(now.getUTCFullYear(),now.getUTCMonth()+1,1),left=Math.max(1,Math.ceil((end-Date.now())/864e5));
-  const P=SEASON_P[th.id];$('sSeason').dataset.th=th.id;
-  $('snHead').innerHTML=`<div class="snHero"><div class="snOrb">${th.ic}</div><b>${T(th.n)}</b><span>${T(th.d)}</span><em>⏳ ${T('Sezonun bitmesine {d} gün',{d:left})}</em></div>`+
+  const P=SEASON_P[th.id];$('sSeason').dataset.th=th.id;walletsRefresh();
+  $('snHead').innerHTML=`<div class="snHero"><div class="snOrb">${th.ic}</div><div class="snTx"><b>${T(th.n)}</b><span>${T(th.d)}</span><em>⏳ ${T('Sezonun bitmesine {d} gün',{d:left})}</em></div></div>`+
     (P?`<div class="snPerks">${P.map(([i,b,d])=>`<div><i>${i}</i><b>${T(b)}</b><small>${T(d)}</small></div>`).join('')}</div>`:'')+
     `<div class="snFinal">🏅 <span>${T('30. kademe: sezon rozeti · 1.000 ⭐ · 50 💎')}<small>${T('Bu rozet yalnızca bu ay kazanılır.')}</small></span></div>`;
-  const inT=SEASON.tier>=SEA.tiers?SEA.per:SEASON.sp-SEASON.tier*SEA.per;
-  $('snT').innerHTML=`<span>${T('KADEME {k}',{k:SEASON.tier})} / ${SEA.tiers}</span><span>${SEASON.tier>=SEA.tiers?'✓':`${inT} / ${SEA.per} SP`}</span>`;$('snFill').style.width=(inT/SEA.per*100)+'%';
-  let h='';for(let i=1;i<=SEA.tiers;i++){const r=seasonReward(i);h+=`<div class="snc${i<=SEASON.tier?' ok':i===SEASON.tier+1?' cur':''}${i%10===0?' big':''}"><i>${i<=SEASON.tier?'✓':seasonIcon(r)}</i><b>${i}</b><small>${r.stars&&!r.gems?r.stars:r.gems?r.gems:''}</small></div>`;}
+  const inT=SEASON.tier>=SEA.tiers?SEA.per:SEASON.sp-SEASON.tier*SEA.per,rd=seasonReady();
+  $('snT').innerHTML=`<span>${T('KADEME {k}',{k:SEASON.tier})} / ${SEA.tiers}</span>`+(rd.length>1?`<button class="snAll" id="snAll">${T('HEPSİNİ AL')} · ${rd.length}</button>`:'')+`<span>${SEASON.tier>=SEA.tiers?'✓':`${inT} / ${SEA.per} SP`}</span>`;$('snFill').style.width=(inT/SEA.per*100)+'%';
+  if($('snAll'))$('snAll').onclick=e=>{e.stopPropagation();seasonClaim(seasonReady(),$('snAll'));};
+  let h='';for(let i=1;i<=SEA.tiers;i++){const r=seasonReward(i),ready=rd.includes(i),got=i<=SEASON.tier&&!ready,amt=r.stars&&!r.gems?r.stars:r.gems?r.gems:'',tg=ready?'button':'div';
+    h+=`<${tg} class="snc${got?' ok':ready?' rdy':i===SEASON.tier+1?' cur':''}${i%10===0?' big':''}" data-i="${i}"${ready?` aria-label="${T('AL')} · ${seasonRwTxt(r)}"`:''}><i>${got?'✓':seasonIcon(r)}</i><b>${i}</b><small>${ready?T('AL'):amt}</small></${tg}>`;}
   $('snGrid').innerHTML=h;
-  $('snHow').innerHTML=`<b>${T('SP nasıl kazanılır')}</b><br>${[T('Seviye bitir: +10 SP, her yıldız +5'),T('Özel seviye: +10 SP · Boss: +25 SP'),T('Günlük görev: +15 SP · Olay atlat: +8 SP'),T('Hayatta Kal: her 15 saniye +1 SP'),T('Günün Fırtınası: günde bir kez +10 SP')].join('<br>')}`+
+  $('snHow').innerHTML=[T('Seviye bitir: +10 SP, her yıldız +5'),T('Özel seviye: +10 SP · Boss: +25 SP'),T('Günlük görev: +15 SP · Olay atlat: +8 SP'),T('Hayatta Kal: her 15 saniye +1 SP'),T('Günün Fırtınası: günde bir kez +10 SP')].join('<br>')+
     (SEASON.badges.length?`<br><br><b>${T('Sezon rozetlerin')}</b><br>${SEASON.badges.map(b=>'🏅 '+b).join(' · ')}`:'');}
 
 // MASS TREE: permanent small perks bought with the mass your hole has swallowed over all its games (classic and the expedition only).
@@ -3603,7 +3642,7 @@ $('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfil
 $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp();$('sExp').classList.add('on');};$('exClose').onclick=()=>$('sExp').classList.remove('on');
 $('treeBtn').onclick=()=>labOpenScr();$('labX').onclick=labClose;$('labCv').addEventListener('pointerdown',labHit);addEventListener('resize',()=>{if(LV.on){labSize();labFit();}});
 $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$('gdClose').onclick=()=>{$('sGarden').classList.remove('on');gdRun=false;};
-$('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.tier;saveG();seasonBadge();renderSeason();$('sSeason').classList.add('on');};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
+$('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.tier;saveG();seasonBadge();renderSeason();$('sSeason').classList.add('on');};$('snGrid').onclick=e=>{const b=e.target.closest('.snc.rdy');if(b)seasonClaim([+b.dataset.i],b);};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
 $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();fillWallets();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');$('atCollect').onclick=atlasCollect;
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
