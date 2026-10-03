@@ -610,7 +610,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .labpow>span{font-family:var(--fm);font-size:11px;color:#cfe3ff;background:rgba(6,10,24,.72);border:1px solid rgba(140,210,255,.25);border-radius:8px;padding:3px 7px;white-space:nowrap;}
 .labpow b{color:#fff;}
 .labstrip{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:3px;}
-.lchip .ltr{position:absolute;top:-6px;left:-3px;font-style:normal;font-family:var(--fd);font-weight:700;font-size:8px;line-height:1;padding:2px 3px;border-radius:5px;background:linear-gradient(90deg,#b98cff,#ffd76a);color:#1a1206;}
+.lchip .ltr{position:absolute;top:-9px;left:-5px;z-index:2;font-style:normal;font-family:var(--fd);font-weight:800;font-size:11px;line-height:1;letter-spacing:.02em;padding:3px 5px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.55);background:linear-gradient(90deg,#b98cff,#ffd76a);color:#1a1206;}
 .lupg{margin-top:4px;padding:10px;border-radius:10px;border:1px dashed rgba(201,160,255,.6);background:linear-gradient(135deg,rgba(185,140,255,.14),rgba(255,215,106,.08));font-size:12.5px;color:#e4dcff;line-height:1.45;text-align:start;}
 .lgo.lup{background:linear-gradient(90deg,#9c6bff,#f2a93b);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5);box-shadow:0 0 18px rgba(185,140,255,.45);}
 #labUpCv{position:absolute;inset:0;width:100%;height:100%;z-index:5;}
@@ -2955,8 +2955,9 @@ function labTierFrame(c,x,y,r,s,tr,t,hex){const k=(tr-2)%3,[a,b]=TIER_COL[k],g=c
   c.save();c.strokeStyle=g;c.lineWidth=1.6*s;hex(r+7*s);c.stroke();if(k>=1){c.globalAlpha=.6+.3*Math.sin(t*3);hex(r+10*s);c.stroke();c.globalAlpha=1;}
   if(k===2)for(let q=0;q<3;q++){const an=t*2.2+q*TAU/3;c.fillStyle=`rgba(${b},.9)`;c.beginPath();c.arc(x+Math.cos(an)*(r+10*s),y+Math.sin(an)*(r+10*s),1.6*s,0,TAU);c.fill();}
   const rounds=Math.floor((tr-2)/3);for(let q=0;q<Math.min(4,rounds);q++){c.fillStyle='#ffd76a';c.font=`${Math.round(8*s)}px sans-serif`;c.textAlign='center';c.fillText('★',x-(rounds-1)*4*s+q*8*s,y+r+20*s);}
-  const bx=x-r*.95,by=y-r*.85;c.fillStyle=`rgb(${a})`;c.beginPath();if(c.roundRect)c.roundRect(bx-8*s,by-6*s,16*s,12*s,4*s);else c.rect(bx-8*s,by-6*s,16*s,12*s);c.fill();
-  c.fillStyle='#1a1206';c.font=`700 ${Math.round(8*s)}px "IBM Plex Sans Condensed",sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillText(roman(tr),bx,by+.5*s);c.restore();}
+  const bx=x-r*.95,by=y-r*.85,rn=roman(tr);c.font=`800 ${Math.round(12*s)}px "IBM Plex Sans Condensed",sans-serif`;const bw=Math.max(22*s,c.measureText(rn).width+10*s),bh=17*s; // big enough to read on a phone
+  c.shadowColor='rgba(0,0,0,.6)';c.shadowBlur=4*s;c.fillStyle=`rgb(${a})`;c.beginPath();if(c.roundRect)c.roundRect(bx-bw/2,by-bh/2,bw,bh,5*s);else c.rect(bx-bw/2,by-bh/2,bw,bh);c.fill();c.shadowBlur=0;
+  c.fillStyle='#1a1206';c.textAlign='center';c.textBaseline='middle';c.fillText(rn,bx,by+.5*s);c.restore();}
 function labPod(c,p,t,cx,cy,R){const {m,x,y,s,i}=p,lv=labRaw(m.id),b=labBusy(m.id),open=labOpen(m),sel=i===LV.sel,r=24*s,col=m.col,dim=.45+.55*(p.z+1)/2;
   c.save();
   if(b){ // a build: a live beam from the core, pulses running along it
