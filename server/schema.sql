@@ -46,3 +46,10 @@ CREATE TABLE IF NOT EXISTS purchase_installs (
   pid   TEXT NOT NULL,
   PRIMARY KEY (token, pid)
 );
+
+-- Script errors reported by the game (no personal data): one row per distinct error per day with a count; 30 days.
+CREATE TABLE IF NOT EXISTS errs (
+  day TEXT NOT NULL, h TEXT NOT NULL, m TEXT NOT NULL, s TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL,
+  n INTEGER NOT NULL DEFAULT 1,
+  PRIMARY KEY (day, h)
+);

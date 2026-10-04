@@ -23,6 +23,11 @@ def main():
     # the V2 drag engine lives in its own file and is inlined into the game script
     assert src.count('//@@V2_ENGINE@@') == 1
     src = src.replace('//@@V2_ENGINE@@', read(f'{SRC}/v2.js').rstrip('\n'))
+    # build stamp for error reports: the service worker cache name (bumped with every web release)
+    import re
+    m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))
+    assert src.count("'@@BUILD@@'") == 1
+    src = src.replace("'@@BUILD@@'", json.dumps(m.group(1) if m else 'dev'))
     for ph in ('FONT_DATA', 'SPRITE_DATA', 'SFX_DATA', 'ASSET_DATA', 'I18N_DATA'):
         assert src.count(f'<!--{ph}-->') == 1, ph
     langs = {}

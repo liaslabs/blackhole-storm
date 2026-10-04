@@ -125,6 +125,7 @@ uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükle
 - **Uygulama etkinliği › Diğer kullanıcı tarafından oluşturulan içerik / Uygulama içi etkileşimler:** günlük fırtına skoru ve süresi; toplanıyor, paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
 - **Finansal bilgiler › Satın alma geçmişi:** toplanıyor (satın alma jetonu ve ürün adı; Google'da doğrulanır, aynı satın almanın tekrar kullanılmaması için kurulum numarasıyla 2 yıl saklanır), paylaşılmıyor, amaç **Uygulama işlevleri** ve **Dolandırıcılığı önleme, güvenlik**. Kart ve ödeme bilgileri Google'da kalır.
 - Bildirilen isimler: bildirenin kurulum numarası ve bildirilen satırın o güne ait kodu sunucuda saklanır (90 gün). Yukarıdaki "Cihaz veya diğer kimlikler" maddesi bunu kapsar.
+- **Uygulama bilgileri ve performansı › Teşhis:** toplanıyor (oyundaki yazılım hatalarının mesajı ve sürüm; kişisel veri yok), bizim tarafımızda paylaşılmıyor, amaç **Analiz** (hataları düzeltmek). 30 gün saklanır.
 - **AdMob (reklam) için ek satırlar** — Google'ın AdMob veri açıklamasına göre; hepsi **toplanıyor ve paylaşılıyor** (Google ile), amaç **Reklam veya pazarlama**, **Analiz** ve **Dolandırıcılığı önleme, güvenlik**, kullanıcı tercihine bağlı değil:
   - **Konum › Yaklaşık konum** (IP adresinden)
   - **Cihaz veya diğer kimlikler** (reklam kimliği; yukarıdaki kurulum numarası maddesine "paylaşılıyor: Evet, Google ile reklam için" eklenir)
