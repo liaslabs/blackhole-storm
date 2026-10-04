@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Kabuk Kırılma ve Onarım</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@500;700&display=swap">
+<style>
+/* layout: the black hole fills the stage; event buttons sit in a two-column dock under it */
+:root{--bg:#05040b;--ink:#f3eefe;--mute:#a79cc4;--gold:#ffd76a;--violet:#b98cff;--red:#ff5a5f;--silver:#eaf1fb;--panel:rgba(18,12,34,.82);--line:rgba(185,140,255,.28);
+ --fd:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--fb:"IBM Plex Sans",system-ui,sans-serif;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);overflow:hidden}
+.app{position:relative;height:100%;display:flex;flex-direction:column}
+#cv{flex:1;min-height:0;width:100%;display:block;touch-action:manipulation}
+.cap{position:absolute;left:16px;right:16px;top:calc(14px + env(safe-area-inset-top,0px));text-align:center;pointer-events:none}
+.cap b{display:block;font:700 clamp(18px,5vw,24px)/1.15 var(--fd);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
+.cap span{display:block;margin-top:4px;font-size:13px;color:var(--mute)}
+.dock{padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:1px solid var(--line);display:grid;gap:8px}
+.ev{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ev button,.ctl button{font:700 13px/1.1 var(--fd);letter-spacing:.04em;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left;min-width:0}
+.ev button i{flex:none;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.ev button.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.ev button.wide{grid-column:1/-1}
+.ctl{display:flex;gap:6px}
+.ctl button{flex:1;justify-content:center;background:linear-gradient(90deg,rgba(255,215,106,.22),rgba(185,140,255,.22))}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="app">
+ <canvas id="cv" aria-label="Kara delik ve yayları"></canvas>
+ <div class="cap" aria-live="polite"><b id="capT">Hazır</b><span id="capS">Bir olaya dokun ya da otomatik oynat</span></div>
+ <div class="dock">
+  <div class="ev" id="ev"></div>
+  <div class="ctl"><button id="auto" type="button">▶ OTOMATİK OYNAT</button><button id="slow" type="button">🐢 YAVAŞ ÇEKİM: AÇIK</button></div>
+ </div>
+</div>
+<script>
+const TAU=Math.PI*2;let clock=0,hX=0,hY=0,W=0,H=0,SC=1,speed=.4;
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const sp2=v=>v*SC;
+const G2={R:60,G:0,afx:[],arcs:3,shells:2,gold:0,t:0,arcFill:1,goldT:-9};
+if(!ctx.roundRect)ctx.roundRect=function(x,y,w,h){this.rect(x,y,w,h);};
+/* ---- the game's own effect code, copied from src/v2.js ---- */
+/* arcs and shells break into pieces you can see fly off, and mend from dust that gathers back into the arc */
+const AFX_COL={arc:'#ff6a6a',shell:'#eaf1fb',gold:'#ffd76a'};
+function v2ArcGeo(i){const R=G2.R||20,lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,seg=TAU/3,gap=.26,a0=-Math.PI/2-seg/2+i*seg+gap/2;return {R,lw,rr,a0,a1:a0+seg-gap};}
+function v2ArcBreak(i,col,k=1){if(!G2.afx||i<0||i>2)return;const {lw,rr,a0,a1}=v2ArcGeo(i),rn=(a,b)=>a+Math.random()*(b-a),n=Math.max(2,Math.round(4*k)),da=(a1-a0)/n;
+  for(let q=0;q<n;q++){const am=a0+da*(q+.5),sp=sp2(rn(70,150));G2.afx.push({k:'chunk',x:hX+Math.cos(am)*rr,y:hY+Math.sin(am)*rr,vx:Math.cos(am)*sp+rn(-30,30),vy:Math.sin(am)*sp+rn(-30,30),a:am,h:da*.4,r:rr,lw,rot:0,vr:rn(-7,7),col,t:0,life:.85});}
+  for(let q=0;q<Math.round(14*k);q++){const am=rn(a0,a1),sp=sp2(rn(110,280)),d=am+rn(-.6,.6);G2.afx.push({k:'shard',x:hX+Math.cos(am)*rr,y:hY+Math.sin(am)*rr,vx:Math.cos(d)*sp,vy:Math.sin(d)*sp,rot:rn(0,TAU),vr:rn(-14,14),s:lw*rn(.35,.85),col,t:0,life:rn(.55,.95)});}
+  G2.afx.push({k:'crack',i,col,t:0,life:.24});}
+function v2ArcForm(i,kind,delay=0){if(!G2.afx||i<0||i>2)return;const rn=(a,b)=>a+Math.random()*(b-a),{a0,a1}=v2ArcGeo(i),n=kind==='gold'?12:kind==='shell'?16:22,life=.85;
+  for(const f of G2.afx)if(f.k==='form'&&f.i===i&&f.kind===kind)f.t=f.life; // a newer mend replaces the old one
+  const ds=[];for(let q=0;q<n;q++){const ta=rn(a0,a1);ds.push({ta,sa:ta+rn(-1.5,1.5),sr:rn(1.7,3),d:rn(0,.18),z:rn(1.1,2.4)});}
+  G2.afx.push({k:'form',i,kind,col:AFX_COL[kind],ds,t:-delay,life});}
+function v2ArcFormQ(i){if(G2.afx)for(const f of G2.afx)if(f.k==='form'&&f.i===i&&f.t<f.life){const q=Math.max(0,f.t/f.life);return {k:f.kind,q,a:Math.min(1,Math.max(0,(q-.55)/.3))};}return {k:'',q:1,a:1};}
+function v2ArcFxStep(dt){const dr=Math.pow(.05,dt);for(const f of G2.afx){f.t+=dt;if(f.x!==undefined){f.x+=f.vx*dt;f.y+=f.vy*dt;f.vx*=dr;f.vy*=dr;f.rot+=f.vr*dt;}}G2.afx=G2.afx.filter(f=>f.t<f.life);}
+function v2DrawArcFx(){const A=G2.afx;if(!A||!A.length)return;ctx.save();ctx.lineCap='round';
+  for(const f of A){if(f.t<0)continue;const q=f.t/f.life;
+    if(f.k==='crack'){const {lw,rr,a0,a1}=v2ArcGeo(f.i);ctx.globalAlpha=1-q;ctx.strokeStyle='#ffffff';ctx.shadowColor=f.col;ctx.shadowBlur=16;ctx.lineWidth=lw+5*(1-q);ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();ctx.shadowBlur=0;}
+    else if(f.k==='chunk'){ctx.save();ctx.translate(f.x-hX,f.y-hY);ctx.rotate(f.rot);ctx.globalAlpha=1-q*q;ctx.strokeStyle=f.col;ctx.shadowColor=f.col;ctx.shadowBlur=8;ctx.lineWidth=f.lw*(1-.35*q);
+      ctx.beginPath();ctx.arc(-Math.cos(f.a)*f.r,-Math.sin(f.a)*f.r,f.r,f.a-f.h,f.a+f.h);ctx.stroke();ctx.restore();}
+    else if(f.k==='shard'){ctx.save();ctx.translate(f.x-hX,f.y-hY);ctx.rotate(f.rot);ctx.globalAlpha=1-q;ctx.fillStyle=f.col;ctx.beginPath();ctx.moveTo(f.s,0);ctx.lineTo(-f.s*.6,f.s*.55);ctx.lineTo(-f.s*.4,-f.s*.6);ctx.closePath();ctx.fill();ctx.restore();}
+    else if(f.k==='form'){const {lw,rr,a0,a1}=v2ArcGeo(f.i);ctx.save();ctx.globalCompositeOperation='lighter';ctx.fillStyle=f.col;ctx.shadowColor=f.col;ctx.shadowBlur=6;
+      for(const d of f.ds){const p=Math.min(1,Math.max(0,(f.t-d.d)/(f.life*.62-d.d)));if(p<=0||p>=1)continue;const e=p*p*(3-2*p),an=d.sa+(d.ta-d.sa)*e,r=rr*(d.sr+(1-d.sr)*e);
+        ctx.globalAlpha=Math.min(1,p*4)*.95;ctx.beginPath();ctx.arc(Math.cos(an)*r,Math.sin(an)*r,d.z*(1-.4*e),0,TAU);ctx.fill();}
+      if(q>.55){const w=1-(q-.55)/.45;ctx.globalAlpha=w*.9;ctx.strokeStyle='#ffffff';ctx.shadowBlur=14;ctx.lineWidth=lw+4*w;ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();}
+      ctx.restore();}}
+  ctx.globalAlpha=1;ctx.restore();}
+function v2DrawArcs(R){const lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,seg=TAU/3,gap=.26,n=G2.arcs,last=n===1,grow=Math.min(1,G2.arcFill/.5); // the arcs sit on the event horizon; their colour is the layer left: gold, silver, red
+  ctx.save();ctx.lineCap='round';
+  for(let i=0;i<3;i++){const a0=-Math.PI/2-seg/2+i*seg+gap/2,a1=a0+seg-gap;
+    if(i>=n){ctx.lineWidth=lw*.45;ctx.strokeStyle='rgba(255,255,255,.14)';ctx.setLineDash([2,5]);ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();ctx.setLineDash([]);} // broken
+    else{const fm=v2ArcFormQ(i),shell=i<G2.shells&&!(fm.k==='shell'&&fm.q<.62),gold=!!G2.gold&&!(fm.k==='gold'&&fm.q<.62),pu=last&&!gold&&!shell?.55+.45*Math.sin(clock*9):1,e=a0+(a1-a0)*grow;
+      ctx.globalAlpha=fm.k==='arc'?fm.a:1;ctx.lineWidth=lw+3;ctx.strokeStyle='rgba(8,4,10,.55)';ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.globalAlpha=1; /* dark backing so the arc reads on any nebula */
+      if(fm.k==='arc')ctx.globalAlpha=fm.a;ctx.globalAlpha*=pu;ctx.lineWidth=lw+(last?1:0);ctx.strokeStyle=gold?'#ffd76a':shell?'#eaf1fb':last?'#ff6a6a':'#ff5a5f';ctx.shadowColor=gold?'#ffb020':shell?'#bcd6ff':'#ff3b3b';ctx.shadowBlur=gold?12:shell?7:last?12:5;
+      ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}
+  }
+  if(G2.gold){const a=-Math.PI/2+((clock*.45)%1)*TAU;ctx.fillStyle='#fff6d0';ctx.shadowColor='#ffd76a';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(Math.cos(a)*rr,Math.sin(a)*rr,lw*.45,0,TAU);ctx.fill();ctx.shadowBlur=0;} // a spark runs round a gold ring
+  {const q=(G2.t-G2.goldT)/.7;if(q>=0&&q<1){ctx.globalAlpha=1-q;ctx.strokeStyle='#ffd76a';ctx.lineWidth=4*(1-q)+1;ctx.beginPath();ctx.arc(0,0,rr+q*sp2(300),0,TAU);ctx.stroke();ctx.globalAlpha=1;}}
+  ctx.restore();}
+
+/* ---- demo stage ---- */
+let stars=[];
+function size(){const d=Math.min(2,window.devicePixelRatio||1),r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=Math.round(W*d);cv.height=Math.round(H*d);ctx.setTransform(d,0,0,d,0,0);
+ hX=W/2;hY=H*.54;G2.R=Math.max(42,Math.min(W,H)*.17);SC=G2.R/40;
+ stars=Array.from({length:120},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,a:Math.random()*.6+.2}));}
+function drawHole(){const R=G2.R;
+ const g=ctx.createRadialGradient(hX,hY,R*.9,hX,hY,R*3.2);g.addColorStop(0,'rgba(255,170,90,.38)');g.addColorStop(.35,'rgba(185,90,255,.16)');g.addColorStop(1,'rgba(185,90,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(hX,hY,R*3.2,0,TAU);ctx.fill();
+ ctx.save();ctx.translate(hX,hY);ctx.rotate(-.28);for(let k=0;k<4;k++){ctx.setLineDash([R*.5,R*.22]);ctx.lineDashOffset=-clock*R*(1.6-k*.25);ctx.strokeStyle=`rgba(255,${200-k*28},${130+k*30},${.42-k*.08})`;ctx.lineWidth=R*.1;ctx.beginPath();ctx.ellipse(0,0,R*(1.35+k*.22),R*(.34+k*.055),0,0,TAU);ctx.stroke();}ctx.setLineDash([]);ctx.restore();
+ ctx.fillStyle='#000';ctx.beginPath();ctx.arc(hX,hY,R,0,TAU);ctx.fill();
+ ctx.save();ctx.shadowColor='#b9a8ff';ctx.shadowBlur=8;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(hX,hY,R+.8,0,TAU);ctx.stroke();ctx.restore();}
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000)*speed;last=now;clock+=dt;G2.t+=dt;if(G2.afx.length)v2ArcFxStep(dt);
+ ctx.fillStyle='#05040b';ctx.fillRect(0,0,W,H);for(const s of stars){ctx.globalAlpha=s.a*(.7+.3*Math.sin(clock*2+s.x));ctx.fillStyle='#fff';ctx.fillRect(s.x,s.y,s.r,s.r);}ctx.globalAlpha=1;
+ drawHole();ctx.save();ctx.translate(hX,hY);try{v2DrawArcs(G2.R);v2DrawArcFx();}catch(e){console.error(e);}ctx.restore();requestAnimationFrame(frame);}
+/* events, mirroring what the game does in each case */
+const brk=(i,c,k)=>v2ArcBreak(i,c,k);
+const EV=[
+ {id:'sb',t:'Gümüş kabuk kırıldı',s:'Meteor gümüş kabuğa çarptı; altındaki yay kopmadı.',c:'#eaf1fb',go(){if(!G2.shells){G2.shells=1;}G2.gold=0;G2.shells--;brk(G2.shells,'#eaf1fb');}},
+ {id:'ab',t:'Yay kırıldı',s:'Kabuksuz yaya çarptı; yay parçalanıp savruldu.',c:'#ff5a5f',go(){G2.gold=0;G2.shells=0;if(G2.arcs<2)G2.arcs=3;G2.arcs--;brk(G2.arcs,'#ff5a5f');}},
+ {id:'rp',t:'Yay onarıldı',s:'Enerji topu yuttun; toz toplanıp yeni yayı oluşturdu.',c:'#ff8a8a',go(){if(G2.arcs>=3){G2.arcs--;}G2.arcs++;v2ArcForm(G2.arcs-1,'arc');}},
+ {id:'sg',t:'Gümüş kabuk geldi',s:'Üst üste 3 kusursuz kaçış; gümüş toz yayın üstünde birleşti.',c:'#dfe8f5',go(){G2.arcs=3;if(G2.shells>=3)G2.shells=0;G2.shells++;v2ArcForm(G2.shells-1,'shell');}},
+ {id:'gg',t:'Altın kabuk geldi',s:'Altın toz bütün yayların üstünde toplandı.',c:'#ffd76a',go(){G2.gold=1;G2.goldT=G2.t;for(let i=0;i<G2.arcs;i++)v2ArcForm(i,'gold',i*.06);}},
+ {id:'gb',t:'Altın kabuk kırıldı',s:'Altın kabuk darbeyi karşıladı ve parçalandı.',c:'#ffb020',go(){if(!G2.gold){G2.gold=1;}G2.gold=0;G2.goldT=G2.t;for(let i=0;i<G2.arcs;i++)v2ArcBreak(i,'#ffd76a',.6);}},
+ {id:'hl',t:'Kalp gitti, yaylar yeniden doğdu',s:'Son yay parçalandı; ardından üç yay tozdan toplandı.',c:'#ff6a9a',wide:1,go(){G2.gold=0;G2.shells=0;G2.arcs=1;brk(0,'#ff5a5f');G2.arcs=0;setTimeout(()=>{for(let i=0;i<3;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=3;},10);}},
+];
+const evBox=document.getElementById('ev'),capT=document.getElementById('capT'),capS=document.getElementById('capS');let cur=null;
+function fire(e){e.go();capT.textContent=e.t;capS.textContent=e.s;for(const b of evBox.children)b.classList.toggle('on',b.dataset.id===e.id);cur=e;}
+for(const e of EV){const b=document.createElement('button');b.type='button';b.dataset.id=e.id;b.style.setProperty('--c',e.c);if(e.wide)b.className='wide';b.innerHTML='<i></i><span></span>';b.lastChild.textContent=e.t;b.onclick=()=>{stopAuto();fire(e);};evBox.appendChild(b);}
+let autoT=null,ai=0;const autoB=document.getElementById('auto'),slowB=document.getElementById('slow');
+function stopAuto(){clearTimeout(autoT);autoT=null;autoB.textContent='▶ OTOMATİK OYNAT';}
+function tick(){fire(EV[ai%EV.length]);ai++;autoT=setTimeout(tick,(speed<1?3600:1900));}
+autoB.onclick=()=>{if(autoT)stopAuto();else{autoB.textContent='⏸ DURDUR';tick();}};
+slowB.onclick=()=>{speed=speed<1?1:.4;slowB.textContent='🐢 YAVAŞ ÇEKİM: '+(speed<1?'AÇIK':'KAPALI');};
+if(matchMedia('(prefers-reduced-motion: reduce)').matches)speed=.4;
+addEventListener('resize',size);size();requestAnimationFrame(frame);
+setTimeout(()=>{autoB.textContent='⏸ DURDUR';tick();},700);
+</script>
+</body>
+</html>
