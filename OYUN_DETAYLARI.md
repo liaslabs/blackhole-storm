@@ -296,6 +296,7 @@ Cam Kalp seçilen seviye 3 yıldız serisine sayılmaz (2 canla 3 yıldız alın
 - 👾 **BOSS DENGESİ**: Boss canı 10. seviyede 40, her evrende +10 (50'de 80; 130'dan sonra her evrende +2, en fazla 100; 110–149 arası bosslar %12 daha az canla gelir). Hızlı çarpma 2 saniyede bir kırar; Süpernova her 9 saniyede 5 enkaz saçar; boss canının %20'sine inince ve sen onun boyuna ulaşınca yutulabilir. Kabuk halkası tamamen kırılınca kaybolur, yerine yeşil bir parıltı kalır. Radyasyonsuz bosslarda meteor fırtınası sürer.
 - 🧲 **MIKNATIS**: 3 saniye; laboratuvarda her seviye +0,5 sn (en fazla 8 sn).
 - ❤️ **KALPLER**: Üst barda; can gidince kalp eriyip damlayarak söner.
+- 💥 **KIRILMA VE ONARIM GÖRÜNTÜSÜ**: Kopan yay, gümüş ya da altın kabuk kendi renginde 2–4 büyük parçaya bölünüp dönerek savrulur, kıvılcım saçar ve kısa bir beyaz çatlak parlar. Onarımda (enerji topu, kalkan, Hayatta Kal'da 25 sn, yeni kalp, İkinci Ufuk) ve kabuk kazanırken toz zerrecikleri kara deliğin etrafından süzülüp yayın yerinde birleşir; yay ya da kabuk beyaz bir parlamayla belirir. Kalp gidince önce son yay parçalanır, ardından yeni yaylar tozdan toplanır.
 - ⚪ **GÜMÜŞ KABUK**: Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.
 - ⚡ **YAY ONARILDI**: Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.
 - ☄️ **METEOR VE YAYLAR**: Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.
