@@ -16,7 +16,7 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 | `starter` | Başlangıç Paketi | 300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali | Tek sefer (tüketilmez) | ₺19,99 |
 | `captain` | Kaptan Seti | 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎 | Tekrar alınabilir | ₺29,99 |
 | `cosmic_id` | Kozmik Kimlik | Oyuncunun ismi kara deliğin içinde (11 harfe kadar, delik büyüdükçe açılır) + Pembe Fırtına ve Piksel Nebula görünümleri | Tek sefer, kalıcı | ₺19,99 |
-| `no_ads` | Reklamsız Oyna | Araya giren reklamlar kalkar, reklamlı ödüller reklamsız gelir | Tek sefer, kalıcı | ₺99,99 |
+| `no_ads` | Reklamsız Oyna | Araya giren reklamlar kalkar, reklamlı ödüller reklamsız gelir. **Reklam ağı bağlanana kadar mağazada görünmez** (reklam yokken satılmaz). | Tek sefer, kalıcı | ₺99,99 |
 | `gems_s` | Avuç Elmas | 80 💎 | Tekrar alınabilir | ₺9,99 |
 | `gems_m` | Kese Elmas | 250 💎 (+%25) | Tekrar alınabilir | ₺24,99 |
 | `gems_l` | Sandık Elmas | 700 💎 (+%75) | Tekrar alınabilir | ₺49,99 |
@@ -24,7 +24,7 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 | `lives_pack` | Can Deposu | 10 yedek can | Tekrar alınabilir | ₺19,99 |
 | `time_pack` | Zaman Kristalleri | 5 × (+15 sn) | Tekrar alınabilir | ₺9,99 |
 
-Başlangıç paketinde üstü çizili gösterilen ₺79,99, içeriğin elmas paketleriyle alınmasının yaklaşık karşılığıdır.
+Başlangıç paketinin altında "değeri ₺79,99" yazar: içeriğin elmas paketleriyle alınmasının yaklaşık karşılığıdır. Paket hiç o fiyata satılmadığı için "indirim" ya da üstü çizili fiyat kullanılmaz (Play'in yanıltıcı beyan kuralı ve Türkiye'deki indirimli satış kuralları).
 
 ### Abonelik (Play Console → Ürünler → Abonelikler)
 
@@ -90,7 +90,7 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
 2. **Mevcut TWA + Google H5 Games Ads (AdSense):** Kabuk değişmez, ama AdSense'in oyun reklamları programına
    başvuru ve onay gerekir. TWA içindeki kullanımı ve gelir seviyesi AdMob kadar net değil.
 
-Reklam eklendiğinde yapılacaklar: gizlilik politikasına reklam bölümü, Play Console'da "Reklam içerir" işareti,
+Reklam eklendiğinde yapılacaklar: gizlilik politikasına reklam bölümü ("reklam yok" cümleleri çıkarılır), Ayarlar'daki "Hesap, reklam ve takip yok" satırı, Play Console'da "Reklam içerir" işareti ve Reklam kimliği beyanı,
 Veri güvenliği formunda reklam SDK'sının topladığı veriler (reklam kimliği vb.), AB/İngiltere için izin (onay) ekranı.
 
 ## Para hesaba nasıl geçer

@@ -15,7 +15,7 @@ ile GitHub Actions'ta otomatik üretilir; bilgisayarına Android Studio kurman g
 | `android/assetlinks.example.json` | Alan adı doğrulama dosyası şablonu |
 | `manifest.webmanifest`, `sw.js`, `icons/` | PWA: yükleme, çevrimdışı çalışma, ikonlar |
 | `privacy.html` | Gizlilik politikası (TR + EN) |
-| `store/` | Tanıtım görseli (1024×500) ve 6 ekran görüntüsü (1080×1920) |
+| `store/` | Tanıtım görseli (1024×500) ve 6 ekran görüntüsü (1080×1920): oyun, boss, laboratuvar, harita, ana ekran, Hayatta Kal |
 | `root-site/` | `liaslabs.github.io` deposuna kopyalanacak dosyalar (adım 4) |
 | `MONETIZATION.md` | Mağaza ürünleri, reklam yerleri, paranın hesaba geçişi |
 
@@ -94,7 +94,8 @@ Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğ
 | Gizlilik politikası | `https://liaslabs.github.io/blackhole-storm/privacy.html` |
 | Uygulama erişimi | Tüm işlevler giriş gerektirmeden kullanılabilir |
 | Reklamlar | Reklam ağı eklenene kadar **Hayır**; eklenince **Evet** (bkz. MONETIZATION.md) |
-| İçerik derecelendirme | Kategori: Oyun. Şiddet, korku, kumar, cinsellik, küfür yok; kullanıcılar arası iletişim yok; **dijital ürün satın alma var**. Beklenen sonuç: 3+ / Herkes |
+| Reklam kimliği (Advertising ID) | **Hayır**, kullanılmıyor (reklam ağı eklenince yeniden bakılacak) |
+| İçerik derecelendirme | Kategori: Oyun. Şiddet, korku, kumar, cinsellik, küfür yok; sohbet/mesajlaşma yok. **Kullanıcılar bilgi paylaşabiliyor mu: Evet** (dünya sıralamasında oyuncu adları görünür; kötü söz filtresi ve ⚑ bildir var). **Dijital ürün satın alma var**; parayla satılan rastgele ödül (şans kutusu) yok. Beklenen sonuç: 3+ / Herkes, "Kullanıcılar Etkileşimde Bulunur" ve "Uygulama İçi Satın Alma" notlarıyla |
 | Hedef kitle | **13 yaş ve üzeri** önerilir (13 yaş altını seçmek "Aileler" politikasının ek şartlarını getirir) |
 | Veri güvenliği | **Veri toplanıyor: Evet · Paylaşılıyor: Hayır.** Aşağıdaki "Veri güvenliği formu" bölümüne bak |
 | Kamu sağlığı, haber, finans, devlet | Hayır |
@@ -106,11 +107,36 @@ Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğ
 - **Cihaz veya diğer kimlikler:** toplanıyor (oyunun ürettiği rastgele kurulum numarası), paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
 - **Uygulama etkinliği › Diğer kullanıcı tarafından oluşturulan içerik / Uygulama içi etkileşimler:** günlük fırtına skoru ve süresi; toplanıyor, paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
 - **Finansal bilgiler › Satın alma geçmişi:** toplanıyor (satın alma jetonu, yalnızca Google'da doğrulayıp onaylamak için sunucudan geçer, saklanmaz), paylaşılmıyor, amaç **Uygulama işlevleri**. Kart ve ödeme bilgileri Google'da kalır.
+- Bildirilen isimler: bildirenin kurulum numarası ve bildirilen satırın o güne ait kodu sunucuda saklanır (90 gün). Yukarıdaki "Cihaz veya diğer kimlikler" maddesi bunu kapsar.
 - Konum, kişiler, fotoğraf/video, ses, dosya, sağlık, mesaj, tarama geçmişi: **toplanmıyor**. Kayıtlı klipler cihazda kalır.
 
 
 6. **Uygulama içi ürünler:** Play Console → Para kazanma → Ürünler → Uygulama içi ürünler. Ürün kimlikleri, içerikleri ve önerilen fiyatlar `MONETIZATION.md` içinde. `vip_monthly` aboneliği ayrıca **Abonelikler** bölümünde, aylık otomatik yenilenen bir temel planla oluşturulur. Bunun için önce Ödemeler profili (banka hesabı) oluşturulmalı.
 7. **Sürüm**: yeni bir `.aab` her zaman daha büyük bir sürüm koduyla yüklenir (adım 3).
+
+## 5b. Sunucu güncellemesi (isim filtresi ve bildirim)
+
+Oyuncu adlarındaki kötü söz filtresi ve sıralamadaki ⚑ bildirim, sıralama sunucusunun yeni sürümüyle çalışır. Bir kez:
+
+```
+cd server
+npx wrangler deploy
+```
+
+Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut skorlar etkilenmez. Sunucu güncellenene kadar oyun eskisi gibi çalışır, yalnızca ⚑ düğmesi görünmez (oyunda isim girerken filtre zaten çalışır).
+
+## 5c. Kapalı test, reklamlar ve satın almalar
+
+- **Reklamlar:** oyunda henüz reklam ağı yok. Bu yüzden Play sürümünde (kapalı test dahil) reklam izleme düğmeleri ve "Reklamsız Oyna" ürünü görünmez; reklamla alınan ödüllerin elmas/yıldız/bekleme seçenekleri çalışır. Kapalı testte senin yapman gereken bir şey yok. Herkese açık yayından önce reklam ağı seçilir (MONETIZATION.md › Reklam ağı seçimi); bağlanınca düğmeler ve "Reklamsız Oyna" kendiliğinden açılır.
+- **Satın almalar:** Play Console'da ürünler oluşturulunca kapalı testte de çalışır. Lisans test kullanıcısı olarak eklenen hesaplar (Ayarlar › Lisans testi) gerçek para ödemeden dener. Tek seferlik ürünler ve VIP için önce satın alma onayı kurulmalı (MONETIZATION.md › Satın alma onayı); kurulmadan satılırsa Google 3 gün sonra iade eder.
+
+## 5d. Geri dönüşü olmayan adımlar (dikkat)
+
+- **Paket adı** `com.liaslabs.blackholestorm`: ilk yüklemeden sonra değiştirilemez.
+- **Ürün kimlikleri** (MONETIZATION.md'deki `starter`, `gems_s` …): bir kimlik silinse bile tekrar kullanılamaz; tabloda yazdığı gibi, harfi harfine oluştur.
+- **Yükleme anahtarı** (`android.keystore` ve şifresi): kaybolursa Play Console'dan sıfırlama istemek gerekir; güvenli iki yerde sakla.
+- **Sürüm kodu:** her yeni paket daha büyük bir sürüm koduyla yüklenir; geri alınamaz.
+- **Hedef kitle "13 yaş altı"** seçilirse "Aileler" politikası devreye girer ve sonradan çıkmak inceleme gerektirir; 13+ öneriliyor.
 
 ## 6. Görseller ve lisanslar
 

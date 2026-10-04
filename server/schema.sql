@@ -21,3 +21,12 @@ CREATE TABLE IF NOT EXISTS prizes (
   claimed INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (day, pid)
 );
+
+-- Reported names: two different players reporting a name hides it on that day's ranking.
+CREATE TABLE IF NOT EXISTS reports (
+  day TEXT    NOT NULL,
+  pid TEXT    NOT NULL,          -- the reported player's install id
+  by  TEXT    NOT NULL,          -- the reporter's install id (one report each)
+  ts  INTEGER NOT NULL,
+  PRIMARY KEY (day, pid, by)
+);

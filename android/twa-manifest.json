@@ -12,7 +12,7 @@
   "navigationDividerColor": "#03040A",
   "navigationDividerColorDark": "#03040A",
   "backgroundColor": "#03040A",
-  "enableNotifications": true,
+  "enableNotifications": false,
   "startUrl": "/blackhole-storm/",
   "iconUrl": "https://liaslabs.github.io/blackhole-storm/icons/icon-512.png",
   "maskableIconUrl": "https://liaslabs.github.io/blackhole-storm/icons/icon-maskable-512.png",

@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "ARCS RESTAURÉS",
 "DEVAM": "CONTINUER",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "S'ouvre au niveau {n} · Construis-le au Laboratoire ; touche deux fois en jeu pour te téléporter. · Touche deux fois vite un endroit vide : ton trou noir s'y téléporte et devient intouchable un instant. Il est prêt quand l'anneau violet est plein.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "S'ouvre au niveau {n} · Construis-le au Laboratoire ; une fois par niveau il sauve un cœur. · Une fois par niveau, le coup qui briserait ton dernier arc est arrêté : le temps ralentit, une onde dorée efface les météores et tes arcs reviennent."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "S'ouvre au niveau {n} · Construis-le au Laboratoire ; une fois par niveau il sauve un cœur. · Une fois par niveau, le coup qui briserait ton dernier arc est arrêté : le temps ralentit, une onde dorée efface les météores et tes arcs reviennent.",
+"TEK SEFER": "UNIQUE",
+"Bu isim kullanılamaz": "Ce nom ne peut pas être utilisé",
+"Başka bir isim seç": "Choisis un autre nom",
+"Bu ismi bildir": "Signaler ce nom",
+"BİLDİR?": "SIGNALER ?",
+"BİLDİRİLDİ": "SIGNALÉ",
+"Bu isim artık sana gösterilmeyecek": "Tu ne verras plus ce nom",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "Pas de compte, de pub ni de pistage. Si tu participes au classement mondial, seuls ton nom de joueur, ton score et un numéro d'installation aléatoire sont envoyés",
+"Kurulum no": "N° d’installation"
 }

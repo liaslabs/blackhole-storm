@@ -106,6 +106,7 @@ button{font-family:inherit;}
 .lbrow .r{width:26px;font-family:var(--fd);font-size:13px;color:var(--gold);}
 .lbrow .n{flex:1;text-align:start;font-size:14px;font-weight:600;}
 .lbrow .p{font-family:var(--fd);font-size:12px;color:var(--cyan);font-variant-numeric:tabular-nums;}
+.lbRep{flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:6px;border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--dim,#9aa0b6);font:700 12px/1 var(--fd);cursor:pointer;}.lbRep.ask{color:#ff8a8a;border-color:rgba(255,120,120,.5);}
 .popt{display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;margin:6px 0;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#fff;font-size:16px;font-weight:600;cursor:pointer;text-align:start;}
 .popt em{margin-left:auto;font-style:normal;font-family:var(--fd);font-size:11px;color:var(--gold);}
 .popt em.off{color:#7d8397;}
@@ -1034,7 +1035,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <button class="icb" id="setBtn" aria-label="Ayarlar">⚙️</button>
   </div>
   <div class="wallet"><span data-w="stars">⭐ <b id="menuStars">0</b></span><span data-w="gems">💎 <b id="menuDia">0</b></span><span data-w="shield">🛡 <b id="menuSh">0</b></span><span id="menuHrt" hidden>⛽ <b id="menuHrtN">5</b><small id="menuHrtT"></small></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
-  <button class="ribbon mon" id="starterRib"><b>🎁</b><span><b>BAŞLANGIÇ PAKETİ</b><br>300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 ⏱</span><em>%75</em></button>
+  <button class="ribbon mon" id="starterRib"><b>🎁</b><span><b>BAŞLANGIÇ PAKETİ</b><br>300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 ⏱</span><em>TEK SEFER</em></button>
   <div class="mmid">
    <div class="mside">
     <button class="sb" id="snBtn"><i>🌀</i><span>SEZON</span><em id="snBadge"></em></button>
@@ -1281,7 +1282,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    Ses efektleri: <a href="https://kenney.nl" target="_blank" rel="noopener">Kenney.nl</a> — CC0 ve Lias Labs<br>
    Müzik: “Star on the Horizon”, “Outworld”, “Eclipse Legion” (vitalezzz), “The Rush” (tebruno99), “Space Adventure” (MintoDog), “Boundless” (Centurion_of_war), “Determined Pursuit” (Emma_MA) — <a href="https://opengameart.org" target="_blank" rel="noopener">OpenGameArt.org</a>, CC0<br>
    <span class="notr">© 2026 Lias Labs · <a href="mailto:liaslabs.games@gmail.com">liaslabs.games@gmail.com</a></span><br>
-   <span id="privRow">🔒 Oyun kişisel veri toplamaz. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir. <a href="privacy.html" target="_blank" rel="noopener">Gizlilik politikası</a></span></div>
+   <span id="privRow">🔒 Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir. <a href="privacy.html" target="_blank" rel="noopener">Gizlilik politikası</a></span><br><span id="pidRow">Kurulum no: <b class="notr" id="pidTxt"></b></span></div>
   <div class="row"><button class="btn" id="setClose">TAMAM</button></div>
  </div>
 </div>
@@ -2470,7 +2471,7 @@ function renderGuide(tab){
 // ══════════════════════════════════════════════════════
 const IAP=[
  {id:'quasar_hoard',sec:'offer',cls:'qh',ic:'👑',t:'KUASAR HAZİNESİ',d:'2.400 💎 · kalıcı 2. lab yuvası · 24 saat lab hızlandırma · yalnızca bu pakette KUASAR TACI görünümü · 10 kalkan · 10 yedek can · 5 zaman kristali. Tek sefer.',price:'₺199,99',val:'değeri ₺235+',tag:'EN AVANTAJLI',once:true,minLv:6},
- {id:'starter',sec:'offer',ic:'🎁',t:'BAŞLANGIÇ PAKETİ',d:'300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali. Tek sefer.',price:'₺19,99',was:'₺79,99',tag:'%75 İNDİRİM',once:true,give:{gems:300,stars:3000,lives:10,shield:5,time:3}},
+ {id:'starter',sec:'offer',ic:'🎁',t:'BAŞLANGIÇ PAKETİ',d:'300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 zaman kristali. Tek sefer.',price:'₺19,99',val:'değeri ₺79,99',tag:'TEK SEFER',once:true,give:{gems:300,stars:3000,lives:10,shield:5,time:3}},
  {id:'vip_monthly',sec:'offer',cls:'vip',ic:'👑',t:'VIP KULÜP · AYLIK',d:'Sınırsız yakıt ⛽ · Her günlük girişte ekstra +15 💎 +1 🛡 · Her ay otomatik paket: 300 💎 · 3.000 ⭐ · 5 kalkan · 5 yedek can · 3 zaman kristali',price:'₺39,99',per:'/ay',tag:'EN KÂRLI',sub:true},
  {id:'captain',sec:'offer',cls:'cap',ic:'🧑‍🚀',t:'KAPTAN SETİ',d:'Oyunu kolaylaştırır: 5 kalkan · 5 yedek can · 3 zaman kristali · 100 💎',price:'₺29,99',tag:'KOLAYLAŞTIR',give:{shield:5,lives:5,time:3,gems:100}},
  {id:'cosmic_id',sec:'offer',cls:'cid',ic:'🌌',t:'KOZMİK KİMLİK',d:'İsmin kara deliğinin içinde (11 harfe kadar, delik büyüdükçe açılır) · Pembe Fırtına ve Piksel Nebula görünümleri. Tek sefer, kalıcı.',price:'₺19,99',once:true,perm:true},
@@ -2523,7 +2524,7 @@ async function monInit(){
   monApply();vipTick();
 }
 function priceOf(p){return (MON.prices[p.id]||p.price)+(p.per||'');}
-const adReady=()=>SHOP.noAds||MON.mode==='test'||!!(window.BHS_ADS&&window.BHS_ADS.rewarded);
+const adNet=()=>MON.mode==='test'||!!(window.BHS_ADS&&window.BHS_ADS.rewarded),adReady=()=>SHOP.noAds||adNet(); // no ad network yet: no ads, and nothing sold that removes them
 const adLabel=t=>(SHOP.noAds?'🎁 ':'▶ REKLAM İZLE · ')+t;
 function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()){SHOP.adDay=d;SHOP.adN=0;}return 3-SHOP.adN;}
 // rewarded ad → true when the reward is earned
@@ -2589,7 +2590,7 @@ function openShop(){if(!monOn())return;renderShop();$('sShop').classList.add('on
 function renderShop(){
   if(!$('sShop'))return;$('shopTest').hidden=MON.mode!=='test';
   $('shopInv').innerHTML=`<span>⭐ ${stars.toLocaleString(LOC)}</span><span>💎 ${diamonds}</span><span>❤️ ${SHOP.lives}</span><span>🛡 ${SHOP.shield}</span><span>⏱ ${SHOP.time}</span>${SHOP.noAds?'<span>🚫 reklamsız</span>':''}${vipOn()?'<span>👑 VIP</span>':''}`;
-  $('shopOffers').innerHTML=IAP.filter(p=>p.sec==='offer'&&!(p.minLv&&bestLevel<p.minLv&&!owned(p))).map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
+  $('shopOffers').innerHTML=IAP.filter(p=>p.sec==='offer'&&!(p.minLv&&bestLevel<p.minLv&&!owned(p))&&!(p.id==='no_ads'&&!owned(p)&&!adNet())).map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
   const tile=p=>`<button class="sitem" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><b>${p.t}</b><small>${p.d}</small><div class="pr">${priceOf(p)}</div></button>`;
   $('shopGems').innerHTML=IAP.filter(p=>p.sec==='gems').map(tile).join('');
   $('shopPacks').innerHTML=IAP.filter(p=>p.sec==='packs').map(tile).join('');
@@ -2647,10 +2648,15 @@ async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
   if(!SET.lb){w.innerHTML=head+mine+`<div class="lbwait">${T('Dünya sıralaması Ayarlar’dan kapalı.')}</div>`;return;}
   w.innerHTML=head+mine+`<div class="lbwait">${T('Yükleniyor…')}</div>`;
   try{const j=await lbFetch(`/top?day=${day}&pid=${PID}`);if(!$('sLB').classList.contains('on'))return;const med=['🥇','🥈','🥉'];
-    const rows=(j.list||[]).map(e=>`<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div><div class="n notr">${String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div></div>`).join('');
+    const hid=lbRepGet(),rk=e=>e.k?String(e.k).replace(/[^a-f0-9]/g,''):'';
+    const rows=(j.list||[]).map(e=>{const k=rk(e),gone=k&&hid.includes(k);return `<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div><div class="n notr">${gone?'•••':String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div>${!e.me&&k&&!gone?`<button class="lbRep" type="button" data-k="${k}" aria-label="${T('Bu ismi bildir')}">⚑</button>`:''}</div>`;}).join('');
     const me=j.me&&!(j.list||[]).some(e=>e.me)?`<div class="lbrow me2"><div class="r">${j.me.rank}</div><div class="n notr">${String(playerName||'PİLOT').replace(/[<>&"]/g,'')}</div><div class="p">${j.me.score.toLocaleString(LOC)}</div></div>`:'';
-    w.innerHTML=head+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;}
+    w.innerHTML=head+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;
+    w.querySelectorAll('.lbRep').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=T('BİLDİR?');return;} // a second tap confirms
+      const k=b.dataset.k,h=lbRepGet();if(!h.includes(k)){h.push(k);lbRepSet(h);}lbFetch('/report',{day,k,by:PID}).catch(()=>{});
+      const row=b.closest('.lbrow');row.querySelector('.n').textContent='•••';b.remove();toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));});}
   catch(e){w.innerHTML=head+mine+`<div class="lbwait">${T('Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.')}</div>`;}}
+const lbRepGet=()=>{try{const a=JSON.parse(localStorage.getItem('bhs_lbrep')||'[]');return Array.isArray(a)?a.slice(-200):[];}catch(e){return [];}},lbRepSet=a=>{try{localStorage.setItem('bhs_lbrep',JSON.stringify(a.slice(-200)));}catch(e){}};
 function lbTab(t){$('lbTW').classList.toggle('on',t==='w');$('lbTM').classList.toggle('on',t!=='w');$('lbWorld').hidden=t!=='w';$('lbMine').hidden=t==='w';if(t==='w')renderLBWorld();}
 
 // SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
@@ -3561,7 +3567,8 @@ document.addEventListener('keydown',e=>{if(e.code==='Space'&&gState==='playing'&
 // ══════════════════════════════════════════════════════
 // SETTINGS
 // ══════════════════════════════════════════════════════
-function syncSettingsUI(){[...$('sFd').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.fd??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
+function syncSettingsUI(){if($('pidTxt'))$('pidTxt').textContent=PID; // quoted when asking for your ranking data to be deleted
+  [...$('sFd').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.fd??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
@@ -3630,7 +3637,14 @@ $('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('profOk').dis
 let profBack=null; // where the profile returns to: the level card, the leaderboard, or the menu
 function openProfile(back){profBack=back||null;$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
 function profClose(){$('sProfile').classList.remove('on');const b=profBack;profBack=null;if(b)b();else{showMenu();offerChallenge();}}
-$('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(n.length<2||!selAv)return;playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};
+// Names others can see: a small word filter (keep the same list in server/worker.js)
+const BAD_SUB=['orospu','orspu','siktir','sikerim','sikeyim','sikik','sikis','yarrak','yarak','amcik','aminakoy','aminako','gotveren','pezevenk','kahpe','kaltak','ibne','gavat','yavsak','serefsiz','fuck','shit','bitch','cunt','nigger','nigga','faggot','whore','slut','dick','pussy','asshole','bastard','hitler','porno','porn'],
+  BAD_WORD=['sik','pic','amk','aq','oc','mk','got','ass','nazi','sex','fag','cum','rape','anan','ananı','ananin'];
+function badName(n){const s=String(n||'').toLocaleLowerCase('tr').replace(/[ıİ]/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c')
+  .replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s');
+  const flat=s.replace(/[^a-z]/g,'');if(BAD_SUB.some(w=>flat.includes(w)))return true;
+  return s.split(/[^a-z]+/).some(w=>BAD_WORD.includes(w))||BAD_WORD.includes(flat);}
+$('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(n.length<2||!selAv)return;if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};
 $('profLater').onclick=()=>{if(selAv&&selAv!==playerAvatar){playerAvatar=selAv;saveG();}profClose();};
 $('editProf').onclick=()=>openProfile(null);
 const MODE_TXT={
