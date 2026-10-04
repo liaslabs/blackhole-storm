@@ -1320,6 +1320,9 @@ const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
+// high-refresh phones (90/120/144 Hz) would draw every frame twice as often for no visible gain: cap drawing near 60 per second
+function fcap(o,ts){if(ts<o.next-4)return true;o.next=Math.max(o.next+1000/60,ts+1000/120);return false;}
+const LOOPF={next:0},MENUF={next:0},LABF={next:0};
 const SK=DEV?'bhs_dev':'bhs_v7';
 let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
@@ -1522,7 +1525,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
   }catch(e){}
 }
-function vib(p){if(!SET.vib)return;const h=CAP('Haptics');if(h){const d=Array.isArray(p)?p.reduce((a,x,i)=>i%2?a:a+x,0):p;h.vibrate({duration:Math.max(10,Math.min(400,d|0))}).catch(()=>{});return;} // app: one buzz as long as the pattern's on-time
+function vib(p){if(!SET.vib)return;const b=CAP('Bhs');if(b){b.vibrate({pattern:Array.isArray(p)?p.map(x=>Math.max(0,Math.min(400,x|0))):[Math.max(20,Math.min(400,p|0))]}).catch(()=>{});return;} // app: our own plugin, on the game vibration channel
   if(navigator.vibrate)try{navigator.vibrate(p);}catch(e){}}
 
 // ══════════════════════════════════════════════════════
@@ -2924,6 +2927,7 @@ function labTex(){ // the accretion disk, drawn once face-on and then squashed a
   x.globalCompositeOperation='destination-in';const m=x.createRadialGradient(C,C,S*.15,C,C,S*.5);m.addColorStop(0,'#000');m.addColorStop(.85,'rgba(0,0,0,.9)');m.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=m;x.fillRect(0,0,S,S);return c;}
 function labPods(cx,cy,rx,ry){const n=LABT.length;return LABT.map((m,i)=>{const a=LV.rot+i*TAU/n,z=Math.sin(a);return {i,m,x:cx+Math.cos(a)*rx,y:cy+z*ry,z,s:.62+.38*(z+1)/2};});}
 function labFrame(now){if(!LV.on||!$('sLab').classList.contains('on')){LV.on=false;return;}
+  if(fcap(LABF,now)){requestAnimationFrame(labFrame);return;}
   const dt=Math.min(.05,(now-LV.last)/1000);LV.last=now;LV.t+=dt;LV.tick+=dt;if(LV.tick>.5){LV.tick=0;labLive();}
   const cv=$('labCv'),c=cv&&cv.getContext('2d');if(!c){requestAnimationFrame(labFrame);return;}
   if(!LV.W||Math.abs(cv.getBoundingClientRect().width-LV.W)>1)labSize();
@@ -3450,7 +3454,7 @@ function recStart(){
     const c=REC.cv||(REC.cv=document.createElement('canvas'));c.width=540;c.height=960;REC.cx=c.getContext('2d');
     const st=c.captureStream(30);
     if(SND.ctx&&SND.ctx.createMediaStreamDestination){REC.dest=SND.ctx.createMediaStreamDestination();SND.master.connect(REC.dest);const tr=REC.dest.stream.getAudioTracks()[0];if(tr)st.addTrack(tr);}
-    const type=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
+    const type=['video/mp4;codecs=avc1,mp4a.40.2','video/mp4;codecs=avc1.42E01E,mp4a.40.2','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/mp4','video/webm'].find(t=>MediaRecorder.isTypeSupported(t))||'';
     REC.chunks=[];REC.type=type;REC.mr=new MediaRecorder(st,type?{mimeType:type,videoBitsPerSecond:1600000}:{videoBitsPerSecond:1600000});
     REC.mr.ondataavailable=e=>{if(e.data&&e.data.size)REC.chunks.push(e.data);};REC.mr.start(1000);
   }catch(e){REC.mr=null;}
@@ -3495,14 +3499,13 @@ function bgSilence(){try{if(SND.ctx&&SND.ctx.state==='running')SND.ctx.suspend()
 function bgWake(){SND.resume();const v=$('introV');if(v&&v._bg){v._bg=0;if(!$('intro').hidden)v.play().catch(()=>{});}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseGame();saveG();bgSilence();}else bgWake();});
 window.addEventListener('pagehide',bgSilence);window.addEventListener('pageshow',()=>{if(!document.hidden)bgWake();});
-// Android back button / back gesture: keep one history entry of our own so "back"
-// pauses the game or closes the open panel instead of leaving the app mid-run.
-// From the plain main menu, back steps past that entry so the app closes normally.
+// Android back button / back gesture: pauses the game or closes the open panel instead of leaving the app mid-run.
+// The web version keeps one history entry of its own for this; the app gets the press straight from its native side.
+// From the plain main menu, back leaves the app normally.
 let backArmed=false;
-function armBack(){if(backArmed)return;try{history.pushState({bhs:1},'');backArmed=true;}catch(e){}}
+function armBack(){if(backArmed||NATIVE)return;try{history.pushState({bhs:1},'');backArmed=true;}catch(e){}}
 addEventListener('pointerdown',armBack,{capture:true});
-addEventListener('popstate',()=>{
-  backArmed=false;
+function backStep(){ // false: nothing left to close, the app may go
   const on=id=>$(id).classList.contains('on');
   if(on('sSet')){$('sSet').classList.remove('on');}
   else if(on('sSkin')){$('skClose').click();}
@@ -3520,9 +3523,14 @@ addEventListener('popstate',()=>{
   else if(gState==='paused'){resumeGame();}
   else if(gState==='tip'){v2TipOk();}
   else if(on('sProfile')&&playerName){$('profLater').click();}
-  else if(on('sMenu')||on('sProfile')){try{history.back();}catch(e){}return;} // step past our entry so the app closes
+  else if(on('sMenu')||on('sProfile'))return false;
+  return true;}
+addEventListener('popstate',()=>{
+  backArmed=false;
+  if(!backStep()){try{history.back();}catch(e){}return;} // step past our entry so the app closes
   armBack();
 });
+{const nb=CAP('Bhs');if(nb&&nb.addListener)nb.addListener('back',()=>{if(!backStep())nb.leave().catch(()=>{});});}
 
 // ══════════════════════════════════════════════════════
 // MAIN LOOP
@@ -3533,9 +3541,10 @@ function adaptQuality(dt){ // drop resolution only while frames are slow; climb 
   if(avg>.022&&GL.quality>.5){GL.quality=Math.max(.5,GL.quality-.15);GL.good=0;glResize();} // one firm step down instead of many small ones: every resize is itself a hitch
   else if(avg<.0175&&GL.quality<1){if(++GL.good>=8&&gState!=='playing'){GL.quality=Math.min(1,GL.quality+.1);GL.good=0;glResize();}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
 }
-let sMapEl=null;
+let sMapEl=null,sMenuEl=null;
 function loop(ts){
-  if((sMapEl||(sMapEl=$('sMap'))).classList.contains('on')){lastT=ts;requestAnimationFrame(loop);return;} // the level map is opaque and full screen: skip drawing the hidden scene
+  if(fcap(LOOPF,ts)){requestAnimationFrame(loop);return;}
+  if((sMapEl||(sMapEl=$('sMap'))).classList.contains('on')||(!G2.on&&!cols.length&&(sMenuEl||(sMenuEl=$('sMenu'))).classList.contains('on'))){lastT=ts;requestAnimationFrame(loop);return;} // the level map is opaque and full screen: skip drawing the hidden scene
   let dt=(ts-lastT)/1000;lastT=ts;if(!(dt>0)||dt>.1)dt=1/60;
   adaptQuality(dt);
   if(G2.on){v2Frame(dt);requestAnimationFrame(loop);return;}
@@ -3678,6 +3687,7 @@ function menuBgSize(){const c=$('menuBg');MB.d=Math.min(2,devicePixelRatio||1);M
   MB.sk=Array.from({length:120},()=>({a:Math.random()*TAU,d:Math.random(),v:.08+Math.random()*.2,w:.5+Math.random()*1.2}));}
 function menuBgStart(){if(MB.on)return;MB.on=true;MB.last=performance.now();menuBgSize();requestAnimationFrame(menuBgFrame);}
 function menuBgFrame(now){if(!$('sMenu').classList.contains('on')||gState!=='menu'){MB.on=false;return;}
+  if(fcap(MENUF,now)){requestAnimationFrame(menuBgFrame);return;}
   const dt=Math.min(.05,(now-MB.last)/1000);MB.last=now;MB.t+=dt;const c=$('menuBg').getContext('2d'),W=MB.W,H=MB.H,t=MB.t,still=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(W!==innerWidth||H!==innerHeight)menuBgSize();c.setTransform(MB.d,0,0,MB.d,0,0);
   const R=Math.min(W*.13,H*.075),mh=$('mHole'),hr=mh&&mh.getBoundingClientRect(),cx=W/2,cy=hr&&hr.height>0?hr.top+hr.height/2:H*.42;if(!LV.tex)LV.tex=labTex(); // the hole sits in the gap between the title and the mode cards
@@ -3836,7 +3846,7 @@ monInit();
     if(pendingChal){showMenu();offerChallenge();if(!seen)introShort(null);}
     else{const go=()=>{selMode('classic');SND.resume();SND.startDrone();SND.music('game');resize();resetRun(true,false);};if(seen)go();else introShort(go);}}}
 requestAnimationFrame(t=>{lastT=t;loop(t);});
-if('serviceWorker' in navigator&&canLink()&&!NATIVE&&window.top===window){ // the app carries its files itselfnavigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator&&canLink()&&!NATIVE&&window.top===window){navigator.serviceWorker.register('sw.js').catch(()=>{}); /* the app carries its files itself */
   later(()=>{if(navigator.serviceWorker.controller&&navigator.onLine!==false)['z1','z2','z3','z4','boss'].forEach((k,i)=>later(()=>fetch('music/'+k+'.mp3').catch(()=>{}),i*2000));},25000);} // the worker caches what passes through
 let installEvt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;$('installBtn').style.display='';});
 $('installBtn').onclick=async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice;}catch(e){}installEvt=null;$('installBtn').style.display='none';};
