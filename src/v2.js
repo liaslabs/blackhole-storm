@@ -918,7 +918,8 @@ function v2GuardImpact(o){const g=G2.guard;o.st='dead';g.hitT=.6;v2Burst(o.x,o.y
   g.hp=Math.max(0,g.hp-g.dmg);v2Sfx('armor',{vol:.6,rate:.8}); /* the planet takes the hit, not your lives */
   if(g.hp<=0){ /* the planet falls: you lose a life and the defense starts over with a fresh planet and a full clock */
     for(const q of G2.objs)if(q.k==='thr'&&q.st==='in'){q.st='dead';v2Burst(q.x,q.y,10,'#ff9a5c',1.5,5,.5);}
-    g.hp=100;g.t=g.dur;g.next=2.5;g.wave=0;G2.immT=0;G2.hitWhy='guard';v2Hit({x:g.px,y:g.py},true);G2.hitWhy=null;
+    const left=g.t;g.hp=100;g.t=g.dur;g.next=2.5;g.wave=0;G2.immT=0;G2.hitWhy='guard';v2Hit({x:g.px,y:g.py},true);G2.hitWhy=null;
+    g.keep=lives<=0?left:null; /* the fall took the last heart: a bought continue resumes the clock where it was, not from the start */
     if(gState==='playing')v2Call('GEZEGEN YOK OLDU','BAŞTAN','#ff7a5c',1.8,true);return;}
   v2Call('GEZEGEN VURULDU','-'+g.dmg+'%','#ff9a5c',1.1);}
 function v2DrawGuard(){const g=G2.guard;if(!g||g.px===undefined)return;const r=g.pr;ctx.save();
@@ -1116,7 +1117,7 @@ function v2Fail(msg){
 function v2AddTime(sec){G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();saveG();
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';}
 function v2Revive(){ // one continue per run (spec §42)
-  G2.contUsed=true;for(let i=0;i<3;i++)v2ArcForm(i,'arc',i*.08);G2.arcs=3;G2.arcFill=.5;if(G2.guard)G2.guard.hp=Math.max(G2.guard.hp,50);lives=G2.failMsg==='SÜRE DOLDU'?Math.max(1,lives):1;G2.combo=0;comboCount=0;G2.rage=V2K.cont.rage;G2.ready=false;G2.rageT=0;G2.immT=V2K.cont.imm;
+  G2.contUsed=true;for(let i=0;i<3;i++)v2ArcForm(i,'arc',i*.08);G2.arcs=3;G2.arcFill=.5;if(G2.guard){const g=G2.guard;g.hp=Math.max(g.hp,50);if(g.keep!=null){g.t=g.keep;g.keep=null;}}lives=G2.failMsg==='SÜRE DOLDU'?Math.max(1,lives):1;G2.combo=0;comboCount=0;G2.rage=V2K.cont.rage;G2.ready=false;G2.rageT=0;G2.immT=V2K.cont.imm;
   hideModals();updateUI();gState='playing';lastT=performance.now();saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';
 }
