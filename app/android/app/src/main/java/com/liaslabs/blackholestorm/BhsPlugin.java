@@ -24,6 +24,19 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.getcapacitor.JSArray;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.ump.ConsentInformation;
+import com.google.android.ump.ConsentRequestParameters;
+import com.google.android.ump.UserMessagingPlatform;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
@@ -49,7 +62,9 @@ import java.util.Map;
 //   each purchase with Google before anything is granted, and the server then acknowledges or consumes it;
 // - Play Integrity tokens, so the server can tell a genuine Play install from a modified copy;
 // - game reminders: the game hands over a short list (lab done, fuel full, daily reward) each time it goes to the
-//   background; they are inexact alarms (no exact-alarm permission), shown by NotifReceiver, cleared when the game opens.
+//   background; they are inexact alarms (no exact-alarm permission), shown by NotifReceiver, cleared when the game opens;
+// - AdMob: a rewarded ad (the player chooses to watch it for a reward) and an ad between levels (the game decides when),
+//   after the consent form Google's User Messaging Platform shows where the law requires one.
 @CapacitorPlugin(name = "Bhs", permissions = { @Permission(strings = { Manifest.permission.POST_NOTIFICATIONS }, alias = "notif") })
 public class BhsPlugin extends Plugin {
     private OnBackPressedCallback back;
@@ -435,5 +450,150 @@ public class BhsPlugin extends Plugin {
                 pi.cancel();
             }
         }
+    }
+
+    // ---- AdMob ----
+    private boolean adsReady;
+    private RewardedAd rewarded;
+    private InterstitialAd inter;
+    private String rewardedUnit = "", interUnit = "";
+
+    // {rewarded, interstitial: ad unit ids} -> {ok, privacy: true when a "privacy options" entry must be offered}
+    @PluginMethod
+    public void adsStart(PluginCall call) {
+        rewardedUnit = call.getString("rewarded", "");
+        interUnit = call.getString("interstitial", "");
+        ConsentInformation ci = UserMessagingPlatform.getConsentInformation(getContext());
+        ConsentRequestParameters params = new ConsentRequestParameters.Builder().setTagForUnderAgeOfConsent(false).build();
+        getActivity().runOnUiThread(() -> ci.requestConsentInfoUpdate(getActivity(), params,
+            () -> UserMessagingPlatform.loadAndShowConsentFormIfRequired(getActivity(), err -> adsAfterConsent(call, ci)),
+            err -> adsAfterConsent(call, ci))); // no answer from the consent service: ads only if consent was given before
+    }
+
+    private void adsAfterConsent(PluginCall call, ConsentInformation ci) {
+        JSObject o = new JSObject();
+        o.put("privacy", ci.getPrivacyOptionsRequirementStatus() == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED);
+        if (!ci.canRequestAds()) {
+            o.put("ok", false);
+            call.resolve(o);
+            return;
+        }
+        if (!adsReady) {
+            adsReady = true;
+            MobileAds.setRequestConfiguration(new RequestConfiguration.Builder()
+                .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_PG) // a game for 13+: no mature ads
+                .setTagForUnderAgeOfConsent(RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE)
+                .build());
+            new Thread(() -> MobileAds.initialize(getContext(), st -> getActivity().runOnUiThread(() -> {
+                loadRewarded();
+                loadInter();
+            }))).start();
+        }
+        o.put("ok", true);
+        call.resolve(o);
+    }
+
+    // the "privacy options" form, so a player in the EEA/UK can change the consent choice later (from Settings)
+    @PluginMethod
+    public void adsPrivacy(PluginCall call) {
+        getActivity().runOnUiThread(() -> UserMessagingPlatform.showPrivacyOptionsForm(getActivity(), err -> call.resolve()));
+    }
+
+    private void loadRewarded() {
+        if (rewardedUnit.isEmpty() || rewarded != null) return;
+        RewardedAd.load(getContext(), rewardedUnit, new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
+            @Override
+            public void onAdLoaded(RewardedAd ad) {
+                rewarded = ad;
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError e) {
+                rewarded = null;
+            }
+        });
+    }
+
+    private void loadInter() {
+        if (interUnit.isEmpty() || inter != null) return;
+        InterstitialAd.load(getContext(), interUnit, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(InterstitialAd ad) {
+                inter = ad;
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError e) {
+                inter = null;
+            }
+        });
+    }
+
+    // -> {shown, earned}; earned only when the player watched long enough for the reward
+    @PluginMethod
+    public void adsRewarded(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            RewardedAd ad = rewarded;
+            JSObject o = new JSObject();
+            if (ad == null) {
+                loadRewarded();
+                o.put("shown", false);
+                o.put("earned", false);
+                call.resolve(o);
+                return;
+            }
+            rewarded = null;
+            boolean[] earned = { false };
+            ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    o.put("shown", true);
+                    o.put("earned", earned[0]);
+                    call.resolve(o);
+                    loadRewarded();
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(AdError e) {
+                    o.put("shown", false);
+                    o.put("earned", false);
+                    call.resolve(o);
+                    loadRewarded();
+                }
+            });
+            ad.show(getActivity(), item -> earned[0] = true);
+        });
+    }
+
+    // -> {shown}
+    @PluginMethod
+    public void adsInterstitial(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            InterstitialAd ad = inter;
+            JSObject o = new JSObject();
+            if (ad == null) {
+                loadInter();
+                o.put("shown", false);
+                call.resolve(o);
+                return;
+            }
+            inter = null;
+            ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    o.put("shown", true);
+                    call.resolve(o);
+                    loadInter();
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(AdError e) {
+                    o.put("shown", false);
+                    call.resolve(o);
+                    loadInter();
+                }
+            });
+            ad.show(getActivity());
+        });
     }
 }

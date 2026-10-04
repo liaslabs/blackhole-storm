@@ -110,8 +110,8 @@ uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükle
 |---|---|
 | Gizlilik politikası | `https://liaslabs.github.io/blackhole-storm/privacy.html` |
 | Uygulama erişimi | Tüm işlevler giriş gerektirmeden kullanılabilir |
-| Reklamlar | Reklam ağı eklenene kadar **Hayır**; eklenince **Evet** (bkz. MONETIZATION.md) |
-| Reklam kimliği (Advertising ID) | **Hayır**, kullanılmıyor (reklam ağı eklenince yeniden bakılacak) |
+| Reklamlar | **Evet** (Android uygulamasında AdMob: ödüllü ve seviye arası reklam) |
+| Reklam kimliği (Advertising ID) | **Evet**, amaç **Reklam veya pazarlama** (AdMob SDK'sı `AD_ID` iznini ekler) |
 | İçerik derecelendirme | Kategori: Oyun. Şiddet, korku, kumar, cinsellik, küfür yok; sohbet/mesajlaşma yok. **Kullanıcılar bilgi paylaşabiliyor mu: Evet** (dünya sıralamasında oyuncu adları görünür; kötü söz filtresi ve ⚑ bildir var). **Dijital ürün satın alma var**; parayla satılan rastgele ödül (şans kutusu) yok. Beklenen sonuç: 3+ / Herkes, "Kullanıcılar Etkileşimde Bulunur" ve "Uygulama İçi Satın Alma" notlarıyla |
 | Hedef kitle | **13 yaş ve üzeri** önerilir (13 yaş altını seçmek "Aileler" politikasının ek şartlarını getirir) |
 | Veri güvenliği | **Veri toplanıyor: Evet · Paylaşılıyor: Hayır.** Aşağıdaki "Veri güvenliği formu" bölümüne bak |
@@ -125,7 +125,12 @@ uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükle
 - **Uygulama etkinliği › Diğer kullanıcı tarafından oluşturulan içerik / Uygulama içi etkileşimler:** günlük fırtına skoru ve süresi; toplanıyor, paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
 - **Finansal bilgiler › Satın alma geçmişi:** toplanıyor (satın alma jetonu ve ürün adı; Google'da doğrulanır, aynı satın almanın tekrar kullanılmaması için kurulum numarasıyla 2 yıl saklanır), paylaşılmıyor, amaç **Uygulama işlevleri** ve **Dolandırıcılığı önleme, güvenlik**. Kart ve ödeme bilgileri Google'da kalır.
 - Bildirilen isimler: bildirenin kurulum numarası ve bildirilen satırın o güne ait kodu sunucuda saklanır (90 gün). Yukarıdaki "Cihaz veya diğer kimlikler" maddesi bunu kapsar.
-- Konum, kişiler, fotoğraf/video, ses, dosya, sağlık, mesaj, tarama geçmişi: **toplanmıyor**. Kayıtlı klipler cihazda kalır.
+- **AdMob (reklam) için ek satırlar** — Google'ın AdMob veri açıklamasına göre; hepsi **toplanıyor ve paylaşılıyor** (Google ile), amaç **Reklam veya pazarlama**, **Analiz** ve **Dolandırıcılığı önleme, güvenlik**, kullanıcı tercihine bağlı değil:
+  - **Konum › Yaklaşık konum** (IP adresinden)
+  - **Cihaz veya diğer kimlikler** (reklam kimliği; yukarıdaki kurulum numarası maddesine "paylaşılıyor: Evet, Google ile reklam için" eklenir)
+  - **Uygulama etkinliği › Uygulama içi etkileşimler** (reklam görüntüleme ve dokunma)
+  - **Uygulama bilgileri ve performansı › Kilitlenme günlükleri, Teşhis**
+- Konum (kesin), kişiler, fotoğraf/video, ses, dosya, sağlık, mesaj, tarama geçmişi: **toplanmıyor**. Kayıtlı klipler cihazda kalır.
 
 
 6. **Uygulama içi ürünler:** Play Console → Para kazanma → Ürünler → Uygulama içi ürünler. Ürün kimlikleri, içerikleri ve önerilen fiyatlar `MONETIZATION.md` içinde. `vip_monthly` aboneliği ayrıca **Abonelikler** bölümünde, aylık otomatik yenilenen bir temel planla oluşturulur. Bunun için önce Ödemeler profili (banka hesabı) oluşturulmalı.
@@ -146,8 +151,20 @@ Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut sk
 
 ## 5c. Kapalı test, reklamlar ve satın almalar
 
-- **Reklamlar:** oyunda henüz reklam ağı yok. Bu yüzden Play sürümünde (kapalı test dahil) reklam izleme düğmeleri ve "Reklamsız Oyna" ürünü görünmez; reklamla alınan ödüllerin elmas/yıldız/bekleme seçenekleri çalışır. Kapalı testte senin yapman gereken bir şey yok. Herkese açık yayından önce reklam ağı seçilir (MONETIZATION.md › Reklam ağı seçimi); bağlanınca düğmeler ve "Reklamsız Oyna" kendiliğinden açılır.
+- **Reklamlar:** Android uygulamasında AdMob var. Kapalı testte yalnızca Google'ın **test reklamları** görünür ("Test Ad" yazar; para kazandırmaz, test kullanıcılarının tıklamaları sorun çıkarmaz). Herkese açık yayında gerçek reklama geçmek için: AdMob'daki iki reklam biriminin kimliği `src/game.src.html` › `ADS_UNITS` içine yazılır ve `ADS_LIVE=true` yapılır, yeni sürüm üretilir. Ayrıca **app-ads.txt** (5f).
 - **Satın almalar:** Play Console'da ürünler oluşturulunca kapalı testte de çalışır. Lisans test kullanıcısı olarak eklenen hesaplar (Ayarlar › Lisans testi) gerçek para ödemeden dener. Ürünleri açmadan **önce** 5e yapılmalı: uygulama hiçbir ürünü sunucu doğrulamadan vermez (MONETIZATION.md › Satın alma doğrulaması).
+
+## 5f. app-ads.txt (AdMob, herkese açık yayından önce)
+
+AdMob, reklam gelirini korumak için Play mağaza sayfasındaki **geliştirici web sitesinin kök adresinde** bir `app-ads.txt` dosyası arar.
+Geliştirici sitesi `https://liaslabs.github.io` ise dosya `https://liaslabs.github.io/app-ads.txt` adresinde olmalı (yani `liaslabs/liaslabs.github.io`
+deposunun kökünde; bu oyunun deposunda değil). İçeriği tek satır, bu depodaki `app-ads.txt` ile aynı:
+
+```
+google.com, pub-2380408512555993, DIRECT, f08c47fec0942fa0
+```
+
+Play Console › Mağaza ayarları › İletişim bilgileri › Web sitesi: `https://liaslabs.github.io`. AdMob birkaç gün içinde dosyayı bulur.
 
 ## 5d. Geri dönüşü olmayan adımlar (dikkat)
 
