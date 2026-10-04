@@ -1317,6 +1317,9 @@ const TAU=Math.PI*2;
 // ══════════════════════════════════════════════════════
 /* DEVELOPER LINK (?dev): its own save slot, the first 1000 levels open, any map level playable as a real level, no fuel, nothing sent to the leaderboard */
 const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
+// The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
+const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
+const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
 const SK=DEV?'bhs_dev':'bhs_v7';
 let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
@@ -1519,7 +1522,8 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
   }catch(e){}
 }
-function vib(p){if(SET.vib&&navigator.vibrate)try{navigator.vibrate(p);}catch(e){}}
+function vib(p){if(!SET.vib)return;const h=CAP('Haptics');if(h){const d=Array.isArray(p)?p.reduce((a,x,i)=>i%2?a:a+x,0):p;h.vibrate({duration:Math.max(10,Math.min(400,d|0))}).catch(()=>{});return;} // app: one buzz as long as the pattern's on-time
+  if(navigator.vibrate)try{navigator.vibrate(p);}catch(e){}}
 
 // ══════════════════════════════════════════════════════
 // AUDIO — sampled SFX (Kenney, CC0) and looped music (OpenGameArt, CC0) on
@@ -2630,7 +2634,7 @@ const RISK={lv:0,mod:null};
 // ══════════════════════════════════════════════════════
 // PACKAGE D: DAILY STORM (survival's scenario of the day), SEASONS, WORLD LEADERBOARD
 // ══════════════════════════════════════════════════════
-const LB_URL=DEV?'':String(window.BHS_LB_URL??(location.hostname==='liaslabs.github.io'?'https://blackhole-storm-lb.liaslabs-games.workers.dev':'')).replace(/\/+$/,''); // the Cloudflare Worker from server/README.md (world board, daily prizes, purchase acknowledgement); only the published site talks to it, so local tests never post scores
+const LB_URL=DEV?'':String(window.BHS_LB_URL??(location.hostname==='liaslabs.github.io'||NATIVE?'https://blackhole-storm-lb.liaslabs-games.workers.dev':'')).replace(/\/+$/,''); // the Cloudflare Worker from server/README.md (world board, daily prizes, purchase acknowledgement); only the published site talks to it, so local tests never post scores
 const utcDay=(t=Date.now())=>new Date(t).toISOString().slice(0,10);
 function daySeed(d){let h=2166136261;for(const c of d)h=Math.imul(h^c.charCodeAt(0),16777619)>>>0;return h;}
 const STORM_MODS=[{id:'wind',ic:'🌬',n:'RÜZGÂRLI GÜN',d:'Yıldız rüzgârı sık eser.'},{id:'eclipse',ic:'🌑',n:'TUTULMA GECESİ',d:'Tutulmalar sık gelir.'},{id:'cons',ic:'✨',n:'YILDIZ YAĞMURU',d:'Takımyıldızlar sık belirir.'},
@@ -3395,8 +3399,8 @@ function sprintEnd(){
   recStop().then(()=>{$('spClip').style.display=REC.blob?'':'none';});
   showModal('mSprint');
 }
-function baseURL(){return location.href.split('#')[0];}
-function canLink(){return /^https?:$/.test(location.protocol)&&!/claudeusercontent|claude\.ai|localhost|127\.0\.0\.1/.test(location.hostname);}
+function baseURL(){return NATIVE?APP_URL:location.href.split('#')[0];} // links shared from the app point at the web version
+function canLink(){return NATIVE||(/^https?:$/.test(location.protocol)&&!/claudeusercontent|claude\.ai|localhost|127\.0\.0\.1/.test(location.hostname));}
 function b64u(t){return btoa(unescape(encodeURIComponent(t))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
 function ub64u(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';return decodeURIComponent(escape(atob(t)));}
 function challengeLink(){const r=SPR_RUN.res;
@@ -3409,6 +3413,7 @@ function readChallenge(){
 }
 async function shareOut(text,url){
   const full=url?`${text}\n${url}`:text;
+  {const sh=CAP('Share');if(sh){try{await sh.share(url?{text,url}:{text});return 'ok';}catch(e){return 'cancel';}}} // the app's own share sheet
   try{if(navigator.share){await navigator.share(url?{text,url}:{text});return 'ok';}}catch(e){if(e&&e.name==='AbortError')return 'cancel';}
   try{await navigator.clipboard.writeText(full);return 'copied';}catch(e){}
   try{const ta=document.createElement('textarea');ta.value=full;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();return 'copied';}catch(e){return 'fail';}
@@ -3471,6 +3476,8 @@ function recStop(){
 let dlNS;async function dlCap(){if(dlNS!==undefined)return dlNS;try{dlNS=window.claude&&window.claude.use?await window.claude.use('downloads'):null;}catch(e){dlNS=null;}return dlNS;}
 async function shareClip(){
   if(!REC.blob)return;const ext=REC.blob.type.includes('mp4')?'mp4':'webm';const f=new File([REC.blob],`blackhole-storm-${SPR_RUN.res.score}.${ext}`,{type:REC.blob.type});
+  {const fs=CAP('Filesystem'),sh=CAP('Share');if(fs&&sh){try{const data=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=no;r.readAsDataURL(REC.blob);});
+    const w=await fs.writeFile({path:f.name,data,directory:'CACHE'});await sh.share({files:[w.uri],text:resultText(SPR_RUN.res,false)});}catch(e){}return;}} // app: save to its cache, then the share sheet (save to gallery is one of its options)
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:resultText(SPR_RUN.res,false)});return;}}catch(e){if(e&&e.name==='AbortError')return;}
   const dl=await dlCap();if(dl){try{await dl.save({filename:f.name,data:REC.blob});}catch(e){}return;} // inside the claude.ai viewer: its confirmed save
   const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
@@ -3829,7 +3836,7 @@ monInit();
     if(pendingChal){showMenu();offerChallenge();if(!seen)introShort(null);}
     else{const go=()=>{selMode('classic');SND.resume();SND.startDrone();SND.music('game');resize();resetRun(true,false);};if(seen)go();else introShort(go);}}}
 requestAnimationFrame(t=>{lastT=t;loop(t);});
-if('serviceWorker' in navigator&&canLink()&&window.top===window){navigator.serviceWorker.register('sw.js').catch(()=>{});
+if('serviceWorker' in navigator&&canLink()&&!NATIVE&&window.top===window){ // the app carries its files itselfnavigator.serviceWorker.register('sw.js').catch(()=>{});
   later(()=>{if(navigator.serviceWorker.controller&&navigator.onLine!==false)['z1','z2','z3','z4','boss'].forEach((k,i)=>later(()=>fetch('music/'+k+'.mp3').catch(()=>{}),i*2000));},25000);} // the worker caches what passes through
 let installEvt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installEvt=e;$('installBtn').style.display='';});
 $('installBtn').onclick=async()=>{if(!installEvt)return;installEvt.prompt();try{await installEvt.userChoice;}catch(e){}installEvt=null;$('installBtn').style.display='none';};

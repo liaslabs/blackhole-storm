@@ -12,7 +12,7 @@
 // so reading prizes costs nothing extra.
 // Purchase checks need two secrets: GP_PKG (the app's package name) and GP_SA (the Play service account JSON key).
 const PRIZE = [1000, 500, 250];
-const ALLOWED = ['https://liaslabs.github.io', 'http://localhost:8766', 'http://127.0.0.1:8766'];
+const ALLOWED = ['https://liaslabs.github.io', 'https://localhost', 'http://localhost:8766', 'http://127.0.0.1:8766']; // https://localhost: the Android app (Capacitor)
 const MAX_SUBS = 40;          // submissions per install per day
 const MAX_SECS = 200;         // the Daily Storm lasts 180 s: a longer run is not a real one
 const MAX_RATE = 4000;        // points per second no real run reaches (Rage ×2 and ×5 combos top out well below this)

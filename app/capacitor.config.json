@@ -1,0 +1,11 @@
+{
+  "appId": "com.liaslabs.blackholestorm",
+  "appName": "Blackhole Storm",
+  "webDir": "www",
+  "backgroundColor": "#03040A",
+  "android": {
+    "allowMixedContent": false,
+    "captureInput": false,
+    "webContentsDebuggingEnabled": false
+  }
+}

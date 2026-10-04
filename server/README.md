@@ -25,6 +25,21 @@ The game works without it; the world tab says "coming soon" until the Worker's U
    window.BHS_LB_URL='https://blackhole-storm-lb.<you>.workers.dev';
    ```
 
+## Telefondan yükleme (GitHub Actions)
+
+Bilgisayar gerekmez. Bir kez:
+
+1. **Cloudflare API anahtarı:** dash.cloudflare.com → sağ üstte profil → **My Profile → API Tokens → Create Token** →
+   "**Edit Cloudflare Workers**" şablonu → **Use template**. *Permissions* listesine **Add more** ile
+   **Account · D1 · Edit** satırını da ekle. *Account Resources*: kendi hesabın. **Continue to summary → Create Token**.
+   Çıkan anahtarı kopyala (bir daha gösterilmez).
+2. **Hesap kimliği:** Cloudflare panelinde **Workers & Pages** sayfasının sağında **Account ID** yazar; kopyala.
+3. GitHub → depo → **Settings → Secrets and variables → Actions → New repository secret**:
+   - `CLOUDFLARE_API_TOKEN` = 1. adımdaki anahtar
+   - `CLOUDFLARE_ACCOUNT_ID` = 2. adımdaki kimlik
+
+Her yüklemede: GitHub → **Actions → "Sunucuyu yayınla" → Run workflow**. Yeşil tik ve özetteki "Sunucu yüklendi ✓" yazısı tamam demektir.
+
 ## What it stores
 One row per install per UTC day: random install id, player name (max 11 chars), best score, run length, time.
 Prize rows for each finished day's top 3 (1000 / 500 / 250 stars). Rows older than 90 days are deleted.
