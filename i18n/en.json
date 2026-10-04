@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "TYPE YOUR NAME",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Payment pending; your pack arrives once it completes",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "No connection; your pack arrives next time you open the game",
-"Satın alma doğrulanamadı": "Purchase could not be verified"
+"Satın alma doğrulanamadı": "Purchase could not be verified",
+"Hatırlatmalar": "Reminders",
+"HATIRLATMALAR": "REMINDERS",
+"LAB": "LAB",
+"GÜNLÜK": "DAILY",
+"EVET": "YES",
+"ŞİMDİ DEĞİL": "NOT NOW",
+"Laboratuvar bitince haber verelim mi?": "Shall we tell you when the Laboratory is done?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "A short notification when an upgrade is done, your fuel is full or your daily reward is ready. At most 2 a day, never between 22:00 and 09:00. You can change this in Settings.",
+"Laboratuvar işi bitti": "Laboratory work done",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "{m} upgrade is ready. Come and try your new power!",
+"Yakıtın doldu": "Your fuel is full",
+"Kaldığın seviye seni bekliyor.": "The level you left is waiting for you.",
+"Günlük ödülün hazır": "Your daily reward is ready",
+"Yeni günün fırtınası da başladı. Serini bozma!": "Today's storm has started too. Keep your streak going!",
+"Oyun hatırlatmaları": "Game reminders",
+"Açık · günde en fazla 2": "On · at most 2 a day",
+"Bildirim izni Android ayarlarından açılabilir": "Notification permission can be turned on in Android settings"
 }

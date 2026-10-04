@@ -1,6 +1,10 @@
 package com.liaslabs.blackholestorm;
 
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.VibrationAttributes;
@@ -23,8 +27,13 @@ import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
+import com.getcapacitor.PermissionState;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
+import androidx.core.app.NotificationManagerCompat;
+import org.json.JSONObject;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
 import com.google.android.play.core.integrity.StandardIntegrityManager;
 import java.util.ArrayList;
@@ -38,8 +47,10 @@ import java.util.Map;
 // - vibration on the game channel (follows the phone's media vibration setting, not touch feedback);
 // - Google Play purchases. The app only reports what Google Play says; the game asks the server to check
 //   each purchase with Google before anything is granted, and the server then acknowledges or consumes it;
-// - Play Integrity tokens, so the server can tell a genuine Play install from a modified copy.
-@CapacitorPlugin(name = "Bhs")
+// - Play Integrity tokens, so the server can tell a genuine Play install from a modified copy;
+// - game reminders: the game hands over a short list (lab done, fuel full, daily reward) each time it goes to the
+//   background; they are inexact alarms (no exact-alarm permission), shown by NotifReceiver, cleared when the game opens.
+@CapacitorPlugin(name = "Bhs", permissions = { @Permission(strings = { Manifest.permission.POST_NOTIFICATIONS }, alias = "notif") })
 public class BhsPlugin extends Plugin {
     private OnBackPressedCallback back;
     private BillingClient billing;
@@ -352,5 +363,77 @@ public class BhsPlugin extends Plugin {
                 integrity = null; // a stale provider is prepared again next time
                 call.reject("integrity: " + e.getMessage());
             });
+    }
+
+    // ---- game reminders ----
+    private static final int NOTIF_BASE = 100, NOTIF_MAX = 8;
+
+    // -> {granted}; asks Android 13+ for the notification permission (the game asks the player first)
+    @PluginMethod
+    public void notifPermission(PluginCall call) {
+        if (Build.VERSION.SDK_INT < 33 || getPermissionState("notif") == PermissionState.GRANTED) {
+            notifResult(call);
+            return;
+        }
+        requestPermissionForAlias("notif", call, "notifPermDone");
+    }
+
+    @PermissionCallback
+    private void notifPermDone(PluginCall call) {
+        notifResult(call);
+    }
+
+    @PluginMethod
+    public void notifState(PluginCall call) {
+        notifResult(call);
+    }
+
+    private void notifResult(PluginCall call) {
+        JSObject o = new JSObject();
+        o.put("granted", NotificationManagerCompat.from(getContext()).areNotificationsEnabled());
+        call.resolve(o);
+    }
+
+    // {channel: name shown in Android settings, list:[{at: epoch ms, title, body}]} -> replaces everything scheduled before
+    @PluginMethod
+    public void notifSchedule(PluginCall call) {
+        Context c = getContext();
+        notifClear(c);
+        NotifReceiver.channel(c, call.getString("channel", "Blackhole Storm"));
+        AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        JSArray list = call.getArray("list", new JSArray());
+        int n = 0;
+        for (int i = 0; i < list.length() && n < NOTIF_MAX && am != null; i++) {
+            JSONObject o = list.optJSONObject(i);
+            if (o == null) continue;
+            long at = o.optLong("at", 0);
+            if (at <= System.currentTimeMillis()) continue;
+            int code = NOTIF_BASE + n++;
+            Intent in = new Intent(c, NotifReceiver.class).putExtra("title", o.optString("title")).putExtra("body", o.optString("body")).putExtra("code", code);
+            PendingIntent pi = PendingIntent.getBroadcast(c, code, in, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            am.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pi); // inexact: Android may deliver it a little later
+        }
+        JSObject r = new JSObject();
+        r.put("n", n);
+        call.resolve(r);
+    }
+
+    // the game is open: nothing pending, and earlier reminders leave the notification shade
+    @PluginMethod
+    public void notifCancel(PluginCall call) {
+        notifClear(getContext());
+        NotificationManagerCompat.from(getContext()).cancelAll();
+        call.resolve();
+    }
+
+    private static void notifClear(Context c) {
+        AlarmManager am = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
+        for (int i = 0; i < NOTIF_MAX; i++) {
+            PendingIntent pi = PendingIntent.getBroadcast(c, NOTIF_BASE + i, new Intent(c, NotifReceiver.class), PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_NO_CREATE);
+            if (pi != null) {
+                if (am != null) am.cancel(pi);
+                pi.cancel();
+            }
+        }
     }
 }

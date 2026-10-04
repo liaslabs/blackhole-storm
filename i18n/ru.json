@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "ВВЕДИ ИМЯ",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Платёж ожидается; набор придёт, когда он завершится",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "Нет связи; набор придёт при следующем запуске",
-"Satın alma doğrulanamadı": "Не удалось подтвердить покупку"
+"Satın alma doğrulanamadı": "Не удалось подтвердить покупку",
+"Hatırlatmalar": "Напоминания",
+"HATIRLATMALAR": "НАПОМИНАНИЯ",
+"LAB": "ЛАБ",
+"GÜNLÜK": "ЕЖЕДНЕВНО",
+"EVET": "ДА",
+"ŞİMDİ DEĞİL": "НЕ СЕЙЧАС",
+"Laboratuvar bitince haber verelim mi?": "Сообщить, когда лаборатория закончит?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Короткое уведомление, когда улучшение готово, топливо заполнено или ежедневная награда ждёт. Не больше 2 в день, никогда с 22:00 до 09:00. Можно изменить в настройках.",
+"Laboratuvar işi bitti": "Лаборатория закончила",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "Улучшение «{m}» готово. Заходи и испытай новую силу!",
+"Yakıtın doldu": "Топливо заполнено",
+"Kaldığın seviye seni bekliyor.": "Твой уровень ждёт тебя.",
+"Günlük ödülün hazır": "Ежедневная награда ждёт",
+"Yeni günün fırtınası da başladı. Serini bozma!": "Буря дня тоже началась. Не прерывай серию!",
+"Oyun hatırlatmaları": "Напоминания игры",
+"Açık · günde en fazla 2": "Вкл. · не больше 2 в день",
+"Bildirim izni Android ayarlarından açılabilir": "Разрешение на уведомления можно включить в настройках Android"
 }

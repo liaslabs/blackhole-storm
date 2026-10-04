@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "TULIS NAMAMU",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Pembayaran tertunda; paketmu datang setelah selesai",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "Tidak ada koneksi; paketmu datang saat game dibuka lagi",
-"Satın alma doğrulanamadı": "Pembelian tidak dapat diverifikasi"
+"Satın alma doğrulanamadı": "Pembelian tidak dapat diverifikasi",
+"Hatırlatmalar": "Pengingat",
+"HATIRLATMALAR": "PENGINGAT",
+"LAB": "LAB",
+"GÜNLÜK": "HARIAN",
+"EVET": "YA",
+"ŞİMDİ DEĞİL": "NANTI SAJA",
+"Laboratuvar bitince haber verelim mi?": "Mau kami kabari saat Laboratorium selesai?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Notifikasi singkat saat peningkatan selesai, bahan bakar penuh, atau hadiah harian siap. Paling banyak 2 sehari, tidak pernah antara 22:00–09:00. Bisa diubah di Pengaturan.",
+"Laboratuvar işi bitti": "Pekerjaan Laboratorium selesai",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "Peningkatan {m} siap. Ayo coba kekuatan barumu!",
+"Yakıtın doldu": "Bahan bakarmu penuh",
+"Kaldığın seviye seni bekliyor.": "Level terakhirmu menunggumu.",
+"Günlük ödülün hazır": "Hadiah harianmu siap",
+"Yeni günün fırtınası da başladı. Serini bozma!": "Badai hari ini juga sudah mulai. Jangan putuskan rentetanmu!",
+"Oyun hatırlatmaları": "Pengingat game",
+"Açık · günde en fazla 2": "Aktif · paling banyak 2 sehari",
+"Bildirim izni Android ayarlarından açılabilir": "Izin notifikasi bisa diaktifkan di pengaturan Android"
 }

@@ -29,6 +29,20 @@ public class MainActivity extends BridgeActivity {
         hideBars();
     }
 
+    static volatile boolean onScreen; // reminders are not shown while the game is open
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        onScreen = true;
+    }
+
+    @Override
+    public void onPause() {
+        onScreen = false;
+        super.onPause();
+    }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);

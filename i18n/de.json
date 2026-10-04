@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "NAMEN EINGEBEN",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Zahlung ausstehend; dein Paket kommt, sobald sie abgeschlossen ist",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "Keine Verbindung; dein Paket kommt beim nächsten Start",
-"Satın alma doğrulanamadı": "Kauf konnte nicht bestätigt werden"
+"Satın alma doğrulanamadı": "Kauf konnte nicht bestätigt werden",
+"Hatırlatmalar": "Erinnerungen",
+"HATIRLATMALAR": "ERINNERUNGEN",
+"LAB": "LABOR",
+"GÜNLÜK": "TÄGLICH",
+"EVET": "JA",
+"ŞİMDİ DEĞİL": "NICHT JETZT",
+"Laboratuvar bitince haber verelim mi?": "Sollen wir dir Bescheid geben, wenn das Labor fertig ist?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Eine kurze Mitteilung, wenn ein Upgrade fertig, dein Treibstoff voll oder deine Tagesbelohnung bereit ist. Höchstens 2 am Tag, nie zwischen 22:00 und 09:00. In den Einstellungen änderbar.",
+"Laboratuvar işi bitti": "Laborarbeit fertig",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "Upgrade {m} ist fertig. Probier deine neue Kraft aus!",
+"Yakıtın doldu": "Dein Treibstoff ist voll",
+"Kaldığın seviye seni bekliyor.": "Dein Level wartet auf dich.",
+"Günlük ödülün hazır": "Deine Tagesbelohnung ist bereit",
+"Yeni günün fırtınası da başladı. Serini bozma!": "Der Sturm des Tages hat auch begonnen. Halte deine Serie!",
+"Oyun hatırlatmaları": "Spielerinnerungen",
+"Açık · günde en fazla 2": "An · höchstens 2 am Tag",
+"Bildirim izni Android ayarlarından açılabilir": "Die Mitteilungs-Berechtigung lässt sich in den Android-Einstellungen einschalten"
 }
