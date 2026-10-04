@@ -78,6 +78,20 @@ adresi `/blackhole-storm/` altında olduğu için oraya konamaz. Çözüm, tek d
 
 Doğrulama olmadan da uygulama çalışır, sadece üstte ince bir adres çubuğu görünür. Kapalı teste bununla başlanabilir.
 
+## 3b. Yeni Android uygulaması (Capacitor) · geçiş aşamasında
+
+Oyun, AdMob reklamları ve telefon içi bildirimler için **Capacitor** kabuğuna taşınıyor (`app/` klasörü). Oyun dosyası aynı;
+uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükleme anahtarı TWA ile aynı olduğu için Play bunu **güncelleme** olarak alır.
+
+- Paket üret: **Actions → "Android uygulaması üret (Capacitor)" → Run workflow** · sürüm kodu (TWA'da 1 kullanıldıysa 2) ve sürüm adı.
+  Çıktıda `.aab` (Play Console'a) ve `.apk` (kendi telefonuna kurup denemek için) var.
+- **Dikkat:** TWA sürümünden bu sürüme geçen test kullanıcılarının oyun ilerlemesi sıfırlanır (kayıt ayrı yerde tutuluyor). Bu yüzden geçiş
+  herkese açık yayından **önce** yapılır; kapalı test kullanıcılarına önceden haber ver. Web sitesindeki oyun etkilenmez.
+- Durum (1. aşama): oyun, paylaşım, klip paylaşma, titreşim, dünya sıralaması çalışır. Mağaza bu sürümde henüz kapalı
+  (2. aşamada Play satın alma kütüphanesi eklenecek); reklam 3., bildirimler 4. aşamada.
+- Dünya sıralamasının uygulamada çalışması için sunucunun güncel olması gerekir (bkz. 5b; sunucu uygulamanın adresine izin verir).
+- Eski TWA iş akışı ("Android paketi üret") geçiş bitene kadar yedek olarak duruyor.
+
 ## 5. Play Console
 
 1. **Geliştirici hesabı**: [play.google.com/console](https://play.google.com/console) (tek seferlik kayıt ücreti).
@@ -122,6 +136,8 @@ Oyuncu adlarındaki kötü söz filtresi ve sıralamadaki ⚑ bildirim, sıralam
 cd server
 npx wrangler deploy
 ```
+
+Bilgisayar yoksa: **Actions → "Sunucuyu yayınla"** (bir kez Cloudflare anahtarı gerekir, adımlar `server/README.md` → "Telefondan yükleme").
 
 Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut skorlar etkilenmez. Sunucu güncellenene kadar oyun eskisi gibi çalışır, yalnızca ⚑ düğmesi görünmez (oyunda isim girerken filtre zaten çalışır).
 

@@ -1,0 +1,76 @@
+# Builds the signed Android app (Capacitor) for Google Play: Actions -> "Android uygulaması üret (Capacitor)" -> Run workflow.
+# Uses the same upload key as the TWA package (secrets ANDROID_KEYSTORE_B64 + ANDROID_KEYSTORE_PASSWORD), so Play takes it as an update.
+name: Android uygulaması üret (Capacitor)
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: 'Sürüm kodu (her yüklemede bir artır: 2, 3, ...)'
+        required: true
+        default: '2'
+      version_name:
+        description: 'Sürüm adı (ör. 1.1.0)'
+        required: true
+        default: '1.1.0'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: İmza anahtarı var mı
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_B64" ] || [ -z "$PASS" ]; then echo "::error::ANDROID_KEYSTORE_B64 / ANDROID_KEYSTORE_PASSWORD secret'ları yok. GOOGLE_PLAY.md adım 2'ye bak."; exit 1; fi
+          echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Oyunu derle ve uygulamaya koy
+        run: |
+          python3 src/build.py
+          cd app
+          npm ci
+          npm run www
+          npx cap sync android
+
+      - name: İmzalı paketleri üret
+        working-directory: app/android
+        env:
+          BHS_KEYSTORE: ${{ runner.temp }}/upload.keystore
+          BHS_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease assembleRelease --no-daemon -PversionCode=${{ inputs.version_code }} -PversionName=${{ inputs.version_name }}
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          cp app/build/outputs/bundle/release/app-release.aab "$GITHUB_WORKSPACE/out/blackhole-storm-${{ inputs.version_name }}.aab"
+          cp app/build/outputs/apk/release/app-release.apk "$GITHUB_WORKSPACE/out/blackhole-storm-${{ inputs.version_name }}.apk"
+          echo "### Paket hazır: ${{ inputs.version_name }} (kod ${{ inputs.version_code }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "- .aab → Play Console'a yükle · .apk → kendi telefonuna kurup dene" >> "$GITHUB_STEP_SUMMARY"
+          keytool -printcert -jarfile app/build/outputs/apk/release/app-release.apk | grep -m1 'SHA256' | sed 's/^/- İmza: /' >> "$GITHUB_STEP_SUMMARY" || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: blackhole-storm-android-${{ inputs.version_name }}
+          path: out/
+          retention-days: 14
+
+      - name: Anahtarı sil
+        if: always()
+        run: rm -f "$RUNNER_TEMP/upload.keystore"
