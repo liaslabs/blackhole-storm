@@ -205,6 +205,9 @@ Bunlar uygulama Play Console'a yüklendikten sonra yapılır; o zamana kadar uyg
 
 ## Mağaza metinleri
 
+Bütün diller için güncel metinler ve dile göre ekran görüntüleri: **`store/listings/`** (nasıl yükleneceği orada `README.md`'de).
+Varsayılan mağaza dili **İngilizce (en-US)**. Aşağıdaki iki metin eski kopyadır.
+
 ### Türkçe
 
 **Uygulama adı (30):** Blackhole Storm
