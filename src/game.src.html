@@ -55,6 +55,12 @@ button{font-family:inherit;}
 .h{font-family:var(--fd);font-size:12px;letter-spacing:2px;color:var(--gold);margin:6px 0 10px;}
 .muted{color:var(--dim);font-size:13px;}
 .avgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0 12px;}
+.inlbl{display:block;text-align:start;margin:12px 0 5px;font-family:var(--fd);font-size:12px;letter-spacing:.08em;color:var(--gold);}
+.inp.need{border-color:var(--gold);box-shadow:0 0 0 3px rgba(242,196,109,.22);animation:inpPulse 1.6s ease-in-out infinite;}
+@keyframes inpPulse{50%{box-shadow:0 0 0 6px rgba(242,196,109,.08);}}
+.nudge{animation:nudgeX .38s ease-in-out;}@keyframes nudgeX{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+#profOk.wait{background:linear-gradient(180deg,rgba(242,196,109,.28),rgba(242,196,109,.16));color:var(--gold);border:1px solid rgba(242,196,109,.55);}
+@media (prefers-reduced-motion:reduce){.inp.need,.nudge{animation:none;}}
 .av{font-size:26px;line-height:1;padding:9px 0;border-radius:8px;border:1.5px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);cursor:pointer;transition:transform .15s,border-color .15s,background .15s;}
 .av.sel{border-color:var(--gold);background:rgba(242,169,59,.13);transform:scale(1.08);}
 .inp{user-select:text;-webkit-user-select:text;width:100%;padding:12px 14px;border-radius:8px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#fff;font-family:var(--fd);font-size:14px;letter-spacing:1px;text-align:center;outline:none;}
@@ -1013,12 +1019,13 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="sub">PİLOT PROFİLİ</div>
   <div class="muted">Avatarını seç</div>
   <div class="avgrid" id="avGrid"></div>
-  <input class="inp" id="nameInp" type="text" maxlength="11" autocomplete="off" placeholder="Pilot adın (en az 2 harf)">
+  <label class="inlbl" for="nameInp">✍️ Adını yaz</label>
+  <input class="inp" id="nameInp" type="text" maxlength="11" autocomplete="off" placeholder="Adını buraya yaz (en az 2 harf)">
   <div class="box" style="display:flex;align-items:center;justify-content:center;gap:12px;">
    <div id="prevAv" style="font-size:34px;">🚀</div>
    <div style="text-align:start;"><div id="prevName" style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:14px;">PİLOT</div><div class="muted" style="font-size:12px;">Hazır mısın kaptan?</div></div>
   </div>
-  <button class="btn big" id="profOk" disabled>GÖREVE BAŞLA</button>
+  <button class="btn big" id="profOk">GÖREVE BAŞLA</button>
   <button class="lnkbtn" id="profLater" hidden>SONRA</button>
  </div>
 </div>
@@ -2487,7 +2494,7 @@ const VIP={daily:{gems:15,shield:1},month:{gems:300,stars:3000,shield:5,lives:5,
 const GEM_ITEMS=[{k:'shield',ic:'🛡',t:'Kalkan',d:'10 saniye meteor koruması',cost:30},{k:'lives',ic:'❤️',t:'Yedek can',d:'Canın bitince devam',cost:25},{k:'time',ic:'⏱',t:'Zaman kristali',d:'Dev gezegene +30 sn',cost:20},{k:'stars',ic:'⭐',t:'500 yıldız',d:'Devam için',cost:40,n:500},{k:'tkey',ic:'🗝',t:'Hazine anahtarı',d:'Sonraki hediyede Büyük Hazine kesin',cost:90,max:1}];
 const MON={mode:'off',svc:null,prices:{},busy:false,lastInter:0,winsSinceInter:0};
 const monOn=()=>MON.mode!=='off';
-function monApply(){const on=monOn();document.querySelectorAll('.mon').forEach(e=>e.hidden=!on);$('menuVip').hidden=$('dVip').hidden=!vipOn();if(on){const st=!(SHOP.starter||bestLevel<3);$('starterRib').hidden=!st;const sb=$('shopBadge');if(sb)sb.textContent=st?'-%75':'';}} // the starter-pack discount shows on the shop button
+function monApply(){const on=monOn();document.querySelectorAll('.mon').forEach(e=>e.hidden=!on);$('menuVip').hidden=$('dVip').hidden=!vipOn();if(on){const sp=IAP.find(x=>x.id==='starter'),st=!(SHOP.starter||bestLevel<3)&&!!sp&&iapShow(sp);$('starterRib').hidden=!st;const sb=$('shopBadge');if(sb)sb.textContent=st?'🎁':'';}} // the starter pack shows on the shop button (no discount claim: it was never sold at a higher price)
 const vipOn=()=>monOn()&&SHOP.vipUntil>Date.now();
 // Hearts (lives between tries, from level 16): a failed level costs one, a won level costs nothing; one comes back every 20 minutes, 5 at most.
 const HRT={max:5,ms:20*60e3,from:16,dia:20};
@@ -2514,15 +2521,18 @@ function heartGo(){const cb=HRT_CB;HRT_CB=null;hideModals();if(cb)cb();}
 function vipSet(until){if(SHOP.vipUntil<=Date.now()){SHOP.vipStart=Date.now();SHOP.vipPer=-1;}SHOP.vipUntil=until;saveG();vipTick();monApply();}
 function vipTick(){if(!vipOn()||!clockOk())return;const per=Math.floor((Date.now()-SHOP.vipStart)/(30*864e5)),n=Math.min(per-SHOP.vipPer,3);if(n<=0)return;SHOP.vipPer=per;
   const g={};for(const k in VIP.month)g[k]=VIP.month[k]*n;grant(g,'👑 VIP AYLIK PAKET');}
+async function monDetails(){if(!MON.svc)return;try{for(const x of await MON.svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){}}
 async function monInit(){
   if(window.BHS_MON_TEST)MON.mode='test';
   else if('getDigitalGoodsService' in window){
     try{const svc=await window.getDigitalGoodsService('https://play.google.com/billing');
       if(svc){MON.svc=svc;MON.mode='play';
-        try{for(const x of await svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){}
+        await monDetails();
         restorePurchases(true);}}catch(e){}}
   monApply();vipTick();
 }
+const IAP_HOLD=new Set(['vip_monthly']); // first release: no subscription yet (the code stays; take the id out of this set to sell it)
+const iapShow=p=>owned(p)||(!IAP_HOLD.has(p.id)&&(MON.mode!=='play'||!!MON.prices[p.id])); // in the Play app, only products that exist in Play Console
 function priceOf(p){return (MON.prices[p.id]||p.price)+(p.per||'');}
 const adNet=()=>MON.mode==='test'||!!(window.BHS_ADS&&window.BHS_ADS.rewarded),adReady=()=>SHOP.noAds||adNet(); // no ad network yet: no ads, and nothing sold that removes them
 const adLabel=t=>(SHOP.noAds?'🎁 ':'▶ REKLAM İZLE · ')+t;
@@ -2563,7 +2573,7 @@ function applyPurchase(p,tok){
 function ackPurchase(p,tok){if(!LB_URL||!tok||!(p.once||p.sub)||SHOP.ackd.includes(tok))return;
   fetch(LB_URL+'/ack',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sku:p.id,token:tok,sub:!!p.sub})}).then(r=>r.json()).then(j=>{if(j&&j.ok){SHOP.ackd.push(tok);if(SHOP.ackd.length>30)SHOP.ackd.shift();saveG();}}).catch(()=>{});} // not acknowledged yet: retried on the next launch by restorePurchases
 async function buy(id){
-  const p=IAP.find(x=>x.id===id);if(!p||owned(p)||MON.busy)return;
+  const p=IAP.find(x=>x.id===id);if(!p||owned(p)||!iapShow(p)||MON.busy)return;
   if(MON.mode==='test'){const ok=await fakePay(p);if(ok)applyPurchase(p,'test-'+Date.now());return;}
   if(MON.mode!=='play')return;MON.busy=true;
   try{const req=new PaymentRequest([{supportedMethods:'https://play.google.com/billing',data:{sku:p.id}}]);
@@ -2586,14 +2596,14 @@ async function restorePurchases(silent){
     if(!vip&&SHOP.vipUntil){SHOP.vipUntil=0;saveG();monApply();}
     if(!silent)toast('🔄','GERİ YÜKLEME',n?`${n} satın alma geri yüklendi`:'Geri yüklenecek satın alma yok');}catch(e){if(!silent)toast('⚠️','GERİ YÜKLEME','Google Play\'e ulaşılamadı');}
 }
-function openShop(){if(!monOn())return;renderShop();$('sShop').classList.add('on');sfx('click',{vol:.4});}
+function openShop(){if(!monOn())return;renderShop();$('sShop').classList.add('on');sfx('click',{vol:.4});if(MON.mode==='play'&&!Object.keys(MON.prices).length)monDetails().then(()=>{if($('sShop').classList.contains('on'))renderShop();});} // prices could not be read at launch (offline): try again
 function renderShop(){
   if(!$('sShop'))return;$('shopTest').hidden=MON.mode!=='test';
   $('shopInv').innerHTML=`<span>⭐ ${stars.toLocaleString(LOC)}</span><span>💎 ${diamonds}</span><span>❤️ ${SHOP.lives}</span><span>🛡 ${SHOP.shield}</span><span>⏱ ${SHOP.time}</span>${SHOP.noAds?'<span>🚫 reklamsız</span>':''}${vipOn()?'<span>👑 VIP</span>':''}`;
-  $('shopOffers').innerHTML=IAP.filter(p=>p.sec==='offer'&&!(p.minLv&&bestLevel<p.minLv&&!owned(p))&&!(p.id==='no_ads'&&!owned(p)&&!adNet())).map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
+  $('shopOffers').innerHTML=IAP.filter(p=>p.sec==='offer'&&iapShow(p)&&!(p.minLv&&bestLevel<p.minLv&&!owned(p))&&!(p.id==='no_ads'&&!owned(p)&&!adNet())).map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
   const tile=p=>`<button class="sitem" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><b>${p.t}</b><small>${p.d}</small><div class="pr">${priceOf(p)}</div></button>`;
-  $('shopGems').innerHTML=IAP.filter(p=>p.sec==='gems').map(tile).join('');
-  $('shopPacks').innerHTML=IAP.filter(p=>p.sec==='packs').map(tile).join('');
+  $('shopGems').innerHTML=IAP.filter(p=>p.sec==='gems'&&iapShow(p)).map(tile).join('');
+  $('shopPacks').innerHTML=IAP.filter(p=>p.sec==='packs'&&iapShow(p)).map(tile).join('');
   $('shopItems').innerHTML=GEM_ITEMS.map((g,i)=>`<button class="sitem" data-gem="${i}" ${diamonds<g.cost||g.max&&(SHOP[g.k]|0)>=g.max?'disabled':''}><div class="ic">${g.ic}</div><b>${g.t}</b><small>${g.d}</small><div class="pr">${g.cost} 💎</div></button>`).join('');
   const left=adLeft(),ok=adReady();$('shopFreeH').hidden=$('shopFree').hidden=!ok;
   $('shopFree').innerHTML=`<button class="btn big adbtn" id="freeGems" ${left<=0?'disabled':''} style="width:100%;">${left>0?adLabel(`+5 💎 · bugün ${left} hak`):'Bugünkü ücretsiz elmaslar alındı'}</button>`;
@@ -3627,13 +3637,14 @@ function buildProfile(){
   AVATARS.forEach(av=>{const b=document.createElement('button');b.className='av'+(av===playerAvatar?' sel':'');setAv(b,av);
     b.onclick=()=>{selAv=av;document.querySelectorAll('.av').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');setAv($('prevAv'),av);checkProf();};g.appendChild(b);});
   selAv=playerAvatar||null;setAv($('prevAv'),playerAvatar);
-  $('nameInp').value=playerName&&!PAUTO?playerName:'';$('nameInp').placeholder=PAUTO?playerName:T('Pilot adın (en az 2 harf)');$('prevName').textContent=playerName||'PİLOT';
-  $('profLater').hidden=!playerName;$('profOk').textContent=T(playerName?'KAYDET':'GÖREVE BAŞLA');
+  $('nameInp').value=playerName&&!PAUTO?playerName:'';$('nameInp').placeholder=T('Adını buraya yaz (en az 2 harf)');$('prevName').textContent=playerName||'PİLOT';
+  $('profLater').hidden=!playerName;$('profOk').dataset.go=playerName?'KAYDET':'GÖREVE BAŞLA';
   checkProf();
 }
-function checkProf(){const n=$('nameInp').value.trim();$('profOk').disabled=!(n.length>=2&&selAv);$('prevName').textContent=n||playerName||'PİLOT';}
+function checkProf(){const n=$('nameInp').value.trim(),ok=n.length>=2&&!!selAv,b=$('profOk');b.classList.toggle('wait',!ok);b.textContent=ok?T(b.dataset.go||'GÖREVE BAŞLA'):!selAv?T('AVATARINI SEÇ'):T('✍️ ADINI YAZ');
+  $('nameInp').classList.toggle('need',!!selAv&&n.length<2);$('prevName').textContent=n||playerName||'PİLOT';} // the button says what is still missing
 $('nameInp').addEventListener('input',checkProf);
-$('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('profOk').disabled)$('profOk').click();});
+$('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')$('profOk').click();});
 let profBack=null; // where the profile returns to: the level card, the leaderboard, or the menu
 function openProfile(back){profBack=back||null;$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
 function profClose(){$('sProfile').classList.remove('on');const b=profBack;profBack=null;if(b)b();else{showMenu();offerChallenge();}}
@@ -3644,7 +3655,8 @@ function badName(n){const s=String(n||'').toLocaleLowerCase('tr').replace(/[ıİ
   .replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s');
   const flat=s.replace(/[^a-z]/g,'');if(BAD_SUB.some(w=>flat.includes(w)))return true;
   return s.split(/[^a-z]+/).some(w=>BAD_WORD.includes(w))||BAD_WORD.includes(flat);}
-$('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(n.length<2||!selAv)return;if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};
+$('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(!selAv){const g=$('avGrid');g.classList.remove('nudge');void g.offsetWidth;g.classList.add('nudge');return;}
+  if(n.length<2){const i=$('nameInp');i.classList.remove('nudge');void i.offsetWidth;i.classList.add('nudge');i.focus();return;} /* points at what is missing */if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};
 $('profLater').onclick=()=>{if(selAv&&selAv!==playerAvatar){playerAvatar=selAv;saveG();}profClose();};
 $('editProf').onclick=()=>openProfile(null);
 const MODE_TXT={

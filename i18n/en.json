@@ -1656,5 +1656,9 @@
 "BİLDİRİLDİ": "REPORTED",
 "Bu isim artık sana gösterilmeyecek": "You won’t see this name any more",
 "Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "No accounts, ads or tracking. If you join the world ranking, only your player name, your score and a random install number are sent",
-"Kurulum no": "Install no"
+"Kurulum no": "Install no",
+"Adını yaz": "Type your name",
+"Adını buraya yaz (en az 2 harf)": "Type your name here (at least 2 letters)",
+"AVATARINI SEÇ": "PICK YOUR AVATAR",
+"ADINI YAZ": "TYPE YOUR NAME"
 }

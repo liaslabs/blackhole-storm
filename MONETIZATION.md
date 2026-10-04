@@ -7,6 +7,10 @@ reklamsız ve mağazasız kalır. Önizlemede "test modu" var: sahte reklam ve s
 
 ### Satın alınabilir ürünler (Play Console → Ürünler → Uygulama içi ürünler)
 
+**İlk sürüm (önerilen):** Play Console'da yalnızca şu ürünleri oluştur: `starter`, `quasar_hoard`, `gems_s`, `gems_m`, `gems_l`, `cosmic_id`
+(ve reklam ağı bağlanınca `no_ads`). Oyun, Play Console'da **olmayan** ürünleri mağazada göstermez; diğerleri (Kaptan Seti, yıldız/can/zaman paketleri)
+sonradan Console'da oluşturulduğu an kendiliğinden görünür. Ürün kimliği silinse bile tekrar kullanılamadığı için emin olmadığın ürünü oluşturma.
+
 Aşağıdaki **ürün kimliklerini aynen** oluştur (oyun bu kimlikleri arıyor). Fiyatlar öneri; Play Console'da
 her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 
@@ -27,6 +31,9 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 Başlangıç paketinin altında "değeri ₺79,99" yazar: içeriğin elmas paketleriyle alınmasının yaklaşık karşılığıdır. Paket hiç o fiyata satılmadığı için "indirim" ya da üstü çizili fiyat kullanılmaz (Play'in yanıltıcı beyan kuralı ve Türkiye'deki indirimli satış kuralları).
 
 ### Abonelik (Play Console → Ürünler → Abonelikler)
+
+> **İlk sürümde VIP kapalı.** Kod duruyor ama mağazada gösterilmiyor (`src/game.src.html` → `IAP_HOLD`). Açmak için oradan `vip_monthly`'yi çıkar,
+> Console'da aboneliği oluştur ve satın alma onayının (aşağıda) kurulu olduğundan emin ol.
 
 | Ürün kimliği | Ad | Temel plan | Önerilen fiyat |
 |---|---|---|---|
