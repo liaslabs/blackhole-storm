@@ -2738,7 +2738,7 @@ function renderShop(){
   const hero=offers.find(p=>p.id==='starter'&&!owned(p)&&bestLevel>=3)||offers.find(p=>p.id==='quasar_hoard'&&!owned(p));
   const gv=p=>p.give?[['gems','💎'],['stars','⭐'],['lives','❤️'],['shield','🛡'],['time','⏱']].filter(([k])=>p.give[k]).map(([k,ic])=>`${fmt(p.give[k])} ${ic}`):p.d.split(' · ').slice(0,4);
   $('shopHero').innerHTML=hero?`<button class="hero" data-buy="${hero.id}">${hero.tag?`<span class="rib">${hero.tag}</span>`:''}<div class="hic">${hero.ic}</div><div class="ht">${hero.t}</div>
-    <div class="hs">${hero.id==='starter'?'Yeni kaptanlara özel, yalnızca bir kez.':'En büyük paket: kalıcı 2. lab yuvası ve yalnızca burada KUASAR TACI.'}</div>
+    <div class="hs">${T(hero.id==='starter'?'Yeni kaptanlara özel, yalnızca bir kez':'En büyük paket: kalıcı ikinci lab yuvası ve yalnızca burada KUASAR TACI')}</div>
     <div class="hgot">${gv(hero).map(x=>`<span>${x}</span>`).join('')}</div><span class="hbuy">${priceOf(hero)}</span>${hero.val?`<small class="hval">${hero.val}</small>`:''}</button>`:'';
   const rest=offers.filter(p=>p!==hero);$('shopOffersH').hidden=!rest.length;
   $('shopOffers').innerHTML=rest.map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
@@ -2748,7 +2748,7 @@ function renderShop(){
   const packs=IAP.filter(p=>p.sec==='packs'&&iapShow(p));$('shopPacksH').hidden=!packs.length;
   $('shopPacks').innerHTML=packs.map(p=>`<button class="sitem" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="amt">${p.t}</div><small>${p.d}</small><div class="pr">${priceOf(p)}</div></button>`).join('');
   $('shopItems').innerHTML=GEM_ITEMS.map((g,i)=>{const max=g.max&&(SHOP[g.k]|0)>=g.max,short=!max&&diamonds<g.cost;
-    return `<button class="sitem gk ${short?'short':''}" data-gem="${i}" ${max?'disabled':''}><div class="ic">${g.ic}</div><b>${g.t}</b><small>${g.d}</small>${short?`<small class="need">+${g.cost-diamonds} 💎 lazım</small>`:''}<div class="pr">${g.cost} 💎</div></button>`;}).join('');
+    return `<button class="sitem gk ${short?'short':''}" data-gem="${i}" ${max?'disabled':''}><div class="ic">${g.ic}</div><b>${g.t}</b><small>${g.d}</small>${short?`<small class="need">${T('+{n} 💎 lazım',{n:g.cost-diamonds})}</small>`:''}<div class="pr">${g.cost} 💎</div></button>`;}).join('');
   $('shopFreeH').hidden=$('shopFree').hidden=!adOk;
   $('shopFree').innerHTML=`<button class="shFree" id="freeGems" ${left<=0?'disabled':''}><div class="fic">🎁</div><div><b>GÜNLÜK ÜCRETSİZ ELMAS</b><small>${left>0?`+5 💎 · bugün ${left} hak`:'Bugünkü ücretsiz elmaslar alındı'}</small></div>${left>0?`<span class="go">${SHOP.noAds?'🎁 AL':'▶ İZLE'}</span>`:''}</button>`;
   // the shopkeeper: one honest line that fits the moment
