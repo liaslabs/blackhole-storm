@@ -1,5 +1,6 @@
 # Uploads the leaderboard server (server/worker.js) to Cloudflare. Run it by hand: Actions -> "Sunucuyu yayınla" -> Run workflow.
 # One-time setup: the repository secret CLOUDFLARE_API_TOKEN (the account id is in server/wrangler.toml). See server/README.md.
+# Optional secrets GP_SA and GP_PKG turn on purchase checks (see GOOGLE_PLAY.md, section 5e).
 name: Sunucuyu yayınla
 
 on:
@@ -36,6 +37,18 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: npx --yes wrangler@4 deploy
+
+      # Optional: Google Play keys for purchase checks (POST /verify) and Play Integrity. Set the repository secrets
+      # GP_SA (the service account's JSON key) and GP_PKG (com.liaslabs.blackholestorm); they are copied to Cloudflare here.
+      - name: Google Play anahtarlarını aktar (varsa)
+        working-directory: server
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          GP_SA: ${{ secrets.GP_SA }}
+          GP_PKG: ${{ secrets.GP_PKG }}
+        run: |
+          if [ -n "$GP_SA" ]; then printf '%s' "$GP_SA" | npx --yes wrangler@4 secret put GP_SA; echo "GP_SA aktarıldı"; else echo "GP_SA yok (satın alma doğrulaması kapalı)"; fi
+          if [ -n "$GP_PKG" ]; then printf '%s' "$GP_PKG" | npx --yes wrangler@4 secret put GP_PKG; echo "GP_PKG aktarıldı"; fi
 
       - name: Kontrol
         run: |

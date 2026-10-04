@@ -1660,5 +1660,8 @@
 "Adını yaz": "Введи своё имя",
 "Adını buraya yaz (en az 2 harf)": "Введи имя здесь (не менее 2 букв)",
 "AVATARINI SEÇ": "ВЫБЕРИ АВАТАР",
-"ADINI YAZ": "ВВЕДИ ИМЯ"
+"ADINI YAZ": "ВВЕДИ ИМЯ",
+"Ödeme bekleniyor; tamamlanınca paketin gelecek": "Платёж ожидается; набор придёт, когда он завершится",
+"Bağlantı yok; paketin bir sonraki açılışta gelecek": "Нет связи; набор придёт при следующем запуске",
+"Satın alma doğrulanamadı": "Не удалось подтвердить покупку"
 }

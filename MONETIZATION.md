@@ -134,28 +134,25 @@ değiştiği için başlamadan önce bir **mali müşavire** danış. Google'ın
 - Cihaz saati geri alınırsa günlük bonus, günlük görevler, günlük reklam hakkı ve VIP paketi saat gerçek zamana
   yetişene kadar kilitli kalır (oyun gördüğü en ileri saati kaydeder).
 
-## Satın alma onayı (yayından önce ŞART)
+## Satın alma doğrulaması ve onayı (yayından önce ŞART)
 
-Google Play, satın almanın **3 gün içinde onaylanmasını (acknowledge)** ister; onaylanmazsa para kullanıcıya iade
-edilir ve ürün geri alınır. Kurallar:
+Google Play, satın almanın **3 gün içinde onaylanmasını (acknowledge)** ister; onaylanmazsa para kullanıcıya iade edilir.
+Android uygulamasında (Capacitor) **hiçbir ürün, sunucu Google'a sormadan verilmez**:
 
-| Ürün | Oyun şu an ne yapıyor | Eksik |
-|---|---|---|
-| Elmas/yıldız paketleri (tüketilebilir) | `consume()` çağırıyor; bu Google tarafından onay sayılır. Başarısız olursa açılışta tekrar dener. | Yok |
-| Kuasar Hazinesi, Başlangıç paketi, Kozmik Kimlik, Reklamsız (tek seferlik) | Ürünü verir, jetonu sunucunun `/ack` ucuna gönderir; sunucu Google'da doğrulayıp onaylar. Onaylanamazsa her açılışta tekrar dener. | Sunucuya iki gizli bilgi girmek (aşağıda) |
-| VIP (abonelik) | Aynı yol: `/ack` aboneliği doğrulayıp onaylar | Aynı |
+1. Oyuncu satın alır; Google Play uygulamaya bir satın alma jetonu verir (satın alma, kurulum numarasına bağlanır).
+2. Oyun jetonu sunucunun `POST /verify` ucuna gönderir. Sunucu Google'a "gerçek mi, ödendi mi, iade edildi mi" diye sorar.
+3. Geçerliyse sunucu jetonu kaydeder (aynı tüketilebilir ürün ikinci kez, başka bir cihazda kullanılamaz; tek seferlik ürünler
+   aynı Google hesabıyla en fazla 5 kuruluma geri yüklenir), sonra ürünü **tüketir** (elmas/yıldız paketleri) ya da **onaylar**
+   (tek seferlik ürünler, VIP). Ancak bundan sonra oyun ürünü verir.
+4. Sunucuya ulaşılamazsa ürün verilmez; oyun her açılışta tekrar dener. Ödeme "bekliyor" durumundaysa (ör. nakit ödeme) ödeme
+   tamamlanınca verilir.
 
-Onay, sıralama sunucusuyla aynı Cloudflare Worker'da (`server/worker.js`, `POST /ack`). Çalışması için bir kez:
+Sahte satın alma araçları (Lucky Patcher vb.) bu yüzden işe yaramaz: Google'da kaydı olmayan jeton reddedilir.
+Web/TWA sürümü eski yolu (`POST /ack`) kullanmaya devam eder.
 
-1. Play Console › Kurulum › API erişimi: bir Google Cloud projesi bağla, bir **hizmet hesabı** oluştur, ona
-   "Finansal verileri görüntüleme" ve "Siparişleri ve abonelikleri yönetme" izinlerini ver, JSON anahtarını indir.
-2. `server/` klasöründe:
-   ```
-   npx wrangler secret put GP_PKG   # uygulamanın paket adı, ör. io.github.liaslabs.blackholestorm
-   npx wrangler secret put GP_SA    # indirilen JSON anahtar dosyasının tüm içeriği
-   npx wrangler deploy
-   ```
-3. Oyunda `window.BHS_LB_URL` Worker adresini göstermeli (sıralama için zaten gerekli).
+Sunucuda çalışması için bir kez (adımlar GOOGLE_PLAY.md › 5e): Play Console'da bir **hizmet hesabı** ve GitHub'a iki gizli bilgi
+(`GP_SA`, `GP_PKG`), ardından **Actions → "Sunucuyu yayınla"**. Bu yapılmadan ürünler mağazada görünse bile satın alınan ürün
+verilmez ve Google 3 gün sonra iade eder; bu yüzden ürünleri Play Console'da açmadan önce kurulmalı.
 
 Bu kurulmadan tek seferlik ürünler ve VIP satılırsa Google 3 gün sonra iade eder. O zamana kadar ya bunları Play
 Console'da etkinleştirme ya da yukarıdaki kurulumu yayından önce bitir. Şu an oyun ürünü onayı beklemeden verir;

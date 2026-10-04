@@ -87,8 +87,9 @@ uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükle
   Çıktıda `.aab` (Play Console'a) ve `.apk` (kendi telefonuna kurup denemek için) var.
 - **Dikkat:** TWA sürümünden bu sürüme geçen test kullanıcılarının oyun ilerlemesi sıfırlanır (kayıt ayrı yerde tutuluyor). Bu yüzden geçiş
   herkese açık yayından **önce** yapılır; kapalı test kullanıcılarına önceden haber ver. Web sitesindeki oyun etkilenmez.
-- Durum (1. aşama): oyun, paylaşım, klip paylaşma, titreşim, dünya sıralaması çalışır. Mağaza bu sürümde henüz kapalı
-  (2. aşamada Play satın alma kütüphanesi eklenecek); reklam 3., bildirimler 4. aşamada.
+- Durum: oyun, paylaşım, klip paylaşma, titreşim, geri hareketi, dünya sıralaması çalışır. 2. aşama: Google Play satın alma
+  (Play Billing 9) ve sunucu doğrulaması eklendi; ürünler Play Console'da oluşturulup 5e yapılınca mağazada görünür.
+  Reklam 3., bildirimler 4. aşamada.
 - Dünya sıralamasının uygulamada çalışması için sunucunun güncel olması gerekir (bkz. 5b; sunucu uygulamanın adresine izin verir).
 - Eski TWA iş akışı ("Android paketi üret") geçiş bitene kadar yedek olarak duruyor.
 
@@ -120,7 +121,7 @@ uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükle
 - **Kişisel bilgiler › Ad:** toplanıyor, paylaşılmıyor, isteğe bağlı (oyuncu adı; kullanıcı Ayarlar'dan sıralamayı kapatabilir), amaç **Uygulama işlevleri**, kişiyle ilişkilendirilmiyor.
 - **Cihaz veya diğer kimlikler:** toplanıyor (oyunun ürettiği rastgele kurulum numarası), paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
 - **Uygulama etkinliği › Diğer kullanıcı tarafından oluşturulan içerik / Uygulama içi etkileşimler:** günlük fırtına skoru ve süresi; toplanıyor, paylaşılmıyor, isteğe bağlı, amaç **Uygulama işlevleri**.
-- **Finansal bilgiler › Satın alma geçmişi:** toplanıyor (satın alma jetonu, yalnızca Google'da doğrulayıp onaylamak için sunucudan geçer, saklanmaz), paylaşılmıyor, amaç **Uygulama işlevleri**. Kart ve ödeme bilgileri Google'da kalır.
+- **Finansal bilgiler › Satın alma geçmişi:** toplanıyor (satın alma jetonu ve ürün adı; Google'da doğrulanır, aynı satın almanın tekrar kullanılmaması için kurulum numarasıyla 2 yıl saklanır), paylaşılmıyor, amaç **Uygulama işlevleri** ve **Dolandırıcılığı önleme, güvenlik**. Kart ve ödeme bilgileri Google'da kalır.
 - Bildirilen isimler: bildirenin kurulum numarası ve bildirilen satırın o güne ait kodu sunucuda saklanır (90 gün). Yukarıdaki "Cihaz veya diğer kimlikler" maddesi bunu kapsar.
 - Konum, kişiler, fotoğraf/video, ses, dosya, sağlık, mesaj, tarama geçmişi: **toplanmıyor**. Kayıtlı klipler cihazda kalır.
 
@@ -144,7 +145,7 @@ Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut sk
 ## 5c. Kapalı test, reklamlar ve satın almalar
 
 - **Reklamlar:** oyunda henüz reklam ağı yok. Bu yüzden Play sürümünde (kapalı test dahil) reklam izleme düğmeleri ve "Reklamsız Oyna" ürünü görünmez; reklamla alınan ödüllerin elmas/yıldız/bekleme seçenekleri çalışır. Kapalı testte senin yapman gereken bir şey yok. Herkese açık yayından önce reklam ağı seçilir (MONETIZATION.md › Reklam ağı seçimi); bağlanınca düğmeler ve "Reklamsız Oyna" kendiliğinden açılır.
-- **Satın almalar:** Play Console'da ürünler oluşturulunca kapalı testte de çalışır. Lisans test kullanıcısı olarak eklenen hesaplar (Ayarlar › Lisans testi) gerçek para ödemeden dener. Tek seferlik ürünler ve VIP için önce satın alma onayı kurulmalı (MONETIZATION.md › Satın alma onayı); kurulmadan satılırsa Google 3 gün sonra iade eder.
+- **Satın almalar:** Play Console'da ürünler oluşturulunca kapalı testte de çalışır. Lisans test kullanıcısı olarak eklenen hesaplar (Ayarlar › Lisans testi) gerçek para ödemeden dener. Ürünleri açmadan **önce** 5e yapılmalı: uygulama hiçbir ürünü sunucu doğrulamadan vermez (MONETIZATION.md › Satın alma doğrulaması).
 
 ## 5d. Geri dönüşü olmayan adımlar (dikkat)
 
@@ -153,6 +154,23 @@ Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut sk
 - **Yükleme anahtarı** (`android.keystore` ve şifresi): kaybolursa Play Console'dan sıfırlama istemek gerekir; güvenli iki yerde sakla.
 - **Sürüm kodu:** her yeni paket daha büyük bir sürüm koduyla yüklenir; geri alınamaz.
 - **Hedef kitle "13 yaş altı"** seçilirse "Aileler" politikası devreye girer ve sonradan çıkmak inceleme gerektirir; 13+ öneriliyor.
+
+## 5e. Satın alma doğrulaması ve hile koruması (Play Console'a yükledikten sonra)
+
+Bunlar uygulama Play Console'a yüklendikten sonra yapılır; o zamana kadar uygulama satın alma göstermez, sıralama eskisi gibi çalışır.
+
+1. **Hizmet hesabı (satın alma doğrulaması):** Play Console › Kurulum › API erişimi → Google Cloud projesi bağla → hizmet hesabı oluştur →
+   JSON anahtarını indir → Play Console › Kullanıcılar ve izinler'de bu hesaba uygulama için "Finansal verileri görüntüleme" ve
+   "Siparişleri ve abonelikleri yönetme" izni ver.
+2. **GitHub'a iki gizli bilgi:** depo › Settings › Secrets and variables › Actions › New repository secret:
+   `GP_SA` = indirilen JSON dosyasının tüm içeriği, `GP_PKG` = `com.liaslabs.blackholestorm`.
+3. **Actions → "Sunucuyu yayınla" → Run workflow.** Gizli bilgiler Cloudflare'e aktarılır.
+4. **Play Integrity (modlu/kopya uygulamaların sıralamaya girmesini engeller):** Play Console › Test ve yayın › Uygulama bütünlüğü →
+   Play Integrity API → aynı Google Cloud projesini bağla. Projenin **numarasını** (Cloud Console ana sayfasında "Proje numarası") bana ver;
+   oyuna eklerim, önce sunucu yalnızca izler (`INTEGRITY = "log"`), sorun yoksa zorunlu yaparız (`"enforce"`).
+   Not: zorunlu olunca web sürümü skor gönderemez (web sürümü kolayca değiştirilebildiği için), yalnızca sıralamayı görür.
+5. **Otomatik koruma** (isteğe bağlı): Uygulama bütünlüğü sayfasında "Otomatik koruma" sunuluyorsa açılabilir; Play dışından kurulan
+   değiştirilmiş kopyalar Play'den indirmeye yönlendirilir.
 
 ## 6. Görseller ve lisanslar
 

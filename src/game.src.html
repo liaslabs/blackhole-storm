@@ -1479,7 +1479,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,qh:false,ackd:[],tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -1522,7 +1522,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   if(V2&&!TIPS.gift&&bestLevel>7){TIPS.gift=1;SHOP.shield++;}
   if(!skinOwned(SKIN.sel))SKIN.sel=0; // e.g. a pack look on a save without the pack // players past level 2 before the first-shield gift existed
   SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
-  SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);
+  SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);SHOP.pend=SHOP.pend.filter(x=>Array.isArray(x)&&x.length===2&&x.every(y=>typeof y==='string')).slice(-10);
   }catch(e){}
 }
 function vib(p){if(!SET.vib)return;const b=CAP('Bhs');if(b){b.vibrate({pattern:Array.isArray(p)?p.map(x=>Math.max(0,Math.min(400,x|0))):[Math.max(20,Math.min(400,p|0))]}).catch(()=>{});return;} // app: our own plugin, on the game vibration channel
@@ -2499,7 +2499,7 @@ const IAP=[
 // VIP subscription: an extra reward with every daily bonus, and one reward pack per 30 days of membership
 const VIP={daily:{gems:15,shield:1},month:{gems:300,stars:3000,shield:5,lives:5,time:3}};
 const GEM_ITEMS=[{k:'shield',ic:'🛡',t:'Kalkan',d:'10 saniye meteor koruması',cost:30},{k:'lives',ic:'❤️',t:'Yedek can',d:'Canın bitince devam',cost:25},{k:'time',ic:'⏱',t:'Zaman kristali',d:'Dev gezegene +30 sn',cost:20},{k:'stars',ic:'⭐',t:'500 yıldız',d:'Devam için',cost:40,n:500},{k:'tkey',ic:'🗝',t:'Hazine anahtarı',d:'Sonraki hediyede Büyük Hazine kesin',cost:90,max:1}];
-const MON={mode:'off',svc:null,prices:{},busy:false,lastInter:0,winsSinceInter:0};
+const MON={mode:'off',svc:null,nat:null,prices:{},busy:false,lastInter:0,winsSinceInter:0}; // svc: Digital Goods (web/TWA) · nat: the Android app's own Google Play bridge
 const monOn=()=>MON.mode!=='off';
 function monApply(){const on=monOn();document.querySelectorAll('.mon').forEach(e=>e.hidden=!on);$('menuVip').hidden=$('dVip').hidden=!vipOn();if(on){const sp=IAP.find(x=>x.id==='starter'),st=!(SHOP.starter||bestLevel<3)&&!!sp&&iapShow(sp);$('starterRib').hidden=!st;const sb=$('shopBadge');if(sb)sb.textContent=st?'🎁':'';}} // the starter pack shows on the shop button (no discount claim: it was never sold at a higher price)
 const vipOn=()=>monOn()&&SHOP.vipUntil>Date.now();
@@ -2528,9 +2528,14 @@ function heartGo(){const cb=HRT_CB;HRT_CB=null;hideModals();if(cb)cb();}
 function vipSet(until){if(SHOP.vipUntil<=Date.now()){SHOP.vipStart=Date.now();SHOP.vipPer=-1;}SHOP.vipUntil=until;saveG();vipTick();monApply();}
 function vipTick(){if(!vipOn()||!clockOk())return;const per=Math.floor((Date.now()-SHOP.vipStart)/(30*864e5)),n=Math.min(per-SHOP.vipPer,3);if(n<=0)return;SHOP.vipPer=per;
   const g={};for(const k in VIP.month)g[k]=VIP.month[k]*n;grant(g,'👑 VIP AYLIK PAKET');}
-async function monDetails(){if(!MON.svc)return;try{for(const x of await MON.svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){}}
+async function monDetails(){if(MON.nat){try{const r=await MON.nat.products({inapp:IAP.filter(p=>!p.sub).map(p=>p.id),subs:IAP.filter(p=>p.sub).map(p=>p.id)});for(const x of (r&&r.list)||[])if(x.price)MON.prices[x.id]=x.price;}catch(e){}return;}
+  if(!MON.svc)return;try{for(const x of await MON.svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){}}
 async function monInit(){
   if(window.BHS_MON_TEST)MON.mode='test';
+  else if(NATIVE&&CAP('Bhs')&&CAP('Bhs').billingStart){
+    try{const nb=CAP('Bhs'),r=await nb.billingStart();
+      if(r&&r.ok){MON.nat=nb;MON.mode='play';nb.addListener('purchases',e=>natTake((e&&e.list)||[],false));
+        await monDetails();restorePurchases(true);}}catch(e){}}
   else if('getDigitalGoodsService' in window){
     try{const svc=await window.getDigitalGoodsService('https://play.google.com/billing');
       if(svc){MON.svc=svc;MON.mode='play';
@@ -2579,10 +2584,37 @@ function applyPurchase(p,tok){
 }
 function ackPurchase(p,tok){if(!LB_URL||!tok||!(p.once||p.sub)||SHOP.ackd.includes(tok))return;
   fetch(LB_URL+'/ack',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({sku:p.id,token:tok,sub:!!p.sub})}).then(r=>r.json()).then(j=>{if(j&&j.ok){SHOP.ackd.push(tok);if(SHOP.ackd.length>30)SHOP.ackd.shift();saveG();}}).catch(()=>{});} // not acknowledged yet: retried on the next launch by restorePurchases
+// Android app: every purchase Google Play reports is checked by the server with Google before anything is granted;
+// the server then acknowledges or consumes it (unacknowledged purchases are refunded by Google after 3 days).
+// A token the server has passed is kept in SHOP.pend until the grant is saved, so a crash in between loses nothing;
+// purchases Google Play still lists are checked again at each launch (applyPurchase never grants one token twice).
+async function natCheck(p,tok){
+  if(!SHOP.pend.some(x=>x[1]===tok)){SHOP.pend.push([p.id,tok]);saveG();}
+  let j=null;try{j=await lbFetch('/verify',{pid:PID,sku:p.id,token:tok});}catch(e){}
+  if(!j||j.err)return 'later';                                   // offline or the server is not set up yet: asked again at the next launch
+  if(j.ok)return 'ok';
+  SHOP.pend=SHOP.pend.filter(x=>x[1]!==tok);saveG();return j.pending?'pending':'no';}
+async function natTake(list,quiet){let n=0,later=0;
+  const todo=list.filter(pu=>pu&&pu.token).flatMap(pu=>(pu.ids||[]).map(id=>[IAP.find(x=>x.id===id),pu]));
+  for(const [sku,tok] of SHOP.pend)if(!todo.some(([p,pu])=>pu.token===tok))todo.push([IAP.find(x=>x.id===sku),{token:tok,state:1}]);
+  for(const [p,pu] of todo){if(!p)continue;
+    if(pu.state===2){if(!quiet)toast('⏳',T('SATIN ALMA'),T('Ödeme bekleniyor; tamamlanınca paketin gelecek'));continue;}
+    if(pu.state!==1)continue;
+    const v=await natCheck(p,pu.token);
+    if(v==='ok'){if(p.sub)vipSet(Date.now()+3*864e5);else if(!(p.once&&owned(p))&&applyPurchase(p,pu.token))n++;SHOP.pend=SHOP.pend.filter(x=>x[1]!==pu.token);saveG();}
+    else if(v==='later')later++;
+    else if(!quiet)toast('⚠️',T('SATIN ALMA'),T(v==='pending'?'Ödeme bekleniyor; tamamlanınca paketin gelecek':'Satın alma doğrulanamadı'));}
+  if(later&&!quiet)toast('⏳',T('SATIN ALMA'),T('Bağlantı yok; paketin bir sonraki açılışta gelecek'));
+  return n;}
 async function buy(id){
   const p=IAP.find(x=>x.id===id);if(!p||owned(p)||!iapShow(p)||MON.busy)return;
   if(MON.mode==='test'){const ok=await fakePay(p);if(ok)applyPurchase(p,'test-'+Date.now());return;}
   if(MON.mode!=='play')return;MON.busy=true;
+  if(MON.nat){try{const r=await MON.nat.buy({id:p.id,account:PID});
+      if(r.code===7)await restorePurchases(true);else if(r.code===0)await natTake(r.list||[],false);
+      else if(r.code!==1)toast('⚠️',T('SATIN ALMA'),T('Tamamlanamadı, ücret alınmadı'));}
+    catch(e){toast('⚠️',T('SATIN ALMA'),T('Tamamlanamadı, ücret alınmadı'));}
+    finally{MON.busy=false;}return;}
   try{const req=new PaymentRequest([{supportedMethods:'https://play.google.com/billing',data:{sku:p.id}}]);
     const res=await req.show();const tok=res.details&&res.details.purchaseToken;
     if(tok){applyPurchase(p,tok);ackPurchase(p,tok);if(!p.once&&!p.sub&&MON.svc.consume)try{await MON.svc.consume(tok);}catch(e){}} // a failed consume is retried by restorePurchases
@@ -2594,6 +2626,10 @@ function fakePay(p){return new Promise(res=>{$('payT').textContent=p.t;$('payD')
   $('payYes').onclick=()=>{$('payOv').classList.remove('on');res(true);};$('payNo').onclick=()=>{$('payOv').classList.remove('on');res(false);};});}
 // purchases made on another device, or granted but not yet consumed (app closed mid-purchase)
 async function restorePurchases(silent){
+  if(MON.nat){try{const r=await MON.nat.purchases(),list=(r&&r.list)||[];const n=await natTake(list,true);
+      if(!list.some(pu=>pu.state===1&&(pu.ids||[]).some(id=>(IAP.find(x=>x.id===id)||{}).sub))&&SHOP.vipUntil){SHOP.vipUntil=0;saveG();monApply();}
+      if(!silent)toast('🔄',T('GERİ YÜKLEME'),n?`${n} satın alma geri yüklendi`:T('Geri yüklenecek satın alma yok'));}
+    catch(e){if(!silent)toast('⚠️',T('GERİ YÜKLEME'),T('Google Play\'e ulaşılamadı'));}return;}
   if(MON.mode!=='play'||!MON.svc)return;
   try{let n=0,vip=false;for(const pu of await MON.svc.listPurchases()){const p=IAP.find(x=>x.id===pu.itemId);if(!p)continue;
       if(p.sub||p.once)ackPurchase(p,pu.purchaseToken);
@@ -2648,15 +2684,21 @@ let STORM={on:false,mods:[],day:''},STORMB={day:'',best:0,sp:''},PID='';
 function stormHas(id){return gameMode==='survival'&&STORM.on&&STORM.mods.some(m=>m.id===id);}
 function stormTxt(){return stormToday().map(m=>`${m.ic} ${T(m.n)}`).join(' + ');}
 function newPid(){const a='abcdefghijklmnopqrstuvwxyz0123456789';let s='';const c=window.crypto&&crypto.getRandomValues?crypto.getRandomValues(new Uint8Array(20)):null;for(let i=0;i<20;i++)s+=a[(c?c[i]:Math.floor(Math.random()*256))%36];return s;}
+// Play Integrity (Android app): a token from Google vouching for this exact request, so the server can refuse scores and
+// prize claims from modified copies. Off until the Google Cloud project number is set here (Play Console → App integrity).
+const INTEG_PROJECT='';
+async function itTok(what){const nb=CAP('Bhs');if(!INTEG_PROJECT||!nb||!nb.integrity||!(window.crypto&&crypto.subtle))return undefined;
+  try{const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(what)))].map(b=>b.toString(16).padStart(2,'0')).join('');return (await nb.integrity({project:INTEG_PROJECT,hash:h})).token;}catch(e){return undefined;}}
+const itScore=async b=>({...b,it:await itTok(`${b.pid}|${b.day}|${Math.floor(b.score)}|${Math.floor(b.secs)}`)});
 async function lbFetch(path,body){if(!LB_URL)throw new Error('off');const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
   try{const r=await fetch(LB_URL+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ac.signal}:{signal:ac.signal});const j=await r.json();if(!r.ok&&!j)throw new Error(r.status);return j;}finally{clearTimeout(tm);}}
 function lbQueue(){try{return JSON.parse(localStorage.getItem('bhs_lbq')||'null');}catch(e){return null;}}
 async function stormSubmit(score,secs){const day=STORM.day||utcDay();
   if(STORMB.day!==day)STORMB={day,best:0,sp:STORMB.sp};if(score>STORMB.best)STORMB.best=score;if(STORMB.sp!==day){STORMB.sp=day;spAdd(10);}saveG();
   if(!LB_URL||!SET.lb||score<=0||secs<5)return null;const body={pid:PID,name:playerName||'PİLOT',score,secs:Math.round(secs),day};
-  try{const j=await lbFetch('/score',body);try{localStorage.removeItem('bhs_lbq');}catch(e){}return j;}catch(e){try{const q=lbQueue();if(!q||q.day!==day||q.score<score)localStorage.setItem('bhs_lbq',JSON.stringify(body));}catch(e2){}return {off:true};}}
-async function lbFlush(){const q=lbQueue();if(!q||!LB_URL||!SET.lb)return;if(q.day!==utcDay()){try{localStorage.removeItem('bhs_lbq');}catch(e){}return;}try{await lbFetch('/score',q);localStorage.removeItem('bhs_lbq');}catch(e){}}
-async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day});
+  try{const j=await lbFetch('/score',await itScore(body));try{localStorage.removeItem('bhs_lbq');}catch(e){}return j;}catch(e){try{const q=lbQueue();if(!q||q.day!==day||q.score<score)localStorage.setItem('bhs_lbq',JSON.stringify(body));}catch(e2){}return {off:true};}}
+async function lbFlush(){const q=lbQueue();if(!q||!LB_URL||!SET.lb)return;if(q.day!==utcDay()){try{localStorage.removeItem('bhs_lbq');}catch(e){}return;}try{await lbFetch('/score',await itScore(q));localStorage.removeItem('bhs_lbq');}catch(e){}}
+async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
   if(c&&c.ok&&c.stars>0){grant({stars:c.stars},`🏆 ${T('GÜNÜN FIRTINASI')} · ${p.rank}.`);sfx('achieve',{vol:.7});}}}catch(e){}}
 async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
   const head=`<div class="stormBox"><b>⛈ ${T('GÜNÜN FIRTINASI')}</b>${stormTxt()}<br><small>${T('Hayatta Kal modunda herkes aynı fırtınada yarışır.')}</small></div><div class="lbprize">${T('Gün sonunda (UTC) ödül')}: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐</div>`;

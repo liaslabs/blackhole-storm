@@ -51,6 +51,7 @@ This matches `privacy.html`; update both together.
 | GET | `/prizes` | `?pid=` | unclaimed prizes (last 7 days) |
 | POST | `/claim` | `{pid,day}` | `{ok,stars}` once |
 | POST | `/ack` | `{sku,token,sub}` | `{ok}`: checks a Google Play purchase and acknowledges it (needs `GP_PKG` and `GP_SA` secrets, see `MONETIZATION.md`) |
+| POST | `/verify` | `{pid,sku,token}` | `{ok,pending?}`: the Android app's purchase check: Google says it is real and paid, the token is recorded (no replay), then consumed or acknowledged. Same secrets |
 
 ## Daily housekeeping
 `wrangler.toml` has a cron trigger (00:07 UTC): it settles the finished days' prizes and deletes rows older than 90 days.

@@ -11,3 +11,8 @@ database_id = "dc0f3d04-51d0-400b-aff3-be53eaa1d586"
 # once a day, a few minutes after midnight UTC: settle yesterday's prizes and drop old rows
 [triggers]
 crons = ["7 0 * * *"]
+
+# Play Integrity on /score and /claim: off | log | enforce (see the top of worker.js). Switch to "log" once the Android app
+# sends integrity tokens (INTEG_PROJECT in src/game.src.html), watch the Worker log, then "enforce".
+[vars]
+INTEGRITY = "off"

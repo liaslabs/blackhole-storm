@@ -1660,5 +1660,8 @@
 "Adını yaz": "Type your name",
 "Adını buraya yaz (en az 2 harf)": "Type your name here (at least 2 letters)",
 "AVATARINI SEÇ": "PICK YOUR AVATAR",
-"ADINI YAZ": "TYPE YOUR NAME"
+"ADINI YAZ": "TYPE YOUR NAME",
+"Ödeme bekleniyor; tamamlanınca paketin gelecek": "Payment pending; your pack arrives once it completes",
+"Bağlantı yok; paketin bir sonraki açılışta gelecek": "No connection; your pack arrives next time you open the game",
+"Satın alma doğrulanamadı": "Purchase could not be verified"
 }
