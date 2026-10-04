@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "ARCOS RESTAURADOS",
 "DEVAM": "CONTINUAR",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "Abre na fase {n} · Construa no Laboratório; toque duas vezes no jogo para se teletransportar. · Toque duas vezes rápido num ponto vazio: seu buraco negro se teletransporta e fica intocável por um instante. Fica pronto de novo quando o anel roxo se enche.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Abre na fase {n} · Construa no Laboratório; uma vez por nível salva um coração. · Uma vez por nível, o golpe que quebraria seu último arco é contido: o tempo desacelera, uma onda dourada limpa os meteoros e os arcos voltam."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Abre na fase {n} · Construa no Laboratório; uma vez por nível salva um coração. · Uma vez por nível, o golpe que quebraria seu último arco é contido: o tempo desacelera, uma onda dourada limpa os meteoros e os arcos voltam.",
+"TEK SEFER": "ÚNICO",
+"Bu isim kullanılamaz": "Este nome não pode ser usado",
+"Başka bir isim seç": "Escolha outro nome",
+"Bu ismi bildir": "Denunciar este nome",
+"BİLDİR?": "DENUNCIAR?",
+"BİLDİRİLDİ": "DENUNCIADO",
+"Bu isim artık sana gösterilmeyecek": "Você não verá mais este nome",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "Sem contas, anúncios ou rastreamento. Se você participar do ranking mundial, só seu nome de jogador, sua pontuação e um número de instalação aleatório são enviados",
+"Kurulum no": "N.º de instalação"
 }

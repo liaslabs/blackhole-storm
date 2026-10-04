@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "ARCOS RESTAURADOS",
 "DEVAM": "CONTINUAR",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "Se abre en el nivel {n} · Constrúyelo en el Laboratorio; toca dos veces en el juego para teletransportarte. · Toca dos veces rápido un punto vacío: tu agujero negro se teletransporta allí y es intocable un momento. Vuelve a estar listo cuando se llena el anillo morado.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Se abre en el nivel {n} · Constrúyelo en el Laboratorio; una vez por nivel salva un corazón. · Una vez por nivel, el golpe que rompería tu último arco se detiene: el tiempo se frena, una ola dorada borra los meteoritos y tus arcos vuelven."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Se abre en el nivel {n} · Constrúyelo en el Laboratorio; una vez por nivel salva un corazón. · Una vez por nivel, el golpe que rompería tu último arco se detiene: el tiempo se frena, una ola dorada borra los meteoritos y tus arcos vuelven.",
+"TEK SEFER": "ÚNICO",
+"Bu isim kullanılamaz": "No se puede usar este nombre",
+"Başka bir isim seç": "Elige otro nombre",
+"Bu ismi bildir": "Denunciar este nombre",
+"BİLDİR?": "¿DENUNCIAR?",
+"BİLDİRİLDİ": "DENUNCIADO",
+"Bu isim artık sana gösterilmeyecek": "Ya no verás este nombre",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "Sin cuentas, anuncios ni rastreo. Si participas en la clasificación mundial, solo se envían tu nombre de jugador, tu puntuación y un número de instalación aleatorio",
+"Kurulum no": "N.º de instalación"
 }

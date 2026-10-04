@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "ARCS RESTORED",
 "DEVAM": "CONTINUE",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "Opens at level {n} · Build it in the Laboratory; double-tap in play to teleport. · Double-tap an empty spot: your black hole teleports there and is untouchable for a moment. It is ready again when the purple ring around it fills.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Opens at level {n} · Build it in the Laboratory; once a level it saves a heart. · Once per level, the hit that would break your last arc is caught: time slows, a gold wave clears the meteors and your arcs come back."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Opens at level {n} · Build it in the Laboratory; once a level it saves a heart. · Once per level, the hit that would break your last arc is caught: time slows, a gold wave clears the meteors and your arcs come back.",
+"TEK SEFER": "ONE-TIME",
+"Bu isim kullanılamaz": "This name can’t be used",
+"Başka bir isim seç": "Pick another name",
+"Bu ismi bildir": "Report this name",
+"BİLDİR?": "REPORT?",
+"BİLDİRİLDİ": "REPORTED",
+"Bu isim artık sana gösterilmeyecek": "You won’t see this name any more",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "No accounts, ads or tracking. If you join the world ranking, only your player name, your score and a random install number are sent",
+"Kurulum no": "Install no"
 }

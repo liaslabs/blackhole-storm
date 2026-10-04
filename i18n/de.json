@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "BÖGEN ERNEUERT",
 "DEVAM": "WEITER",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "Öffnet bei Level {n} · Im Labor bauen; im Spiel zweimal tippen zum Teleportieren. · Tippe zweimal schnell auf eine freie Stelle: dein Schwarzes Loch teleportiert sich dorthin und ist kurz unverwundbar. Bereit, wenn sich der lila Ring füllt.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Öffnet bei Level {n} · Im Labor bauen; einmal pro Level rettet es ein Herz. · Einmal pro Level wird der Treffer abgefangen, der deinen letzten Bogen zerbrechen würde: die Zeit verlangsamt sich, eine goldene Welle löscht die Meteore und deine Bögen kehren zurück."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Öffnet bei Level {n} · Im Labor bauen; einmal pro Level rettet es ein Herz. · Einmal pro Level wird der Treffer abgefangen, der deinen letzten Bogen zerbrechen würde: die Zeit verlangsamt sich, eine goldene Welle löscht die Meteore und deine Bögen kehren zurück.",
+"TEK SEFER": "EINMALIG",
+"Bu isim kullanılamaz": "Dieser Name ist nicht erlaubt",
+"Başka bir isim seç": "Wähle einen anderen Namen",
+"Bu ismi bildir": "Diesen Namen melden",
+"BİLDİR?": "MELDEN?",
+"BİLDİRİLDİ": "GEMELDET",
+"Bu isim artık sana gösterilmeyecek": "Du siehst diesen Namen nicht mehr",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "Keine Konten, keine Werbung, kein Tracking. Nimmst du an der Weltrangliste teil, werden nur dein Spielername, dein Ergebnis und eine zufällige Installationsnummer gesendet",
+"Kurulum no": "Installations-Nr."
 }

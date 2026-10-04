@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "ДУГИ ВОССТАНОВЛЕНЫ",
 "DEVAM": "ДАЛЕЕ",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "Откроется на {n}-м уровне · Постройте в лаборатории; в игре дважды коснитесь, чтобы телепортироваться. · Дважды быстро коснитесь пустого места: чёрная дыра телепортируется туда и ненадолго неуязвима. Снова готово, когда фиолетовое кольцо заполнится.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Откроется на {n}-м уровне · Постройте в лаборатории; раз за уровень спасает сердце. · Раз за уровень удар, который сломал бы последнюю дугу, гасится: время замедляется, золотая волна стирает метеоры, дуги возвращаются."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Откроется на {n}-м уровне · Постройте в лаборатории; раз за уровень спасает сердце. · Раз за уровень удар, который сломал бы последнюю дугу, гасится: время замедляется, золотая волна стирает метеоры, дуги возвращаются.",
+"TEK SEFER": "ОДИН РАЗ",
+"Bu isim kullanılamaz": "Это имя нельзя использовать",
+"Başka bir isim seç": "Выберите другое имя",
+"Bu ismi bildir": "Пожаловаться на имя",
+"BİLDİR?": "ЖАЛОБА?",
+"BİLDİRİLDİ": "ЖАЛОБА ОТПРАВЛЕНА",
+"Bu isim artık sana gösterilmeyecek": "Вы больше не увидите это имя",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "Без аккаунтов, рекламы и отслеживания. Если участвуешь в мировом рейтинге, отправляются только имя игрока, результат и случайный номер установки",
+"Kurulum no": "Номер установки"
 }

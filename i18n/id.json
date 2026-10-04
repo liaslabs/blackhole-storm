@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "BUSUR PULIH",
 "DEVAM": "LANJUT",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "Terbuka di level {n} · Bangun di Laboratorium; ketuk dua kali saat bermain untuk berteleportasi. · Ketuk dua kali cepat di tempat kosong: lubang hitammu berteleportasi dan kebal sesaat. Siap lagi saat cincin ungu penuh.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Terbuka di level {n} · Bangun di Laboratorium; sekali per level menyelamatkan satu hati. · Sekali per level, pukulan yang akan mematahkan busur terakhirmu ditahan: waktu melambat, gelombang emas menghapus meteor dan busurmu kembali."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Terbuka di level {n} · Bangun di Laboratorium; sekali per level menyelamatkan satu hati. · Sekali per level, pukulan yang akan mematahkan busur terakhirmu ditahan: waktu melambat, gelombang emas menghapus meteor dan busurmu kembali.",
+"TEK SEFER": "SEKALI",
+"Bu isim kullanılamaz": "Nama ini tidak bisa dipakai",
+"Başka bir isim seç": "Pilih nama lain",
+"Bu ismi bildir": "Laporkan nama ini",
+"BİLDİR?": "LAPORKAN?",
+"BİLDİRİLDİ": "DILAPORKAN",
+"Bu isim artık sana gösterilmeyecek": "Kamu tidak akan melihat nama ini lagi",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "Tanpa akun, iklan, atau pelacakan. Jika ikut peringkat dunia, hanya nama pemain, skor, dan nomor instalasi acak yang dikirim",
+"Kurulum no": "No. instalasi"
 }

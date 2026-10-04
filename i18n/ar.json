@@ -1647,5 +1647,14 @@
 "YAYLAR YENİLENDİ": "استُعيدت الأقواس",
 "DEVAM": "متابعة",
 "{n}. seviyede açılır · Laboratuvarda inşa et; oyunda iki kez dokunarak ışınlan. · Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.": "يُفتح في المستوى {n} · ابنه في المختبر؛ انقر مرتين في اللعب للانتقال. · انقر مرتين بسرعة على مكان فارغ: ينتقل ثقبك الأسود إليه ويصبح محصنًا للحظة. يجهز مجددًا حين تمتلئ الحلقة البنفسجية.",
-"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "يُفتح في المستوى {n} · ابنه في المختبر؛ ينقذ قلبًا مرة في كل مرحلة. · مرة واحدة في كل مرحلة، تُصدّ الضربة التي كانت ستكسر قوسك الأخير: يتباطأ الزمن، وتمسح موجة ذهبية النيازك وتعود أقواسك."
+"{n}. seviyede açılır · Laboratuvarda inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "يُفتح في المستوى {n} · ابنه في المختبر؛ ينقذ قلبًا مرة في كل مرحلة. · مرة واحدة في كل مرحلة، تُصدّ الضربة التي كانت ستكسر قوسك الأخير: يتباطأ الزمن، وتمسح موجة ذهبية النيازك وتعود أقواسك.",
+"TEK SEFER": "مرة واحدة",
+"Bu isim kullanılamaz": "لا يمكن استخدام هذا الاسم",
+"Başka bir isim seç": "اختر اسمًا آخر",
+"Bu ismi bildir": "الإبلاغ عن هذا الاسم",
+"BİLDİR?": "إبلاغ؟",
+"BİLDİRİLDİ": "تم الإبلاغ",
+"Bu isim artık sana gösterilmeyecek": "لن ترى هذا الاسم بعد الآن",
+"Hesap, reklam ve takip yok. Dünya sıralamasına katılırsan yalnızca oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir": "لا حسابات ولا إعلانات ولا تتبع. إذا شاركت في الترتيب العالمي فلا يُرسل إلا اسمك في اللعبة ونتيجتك ورقم تثبيت عشوائي",
+"Kurulum no": "رقم التثبيت"
 }
