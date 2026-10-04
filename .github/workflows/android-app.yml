@@ -21,7 +21,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: İmza anahtarı var mı
         env:
@@ -31,16 +31,21 @@ jobs:
           if [ -z "$KEYSTORE_B64" ] || [ -z "$PASS" ]; then echo "::error::ANDROID_KEYSTORE_B64 / ANDROID_KEYSTORE_PASSWORD secret'ları yok. GOOGLE_PLAY.md adım 2'ye bak."; exit 1; fi
           echo "$KEYSTORE_B64" | base64 -d > "$RUNNER_TEMP/upload.keystore"
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
-      - uses: android-actions/setup-android@v3
+      - name: Android araçları
+        run: |
+          # GitHub's Ubuntu runners already carry the Android SDK; just make sure the pieces this app needs are there
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0" > /dev/null
 
       - name: Oyunu derle ve uygulamaya koy
         run: |
