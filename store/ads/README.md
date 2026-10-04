@@ -43,7 +43,8 @@ Uygulama yüklemeleri › Android › Blackhole Storm** seçilir; reklamları Go
 
 ## Video notları
 
-- Görüntüler oyunun kendisinden kare kare çekildi (otomatik oyuncu oynuyor, montaj efekti yok): seviye 29, seviye 30 bossu, seviye 140 kuasar, Hayatta Kalma ve kapanış kartı.
+- Görüntüler oyunun kendisinden kare kare çekildi (otomatik oyuncu oynuyor, montaj efekti yok): seviye 29, seviye 30 bossu, seviye 181 kuasar jeti, Hayatta Kalma (jetli) ve kapanış kartı.
+- 15 sn kesit: yut (3 sn), boss (4 sn), kuasar jeti (3 sn), Hayatta Kalma (2 sn), kapanış (3 sn).
 - Başlıklar: SWALLOW EVERYTHING · GROW BIGGER · DEFEAT GIANT BOSSES · UNLEASH QUASAR POWER · SURVIVE THE STORM (TR sürümünde Türkçe).
 - Müzik oyunun kendi parçası (`music/z4.mp3`), telif sorunu yok.
 - Play'in tanıtım videosu alanı YouTube bağlantısı ister; video herkese açık ya da liste dışı olmalı, reklamlar kapalı olmalı, yaş sınırı olmamalı.
