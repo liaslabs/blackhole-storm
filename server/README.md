@@ -33,10 +33,8 @@ Bilgisayar gerekmez. Bir kez:
    "**Edit Cloudflare Workers**" şablonu → **Use template**. *Permissions* listesine **Add more** ile
    **Account · D1 · Edit** satırını da ekle. *Account Resources*: kendi hesabın. **Continue to summary → Create Token**.
    Çıkan anahtarı kopyala (bir daha gösterilmez).
-2. **Hesap kimliği:** Cloudflare panelinde **Workers & Pages** sayfasının sağında **Account ID** yazar; kopyala.
-3. GitHub → depo → **Settings → Secrets and variables → Actions → New repository secret**:
-   - `CLOUDFLARE_API_TOKEN` = 1. adımdaki anahtar
-   - `CLOUDFLARE_ACCOUNT_ID` = 2. adımdaki kimlik
+2. GitHub → depo → **Settings → Secrets and variables → Actions → New repository secret**:
+   `CLOUDFLARE_API_TOKEN` = 1. adımdaki anahtar. (Hesap kimliği gizli değil; `wrangler.toml` içinde yazılı.)
 
 Her yüklemede: GitHub → **Actions → "Sunucuyu yayınla" → Run workflow**. Yeşil tik ve özetteki "Sunucu yüklendi ✓" yazısı tamam demektir.
 
