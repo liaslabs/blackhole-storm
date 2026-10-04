@@ -2052,6 +2052,8 @@ function zonePlanetCell(){const pool=(ZONES[Math.max(0,curZone)]||{}).pool||PCEL
 // STATE
 // ══════════════════════════════════════════════════════
 const fx=$('fx'),ctx=fx.getContext('2d');
+let FXLITE=false; // a phone that proved slow drops the canvas glows: every shadowBlur is a separate blur pass on the GPU
+{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(ctx,'shadowBlur',{get(){return d.get.call(ctx);},set(v){d.set.call(ctx,FXLITE?0:v);}});}
 let W=300,H=300,DPR=1;
 let hX=150,hY=150,hBaseX=150,hBaseY=150,hWanderT=0,hWpTimer=0,hAmp={x:0,y:0};
 const WP_INT=4.0;
@@ -3709,8 +3711,8 @@ addEventListener('popstate',()=>{
 let fpsAcc=0,fpsN=0,fpsCheck=0;
 function adaptQuality(dt){ // drop resolution only while frames are slow; climb back when they recover
   fpsAcc+=dt;fpsN++;fpsCheck+=dt;if(fpsCheck<2)return;const avg=fpsAcc/fpsN;fpsAcc=0;fpsN=0;fpsCheck=0;
-  if(avg>.022&&GL.quality>.5){GL.quality=Math.max(.5,GL.quality-.15);GL.good=0;glResize();} // one firm step down instead of many small ones: every resize is itself a hitch
-  else if(avg<.0175&&GL.quality<1){if(++GL.good>=8&&gState!=='playing'){GL.quality=Math.min(1,GL.quality+.1);GL.good=0;glResize();}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
+  if(avg>.022&&(GL.quality>.5||!FXLITE)){if(!FXLITE)FXLITE=true;else{GL.quality=Math.max(.5,GL.quality-.15);glResize();}GL.good=0;} /* first the glows go (free, no resize), then the resolution */ // one firm step down instead of many small ones: every resize is itself a hitch
+  else if(avg<.0175&&(GL.quality<1||FXLITE)){if(++GL.good>=8&&gState!=='playing'){if(GL.quality<1){GL.quality=Math.min(1,GL.quality+.1);glResize();}else FXLITE=false;GL.good=0;}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
 }
 let sMapEl=null,sMenuEl=null;
 function loop(ts){
