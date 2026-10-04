@@ -532,6 +532,9 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 .shFree small{display:block;color:#cfe3ee;font-size:12.5px;margin-top:2px;}
 .shFree .go{margin-inline-start:auto;padding:8px 12px;border-radius:999px;background:var(--cyan);color:#06111a;font-family:var(--fd);font-weight:900;font-size:12px;white-space:nowrap;}
 .shFree[disabled]{opacity:.5;}
+.shNone{margin:10px 0 4px;padding:16px 14px;border-radius:16px;border:1px dashed rgba(242,169,59,.45);background:rgba(242,169,59,.06);text-align:center;}
+.shNone .nic{font-size:30px;}.shNone .nic .ico{width:30px;height:30px;}
+.shNone b{display:block;font-family:var(--fd);font-size:14px;margin:4px 0 2px;}.shNone small{display:block;color:#aab0c2;font-size:12.5px;margin-bottom:10px;}
 @media (prefers-reduced-motion:reduce){#shopHero .hero::after,#shopHero .hic::before,.sitem.pop .pile,.shFree .fic{animation:none!important;}}
 .nd{font-family:var(--fm);font-weight:500;}
 .nd.done{background:var(--gold);color:#1c1405;box-shadow:0 0 0 3px rgba(7,9,12,.85);}
@@ -2610,7 +2613,7 @@ function vipTick(){if(!vipOn()||!clockOk())return;const per=Math.floor((Date.now
 async function monDetails(){if(MON.nat){try{const r=await MON.nat.products({inapp:IAP.filter(p=>!p.sub).map(p=>p.id),subs:IAP.filter(p=>p.sub).map(p=>p.id)});for(const x of (r&&r.list)||[])if(x.price)MON.prices[x.id]=x.price;}catch(e){}return;}
   if(!MON.svc)return;try{for(const x of await MON.svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){}}
 async function monInit(){
-  if(window.BHS_MON_TEST)MON.mode='test';
+  if(window.BHS_MON_TEST||DEV&&!NATIVE)MON.mode='test'; // the site's developer link (?dev, its own save) shows the whole shop with test payments
   else if(NATIVE&&CAP('Bhs')&&CAP('Bhs').billingStart){
     try{const nb=CAP('Bhs'),r=await nb.billingStart();
       if(r&&r.ok){MON.nat=nb;MON.mode='play';nb.addListener('purchases',e=>natTake((e&&e.list)||[],false));
@@ -2620,7 +2623,7 @@ async function monInit(){
       if(svc){MON.svc=svc;MON.mode='play';
         await monDetails();
         restorePurchases(true);}}catch(e){}}
-  monApply();vipTick();
+  monApply();vipTick();if(bestLevel>=3)adsKick(1500); // past the tutorial: ads can start right away (a consent form never covers the first levels)
 }
 const IAP_HOLD=new Set(['vip_monthly']); // first release: no subscription yet (the code stays; take the id out of this set to sell it)
 const iapShow=p=>owned(p)||(!IAP_HOLD.has(p.id)&&(MON.mode!=='play'||!!MON.prices[p.id])); // in the Play app, only products that exist in Play Console
@@ -2632,11 +2635,12 @@ function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()
 // AdMob in the Android app. ADS_LIVE stays false during closed testing: Google's own test ads only, so testers'
 // taps never count as invalid traffic. At the public launch: real unit ids below and ADS_LIVE=true.
 const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'',interstitial:''}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
-const ADS={on:false,privacy:false};
+const ADS={on:false,privacy:false,t:0};
+function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
 async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;
   try{const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
     if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{const x=await nb.adsRewarded();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{await nb.adsInterstitial();}};}
-    monApply();if($('sSet').classList.contains('on'))syncSettingsUI();}catch(e){}}
+    monApply();if($('sSet').classList.contains('on'))syncSettingsUI();if($('sShop').classList.contains('on'))renderShop();}catch(e){}}
 async function showRewarded(){showRewarded.none=false;
   if(SHOP.noAds)return true;if(MON.busy)return false;MON.busy=true;SND.duck(.15,1e5);
   try{if(MON.mode==='test')return await fakeAd(true);if(window.BHS_ADS&&window.BHS_ADS.rewarded){const ok=!!(await window.BHS_ADS.rewarded());
@@ -2737,7 +2741,8 @@ function renderShop(){
   // the hero: the one-time starter pack while it is on offer, otherwise the biggest pack
   const hero=offers.find(p=>p.id==='starter'&&!owned(p)&&bestLevel>=3)||offers.find(p=>p.id==='quasar_hoard'&&!owned(p));
   const gv=p=>p.give?[['gems','💎'],['stars','⭐'],['lives','❤️'],['shield','🛡'],['time','⏱']].filter(([k])=>p.give[k]).map(([k,ic])=>`${fmt(p.give[k])} ${ic}`):p.d.split(' · ').slice(0,4);
-  $('shopHero').innerHTML=hero?`<button class="hero" data-buy="${hero.id}">${hero.tag?`<span class="rib">${hero.tag}</span>`:''}<div class="hic">${hero.ic}</div><div class="ht">${hero.t}</div>
+  const none=MON.mode==='play'&&!IAP.some(p=>iapShow(p)&&!owned(p));
+  $('shopHero').innerHTML=none?`<div class="shNone"><div class="nic">🛒</div><b>${T('Paketler Google Play\'den alınamadı')}</b><small>${T('İnternet bağlantını kontrol edip tekrar dene.')}</small><button class="btn sec" id="shopRetry">${T('TEKRAR DENE')}</button></div>`:hero?`<button class="hero" data-buy="${hero.id}">${hero.tag?`<span class="rib">${hero.tag}</span>`:''}<div class="hic">${hero.ic}</div><div class="ht">${hero.t}</div>
     <div class="hs">${T(hero.id==='starter'?'Yeni kaptanlara özel, yalnızca bir kez':'En büyük paket: kalıcı ikinci lab yuvası ve yalnızca burada KUASAR TACI')}</div>
     <div class="hgot">${gv(hero).map(x=>`<span>${x}</span>`).join('')}</div><span class="hbuy">${priceOf(hero)}</span>${hero.val?`<small class="hval">${hero.val}</small>`:''}</button>`:'';
   const rest=offers.filter(p=>p!==hero);$('shopOffersH').hidden=!rest.length;
@@ -2758,6 +2763,7 @@ function renderShop(){
     for(const c of t.children){c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');}return true;};
   $('shopPlus').onclick=()=>{if(!toGems())toast('💎',T('ELMAS'),T('Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın'));};
   $('sShop').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(b.dataset.buy));
+  if($('shopRetry'))$('shopRetry').onclick=async()=>{$('shopRetry').disabled=true;await monDetails();renderShop();};
   $('sShop').querySelectorAll('[data-gem]').forEach(b=>b.onclick=()=>{const g=GEM_ITEMS[+b.dataset.gem];if(g.max&&(SHOP[g.k]|0)>=g.max)return;
     if(diamonds<g.cost){sfx('buzz',{vol:.25});if(!toGems())toast('💎',T('ELMAS'),T('Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın'));return;}
     diamonds-=g.cost;if(g.k==='stars')stars+=g.n;else SHOP[g.k]=(SHOP[g.k]|0)+1;saveG();updateUI();$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;sfx('coin',{vol:.6});renderShop();});
@@ -3904,7 +3910,7 @@ function showMenu(){
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();if(!showMenu.ads&&monOn()){showMenu.ads=1;setTimeout(adsInit,1200);}if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';
