@@ -1660,5 +1660,8 @@
 "Adını yaz": "Écris ton nom",
 "Adını buraya yaz (en az 2 harf)": "Écris ton nom ici (2 lettres min.)",
 "AVATARINI SEÇ": "CHOISIS TON AVATAR",
-"ADINI YAZ": "ÉCRIS TON NOM"
+"ADINI YAZ": "ÉCRIS TON NOM",
+"Ödeme bekleniyor; tamamlanınca paketin gelecek": "Paiement en attente ; ton pack arrive dès qu'il est validé",
+"Bağlantı yok; paketin bir sonraki açılışta gelecek": "Pas de connexion ; ton pack arrivera à la prochaine ouverture",
+"Satın alma doğrulanamadı": "Achat non vérifié"
 }

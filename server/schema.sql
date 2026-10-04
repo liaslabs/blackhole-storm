@@ -30,3 +30,19 @@ CREATE TABLE IF NOT EXISTS reports (
   ts  INTEGER NOT NULL,
   PRIMARY KEY (day, pid, by)
 );
+
+-- Google Play purchases the app has had checked (POST /verify). A consumable token is granted once, to the install
+-- that bought it; one-time products may be restored on a new install. Kept so a token cannot be replayed.
+CREATE TABLE IF NOT EXISTS purchases (
+  token TEXT    PRIMARY KEY,       -- Google Play purchase token
+  sku   TEXT    NOT NULL,
+  pid   TEXT    NOT NULL,          -- install id that first claimed it
+  ts    INTEGER NOT NULL
+);
+
+-- Installs that restored a one-time product or subscription (at most 5 per purchase).
+CREATE TABLE IF NOT EXISTS purchase_installs (
+  token TEXT NOT NULL,
+  pid   TEXT NOT NULL,
+  PRIMARY KEY (token, pid)
+);

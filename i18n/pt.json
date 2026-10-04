@@ -1660,5 +1660,8 @@
 "Adını yaz": "Digite seu nome",
 "Adını buraya yaz (en az 2 harf)": "Digite seu nome aqui (mín. 2 letras)",
 "AVATARINI SEÇ": "ESCOLHA SEU AVATAR",
-"ADINI YAZ": "DIGITE SEU NOME"
+"ADINI YAZ": "DIGITE SEU NOME",
+"Ödeme bekleniyor; tamamlanınca paketin gelecek": "Pagamento pendente; o pacote chega quando for concluído",
+"Bağlantı yok; paketin bir sonraki açılışta gelecek": "Sem conexão; o pacote chega na próxima vez que abrir o jogo",
+"Satın alma doğrulanamadı": "Não foi possível verificar a compra"
 }

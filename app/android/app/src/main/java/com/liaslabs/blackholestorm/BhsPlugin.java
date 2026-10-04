@@ -8,20 +8,45 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 import androidx.activity.OnBackPressedCallback;
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.PendingPurchasesParams;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.google.android.play.core.integrity.IntegrityManagerFactory;
+import com.google.android.play.core.integrity.StandardIntegrityManager;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // The game's own small bridge to Android:
 // - the back button / back gesture goes to the game first (it pauses play or closes the open panel);
 //   only on the main menu does the game ask to leave;
-// - vibration on the game channel (follows the phone's media vibration setting, not touch feedback).
+// - vibration on the game channel (follows the phone's media vibration setting, not touch feedback);
+// - Google Play purchases. The app only reports what Google Play says; the game asks the server to check
+//   each purchase with Google before anything is granted, and the server then acknowledges or consumes it;
+// - Play Integrity tokens, so the server can tell a genuine Play install from a modified copy.
 @CapacitorPlugin(name = "Bhs")
 public class BhsPlugin extends Plugin {
     private OnBackPressedCallback back;
+    private BillingClient billing;
+    private final Map<String, ProductDetails> details = new HashMap<>();
+    private PluginCall buyCall; // the purchase flow that is open right now
+    private StandardIntegrityManager.StandardIntegrityTokenProvider integrity;
+    private long integrityProject;
 
     @Override
     public void load() {
@@ -86,5 +111,246 @@ public class BhsPlugin extends Plugin {
             return m != null ? m.getDefaultVibrator() : null;
         }
         return (Vibrator) c.getSystemService(Context.VIBRATOR_SERVICE);
+    }
+
+    // ---- Google Play Billing ----
+
+    @PluginMethod
+    public void billingStart(PluginCall call) {
+        if (billing == null) {
+            billing = BillingClient.newBuilder(getContext())
+                .setListener(this::onPurchases)
+                .enablePendingPurchases(PendingPurchasesParams.newBuilder().enableOneTimeProducts().build())
+                .enableAutoServiceReconnection()
+                .build();
+        }
+        if (billing.isReady()) {
+            call.resolve(ok(true));
+            return;
+        }
+        billing.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult r) {
+                JSObject o = ok(r.getResponseCode() == BillingClient.BillingResponseCode.OK);
+                o.put("code", r.getResponseCode());
+                call.resolve(o);
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {}
+        });
+    }
+
+    // {inapp:[ids], subs:[ids]} -> {list:[{id, price, micros, currency}]}; products missing from Play Console are left out
+    @PluginMethod
+    public void products(PluginCall call) {
+        if (!ready(call)) return;
+        List<String> inapp = strings(call.getArray("inapp", new JSArray())), subs = strings(call.getArray("subs", new JSArray()));
+        JSArray out = new JSArray();
+        int[] left = { (inapp.isEmpty() ? 0 : 1) + (subs.isEmpty() ? 0 : 1) };
+        if (left[0] == 0) {
+            JSObject o = new JSObject();
+            o.put("list", out);
+            call.resolve(o);
+            return;
+        }
+        for (int k = 0; k < 2; k++) {
+            List<String> ids = k == 0 ? inapp : subs;
+            if (ids.isEmpty()) continue;
+            String type = k == 0 ? BillingClient.ProductType.INAPP : BillingClient.ProductType.SUBS;
+            List<QueryProductDetailsParams.Product> ps = new ArrayList<>();
+            for (String id : ids) ps.add(QueryProductDetailsParams.Product.newBuilder().setProductId(id).setProductType(type).build());
+            billing.queryProductDetailsAsync(QueryProductDetailsParams.newBuilder().setProductList(ps).build(), (r, res) -> {
+                synchronized (out) {
+                    if (r.getResponseCode() == BillingClient.BillingResponseCode.OK && res != null) {
+                        for (ProductDetails d : res.getProductDetailsList()) {
+                            details.put(d.getProductId(), d);
+                            JSObject o = new JSObject();
+                            o.put("id", d.getProductId());
+                            ProductDetails.OneTimePurchaseOfferDetails one = d.getOneTimePurchaseOfferDetails();
+                            if (one != null) {
+                                o.put("price", one.getFormattedPrice());
+                                o.put("micros", one.getPriceAmountMicros());
+                                o.put("currency", one.getPriceCurrencyCode());
+                            } else if (d.getSubscriptionOfferDetails() != null && !d.getSubscriptionOfferDetails().isEmpty()) {
+                                List<ProductDetails.PricingPhase> ph = d.getSubscriptionOfferDetails().get(0).getPricingPhases().getPricingPhaseList();
+                                ProductDetails.PricingPhase last = ph.get(ph.size() - 1);
+                                o.put("price", last.getFormattedPrice());
+                                o.put("micros", last.getPriceAmountMicros());
+                                o.put("currency", last.getPriceCurrencyCode());
+                            }
+                            out.put(o);
+                        }
+                    }
+                    if (--left[0] == 0) {
+                        JSObject o = new JSObject();
+                        o.put("list", out);
+                        call.resolve(o);
+                    }
+                }
+            });
+        }
+    }
+
+    // {id, account} -> {code, list:[purchase]}; code 0 = paid (or pending), 1 = cancelled, 7 = already owned
+    @PluginMethod
+    public void buy(PluginCall call) {
+        if (!ready(call)) return;
+        ProductDetails d = details.get(call.getString("id", ""));
+        if (d == null) {
+            call.reject("unknown product");
+            return;
+        }
+        if (buyCall != null) {
+            call.reject("busy");
+            return;
+        }
+        BillingFlowParams.ProductDetailsParams.Builder pp = BillingFlowParams.ProductDetailsParams.newBuilder().setProductDetails(d);
+        if (d.getSubscriptionOfferDetails() != null && !d.getSubscriptionOfferDetails().isEmpty()) pp.setOfferToken(d.getSubscriptionOfferDetails().get(0).getOfferToken());
+        List<BillingFlowParams.ProductDetailsParams> list = new ArrayList<>();
+        list.add(pp.build());
+        BillingFlowParams.Builder fb = BillingFlowParams.newBuilder().setProductDetailsParamsList(list);
+        String acc = call.getString("account", "");
+        if (acc != null && !acc.isEmpty()) fb.setObfuscatedAccountId(acc); // the install id: the server checks a purchase belongs to the install that claims it
+        BillingFlowParams fp = fb.build();
+        buyCall = call;
+        getActivity().runOnUiThread(() -> {
+            BillingResult r = billing.launchBillingFlow(getActivity(), fp);
+            if (r.getResponseCode() != BillingClient.BillingResponseCode.OK) finishBuy(r.getResponseCode(), null);
+        });
+    }
+
+    private void onPurchases(BillingResult r, List<Purchase> list) {
+        if (buyCall != null) {
+            finishBuy(r.getResponseCode(), list);
+            return;
+        }
+        if (list == null || list.isEmpty()) return; // a pending payment completed later, or a purchase made outside the app
+        JSObject o = new JSObject();
+        o.put("list", toJs(list));
+        notifyListeners("purchases", o);
+    }
+
+    private void finishBuy(int code, List<Purchase> list) {
+        PluginCall c = buyCall;
+        buyCall = null;
+        if (c == null) return;
+        JSObject o = new JSObject();
+        o.put("code", code);
+        o.put("list", toJs(list));
+        c.resolve(o);
+    }
+
+    // purchases Google Play still holds for this account: one-time products owned, consumables not consumed yet, active subscriptions
+    @PluginMethod
+    public void purchases(PluginCall call) {
+        if (!ready(call)) return;
+        List<Purchase> all = new ArrayList<>();
+        int[] left = { 2 };
+        for (String type : new String[] { BillingClient.ProductType.INAPP, BillingClient.ProductType.SUBS }) {
+            billing.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(type).build(), (r, list) -> {
+                synchronized (all) {
+                    if (r.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null) all.addAll(list);
+                    if (--left[0] == 0) {
+                        JSObject o = new JSObject();
+                        o.put("list", toJs(all));
+                        call.resolve(o);
+                    }
+                }
+            });
+        }
+    }
+
+    // fallbacks: normally the server acknowledges or consumes a purchase once it has checked it
+    @PluginMethod
+    public void consume(PluginCall call) {
+        if (!ready(call)) return;
+        billing.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(call.getString("token", "")).build(), (r, t) -> call.resolve(ok(r.getResponseCode() == BillingClient.BillingResponseCode.OK)));
+    }
+
+    @PluginMethod
+    public void acknowledge(PluginCall call) {
+        if (!ready(call)) return;
+        billing.acknowledgePurchase(AcknowledgePurchaseParams.newBuilder().setPurchaseToken(call.getString("token", "")).build(), r -> call.resolve(ok(r.getResponseCode() == BillingClient.BillingResponseCode.OK)));
+    }
+
+    private boolean ready(PluginCall call) {
+        if (billing != null && billing.isReady()) return true;
+        call.reject("billing not ready");
+        return false;
+    }
+
+    private static JSArray toJs(List<Purchase> list) {
+        JSArray a = new JSArray();
+        if (list == null) return a;
+        for (Purchase p : list) {
+            JSObject o = new JSObject();
+            o.put("token", p.getPurchaseToken());
+            o.put("ids", new JSArray(p.getProducts()));
+            o.put("state", p.getPurchaseState()); // 1 purchased, 2 pending
+            o.put("acked", p.isAcknowledged());
+            o.put("order", p.getOrderId());
+            o.put("account", p.getAccountIdentifiers() != null ? p.getAccountIdentifiers().getObfuscatedAccountId() : null);
+            a.put(o);
+        }
+        return a;
+    }
+
+    private static List<String> strings(JSArray a) {
+        List<String> l = new ArrayList<>();
+        for (int i = 0; i < a.length(); i++) {
+            String s = a.optString(i, "");
+            if (!s.isEmpty()) l.add(s);
+        }
+        return l;
+    }
+
+    private static JSObject ok(boolean v) {
+        JSObject o = new JSObject();
+        o.put("ok", v);
+        return o;
+    }
+
+    // ---- Play Integrity (standard requests) ----
+
+    // {project: Google Cloud project number, hash: a digest of the request it vouches for} -> {token}
+    @PluginMethod
+    public void integrity(PluginCall call) {
+        long project = 0;
+        try {
+            project = Long.parseLong(call.getString("project", "0"));
+        } catch (NumberFormatException e) {}
+        String hash = call.getString("hash", "");
+        if (project <= 0 || hash == null || hash.isEmpty()) {
+            call.reject("integrity not configured");
+            return;
+        }
+        if (integrity != null && integrityProject == project) {
+            request(call, hash);
+            return;
+        }
+        long pj = project;
+        IntegrityManagerFactory.createStandard(getContext())
+            .prepareIntegrityToken(StandardIntegrityManager.PrepareIntegrityTokenRequest.builder().setCloudProjectNumber(pj).build())
+            .addOnSuccessListener(p -> {
+                integrity = p;
+                integrityProject = pj;
+                request(call, hash);
+            })
+            .addOnFailureListener(e -> call.reject("integrity: " + e.getMessage()));
+    }
+
+    private void request(PluginCall call, String hash) {
+        integrity
+            .request(StandardIntegrityManager.StandardIntegrityTokenRequest.builder().setRequestHash(hash).build())
+            .addOnSuccessListener(t -> {
+                JSObject o = new JSObject();
+                o.put("token", t.token());
+                call.resolve(o);
+            })
+            .addOnFailureListener(e -> {
+                integrity = null; // a stale provider is prepared again next time
+                call.reject("integrity: " + e.getMessage());
+            });
     }
 }

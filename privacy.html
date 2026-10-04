@@ -49,7 +49,7 @@ nav{display:flex;gap:12px;font-size:14px;margin-bottom:20px}
 </ul>
 
 <h2>Uygulama içi satın almalar (Google Play sürümü)</h2>
-<p>Satın almalar tamamen Google Play üzerinden yapılır. Ödeme bilgilerin (kart, fatura) Google'da kalır; biz görmeyiz ve saklamayız. Oyun, satın aldığın ürünü sana verebilmek için yalnızca Google Play'in gönderdiği satın alma kimliğini cihazında saklar. Google'ın kuralı gereği satın almanın onaylanması için bu kimlik, ürün adıyla birlikte bir kez sunucumuza (Cloudflare) gönderilir; sunucu onu yalnızca Google'a doğrulatır ve onaylar, saklamaz. VIP aboneliğinin aktif olup olmadığı her açılışta Google Play'e sorulur; aboneliği Google Play › Abonelikler'den istediğin an iptal edebilirsin.</p>
+<p>Satın almalar tamamen Google Play üzerinden yapılır. Ödeme bilgilerin (kart, fatura) Google'da kalır; biz görmeyiz ve saklamayız. Oyun, satın aldığın ürünü sana verebilmek için yalnızca Google Play'in gönderdiği satın alma kimliğini cihazında saklar. Ürün sana verilmeden önce bu kimlik, ürün adı ve kurulum numaranla birlikte sunucumuza (Cloudflare) gönderilir; sunucu satın almanın gerçek ve ödenmiş olduğunu Google'a doğrulatır, Google'ın istediği onayı yapar ve aynı satın almanın başka bir cihazda tekrar kullanılmasını önlemek için kimliği kurulum numarasıyla birlikte saklar. Android uygulamasında, sıralamaya gönderilen skorların ve ödüllerin değiştirilmemiş gerçek uygulamadan geldiğini anlamak için Google Play Integrity'den alınan tek kullanımlık bir doğrulama kodu da gönderilebilir; bu kod yalnızca Google'a doğrulatılır, saklanmaz. VIP aboneliğinin aktif olup olmadığı her açılışta Google Play'e sorulur; aboneliği Google Play › Abonelikler'den istediğin an iptal edebilirsin.</p>
 
 <h2>İzinler</h2>
 <p>Oyun yalnızca titreşim kullanır (Ayarlar'dan kapatılabilir). Konum, kamera, mikrofon, rehber veya dosya erişimi istemez.</p>
@@ -63,7 +63,7 @@ nav{display:flex;gap:12px;font-size:14px;margin-bottom:20px}
 <li><b>Amaç:</b> dünya sıralamasını göstermek ve günlük ödülleri vermek; satın aldığın ürünü sana teslim etmek ve Google'ın istediği satın alma onayını yapmak. Bu bilgiler başka bir amaçla kullanılmaz.</li>
 <li><b>Hukuki sebep:</b> istediğin hizmetin sunulması ve satın alma sözleşmesinin yerine getirilmesi (KVKK m.5/2-c, GDPR m.6/1-b). Dünya sıralamasına katılım isteğe bağlıdır ve Ayarlar'dan her an kapatılabilir.</li>
 <li><b>Yurt dışı:</b> sunucumuz Cloudflare altyapısında çalışır; bilgiler Türkiye dışındaki sunucularda işlenebilir. Satın alma doğrulaması Google üzerinden yapılır.</li>
-<li><b>Saklama:</b> sıralama kayıtları ve bildirimler en fazla 90 gün; satın alma kimliği sunucuda saklanmaz.</li>
+<li><b>Saklama:</b> sıralama kayıtları ve bildirimler en fazla 90 gün; satın alma kimliği ve onu kullanan kurulum numarası en fazla 2 yıl.</li>
 <li><b>Hakların:</b> verinin işlenip işlenmediğini öğrenme, bilgi isteme, düzeltme, silme ve itiraz etme (KVKK m.11, GDPR m.15–21). Kurulum numaranı Ayarlar'dan bize bildirerek e-postayla başvurabilirsin; en geç 30 gün içinde yanıt veririz. Kişisel Verileri Koruma Kurulu'na (AB'de kendi ülkenin veri koruma otoritesine) şikâyette bulunma hakkın da vardır.</li>
 </ul>
 
@@ -96,7 +96,7 @@ nav{display:flex;gap:12px;font-size:14px;margin-bottom:20px}
 </ul>
 
 <h2>In-app purchases (Google Play version)</h2>
-<p>Purchases are handled entirely by Google Play. Your payment details stay with Google; we never see or store them. To deliver what you bought, the game only keeps the purchase token sent by Google Play on your device. Because Google requires every purchase to be acknowledged, this token and the product name are sent once to our server (Cloudflare), which only verifies and acknowledges it with Google and does not store it. Whether your VIP subscription is active is checked with Google Play at each launch; you can cancel it any time in Google Play › Subscriptions.</p>
+<p>Purchases are handled entirely by Google Play. Your payment details stay with Google; we never see or store them. To deliver what you bought, the game only keeps the purchase token sent by Google Play on your device. Before anything is delivered, this token is sent with the product name and your install number to our server (Cloudflare), which checks with Google that the purchase is real and paid, makes the acknowledgement Google requires, and keeps the token with the install number so the same purchase cannot be reused on other devices. In the Android app, a one-time Google Play Integrity code may also be sent with ranking scores and prize claims so the server can tell they come from the genuine, unmodified app; it is only checked with Google and not stored. Whether your VIP subscription is active is checked with Google Play at each launch; you can cancel it any time in Google Play › Subscriptions.</p>
 
 <h2>Permissions</h2>
 <p>The game only uses vibration (can be turned off in Settings). It does not request location, camera, microphone, contacts or file access.</p>
@@ -110,7 +110,7 @@ nav{display:flex;gap:12px;font-size:14px;margin-bottom:20px}
 <li><b>Purpose:</b> showing the world ranking and giving daily prizes; delivering what you buy and the purchase acknowledgement Google requires. The information is not used for anything else.</li>
 <li><b>Legal basis:</b> providing the service you asked for and performing the purchase contract (GDPR Art. 6(1)(b), KVKK Art. 5/2-c). Taking part in the world ranking is optional and can be turned off in Settings at any time.</li>
 <li><b>Transfers:</b> our server runs on Cloudflare; information may be processed on servers outside your country. Purchases are verified through Google.</li>
-<li><b>Retention:</b> ranking entries and reports for at most 90 days; purchase tokens are not stored on the server.</li>
+<li><b>Retention:</b> ranking entries and reports for at most 90 days; purchase tokens and the install number that used them for at most 2 years.</li>
 <li><b>Your rights:</b> to know whether your data is processed, to access, correct or delete it and to object (GDPR Art. 15–21, KVKK Art. 11). Email us with your install number from Settings; we answer within 30 days. You may also complain to your data protection authority.</li>
 </ul>
 
