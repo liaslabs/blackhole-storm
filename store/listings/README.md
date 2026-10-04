@@ -5,7 +5,8 @@ Her klasör bir Play Console dilidir. İçinde:
 - `title.txt` → **Uygulama adı** (en fazla 30 karakter)
 - `short.txt` → **Kısa açıklama** (en fazla 80)
 - `full.txt` → **Tam açıklama** (en fazla 4000)
-- `screenshots/` → o dilin arayüzüyle çekilmiş 6 telefon ekran görüntüsü (1080×1920)
+- `frames/` → **önerilen**: başlıklı tanıtım kareleri (o dilde slogan + telefon çerçevesi içinde oyun), 6 adet, 1080×1920
+- `screenshots/` → o dilin arayüzüyle çekilmiş düz ekran görüntüleri (aynı 6 ekran)
 
 | Klasör | Play Console dili | Ekran görüntüleri |
 |---|---|---|
