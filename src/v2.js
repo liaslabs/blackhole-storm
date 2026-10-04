@@ -140,7 +140,7 @@ function v2Start(mode){
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   if(DEV&&mode==='level'&&gameMode==='classic'&&!HMODE)devKit(v2Lv()); // the developer link keeps the Laboratory at each level's recommended power
-  const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));
+  const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));if(mode==='surv')$('lvVal').textContent=l; /* the speed pill, not the classic level left from before */
   const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
@@ -477,7 +477,7 @@ function v2Update(dt){
   if(G2.combo>0&&!G2.hold){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
   if(gameMode==='survival'){survTime+=dt;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);if(sc>0&&sc%15===0)spAdd(1);if(G2.dstorm&&sc>0){totalScore+=DSTORM.sec;levelScore+=DSTORM.sec;}} /* every second still in the storm pays */
     if(G2.dstorm){v2StormStep();if(gState!=='playing')return;}
-    const nl=Math.min(40,effLevel());if(nl!==G2.lv){G2.lv=nl;const cap=G2.cap;G2.L=v2ApplyMods(v2Rules(nl));G2.cap=Math.max(cap,V2K.r0*G2.L.capMul);if(G2.dstorm)v2Call('FIRTINA ŞİDDETLENİYOR',T('{n} sn kaldı',{n:Math.max(0,Math.ceil(DSTORM.dur-survTime))}),'#ff8a80',1.3,true);else v2Call('SEVİYE ATLADIN','HIZ '+nl,'#ffb35c',1.2,true);const z=zoneOf(nl);if(z!==curZone)setZone(z);}}
+    const nl=Math.min(40,effLevel());if(nl!==G2.lv){G2.lv=nl;$('lvVal').textContent=nl;const cap=G2.cap;G2.L=v2ApplyMods(v2Rules(nl));G2.cap=Math.max(cap,V2K.r0*G2.L.capMul);if(G2.dstorm)v2Call('FIRTINA ŞİDDETLENİYOR',T('{n} sn kaldı',{n:Math.max(0,Math.ceil(DSTORM.dur-survTime))}),'#ff8a80',1.3,true);else v2Call('SEVİYE ATLADIN','HIZ '+nl,'#ffb35c',1.2,true);const z=zoneOf(nl);if(z!==curZone)setZone(z);}}
   if(gameMode==='sprint'){const sec=Math.ceil(SPR_RUN.dur-SPR_RUN.t);SPR_RUN.t+=dt;const s2=Math.ceil(SPR_RUN.dur-SPR_RUN.t);
     if(s2!==sec&&s2<=5&&s2>0)sfx('tickHi',{vol:.6,rev:0});if(SPR_RUN.t>=SPR_RUN.dur){sprintEnd();return;}}
 
@@ -795,14 +795,17 @@ function v2StormStep(){const t=survTime;
 // ── the sticky nebula: a shape-shifting cloud drifts in from one side and out the other; inside it the hole is a silhouette in the fog and steers heavily ──
 const ICE={dur:3,follow:.07};
 const v2Heavy=()=>G2.iceT>0||!!G2.nebIn;
-function v2NebGo(e){const R=Math.min(W*.42,H*.26);e.R=R;e.dir=rng()<.5?1:-1;e.y0=H*rrnd(.38,.6);e.x=-e.dir*(W/2+R*1.6)+W/2;e.puffs=Array.from({length:16},(_,i)=>({a:i/16*TAU+rng()*.4,r:.25+.6*rng(),s:.5+.5*rng(),p:rng()*TAU,w:.4+rng()*.8}));
+function v2NebGo(e){const R=Math.min(W*.42,H*.26);e.R=R;e.dir=rng()<.5?1:-1;e.y0=H*rrnd(.38,.6);e.y=e.y0;e.x=-e.dir*(W/2+R*1.6)+W/2;e.puffs=Array.from({length:16},(_,i)=>({a:i/16*TAU+rng()*.4,r:.25+.6*rng(),s:.5+.5*rng(),p:rng()*TAU,w:.4+rng()*.8}));
   v2Call('🌫 YAPIŞKAN NEBULA','İÇİNDE AĞIR HAREKET EDERSİN','#cdbfff',1.6,true);v2Sfx('slow',{vol:.45,rate:.5});}
 function v2NebStep(e,dt){const span=W+e.R*3.2;e.x=W/2-e.dir*span/2+e.dir*span*Math.min(1,e.t/e.dur);e.y=e.y0+Math.sin(e.t*.45)*H*.06; /* crosses the screen once in its 15 s */
   const inn=Math.hypot((hX-e.x)/(e.R*1.05),(hY-e.y)/(e.R*.82))<1;
   if(inn&&!G2.nebIn){G2.nebIn=1;vib(15);}else if(!inn&&G2.nebIn){G2.nebIn=0;v2Pop(T('AĞIRLIK GEÇTİ'),'#8dffcb',16);if(G2.mode!=='sprint')atlasAdd('nebula');}}
-function v2NebPuffs(e,k,al){for(const p of e.puffs){const a=p.a+e.t*.08*p.w,rr=e.R*(p.r+.08*Math.sin(e.t*p.w+p.p)),px=e.x+Math.cos(a)*rr+Math.sin(e.t*.7+p.p)*e.R*.07,py=e.y+Math.sin(a)*rr*.72+Math.cos(e.t*.6+p.p)*e.R*.06,pr=e.R*.55*p.s*k*(1+.15*Math.sin(e.t*1.1*p.w+p.p)); /* each puff breathes and orbits: the cloud keeps changing shape */
+function v2NebPuffs(e,k,al,ctx){for(const p of e.puffs){const a=p.a+e.t*.08*p.w,rr=e.R*(p.r+.08*Math.sin(e.t*p.w+p.p)),px=e.x+Math.cos(a)*rr+Math.sin(e.t*.7+p.p)*e.R*.07,py=e.y+Math.sin(a)*rr*.72+Math.cos(e.t*.6+p.p)*e.R*.06,pr=e.R*.55*p.s*k*(1+.15*Math.sin(e.t*1.1*p.w+p.p)); /* each puff breathes and orbits: the cloud keeps changing shape */
     const g=ctx.createRadialGradient(px,py,0,px,py,pr);g.addColorStop(0,`rgba(160,140,200,${.42*al})`);g.addColorStop(.6,`rgba(115,98,158,${.26*al})`);g.addColorStop(1,'rgba(90,80,130,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,pr,0,TAU);ctx.fill();}}
-function v2DrawNeb(e){ctx.save();v2NebPuffs(e,1,1);v2NebPuffs(e,.8,.6);
+const NEBC={c:null,x:null};
+function v2DrawNeb(e){ctx.save();
+  {const s=.3;if(!NEBC.c){NEBC.c=document.createElement('canvas');NEBC.x=NEBC.c.getContext('2d');}const cw=Math.ceil(W*s),ch=Math.ceil(H*s);if(NEBC.c.width!==cw||NEBC.c.height!==ch){NEBC.c.width=cw;NEBC.c.height=ch;}
+    const x=NEBC.x;x.setTransform(1,0,0,1,0,0);x.clearRect(0,0,cw,ch);x.setTransform(s,0,0,s,0,0);v2NebPuffs(e,1,1,x);v2NebPuffs(e,.8,.6,x);ctx.drawImage(NEBC.c,0,0,W,H);} /* the cloud is all soft gradients: drawn small and scaled up it looks the same and fills a tenth of the pixels */
   for(const o of G2.objs){if(o.k!=='meteor'||o.st!=='in'||Math.hypot((o.x-e.x)/e.R,(o.y-e.y)/(e.R*.75))>1.2)continue;const sp=Math.hypot(o.vx,o.vy)||1; /* meteors stay readable in the fog: an ember and its tail */
     ctx.globalCompositeOperation='lighter';ctx.strokeStyle='rgba(255,110,60,.85)';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(o.x-o.vx/sp*o.r*4,o.y-o.vy/sp*o.r*4);ctx.stroke();ctx.fillStyle='#ffb07a';ctx.beginPath();ctx.arc(o.x,o.y,Math.max(2,o.r*.55),0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';}
   if(G2.nebIn){const R=G2.R,g=ctx.createRadialGradient(hX,hY,R*.6,hX,hY,R*1.9);g.addColorStop(0,'rgba(8,6,14,.95)');g.addColorStop(1,'rgba(8,6,14,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(hX,hY,R*1.9,0,TAU);ctx.fill(); /* the hole: a silhouette in the fog */
@@ -1768,9 +1771,10 @@ function v2Hud(){
   hb('hkTop','💨',v2Hawking,'HAWKING');hb('shTop','🛡',v2Shield,'KALKAN');hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')v2Nova();},'SÜPERNOVA');
   rb.addEventListener('pointerdown',e=>{e.preventDefault();if(G2.on&&gState==='playing')v2Tap();});
 }
-function v2ScFit(mk){const sv=$('scVal'),w=$('scoreBox').clientWidth-4;const fit=(h,m,st)=>{sv.innerHTML=h;sv.classList.toggle('stk',!!st);sv.style.fontSize='';const sw=sv.scrollWidth;if(w<=0||sw<=w)return 1;const fs=Math.floor(21*w/sw);sv.style.fontSize=Math.max(11,fs)+'px';return fs>=m;};const full=mk(x=>x.toLocaleString(LOC));if(fit(full,15)||!sv.querySelector('small')&&fit(full,13)||fit(full,13,1))return;const c=new Intl.NumberFormat(LOC,{notation:'compact',maximumFractionDigits:2});if(!fit(mk(x=>c.format(x)),11,1)){const g=sv.querySelector('small');if(g){g.remove();fit(sv.innerHTML,11);}}} /* long scores (81.100/81.100) fit the narrow slot: shrink, then put the goal under the score, then 1,28 Mn style; the goal is dropped only as a last resort */
+function v2ScFit(mk,force){const sv=$('scVal'),full=mk(x=>x.toLocaleString(LOC)),key=full.replace(/\d/g,'0');if(!force&&sv._k===key&&sv._full){sv.innerHTML=full;return;} /* same shape as last time: the fitted size still holds, so no layout read on every point scored */
+  sv._k=key;sv._full=0;const w=$('scoreBox').clientWidth-4;const fit=(h,m,st)=>{sv.innerHTML=h;sv.classList.toggle('stk',!!st);sv.style.fontSize='';const sw=sv.scrollWidth;if(w<=0||sw<=w)return 1;const fs=Math.floor(21*w/sw);sv.style.fontSize=Math.max(11,fs)+'px';return fs>=m;};if(fit(full,15)||!sv.querySelector('small')&&fit(full,13)||fit(full,13,1)){sv._full=1;return;}const c=new Intl.NumberFormat(LOC,{notation:'compact',maximumFractionDigits:2});if(!fit(mk(x=>c.format(x)),11,1)){const g=sv.querySelector('small');if(g){g.remove();fit(sv.innerHTML,11);}}} /* long scores (81.100/81.100) fit the narrow slot: shrink, then put the goal under the score, then 1,28 Mn style; the goal is dropped only as a last resort */
 function v2Ui(force){
-  {const jc=$('jet2');if(jc){const on=G2.mode!=='sprint'&&v2JetOn();if(jc.hidden!==!on)jc.hidden=!on;if(on){const J=G2.jet,p=J?1-J.t/J.D:G2.jetRdy?1:clamp(1-G2.jetCD/V2K.jet.cd,0,1),c=J?'on':G2.jetRdy?(G2.t-G2.jetGoT<1.6?'rdy go':'rdy'):'';jc.style.setProperty('--p',p.toFixed(3));if(jc.className!==c)jc.className=c;}}}
+  {const jc=$('jet2');if(jc){const on=G2.mode!=='sprint'&&v2JetOn();if(jc.hidden!==!on){jc.hidden=!on;force=true;}if(on){const J=G2.jet,p=J?1-J.t/J.D:G2.jetRdy?1:clamp(1-G2.jetCD/V2K.jet.cd,0,1),c=J?'on':G2.jetRdy?(G2.t-G2.jetGoT<1.6?'rdy go':'rdy'):'';jc.style.setProperty('--p',p.toFixed(3));if(jc.className!==c)jc.className=c;}}}
   {const hk=$('hkTop');if(hk){const ok=v2HawkOk(),mets=ok?G2.objs.reduce((n,o)=>n+(o.k==='meteor'&&o.st==='in'&&o.x>0&&o.x<W&&o.y>0&&o.y<H),0):0; /* it pulses when there is something to clear */
     if(mets>=2&&G2.hard&&!G2.hkHint){G2.hkHint=1;v2Pop(T('HAWKING METEORLARI SİLER'),'#ffffff',15);}const c='hb2'+(!v2HawkOn()?' off':ok?(mets>=2?' ready pulse':' ready'):' empty')+(hk.classList.contains('hl')?' hl':'');if(hk.className!==c)hk.className=c;}} // Hawking burst: shown from level 24, lit when you are big enough
   const h=G2.hud,sb=$('shTop');
@@ -1786,7 +1790,7 @@ function v2Ui(force){
   {const tp=$('tmr2'),showT=G2.mode==='sprint'||!!G2.dstorm||(!!G2.L.boss||!!G2.hard)&&G2.mode==='level';if(tp&&tp.hidden!==!showT)tp.hidden=!showT;if(tp)tp.classList.toggle('hard',!!G2.hard); // the clock only matters in timed runs and boss fights
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',(G2.mode==='level'||G2.dstorm)&&left<=10);}
   const pct=G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt?G2.hunt.n/G2.hunt.need*100:G2.mode==='surv'?(survTime%30)/30*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
-  {const sc=G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?-1-G2.hunt.n:G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`:G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc));}}
+  {const sc=G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?-1-G2.hunt.n:G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`:G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));
