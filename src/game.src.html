@@ -464,6 +464,75 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 .vipline{background:rgba(242,169,59,.1);color:var(--gold);}
 .ribbon{background:var(--pan);border-color:rgba(242,169,59,.55);}
 .shopTest{border-color:rgba(111,183,216,.45);background:transparent;}
+/* SHOP (v2): an opaque, warm space bazaar. Hero offer, gem piles, a shopkeeper with a word for you, items that point to gems */
+#sShop{align-items:flex-start;background:radial-gradient(ellipse at 50% -10%,rgba(242,169,59,.16),transparent 55%),radial-gradient(ellipse at 100% 40%,rgba(185,120,255,.12),transparent 50%),#06070d;}
+#sShop .shopc{max-width:440px;width:100%;margin:0 auto;padding:14px 14px 18px;background:transparent;border:none;box-shadow:none;}
+.shTop{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.shTitle{font-family:var(--fd);font-weight:800;font-size:20px;letter-spacing:4px;color:var(--gold);text-shadow:0 0 18px rgba(242,169,59,.35);}
+.shTitle .ico{width:20px;height:20px;vertical-align:-3px;margin-inline-end:4px;}
+.shX{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#cfd4e2;font-size:16px;cursor:pointer;}
+.shWallet{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px;}
+.shWallet .big{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.1);font-family:var(--fd);font-weight:800;font-size:19px;color:#fff;}
+.shWallet .big .ico{width:22px;height:22px;}
+.shWallet .big.gem{border-color:rgba(111,183,216,.45);}
+.shWallet .big .plus{margin-inline-start:auto;width:26px;height:26px;border-radius:50%;border:none;background:var(--cyan);color:#06111a;font-weight:900;font-size:17px;line-height:26px;cursor:pointer;}
+.shWallet .chips{grid-column:1/-1;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+.shWallet .chips span{padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);font-family:var(--fd);font-size:11.5px;color:#cfd4e2;}
+.shWallet .chips .ico{width:13px;height:13px;vertical-align:-2px;}
+.shCap{display:flex;align-items:flex-end;gap:10px;margin:12px 0 6px;}
+.shCapAv{flex:0 0 52px;height:52px;border-radius:50%;overflow:hidden;border:2px solid var(--gold);box-shadow:0 0 14px rgba(242,169,59,.35);background:#1b1f2a;display:flex;align-items:center;justify-content:center;font-size:28px;}
+.shCapAv img{width:100%;height:100%;object-fit:cover;}
+.shBub{position:relative;flex:1;padding:9px 12px;border-radius:14px 14px 14px 4px;background:#f4ead6;color:#1b1406;font-size:13.5px;line-height:1.35;font-weight:600;}
+.shBub b{color:#a35d00;}
+#shopHero .hero{position:relative;display:block;width:100%;margin:10px 0 4px;padding:18px 14px 14px;border-radius:18px;border:1.5px solid #ffd98a;color:#fff;text-align:center;cursor:pointer;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,210,120,.35),transparent 60%),linear-gradient(160deg,#3a2408,#1a1230 60%,#0d1426);box-shadow:0 0 30px rgba(255,200,90,.25),inset 0 0 30px rgba(255,200,90,.08);}
+#shopHero .hero::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);animation:shShine 3.6s ease-in-out infinite;}
+@keyframes shShine{0%,55%{left:-60%}100%{left:130%}}
+#shopHero .rib{position:absolute;top:12px;left:-34px;transform:rotate(-35deg);padding:3px 40px;background:var(--red);font-family:var(--fd);font-weight:800;font-size:10px;letter-spacing:2px;}
+#shopHero .hic{position:relative;width:86px;height:86px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:52px;}
+#shopHero .hic::before{content:'';position:absolute;inset:-14px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 10%,rgba(255,215,130,.28) 10% 15%,transparent 15% 35%,rgba(255,215,130,.28) 35% 40%,transparent 40% 60%,rgba(255,215,130,.28) 60% 65%,transparent 65% 85%,rgba(255,215,130,.28) 85% 90%,transparent 90%);animation:shSpin 14s linear infinite;}
+#shopHero .hic .ico{width:62px;height:62px;filter:drop-shadow(0 0 12px rgba(255,210,120,.7));position:relative;}
+@keyframes shSpin{to{transform:rotate(360deg)}}
+#shopHero .ht{font-family:var(--fd);font-weight:800;font-size:21px;letter-spacing:2px;color:#ffe2a0;}
+#shopHero .hs{font-size:13px;color:#e8dcc4;margin:4px 6px 10px;line-height:1.4;}
+#shopHero .hgot{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:0 0 12px;}
+#shopHero .hgot span{padding:5px 10px;border-radius:10px;background:rgba(0,0,0,.35);border:1px solid rgba(255,217,138,.35);font-family:var(--fd);font-weight:800;font-size:14px;}
+#shopHero .hgot .ico{width:16px;height:16px;vertical-align:-3px;}
+#shopHero .hbuy{display:inline-flex;align-items:center;gap:10px;padding:11px 26px;border-radius:999px;background:linear-gradient(180deg,#ffd27a,#f2a93b);color:#1d1203;font-family:var(--fd);font-weight:900;font-size:17px;letter-spacing:1px;box-shadow:0 4px 0 #a96a12,0 0 18px rgba(255,200,90,.5);}
+#shopHero .hval{display:block;margin-top:8px;font-size:12px;color:#d9c9a8;}
+#shopHero .hero.owned{opacity:.6;pointer-events:none;}#shopHero .hero.owned::after{display:none;}
+.offer .pr{padding:6px 10px;border-radius:999px;background:linear-gradient(180deg,#ffd27a,#f2a93b);color:#1d1203;font-weight:900;}
+.offer .pr small.val,.offer .pr s{color:#5b3a06;}
+.offer.owned .pr{background:rgba(87,199,138,.18);color:var(--green);}
+.sgrid.gems{align-items:end;}
+.sitem{border-radius:14px;padding:12px 4px 10px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));}
+.sitem .pr{padding:5px 12px;border-radius:999px;background:linear-gradient(180deg,#ffd27a,#f2a93b);color:#1d1203;font-weight:900;font-size:12px;}
+.sitem.gk .pr,.sitem.gk.short .pr{background:rgba(111,183,216,.16);color:#bfe6f7;}
+.sitem.gk.short .pr{background:rgba(242,169,59,.14);color:#ffd27a;}
+.sitem.gk.short small.need{display:block;color:#ffd27a;font-weight:700;}
+.sitem.pop{border:1.5px solid var(--gold);transform:translateY(-6px);box-shadow:0 0 18px rgba(242,169,59,.25);padding-top:16px;}
+.sitem .amt{font-family:var(--fd);font-weight:900;font-size:20px;color:#fff;}
+.sitem .bon{margin-top:-2px;padding:1px 7px;border-radius:999px;background:rgba(87,199,138,.18);color:var(--green);font-family:var(--fd);font-weight:800;font-size:10.5px;}
+.pile{position:relative;width:64px;height:46px;margin-bottom:2px;}
+.pile i{position:absolute;font-style:normal;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+.pile .ico{width:100%;height:100%;}
+.pile i{width:26px;height:26px;}
+.pile.p1 i:nth-child(1){left:19px;top:10px;width:30px;height:30px;}
+.pile.p3 i:nth-child(1){left:6px;top:16px}.pile.p3 i:nth-child(2){left:32px;top:16px}.pile.p3 i:nth-child(3){left:19px;top:2px;width:28px;height:28px;}
+.pile.p6 i:nth-child(1){left:0;top:20px}.pile.p6 i:nth-child(2){left:19px;top:20px}.pile.p6 i:nth-child(3){left:38px;top:20px}.pile.p6 i:nth-child(4){left:9px;top:6px}.pile.p6 i:nth-child(5){left:29px;top:6px}.pile.p6 i:nth-child(6){left:19px;top:-8px;width:28px;height:28px;}
+.sitem.pop .pile{animation:shFloat 2.6s ease-in-out infinite;}
+@keyframes shFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.sitem.flash{animation:shFlash .9s ease-out 2;}
+@keyframes shFlash{0%{box-shadow:0 0 0 0 rgba(111,183,216,.9)}100%{box-shadow:0 0 0 14px rgba(111,183,216,0)}}
+.shFree{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;border-radius:16px;border:1.5px solid rgba(111,183,216,.6);background:linear-gradient(135deg,rgba(111,183,216,.18),rgba(185,120,255,.12));color:#fff;cursor:pointer;text-align:start;}
+.shFree .fic{flex:0 0 52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:36px;animation:shWig 2.4s ease-in-out infinite;}
+.shFree .fic .ico{width:40px;height:40px;}
+@keyframes shWig{0%,70%,100%{transform:rotate(0)}75%{transform:rotate(-10deg)}80%{transform:rotate(9deg)}85%{transform:rotate(-6deg)}90%{transform:rotate(4deg)}}
+.shFree b{display:block;font-family:var(--fd);font-weight:800;font-size:14px;letter-spacing:1px;}
+.shFree small{display:block;color:#cfe3ee;font-size:12.5px;margin-top:2px;}
+.shFree .go{margin-inline-start:auto;padding:8px 12px;border-radius:999px;background:var(--cyan);color:#06111a;font-family:var(--fd);font-weight:900;font-size:12px;white-space:nowrap;}
+.shFree[disabled]{opacity:.5;}
+@media (prefers-reduced-motion:reduce){#shopHero .hero::after,#shopHero .hic::before,.sitem.pop .pile,.shFree .fic{animation:none!important;}}
 .nd{font-family:var(--fm);font-weight:500;}
 .nd.done{background:var(--gold);color:#1c1405;box-shadow:0 0 0 3px rgba(7,9,12,.85);}
 .nd.cur{background:var(--cyan);color:#07131a;box-shadow:0 0 0 3px rgba(7,9,12,.85),0 0 0 7px rgba(111,183,216,.3);}
@@ -1090,12 +1159,14 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <!-- SHOP -->
 <div class="screen" id="sShop" style="z-index:136;">
  <div class="card shopc">
-  <div class="h" style="font-size:15px;text-align:center;">🛒 MAĞAZA</div>
+  <div class="shTop"><div class="shTitle">🛒 MAĞAZA</div><button class="shX" id="shopX" aria-label="Kapat">✕</button></div>
   <div class="shopTest" id="shopTest">TEST MODU · gerçek ödeme ve gerçek reklam yok</div>
-  <div class="inv" id="shopInv"></div>
-  <div class="sh">ÖZEL TEKLİFLER</div><div id="shopOffers"></div>
-  <div class="sh">ELMAS</div><div class="sgrid" id="shopGems"></div>
-  <div class="sh">PAKETLER</div><div class="sgrid" id="shopPacks"></div>
+  <div class="shWallet" id="shopInv"></div>
+  <div class="shCap"><div class="shCapAv" id="shopCapAv"></div><div class="shBub" id="shopTalk"></div></div>
+  <div id="shopHero"></div>
+  <div class="sh" id="shopOffersH">ÖZEL TEKLİFLER</div><div id="shopOffers"></div>
+  <div class="sh" id="shopGemsH">ELMAS</div><div class="sgrid gems" id="shopGems"></div>
+  <div class="sh" id="shopPacksH">PAKETLER</div><div class="sgrid" id="shopPacks"></div>
   <div class="sh">ELMASLA AL</div><div class="sgrid" id="shopItems"></div>
   <div class="sh" id="shopFreeH">ÜCRETSİZ</div><div id="shopFree"></div>
   <div class="row"><button class="btn sec" id="shopRestore">Satın alımları geri yükle</button><button class="btn" id="shopClose">KAPAT</button></div>
@@ -2659,17 +2730,37 @@ async function restorePurchases(silent){
 function openShop(){if(!monOn())return;renderShop();$('sShop').classList.add('on');sfx('click',{vol:.4});if(MON.mode==='play'&&!Object.keys(MON.prices).length)monDetails().then(()=>{if($('sShop').classList.contains('on'))renderShop();});} // prices could not be read at launch (offline): try again
 function renderShop(){
   if(!$('sShop'))return;$('shopTest').hidden=MON.mode!=='test';
-  $('shopInv').innerHTML=`<span>⭐ ${stars.toLocaleString(LOC)}</span><span>💎 ${diamonds}</span><span>❤️ ${SHOP.lives}</span><span>🛡 ${SHOP.shield}</span><span>⏱ ${SHOP.time}</span>${SHOP.noAds?'<span>🚫 reklamsız</span>':''}${vipOn()?'<span>👑 VIP</span>':''}`;
-  $('shopOffers').innerHTML=IAP.filter(p=>p.sec==='offer'&&iapShow(p)&&!(p.minLv&&bestLevel<p.minLv&&!owned(p))&&!(p.id==='no_ads'&&!owned(p)&&!adNet())).map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
-  const tile=p=>`<button class="sitem" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><b>${p.t}</b><small>${p.d}</small><div class="pr">${priceOf(p)}</div></button>`;
-  $('shopGems').innerHTML=IAP.filter(p=>p.sec==='gems'&&iapShow(p)).map(tile).join('');
-  $('shopPacks').innerHTML=IAP.filter(p=>p.sec==='packs'&&iapShow(p)).map(tile).join('');
-  $('shopItems').innerHTML=GEM_ITEMS.map((g,i)=>`<button class="sitem" data-gem="${i}" ${diamonds<g.cost||g.max&&(SHOP[g.k]|0)>=g.max?'disabled':''}><div class="ic">${g.ic}</div><b>${g.t}</b><small>${g.d}</small><div class="pr">${g.cost} 💎</div></button>`).join('');
-  const left=adLeft(),ok=adReady();$('shopFreeH').hidden=$('shopFree').hidden=!ok;
-  $('shopFree').innerHTML=`<button class="btn big adbtn" id="freeGems" ${left<=0?'disabled':''} style="width:100%;">${left>0?adLabel(`+5 💎 · bugün ${left} hak`):'Bugünkü ücretsiz elmaslar alındı'}</button>`;
+  const fmt=n=>n.toLocaleString(LOC),left=adLeft(),adOk=adReady();
+  $('shopInv').innerHTML=`<div class="big">⭐ ${fmt(stars)}</div><div class="big gem">💎 ${fmt(diamonds)}<button class="plus" id="shopPlus" aria-label="+">+</button></div>
+    <div class="chips"><span>❤️ ${SHOP.lives}</span><span>🛡 ${SHOP.shield}</span><span>⏱ ${SHOP.time}</span>${SHOP.noAds?`<span>🚫 ${T('reklamsız')}</span>`:''}${vipOn()?'<span>👑 VIP</span>':''}</div>`;
+  const offers=IAP.filter(p=>p.sec==='offer'&&iapShow(p)&&!(p.minLv&&bestLevel<p.minLv&&!owned(p))&&!(p.id==='no_ads'&&!owned(p)&&!adNet()));
+  // the hero: the one-time starter pack while it is on offer, otherwise the biggest pack
+  const hero=offers.find(p=>p.id==='starter'&&!owned(p)&&bestLevel>=3)||offers.find(p=>p.id==='quasar_hoard'&&!owned(p));
+  const gv=p=>p.give?[['gems','💎'],['stars','⭐'],['lives','❤️'],['shield','🛡'],['time','⏱']].filter(([k])=>p.give[k]).map(([k,ic])=>`${fmt(p.give[k])} ${ic}`):p.d.split(' · ').slice(0,4);
+  $('shopHero').innerHTML=hero?`<button class="hero" data-buy="${hero.id}">${hero.tag?`<span class="rib">${hero.tag}</span>`:''}<div class="hic">${hero.ic}</div><div class="ht">${hero.t}</div>
+    <div class="hs">${hero.id==='starter'?'Yeni kaptanlara özel, yalnızca bir kez.':'En büyük paket: kalıcı 2. lab yuvası ve yalnızca burada KUASAR TACI.'}</div>
+    <div class="hgot">${gv(hero).map(x=>`<span>${x}</span>`).join('')}</div><span class="hbuy">${priceOf(hero)}</span>${hero.val?`<small class="hval">${hero.val}</small>`:''}</button>`:'';
+  const rest=offers.filter(p=>p!==hero);$('shopOffersH').hidden=!rest.length;
+  $('shopOffers').innerHTML=rest.map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
+  const gems=IAP.filter(p=>p.sec==='gems'&&iapShow(p)),PILE={gems_s:1,gems_m:3,gems_l:6};
+  $('shopGemsH').hidden=!gems.length;
+  $('shopGems').innerHTML=gems.map(p=>{const n=PILE[p.id]||1,[lab,bon]=p.d.split(' · ');return `<button class="sitem ${p.tag==='POPÜLER'?'pop':''}" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="pile p${n}">${'<i>💎</i>'.repeat(n)}</div><div class="amt">${p.t}</div>${bon?`<span class="bon">${bon}</span>`:''}<small>${lab}</small><div class="pr">${priceOf(p)}</div></button>`;}).join('');
+  const packs=IAP.filter(p=>p.sec==='packs'&&iapShow(p));$('shopPacksH').hidden=!packs.length;
+  $('shopPacks').innerHTML=packs.map(p=>`<button class="sitem" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="amt">${p.t}</div><small>${p.d}</small><div class="pr">${priceOf(p)}</div></button>`).join('');
+  $('shopItems').innerHTML=GEM_ITEMS.map((g,i)=>{const max=g.max&&(SHOP[g.k]|0)>=g.max,short=!max&&diamonds<g.cost;
+    return `<button class="sitem gk ${short?'short':''}" data-gem="${i}" ${max?'disabled':''}><div class="ic">${g.ic}</div><b>${g.t}</b><small>${g.d}</small>${short?`<small class="need">+${g.cost-diamonds} 💎 lazım</small>`:''}<div class="pr">${g.cost} 💎</div></button>`;}).join('');
+  $('shopFreeH').hidden=$('shopFree').hidden=!adOk;
+  $('shopFree').innerHTML=`<button class="shFree" id="freeGems" ${left<=0?'disabled':''}><div class="fic">🎁</div><div><b>GÜNLÜK ÜCRETSİZ ELMAS</b><small>${left>0?`+5 💎 · bugün ${left} hak`:'Bugünkü ücretsiz elmaslar alındı'}</small></div>${left>0?`<span class="go">${SHOP.noAds?'🎁 AL':'▶ İZLE'}</span>`:''}</button>`;
+  // the shopkeeper: one honest line that fits the moment
+  const av=$('shopCapAv');if(av&&!av.firstChild){const src=window.BHS_SPR&&BHS_SPR.av&&BHS_SPR.av.astro;if(src){const im=new Image();im.alt='';im.src=src;av.appendChild(im);}else av.textContent='🧑‍🚀';}
+  $('shopTalk').textContent=T(hero&&hero.id==='starter'?'Yeni kaptanlara bir kerelik Başlangıç Paketi ayırdım!':diamonds<30&&gems.length?'Elmasın azalmış. Bir kese, kalkan ve devam için yeter!':adOk&&left>0?'Bugünün ücretsiz elmasları aşağıda seni bekliyor.':'Zorlu boss\'lara karşı kalkan ve yedek can stokla!');
+  const toGems=()=>{const t=gems.length?$('shopGems'):!$('shopFree').hidden?$('shopFree'):null;if(!t)return false;t.scrollIntoView({behavior:'smooth',block:'center'});
+    for(const c of t.children){c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');}return true;};
+  $('shopPlus').onclick=()=>{if(!toGems())toast('💎',T('ELMAS'),T('Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın'));};
   $('sShop').querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>buy(b.dataset.buy));
-  $('sShop').querySelectorAll('[data-gem]').forEach(b=>b.onclick=()=>{const g=GEM_ITEMS[+b.dataset.gem];if(diamonds<g.cost||g.max&&(SHOP[g.k]|0)>=g.max)return;diamonds-=g.cost;
-    if(g.k==='stars')stars+=g.n;else SHOP[g.k]=(SHOP[g.k]|0)+1;saveG();updateUI();$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;sfx('coin',{vol:.6});renderShop();});
+  $('sShop').querySelectorAll('[data-gem]').forEach(b=>b.onclick=()=>{const g=GEM_ITEMS[+b.dataset.gem];if(g.max&&(SHOP[g.k]|0)>=g.max)return;
+    if(diamonds<g.cost){sfx('buzz',{vol:.25});if(!toGems())toast('💎',T('ELMAS'),T('Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın'));return;}
+    diamonds-=g.cost;if(g.k==='stars')stars+=g.n;else SHOP[g.k]=(SHOP[g.k]|0)+1;saveG();updateUI();$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;sfx('coin',{vol:.6});renderShop();});
   const fg=$('freeGems');if(fg)fg.onclick=async()=>{if(adLeft()<=0)return;if(await showRewarded()){SHOP.adN++;grant({gems:5},'ÜCRETSİZ ELMAS');}renderShop();};
 }
 // shield: absorbs one life loss (not in Daily Cosmos / challenges)
@@ -3848,6 +3939,7 @@ $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
 $('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('raceBtn').onclick=()=>{sfx('click',{vol:.4});renderDaily();$('raceSheet').hidden=false;};$('raceClose').onclick=()=>{$('raceSheet').hidden=true;};$('shopBtn').onclick=openShop;$('starterRib').onclick=openShop;$('pShop').onclick=openShop;
+$('shopX').onclick=()=>$('shopClose').click();
 $('shopClose').onclick=()=>{$('sShop').classList.remove('on');if($('sMenu').classList.contains('on'))showMenu();};$('shopRestore').onclick=()=>MON.mode==='test'?toast('🔄','GERİ YÜKLEME','Test modunda geri yüklenecek bir şey yok'):restorePurchases(false);$('mapBack').onclick=closeMap;$('shClose').onclick=()=>$('mSheet').classList.remove('on');
 $('dcPlay').onclick=()=>{const n=dailyNo();startSprint(dailySeed(n),{daily:n});};
 $('dcShare').onclick=async()=>{const n=dailyNo();if(DAILY.n!==n)return;const r={score:DAILY.score,combo:DAILY.combo,perf:DAILY.perf,grid:DAILY.grid,zone:sprintSetup(dailySeed(n)).zone,daily:n};
