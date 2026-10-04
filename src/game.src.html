@@ -1283,6 +1283,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
   <div class="srow"><span>🌍 Dünya sıralamasına katıl</span><button class="tg" id="sLbOn"></button></div>
+  <div class="srow" id="sAdPrivRow" hidden><span>🛡 Reklam gizlilik seçenekleri</span><button class="btn sec" id="sAdPriv" style="padding:6px 12px;font-size:12px;">AÇ</button></div>
   <div class="srow" id="sNotifRow" hidden><span>🔔 Hatırlatmalar</span><button class="tg" id="sNotif"></button></div>
   <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ YAKIT</button><button id="sNDay">🎁 GÜNLÜK</button></div></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
@@ -2557,9 +2558,18 @@ const adNet=()=>MON.mode==='test'||!!(window.BHS_ADS&&window.BHS_ADS.rewarded),a
 const adLabel=t=>(SHOP.noAds?'🎁 ':'▶ REKLAM İZLE · ')+t;
 function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()){SHOP.adDay=d;SHOP.adN=0;}return 3-SHOP.adN;}
 // rewarded ad → true when the reward is earned
-async function showRewarded(){
+// AdMob in the Android app. ADS_LIVE stays false during closed testing: Google's own test ads only, so testers'
+// taps never count as invalid traffic. At the public launch: real unit ids below and ADS_LIVE=true.
+const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'',interstitial:''}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
+const ADS={on:false,privacy:false};
+async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;
+  try{const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
+    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{const x=await nb.adsRewarded();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{await nb.adsInterstitial();}};}
+    monApply();if($('sSet').classList.contains('on'))syncSettingsUI();}catch(e){}}
+async function showRewarded(){showRewarded.none=false;
   if(SHOP.noAds)return true;if(MON.busy)return false;MON.busy=true;SND.duck(.15,1e5);
-  try{if(MON.mode==='test')return await fakeAd(true);if(window.BHS_ADS&&window.BHS_ADS.rewarded)return !!(await window.BHS_ADS.rewarded());return false;}
+  try{if(MON.mode==='test')return await fakeAd(true);if(window.BHS_ADS&&window.BHS_ADS.rewarded){const ok=!!(await window.BHS_ADS.rewarded());
+      if(showRewarded.none)toast('📺',T('REKLAM'),T('Şu an reklam yok, biraz sonra tekrar dene'));return ok;}return false;}
   finally{MON.busy=false;SND.duck(1,0);}
 }
 // interstitial only between levels: after every 3rd level from level 6 on, at most one per 3 minutes
@@ -3150,11 +3160,12 @@ function giftPick(i){const S=GIFTS;if(!S||S.over)return;const b=S.boxes[i];if(b.
   giftHud();}
 function giftReveal(){GIFTS.boxes.forEach(x=>{if(!x.open){x.el.className='gfb peek'+(x.bad?' bad':x.jack?' jack':'');x.el.innerHTML=x.bad?'<span class="bh"></span>':`<span class="rw">${x.jack?'🏆<br>':''}${giftTxt(x.g)}</span>`;}});}
 $('gfBoost').onclick=async e=>{e.stopPropagation();const S=GIFTS;if(!S||S.boosted||S.n>0)return;S.boost=false;$('gfBoost').hidden=true;
-  if(!(await showRewarded())){giftHud();return;}S.boosted=true;
+  if(!(await showRewarded())){if(showRewarded.none){S.boost=true;$('gfBoost').hidden=false;}giftHud();return;}S.boosted=true;
   if(!S.boxes.some(x=>x.jack)&&Math.random()<(GIFT.jackAd-GIFT.jackP)/(1-GIFT.jackP)){const c=S.boxes.filter(x=>!x.bad&&!x.open);const b=c[Math.floor(Math.random()*c.length)];b.g=GIFT.jack;b.jack=true;} // same odds as if it had been there from the start
   $('gfMsg').className='gfMsg ok';sfx('powerup',{vol:.5});giftHud();$('gfMsg').textContent=T('Hazine şansı arttı! Şimdi kutuları aç.');};
 $('gfAd').onclick=async e=>{e.stopPropagation();const S=GIFTS;if(!S||!S.canAd)return;S.canAd=false;S.adUsed=true;$('gfAd').hidden=true;
-  if(!(await showRewarded())){giftReveal();$('gfMsg').textContent=T('Bu sefer olmadı… Bir dahaki sefere!');giftHud();return;}
+  if(!(await showRewarded())){if(showRewarded.none){S.canAd=true;S.adUsed=false;$('gfAd').hidden=false;giftHud();return;} /* no ad to show: the offer stays */
+    giftReveal();$('gfMsg').textContent=T('Bu sefer olmadı… Bir dahaki sefere!');giftHud();return;}
   const b=S.badBox;S.got=S.lost;for(const k in GIFT.adBonus)S.got[k]+=GIFT.adBonus[k];S.over=false; // second chance: winnings back, and the black hole becomes a bonus
   b.el.className='gfb open';b.el.innerHTML=`<span class="rw">${giftTxt(GIFT.adBonus)}</span><small class="gfx">${T('BONUS')}</small>`;$('gfMsg').className='gfMsg ok';
   sfx('achieve',{vol:.6});giftHud();$('gfMsg').textContent=T('İkinci şans! Devam et ya da hemen al');};
@@ -3667,6 +3678,7 @@ function syncSettingsUI(){if($('pidTxt'))$('pidTxt').textContent=PID; // quoted 
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
+  $('sAdPrivRow').hidden=!ADS.privacy;
   {const nOk=!!(CAP('Bhs')&&CAP('Bhs').notifSchedule);$('sNotifRow').hidden=!nOk;$('sNotifSub').hidden=!nOk||!SET.notif;tg('sNotif',SET.notif);
    $('sNLab').classList.toggle('on',SET.nLab);$('sNFuel').classList.toggle('on',SET.nFuel);$('sNDay').classList.toggle('on',SET.nDay);}
   const pl=(id,on)=>{const e=$(id);e.textContent=on?'AÇIK':'KAPALI';e.className=on?'':'off';};pl('pMusicL',SET.music);pl('pSfxL',SET.sfx);
@@ -3679,6 +3691,7 @@ $('sVib').onclick=()=>{SET.vib=!SET.vib;setChanged();vib(30);};
 $('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};
 $('sNotif').onclick=async()=>{if(SET.notif){SET.notif=false;setChanged();notifSync();return;}SET.nAsked=true;await notifEnable(true);};
 for(const [id,k] of [['sNLab','nLab'],['sNFuel','nFuel'],['sNDay','nDay']])$(id).onclick=()=>{SET[k]=!SET[k];setChanged();notifSync();};
+$('sAdPriv').onclick=()=>{const nb=CAP('Bhs');if(nb&&nb.adsPrivacy)nb.adsPrivacy().catch(()=>{});};
 $('nAskYes').onclick=()=>{$('nAsk').classList.remove('on');notifEnable(false);};$('nAskNo').onclick=()=>{$('nAsk').classList.remove('on');};$('sLbOn').onclick=()=>{SET.lb=!SET.lb;setChanged();};
 $('sMusV').oninput=e=>{SET.musicVol=+e.target.value;SND.applySettings();};$('sMusV').onchange=saveG;
 $('sSfxV').oninput=e=>{SET.sfxVol=+e.target.value;SND.applySettings();};$('sSfxV').onchange=()=>{saveG();sfx('coin',{vol:.5});};
@@ -3715,6 +3728,7 @@ function playIntro(){const ov=$('intro'),v=$('introV'),snd=$('introSnd');let fin
 $('sIntro').onclick=()=>{sfx('click',{vol:.4});playIntro();};
 $('sTips').onclick=()=>{TIPS={};saveG();$('sTips').textContent='✓';sfx('click',{vol:.4});};
 if(!canLink())$('privRow').innerHTML='🔒 Oyun kişisel veri toplamaz; skorlar ve ayarlar yalnızca bu cihazda saklanır.';
+else if(NATIVE)$('privRow').innerHTML=`🔒 Hesap yok. Reklamlar Google AdMob ile gösterilir; dünya sıralamasına katılırsan oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir. <a href="${baseURL()}privacy.html" target="_blank" rel="noopener">Gizlilik politikası</a>`;
 
 // ══════════════════════════════════════════════════════
 // UI WIRING
@@ -3799,7 +3813,7 @@ function showMenu(){
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();if(!showMenu.ads&&monOn()){showMenu.ads=1;setTimeout(adsInit,1200);}if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';

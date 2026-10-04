@@ -85,20 +85,21 @@ Elmasla alınanlar (gerçek para yok): 🛡 kalkan 30 💎 · ❤️ yedek can 2
   Android paketi bu ayarla derlendi (izin: `com.android.vending.BILLING`, en düşük Android 6.0).
   Kalıcı ürünler (`quasar_hoard`, `starter`, `cosmic_id`, `no_ads`) ve aktif VIP aboneliği cihaz değişince **Satın alımları geri yükle** ile geri gelir.
   Elmas, yıldız ve eşya bakiyesi ise cihazda durur (hesap sistemi yok); uygulama silinirse gider.
-- **Reklamlar:** Oyun, reklamları `window.BHS_ADS` adında bir bağlantı üzerinden istiyor
-  (`rewarded()` ve `interstitial()`). Bu bağlantıyı sağlayacak reklam ağı **henüz seçilmedi** (aşağıya bak).
-  Seçilene kadar Play sürümünde reklam düğmeleri gizli kalır; satın almalar çalışır.
+- **Reklamlar:** Android uygulamasında **AdMob** (Capacitor). Oyun reklamları `window.BHS_ADS` üzerinden ister
+  (`rewarded()` ve `interstitial()`); uygulama bu bağlantıyı AdMob'a bağlar. Web sürümünde reklam yok.
 
-### Reklam ağı seçimi
+### AdMob ayarları
 
-1. **AdMob + Capacitor (önerilen):** Android kabuğu TWA yerine Capacitor olur, oyun dosyası aynı kalır.
-   AdMob, Play oyunlarında standart reklam ağı; ödüllü ve geçiş reklamları doğrudan desteklenir, gelir genelde en yüksek olanıdır.
-   Android derleme iş akışı değişir.
-2. **Mevcut TWA + Google H5 Games Ads (AdSense):** Kabuk değişmez, ama AdSense'in oyun reklamları programına
-   başvuru ve onay gerekir. TWA içindeki kullanımı ve gelir seviyesi AdMob kadar net değil.
-
-Reklam eklendiğinde yapılacaklar: gizlilik politikasına reklam bölümü ("reklam yok" cümleleri çıkarılır), Ayarlar'daki "Hesap, reklam ve takip yok" satırı, Play Console'da "Reklam içerir" işareti ve Reklam kimliği beyanı,
-Veri güvenliği formunda reklam SDK'sının topladığı veriler (reklam kimliği vb.), AB/İngiltere için izin (onay) ekranı.
+- Uygulama kimliği `ca-app-pub-2380408512555993~2105829637` (AndroidManifest.xml; gizli değil).
+- Reklam birimleri: **Ödüllü** ve **Geçiş**. Kapalı testte Google'ın test birimleri kullanılır (`ADS_LIVE=false`); herkese açık yayında
+  gerçek birim kimlikleri `ADS_UNITS` içine yazılır ve `ADS_LIVE=true` yapılır.
+- Sıklık: geçiş reklamı yalnızca seviyeler arasında, 6. seviyeden sonra her 3. galibiyette, en fazla 3 dakikada bir; ödüllü reklamı oyuncu seçer.
+  "Reklamsız Oyna" ürünü ikisini de kaldırır (ödüllüler reklamsız gelir).
+- İzin: Avrupa Ekonomik Alanı, İngiltere ve İsviçre'de Google'ın izin penceresi (UMP) ilk menüde bir kez çıkar; Ayarlar'da
+  "Reklam gizlilik seçenekleri". İzin penceresinin metni AdMob › Gizlilik ve mesajlaşma bölümünden yönetilir (bir kez "GDPR mesajı"
+  oluşturup yayınlamak gerekir).
+- Reklam içeriği en fazla **PG** (13+ oyun); "çocuklara yönelik" işareti yok.
+- `app-ads.txt`: GOOGLE_PLAY.md › 5f.
 
 ## Para hesaba nasıl geçer
 
