@@ -1,5 +1,6 @@
 name = "blackhole-storm-lb"
 main = "worker.js"
+account_id = "87ad941aab047fa5b744aa610abd2de6"   # not a secret: it only says which Cloudflare account the Worker belongs to
 compatibility_date = "2026-09-01"
 
 [[d1_databases]]
