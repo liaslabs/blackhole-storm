@@ -8,6 +8,9 @@
 //   GET  /prizes?pid=...                         -> {list:[{day,rank,stars}]}   (unclaimed, last 7 days)
 //   POST /claim   {pid,day}                      -> {ok,stars}
 //   POST /ack     {sku,token,sub}                -> {ok}   checks a Google Play purchase and acknowledges it (web/TWA version)
+//   POST /err     {m,s,v,p,l}                    -> {ok}   a script error from the game (message, top of stack, build, app/web,
+//                                                   language); counted per day, no personal data, kept 30 days
+//   GET  /errs?days=3                            -> {list:[{day,m,s,v,p,n}]}   the most frequent recent errors
 //   POST /verify  {pid,sku,token}                -> {ok,pending?}   the app's purchase check: asks Google whether the purchase is real
 //                                                   and paid, records the token (a consumable token counts once, for the install
 //                                                   that bought it), then acknowledges or consumes it. The app grants nothing without ok.
@@ -152,11 +155,19 @@ async function integrityGate(env, it, what) {
   if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', what.split('|')[0].slice(0, 4)); return true; }
   return ok;
 }
+let errReady = false;
+async function ensureErrs(DB) {
+  if (errReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS errs (day TEXT NOT NULL, h TEXT NOT NULL, m TEXT NOT NULL, s TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, h))').run();
+  errReady = true;
+}
+const clip = (x, n) => (typeof x === 'string' ? x : '').replace(/[\u0000-\u0008\u000b-\u001f]/g, '').slice(0, n);
 async function housekeeping(DB) {
   for (let i = 1; i <= 7; i++) await settle(DB, day(Date.now() - i * 864e5));
   const old = day(Date.now() - 90 * 864e5); // keep at most 90 days (privacy policy)
   await DB.prepare('DELETE FROM scores WHERE day < ?').bind(old).run(); await DB.prepare('DELETE FROM prizes WHERE day < ?').bind(old).run();
   await ensureReports(DB); await DB.prepare('DELETE FROM reports WHERE day < ?').bind(old).run();
+  await ensureErrs(DB); await DB.prepare('DELETE FROM errs WHERE day < ?').bind(day(Date.now() - 30 * 864e5)).run();
   await ensurePurchases(DB); // purchase records: two years (a consumed purchase cannot be claimed again anyway, see gpVerify)
   await DB.prepare('DELETE FROM purchases WHERE ts < ?').bind(Date.now() - 730 * 864e5).run();
   await DB.prepare('DELETE FROM purchase_installs WHERE token NOT IN (SELECT token FROM purchases)').run();
@@ -241,6 +252,25 @@ export default {
         if (!ACK_SKUS.includes(b.sku) || typeof b.token !== 'string' || b.token.length < 10 || b.token.length > 600) return json(req, { ok: false }, 400);
         if (!env.GP_SA || !env.GP_PKG) return json(req, { ok: false, err: 'not configured' }, 503);
         return json(req, { ok: await gpAck(env, b.sku, b.token, !!b.sub) });
+      }
+      if (url.pathname === '/err' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({}));
+        const m = clip(b.m, 300); if (!m) return json(req, { ok: false }, 400);
+        const s2 = clip(b.s, 900), v = clip(b.v, 20), p = b.p === 'app' ? 'app' : 'web', l = clip(b.l, 5), d = day();
+        await ensureErrs(DB);
+        const h = (await sha(m + '|' + s2.split('\n')[0] + '|' + v + '|' + p)).slice(0, 16);
+        const up = await DB.prepare('UPDATE errs SET n = n + 1 WHERE day = ? AND h = ?').bind(d, h).run();
+        if (!(up.meta && up.meta.changes)) {
+          const c = await DB.prepare('SELECT COUNT(*) AS n FROM errs WHERE day = ?').bind(d).first();
+          if (!c || c.n < 300) await DB.prepare('INSERT OR IGNORE INTO errs (day, h, m, s, v, p, l) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(d, h, m, s2, v, p, l).run();
+        }
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/errs' && req.method === 'GET') {
+        const days = Math.min(30, Math.max(1, +url.searchParams.get('days') || 3));
+        await ensureErrs(DB);
+        const r = await DB.prepare('SELECT day, m, s, v, p, n FROM errs WHERE day >= ? ORDER BY n DESC LIMIT 60').bind(day(Date.now() - (days - 1) * 864e5)).all();
+        return json(req, { list: r.results || [] });
       }
       if (url.pathname === '/verify' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));

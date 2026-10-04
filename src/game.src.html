@@ -532,6 +532,7 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 .shFree small{display:block;color:#cfe3ee;font-size:12.5px;margin-top:2px;}
 .shFree .go{margin-inline-start:auto;padding:8px 12px;border-radius:999px;background:var(--cyan);color:#06111a;font-family:var(--fd);font-weight:900;font-size:12px;white-space:nowrap;}
 .shFree[disabled]{opacity:.5;}
+.shHint{margin:-2px 0 6px;text-align:center;font-size:12.5px;color:#ffd27a;}
 .shNone{margin:10px 0 4px;padding:16px 14px;border-radius:16px;border:1px dashed rgba(242,169,59,.45);background:rgba(242,169,59,.06);text-align:center;}
 .shNone .nic{font-size:30px;}.shNone .nic .ico{width:30px;height:30px;}
 .shNone b{display:block;font-family:var(--fd);font-size:14px;margin:4px 0 2px;}.shNone small{display:block;color:#aab0c2;font-size:12.5px;margin-bottom:10px;}
@@ -1053,6 +1054,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="grid" id="spGrid"></div>
    <div class="muted" id="spStats"></div>
    <div class="row" id="sprintBtns"><button class="btn" id="spShare">📤 PAYLAŞ</button><button class="btn cy" id="spChal">⚔️ MEYDAN OKU</button></div>
+   <div class="shHint" id="spHint">🎁 Günün ilk paylaşımı: +5 💎</div>
    <div class="row"><button class="btn sec" id="spClip" style="display:none;width:100%;">🎬 KLİBİ KAYDET / PAYLAŞ</button></div>
    <div class="row"><button class="btn sec" id="spAgain">🔁 TEKRAR</button><button class="btn sec" id="spMenu">ANA MENÜ</button></div>
    <div class="muted" id="spNote" style="font-size:12px;margin-top:8px;"></div>
@@ -1402,6 +1404,15 @@ const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
+const BUILD='@@BUILD@@';
+// Error reports (published site and app only): a script error's message and the top of its stack go to our server so
+// we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
+const ERRS=new Set();
+function errReport(msg,stack){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE)return;msg=String(msg||'').slice(0,300);if(!msg||ERRS.has(msg)||ERRS.size>=5)return;ERRS.add(msg);
+  fetch('https://blackhole-storm-lb.liaslabs-games.workers.dev/err',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({m:msg,s:String(stack||'').split('\n').slice(0,6).join('\n').slice(0,900),v:BUILD,p:NATIVE?'app':'web',l:(navigator.language||'').slice(0,5)})}).catch(()=>{});}catch(e){}}
+addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filename?e.filename.split('/').pop()+':'+e.lineno+':'+e.colno:'')));
+addEventListener('unhandledrejection',e=>{const r=e.reason;errReport('promise: '+(r&&r.message||r),r&&r.stack);});
 // high-refresh phones (90/120/144 Hz) would draw every frame twice as often for no visible gain: cap drawing near 60 per second
 function fcap(o,ts){if(ts<o.next-4)return true;o.next=Math.max(o.next+1000/60,ts+1000/120);return false;}
 const LOOPF={next:0},MENUF={next:0},LABF={next:0};
@@ -1561,7 +1572,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -3557,7 +3568,7 @@ function sprintEnd(){
   $('spNote').textContent=res.daily?(official?raceRwTxt(rw)+T('Bugünkü resmi sonucun kaydedildi. Yarın yeni kozmos!'):'Antrenman turu: resmi sonucun değişmez.'):'';
   $('spChal').textContent=res.chal?'⚔️ GERİ MEYDAN OKU':'⚔️ MEYDAN OKU';
   sfx(res.chal&&res.score>res.chal.s||newBest?'levelup':'gameover',{vol:.8,rev:.4});
-  recStop().then(()=>{$('spClip').style.display=REC.blob?'':'none';});
+  recStop().then(()=>{$('spClip').style.display=REC.blob?'':'none';});shareHint();
   showModal('mSprint');
 }
 function baseURL(){return NATIVE?APP_URL:location.href.split('#')[0];} // links shared from the app point at the web version
@@ -3572,10 +3583,13 @@ function readChallenge(){
     return {n:[...String(d.n||'Pilot')].slice(0,NAME_MAX).join(''),a:String(d.a||'🚀').slice(0,4),s:Math.max(0,Math.min(1e7,Math.floor(d.s))),seed:d.seed>>>0,dn:d.dn|0};}}catch(e){}
   return null;
 }
+// the first share of the day (a result, a challenge or a clip) gives a few diamonds
+function shareReward(){const d=new Date().toDateString();if(SHOP.shareDay===d||!clockOk())return;SHOP.shareDay=d;saveG();grant({gems:5},T('PAYLAŞIM ÖDÜLÜ'));shareHint();}
+function shareHint(){const h=$('spHint');if(h)h.hidden=SHOP.shareDay===new Date().toDateString();}
 async function shareOut(text,url){
   const full=url?`${text}\n${url}`:text;
-  {const sh=CAP('Share');if(sh){try{await sh.share(url?{text,url}:{text});return 'ok';}catch(e){return 'cancel';}}} // the app's own share sheet
-  try{if(navigator.share){await navigator.share(url?{text,url}:{text});return 'ok';}}catch(e){if(e&&e.name==='AbortError')return 'cancel';}
+  {const sh=CAP('Share');if(sh){try{await sh.share(url?{text,url}:{text});shareReward();return 'ok';}catch(e){return 'cancel';}}} // the app's own share sheet
+  try{if(navigator.share){await navigator.share(url?{text,url}:{text});shareReward();return 'ok';}}catch(e){if(e&&e.name==='AbortError')return 'cancel';}
   try{await navigator.clipboard.writeText(full);return 'copied';}catch(e){}
   try{const ta=document.createElement('textarea');ta.value=full;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();return 'copied';}catch(e){return 'fail';}
 }
@@ -3638,8 +3652,8 @@ let dlNS;async function dlCap(){if(dlNS!==undefined)return dlNS;try{dlNS=window.
 async function shareClip(){
   if(!REC.blob)return;const ext=REC.blob.type.includes('mp4')?'mp4':'webm';const f=new File([REC.blob],`blackhole-storm-${SPR_RUN.res.score}.${ext}`,{type:REC.blob.type});
   {const fs=CAP('Filesystem'),sh=CAP('Share');if(fs&&sh){try{const data=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=no;r.readAsDataURL(REC.blob);});
-    const w=await fs.writeFile({path:f.name,data,directory:'CACHE'});await sh.share({files:[w.uri],text:resultText(SPR_RUN.res,false)});}catch(e){}return;}} // app: save to its cache, then the share sheet (save to gallery is one of its options)
-  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:resultText(SPR_RUN.res,false)});return;}}catch(e){if(e&&e.name==='AbortError')return;}
+    const w=await fs.writeFile({path:f.name,data,directory:'CACHE'});await sh.share({files:[w.uri],text:resultText(SPR_RUN.res,false)});shareReward();}catch(e){}return;}} // app: save to its cache, then the share sheet (save to gallery is one of its options)
+  try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],text:resultText(SPR_RUN.res,false)});shareReward();return;}}catch(e){if(e&&e.name==='AbortError')return;}
   const dl=await dlCap();if(dl){try{await dl.save({filename:f.name,data:REC.blob});}catch(e){}return;} // inside the claude.ai viewer: its confirmed save
   const a=document.createElement('a');a.href=URL.createObjectURL(f);a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
 }
