@@ -9,7 +9,7 @@ Uygulama yüklemeleri › Android › Blackhole Storm** seçilir; reklamları Go
 | Ne | Dosya / bağlantı |
 |---|---|
 | Oynanabilir reklam (HTML5) | `playable-google-ads.zip` (tek `index.html`, 15 KB, 9 dil, `ExitApi.exit()` ile mağazaya gider). Önizleme: https://liaslabs.github.io/blackhole-storm/onizleme/playable/ |
-| Video (30 sn ve 15 sn, dikey) | `video/` klasörü: YouTube'a yüklenip bağlantıları kampanyaya eklenir |
+| Video (25 sn tanıtım ve 15 sn reklam, dikey 1080×1920, müzikli) | `video/blackhole-storm-promo-25s-{en,tr}.mp4`, `video/blackhole-storm-ad-15s-{en,tr}.mp4`: YouTube'a **Liste dışı** yüklenir, bağlantılar kampanyaya ve Play'deki "Tanıtım videosu" alanına eklenir |
 | Görseller | `store/listings/<dil>/frames/` (1080×1920 tanıtım kareleri) |
 | Simge | `icons/icon-512.png` |
 
@@ -40,3 +40,10 @@ Uygulama yüklemeleri › Android › Blackhole Storm** seçilir; reklamları Go
 - Google Ads HTML5 kuralları: tek `.zip`, en fazla 5 MB, dışarıdan dosya yüklemez (yalnızca Google'ın `exitapi.js`'i), dikey.
 - Oyun 40 saniye ya da Dev Gezegen yutulunca biter; sağ üstteki "YÜKLE" düğmesi her an mağazaya gider.
 - Kaynak: `onizleme/playable/index.html` (değiştirirsen zip'i yeniden oluştur: `cd onizleme/playable && zip ../../store/ads/playable-google-ads.zip index.html`).
+
+## Video notları
+
+- Görüntüler oyunun kendisinden kare kare çekildi (otomatik oyuncu oynuyor, montaj efekti yok): seviye 29, seviye 30 bossu, seviye 140 kuasar, Hayatta Kalma ve kapanış kartı.
+- Başlıklar: SWALLOW EVERYTHING · GROW BIGGER · DEFEAT GIANT BOSSES · UNLEASH QUASAR POWER · SURVIVE THE STORM (TR sürümünde Türkçe).
+- Müzik oyunun kendi parçası (`music/z4.mp3`), telif sorunu yok.
+- Play'in tanıtım videosu alanı YouTube bağlantısı ister; video herkese açık ya da liste dışı olmalı, reklamlar kapalı olmalı, yaş sınırı olmamalı.

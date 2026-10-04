@@ -34,6 +34,7 @@ jobs:
           cp index.html dev.html privacy.html manifest.webmanifest sw.js intro.mp4 _site/
           cp -r icons music onizleme _site/
           mkdir -p _site/store && cp store/screenshot-*.jpg _site/store/
+          mkdir -p _site/store/ads && cp -r store/ads/video _site/store/ads/
           touch _site/.nojekyll
 
       - uses: actions/configure-pages@v5
