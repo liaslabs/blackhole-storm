@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "ÉCRIS TON NOM",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Paiement en attente ; ton pack arrive dès qu'il est validé",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "Pas de connexion ; ton pack arrivera à la prochaine ouverture",
-"Satın alma doğrulanamadı": "Achat non vérifié"
+"Satın alma doğrulanamadı": "Achat non vérifié",
+"Hatırlatmalar": "Rappels",
+"HATIRLATMALAR": "RAPPELS",
+"LAB": "LABO",
+"GÜNLÜK": "QUOTIDIEN",
+"EVET": "OUI",
+"ŞİMDİ DEĞİL": "PAS MAINTENANT",
+"Laboratuvar bitince haber verelim mi?": "On te prévient quand le Laboratoire a fini ?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Une courte notification quand une amélioration est finie, ton carburant plein ou ta récompense du jour prête. 2 par jour au plus, jamais entre 22 h et 9 h. Modifiable dans les Réglages.",
+"Laboratuvar işi bitti": "Le Laboratoire a fini",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "L'amélioration {m} est prête. Viens tester ta nouvelle puissance !",
+"Yakıtın doldu": "Ton carburant est plein",
+"Kaldığın seviye seni bekliyor.": "Le niveau où tu t'es arrêté t'attend.",
+"Günlük ödülün hazır": "Ta récompense du jour est prête",
+"Yeni günün fırtınası da başladı. Serini bozma!": "La tempête du jour a aussi commencé. Ne casse pas ta série !",
+"Oyun hatırlatmaları": "Rappels du jeu",
+"Açık · günde en fazla 2": "Activés · 2 par jour au plus",
+"Bildirim izni Android ayarlarından açılabilir": "L'autorisation des notifications s'active dans les réglages Android"
 }

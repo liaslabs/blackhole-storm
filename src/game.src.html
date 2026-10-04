@@ -383,13 +383,15 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 .sitem .pr{margin-top:3px;padding:3px 8px;border-radius:6px;background:rgba(242,169,59,.14);font-family:var(--fd);font-size:10.5px;color:var(--gold);}
 .sitem[disabled]{opacity:.45;pointer-events:none;}
 .adbtn{background:linear-gradient(135deg,#b9a7ff,#8a93a2 50%,#6a55e0)!important;color:#fff!important;box-shadow:0 8px 24px rgba(143,123,255,.3)!important;}
-#adOv,#payOv{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.88);}
-#adOv.on,#payOv.on{display:flex;}
-#adOv .box2,#payOv .box2{width:min(100%,340px);padding:20px;border-radius:6px;background:#0d0f1c;border:1px solid rgba(255,255,255,.15);text-align:center;}
-#adOv .k,#payOv .k{font-family:var(--fd);font-size:10px;letter-spacing:2px;color:#a9d3e8;}
+#adOv,#payOv,#nAsk{position:fixed;inset:0;z-index:300;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.88);}
+#adOv.on,#payOv.on,#nAsk.on{display:flex;}
+#adOv .box2,#payOv .box2,#nAsk .box2{width:min(100%,340px);padding:20px;border-radius:6px;background:#0d0f1c;border:1px solid rgba(255,255,255,.15);text-align:center;}
+#adOv .k,#payOv .k,#nAsk .k{font-family:var(--fd);font-size:10px;letter-spacing:2px;color:#a9d3e8;}
 #adOv .cd{font-family:var(--fd);font-weight:900;font-size:56px;color:#fff;margin:14px 0;}
-#payOv .gp{font-family:system-ui,sans-serif;font-size:13px;color:#aab0c2;}
-#payOv b{display:block;font-size:17px;margin:10px 0 2px;}
+#payOv .gp,#nAsk .gp{font-family:system-ui,sans-serif;font-size:13px;color:#aab0c2;}
+#payOv b,#nAsk b{display:block;font-size:17px;margin:10px 0 2px;}
+#nAsk .gp{margin:6px 0 16px;line-height:1.45;}
+.srow.nsub{padding:2px 12px 8px;margin-top:-4px;background:none;border:none;justify-content:flex-end;}
 #payOv .pr{font-size:22px;font-weight:700;color:#57c78a;margin:6px 0 14px;}
 #hearts .shd{font-size:12px;font-family:var(--fd);color:#a9d3e8;margin-left:4px;align-self:center;}
 .ribbon{display:flex;align-items:center;gap:10px;width:100%;margin-top:10px;padding:10px 12px;border-radius:8px;border:1px solid rgba(242,169,59,.5);background:linear-gradient(90deg,rgba(242,169,59,.18),rgba(229,72,77,.12));color:#fff;text-align:start;cursor:pointer;}
@@ -1104,6 +1106,9 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <div id="payOv"><div class="box2"><div class="k">GOOGLE PLAY · TEST</div><div class="gp">Test satın alması: ödeme alınmaz.</div><b id="payT"></b><div class="gp" id="payD"></div><div class="pr" id="payP"></div>
  <div class="row"><button class="btn sec" id="payNo">İPTAL</button><button class="btn" id="payYes">SATIN AL</button></div></div></div>
 
+<div id="nAsk"><div class="box2"><div class="k">🔔 HATIRLATMALAR</div><b>Laboratuvar bitince haber verelim mi?</b><div class="gp">Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.</div>
+ <div class="row"><button class="btn sec" id="nAskNo">ŞİMDİ DEĞİL</button><button class="btn" id="nAskYes">EVET</button></div></div></div>
+
 <!-- DAILY MISSIONS -->
 <div class="screen" id="sDM" style="z-index:130;">
  <div class="card" style="text-align:start;">
@@ -1278,6 +1283,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
   <div class="srow"><span>🌍 Dünya sıralamasına katıl</span><button class="tg" id="sLbOn"></button></div>
+  <div class="srow" id="sNotifRow" hidden><span>🔔 Hatırlatmalar</span><button class="tg" id="sNotif"></button></div>
+  <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ YAKIT</button><button id="sNDay">🎁 GÜNLÜK</button></div></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
   <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
   <div class="srow"><span>👆 Parmak mesafesi</span><div class="seg" id="sFd"><button>YAKIN</button><button>ORTA</button><button>UZAK</button></div></div>
@@ -1328,7 +1335,7 @@ let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,PAUTO=false,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
 try{localStorage.removeItem('bhs_ghost');}catch(e){} // the record ghost was removed: drop its saved runs
-const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,lb:true};
+const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true}; // notif: game reminders in the Android app
 // ══════════════════════════════════════════════════════
 // ICONS. Emoji in any on-screen text are drawn as these SVG icons (the strings, translations and share texts
 // keep their emoji). Colored icons use the gradients in #icoDefs; line icons follow the text color.
@@ -2838,7 +2845,7 @@ function labTick(){const now=Date.now();let n=0;for(let i=LAB.q.length-1;i>=0;i-
   if(n){saveG();labBadge();}return n;}
 function labStart(id){const m=LABT.find(x=>x.id===id),lv=labRaw(id);if(!m||lv>=LAB_MAX||!labOpen(m)||labBusy(id)||LAB.q.length>=labSlots())return false;
   if(massFree()<labCM(lv)||stars<labCS(lv))return false;
-  PERK.spent+=labCM(lv);stars-=labCS(lv);const d=labCT(lv)*6e4;LAB.q.push({id,to:lv+1,end:Date.now()+d,dur:d,ad:0});saveG();walletsRefresh();labBadge();return true;}
+  PERK.spent+=labCM(lv);stars-=labCS(lv);const d=labCT(lv)*6e4;LAB.q.push({id,to:lv+1,end:Date.now()+d,dur:d,ad:0});saveG();walletsRefresh();labBadge();notifAsk();notifSync();return true;}
 function labFinish(id,how){const b=labBusy(id);if(!b)return false;const left=b.end-Date.now();
   if(how==='gem'){const g=labGem(left,b.to);if(diamonds<g)return false;diamonds-=g;b.end=Date.now();}
   else if(how==='ad'){if(b.ad)return false;b.ad=1;b.end-=LAB_AD*6e4;}
@@ -3539,7 +3546,7 @@ function resumeGame(){if(gState!=='paused')return;gState=pausedFrom;if(REC.mr&&R
 // Going to the background (home button, another app, screen off) silences everything; coming back resumes the sound (the game itself stays paused)
 function bgSilence(){try{if(SND.ctx&&SND.ctx.state==='running')SND.ctx.suspend();}catch(e){}const v=$('introV');if(v&&!v.paused){v.pause();v._bg=1;}}
 function bgWake(){SND.resume();const v=$('introV');if(v&&v._bg){v._bg=0;if(!$('intro').hidden)v.play().catch(()=>{});}}
-document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseGame();saveG();bgSilence();}else bgWake();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){pauseGame();saveG();bgSilence();notifSync();}else{bgWake();notifShown();}});
 window.addEventListener('pagehide',bgSilence);window.addEventListener('pageshow',()=>{if(!document.hidden)bgWake();});
 // Android back button / back gesture: pauses the game or closes the open panel instead of leaving the app mid-run.
 // The web version keeps one history entry of its own for this; the app gets the press straight from its native side.
@@ -3635,11 +3642,33 @@ document.addEventListener('keydown',e=>{if(e.code==='Space'&&gState==='playing'&
 // ══════════════════════════════════════════════════════
 // SETTINGS
 // ══════════════════════════════════════════════════════
+// GAME REMINDERS (Android app): a short plan handed to the app's own alarms; nothing goes through a server.
+// Lab done, fuel full, daily reward (next day and 3 days later, 19:00). At most 2 a day, none 22:00–09:00 (moved to 09:00),
+// none while the game is on screen. Asked for at the first Laboratory build, switched per kind in Settings.
+function notifPlan(now=Date.now()){const L=[];
+  if(SET.nLab){const b=LAB.q.slice().sort((x,y)=>x.end-y.end)[0],m=b&&LABT.find(x=>x.id===b.id);
+    if(b&&m&&b.end>now)L.push({p:0,at:b.end,title:'🧪 '+T('Laboratuvar işi bitti'),body:T('{m} yükseltmesi hazır. Gel, yeni gücünü dene!',{m:T(m.n)})});}
+  if(SET.nFuel&&bestLevel>=HRT.from&&!vipOn()){heartTick();if(HEARTS.n<HRT.max&&HEARTS.t)L.push({p:1,at:HEARTS.t+(HRT.max-HEARTS.n)*HRT.ms,title:'⛽ '+T('Yakıtın doldu'),body:T('Kaldığın seviye seni bekliyor.')});}
+  if(SET.nDay&&lastLogin)for(const dd of [1,3]){const d=new Date(now);d.setDate(d.getDate()+dd);d.setHours(19,0,0,0);L.push({p:2,at:d.getTime(),title:'🎁 '+T('Günlük ödülün hazır'),body:T('Yeni günün fırtınası da başladı. Serini bozma!')});}
+  for(const n of L){const d=new Date(n.at),h=d.getHours();if(h>=22){d.setDate(d.getDate()+1);d.setHours(9,0,0,0);}else if(h<9)d.setHours(9,0,0,0);n.at=d.getTime();}
+  L.sort((a,b)=>a.p-b.p||a.at-b.at);const per={},out=[];
+  for(const n of L){const k=new Date(n.at).toDateString();if((per[k]|0)>=2)continue;per[k]=(per[k]|0)+1;out.push(n);}
+  return out.sort((a,b)=>a.at-b.at);}
+function notifSync(){const nb=CAP('Bhs');if(!nb||!nb.notifSchedule)return;
+  nb.notifSchedule({channel:T('Oyun hatırlatmaları'),list:SET.notif?notifPlan().map(({at,title,body})=>({at,title,body})):[]}).catch(()=>{});}
+function notifShown(){const nb=CAP('Bhs');if(!nb||!nb.notifCancel)return;nb.notifCancel().then(notifSync).catch(()=>{});} // back in the game: clear the shade, plan again
+async function notifEnable(fromSettings){const nb=CAP('Bhs');if(!nb||!nb.notifPermission)return;
+  let ok=false;try{ok=!!(await nb.notifPermission()).granted;}catch(e){}
+  SET.notif=ok;setChanged();notifSync();
+  if(ok)toast('🔔',T('HATIRLATMALAR'),T('Açık · günde en fazla 2'));else if(fromSettings)toast('🔕',T('HATIRLATMALAR'),T('Bildirim izni Android ayarlarından açılabilir'));}
+function notifAsk(){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission))return;SET.nAsked=true;saveG();setTimeout(()=>$('nAsk').classList.add('on'),900);}
 function syncSettingsUI(){if($('pidTxt'))$('pidTxt').textContent=PID; // quoted when asking for your ranking data to be deleted
   [...$('sFd').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.fd??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
+  {const nOk=!!(CAP('Bhs')&&CAP('Bhs').notifSchedule);$('sNotifRow').hidden=!nOk;$('sNotifSub').hidden=!nOk||!SET.notif;tg('sNotif',SET.notif);
+   $('sNLab').classList.toggle('on',SET.nLab);$('sNFuel').classList.toggle('on',SET.nFuel);$('sNDay').classList.toggle('on',SET.nDay);}
   const pl=(id,on)=>{const e=$(id);e.textContent=on?'AÇIK':'KAPALI';e.className=on?'':'off';};pl('pMusicL',SET.music);pl('pSfxL',SET.sfx);
 }
 function setChanged(){SND.applySettings();syncSettingsUI();updateUI();saveG();}
@@ -3647,7 +3676,10 @@ $('sMus').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('sSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();sfx('click',{vol:.4});};
 {const ls=$('sLang');ls.innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join('');ls.onchange=()=>{setLang(ls.value,true);syncSettingsUI();if($('sMenu').classList.contains('on'))selMode(gameMode);};}
 $('sVib').onclick=()=>{SET.vib=!SET.vib;setChanged();vib(30);};
-$('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};$('sLbOn').onclick=()=>{SET.lb=!SET.lb;setChanged();};
+$('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};
+$('sNotif').onclick=async()=>{if(SET.notif){SET.notif=false;setChanged();notifSync();return;}SET.nAsked=true;await notifEnable(true);};
+for(const [id,k] of [['sNLab','nLab'],['sNFuel','nFuel'],['sNDay','nDay']])$(id).onclick=()=>{SET[k]=!SET[k];setChanged();notifSync();};
+$('nAskYes').onclick=()=>{$('nAsk').classList.remove('on');notifEnable(false);};$('nAskNo').onclick=()=>{$('nAsk').classList.remove('on');};$('sLbOn').onclick=()=>{SET.lb=!SET.lb;setChanged();};
 $('sMusV').oninput=e=>{SET.musicVol=+e.target.value;SND.applySettings();};$('sMusV').onchange=saveG;
 $('sSfxV').oninput=e=>{SET.sfxVol=+e.target.value;SND.applySettings();};$('sSfxV').onchange=()=>{saveG();sfx('coin',{vol:.5});};
 

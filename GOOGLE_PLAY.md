@@ -89,7 +89,9 @@ uygulama onu kendi içinde taşır (internetsiz açılır). Paket adı ve yükle
   herkese açık yayından **önce** yapılır; kapalı test kullanıcılarına önceden haber ver. Web sitesindeki oyun etkilenmez.
 - Durum: oyun, paylaşım, klip paylaşma, titreşim, geri hareketi, dünya sıralaması çalışır. 2. aşama: Google Play satın alma
   (Play Billing 9) ve sunucu doğrulaması eklendi; ürünler Play Console'da oluşturulup 5e yapılınca mağazada görünür.
-  Reklam 3., bildirimler 4. aşamada.
+  4. aşama: hatırlatma bildirimleri (laboratuvar bitti, yakıt doldu, günlük ödül; günde en fazla 2, 22:00–09:00 arası yok).
+  İzin ilk laboratuvar yükseltmesinde sorulur, Ayarlar'dan tür tür kapatılır. Telefonda planlanır, sunucu yok; tam zamanlı alarm
+  izni (Play'in kısıtladığı) kullanılmaz. Reklam 3. aşamada.
 - Dünya sıralamasının uygulamada çalışması için sunucunun güncel olması gerekir (bkz. 5b; sunucu uygulamanın adresine izin verir).
 - Eski TWA iş akışı ("Android paketi üret") geçiş bitene kadar yedek olarak duruyor.
 

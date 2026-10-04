@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "NAVÊ XWE BINIVÎSE",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Pere li benda ye; dema temam bibe pakêta te tê",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "Girêdan tune; pakêta te di vekirina din de tê",
-"Satın alma doğrulanamadı": "Kirîn nehat piştrastkirin"
+"Satın alma doğrulanamadı": "Kirîn nehat piştrastkirin",
+"Hatırlatmalar": "Bîranîn",
+"HATIRLATMALAR": "BÎRANÎN",
+"LAB": "LAB",
+"GÜNLÜK": "ROJANE",
+"EVET": "ERÊ",
+"ŞİMDİ DEĞİL": "NE NIHA",
+"Laboratuvar bitince haber verelim mi?": "Dema laboratuvar biqede em ji te re bibêjin?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Dema bilindkirin biqede, sotemenî tije bibe û xelata rojane amade be, agahdariyek kurt. Rojê herî zêde 2, şev di navbera 22:00–09:00 de qet. Ji Mîhengan dikarî biguherînî.",
+"Laboratuvar işi bitti": "Karê laboratuvarê qediya",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "Bilindkirina {m} amade ye. Were, hêza xwe ya nû biceribîne!",
+"Yakıtın doldu": "Sotemeniya te tije bû",
+"Kaldığın seviye seni bekliyor.": "Asta ku lê mayî li benda te ye.",
+"Günlük ödülün hazır": "Xelata te ya rojane amade ye",
+"Yeni günün fırtınası da başladı. Serini bozma!": "Bahoza roja nû jî dest pê kir. Rêza xwe xera neke!",
+"Oyun hatırlatmaları": "Bîranînên lîstikê",
+"Açık · günde en fazla 2": "Vekirî · rojê herî zêde 2",
+"Bildirim izni Android ayarlarından açılabilir": "Destûra agahdariyê ji mîhengên Android dikare were vekirin"
 }

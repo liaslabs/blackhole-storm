@@ -1663,5 +1663,22 @@
 "ADINI YAZ": "ESCRIBE TU NOMBRE",
 "Ödeme bekleniyor; tamamlanınca paketin gelecek": "Pago pendiente; tu paquete llegará cuando se complete",
 "Bağlantı yok; paketin bir sonraki açılışta gelecek": "Sin conexión; tu paquete llegará la próxima vez que abras el juego",
-"Satın alma doğrulanamadı": "No se pudo verificar la compra"
+"Satın alma doğrulanamadı": "No se pudo verificar la compra",
+"Hatırlatmalar": "Recordatorios",
+"HATIRLATMALAR": "RECORDATORIOS",
+"LAB": "LAB",
+"GÜNLÜK": "DIARIO",
+"EVET": "SÍ",
+"ŞİMDİ DEĞİL": "AHORA NO",
+"Laboratuvar bitince haber verelim mi?": "¿Te avisamos cuando termine el Laboratorio?",
+"Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Un aviso corto cuando termine una mejora, tu combustible esté lleno o tu premio diario esté listo. Como mucho 2 al día, nunca entre las 22:00 y las 09:00. Puedes cambiarlo en Ajustes.",
+"Laboratuvar işi bitti": "Trabajo del Laboratorio terminado",
+"{m} yükseltmesi hazır. Gel, yeni gücünü dene!": "La mejora de {m} está lista. ¡Ven a probar tu nuevo poder!",
+"Yakıtın doldu": "Tu combustible está lleno",
+"Kaldığın seviye seni bekliyor.": "El nivel donde te quedaste te espera.",
+"Günlük ödülün hazır": "Tu premio diario está listo",
+"Yeni günün fırtınası da başladı. Serini bozma!": "La tormenta de hoy también empezó. ¡No rompas tu racha!",
+"Oyun hatırlatmaları": "Recordatorios del juego",
+"Açık · günde en fazla 2": "Activado · máximo 2 al día",
+"Bildirim izni Android ayarlarından açılabilir": "El permiso de notificaciones se activa en los ajustes de Android"
 }
