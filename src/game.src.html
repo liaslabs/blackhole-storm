@@ -127,6 +127,7 @@ html[lang=ar] *{letter-spacing:0!important;}
 .seg{display:flex;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.14);}
 .seg button{padding:7px 14px;border:none;background:rgba(255,255,255,.04);color:#8a90a6;font-family:var(--fd);font-size:11px;font-weight:700;cursor:pointer;}
 .seg button.on{background:rgba(242,169,59,.18);color:var(--gold);}
+.srow.wide{flex-wrap:wrap;}.srow.wide .seg{flex:1 1 100%;}.srow.wide .seg button{flex:1;padding:8px 6px;} /* three wide labels (sensitivity) get the full row under their title */
 .credits{margin-top:12px;text-align:start;font-size:12px;line-height:1.55;color:#7d8397;padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.025);}
 .credits b{color:#aab0c2;}
 .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;width:min(92%,360px);display:none;}
@@ -1364,7 +1365,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ YAKIT</button><button id="sNDay">🎁 GÜNLÜK</button></div></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
   <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
-  <div class="srow"><span>👆 Parmak mesafesi</span><div class="seg" id="sFd"><button>YAKIN</button><button>ORTA</button><button>UZAK</button></div></div>
+  <div class="srow wide"><span>👆 Hassasiyet</span><div class="seg" id="sSens"><button>NORMAL</button><button>KADEMELİ</button><button>YÜKSEK</button></div></div>
   <div class="credits"><b>Emeği geçenler</b><br>
    Bölge fotoğrafları (CC BY 4.0): Hubble Ultra Derin Alan — NASA, ESA, S. Beckwith (STScI), HUDF Team · Westerlund 2 — NASA, ESA, Hubble Heritage Team (STScI/AURA), A. Nota, Westerlund 2 Science Team · Orion — NASA, ESA, M. Robberto, HST Orion Treasury Team · Karina — NASA, ESA, N. Smith, Hubble Heritage Team · Kozmik Uçurumlar — NASA, ESA, CSA, STScI (Webb)<br>
    Gezegen dokuları: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (NASA verisi) — CC BY 4.0; lav, buz ve mor dev bunlardan türetildi<br>
@@ -1421,7 +1422,7 @@ let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,PAUTO=false,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
 try{localStorage.removeItem('bhs_ghost');}catch(e){} // the record ghost was removed: drop its saved runs
-const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true}; // notif: game reminders in the Android app
+const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,sens:1,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true}; // notif: game reminders in the Android app
 // ══════════════════════════════════════════════════════
 // ICONS. Emoji in any on-screen text are drawn as these SVG icons (the strings, translations and share texts
 // keep their emoji). Colored icons use the gradients in #icoDefs; line icons follow the text color.
@@ -1592,7 +1593,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   lastLogin=typeof d.lastLogin==='string'?d.lastLogin:'';loginStreak=svI(d.loginStreak,0,0,1e5);
   rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?[...d.playerName].slice(0,NAME_MAX).join(''):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';PAUTO=!!d.pAuto&&!!playerName;
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
-  if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
+  if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sens=svI(SET.sens,1,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
   if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);{const h=svO(d.hm);if(h)HM={lv:svI(h.lv,1,1,1e9),sc:svI(h.sc,0),best:svI(h.best,1,1,1e9),ls:svO(h.ls)||{},ws:svI(h.ws,0,0,9999),s3:svI(h.s3,0,0,9)};}bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false,seen:Array.isArray(k.seen)?k.seen.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):null};}
   {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999),pend:Array.isArray(a.pend)?a.pend.filter(x=>typeof x==='string').slice(0,40):[]};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
@@ -3791,7 +3792,7 @@ async function notifEnable(fromSettings){const nb=CAP('Bhs');if(!nb||!nb.notifPe
   if(ok)toast('🔔',T('HATIRLATMALAR'),T('Açık · günde en fazla 2'));else if(fromSettings)toast('🔕',T('HATIRLATMALAR'),T('Bildirim izni Android ayarlarından açılabilir'));}
 function notifAsk(){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission))return;SET.nAsked=true;saveG();setTimeout(()=>$('nAsk').classList.add('on'),900);}
 function syncSettingsUI(){if($('pidTxt'))$('pidTxt').textContent=PID; // quoted when asking for your ranking data to be deleted
-  [...$('sFd').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.fd??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
+  [...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
@@ -3818,7 +3819,7 @@ $('pSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();};
 $('pSet').onclick=$('setBtn').onclick=()=>{syncSettingsUI();$('sSet').classList.add('on');};
 $('setClose').onclick=()=>$('sSet').classList.remove('on');
 $('evoBox').onclick=()=>{if(V2)openSkins();};$('skClose').onclick=()=>{$('sSkin').classList.remove('on');SKINUI.run=false;SKIN.seen=SKINS.map((_,i)=>i).filter(skinOwned);saveG();renderEvo();};$('evoBox').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('evoBox').click();}};$('skAct').onclick=()=>skinAct();
-[...$('sFd').children].forEach((b,i)=>b.onclick=()=>{SET.fd=i;saveG();syncSettingsUI();sfx('click',{vol:.4});});
+[...$('sSens').children].forEach((b,i)=>b.onclick=()=>{SET.sens=i;saveG();syncSettingsUI();sfx('click',{vol:.4});}); /* drag sensitivity: 1:1, graded by finger speed (default), or graded and stronger */
 $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};
 // Lias Labs intro: plays once on the very first launch (and on demand from settings); tries sound, falls back to muted
