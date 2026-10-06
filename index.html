@@ -4629,7 +4629,7 @@ function v2Update(dt){
         if(md<q.r+o.r*.65){v2Swallow(o,q);break;}}
       if(G2.twin&&ed&&o.st==='in'&&o.k!=='anti'&&o.k!=='bomb'&&!o.boss){const q=G2.twin,mx=q.x-o.x,my=q.y-o.y,md=Math.hypot(mx,my)||1;if(md<q.g){const A=(V2K.acc.min+1.4*(1-md/q.g))*S*3600*odt*.8;o.vx+=mx/md*A;o.vy+=my/md*A;}if(md<q.r+o.r*.65)v2Swallow(o,q);}
       if(o.st!=='in')continue;
-      o.x+=o.vx*odt;o.y+=o.vy*odt;dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
+      o.x+=o.vx*odt;o.y+=o.vy*odt;if(o.k==='half')v2HalfKeep(o,odt);dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
       if(d<G2.R+o.r*.65&&!anti&&!(o.k==='cstar'&&!ed)&&o.k!=='prey'){ /* a star out of turn is only light: it passes through */
         if(ed)v2Swallow(o,null);
         else{ // too big: bounces off the event horizon
@@ -5194,9 +5194,12 @@ function v2RageGo(){
 
 // ── split planets, antimatter, wormholes ─────────────
 function v2Split(o){ // a split planet cracks in two: both halves (half the mass each) shoot away from the hole
-  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*.55,s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;}
+  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*.55,s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;}
   v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
 }
+// the two halves burst apart, then slow to an ordinary drift; one that still reaches an edge bounces back in, so neither is ever lost
+function v2HalfKeep(o,dt){if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(70);if(v>cr){const f=Math.max(cr/v,Math.pow(.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
+  const m=o.r;if(o.x<m){o.x=m;o.vx=Math.abs(o.vx);}else if(o.x>W-m){o.x=W-m;o.vx=-Math.abs(o.vx);}if(o.y<m){o.y=m;o.vy=Math.abs(o.vy);}else if(o.y>H-m){o.y=H-m;o.vy=-Math.abs(o.vy);}}
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NÖTRLENDİ +'+p,'#ff4fd8',15);return;}
