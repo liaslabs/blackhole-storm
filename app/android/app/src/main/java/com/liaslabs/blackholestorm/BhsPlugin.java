@@ -173,7 +173,7 @@ public class BhsPlugin extends Plugin {
         if (!ready(call)) return;
         List<String> inapp = strings(call.getArray("inapp", new JSArray())), subs = strings(call.getArray("subs", new JSArray()));
         JSArray out = new JSArray();
-        int[] left = { (inapp.isEmpty() ? 0 : 1) + (subs.isEmpty() ? 0 : 1) };
+        int[] left = { (inapp.isEmpty() ? 0 : 1) + (subs.isEmpty() ? 0 : 1) }, err = { 0 }; // err: Play's response code when a query failed (no connection, service down)
         if (left[0] == 0) {
             JSObject o = new JSObject();
             o.put("list", out);
@@ -207,10 +207,11 @@ public class BhsPlugin extends Plugin {
                             }
                             out.put(o);
                         }
-                    }
+                    } else err[0] = r.getResponseCode();
                     if (--left[0] == 0) {
                         JSObject o = new JSObject();
                         o.put("list", out);
+                        o.put("code", err[0]);
                         call.resolve(o);
                     }
                 }

@@ -1694,8 +1694,11 @@
 "Bugünün ücretsiz elmasları aşağıda seni bekliyor.": "Бесплатные алмазы на сегодня ждут тебя ниже.",
 "Zorlu boss'lara karşı kalkan ve yedek can stokla!": "Запасись щитами и запасными жизнями для трудных боссов!",
 "Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın": "Алмазы дают за уровни, ежедневные награды и задания",
-"Paketler Google Play'den alınamadı": "Не удалось загрузить наборы из Google Play",
-"İnternet bağlantını kontrol edip tekrar dene.": "Проверь подключение к интернету и попробуй ещё раз.",
 "PAYLAŞIM ÖDÜLÜ": "НАГРАДА ЗА ПОДЕЛИТЬСЯ",
-"Günün ilk paylaşımı: +{n}": "Первая публикация за день: +{n}"
+"Günün ilk paylaşımı: +{n}": "Первая публикация за день: +{n}",
+"İnternet bağlantısı yok": "Нет подключения к интернету",
+"Paketleri görmek için internete bağlan ve tekrar dene. Elmasla alınabilenler aşağıda.": "Подключись к интернету и попробуй ещё раз, чтобы увидеть наборы. Всё, что можно купить за алмазы, — ниже.",
+"Paketler yakında burada": "Наборы скоро появятся",
+"Gerçek parayla satın alma şu an kapalı. Elmasla alınabilen her şey aşağıda.": "Покупки за реальные деньги пока отключены. Всё, что можно купить за алмазы, — ниже.",
+"Ücret alınmadı. Bağlanınca tekrar dene.": "Деньги не списаны. Попробуй ещё раз, когда появится связь."
 }

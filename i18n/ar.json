@@ -1694,8 +1694,11 @@
 "Bugünün ücretsiz elmasları aşağıda seni bekliyor.": "ألماس اليوم المجاني بانتظارك في الأسفل.",
 "Zorlu boss'lara karşı kalkan ve yedek can stokla!": "خزّن الدروع والأرواح الاحتياطية للزعماء الصعبين!",
 "Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın": "تكسب الألماس بتجاوز المستويات ومن المكافآت اليومية والمهام",
-"Paketler Google Play'den alınamadı": "تعذّر تحميل الحزم من Google Play",
-"İnternet bağlantını kontrol edip tekrar dene.": "تحقق من اتصال الإنترنت وحاول مرة أخرى.",
 "PAYLAŞIM ÖDÜLÜ": "مكافأة المشاركة",
-"Günün ilk paylaşımı: +{n}": "أول مشاركة اليوم: +{n}"
+"Günün ilk paylaşımı: +{n}": "أول مشاركة اليوم: +{n}",
+"İnternet bağlantısı yok": "لا يوجد اتصال بالإنترنت",
+"Paketleri görmek için internete bağlan ve tekrar dene. Elmasla alınabilenler aşağıda.": "اتصل بالإنترنت وحاول مرة أخرى لرؤية الحزم. كل ما يمكنك شراؤه بالألماس موجود أدناه.",
+"Paketler yakında burada": "الحزم قريبًا",
+"Gerçek parayla satın alma şu an kapalı. Elmasla alınabilen her şey aşağıda.": "الشراء بالمال الحقيقي متوقف حاليًا. كل ما يمكنك شراؤه بالألماس موجود أدناه.",
+"Ücret alınmadı. Bağlanınca tekrar dene.": "لم يتم خصم أي مبلغ. حاول مرة أخرى عند الاتصال."
 }
