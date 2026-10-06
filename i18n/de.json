@@ -1694,8 +1694,11 @@
 "Bugünün ücretsiz elmasları aşağıda seni bekliyor.": "Die Gratis-Diamanten von heute warten unten auf dich.",
 "Zorlu boss'lara karşı kalkan ve yedek can stokla!": "Deck dich mit Schilden und Ersatzleben für die harten Bosse ein!",
 "Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın": "Diamanten bekommst du durch Levels, Tagesbelohnungen und Missionen",
-"Paketler Google Play'den alınamadı": "Pakete konnten nicht von Google Play geladen werden",
-"İnternet bağlantını kontrol edip tekrar dene.": "Prüfe deine Internetverbindung und versuch es noch einmal.",
 "PAYLAŞIM ÖDÜLÜ": "TEILEN-BELOHNUNG",
-"Günün ilk paylaşımı: +{n}": "Erstes Teilen heute: +{n}"
+"Günün ilk paylaşımı: +{n}": "Erstes Teilen heute: +{n}",
+"İnternet bağlantısı yok": "Keine Internetverbindung",
+"Paketleri görmek için internete bağlan ve tekrar dene. Elmasla alınabilenler aşağıda.": "Verbinde dich mit dem Internet und versuch es noch einmal, um die Pakete zu sehen. Alles, was du mit Diamanten kaufen kannst, findest du unten.",
+"Paketler yakında burada": "Pakete bald verfügbar",
+"Gerçek parayla satın alma şu an kapalı. Elmasla alınabilen her şey aşağıda.": "Käufe mit echtem Geld sind vorerst deaktiviert. Alles, was du mit Diamanten kaufen kannst, findest du unten.",
+"Ücret alınmadı. Bağlanınca tekrar dene.": "Es wurde nichts berechnet. Versuch es noch einmal, sobald du verbunden bist."
 }

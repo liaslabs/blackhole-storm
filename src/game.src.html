@@ -2623,8 +2623,8 @@ function heartGo(){const cb=HRT_CB;HRT_CB=null;hideModals();if(cb)cb();}
 function vipSet(until){if(SHOP.vipUntil<=Date.now()){SHOP.vipStart=Date.now();SHOP.vipPer=-1;}SHOP.vipUntil=until;saveG();vipTick();monApply();}
 function vipTick(){if(!vipOn()||!clockOk())return;const per=Math.floor((Date.now()-SHOP.vipStart)/(30*864e5)),n=Math.min(per-SHOP.vipPer,3);if(n<=0)return;SHOP.vipPer=per;
   const g={};for(const k in VIP.month)g[k]=VIP.month[k]*n;grant(g,'👑 VIP AYLIK PAKET');}
-async function monDetails(){if(MON.nat){try{const r=await MON.nat.products({inapp:IAP.filter(p=>!p.sub).map(p=>p.id),subs:IAP.filter(p=>p.sub).map(p=>p.id)});for(const x of (r&&r.list)||[])if(x.price)MON.prices[x.id]=x.price;}catch(e){}return;}
-  if(!MON.svc)return;try{for(const x of await MON.svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){}}
+async function monDetails(){if(MON.nat){MON.netErr=!navigator.onLine;try{const r=await MON.nat.products({inapp:IAP.filter(p=>!p.sub).map(p=>p.id),subs:IAP.filter(p=>p.sub).map(p=>p.id)});if(r&&r.code)MON.netErr=true;for(const x of (r&&r.list)||[])if(x.price)MON.prices[x.id]=x.price;}catch(e){MON.netErr=true;}return;} // netErr: Play could not be reached, so an empty shop means "no connection", not "no packs"
+  if(!MON.svc)return;MON.netErr=!navigator.onLine;try{for(const x of await MON.svc.getDetails(IAP.map(p=>p.id)))MON.prices[x.itemId]=new Intl.NumberFormat(LOC,{style:'currency',currency:x.price.currency}).format(+x.price.value);}catch(e){MON.netErr=true;}}
 async function monInit(){
   if(window.BHS_MON_TEST||DEV&&!NATIVE)MON.mode='test'; // the site's developer link (?dev, its own save) shows the whole shop with test payments
   else if(NATIVE&&CAP('Bhs')&&CAP('Bhs').billingStart){
@@ -2711,14 +2711,17 @@ async function natTake(list,quiet){let n=0,later=0;
     else if(!quiet)toast('⚠️',T('SATIN ALMA'),T(v==='pending'?'Ödeme bekleniyor; tamamlanınca paketin gelecek':'Satın alma doğrulanamadı'));}
   if(later&&!quiet)toast('⏳',T('SATIN ALMA'),T('Bağlantı yok; paketin bir sonraki açılışta gelecek'));
   return n;}
+// a purchase that did not go through: say plainly when the cause is the connection (no signal on the metro is not a game error)
+function buyFail(code){const net=!navigator.onLine||code===-1||code===2||code===12; /* Play: SERVICE_DISCONNECTED, SERVICE_UNAVAILABLE, NETWORK_ERROR */
+  if(net)toast('📡',T('İnternet bağlantısı yok'),T('Ücret alınmadı. Bağlanınca tekrar dene.'));else toast('⚠️',T('SATIN ALMA'),T('Tamamlanamadı, ücret alınmadı'));}
 async function buy(id){
   const p=IAP.find(x=>x.id===id);if(!p||owned(p)||!iapShow(p)||MON.busy)return;
   if(MON.mode==='test'){const ok=await fakePay(p);if(ok)applyPurchase(p,'test-'+Date.now());return;}
   if(MON.mode!=='play')return;MON.busy=true;
   if(MON.nat){try{const r=await MON.nat.buy({id:p.id,account:PID});
       if(r.code===7)await restorePurchases(true);else if(r.code===0)await natTake(r.list||[],false);
-      else if(r.code!==1)toast('⚠️',T('SATIN ALMA'),T('Tamamlanamadı, ücret alınmadı'));}
-    catch(e){toast('⚠️',T('SATIN ALMA'),T('Tamamlanamadı, ücret alınmadı'));}
+      else if(r.code!==1)buyFail(r.code);}
+    catch(e){buyFail();}
     finally{MON.busy=false;}return;}
   try{const req=new PaymentRequest([{supportedMethods:'https://play.google.com/billing',data:{sku:p.id}}]);
     const res=await req.show();const tok=res.details&&res.details.purchaseToken;
@@ -2755,7 +2758,8 @@ function renderShop(){
   const hero=offers.find(p=>p.id==='starter'&&!owned(p)&&bestLevel>=3)||offers.find(p=>p.id==='quasar_hoard'&&!owned(p));
   const gv=p=>p.give?[['gems','💎'],['stars','⭐'],['lives','❤️'],['shield','🛡'],['time','⏱']].filter(([k])=>p.give[k]).map(([k,ic])=>`${fmt(p.give[k])} ${ic}`):p.d.split(' · ').slice(0,4);
   const none=MON.mode==='play'&&!IAP.some(p=>iapShow(p)&&!owned(p));
-  $('shopHero').innerHTML=none?`<div class="shNone"><div class="nic">🛒</div><b>${T('Paketler Google Play\'den alınamadı')}</b><small>${T('İnternet bağlantını kontrol edip tekrar dene.')}</small><button class="btn sec" id="shopRetry">${T('TEKRAR DENE')}</button></div>`:hero?`<button class="hero" data-buy="${hero.id}">${hero.tag?`<span class="rib">${hero.tag}</span>`:''}<div class="hic">${hero.ic}</div><div class="ht">${hero.t}</div>
+  $('shopHero').innerHTML=none?(MON.netErr?`<div class="shNone"><div class="nic">📡</div><b>${T('İnternet bağlantısı yok')}</b><small>${T('Paketleri görmek için internete bağlan ve tekrar dene. Elmasla alınabilenler aşağıda.')}</small><button class="btn sec" id="shopRetry">${T('TEKRAR DENE')}</button></div>`
+    :`<div class="shNone"><div class="nic">🛒</div><b>${T('Paketler yakında burada')}</b><small>${T('Gerçek parayla satın alma şu an kapalı. Elmasla alınabilen her şey aşağıda.')}</small></div>`):hero?`<button class="hero" data-buy="${hero.id}">${hero.tag?`<span class="rib">${hero.tag}</span>`:''}<div class="hic">${hero.ic}</div><div class="ht">${hero.t}</div>
     <div class="hs">${T(hero.id==='starter'?'Yeni kaptanlara özel, yalnızca bir kez':'En büyük paket: kalıcı ikinci lab yuvası ve yalnızca burada KUASAR TACI')}</div>
     <div class="hgot">${gv(hero).map(x=>`<span>${x}</span>`).join('')}</div><span class="hbuy">${priceOf(hero)}</span>${hero.val?`<small class="hval">${hero.val}</small>`:''}</button>`:'';
   const rest=offers.filter(p=>p!==hero);$('shopOffersH').hidden=!rest.length;
