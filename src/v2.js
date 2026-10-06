@@ -189,7 +189,7 @@ function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
 // so a thumb that starts near one edge can still send the hole to the other in one stroke. Speeds are in reference px per ms.
 const SENS2=[1,2,2.6],SENS_V=[.25,1.4];
 function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Math.max(4,now-DRAG.pt);DRAG.px=x;DRAG.py=y;DRAG.pt=now;
-  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=SENS2[SET.sens]??2,q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
+  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=rel(7)?SENS2[SET.sens]??2:1,q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
   const m=(G2.R||0)+4;DRAG.ax=clamp(DRAG.ax+dx*k,m,W-m);DRAG.ay=clamp(DRAG.ay+dy*k,m+2,H-m-70); /* the same walls the hole has; held at an edge, pulling back moves it straight away */
   G2.tx=DRAG.ax;G2.ty=DRAG.ay;}
 function v2Down(x,y,id){
@@ -1152,7 +1152,7 @@ function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the scr
     const w={ax,ay,bx:hX,by:hY,r:pr,t:0,life:12,n:0};G2.worms.push(w);v2Call('SOLUCAN DELİĞİ','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
   for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){if(w.n)v2Pop('PORTAL ×'+w.n,'#8fd0ff',15);G2.worms.splice(i,1);continue;}
     {const a=Math.atan2(hY-w.ay,hX-w.ax);const d0=(G2.R+G2.G)*.5;w.bx=hX-Math.cos(a)*d0;w.by=hY-Math.sin(a)*d0;} // the exit rides inside your pull, on the side facing the entrance
-    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.k==='anti'||v2Banned(o)||o.boss||o.orb||o.wait>0||o.jumped>0)continue; /* the exit fires bodies straight at you: antimatter and forbidden bodies are left out, they would be a hit you cannot dodge */const dx=w.ax-o.x,dy=w.ay-o.y,d=Math.hypot(dx,dy)||1;
+    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||rel(7)&&(o.k==='anti'||v2Banned(o))||o.boss||o.orb||o.wait>0||o.jumped>0)continue; /* the exit fires bodies straight at you: antimatter and forbidden bodies are left out, they would be a hit you cannot dodge */const dx=w.ax-o.x,dy=w.ay-o.y,d=Math.hypot(dx,dy)||1;
       if(d<w.r*3.6){const A=sp2(1100)*dt;o.vx+=dx/d*A;o.vy+=dy/d*A;const sp=Math.hypot(o.vx,o.vy),mx=sp2(340);if(sp>mx){o.vx*=mx/sp;o.vy*=mx/sp;} // the mouth draws nearby bodies in
         if(Math.random()<dt*12&&G2.parts.length<150)G2.parts.push({x:o.x,y:o.y,vx:dx/d*1.5,vy:dy/d*1.5,life:.35,max:.35,c:'#ffb35c',sz:1.6});}
       if(d<w.r+o.r*.8){v2Burst(o.x,o.y,12,'#ffb35c',1,4,.4);o.x=w.bx;o.y=w.by;const ex=hX-o.x,ey=hY-o.y,ed=Math.hypot(ex,ey)||1,sp=sp2(180);o.vx=ex/ed*sp;o.vy=ey/ed*sp;o.jumped=1;w.n++;
@@ -1183,7 +1183,7 @@ function v2Nova(){ // 💎 Supernova: everything on screen pops into the hole, t
   sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.5,rate:1.4});vib([30,20,60]);v2Blast(hX,hY,true,true);if(G2.mega)G2.mega.nb=nb;v2Call('SÜPERNOVA','+'+nb.toLocaleString(LOC),'#8fe9ff',1.6,true);v2Ui(true);
 }
 function v2Blast(x,y,mega,nova){ // mega: the whole screen falls in; otherwise ~3× your radius (spec)
-  const unb=v2Unban(); /* first: freed bodies can fall into a mega blast too */
+  const unb=rel(7)?v2Unban():0; /* 1.4.7; first: freed bodies can fall into a mega blast too */
   G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,vis:mega,hit:new Set(),n:0,bonus:0});
   if(mega){const L=G2.objs.filter(o=>o.st==='in'&&o.wait<=0&&!o.boss&&!o.orb&&o.k!=='anti'&&o.k!=='bomb'&&(o.k==='meteor'||v2Edible(o))).sort((a,b)=>Math.hypot(a.x-hX,a.y-hY)-Math.hypot(b.x-hX,b.y-hY));
     G2.mega={t:0,i:0,list:L,gap:Math.min(.07,1.1/Math.max(1,L.length)),bonus:0,n:0,nova:!!nova};}
