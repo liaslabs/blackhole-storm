@@ -111,7 +111,7 @@ const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[
   eaten:0,perfA:0,perfD:0,dmg:0,acc:0,swarm:0,swarmT:0,script:null,si:0,st:0,touched:false,tut:1,contUsed:false,
   boss:null,ending:0,endT:0,pulse:0,uiT:0,sprLv:6,sprBlock:-1,hud:{}};
 const v2Ach={rage:0,mega:0}; // for achievements
-const DRAG={id:null,x:0,y:0,sx:0,sy:0,t0:0,moved:false,held:false};
+const DRAG={id:null,x:0,y:0,sx:0,sy:0,t0:0,moved:false,held:false,ax:0,ay:0,px:0,py:0,pt:0,vs:0};
 
 function v2Resize(){G2.S=Math.min(W,H*.5625)/486;}
 const sp2=v=>v*G2.S;
@@ -185,12 +185,16 @@ function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2'
 function v2Pt(e){const r=$('fx').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
 const FD2=[60,90,120]; // finger → hole distance in reference px (settings: near / middle / far)
 function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
-function v2Aim(x,y){let tx=DRAG.hx+(x-DRAG.sx),ty=DRAG.hy+(y-DRAG.sy);const m=(G2.R||0)+4,cx=clamp(tx,m,W-m),cy=clamp(ty,m+2,H-m-70); /* the same walls the hole has: a big hole at an edge answers the first pixel of a pull back */
-  if(cx!==tx)DRAG.sx+=tx-cx;if(cy!==ty)DRAG.sy+=ty-cy; /* held at an edge: pulling back moves it straight away */
-  G2.tx=cx;G2.ty=cy;}
+// Graded sensitivity (settings: normal / graded / high): a slow finger moves the hole 1:1 for fine aim, a quick swipe up to SENS2× as far,
+// so a thumb that starts near one edge can still send the hole to the other in one stroke. Speeds are in reference px per ms.
+const SENS2=[1,2,2.6],SENS_V=[.25,1.4];
+function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Math.max(4,now-DRAG.pt);DRAG.px=x;DRAG.py=y;DRAG.pt=now;
+  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=SENS2[SET.sens]??2,q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
+  const m=(G2.R||0)+4;DRAG.ax=clamp(DRAG.ax+dx*k,m,W-m);DRAG.ay=clamp(DRAG.ay+dy*k,m+2,H-m-70); /* the same walls the hole has; held at an edge, pulling back moves it straight away */
+  G2.tx=DRAG.ax;G2.ty=DRAG.ay;}
 function v2Down(x,y,id){
   if(!G2.on||gState!=='playing'||DRAG.id!==null)return;
-  DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;DRAG.hx=hX;DRAG.hy=hY; /* the hole moves by the finger's travel from here: touching the screen never makes it jump */
+  DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;DRAG.ax=hX;DRAG.ay=hY;DRAG.px=x;DRAG.py=y;DRAG.pt=DRAG.t0;DRAG.vs=0; /* the hole moves by the finger's travel from here: touching the screen never makes it jump */
   if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);}
 }
 function v2Move(x,y,id){
@@ -565,7 +569,7 @@ function v2Update(dt){
         if(md<q.r+o.r*.65){v2Swallow(o,q);break;}}
       if(G2.twin&&ed&&o.st==='in'&&o.k!=='anti'&&o.k!=='bomb'&&!o.boss){const q=G2.twin,mx=q.x-o.x,my=q.y-o.y,md=Math.hypot(mx,my)||1;if(md<q.g){const A=(V2K.acc.min+1.4*(1-md/q.g))*S*3600*odt*.8;o.vx+=mx/md*A;o.vy+=my/md*A;}if(md<q.r+o.r*.65)v2Swallow(o,q);}
       if(o.st!=='in')continue;
-      o.x+=o.vx*odt;o.y+=o.vy*odt;dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
+      o.x+=o.vx*odt;o.y+=o.vy*odt;if(o.k==='half')v2HalfKeep(o,odt);dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
       if(d<G2.R+o.r*.65&&!anti&&!(o.k==='cstar'&&!ed)&&o.k!=='prey'){ /* a star out of turn is only light: it passes through */
         if(ed)v2Swallow(o,null);
         else{ // too big: bounces off the event horizon
@@ -1130,9 +1134,12 @@ function v2RageGo(){
 
 // ── split planets, antimatter, wormholes ─────────────
 function v2Split(o){ // a split planet cracks in two: both halves (half the mass each) shoot away from the hole
-  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*.55,s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;}
+  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*.55,s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;}
   v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
 }
+// the two halves burst apart, then slow to an ordinary drift; one that still reaches an edge bounces back in, so neither is ever lost
+function v2HalfKeep(o,dt){if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(70);if(v>cr){const f=Math.max(cr/v,Math.pow(.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
+  const m=o.r;if(o.x<m){o.x=m;o.vx=Math.abs(o.vx);}else if(o.x>W-m){o.x=W-m;o.vx=-Math.abs(o.vx);}if(o.y<m){o.y=m;o.vy=Math.abs(o.vy);}else if(o.y>H-m){o.y=H-m;o.vy=-Math.abs(o.vy);}}
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NÖTRLENDİ +'+p,'#ff4fd8',15);return;}
@@ -1145,7 +1152,7 @@ function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the scr
     const w={ax,ay,bx:hX,by:hY,r:pr,t:0,life:12,n:0};G2.worms.push(w);v2Call('SOLUCAN DELİĞİ','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
   for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){if(w.n)v2Pop('PORTAL ×'+w.n,'#8fd0ff',15);G2.worms.splice(i,1);continue;}
     {const a=Math.atan2(hY-w.ay,hX-w.ax);const d0=(G2.R+G2.G)*.5;w.bx=hX-Math.cos(a)*d0;w.by=hY-Math.sin(a)*d0;} // the exit rides inside your pull, on the side facing the entrance
-    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.boss||o.orb||o.wait>0||o.jumped>0)continue;const dx=w.ax-o.x,dy=w.ay-o.y,d=Math.hypot(dx,dy)||1;
+    for(const o of G2.objs){if(o.st!=='in'||o.k==='meteor'||o.k==='anti'||v2Banned(o)||o.boss||o.orb||o.wait>0||o.jumped>0)continue; /* the exit fires bodies straight at you: antimatter and forbidden bodies are left out, they would be a hit you cannot dodge */const dx=w.ax-o.x,dy=w.ay-o.y,d=Math.hypot(dx,dy)||1;
       if(d<w.r*3.6){const A=sp2(1100)*dt;o.vx+=dx/d*A;o.vy+=dy/d*A;const sp=Math.hypot(o.vx,o.vy),mx=sp2(340);if(sp>mx){o.vx*=mx/sp;o.vy*=mx/sp;} // the mouth draws nearby bodies in
         if(Math.random()<dt*12&&G2.parts.length<150)G2.parts.push({x:o.x,y:o.y,vx:dx/d*1.5,vy:dy/d*1.5,life:.35,max:.35,c:'#ffb35c',sz:1.6});}
       if(d<w.r+o.r*.8){v2Burst(o.x,o.y,12,'#ffb35c',1,4,.4);o.x=w.bx;o.y=w.by;const ex=hX-o.x,ey=hY-o.y,ed=Math.hypot(ex,ey)||1,sp=sp2(180);o.vx=ex/ed*sp;o.vy=ey/ed*sp;o.jumped=1;w.n++;
@@ -1176,13 +1183,20 @@ function v2Nova(){ // 💎 Supernova: everything on screen pops into the hole, t
   sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.5,rate:1.4});vib([30,20,60]);v2Blast(hX,hY,true,true);if(G2.mega)G2.mega.nb=nb;v2Call('SÜPERNOVA','+'+nb.toLocaleString(LOC),'#8fe9ff',1.6,true);v2Ui(true);
 }
 function v2Blast(x,y,mega,nova){ // mega: the whole screen falls in; otherwise ~3× your radius (spec)
+  const unb=v2Unban(); /* first: freed bodies can fall into a mega blast too */
   G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,vis:mega,hit:new Set(),n:0,bonus:0});
   if(mega){const L=G2.objs.filter(o=>o.st==='in'&&o.wait<=0&&!o.boss&&!o.orb&&o.k!=='anti'&&o.k!=='bomb'&&(o.k==='meteor'||v2Edible(o))).sort((a,b)=>Math.hypot(a.x-hX,a.y-hY)-Math.hypot(b.x-hX,b.y-hY));
     G2.mega={t:0,i:0,list:L,gap:Math.min(.07,1.1/Math.max(1,L.length)),bonus:0,n:0,nova:!!nova};}
   shake=Math.max(shake,mega?12:6);flash=Math.max(flash,mega?.9:.5);sfx('boom',{vol:mega?.9:.7,rate:mega?.7:1});
   if(nova)shock=1;else if(mega){v2Ach.mega++;shock=1;v2Call('MEGA BOMBA!','','#ff8a4c',1.5,true);vib([40,30,120]);}else v2Call('BOMBA!','','#ff8a4c',.8);
+  if(unb)v2Call('YASAK KALKTI','×'+unb,'#8dffcb',1.2); /* the lifted ban is the news, not the word BOMB */
 }
 
+// a bomb lifts the ban from every forbidden body on screen at that moment (bodies that come later are still forbidden)
+function v2Unban(){if(!(G2.rule&&G2.rule.ban))return 0;let n=0;
+  for(const o of G2.objs){if(o.st!=='in'||o.wait>0||!v2Banned(o)||o.x<-o.r||o.x>W+o.r||o.y<-o.r||o.y>H+o.r)continue;
+    o.freed=1;o.unbanT=G2.t;n++;v2Burst(o.x,o.y,14,'#8dffcb',2,5,.5,1.8);ftexts.push(new FText(T('SERBEST'),o.x,o.y-o.r-sp2(8),'#8dffcb',13));}
+  if(n)v2Sfx('sparkle',{vol:.5,rate:1.2});return n;}
 function v2MegaStep(dt){ // play pauses while the screen pops body by body and everything spirals into the hole
   const M=G2.mega;M.t+=dt;
   while(M.i<M.list.length&&M.t>=M.i*M.gap){const o=M.list[M.i++];if(o.st!=='in')continue;M.n++;
@@ -1664,6 +1678,8 @@ function v2DrawMarks(){ // what can be eaten: pull lines and too-big warnings
   if(gState!=='playing'&&gState!=='tip')return;const Gr=G2.G;ctx.save();
   for(const o of G2.objs){if(o.st!=='in'||o.wait>0||o.k==='meteor'||o.orb||o.k==='cstar')continue;const d=Math.hypot(o.x-hX,o.y-hY);
     if(o.k==='anti'){if(d<Gr*1.6){ctx.globalAlpha=.6+.4*Math.sin(clock*12);ctx.strokeStyle='#ff4fd8';ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(o.x,o.y,o.r*1.6+3,0,TAU);ctx.stroke();ctx.setLineDash([]);}continue;}
+    if(o.unbanT!==undefined){const u=(G2.t-o.unbanT)/.55;if(u>=1)delete o.unbanT;else{const rr=(o.r*1.3+3)*(1+u*.7),c=Math.cos(u*2.2),s=Math.sin(u*2.2),q=rr*.7; /* the lifted ban: the red mark swells, the bar spins off and both fade */
+      ctx.globalAlpha=(1-u)*.9;ctx.strokeStyle='#ff5a4a';ctx.lineWidth=2.5*(1-u*.5);ctx.beginPath();ctx.arc(o.x,o.y,rr,0,TAU);ctx.moveTo(o.x-q*(c-s),o.y-q*(s+c));ctx.lineTo(o.x+q*(c-s),o.y+q*(s+c));ctx.stroke();}}
     if(v2Banned(o)){{ctx.globalAlpha=(d<Gr*1.8?.7:.4)+.3*Math.sin(clock*9);ctx.strokeStyle='#ff5a4a';ctx.lineWidth=2.5;const rr=o.r*1.3+3;ctx.beginPath();ctx.arc(o.x,o.y,rr,0,TAU);ctx.moveTo(o.x-rr*.7,o.y-rr*.7);ctx.lineTo(o.x+rr*.7,o.y+rr*.7);ctx.stroke();}continue;} // forbidden: red no-entry mark
     if(v2Edible(o)){if(d<Gr){const k=1-d/Gr;ctx.globalAlpha=.18+.4*k;ctx.strokeStyle='#e6ecff';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(hX+(o.x-hX)/d*G2.R,hY+(o.y-hY)/d*G2.R);ctx.stroke();}}
     else if(o.k==='split'||o.k==='pulsar'){}
