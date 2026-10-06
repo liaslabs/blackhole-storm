@@ -59,3 +59,9 @@ Her güncellemede:
 
 ## 1.4.8 (16 Ekim) · `REL` 8 yapılacak
 - (geri bildirimlerden eklenecek)
+
+## Üretimden sonra (ayrı güncelleme)
+- R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
+  Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
+  reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
+- AGP 8.13 → 9.0 yükseltmesi (Play önerisi).
