@@ -1415,7 +1415,10 @@ function errReport(msg,stack){try{if(DEV||!/liaslabs\.github\.io/.test(location.
 addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filename?e.filename.split('/').pop()+':'+e.lineno+':'+e.colno:'')));
 addEventListener('unhandledrejection',e=>{const r=e.reason;errReport('promise: '+(r&&r.message||r),r&&r.stack);});
 // high-refresh phones (90/120/144 Hz) would draw every frame twice as often for no visible gain: cap drawing near 60 per second
-function fcap(o,ts){if(ts<o.next-4)return true;o.next=Math.max(o.next+1000/60,ts+1000/120);return false;}
+// Frame cap that follows the display: the refresh interval is measured from every vsync, and above ~105 Hz every other frame is skipped
+// (120 Hz -> 60, 144 Hz -> 72); at 90 Hz or below every frame runs. Skipping by time instead gave 22/11 ms gaps on 90 and 144 Hz screens,
+// a visible stutter on phones that switch refresh rate on the fly (LTPO).
+function fcap(o,ts){const d=ts-(o.last||ts);o.last=ts;if(d>2&&d<40)o.iv=o.iv?o.iv*.9+d*.1:d;o.n=(o.n||0)+1;return o.iv<9.5&&(o.n&1)===1;}
 const LOOPF={next:0},MENUF={next:0},LABF={next:0};
 const SK=DEV?'bhs_dev':'bhs_v7';
 let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
@@ -3720,7 +3723,19 @@ function adaptQuality(dt){ // drop resolution only while frames are slow; climb 
   else if(avg<.0175&&(GL.quality<1||FXLITE)){if(++GL.good>=8&&gState!=='playing'){if(GL.quality<1){GL.quality=Math.min(1,GL.quality+.1);glResize();}else FXLITE=false;GL.good=0;}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
 }
 let sMapEl=null,sMenuEl=null;
+// Hitch report (published site and app): a gap of 120 ms+ between two screen refreshes in the middle of a level is a hitch. A level with two
+// hitches (or one of 300 ms+) sends one short anonymous note to the error log: level, worst gap, refresh rate, quality step, what was on
+// screen, CPU cores, memory and the phone model from the browser. No install id or name; at most 3 notes a session.
+const LAG={last:0,lv:-1,n:0,worst:0,ctx:'',sent:0,done:false};
+function lagWatch(ts){const g=ts-LAG.last;LAG.last=ts;if(!G2.on||gState!=='playing'||document.hidden||G2.t<2)return;
+  if(LAG.lv!==level+'/'+gameMode){LAG.lv=level+'/'+gameMode;LAG.n=0;LAG.worst=0;LAG.done=false;}
+  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}`;}
+  if((LAG.n>=2||LAG.worst>=300)&&LAG.sent<3){LAG.done=true;LAG.sent++;const hz=LOOPF.iv?Math.round(1000/LOOPF.iv):0,ua=(navigator.userAgent.match(/Android [^;)]*;\s*([^;)]+)/)||[])[1]||'';
+    lagReport(`LAG ${hz}Hz q${GL.quality.toFixed(2)} fx${FXLITE?1:0}`,`L${level} ${gameMode} hitches ${LAG.n} worst ${Math.round(LAG.worst)}ms\n${LAG.ctx}\ncores ${navigator.hardwareConcurrency||0} mem ${navigator.deviceMemory||0} heap ${performance.memory?Math.round(performance.memory.usedJSHeapSize/1048576):0}MB ads ${ADS.on?1:0} dpr ${devicePixelRatio} ${innerWidth}x${innerHeight}\n${ua.replace(/\s*Build\/.*$/,'').slice(0,40)}`);}}
+function lagReport(m,s){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE)return;
+  fetch('https://blackhole-storm-lb.liaslabs-games.workers.dev/err',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({m:m.slice(0,300),s:s.slice(0,900),v:BUILD,p:NATIVE?'app':'web',l:(navigator.language||'').slice(0,5)})}).catch(()=>{});}catch(e){}}
 function loop(ts){
+  lagWatch(ts);
   if(fcap(LOOPF,ts)){requestAnimationFrame(loop);return;}
   if((sMapEl||(sMapEl=$('sMap'))).classList.contains('on')||(!G2.on&&!cols.length&&(sMenuEl||(sMenuEl=$('sMenu'))).classList.contains('on'))){lastT=ts;requestAnimationFrame(loop);return;} // the level map is opaque and full screen: skip drawing the hidden scene
   let dt=(ts-lastT)/1000;lastT=ts;if(!(dt>0)||dt>.1)dt=1/60;
