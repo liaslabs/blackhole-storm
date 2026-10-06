@@ -1365,7 +1365,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ YAKIT</button><button id="sNDay">🎁 GÜNLÜK</button></div></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
   <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
-  <div class="srow wide"><span>👆 Hassasiyet</span><div class="seg" id="sSens"><button>NORMAL</button><button>KADEMELİ</button><button>YÜKSEK</button></div></div>
+  <div class="srow wide" id="sSensRow"><span>👆 Hassasiyet</span><div class="seg" id="sSens"><button>NORMAL</button><button>KADEMELİ</button><button>YÜKSEK</button></div></div>
   <div class="credits"><b>Emeği geçenler</b><br>
    Bölge fotoğrafları (CC BY 4.0): Hubble Ultra Derin Alan — NASA, ESA, S. Beckwith (STScI), HUDF Team · Westerlund 2 — NASA, ESA, Hubble Heritage Team (STScI/AURA), A. Nota, Westerlund 2 Science Team · Orion — NASA, ESA, M. Robberto, HST Orion Treasury Team · Karina — NASA, ESA, N. Smith, Hubble Heritage Team · Kozmik Uçurumlar — NASA, ESA, CSA, STScI (Webb)<br>
    Gezegen dokuları: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (NASA verisi) — CC BY 4.0; lav, buz ve mor dev bunlardan türetildi<br>
@@ -1402,6 +1402,9 @@ const TAU=Math.PI*2;
 // ══════════════════════════════════════════════════════
 /* DEVELOPER LINK (?dev): its own save slot, the first 1000 levels open, any map level playable as a real level, no fuel, nothing sent to the leaderboard */
 const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
+/* RELEASE GATE: updates go out in steps during the closed test. REL is the release this build ships (1.4.6 -> 6, 1.4.7 -> 7 ...);
+   a feature waiting for a later release checks rel(n). The developer link always sees everything, so it previews what is coming. */
+const REL=6,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
@@ -3807,7 +3810,7 @@ async function notifEnable(fromSettings){const nb=CAP('Bhs');if(!nb||!nb.notifPe
   if(ok)toast('🔔',T('HATIRLATMALAR'),T('Açık · günde en fazla 2'));else if(fromSettings)toast('🔕',T('HATIRLATMALAR'),T('Bildirim izni Android ayarlarından açılabilir'));}
 function notifAsk(){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission))return;SET.nAsked=true;saveG();setTimeout(()=>$('nAsk').classList.add('on'),900);}
 function syncSettingsUI(){if($('pidTxt'))$('pidTxt').textContent=PID; // quoted when asking for your ranking data to be deleted
-  [...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
+  $('sSensRow').hidden=!rel(7);[...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??1)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
