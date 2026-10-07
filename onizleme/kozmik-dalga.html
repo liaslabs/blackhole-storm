@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Uzay Dalgası ve Nötrino</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@500;700&display=swap">
+<style>
+/* preview page: one canvas stage, a caption on top, scene buttons in a dock under it (same layout as kabuk.html) */
+:root{--bg:#05040b;--ink:#f3eefe;--mute:#a79cc4;--gold:#ffd76a;--cyan:#8fe6ff;--blue:#4fc3ff;--panel:rgba(18,12,34,.82);--line:rgba(185,140,255,.28);
+ --fd:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--fb:"IBM Plex Sans",system-ui,sans-serif;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);overflow:hidden}
+.app{position:relative;height:100%;display:flex;flex-direction:column}
+#cv{flex:1;min-height:0;width:100%;display:block;touch-action:none}
+.cap{position:absolute;left:16px;right:16px;top:calc(14px + env(safe-area-inset-top,0px));text-align:center;pointer-events:none}
+.cap b{display:block;font:700 clamp(18px,5vw,24px)/1.15 var(--fd);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance}
+.cap span{display:block;margin:4px auto 0;max-width:34em;font-size:13px;line-height:1.35;color:var(--mute);text-wrap:pretty}
+.dock{padding:10px 16px calc(14px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:1px solid var(--line);display:grid;gap:8px}
+.ev{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ev button,.ctl button{font:700 13px/1.1 var(--fd);letter-spacing:.04em;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left;min-width:0}
+.ev button i{flex:none;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.ev button.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.ev button.wide{grid-column:1/-1}
+.ctl{display:flex;gap:6px}
+.ctl button{flex:1;justify-content:center;background:linear-gradient(90deg,rgba(143,230,255,.2),rgba(185,140,255,.22))}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="app">
+ <canvas id="cv"></canvas>
+ <div class="cap"><b id="capT"></b><span id="capS"></span></div>
+ <div class="dock">
+  <div class="ev" id="ev"></div>
+  <div class="ctl"><button id="again">↻ TEKRAR</button><button id="slow">YAVAŞ: KAPALI</button></div>
+ </div>
+</div>
+<script>
+const TAU=Math.PI*2;let W=0,H=0,SC=1,hX=0,hY=0,R=28,clock=0,speed=1,stars=[],planets=[];
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),sp2=v=>v*SC,rnd=(a,b)=>a+Math.random()*(b-a);
+function size(){const d=Math.min(2,window.devicePixelRatio||1),r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=Math.round(W*d);cv.height=Math.round(H*d);ctx.setTransform(d,0,0,d,0,0);
+ SC=Math.min(W/400,H/700);R=sp2(30);hX=W/2;hY=H*.74;
+ stars=Array.from({length:140},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.3+.2,a:Math.random()*.6+.2}));}
+function seedPlanets(){const cols=[['#ffb36b','#7a3b12'],['#7fd1ff','#123a66'],['#c9a2ff','#3b1f6e'],['#9be38a','#1f5a2a'],['#ffd76a','#6b4a0c'],['#ff8a8a','#5e1a22']];
+ planets=cols.map((c,i)=>({x:rnd(.12,.88)*W,y:rnd(.42,.66)*H,r:sp2(rnd(9,16)),vx:sp2(rnd(-10,10)),vy:sp2(rnd(-6,6)),c}));}
+/* the hole, drawn as on kabuk.html */
+function drawHole(){const g=ctx.createRadialGradient(hX,hY,R*.9,hX,hY,R*3.2);g.addColorStop(0,'rgba(255,170,90,.38)');g.addColorStop(.35,'rgba(185,90,255,.16)');g.addColorStop(1,'rgba(185,90,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(hX,hY,R*3.2,0,TAU);ctx.fill();
+ ctx.save();ctx.translate(hX,hY);ctx.rotate(-.28);for(let k=0;k<4;k++){ctx.setLineDash([R*.5,R*.22]);ctx.lineDashOffset=-clock*R*(1.6-k*.25);ctx.strokeStyle=`rgba(255,${200-k*28},${130+k*30},${.42-k*.08})`;ctx.lineWidth=R*.1;ctx.beginPath();ctx.ellipse(0,0,R*(1.35+k*.22),R*(.34+k*.055),0,0,TAU);ctx.stroke();}ctx.setLineDash([]);ctx.restore();
+ ctx.fillStyle='#000';ctx.beginPath();ctx.arc(hX,hY,R,0,TAU);ctx.fill();
+ ctx.save();ctx.shadowColor='#b9a8ff';ctx.shadowBlur=8;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(hX,hY,R+.8,0,TAU);ctx.stroke();ctx.restore();}
+function drawPlanet(p,ox=0,oy=0){const x=p.x+ox,y=p.y+oy,g=ctx.createRadialGradient(x-p.r*.4,y-p.r*.4,p.r*.1,x,y,p.r);g.addColorStop(0,p.c[0]);g.addColorStop(1,p.c[1]);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,p.r,0,TAU);ctx.fill();}
+function stepPlanets(dt){const m=sp2(14);for(const p of planets){p.x+=p.vx*dt;p.y+=p.vy*dt;const f=Math.pow(.6,dt);if(Math.hypot(p.vx,p.vy)>sp2(14)){p.vx*=f;p.vy*=f;}
+ if(p.x<m){p.x=m;p.vx=Math.abs(p.vx);}if(p.x>W-m){p.x=W-m;p.vx=-Math.abs(p.vx);}if(p.y<H*.12){p.y=H*.12;p.vy=Math.abs(p.vy);}if(p.y>H-m){p.y=H-m;p.vy=-Math.abs(p.vy);}}}
+const texts=[];function popText(x,y,s,c){texts.push({x,y,s,c,t:0});}
+function drawTexts(dt){ctx.save();ctx.textAlign='center';for(const t of texts){t.t+=dt;const q=t.t/1.2;ctx.globalAlpha=Math.max(0,1-q*q);ctx.fillStyle=t.c;ctx.font=`700 ${Math.round(sp2(15))}px "IBM Plex Sans Condensed",sans-serif`;ctx.shadowColor=t.c;ctx.shadowBlur=10;ctx.fillText(t.s,t.x,t.y-q*sp2(36));}ctx.restore();
+ for(let i=texts.length-1;i>=0;i--)if(texts[i].t>1.2)texts.splice(i,1);}
+function banner(s,c,t0,len,now){const a=now-t0;if(a<0||a>len)return;const q=Math.min(1,a/.25,(len-a)/.4);ctx.save();ctx.globalAlpha=q;ctx.textAlign='center';ctx.fillStyle=c;ctx.shadowColor=c;ctx.shadowBlur=14;
+ ctx.font=`700 ${Math.round(sp2(20))}px "IBM Plex Sans Condensed",sans-serif`;ctx.fillText(s,W/2,H*.22);ctx.restore();}
+
+/* ---------- kilonova: as in the game today (src/v2.js v2DrawKilo / v2KiloBoom), and with the new space-ripple sheet ---------- */
+const K={};
+function kiloReset(){Object.assign(K,{t:0,cx:W*.5,cy:Math.max(sp2(190),H*.34),R0:sp2(100),ang:0,rad:sp2(100),merged:false,wave:0,gold:[],calm:0});seedPlanets();}
+function kiloStep(dt){K.t+=dt;if(!K.merged){const p=Math.min(1,K.t/7);K.rad=K.R0*(1-p*p*.95);K.ang+=dt*(2+16*p*p);if(K.t>=7)kiloBoom();}
+ else{const w0=K.wave;K.wave+=dt*sp2(scene&&scene.id==='new'?420:650);for(const p of planets){const d=Math.hypot(p.x-K.cx,p.y-K.cy);if(w0<d&&K.wave>=d){const dx=(p.x-K.cx)/d,dy=(p.y-K.cy)/d;p.vx+=dx*sp2(220);p.vy+=dy*sp2(220);}}
+  for(const g of K.gold){g.t+=dt;const q=Math.min(1,g.t/g.d),e=1-Math.pow(1-q,3);g.x=g.x0+(g.x1-g.x0)*e;g.y=g.y0+(g.y1-g.y0)*e;}
+  if(K.t>12.5)kiloReset();}}
+function kiloBoom(){K.merged=true;K.wave=0;flash=.9;shake=14;for(let i=0;i<14;i++){const a=rnd(0,TAU),L=sp2(rnd(90,240));K.gold.push({x0:K.cx,y0:K.cy,x1:Math.min(W-12,Math.max(12,K.cx+Math.cos(a)*L)),y1:Math.min(H-12,Math.max(H*.12,K.cy+Math.sin(a)*L)),x:K.cx,y:K.cy,t:0,d:rnd(.8,1.3)});}}
+function drawPair(){ctx.save();ctx.globalCompositeOperation='lighter';
+ if(!K.merged){ctx.strokeStyle='rgba(190,230,255,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(K.cx,K.cy,K.rad,0,TAU);ctx.stroke();
+  for(const sgn of [1,-1]){const x=K.cx+Math.cos(K.ang)*K.rad*sgn,y=K.cy+Math.sin(K.ang)*K.rad*sgn,g=ctx.createRadialGradient(x,y,0,x,y,sp2(34));g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.3,'rgba(170,220,255,.9)');g.addColorStop(1,'rgba(120,180,255,0)');
+   ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,sp2(34),0,TAU);ctx.fill();
+   ctx.strokeStyle='rgba(170,220,255,.35)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(K.cx,K.cy,K.rad,K.ang+(sgn<0?Math.PI:0)-.9,K.ang+(sgn<0?Math.PI:0));ctx.stroke();}}
+ else{const ag=Math.max(0,1-(K.t-7)/2.5);if(ag>0){const g=ctx.createRadialGradient(K.cx,K.cy,0,K.cx,K.cy,sp2(70));g.addColorStop(0,`rgba(255,240,200,${ag})`);g.addColorStop(1,'rgba(255,200,120,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(K.cx,K.cy,sp2(70),0,TAU);ctx.fill();}}
+ ctx.restore();
+ for(const g of K.gold){ctx.save();ctx.fillStyle='#ffd76a';ctx.shadowColor='#ffb020';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(g.x,g.y,sp2(5),0,TAU);ctx.fill();ctx.restore();}}
+function drawRing(){if(!K.merged)return;const q=Math.max(0,1-K.wave/Math.max(W,H)*.9);if(q<=0)return;ctx.save();ctx.strokeStyle=`rgba(200,235,255,${.6*q})`;ctx.lineWidth=4;ctx.beginPath();ctx.arc(K.cx,K.cy,K.wave,0,TAU);ctx.stroke();ctx.restore();}
+/* NEW: the space sheet. A faint grid that sags under the two stars, carries the spiral ripples they send out while circling
+   (faster and tighter as they close in, the "chirp"), and rolls like cloth when the merger wave passes. */
+function sheetDisp(x,y){let dx=0,dy=0;const vx=x-K.cx,vy=y-K.cy,d=Math.hypot(vx,vy)||1,ux=vx/d,uy=vy/d;
+ if(!K.merged){const p=Math.min(1,K.t/7);
+  for(const sgn of [1,-1]){const sx=K.cx+Math.cos(K.ang)*K.rad*sgn,sy=K.cy+Math.sin(K.ang)*K.rad*sgn,ex=sx-x,ey=sy-y,e=Math.hypot(ex,ey)||1,w=sp2(16)*Math.exp(-(e*e)/(2*sp2(46)**2));dx+=ex/e*w;dy+=ey/e*w;} // wells under the stars
+  if(d>K.rad*.8){const lam=sp2(120)*(1-.6*p),A=sp2(2.5+9*p*p)/(1+d/sp2(260)),ph=2*(Math.atan2(vy,vx)-K.ang)+TAU*d/lam,h=A*Math.sin(ph)*Math.min(1,(d-K.rad*.8)/sp2(30));dx+=ux*h;dy+=uy*h;}} // spiral ripples
+ else{const q=Math.max(0,1-K.wave/(Math.max(W,H)*1.15)),lam=sp2(70),z=(d-K.wave)/lam;if(Math.abs(z)<2.5){const h=sp2(22)*q*Math.sin(TAU*z*.5)*Math.exp(-z*z*.7);dx+=ux*h;dy+=uy*h;}
+  const ag=Math.max(0,1-(K.t-7)/1.2),w=sp2(26)*ag*Math.exp(-(d*d)/(2*sp2(60)**2));dx-=ux*w;dy-=uy*w;} // the merger wave, and the sag of the new remnant
+ return [dx,dy];}
+function sheetAlpha(){if(!K.merged)return Math.min(1,K.t/1.2)*(.18+.14*Math.min(1,K.t/7));return Math.max(0,.32*(1-(K.t-7)/4.5));}
+function drawSheet(){const a=sheetAlpha();if(a<=0)return;const gs=sp2(28),st=sp2(10);ctx.save();ctx.lineWidth=1;
+ const line=(pts)=>{ctx.beginPath();pts.forEach(([x,y],i)=>{const [ox,oy]=sheetDisp(x,y);i?ctx.lineTo(x+ox,y+oy):ctx.moveTo(x+ox,y+oy);});ctx.stroke();};
+ for(let x=(W/2)%gs;x<=W;x+=gs){const pts=[];for(let y=0;y<=H+st;y+=st)pts.push([x,y]);const d=Math.abs(x-K.cx)/W;ctx.strokeStyle=`rgba(143,230,255,${a*(1-d*.8)})`;line(pts);}
+ for(let y=K.cy%gs;y<=H;y+=gs){const pts=[];for(let x=0;x<=W+st;x+=st)pts.push([x,y]);const d=Math.abs(y-K.cy)/H;ctx.strokeStyle=`rgba(143,230,255,${a*(1-d*.9)})`;line(pts);}
+ if(K.merged){const q=Math.max(0,1-K.wave/(Math.max(W,H)*1.15)),lam=sp2(70);if(q>0){const r0=Math.max(0,K.wave-lam*1.5),r1=K.wave+lam*1.5,g=ctx.createRadialGradient(K.cx,K.cy,r0,K.cx,K.cy,r1);
+  g.addColorStop(0,'rgba(143,230,255,0)');g.addColorStop(.5,`rgba(143,230,255,${.22*q})`);g.addColorStop(1,'rgba(143,230,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(K.cx,K.cy,r1,0,TAU);ctx.arc(K.cx,K.cy,r0,0,TAU,true);ctx.fill();}}
+ ctx.restore();}
+
+/* ---------- neutrino rain: ghost particles from a dying star off-screen; they pass through everything.
+   The hole sitting in the stream sometimes catches one: a blue Cherenkov flash and a bonus. Seconds later the supernova wave arrives. ---------- */
+const N={};
+function nuReset(){Object.assign(N,{t:0,ps:[],acc:0,hits:0,fx:[],shock:-1,dir:Math.atan2(1,.55)});seedPlanets();}
+function nuStep(dt){N.t+=dt;const raining=N.t>1&&N.t<10.5,ux=Math.cos(N.dir),uy=Math.sin(N.dir),v=sp2(900);
+ if(raining){N.acc+=dt*55;while(N.acc>=1){N.acc--;const s=rnd(-.2,1.25),px=-uy,py=ux,bx=W*.5-ux*H*.9+px*(s-.5)*W*1.8,by=H*.5-uy*H*.9+py*(s-.5)*W*1.8;N.ps.push({x:bx,y:by,hit:false});}}
+ for(const p of N.ps){p.x+=ux*v*dt;p.y+=uy*v*dt;if(!p.hit&&Math.hypot(p.x-hX,p.y-hY)<R){p.hit=true;if(Math.random()<.09){N.hits++;N.fx.push({x:p.x,y:p.y,t:0});popText(hX,hY-R-sp2(18),'+25 NÖTRİNO','#4fc3ff');}}}
+ N.ps=N.ps.filter(p=>p.x<W+sp2(80)&&p.y<H+sp2(80));for(const f of N.fx)f.t+=dt;N.fx=N.fx.filter(f=>f.t<.7);
+ if(N.t>8&&N.shock<0)N.shock=0;if(N.shock>=0){const w0=N.shock;N.shock+=dt*sp2(520);for(const p of planets){const d=(p.x*ux+p.y*uy)-(-H*.2);if(w0<d&&N.shock>=d){p.vx+=ux*sp2(200);p.vy+=uy*sp2(200);}}}
+ if(N.t>13)nuReset();}
+function drawNu(){const ux=Math.cos(N.dir),uy=Math.sin(N.dir),L=sp2(22);ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+ for(const p of N.ps){ctx.strokeStyle='rgba(200,255,240,.45)';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(p.x-ux*L,p.y-uy*L);ctx.lineTo(p.x,p.y);ctx.stroke();}
+ for(const f of N.fx){const q=f.t/.7,r=R*(1+q*1.6);ctx.strokeStyle=`rgba(79,195,255,${(1-q)*.9})`;ctx.lineWidth=3*(1-q)+1;ctx.shadowColor='#4fc3ff';ctx.shadowBlur=16;ctx.beginPath();ctx.arc(hX,hY,r,0,TAU);ctx.stroke(); // Cherenkov light: a blue ring and a cone along the path
+  ctx.fillStyle=`rgba(79,195,255,${(1-q)*.35})`;ctx.beginPath();ctx.moveTo(hX,hY);const a=N.dir,c=.42,Lc=R*(2+q*3);ctx.lineTo(hX+Math.cos(a-c)*Lc,hY+Math.sin(a-c)*Lc);ctx.lineTo(hX+Math.cos(a+c)*Lc,hY+Math.sin(a+c)*Lc);ctx.closePath();ctx.fill();}
+ ctx.restore();
+ if(N.shock>=0){const k=N.shock-H*.2,px=-uy,py=ux,cx=ux*k,cy=uy*k,q=Math.max(0,1-N.shock/(Math.max(W,H)*1.6));ctx.save();ctx.strokeStyle=`rgba(255,160,90,${.75*q})`;ctx.lineWidth=sp2(5);ctx.shadowColor='#ff8a3c';ctx.shadowBlur=18;
+  ctx.beginPath();ctx.moveTo(cx-px*W*2,cy-py*W*2);ctx.lineTo(cx+px*W*2,cy+py*W*2);ctx.stroke();ctx.restore();}
+ ctx.save();ctx.fillStyle='#4fc3ff';ctx.font=`700 ${Math.round(sp2(14))}px "IBM Plex Sans Condensed",sans-serif`;ctx.textAlign='left';ctx.fillText(`TESPİT: ${N.hits}`,16,H-16);ctx.restore();
+ banner('NÖTRİNO YAĞMURU','#bff6ff',1,2.4,N.t);banner('ŞOK DALGASI GELİYOR','#ffb27a',5.2,2.6,N.t);}
+
+/* ---------- scenes ---------- */
+let flash=0,shake=0,scene;
+const SCENES=[
+ {id:'now',t:'Kilonova · şu an',s:'Oyundaki hali: iki nötron yıldızı 7 saniye döner, birleşir; ince bir halka her şeyi dışarı iter, altın saçılır.',c:'#aab6ff',reset:kiloReset,step:kiloStep,draw(){drawPair();drawRing();}},
+ {id:'new',t:'Kilonova · uzay dalgası',s:'Yeni: zemin bir ağ gibi görünür. Yıldızlar döndükçe ağ çukurlaşır ve sarmal dalgalar yayar; birleşince dev dalga ağı kumaş gibi dalgalandırarak geçer.',c:'#8fe6ff',reset:kiloReset,step:kiloStep,draw(){drawSheet();drawPair();drawRing();}},
+ {id:'nu',t:'Nötrino yağmuru',s:'Yeni: uzaktaki bir yıldız çöküyor. Hayalet parçacıklar her şeyin içinden geçer, zarar vermez. Delik akışta durursa ara sıra biri yakalanır: mavi parıltı, +25. Birkaç saniye sonra süpernova şok dalgası gelir; yağmur bir uyarıdır. Deliği sürükleyebilirsin.',c:'#4fc3ff',wide:1,reset:nuReset,step:nuStep,draw:drawNu},
+];
+const evBox=document.getElementById('ev'),capT=document.getElementById('capT'),capS=document.getElementById('capS');
+function pick(s){scene=s;flash=0;shake=0;texts.length=0;hX=W/2;hY=H*.74;s.reset();capT.textContent=s.t;capS.textContent=s.s;for(const b of evBox.children)b.classList.toggle('on',b.dataset.id===s.id);}
+for(const s of SCENES){const b=document.createElement('button');b.dataset.id=s.id;b.style.setProperty('--c',s.c);if(s.wide)b.className='wide';b.innerHTML=`<i></i><span></span>`;b.lastChild.textContent=s.t;b.onclick=()=>pick(s);evBox.appendChild(b);}
+document.getElementById('again').onclick=()=>pick(scene);
+const slowBtn=document.getElementById('slow');slowBtn.onclick=()=>{speed=speed===1?.4:1;slowBtn.textContent=speed===1?'YAVAŞ: KAPALI':'YAVAŞ: AÇIK';};
+let drag=false;cv.addEventListener('pointerdown',e=>{drag=true;cv.setPointerCapture(e.pointerId);move(e);});cv.addEventListener('pointermove',e=>{if(drag)move(e);});cv.addEventListener('pointerup',()=>drag=false);
+function move(e){const r=cv.getBoundingClientRect();hX=Math.min(W-R,Math.max(R,e.clientX-r.left));hY=Math.min(H-R,Math.max(H*.15,e.clientY-r.top));}
+let last=performance.now();
+function frame(now){const dt=Math.min(.05,(now-last)/1000)*speed;last=now;clock+=dt;scene.step(dt);stepPlanets(dt);
+ ctx.save();if(shake>0){ctx.translate(rnd(-shake,shake)*.5,rnd(-shake,shake)*.5);shake=Math.max(0,shake-dt*40);}
+ ctx.fillStyle='#05040b';ctx.fillRect(-20,-20,W+40,H+40);for(const s of stars){ctx.globalAlpha=s.a*(.7+.3*Math.sin(clock*2+s.x));ctx.fillStyle='#fff';ctx.fillRect(s.x,s.y,s.r,s.r);}ctx.globalAlpha=1;
+ if(scene.id==='new'){for(const p of planets){const [ox,oy]=sheetDisp(p.x,p.y);drawPlanet(p,ox*.6,oy*.6);}}else for(const p of planets)drawPlanet(p);
+ drawHole();scene.draw();drawTexts(dt);ctx.restore();
+ if(flash>0){ctx.fillStyle=`rgba(230,245,255,${flash*.55})`;ctx.fillRect(0,0,W,H);flash=Math.max(0,flash-dt*1.6);}
+ requestAnimationFrame(frame);}
+size();addEventListener('resize',()=>{size();pick(scene);});
+pick(SCENES[1]);requestAnimationFrame(frame);
+</script>
+</body>
+</html>
