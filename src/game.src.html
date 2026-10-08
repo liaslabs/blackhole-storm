@@ -2660,7 +2660,7 @@ const ADS={on:false,privacy:false,t:0};
 function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
 async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;
   try{const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
-    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{const x=await nb.adsRewarded();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{await nb.adsInterstitial();}};}
+    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{const x=await nb.adsRewarded();LAG.ad=performance.now();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{await nb.adsInterstitial();LAG.ad=performance.now();}};} /* LAG.ad: when an ad last closed; the next one starts loading right then */
     monApply();if($('sSet').classList.contains('on'))syncSettingsUI();if($('sShop').classList.contains('on'))renderShop();}catch(e){}}
 async function showRewarded(){showRewarded.none=false;
   if(SHOP.noAds)return true;if(MON.busy)return false;MON.busy=true;SND.duck(.15,1e5);
@@ -3733,7 +3733,7 @@ let sMapEl=null,sMenuEl=null;
 const LAG={last:0,lv:-1,n:0,worst:0,ctx:'',sent:0,done:false};
 function lagWatch(ts){const g=ts-LAG.last,pj=LAG.js||0,hp=performance.memory?performance.memory.usedJSHeapSize:0,dh=LAG.hp?hp-LAG.hp:0;LAG.last=ts;LAG.hp=hp;LAG.j0=performance.now();queueMicrotask(()=>{LAG.js=performance.now()-LAG.j0;}); /* js: our own work in a frame */if(!G2.on||gState!=='playing'||document.hidden||G2.t<2)return;
   if(LAG.lv!==level+'/'+gameMode){LAG.lv=level+'/'+gameMode;LAG.n=0;LAG.worst=0;LAG.done=false;}
-  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(performance.now()-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms`;}
+  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(performance.now()-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((performance.now()-LAG.ad)/1000):-1}s ago t ${G2.t.toFixed(1)}s`;}
   if((LAG.n>=2||LAG.worst>=300)&&LAG.sent<3){LAG.done=true;LAG.sent++;const hz=LOOPF.iv?Math.round(1000/LOOPF.iv):0,ua=(navigator.userAgent.match(/Android [^;)]*;\s*([^;)]+)/)||[])[1]||'';
     lagReport(`LAG ${hz}Hz q${GL.quality.toFixed(2)} fx${FXLITE?1:0}`,`L${level} ${gameMode} hitches ${LAG.n} worst ${Math.round(LAG.worst)}ms\n${LAG.ctx}\ncores ${navigator.hardwareConcurrency||0} mem ${navigator.deviceMemory||0} heap ${performance.memory?Math.round(performance.memory.usedJSHeapSize/1048576):0}MB ads ${ADS.on?1:0} dpr ${devicePixelRatio} ${innerWidth}x${innerHeight}\n${ua.replace(/\s*Build\/.*$/,'').slice(0,40)}`);}}
 function lagReport(m,s){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE)return;

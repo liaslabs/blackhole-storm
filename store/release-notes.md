@@ -15,7 +15,7 @@ Her güncellemede:
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
-| 1.4.7 | 14 | 13 Eki | Hazır, `rel(7)` ile kapalı |
+| 1.4.7 | 14 | 9 Eki | Öne alındı (testçiler takılma bildirdi); `rel(7)` ile kapalı |
 | 1.4.8 | 15 | 16 Eki | Gelen geri bildirimler |
 
 ## 1.4.5 (7 Ekim)
@@ -46,9 +46,10 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.4.7 (13 Ekim) · `REL` 7 yapılacak
+## 1.4.7 (9 Ekim, öne alındı) · `REL` 7 yapılacak
 - Kasma: oyun sırasında hafızaya kayıt yapılmıyor (1.4.6'da 12 sn'de 8 kayıt vardı: atlas, başarım, ipucu); kayıt seviye sonu, duraklatma veya arka plana geçişte. Menü kalp sayacı oyun sırasında ekranı güncellemiyor.
-- Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ) ve son kaydı da yazıyor.
+- Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ), son kaydı, son reklamdan geçen süreyi ve seviyenin kaçıncı saniyesi olduğunu da yazıyor.
+- Şüphe (doğrulanacak): AdMob, bir reklam kapandıktan hemen sonra sıradakini yüklüyor; yükleme yeni seviyenin ilk saniyelerine denk gelip güçlü telefonlarda da takılma yapabilir. Raporlar bunu doğrularsa yükleme, Dahili test kanalında denenerek seviye sonuna (sonuç ekranına) taşınacak.
 - Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
 - Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek).
 - Solucan deliği antimaddeyi ve yasaklı cisimleri almıyor (kaçılamayan isabet oluyordu).
