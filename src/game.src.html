@@ -334,6 +334,7 @@ body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:ba
 #boost2{display:none;}
 body.v2 #boost2{position:fixed;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;gap:9px;pointer-events:none;}
 body.v2 #boost2 .hb2{pointer-events:auto;position:relative;width:62px;height:62px;min-width:0;padding:0 0 2px;flex-direction:column;gap:2px;border-radius:16px;background:rgba(10,13,20,.62);border:1.5px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);touch-action:manipulation;overflow:visible;}
+body.r7.v2 #boost2 .hb2{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(10,13,20,.8);} /* 1.4.7: no live blur over the moving game (the GPU redid it every frame) */
 #boost2 .hb2 .ic{font-size:25px;line-height:1;}#boost2 .hb2 .ic .ico{width:27px;height:27px;}
 #boost2 .hb2 i{font-style:normal;font-family:var(--fd);font-size:8px;letter-spacing:.02em;color:#d6dcea;max-width:58px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 #boost2 .hb2 b{position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;border-radius:11px;background:#ffd84d;color:#1c1405;font-family:var(--fm);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(7,9,12,.9);}
@@ -2658,9 +2659,10 @@ function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()
 const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'',interstitial:''}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
 const ADS={on:false,privacy:false,t:0};
 function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
-async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;
+function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload)nb.adsPreload().catch(()=>{});} /* an app with adsPreload loads the next ad here; older builds reload on their own */
+async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;if(rel(7)&&gState==='playing'){setTimeout(adsInit,3000);return;} /* 1.4.7: the ad SDK never starts up mid-level */
   try{const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
-    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{const x=await nb.adsRewarded();LAG.ad=performance.now();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{await nb.adsInterstitial();LAG.ad=performance.now();}};} /* LAG.ad: when an ad last closed; the next one starts loading right then */
+    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{ADS.showing=1;let x={};try{x=await nb.adsRewarded();}finally{ADS.showing=0;}LAG.ad=performance.now();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{ADS.showing=1;try{await nb.adsInterstitial();}finally{ADS.showing=0;}LAG.ad=performance.now();}};} /* LAG.ad: when an ad last closed; the next one starts loading right then */
     monApply();if($('sSet').classList.contains('on'))syncSettingsUI();if($('sShop').classList.contains('on'))renderShop();}catch(e){}}
 async function showRewarded(){showRewarded.none=false;
   if(SHOP.noAds)return true;if(MON.busy)return false;MON.busy=true;SND.duck(.15,1e5);
@@ -3951,7 +3953,7 @@ function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey()
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(adsPreload,1500);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';

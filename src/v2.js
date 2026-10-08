@@ -147,7 +147,7 @@ function v2Rules(l){
 
 // ── start / reset ─────────────────────────────────────
 function v2Start(mode){
-  v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
+  v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');document.body.classList.toggle('r7',rel(7));v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   if(DEV&&mode==='level'&&gameMode==='classic'&&!HMODE)devKit(v2Lv()); // the developer link keeps the Laboratory at each level's recommended power
   const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));if(mode==='surv')$('lvVal').textContent=l; /* the speed pill, not the classic level left from before */
@@ -1159,14 +1159,14 @@ function v2Fail(msg){
   if(gState==='tip'){hideModals();G2.tip=null;gState='playing';SND.duck(1,0);} // a tip card opened earlier in the same frame must not swallow the loss
   if(gState!=='playing')return;gState='over';G2.failMsg=msg;SND.setDrone(.08,300);SND.duck(.35,2);
   if(msg){if(msg!=='SÜRE DOLDU'&&msg!=='DEV GEZEGEN KAÇTI')lives=0; /* the clock running out is not a death: hearts (and stars) stay */v2Call(msg==='DEV GEZEGEN KAÇTI'?(G2.boss&&G2.boss.bt&&G2.boss.bt!=='planet'?'YILDIZ KAÇTI':'GEZEGEN KAÇTI'):msg,'','#ff7a5c',2,true);}
-  setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();},850);
+  setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();try{adsPreload();}catch(e){}},850); /* a lost level: the continue offer is a quiet screen to load the next ad */
 }
 // time bought when the clock ran out: back to the fight with more seconds; hearts and the one continue stay untouched
-function v2AddTime(sec){G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();saveG();
+function v2AddTime(sec){G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();if(rel(7))later(saveG,400);else saveG();
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';}
 function v2Revive(){ // one continue per run (spec §42)
   G2.contUsed=true;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',i*.08);G2.arcs=am;}G2.arcFill=.5;if(G2.guard){const g=G2.guard;g.hp=Math.max(g.hp,50);if(g.keep!=null){g.t=g.keep;g.keep=null;}}lives=G2.failMsg==='SÜRE DOLDU'?Math.max(1,lives):1;G2.combo=0;comboCount=0;G2.rage=V2K.cont.rage;G2.ready=false;G2.rageT=0;G2.immT=V2K.cont.imm;
-  hideModals();updateUI();gState='playing';lastT=performance.now();saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});
+  hideModals();updateUI();gState='playing';lastT=performance.now();if(rel(7))later(saveG,400);else saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6}); /* 1.4.7: the save waits for the first frames back in play */
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';
 }
 function v2RageGo(){
@@ -1457,7 +1457,7 @@ function v2TipAnim(id){let cv=$('tip2Cv');const fn=TIPANIM[id];if(!fn){if(cv)cv.
 function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8;G2.tipGap=8;$('rage2')&&$('rage2').classList.remove('hl');$('shTop').classList.remove('hl');$('diaTop').classList.remove('hl');$('hkTop').classList.remove('hl');gState='playing';lastT=performance.now();SND.duck(1,0);sfx('click',{vol:.4});}
 
 // ── level end ─────────────────────────────────────────
-function v2Complete(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus('boss');}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
+function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');adsPreload();}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
   if(gState!=='playing')return;
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();}
   if(!G2.dmg)dmEvent('clean',1);
