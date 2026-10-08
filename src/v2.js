@@ -957,13 +957,36 @@ function v2Spec(o){if(G2.mode==='sprint'||o.chain)return;const k=SPK[o.k]||o.k,s
 function v2DrawSpec(){const sp=G2.spec;if(!sp||sp.length<2||gState==='menu'||G2.ending)return;const R=G2.R+sp2(14);ctx.save();
   for(let i=0;i<5;i++){const a=Math.PI/2+(i-2)*.32,x=hX+Math.cos(a)*R,y=hY+Math.sin(a)*R;ctx.beginPath();ctx.arc(x,y,sp2(4.5),0,TAU);if(i<sp.length){ctx.fillStyle=SPC[sp[i]]||'#fff';ctx.fill();}else{ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1.2;ctx.stroke();}}
   ctx.restore();}
+// The space sheet under a kilonova: a faint grid that sags under the two stars, carries the spiral ripples they send out
+// (tighter and stronger as they close in) and rolls like cloth as the merger wave passes. Looks only; the push stays in v2KiloBoom.
+function v2SheetDisp(e,x,y){let dx=0,dy=0;const vx=x-e.cx,vy=y-e.cy,d=Math.hypot(vx,vy)||1,ux=vx/d,uy=vy/d;
+  if(!e.merged){const p=Math.min(1,e.t/7),s2=sp2(46)**2;
+    for(const sgn of [1,-1]){const ex=e.cx+Math.cos(e.ang)*e.rad*sgn-x,ey=e.cy+Math.sin(e.ang)*e.rad*sgn-y,m=Math.hypot(ex,ey)||1,w=sp2(16)*Math.exp(-(m*m)/(2*s2));dx+=ex/m*w;dy+=ey/m*w;}
+    if(d>e.rad*.8){const lam=sp2(120)*(1-.6*p),A=sp2(2.5+9*p*p)/(1+d/sp2(260)),h=A*Math.sin(2*(Math.atan2(vy,vx)-e.ang)+TAU*d/lam)*Math.min(1,(d-e.rad*.8)/sp2(30));dx+=ux*h;dy+=uy*h;}}
+  else{const q=Math.max(0,1-e.wave/(Math.max(W,H)*1.15)),z=(d-e.wave)/sp2(70);if(Math.abs(z)<2.5){const h=sp2(22)*q*Math.sin(Math.PI*z)*Math.exp(-z*z*.7);dx+=ux*h;dy+=uy*h;}
+    const ag=Math.max(0,1-(e.t-7)/1.2),w=sp2(26)*ag*Math.exp(-(d*d)/(2*sp2(60)**2));dx-=ux*w;dy-=uy*w;}
+  return [dx,dy];}
+function v2DrawSheet(e){const a=!e.merged?Math.min(1,e.t/1.2)*(.24+.16*Math.min(1,e.t/7)):Math.max(0,.4*(1-(e.t-7)/3.5));if(a<=0)return;
+  const gs=sp2(FXLITE?40:28),st=sp2(FXLITE?20:10),hr=(G2.R||20)+2,Rv=sp2(230)+(e.merged?Math.min(e.wave*.5,sp2(110)):0); // the sheet shows only around the kilonova, opening a little as the merger wave leaves
+  const x0=Math.max(0,e.cx-Rv),x1=Math.min(W,e.cx+Rv),y0=Math.max(0,e.cy-Rv),y1=Math.min(H,e.cy+Rv),fade=ctx.createRadialGradient(e.cx,e.cy,0,e.cx,e.cy,Rv);
+  fade.addColorStop(0,`rgba(143,230,255,${a})`);fade.addColorStop(.5,`rgba(143,230,255,${a*.8})`);fade.addColorStop(1,'rgba(143,230,255,0)');ctx.save();
+  ctx.beginPath();ctx.rect(0,0,W,H);ctx.moveTo(hX+hr,hY);ctx.arc(hX,hY,hr,0,TAU,true); // the grid stays off the hole and the bodies on screen
+  for(const o of G2.objs)if(o.st==='in'&&o.r){ctx.moveTo(o.x+o.r,o.y);ctx.arc(o.x,o.y,o.r,0,TAU,true);}
+  ctx.clip();ctx.lineWidth=1;
+  const line=pts=>{ctx.beginPath();pts.forEach(([x,y],i)=>{const [ox,oy]=v2SheetDisp(e,x,y);i?ctx.lineTo(x+ox,y+oy):ctx.moveTo(x+ox,y+oy);});ctx.stroke();};
+  ctx.strokeStyle=fade;
+  for(let x=e.cx+Math.ceil((x0-e.cx)/gs)*gs;x<=x1;x+=gs){const pts=[];for(let y=y0;y<=y1+st;y+=st)pts.push([x,y]);line(pts);}
+  for(let y=e.cy+Math.ceil((y0-e.cy)/gs)*gs;y<=y1;y+=gs){const pts=[];for(let x=x0;x<=x1+st;x+=st)pts.push([x,y]);line(pts);}
+  if(e.merged){const q=Math.max(0,1-e.wave/(Math.max(W,H)*1.15)),lam=sp2(70);if(q>0){const r0=Math.max(0,e.wave-lam*1.5),r1=e.wave+lam*1.5,g=ctx.createRadialGradient(e.cx,e.cy,r0,e.cx,e.cy,r1);
+    g.addColorStop(0,'rgba(143,230,255,0)');g.addColorStop(.5,`rgba(143,230,255,${.22*q})`);g.addColorStop(1,'rgba(143,230,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.cx,e.cy,r1,0,TAU);ctx.arc(e.cx,e.cy,r0,0,TAU,true);ctx.fill();}}
+  ctx.restore();}
 // Kilonova: two neutron stars spiral in and merge; the flash forges gold (real kilonovae make most of the universe's gold).
 function v2KiloBoom(e){e.merged=true;e.wave=0;flash=Math.max(flash,.9);shake=Math.max(shake,14);shock=1;v2Sfx('boom',{vol:.7,rate:.7});sfx('bossDie',{vol:.5,rate:1.3});v2Burst(e.cx,e.cy,50,'#dff4ff',2.4,9,1,2.4);
   for(const o of G2.objs){if(o.st!=='in'||o.boss||o.orb||o.k==='meteor')continue;const dx=o.x-e.cx,dy=o.y-e.cy,d=Math.hypot(dx,dy)||1;o.vx+=dx/d*sp2(220);o.vy+=dy/d*sp2(220);} // the gravitational wave shoves everything out
   v2KiloSpots(e.cx,e.cy,14).forEach((p,i)=>{const o=v2Obj('kgold',e.cx,e.cy,0,0);o.seen=true;const deep=i%3===1; /* every third piece seems to fly at the camera, then lands elsewhere */
     const a=Math.atan2(p.y-e.cy,p.x-e.cx)+(deep?rrnd(-.9,.9):rrnd(-.25,.25)),L=Math.hypot(p.x-e.cx,p.y-e.cy);o.fly={x0:e.cx,y0:e.cy,x1:p.x,y1:p.y,cx:e.cx+Math.cos(a)*L*.55,cy:e.cy+Math.sin(a)*L*.55,t:0,d:deep?rrnd(1.3,1.7):rrnd(.8,1.2),pk:deep?rrnd(1.1,1.5):0};o.zs=.4;});
   if(G2.mode!=='sprint')atlasAdd('kilonova');v2Call('ALTIN DÖVÜLDÜ','ALTINI YUT','#ffd76a',1.5,true);}
-function v2DrawKilo(e){ctx.save();ctx.globalCompositeOperation='lighter';
+function v2DrawKilo(e){if(rel(8))v2DrawSheet(e);ctx.save();ctx.globalCompositeOperation='lighter';
   if(!e.merged){ctx.strokeStyle='rgba(190,230,255,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(e.cx,e.cy,e.rad,0,TAU);ctx.stroke();
     for(const sgn of [1,-1]){const x=e.cx+Math.cos(e.ang)*e.rad*sgn,y=e.cy+Math.sin(e.ang)*e.rad*sgn,g=ctx.createRadialGradient(x,y,0,x,y,sp2(34));g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.3,'rgba(170,220,255,.9)');g.addColorStop(1,'rgba(120,180,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,sp2(34),0,TAU);ctx.fill();
       ctx.strokeStyle='rgba(170,220,255,.35)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.cx,e.cy,e.rad,e.ang+(sgn<0?Math.PI:0)-.9,e.ang+(sgn<0?Math.PI:0));ctx.stroke();} // trails

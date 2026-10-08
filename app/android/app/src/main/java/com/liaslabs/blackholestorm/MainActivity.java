@@ -2,7 +2,6 @@ package com.liaslabs.blackholestorm;
 
 import android.os.Bundle;
 import android.view.View;
-import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -16,7 +15,6 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(BhsPlugin.class);
-        EdgeToEdge.enable(this); // the standard edge-to-edge setup for every Android version (Play's recommendation for SDK 35+)
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(0xFF03040A);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);

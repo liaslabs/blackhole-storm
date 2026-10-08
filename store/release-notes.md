@@ -13,8 +13,8 @@ Her güncellemede:
 | Sürüm | Kod | Plan | Durum |
 |---|---|---|---|
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
-| 1.4.5 | 12 | 7 Eki | Derlendi (main 6e88e07), yüklenecek |
-| 1.4.6 | 13 | 10 Eki | Hazır (REL=6) |
+| 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
+| 1.4.6 | 13 | 8 Eki | Derleniyor (öne alındı: 1.4.5'teki başlık çubuğu hatası) |
 | 1.4.7 | 14 | 13 Eki | Hazır, `rel(7)` ile kapalı |
 | 1.4.8 | 15 | 16 Eki | Gelen geri bildirimler |
 
@@ -31,13 +31,15 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.4.6 (10 Ekim)
+## 1.4.6 (8 Ekim, öne alındı)
+- Düzeltme: 1.4.5'te oyunun üstünde "Blackhole Storm" yazan bir başlık çubuğu çıkıp üst barı örtüyordu. Sebep: `EdgeToEdge.enable()` `super.onCreate`'ten önce çağrılınca pencere, Capacitor temayı değiştirmeden önce başlık çubuklu temayla kuruluyordu. Satır kaldırıldı; `MainActivity` 1.4.4 ile birebir aynı.
 - Kasma: 90 ve 144 Hz ekranlarda (yenileme hızı değişen telefonlarda) düzensiz kare aralığı giderildi.
 - Kasma raporu: seviye ortasında belirgin takılma olursa isimsiz kısa not (gizlilik sayfasında anlatılıyor).
 - Bölünen gezegen: iki parça artık ekrandan çıkmıyor.
 
 ```
 <en-US>
+• Fixed: a title bar covered the top of the game screen in 1.4.5
 • Smoother play on 90 Hz and 144 Hz screens: no more stutter
 • Split planets: both halves now stay on screen
 • Anonymous stutter reports help us find slow spots
@@ -58,4 +60,18 @@ Her güncellemede:
 ```
 
 ## 1.4.8 (16 Ekim) · `REL` 8 yapılacak
-- (geri bildirimlerden eklenecek)
+- Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Ağ yıldızların altında çukurlaşıyor, sarmal dalgalar yayıyor,
+  birleşmede kumaş gibi dalgalanıyor. Sadece görsel; dalganın hızı ve itişi aynı. `rel(8)`.
+- (geri bildirimlerden eklenecekler)
+
+```
+<en-US>
+• Kilonova: see space itself ripple as two neutron stars merge
+</en-US>
+```
+
+## Üretimden sonra (ayrı güncelleme)
+- R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
+  Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
+  reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
+- AGP 8.13 → 9.0 yükseltmesi (Play önerisi).
