@@ -81,3 +81,4 @@ Her güncellemede:
   Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
 - AGP 8.13 → 9.0 yükseltmesi (Play önerisi).
+- Uçtan uca ekran (Play önerisi): `EdgeToEdge.enable(this)` bu sefer `super.onCreate`'ten **sonra** çağrılacak (1.4.5'teki başlık çubuğu hatası önceye konduğu içindi). Önce **Dahili test** kanalında kendi telefonda denenecek, sonra kapalı/üretim kanalına.
