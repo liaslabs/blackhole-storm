@@ -966,14 +966,17 @@ function v2SheetDisp(e,x,y){let dx=0,dy=0;const vx=x-e.cx,vy=y-e.cy,d=Math.hypot
   else{const q=Math.max(0,1-e.wave/(Math.max(W,H)*1.15)),z=(d-e.wave)/sp2(70);if(Math.abs(z)<2.5){const h=sp2(22)*q*Math.sin(Math.PI*z)*Math.exp(-z*z*.7);dx+=ux*h;dy+=uy*h;}
     const ag=Math.max(0,1-(e.t-7)/1.2),w=sp2(26)*ag*Math.exp(-(d*d)/(2*sp2(60)**2));dx-=ux*w;dy-=uy*w;}
   return [dx,dy];}
-function v2DrawSheet(e){const a=!e.merged?Math.min(1,e.t/1.2)*(.18+.14*Math.min(1,e.t/7)):Math.max(0,.32*(1-(e.t-7)/4.5));if(a<=0)return;
-  const gs=sp2(FXLITE?40:28),st=sp2(FXLITE?20:10),hr=(G2.R||20)+2;ctx.save();
+function v2DrawSheet(e){const a=!e.merged?Math.min(1,e.t/1.2)*(.24+.16*Math.min(1,e.t/7)):Math.max(0,.4*(1-(e.t-7)/3.5));if(a<=0)return;
+  const gs=sp2(FXLITE?40:28),st=sp2(FXLITE?20:10),hr=(G2.R||20)+2,Rv=sp2(230)+(e.merged?Math.min(e.wave*.5,sp2(110)):0); // the sheet shows only around the kilonova, opening a little as the merger wave leaves
+  const x0=Math.max(0,e.cx-Rv),x1=Math.min(W,e.cx+Rv),y0=Math.max(0,e.cy-Rv),y1=Math.min(H,e.cy+Rv),fade=ctx.createRadialGradient(e.cx,e.cy,0,e.cx,e.cy,Rv);
+  fade.addColorStop(0,`rgba(143,230,255,${a})`);fade.addColorStop(.5,`rgba(143,230,255,${a*.8})`);fade.addColorStop(1,'rgba(143,230,255,0)');ctx.save();
   ctx.beginPath();ctx.rect(0,0,W,H);ctx.moveTo(hX+hr,hY);ctx.arc(hX,hY,hr,0,TAU,true); // the grid stays off the hole and the bodies on screen
   for(const o of G2.objs)if(o.st==='in'&&o.r){ctx.moveTo(o.x+o.r,o.y);ctx.arc(o.x,o.y,o.r,0,TAU,true);}
   ctx.clip();ctx.lineWidth=1;
   const line=pts=>{ctx.beginPath();pts.forEach(([x,y],i)=>{const [ox,oy]=v2SheetDisp(e,x,y);i?ctx.lineTo(x+ox,y+oy):ctx.moveTo(x+ox,y+oy);});ctx.stroke();};
-  for(let x=(W/2)%gs;x<=W;x+=gs){const pts=[];for(let y=0;y<=H+st;y+=st)pts.push([x,y]);ctx.strokeStyle=`rgba(143,230,255,${a*(1-Math.abs(x-e.cx)/W*.8)})`;line(pts);}
-  for(let y=e.cy%gs;y<=H;y+=gs){const pts=[];for(let x=0;x<=W+st;x+=st)pts.push([x,y]);ctx.strokeStyle=`rgba(143,230,255,${a*(1-Math.abs(y-e.cy)/H*.9)})`;line(pts);}
+  ctx.strokeStyle=fade;
+  for(let x=e.cx+Math.ceil((x0-e.cx)/gs)*gs;x<=x1;x+=gs){const pts=[];for(let y=y0;y<=y1+st;y+=st)pts.push([x,y]);line(pts);}
+  for(let y=e.cy+Math.ceil((y0-e.cy)/gs)*gs;y<=y1;y+=gs){const pts=[];for(let x=x0;x<=x1+st;x+=st)pts.push([x,y]);line(pts);}
   if(e.merged){const q=Math.max(0,1-e.wave/(Math.max(W,H)*1.15)),lam=sp2(70);if(q>0){const r0=Math.max(0,e.wave-lam*1.5),r1=e.wave+lam*1.5,g=ctx.createRadialGradient(e.cx,e.cy,r0,e.cx,e.cy,r1);
     g.addColorStop(0,'rgba(143,230,255,0)');g.addColorStop(.5,`rgba(143,230,255,${.22*q})`);g.addColorStop(1,'rgba(143,230,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.cx,e.cy,r1,0,TAU);ctx.arc(e.cx,e.cy,r0,0,TAU,true);ctx.fill();}}
   ctx.restore();}

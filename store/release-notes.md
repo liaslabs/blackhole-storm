@@ -58,7 +58,15 @@ Her güncellemede:
 ```
 
 ## 1.4.8 (16 Ekim) · `REL` 8 yapılacak
-- (geri bildirimlerden eklenecek)
+- Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Ağ yıldızların altında çukurlaşıyor, sarmal dalgalar yayıyor,
+  birleşmede kumaş gibi dalgalanıyor. Sadece görsel; dalganın hızı ve itişi aynı. `rel(8)`.
+- (geri bildirimlerden eklenecekler)
+
+```
+<en-US>
+• Kilonova: see space itself ripple as two neutron stars merge
+</en-US>
+```
 
 ## Üretimden sonra (ayrı güncelleme)
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
