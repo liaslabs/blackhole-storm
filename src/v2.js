@@ -80,14 +80,18 @@ function v2LevelType(l){if(l>=50&&l%50===0)return 'duel';if(l<11||l%10===0||l%10
 // power cards: each opens on a level that brings nothing else new, one per level, shown at the start
 const v2GoldZone=l=>l>6&&(l%10>=8||l%10===0); // the last three levels of each universe (8, 9 and the boss)
 /* shells arrive in steps after level 50: 51+ silver from near misses (one at a time until 60) and help after two misses, 61+ the win streak's silver, 71+ gold */
+/* 1.4.8 arcs: 3 per heart to level 10, 2 to level 25, none after; from 26 the arcs are a power: swallow 3 energy balls, they come back for 20 s */
+const ARCPOW={need:3,dur:20},v2ArcMaxL=l=>!rel(8)||G2.mode!=='level'?3:l<=10?3:l<=25?2:0,v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
+function v2ArcPowOn(){const was=G2.arcs;G2.arcPow=ARCPOW.dur;G2.eN=0;G2.arcs=3;for(let i=was;i<3;i++)v2ArcForm(i,'arc',(i-was)*.08);G2.arcFill=.5;G2.arcFix={i:2,t:G2.t};v2Call(T('YAY KALKANI'),T('20 SANİYE'),'#ff8a8a',1.3,true);v2Sfx('bell',{vol:.5,rate:1.2});vib(25);}
+function v2ArcPowEnd(){const keep=G2.arcMax||0;for(let i=keep;i<G2.arcs;i++)v2ArcBreak(i,i<G2.shells?'#eaf1fb':'#ff8a8a',.5);G2.arcPow=0;G2.arcs=Math.min(G2.arcs,keep);G2.shells=Math.min(G2.shells,G2.arcs);if(G2.on&&gState==='playing')v2Pop(T('YAY KALKANI BİTTİ'),'#ff8a8a',15);}
 const shTier=l=>l<=50?0:l<=60?1:l<=70?2:3,v2ShT=()=>G2.mode==='level'?shTier(level):0;
 function v2GoldEarn(why){if(G2.gold||G2.mode!=='level'||v2ShT()<3)return;G2.gold=1;G2.goldT=G2.t;for(let i=0;i<G2.arcs;i++)v2ArcForm(i,'gold',i*.06);v2Pop(T('ALTIN KABUK')+' · '+T(why),'#ffd76a',17);v2Sfx('bell',{vol:.5,rate:1.6});if(!TIPS.gold2)later(()=>v2Tip('gold2',null),700);}
 /* slowing time: slow motion runs at 50% and the time ball at 65%; each level of the Laboratory's Time Bender slows it a little more (25% / 35% at 10);
    how long it lasts grows with the hole's evolution: star-mass, intermediate, supermassive, quasar */
 const v2Stage=()=>typeof stageOf==='function'?stageOf(mass):0,v2BtK=()=>Math.max(.25,.5-.025*labEffLv('time')),v2TimeK=()=>Math.max(.3,.65-.03*labEffLv('time')),v2BtDur=()=>[.35,.45,.55,.7][v2Stage()],v2TimeDur=()=>[4,5,6,7][v2Stage()];
 const v2BtOn=()=>!G2.hm&&!G2.dstorm&&(G2.mode==='level'?level>20:G2.lv>20); /* slow motion is a late-game help: from level 21, never in Hard Mode or the daily storm */
-const FEAT=[['arcs',2],['shield',7],['nova',21],['hawking',140],['jet',180],['worm',250],['hor',350]];
-const v2FeatReady=id=>id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
+const FEAT=[['arcs',2],['shield',7],['arcs2',11],['nova',21],['arcpow',26],['hawking',140],['jet',180],['worm',250],['hor',350]];
+const v2FeatReady=id=>id==='arcs2'?rel(8)&&level<=25:id==='arcpow'?rel(8):id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
 const HARD={t:[0,50,55],first:60,met:[1,.7,.6],stars:[0,10,20]};
 function v2Hard(l){if(l<9||l%10===0||v2LevelType(l)!=='score')return 0;if(l%10===9)return l>=39?2:1;return l>20&&l%10===5?1:0;}
 function v2HardT(l){const h=v2Hard(l);return h?(l===9?HARD.first:HARD.t[h]):0;}
@@ -151,7 +155,7 @@ function v2Start(mode){
     script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0});
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
-  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.beltN=0;if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
+  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);G2.arcs=G2.arcMax;if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
   {const pl=labEffLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+Math.min(.3,.02*pl));}G2.L.comboT+=.12*labEffLv('combo');} // Laboratory upgrades (classic only)
@@ -159,6 +163,7 @@ function v2Start(mode){
   if(mode==='level'&&!REPLAY&&gameMode==='classic'&&shTier(level)>2&&v2GoldZone(level)&&SHOP.gold>0){SHOP.gold=0;G2.gold=1;saveG();later(()=>{if(G2.on)v2Pop(T('ALTIN KABUK'),'#ffd76a',17);},1400);} /* a stored gold shell goes on in the last three levels of a universe */
   if(mode==='level'&&!REPLAY&&gameMode==='classic'&&level>1&&WSTREAK>0&&wsReward(WSTREAK).s){const w=wsReward(WSTREAK);G2.shells=Math.max(G2.shells,w.s);if(w.g)G2.gold=1;const n=WSTREAK; /* win streak: the next level starts armoured; losing without a continue resets it */
     later(()=>{if(G2.on)v2Call('GALİBİYET SERİSİ '+n,wsTxt(w),'#ffd76a',1.6,true);},900);if(!FEAT.some(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id)))for(const d of [2400,6000])later(()=>{if(G2.on&&!TIPS.wstreak)v2Tip('wstreak',null);},d);} /* never on a level that opens with a power card */
+  if(G2.arcMax===0&&G2.shells>0){G2.arcPow=ARCPOW.dur;G2.arcs=3;} /* help after misses or a win streak brings the arcs back for the first 20 s */
   if(rule&&rule.guard)G2.guard={n:0,hp:100,t:rule.dur,dur:rule.dur,dmg:rule.dmg,next:3};
   if(mod){const c=RISK_CARDS.find(x=>x.id===mod);if(c)later(()=>{if(G2.on)v2Call(c.n,c.d+' · '+T('Ödül')+': '+giftTxt(c.rw),'#ffb3a8',2,true);},700);} /* the chosen card, said once at the start instead of a label that stays */
   G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
@@ -220,7 +225,7 @@ function v2DrawWorm(){if(!v2WormOn())return;const R=G2.R||20;ctx.save();
   else if(w)G2.wormFx=null;ctx.restore();}
 // Second Horizon (Laboratory): once a level, the blow that would take a heart is caught: time slows, a gold wave clears the meteors, the arcs come back
 function v2HorOk(){return G2.mode==='level'&&gameMode==='classic'&&labLv('hor')>=1&&!G2.horUsed;}
-function v2Horizon(){G2.horUsed=1;for(let i=G2.arcs;i<3;i++)v2ArcForm(i,'arc',(i-G2.arcs)*.08);G2.arcs=3;G2.arcFill=.5;const d=Math.min(6,2+.3*labEffLv('hor'));G2.immT=Math.max(G2.immT,d);G2.horT=d;G2.horSlow=.9;G2.horFx={t:0};
+function v2Horizon(){G2.horUsed=1;{const am=v2AM();for(let i=G2.arcs;i<am;i++)v2ArcForm(i,'arc',(i-G2.arcs)*.08);G2.arcs=Math.max(G2.arcs,am);}G2.arcFill=.5;const d=Math.min(6,2+.3*labEffLv('hor'));G2.immT=Math.max(G2.immT,d);G2.horT=d;G2.horSlow=.9;G2.horFx={t:0};
   for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';v2Burst(o.x,o.y,14,'#ffd76a',2,6,.5);}
   flash=Math.max(flash,.6);shake=Math.max(shake,8);vib([40,30,90]);sfx('powerup',{vol:.8,rate:.7});v2Sfx('achieve',{vol:.5,rate:1.2});v2Call(T('İKİNCİ UFUK'),T('YAYLAR YENİLENDİ'),'#ffd76a',1.6,true);updateUI();dmEvent('hor',1);}
 function v2DrawHor(){const f=G2.horFx,R=G2.R||20;ctx.save();ctx.globalCompositeOperation='lighter';
@@ -356,22 +361,23 @@ const v2SpotR=b=>Math.max(9*G2.S,b.r*.2);
 // Radiation: the boss charges (a radiation sign on it, the danger sectors shaded), then sends out waves of arcs.
 // Between the arcs are gaps: sit in a gap as a wave passes. A shield or Rage protects you.
 const RAD2={planet:{n:3,fill:.6,waves:2,gap:.55,shift:0,v:300,col:'190,255,90'},red:{n:2,fill:.62,waves:2,gap:.6,shift:0,v:260,col:'255,140,60'},nova:{n:4,fill:.5,waves:2,gap:1.1,shift:.5,v:320,col:'170,235,255'}};
+const v2RadN=C=>rel(7)&&level>40?Math.max(3,C.waves):C.waves,v2RadGap=C=>C.gap*(rel(7)&&level>=80?.85:1); // later bosses send three waves, closer together from level 80
 function v2RadWarn(){return Math.max(1,1.5-.05*(Math.floor(level/10)-1));}
 function v2RadArc(b,a,a0){const C=RAD2[b.bt]||RAD2.planet,seg=TAU/C.n,x=((a-a0)%seg+seg*2)%seg;return x<seg*C.fill;} // is angle a inside an arc of the pattern starting at a0?
 function v2RadIn(b,x,y){const r=b.rad;if(!r||r.ph==='idle')return false;const C=RAD2[b.bt]||RAD2.planet,a=Math.atan2(y-b.y,x-b.x),d=Math.max(1,Math.hypot(x-b.x,y-b.y)),m=Math.atan2(G2.R*.55,d);
-  const k=r.ph==='fire'?Math.min(C.waves-1,r.next):0,a0=r.a0+k*C.shift*TAU/C.n;return v2RadArc(b,a-m,a0)||v2RadArc(b,a+m,a0)||v2RadArc(b,a,a0);}
+  const k=r.ph==='fire'?Math.min(v2RadN(C)-1,r.next):0,a0=r.a0+k*C.shift*TAU/C.n;return v2RadArc(b,a-m,a0)||v2RadArc(b,a+m,a0)||v2RadArc(b,a,a0);}
 const v2RadAct=()=>{const b=G2.boss;return !!(b&&b.radOn&&!b.edible&&(b.rad.ph!=='idle'||(b.rad.after||0)>0));}; // radiation is the danger while it runs: no meteors then
 function v2BossRad(b,dt,tk){const r=b.rad,K=V2K.boss,C=RAD2[b.bt]||RAD2.planet;
   if(r.ph==='idle'){if(r.after>0)r.after-=dt;r.cd-=dt*tk;if(r.cd<=0){r.ph='warn';r.t=0;G2.objs=G2.objs.filter(o=>!(o.k==='meteor'&&o.wait>0)); /* meteors still waiting at the edge are called off */if(!v2RadSafe())v2Alarm();const seg=TAU/C.n;r.a0=Math.atan2(hY-b.y,hX-b.x)-seg*C.fill/2;r.waves=[];r.next=0;r.hurt=false;v2Sfx('powerup',{vol:.35,rate:.55}); // an arc is aimed straight at you: move into a gap
       if(!TIPS.rad&&!G2.featShown)v2Tip('rad',b);else if(!G2.radSeen){G2.radSeen=1;v2Call('RADYASYON!','BOŞLUKLARA SAKLAN','#ff5a4a',1.3,true);}}}
   else if(r.ph==='warn'){r.t+=dt;if(r.t>=v2RadWarn()){r.ph='fire';r.t=0;r.next=0;r.spawnT=0;if(b.bt==='nova')b.burst=0;}}
   else{r.t+=dt;r.spawnT-=dt;
-    if(r.next<C.waves&&r.spawnT<=0){r.waves.push({r:b.r,a0:r.a0+r.next*C.shift*TAU/C.n,hit:false});r.next++;r.spawnT=C.gap;shake=Math.max(shake,5);flash=Math.max(flash,.15);v2Sfx('boom',{vol:.45,rate:b.bt==='nova'?.9:1.2});}
+    if(r.next<v2RadN(C)&&r.spawnT<=0){r.waves.push({r:b.r,a0:r.a0+r.next*C.shift*TAU/C.n,hit:false});r.next++;r.spawnT=v2RadGap(C);shake=Math.max(shake,5);flash=Math.max(flash,.15);v2Sfx('boom',{vol:.45,rate:b.bt==='nova'?.9:1.2});}
     const far=Math.hypot(W,H),th=sp2(16);
     for(const w of r.waves){w.r+=sp2(C.v)*dt*tk;if(w.hit)continue;const d=Math.hypot(hX-b.x,hY-b.y);
       if(Math.abs(d-w.r)<th*.5+G2.R*.55){const a=Math.atan2(hY-b.y,hX-b.x),m=Math.atan2(G2.R*.45,Math.max(d,1));
         if(v2RadArc(b,a,w.a0)||v2RadArc(b,a-m,w.a0)||v2RadArc(b,a+m,w.a0)){w.hit=true;if(!r.hurt&&G2.shT<=0&&G2.rageT<=0&&G2.immT<=0){r.hurt=true;G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.25);G2.immT=Math.max(G2.immT,1);v2ComboLost();v2Burst(hX,hY,22,'#b8ff5a',2,7,.6,2.2);shake=Math.max(shake,6);vib(50);v2Sfx('armor',{vol:.55,rate:.8});v2Call('RADYASYON','KÜÇÜLDÜN','#b8ff5a',1.1);} /* radiation burns size, not a life */}}}
-    if(r.next>=C.waves&&r.waves.every(w=>w.r>far)){r.ph='idle';r.after=1.5;r.cd=K.radEvery[b.bt]||9;r.waves=[];if(b.bt==='nova')b.burst=1e9;}}}
+    if(r.next>=v2RadN(C)&&r.waves.every(w=>w.r>far)){r.ph='idle';r.after=1.5;r.cd=K.radEvery[b.bt]||9;r.waves=[];if(b.bt==='nova')b.burst=1e9;}}}
 function v2DrawRadSign(b){const r=b.rad;if(!r||r.ph==='idle'||b.edible||b.sw)return;const C=RAD2[b.bt]||RAD2.planet,seg=TAU/C.n,rot=r.a0+seg*C.fill/2+Math.PI/2; // the radiation sign on the boss, drawn above its body
   if(r.ph==='warn'){const q=Math.min(1,r.t/v2RadWarn()),pu=.5+.5*Math.sin(clock*(9+q*16));v2DrawTrefoil(b.x,b.y,b.r*.62,rot+(1-q)*2,C.col,.55+.45*pu);}
   else v2DrawTrefoil(b.x,b.y,b.r*.62,rot,C.col,Math.max(0,.9-r.t*.8));}
@@ -454,7 +460,7 @@ function v2AddRage(n){if(G2.rageT>0||G2.ready)return;G2.rage=Math.min(G2.script&
 function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO BİTTİ','#9aa3b2',13);G2.combo=0;comboCount=0;G2.spec=[];}
 
 function v2Update(dt){
-  G2.arcFill+=dt;if(G2.lastArcT>0)G2.lastArcT-=dt;
+  G2.arcFill+=dt;if(G2.lastArcT>0)G2.lastArcT-=dt;if(G2.arcPow>0){G2.arcPow-=dt;if(G2.arcPow<=0)v2ArcPowEnd();}
   if(G2.mode==='surv'&&!G2.dstorm&&G2.arcs<3&&gState==='playing'){G2.regT+=dt;if(G2.regT>=25){G2.regT=0;G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2ArcForm(G2.arcs-1,'arc');v2Pop(T('YAY ONARILDI'),'#ff8a8a',15);}}else G2.regT=0; /* survival: a broken arc mends every 25 s */
   const S=G2.S,tk=(G2.horSlow>0?.3:1)*(G2.timeT>0?v2TimeK():1)*(G2.btT>0?v2BtK():1)*(G2.killFx&&G2.killFx.boom===undefined?.35:1),lv=G2.lv;
   // timers
@@ -1075,7 +1081,8 @@ function v2Score(o,mini){
   dmEvent('catch',1);dmEvent('combo',G2.combo,true);if(o.k==='crystal')dmEvent('comet',1);dmEvent('score',totalScore,true);
   if(gameMode==='sprint'){const bi=Math.min(9,Math.floor(SPR_RUN.t/6));SPR_RUN.blocks[bi].c++;if(perf)SPR_RUN.blocks[bi].p++;SPR_RUN.caught++;}
   if(o.fromBoss)v2BossHit();
-  if(o.k==='energy'){if(G2.arcs<3&&!G2.ending){G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2ArcForm(G2.arcs-1,'arc');v2Call(T('YAY ONARILDI'),'','#ff8a8a',.9);v2Sfx('bell',{vol:.45,rate:1.1});if(!TIPS.repair)later(()=>v2Tip('repair',null),600);}else v2Call('+15 VORTEX','','#b6ff4a',.8);} /* energy mends a broken arc first */
+  if(o.k==='energy'){if(G2.arcMax===0&&!(G2.arcPow>0)&&!G2.ending){G2.eN=(G2.eN||0)+1;if(G2.eN>=ARCPOW.need)v2ArcPowOn();else{v2Call(T('YAY KALKANI'),G2.eN+' / '+ARCPOW.need,'#ff8a8a',.9);v2Sfx('bell',{vol:.35,rate:1.4});}}
+  else if(G2.arcs<v2AM()&&!G2.ending){G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2ArcForm(G2.arcs-1,'arc');v2Call(T('YAY ONARILDI'),'','#ff8a8a',.9);v2Sfx('bell',{vol:.45,rate:1.1});if(!TIPS.repair)later(()=>v2Tip('repair',null),600);}else v2Call('+15 VORTEX','','#b6ff4a',.8);} /* energy mends a broken arc first */
   vib(o.k==='ast'?8:15);
 }
 function v2Eaten(o){ // the body has crossed the event horizon
@@ -1124,7 +1131,7 @@ function v2Hit(o,whole){
     if(!TIPS.arcs)later(()=>v2Tip('arcs',null),500); /* the first broken arc explains itself */return;}
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
-  for(let i=0;i<3;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=3;G2.arcFill=.5;G2.immT=Math.max(G2.immT,1.5); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
+  G2.arcPow=0;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=am;}G2.arcFill=.5;G2.immT=Math.max(G2.immT,1.5); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
   if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);v2HitNote();}
   v2Pop('-1 ♥','#ff7a5c',20);updateUI();
   if(lives<=0){v2Fail(null);}
@@ -1144,7 +1151,7 @@ function v2Fail(msg){
 function v2AddTime(sec){G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();saveG();
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';}
 function v2Revive(){ // one continue per run (spec §42)
-  G2.contUsed=true;for(let i=0;i<3;i++)v2ArcForm(i,'arc',i*.08);G2.arcs=3;G2.arcFill=.5;if(G2.guard){const g=G2.guard;g.hp=Math.max(g.hp,50);if(g.keep!=null){g.t=g.keep;g.keep=null;}}lives=G2.failMsg==='SÜRE DOLDU'?Math.max(1,lives):1;G2.combo=0;comboCount=0;G2.rage=V2K.cont.rage;G2.ready=false;G2.rageT=0;G2.immT=V2K.cont.imm;
+  G2.contUsed=true;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',i*.08);G2.arcs=am;}G2.arcFill=.5;if(G2.guard){const g=G2.guard;g.hp=Math.max(g.hp,50);if(g.keep!=null){g.t=g.keep;g.keep=null;}}lives=G2.failMsg==='SÜRE DOLDU'?Math.max(1,lives):1;G2.combo=0;comboCount=0;G2.rage=V2K.cont.rage;G2.ready=false;G2.rageT=0;G2.immT=V2K.cont.imm;
   hideModals();updateUI();gState='playing';lastT=performance.now();saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';
 }
@@ -1157,11 +1164,11 @@ function v2RageGo(){
 
 // ── split planets, antimatter, wormholes ─────────────
 function v2Split(o){ // a split planet cracks in two: both halves (half the mass each) shoot away from the hole
-  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*.55,s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;}
+  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*(rel(7)?.85:.55),s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;if(rel(7))h.spinV=sd*rrnd(4,5.5);}
   v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
 }
 // the two halves burst apart, then slow to an ordinary drift; one that still reaches an edge bounces back in, so neither is ever lost
-function v2HalfKeep(o,dt){if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(70);if(v>cr){const f=Math.max(cr/v,Math.pow(.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
+function v2HalfKeep(o,dt){if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(7)?120:70);if(v>cr){const f=Math.max(cr/v,Math.pow(rel(7)?.45:.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
   const m=o.r;if(o.x<m){o.x=m;o.vx=Math.abs(o.vx);}else if(o.x>W-m){o.x=W-m;o.vx=-Math.abs(o.vx);}if(o.y<m){o.y=m;o.vy=Math.abs(o.vy);}else if(o.y>H-m){o.y=H-m;o.vy=-Math.abs(o.vy);}}
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
@@ -1253,7 +1260,7 @@ function v2DrawMegaFx(dt){ // a white-hot flare on every body the mega bomb deto
 function v2Shield(){
   if(!G2.on||gState!=='playing'||gameMode==='sprint'||G2.shT>0||G2.rageT>0)return;
   if(SHOP.shield<=0){if(monOn())v2ShieldBuy();else{toast('🛡','KALKANIN YOK','3 kalkan parçası topla: seviye 4’ten itibaren gelir.');v2Sfx('buzz',{vol:.25});}return;}
-  SHOP.shield--;saveG();updateUI();G2.shT=v2ShDur();G2.shTick=0;const fix=G2.mode!=='sprint'&&G2.arcs<3;if(fix){for(let i=G2.arcs;i<3;i++)v2ArcForm(i,'arc');G2.arcs=3;G2.arcFix={i:2,t:G2.t};} /* the shield also mends every broken arc */
+  SHOP.shield--;saveG();updateUI();G2.shT=v2ShDur();G2.shTick=0;const am=v2AM(),fix=G2.mode!=='sprint'&&G2.arcs<am;if(fix){for(let i=G2.arcs;i<am;i++)v2ArcForm(i,'arc');G2.arcs=am;G2.arcFix={i:am-1,t:G2.t};} /* the shield also mends every broken arc */
   v2Call('KALKAN',fix?'10 sn · YAYLAR TAMİR':'10 sn','#ffd84d',1.1);sfx('armor',{vol:.8,rate:.9});sfx('powerup',{vol:.45,rate:1.3});vib(25);v2Burst(hX,hY,24,'#ffd84d',2,6,.6);v2Ui(true);
 }
 function v2ShieldBuy(){ // empty: offer one for diamonds, the game waits
@@ -1270,6 +1277,8 @@ const TIP2={
   hard:['🔥','ZOR SEVİYE','Süre dolmadan hedefe ulaş; meteorlar daha sık gelir. Güçlerini burada kullan.'],
   gold2:['🟡','ALTIN KABUK','Altın kabuk kazandın. Bir sonraki darbeyi o karşılar ve patlayıp etrafındaki meteorları siler.'],
   shell:['⚪','GÜMÜŞ KABUK','Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.'],
+  arcs2:['☄️','İKİ YAY','Bu evrende her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.'],
+  arcpow:['⚡','YAY KALKANI','Artık yayların yok: her darbe bir kalp götürür. 3 enerji topu yut, yaylar 20 saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.'],
   repair:['⚡','YAY ONARILDI','Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.'],
   arcs:['☄️','METEOR VE YAYLAR','Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.'],
   meteor:['☄️','METEOR','Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; 3 yay giderse 1 can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ!'],
@@ -1504,12 +1513,12 @@ function v2Frame(dt){
 // the last one pulses; when all three are gone a heart goes and the arcs grow back.
 /* arcs and shells break into pieces you can see fly off, and mend from dust that gathers back into the arc */
 const AFX_COL={arc:'#ff6a6a',shell:'#eaf1fb',gold:'#ffd76a'};
-function v2ArcGeo(i){const R=G2.R||20,lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,seg=TAU/3,gap=.26,a0=-Math.PI/2-seg/2+i*seg+gap/2;return {R,lw,rr,a0,a1:a0+seg-gap};}
-function v2ArcBreak(i,col,k=1){if(!G2.afx||i<0||i>2)return;const {lw,rr,a0,a1}=v2ArcGeo(i),rn=(a,b)=>a+Math.random()*(b-a),n=Math.max(2,Math.round(4*k)),da=(a1-a0)/n;
+function v2ArcGeo(i){const R=G2.R||20,lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,seg=TAU/v2AN(),gap=.26,a0=-Math.PI/2-seg/2+i*seg+gap/2;return {R,lw,rr,a0,a1:a0+seg-gap};}
+function v2ArcBreak(i,col,k=1){if(!G2.afx||i<0||i>=v2AN())return;const {lw,rr,a0,a1}=v2ArcGeo(i),rn=(a,b)=>a+Math.random()*(b-a),n=Math.max(2,Math.round(4*k)),da=(a1-a0)/n;
   for(let q=0;q<n;q++){const am=a0+da*(q+.5),sp=sp2(rn(70,150));G2.afx.push({k:'chunk',x:hX+Math.cos(am)*rr,y:hY+Math.sin(am)*rr,vx:Math.cos(am)*sp+rn(-30,30),vy:Math.sin(am)*sp+rn(-30,30),a:am,h:da*.4,r:rr,lw,rot:0,vr:rn(-7,7),col,t:0,life:.85});}
   for(let q=0;q<Math.round(14*k);q++){const am=rn(a0,a1),sp=sp2(rn(110,280)),d=am+rn(-.6,.6);G2.afx.push({k:'shard',x:hX+Math.cos(am)*rr,y:hY+Math.sin(am)*rr,vx:Math.cos(d)*sp,vy:Math.sin(d)*sp,rot:rn(0,TAU),vr:rn(-14,14),s:lw*rn(.35,.85),col,t:0,life:rn(.55,.95)});}
   G2.afx.push({k:'crack',i,col,t:0,life:.24});}
-function v2ArcForm(i,kind,delay=0){if(!G2.afx||i<0||i>2)return;const rn=(a,b)=>a+Math.random()*(b-a),{a0,a1}=v2ArcGeo(i),n=kind==='gold'?12:kind==='shell'?16:22,life=.85;
+function v2ArcForm(i,kind,delay=0){if(!G2.afx||i<0||i>=v2AN())return;const rn=(a,b)=>a+Math.random()*(b-a),{a0,a1}=v2ArcGeo(i),n=kind==='gold'?12:kind==='shell'?16:22,life=.85;
   for(const f of G2.afx)if(f.k==='form'&&f.i===i&&f.kind===kind)f.t=f.life; // a newer mend replaces the old one
   const ds=[];for(let q=0;q<n;q++){const ta=rn(a0,a1);ds.push({ta,sa:ta+rn(-1.5,1.5),sr:rn(1.7,3),d:rn(0,.18),z:rn(1.1,2.4)});}
   G2.afx.push({k:'form',i,kind,col:AFX_COL[kind],ds,t:-delay,life});}
@@ -1527,9 +1536,12 @@ function v2DrawArcFx(){const A=G2.afx;if(!A||!A.length)return;ctx.save();ctx.lin
       if(q>.55){const w=1-(q-.55)/.45;ctx.globalAlpha=w*.9;ctx.strokeStyle='#ffffff';ctx.shadowBlur=14;ctx.lineWidth=lw+4*w;ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();}
       ctx.restore();}}
   ctx.globalAlpha=1;ctx.restore();}
-function v2DrawArcs(R){const lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,seg=TAU/3,gap=.26,n=G2.arcs,last=n===1,grow=Math.min(1,G2.arcFill/.5); // the arcs sit on the event horizon; their colour is the layer left: gold, silver, red
+function v2DrawArcs(R){const lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,N=v2AM(),seg=TAU/Math.max(1,N),gap=.26,n=G2.arcs,last=n===1&&N>1,grow=Math.min(1,G2.arcFill/.5); // the arcs sit on the event horizon; their colour is the layer left: gold, silver, red
   ctx.save();ctx.lineCap='round';
-  for(let i=0;i<3;i++){const a0=-Math.PI/2-seg/2+i*seg+gap/2,a1=a0+seg-gap;
+  if(N===0){if(G2.gold){ctx.strokeStyle='#ffd76a';ctx.shadowColor='#ffb020';ctx.shadowBlur=12;ctx.lineWidth=lw;ctx.beginPath();ctx.arc(0,0,rr,0,TAU);ctx.stroke();ctx.shadowBlur=0;} /* no arcs: a gold shell shows as a full ring */
+    if(G2.mode==='level'&&G2.arcMax===0){const k=ARCPOW.need,e=G2.eN||0,y=rr+lw+sp2(12),dx=sp2(15),pr=sp2(4.6);for(let i=0;i<k;i++){const x=(i-(k-1)/2)*dx,on=i<e;ctx.fillStyle=on?'#ff8a8a':'rgba(8,4,10,.55)';ctx.shadowColor='#ff5a5f';ctx.shadowBlur=on?10:0;ctx.beginPath();ctx.arc(x,y,pr,0,TAU);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=on?'#ffd0d0':'rgba(255,170,170,.55)';ctx.lineWidth=1.5;ctx.stroke();}}} /* the energy balls counted toward the arc power */
+  if(G2.arcPow>0){const q=G2.arcPow/ARCPOW.dur,bl=G2.arcPow<3?.4+.6*Math.abs(Math.sin(clock*8)):1;ctx.globalAlpha=bl;ctx.strokeStyle='rgba(255,170,170,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,rr+lw+3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke();ctx.globalAlpha=1;} /* the arc power's time left, blinking in its last 3 s */
+  for(let i=0;i<N;i++){const a0=-Math.PI/2-seg/2+i*seg+gap/2,a1=a0+seg-gap;
     if(i>=n){ctx.lineWidth=lw*.45;ctx.strokeStyle='rgba(255,255,255,.14)';ctx.setLineDash([2,5]);ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();ctx.setLineDash([]);} // broken
     else{const fm=v2ArcFormQ(i),shell=i<G2.shells&&!(fm.k==='shell'&&fm.q<.62),gold=!!G2.gold&&!(fm.k==='gold'&&fm.q<.62),pu=last&&!gold&&!shell?.55+.45*Math.sin(clock*9):1,e=a0+(a1-a0)*grow;
       ctx.globalAlpha=fm.k==='arc'?fm.a:1;ctx.lineWidth=lw+3;ctx.strokeStyle='rgba(8,4,10,.55)';ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.globalAlpha=1; /* dark backing so the arc reads on any nebula */
@@ -1726,7 +1738,8 @@ function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(
   ctx.strokeStyle='rgba(200,210,240,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(o.x,o.y,d,0,TAU);ctx.stroke();
   const g=ctx.createRadialGradient(x-r*.35,y-r*.35,0,x,y,r);g.addColorStop(0,'#f2f2ee');g.addColorStop(1,'#6f7078');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const r=o.r,k=.7+.3*Math.sin(clock*6);
-  if(o.k==='half'){ctx.rotate(o.cut||0);ctx.strokeStyle=`rgba(160,245,255,${.9*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=10;ctx.lineWidth=Math.max(1.5,r*.12);ctx.beginPath();ctx.moveTo(-r*.95,0);ctx.lineTo(-r*.3,r*.08);ctx.lineTo(r*.2,-r*.06);ctx.lineTo(r*.95,0);ctx.stroke();ctx.restore();return;} // the fresh fracture face
+  if(o.k==='half'){if(rel(7)){const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();ctx.rotate(o.spinA||0);} /* the halves blink and spin so they read apart from whole bodies */
+    ctx.rotate(o.cut||0);ctx.strokeStyle=`rgba(160,245,255,${.9*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=10;ctx.lineWidth=Math.max(1.5,r*.12);ctx.beginPath();ctx.moveTo(-r*.95,0);ctx.lineTo(-r*.3,r*.08);ctx.lineTo(r*.2,-r*.06);ctx.lineTo(r*.95,0);ctx.stroke();ctx.restore();return;} // the fresh fracture face
   ctx.rotate(o.rot*.3);ctx.strokeStyle=`rgba(150,240,255,${.85*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=8;ctx.lineWidth=Math.max(1.2,r*.07);
   ctx.beginPath();ctx.moveTo(-r*.8,-r*.2);ctx.lineTo(-r*.2,r*.05);ctx.lineTo(r*.15,-r*.45);ctx.moveTo(-r*.2,r*.05);ctx.lineTo(0,r*.75);ctx.moveTo(r*.15,-r*.45);ctx.lineTo(r*.75,-r*.1);ctx.stroke();ctx.restore();}
 function v2DrawWorms(){for(const w of G2.worms){const a=Math.min(1,w.t/.4,(w.life-w.t)/.6);ctx.save();ctx.globalAlpha=a*.35;ctx.strokeStyle='#b9a8ff';ctx.lineWidth=1.2;ctx.setLineDash([3,8]);ctx.lineDashOffset=-clock*30;
