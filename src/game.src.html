@@ -1625,7 +1625,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);SHOP.pend=SHOP.pend.filter(x=>Array.isArray(x)&&x.length===2&&x.every(y=>typeof y==='string')).slice(-10);
   }catch(e){}
 }
-function vib(p){if(!SET.vib)return;const b=CAP('Bhs');if(b){b.vibrate({pattern:Array.isArray(p)?p.map(x=>Math.max(0,Math.min(400,x|0))):[Math.max(20,Math.min(400,p|0))]}).catch(()=>{});return;} // app: our own plugin, on the game vibration channel
+let VIBT=0;function vib(p){if(!SET.vib)return;if(rel(7)&&!Array.isArray(p)&&gState==='playing'){const n=performance.now();if(n-VIBT<90)return;VIBT=n;} /* 1.4.7: short buzzes are thinned out during a level */const b=CAP('Bhs');if(b){b.vibrate({pattern:Array.isArray(p)?p.map(x=>Math.max(0,Math.min(400,x|0))):[Math.max(20,Math.min(400,p|0))]}).catch(()=>{});return;} // app: our own plugin, on the game vibration channel
   if(navigator.vibrate)try{navigator.vibrate(p);}catch(e){}}
 
 // ══════════════════════════════════════════════════════
@@ -1721,7 +1721,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
     const g=c.createGain();g.gain.value=0;s.connect(g);g.connect(this.musBus);
     try{s.start(t,.06);}catch(e){return;}
     g.gain.linearRampToValueAtTime(key==='mMenu'?.5:.62,t+1.6);
-    this.mus={cur:this.buf[key]===b?key:'mGame',want:name,src:s,g};if(name==='game')this.fetchMus('boss');
+    this.mus={cur:this.buf[key]===b?key:'mGame',want:name,src:s,g};if(name==='game'&&!rel(7))this.fetchMus('boss');
   },
   duck(k,sec){if(!this.musDuck)return;const t=this.ctx.currentTime;this.musDuck.gain.cancelScheduledValues(t);this.musDuck.gain.setTargetAtTime(k,t,.08);this.musDuck.gain.setTargetAtTime(1,t+sec,.6);},
   tension(on){if(!this.musF)return;this.musF.frequency.setTargetAtTime(on?1100:16000,this.ctx.currentTime,.5);}
@@ -3730,10 +3730,11 @@ let sMapEl=null,sMenuEl=null;
 // Hitch report (published site and app): a gap of 120 ms+ between two screen refreshes in the middle of a level is a hitch. A level with two
 // hitches (or one of 300 ms+) sends one short anonymous note to the error log: level, worst gap, refresh rate, quality step, what was on
 // screen, CPU cores, memory and the phone model from the browser. No install id or name; at most 3 notes a session.
-const LAG={last:0,lv:-1,n:0,worst:0,ctx:'',sent:0,done:false};
+const LAG={last:0,lv:-1,n:0,worst:0,ctx:'',sent:0,done:false,first:[],seen:new Set()};
+function lagFirst(k){if(LAG.seen.has(k))return;LAG.seen.add(k);LAG.first.push([k,performance.now()]);if(LAG.first.length>12)LAG.first.shift();} /* first sight this session of a body kind, an event or a callout: a new GPU shader may compile then */
 function lagWatch(ts){const g=ts-LAG.last,pj=LAG.js||0,hp=performance.memory?performance.memory.usedJSHeapSize:0,dh=LAG.hp?hp-LAG.hp:0;LAG.last=ts;LAG.hp=hp;LAG.j0=performance.now();queueMicrotask(()=>{LAG.js=performance.now()-LAG.j0;}); /* js: our own work in a frame */if(!G2.on||gState!=='playing'||document.hidden||G2.t<2)return;
   if(LAG.lv!==level+'/'+gameMode){LAG.lv=level+'/'+gameMode;LAG.n=0;LAG.worst=0;LAG.done=false;}
-  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(performance.now()-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((performance.now()-LAG.ad)/1000):-1}s ago t ${G2.t.toFixed(1)}s`;}
+  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(performance.now()-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((performance.now()-LAG.ad)/1000):-1}s ago t ${G2.t.toFixed(1)}s\nnew ${LAG.first.filter(f=>performance.now()-f[1]<1500).map(f=>f[0]+'@'+Math.round(performance.now()-f[1])).join(',')||'-'}`;}
   if((LAG.n>=2||LAG.worst>=300)&&LAG.sent<3){LAG.done=true;LAG.sent++;const hz=LOOPF.iv?Math.round(1000/LOOPF.iv):0,ua=(navigator.userAgent.match(/Android [^;)]*;\s*([^;)]+)/)||[])[1]||'';
     lagReport(`LAG ${hz}Hz q${GL.quality.toFixed(2)} fx${FXLITE?1:0}`,`L${level} ${gameMode} hitches ${LAG.n} worst ${Math.round(LAG.worst)}ms\n${LAG.ctx}\ncores ${navigator.hardwareConcurrency||0} mem ${navigator.deviceMemory||0} heap ${performance.memory?Math.round(performance.memory.usedJSHeapSize/1048576):0}MB ads ${ADS.on?1:0} dpr ${devicePixelRatio} ${innerWidth}x${innerHeight}\n${ua.replace(/\s*Build\/.*$/,'').slice(0,40)}`);}}
 function lagReport(m,s){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE)return;
@@ -3941,7 +3942,7 @@ function menuTick(){const th=seasonTheme(),cur=Math.max(1,savedLevel);let nb=0;f
   $('menuTick').innerHTML=L.join('<span style="opacity:.4">  ·  </span>');}
 function menuHub(){labBadge();menuTick();$('snBtn').classList.toggle('gold',seasonIs('gold'));const rb=$('raceBadge');if(rb){const d=DAILY.n!==dailyNo();rb.textContent=d?'!':'';rb.className=d?'hot':'';}menuBgStart();}
 setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTickQuiet();labMenuRing();}},1000);
-function showMenu(){
+function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
   if(G2.on)v2Stop();if(HMODE)hmSwap(); // the menu always shows the classic run
   runId++;pendingWin=false;EXPRUN=null;renderExpBtn();
   setAv($('menuAv'),playerAvatar);$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();atlasBadge();seasonBadge();

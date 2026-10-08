@@ -48,7 +48,8 @@ Her güncellemede:
 
 ## 1.4.7 (9 Ekim, öne alındı) · `REL` 7 yapılacak
 - Kasma: oyun sırasında hafızaya kayıt yapılmıyor (1.4.6'da 12 sn'de 8 kayıt vardı: atlas, başarım, ipucu); kayıt seviye sonu, duraklatma veya arka plana geçişte. Menü kalp sayacı oyun sırasında ekranı güncellemiyor.
-- Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ), son kaydı, son reklamdan geçen süreyi ve seviyenin kaçıncı saniyesi olduğunu da yazıyor.
+- Kasma: müzik parçaları (bölge ve boss) seviye içinde değil, menüde ve sonuç ekranında açılıyor (decode). Titreşim çağrıları oyun sırasında en sık 90 ms'de bir (her biri uygulamanın yerel tarafına gidip geliyor).
+- Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ), son kaydı, son reklamdan geçen süreyi, seviyenin kaçıncı saniyesi olduğunu ve son 1,5 sn'de oturumda ilk kez görülen cisim/olay/yazıları (yeni bir ekran kartı programı derleniyor olabilir) da yazıyor.
 - Şüphe (doğrulanacak): AdMob, bir reklam kapandıktan hemen sonra sıradakini yüklüyor; yükleme yeni seviyenin ilk saniyelerine denk gelip güçlü telefonlarda da takılma yapabilir. Raporlar bunu doğrularsa yükleme, Dahili test kanalında denenerek seviye sonuna (sonuç ekranına) taşınacak.
 - Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
 - Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek).

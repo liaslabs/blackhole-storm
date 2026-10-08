@@ -249,7 +249,7 @@ function v2Burst(x,y,n,col,s0,s1,life=.5,sz=1.8){
 }
 function v2Pop(txt,col,sz=18){ftexts.push(new FText(txt,hX+rnd(-8,8),hY-G2.R-sp2(26)-rnd(0,14),col,sz));if(ftexts.length>14)ftexts.shift();}
 // big centred callout (arcade terms stay English in every language)
-function v2Call(txt,sub='',col='#fff',life=1.1,top=false){G2.calls=G2.calls.filter(c=>c.top!==top);G2.calls.push({txt:T(String(txt)),sub:T(String(sub)),col,life,max:life,top});} /* every callout is shown in the player's language */
+function v2Call(txt,sub='',col='#fff',life=1.1,top=false){if(typeof lagFirst==='function')lagFirst('call:'+String(txt).slice(0,14));G2.calls=G2.calls.filter(c=>c.top!==top);G2.calls.push({txt:T(String(txt)),sub:T(String(sub)),col,life,max:life,top});} /* every callout is shown in the player's language */
 
 // ── spawning ──────────────────────────────────────────
 function v2Big(){return clamp((G2.rr/V2K.r0-1.3)/(V2K.rMax/V2K.r0-1.3),0,1);} // 0 small … 1 largest
@@ -261,7 +261,7 @@ function v2Obj(k,x,y,vx,vy,opt={}){
   if(k==='meteor'){o.fvx=vx;o.fvy=vy;o.slow=clamp(.8-.02*(G2.lv-2),.45,.8)+.25*v2Big();o.ramp=0;} // enters slowly (longer when the hole is big), then speeds up
   if(k==='pulsar')o.ph=rng()*1.6;if(k==='mpair')o.sa=rng()*TAU;
   if(GL2.has(k)){o.cell=k==='moon'?8:k==='gold'?6:k==='split'||k==='half'?14:k==='mpair'?5:k==='sat'?10:opt.cell??zonePlanetCell();o.sX=1;o.sY=1;o.gs=1;o.suck=null;o.heat=0;giveSpin(o);}
-  G2.objs.push(o);return o;
+  if(typeof lagFirst==='function')lagFirst(k);G2.objs.push(o);return o;
 }
 function v2Edge(k,side,x0){
   const s=v2Speed(k),r=OBJ2[k].r*G2.S;let x,y,a;
@@ -788,7 +788,7 @@ function v2EvStep(dt){
   if(e.k==='eclipse'){e.ping-=dt;e.pingT+=dt;if(e.ping<=0){e.ping=2;e.pingT=0;v2Sfx('tickHi',{vol:.35,rate:.7});}}
   if(e.k==='belt'){v2BeltStep(e,dt);if(e.t>=BELT.warn&&(G2.shT>0||G2.novaT>0))e.sh=1;} /* got through behind a shield or Supernova */if(e.k==='neb')v2NebStep(e,dt);
   if(e.t>=e.dur||G2.ending){if(e.k==='cons')v2ConsEnd(e);if(e.k==='belt'){G2.ev=null;v2BeltEnd(e);return;}if(e.k==='neb'){G2.ev=null;if(G2.nebIn){G2.nebIn=0;if(!G2.ending)v2Pop(T('AĞIRLIK GEÇTİ'),'#8dffcb',16);}return;}G2.ev=null;if(!G2.ending&&(e.k!=='cons'||e.done))spAdd(8*(seasonIs(e.k)?2:1));if(!G2.ending&&e.k!=='cons')v2Call(e.k==='wind'?'RÜZGÂR DİNDİ':'IŞIK GERİ GELDİ','','#cfe6f5',.9);}}
-function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;if(k==='belt'&&G2.mode==='sprint')e.dur=BELT.warn+8+BELT.end; /* the race's belt is a short one */
+function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;if(typeof lagFirst==='function')lagFirst('ev:'+e.k);if(k==='belt'&&G2.mode==='sprint')e.dur=BELT.warn+8+BELT.end; /* the race's belt is a short one */
   if(k==='wind'){e.a=(rng()<.5?0:Math.PI)+rrnd(-.35,.35);e.f=sp2(170);e.st=[];v2Call('YILDIZ RÜZGÂRI','AKINTIYA KAPIL','#bfe6ff',1.4,true);v2Sfx('slow',{vol:.5,rate:1.6});}
   else if(k==='eclipse'){e.ping=.6;e.pingT=9;v2Call('TUTULMA','KARANLIKTA PUAN ×1,5','#b9a8ff',1.4,true);v2Sfx('bossIntro',{vol:.35,rate:.6});}
   else if(k==='kilo'){e.cx=W*.5;e.cy=Math.max(sp2(190),H*.32);e.R0=sp2(100);e.ang=0;e.rad=e.R0;e.merged=false;e.wave=0;v2Call('KİLONOVA','İKİ NÖTRON YILDIZI BİRLEŞİYOR','#bfe6ff',1.5,true);v2Sfx('bossIntro',{vol:.35,rate:1.4});}
@@ -1457,7 +1457,7 @@ function v2TipAnim(id){let cv=$('tip2Cv');const fn=TIPANIM[id];if(!fn){if(cv)cv.
 function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8;G2.tipGap=8;$('rage2')&&$('rage2').classList.remove('hl');$('shTop').classList.remove('hl');$('diaTop').classList.remove('hl');$('hkTop').classList.remove('hl');gState='playing';lastT=performance.now();SND.duck(1,0);sfx('click',{vol:.4});}
 
 // ── level end ─────────────────────────────────────────
-function v2Complete(){
+function v2Complete(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus('boss');}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
   if(gState!=='playing')return;
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();}
   if(!G2.dmg)dmEvent('clean',1);
