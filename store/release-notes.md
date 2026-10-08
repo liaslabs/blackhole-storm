@@ -62,11 +62,17 @@ Her güncellemede:
 ## 1.4.8 (16 Ekim) · `REL` 8 yapılacak
 - Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Ağ yıldızların altında çukurlaşıyor, sarmal dalgalar yayıyor,
   birleşmede kumaş gibi dalgalanıyor. Sadece görsel; dalganın hızı ve itişi aynı. `rel(8)`.
+- Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez. Deliğin etrafında kovalayan iki altın kuyruklu yay.
+- Dolu ekran: cisimler ~1,7 kat sık, ekranda en fazla 14/16/18; L2–10'da %20 hızlı; 6–8'lik kaya sağanakları; hedef puanlar L2–6'da ×2, sonra ×1,5; L1 öğretici %35 hızlı.
+- Yaylar: L1–10 3 yay, L11–40 2 yay, L41+ yaysız; L41+ 3 enerji topu = 20 sn Yay Kalkanı. L11 ve L41'de tanıtım kartı.
 - (geri bildirimlerden eklenecekler)
 
 ```
 <en-US>
 • Kilonova: see space itself ripple as two neutron stars merge
+• A fuller screen from the first level: more to swallow, faster action
+• New, very rare Golden Arc: for 10 s you swallow everything, even meteors
+• Tougher later levels: fewer arcs per heart, with an arc power from level 41
 </en-US>
 ```
 
