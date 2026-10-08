@@ -1720,7 +1720,7 @@ const REL=6,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v46";
+const BUILD="bhs-v47";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
