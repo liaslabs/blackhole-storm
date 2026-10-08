@@ -1899,7 +1899,7 @@ let HMODE=false,HSEL=false,HM={lv:1,sc:0,best:1,ls:{},ws:0,s3:0};const HM_OPEN=3
 function hmSwap(){[savedLevel,HM.lv]=[HM.lv,savedLevel];[savedScore,HM.sc]=[HM.sc,savedScore];[bestLevel,HM.best]=[HM.best,bestLevel];[LSTARS,HM.ls]=[HM.ls,LSTARS];[WSTREAK,HM.ws]=[HM.ws,WSTREAK];[STREAK3,HM.s3]=[HM.s3,STREAK3];HMODE=!HMODE;}
 const hmOpen=()=>(HMODE?HM.best:bestLevel)>=HM_OPEN;
 function saveG(){if(HMODE){hmSwap();try{saveG0();}finally{hmSwap();}return;}saveG0();}
-function saveG0(){try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}}
+const LSAVE={t:0,d:0};function saveG0(){const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -2386,7 +2386,8 @@ let lastT=performance.now(),clock=0;
 const BASE_R=29,RING_K=1.45;let curR=BASE_R,tgtR=BASE_R;
 let runId=0,pendingWin=false;
 let antiNear=false,lostThisLevel=false,runStartBest=0,lastSurvSec=-1;
-let saveTimer=0;function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(saveG,1200);}
+const saveLater=()=>rel(7)&&gState==='playing'?saveSoon():saveG(); /* 1.4.7: an Atlas step or an achievement in mid-level is saved when the level stops */
+let saveTimer=0;function saveSoon(){clearTimeout(saveTimer);saveTimer=setTimeout(function go(){if(rel(7)&&gState==='playing'&&!document.hidden){saveTimer=setTimeout(go,1500);return;}saveG();},1200);} /* 1.4.7: no storage write while a level runs (a hitch on slow phones); it waits for the level end, a pause or the background */
 // Game-flow timers are tied to the level/run that started them: a timer left over from a
 // finished level, a rescue that ended, or a run abandoned from the pause menu must not fire later.
 function later(fn,ms){const id=runId;setTimeout(()=>{if(id===runId)fn();},ms);}
@@ -2428,7 +2429,7 @@ const ACHS=[
   {id:'streak7',i:'📅',t:'Sadık Pilot',d:'7 gün üst üste giriş',c:()=>loginStreak>=7},
 ];
 let achShowing=false;const ACH_STALE=5000;
-function checkAchs(){for(const a of ACHS){if(!unlockedAch.has(a.id)&&a.c()){unlockedAch.add(a.id);achQueue.push({...a,at:performance.now()});saveG();}}if(achQueue.length&&!achShowing)nextAch();}
+function checkAchs(){for(const a of ACHS){if(!unlockedAch.has(a.id)&&a.c()){unlockedAch.add(a.id);achQueue.push({...a,at:performance.now()});saveLater();}}if(achQueue.length&&!achShowing)nextAch();}
 function nextAch(){const now=performance.now();while(achQueue.length&&now-(achQueue[0].at||now)>ACH_STALE)achQueue.shift(); // a note that waited too long in line is skipped (the achievement stays unlocked)
   if(!achQueue.length){achShowing=false;return;}achShowing=true;const a=achQueue.shift();
   $('tI').textContent=a.i;$('tT').textContent=a.t;$('tD').textContent=a.d;$('toast').classList.add('on');sfx('achieve',{vol:.55,rev:.3});
@@ -2563,7 +2564,7 @@ function atlasAdd(k){k=ATLAS_ALIAS[k]||k;const d=ATLAS_DEF.find(x=>x[0]===k);if(
   const all=ATLAS_DEF.every(x=>atlasTier(x[0])>=1),mast=ATLAS_DEF.every(x=>atlasTier(x[0])>=3);
   if(all&&!COSMO.seenAll){COSMO.seenAll=1;COSMO.pend.push('*seen');achQueue.push({i:'📖',t:T('ATLAS TAMAM'),d:T('Her cismi gördün')+' · '+T('ödülün Atlas\'ta seni bekliyor'),at:performance.now()});}
   if(mast&&!COSMO.masterAll){COSMO.masterAll=1;COSMO.pend.push('*master');achQueue.push({i:'🏛',t:T('KOZMİK ARŞİVCİ'),d:T('Her cisimde ustalaştın')+' · '+T('ödülün Atlas\'ta seni bekliyor'),at:performance.now()});}
-  if(!achShowing)nextAch();saveG();atlasBadge();}
+  if(!achShowing)nextAch();saveLater();atlasBadge();}
 function atlasBadge(){const e=$('atBadge');if(!e)return;const n=COSMO.pend.length;e.textContent=n?String(n):'';e.className=n?'hot':'';} // only rewards waiting to be collected
 let atSel=null;
 // one button collects everything waiting; each reward flies from its tile to the wallet
@@ -4042,9 +4043,9 @@ let sMapEl=null,sMenuEl=null;
 // hitches (or one of 300 ms+) sends one short anonymous note to the error log: level, worst gap, refresh rate, quality step, what was on
 // screen, CPU cores, memory and the phone model from the browser. No install id or name; at most 3 notes a session.
 const LAG={last:0,lv:-1,n:0,worst:0,ctx:'',sent:0,done:false};
-function lagWatch(ts){const g=ts-LAG.last;LAG.last=ts;if(!G2.on||gState!=='playing'||document.hidden||G2.t<2)return;
+function lagWatch(ts){const g=ts-LAG.last,pj=LAG.js||0,hp=performance.memory?performance.memory.usedJSHeapSize:0,dh=LAG.hp?hp-LAG.hp:0;LAG.last=ts;LAG.hp=hp;LAG.j0=performance.now();queueMicrotask(()=>{LAG.js=performance.now()-LAG.j0;}); /* js: our own work in a frame */if(!G2.on||gState!=='playing'||document.hidden||G2.t<2)return;
   if(LAG.lv!==level+'/'+gameMode){LAG.lv=level+'/'+gameMode;LAG.n=0;LAG.worst=0;LAG.done=false;}
-  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}`;}
+  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(performance.now()-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms`;}
   if((LAG.n>=2||LAG.worst>=300)&&LAG.sent<3){LAG.done=true;LAG.sent++;const hz=LOOPF.iv?Math.round(1000/LOOPF.iv):0,ua=(navigator.userAgent.match(/Android [^;)]*;\s*([^;)]+)/)||[])[1]||'';
     lagReport(`LAG ${hz}Hz q${GL.quality.toFixed(2)} fx${FXLITE?1:0}`,`L${level} ${gameMode} hitches ${LAG.n} worst ${Math.round(LAG.worst)}ms\n${LAG.ctx}\ncores ${navigator.hardwareConcurrency||0} mem ${navigator.deviceMemory||0} heap ${performance.memory?Math.round(performance.memory.usedJSHeapSize/1048576):0}MB ads ${ADS.on?1:0} dpr ${devicePixelRatio} ${innerWidth}x${innerHeight}\n${ua.replace(/\s*Build\/.*$/,'').slice(0,40)}`);}}
 function lagReport(m,s){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE)return;
@@ -6218,7 +6219,7 @@ $('hrtAd').onclick=async()=>{if(await showRewarded()){heartGain(1);toast('⛽','
 $('hrtDia').onclick=()=>{if(diamonds<HRT.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:HRT.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}
   diamonds-=HRT.dia;heartGain(HRT.max);updateUI();toast('⛽','YAKIT DOLDU','');heartGo();};
 $('hrtWait').onclick=()=>{heartTick();if(HEARTS.n>0){heartGo();return;}HRT_CB=null;hideModals();if(!$('sMenu').classList.contains('on')){if(gameMode==='classic'&&G2.on){savedLevel=Math.max(savedLevel,level);saveG();}$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';showMenu();}};
-setInterval(()=>{if(document.hidden)return;const had=HEARTS.n;heartUI();if(had<=0&&HEARTS.n>0&&$('mHeart').classList.contains('on'))sfx('confirm',{vol:.4});},1000);
+setInterval(()=>{if(document.hidden)return;if(rel(7)&&gState==='playing'){heartTick();return;} /* 1.4.7: no menu DOM work during a level */const had=HEARTS.n;heartUI();if(had<=0&&HEARTS.n>0&&$('mHeart').classList.contains('on'))sfx('confirm',{vol:.4});},1000);
 // Ease offer: after three failed tries of the same level, make it 20% easier for 15 💎 or an ad.
 const EASE={after:3,dia:15,k:.8};
 function easeGo(){SHOP.easyLv=level;SHOP.failN=0;saveG();hideModals();retryLevel();toast('🪶','SEVİYE KOLAYLAŞTI',T('Hedef %20 düştü'));}

@@ -47,6 +47,9 @@ Her güncellemede:
 ```
 
 ## 1.4.7 (13 Ekim) · `REL` 7 yapılacak
+- Kasma: oyun sırasında hafızaya kayıt yapılmıyor (1.4.6'da 12 sn'de 8 kayıt vardı: atlas, başarım, ipucu); kayıt seviye sonu, duraklatma veya arka plana geçişte. Menü kalp sayacı oyun sırasında ekranı güncellemiyor.
+- Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ) ve son kaydı da yazıyor.
+- Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
 - Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek).
 - Solucan deliği antimaddeyi ve yasaklı cisimleri almıyor (kaçılamayan isabet oluyordu).
 - Yasaklı seviyeler: bomba, ekrandaki yasaklı cisimlerin yasağını kaldırıyor.
@@ -56,6 +59,9 @@ Her güncellemede:
 • New: graded touch sensitivity (Settings › Sensitivity): a quick swipe reaches the far edge in one move
 • Wormholes no longer fling antimatter or forbidden bodies at you
 • Restricted levels: a bomb lifts the ban from forbidden bodies on screen
+• Fewer hitches: the game no longer saves while you play
+• Split planets: halves fly further apart, spin and blink
+• Later bosses send three radiation waves
 </en-US>
 ```
 
