@@ -15,8 +15,9 @@ Her güncellemede:
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
-| 1.4.7 | 14 | 9 Eki | Öne alındı (testçiler takılma bildirdi); `rel(7)` ile kapalı |
-| 1.4.8 | 15 | 16 Eki | Gelen geri bildirimler |
+| 1.4.7 | 14 | 9 Eki | Öne alındı (testçiler takılma bildirdi); önce Dahili test, sonra Alpha |
+| 1.4.8 | 15 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
+| 1.4.9 | 16 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -50,7 +51,8 @@ Her güncellemede:
 - Kasma: oyun sırasında hafızaya kayıt yapılmıyor (1.4.6'da 12 sn'de 8 kayıt vardı: atlas, başarım, ipucu); kayıt seviye sonu, duraklatma veya arka plana geçişte. Menü kalp sayacı oyun sırasında ekranı güncellemiyor.
 - Kasma: müzik parçaları (bölge ve boss) seviye içinde değil, menüde ve sonuç ekranında açılıyor (decode). Titreşim çağrıları oyun sırasında en sık 90 ms'de bir (her biri uygulamanın yerel tarafına gidip geliyor).
 - Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ), son kaydı, son reklamdan geçen süreyi, seviyenin kaçıncı saniyesi olduğunu ve son 1,5 sn'de oturumda ilk kez görülen cisim/olay/yazıları (yeni bir ekran kartı programı derleniyor olabilir) da yazıyor.
-- Şüphe (doğrulanacak): AdMob, bir reklam kapandıktan hemen sonra sıradakini yüklüyor; yükleme yeni seviyenin ilk saniyelerine denk gelip güçlü telefonlarda da takılma yapabilir. Raporlar bunu doğrularsa yükleme, Dahili test kanalında denenerek seviye sonuna (sonuç ekranına) taşınacak.
+- Kasma (reklam, ANDROID değişikliği): reklam kapanınca sıradaki hemen yüklenmiyordu artık; yükleme sonuç ekranı, devam teklifi ve menüde (`adsPreload`). Reklam motoru oyun sırasında hiç başlatılmıyor. Kullanıcı reklamdan sonraki seviyede takılma gözlemledi. **Önce Dahili test'te denenecek.**
+- Kasma: oyun içi güç düğmelerinde canlı bulanıklık (backdrop-filter) kaldırıldı, koyu cam arka plan; 'devam et' kaydı 0,4 sn sonra (kullanıcı devamdan sonra takılma gözlemledi).
 - Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
 - Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek).
 - Solucan deliği antimaddeyi ve yasaklı cisimleri almıyor (kaçılamayan isabet oluyordu).
@@ -61,7 +63,7 @@ Her güncellemede:
 • New: graded touch sensitivity (Settings › Sensitivity): a quick swipe reaches the far edge in one move
 • Wormholes no longer fling antimatter or forbidden bodies at you
 • Restricted levels: a bomb lifts the ban from forbidden bodies on screen
-• Fewer hitches: the game no longer saves while you play
+• Fewer hitches: no saving during play, and ads load between levels, not during them
 • Split planets: halves fly further apart, spin and blink
 • Later bosses send three radiation waves
 </en-US>
@@ -84,7 +86,7 @@ Her güncellemede:
 </en-US>
 ```
 
-## Üretimden sonra (ayrı güncelleme)
+## 1.4.9 (~24 Ekim, üretimden sonra) · Android bakım güncellemesi
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
   Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
