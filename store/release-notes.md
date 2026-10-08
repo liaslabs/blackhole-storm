@@ -13,7 +13,7 @@ Her güncellemede:
 | Sürüm | Kod | Plan | Durum |
 |---|---|---|---|
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
-| 1.4.5 | 12 | 8 Eki | İncelemede (8 Eki'de gönderildi; main 6e88e07) |
+| 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 10 Eki | Hazır (REL=6) |
 | 1.4.7 | 14 | 13 Eki | Hazır, `rel(7)` ile kapalı |
 | 1.4.8 | 15 | 16 Eki | Gelen geri bildirimler |
