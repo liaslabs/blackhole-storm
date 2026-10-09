@@ -342,6 +342,9 @@ body.r7.v2 #boost2 .hb2{-webkit-backdrop-filter:none;backdrop-filter:none;backgr
 #boost2 .hb2.ready{border-color:rgba(255,216,77,.75);}#boost2 .hb2.dia.ready{border-color:rgba(111,208,240,.8);}
 #boost2 .hb2.pulse{animation:hbPulse2 .55s ease-in-out infinite alternate;}@keyframes hbPulse2{to{transform:scale(1.08);box-shadow:0 0 0 2px rgba(255,216,77,.95),0 0 22px rgba(255,200,60,.9);}}
 #boost2 .hb2.dia.pulse{animation-name:hbPulse3;}@keyframes hbPulse3{to{transform:scale(1.08);box-shadow:0 0 0 2px rgba(111,208,240,.95),0 0 22px rgba(95,242,255,.85);}}
+body.r7.v2 #boost2 .hb2.pulse{animation:hbP7 .55s ease-in-out infinite alternate;will-change:transform;}@keyframes hbP7{to{transform:scale(1.08);}} /* 1.4.7: an animated box-shadow was repainted every frame; now the glow is drawn once and only fades in and out */
+body.r7.v2 #boost2 .hb2.pulse::after{content:'';position:absolute;inset:-1.5px;border-radius:inherit;pointer-events:none;box-shadow:0 0 0 2px rgba(255,216,77,.95),0 0 22px rgba(255,200,60,.9);opacity:0;animation:hbG7 .55s ease-in-out infinite alternate;}
+body.r7.v2 #boost2 .hb2.dia.pulse::after{box-shadow:0 0 0 2px rgba(111,208,240,.95),0 0 22px rgba(95,242,255,.85);}@keyframes hbG7{to{opacity:1;}}
 body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 .lvnext .hdT{display:block;margin-top:4px;font-family:var(--fd);font-size:11px;letter-spacing:1px;color:#ff7a70;}
 .ctime{display:flex;flex-direction:column;gap:8px;margin:6px 0;}.ctime .ctc{flex-direction:column;}.ctmsg{text-align:center;font-size:14px;color:var(--ink,#e8ecf5);}.ctime .btn small{display:block;font-family:var(--fb);font-weight:500;letter-spacing:0;font-size:11.5px;opacity:.8;margin-top:2px;}
@@ -2659,10 +2662,11 @@ function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()
 const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'',interstitial:''}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
 const ADS={on:false,privacy:false,t:0};
 function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
-function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload){lagNat('adsPreload');nb.adsPreload().catch(()=>{});}} /* an app with adsPreload loads the next ad here; older builds reload on their own */
+function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload&&(!nb.adsDrop||interDue())){lagNat('adsPreload');LAG.adh=1;nb.adsPreload().catch(()=>{});}}
+function adsDrop(){const nb=CAP('Bhs');if(ADS.on&&nb&&nb.adsDrop){lagNat('adsDrop');LAG.adh=0;nb.adsDrop().catch(()=>{});}} /* a level starts: no ad is held while it plays (a loaded ad stalls the game now and then) */ /* an app with adsPreload loads the next ad here; older builds reload on their own */
 async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;if(rel(7)&&gState==='playing'){setTimeout(adsInit,3000);return;} /* 1.4.7: the ad SDK never starts up mid-level */
   try{lagNat('adsStart');const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
-    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{ADS.showing=1;let x={};try{x=await nb.adsRewarded();}finally{ADS.showing=0;}LAG.ad=performance.now();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{ADS.showing=1;try{await nb.adsInterstitial();}finally{ADS.showing=0;}LAG.ad=performance.now();}};} /* LAG.ad: when an ad last closed; the next one starts loading right then */
+    if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{ADS.showing=1;let x={};try{if(nb.adsHas){const h=await nb.adsHas().catch(()=>({}));if(!h.rewarded)toast('⏳',T('REKLAM'),T('Reklam yükleniyor…'));}x=await nb.adsRewarded();}finally{ADS.showing=0;}LAG.ad=performance.now();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{ADS.showing=1;try{await nb.adsInterstitial();}finally{ADS.showing=0;}LAG.ad=performance.now();}};} /* LAG.ad: when an ad last closed; the next one starts loading right then */
     monApply();if($('sSet').classList.contains('on'))syncSettingsUI();if($('sShop').classList.contains('on'))renderShop();}catch(e){}}
 async function showRewarded(){showRewarded.none=false;
   if(SHOP.noAds)return true;if(MON.busy)return false;MON.busy=true;SND.duck(.15,1e5);
@@ -2671,6 +2675,7 @@ async function showRewarded(){showRewarded.none=false;
   finally{MON.busy=false;SND.duck(1,0);}
 }
 // interstitial only between levels: after every 3rd level from level 6 on, at most one per 3 minutes
+function interDue(){return monOn()&&!SHOP.noAds&&!REPLAY&&gameMode==='classic'&&level>=6&&MON.winsSinceInter+1>=3&&Date.now()-MON.lastInter>=180000;} /* the next 'next level' tap shows a between-level ad */
 async function maybeInterstitial(){
   if(!monOn()||SHOP.noAds||REPLAY||gameMode!=='classic'||level<6)return;
   MON.winsSinceInter++;if(MON.winsSinceInter<3||Date.now()-MON.lastInter<180000)return;
@@ -3748,7 +3753,7 @@ function lagMark(k){try{LAG[k]=performance.now();if(k==='st')LAG.lvN++;}catch(e)
 const lagAgo=(a,ms,now)=>a.filter(f=>now-f[1]<ms).slice(-6).map(f=>f[0].slice(0,16)+'@'+Math.round(now-f[1])).join(',')||'-';
 function lagRec(ts,g,pj,dh,kind){const now=performance.now(),fr=[];for(let i=9;i>=1;i--)fr.push(Math.round(LAG.fr[(LAG.fi-i)&255]));const m=document.querySelector('.modal.on');
   return {ts,g,kind,fi:LAG.fi,fr,an:null,gs:gState+(m&&m.id?':'+m.id:''),
-    ctx:`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(now-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((now-LAG.ad)/1000):-1}s cont ${LAG.cont?Math.round((now-LAG.cont)/1000):-1}s vis ${LAG.vis?Math.round((now-LAG.vis)/1000):-1}s t ${G2.t.toFixed(1)}s`,
+    ctx:`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(now-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((now-LAG.ad)/1000):-1}s held${LAG.adh??'-'} cont ${LAG.cont?Math.round((now-LAG.cont)/1000):-1}s vis ${LAG.vis?Math.round((now-LAG.vis)/1000):-1}s t ${G2.t.toFixed(1)}s`,
     tail:`nat ${lagAgo(LAG.nat,1500,now)} snd ${lagAgo(LAG.snd,1000,now)}\nnew ${lagAgo(LAG.first,1500,now)}`};}
 function lagAn(r){const a=r.ts-r.g,b=r.ts,now=performance.now();let hb=0;const H=[];for(let i=0;i<128;i++){const t=LAG.hb[i];if(t)H.push(t);}H.sort((x,y)=>x-y); /* the longest heartbeat silence that overlaps the gap */
   for(let i=1;i<H.length;i++)if(H[i]>a&&H[i-1]<b)hb=Math.max(hb,H[i]-H[i-1]);
@@ -3988,7 +3993,7 @@ function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey()
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(adsPreload,1500);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';

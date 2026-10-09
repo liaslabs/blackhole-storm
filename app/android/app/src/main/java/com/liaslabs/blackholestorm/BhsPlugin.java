@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationAttributes;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -454,9 +456,16 @@ public class BhsPlugin extends Plugin {
     }
 
     // ---- AdMob ----
+    // No ad is kept loaded while a level is on: a loaded full-screen ad runs its own page in the app's shared web
+    // process and stalls the game now and then (1.4.7: no stalls at all with the network off). So a rewarded ad
+    // loads when the player taps for one (the game says "loading" meanwhile), the between-level ad loads on the
+    // result screen before it is due, and when a level starts the game lets go of whatever is still held (adsDrop).
     private boolean adsReady;
     private RewardedAd rewarded;
     private InterstitialAd inter;
+    private boolean rewardedLoading, interLoading, holdOff; // holdOff: a level is on, an ad that finishes loading now is let go
+    private PluginCall rewardedWait; // a tap waiting for its ad to load
+    private final Handler ui = new Handler(Looper.getMainLooper());
     private String rewardedUnit = "", interUnit = "";
 
     // {rewarded, interstitial: ad unit ids} -> {ok, privacy: true when a "privacy options" entry must be offered}
@@ -485,10 +494,7 @@ public class BhsPlugin extends Plugin {
                 .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_PG) // a game for 13+: no mature ads
                 .setTagForUnderAgeOfConsent(RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE)
                 .build());
-            new Thread(() -> MobileAds.initialize(getContext(), st -> getActivity().runOnUiThread(() -> {
-                loadRewarded();
-                loadInter();
-            }))).start();
+            new Thread(() -> MobileAds.initialize(getContext(), st -> {})).start(); // nothing is loaded up front
         }
         o.put("ok", true);
         call.resolve(o);
@@ -501,90 +507,142 @@ public class BhsPlugin extends Plugin {
     }
 
     private void loadRewarded() {
-        if (rewardedUnit.isEmpty() || rewarded != null) return;
+        if (!adsReady || rewardedUnit.isEmpty() || rewarded != null || rewardedLoading) return;
+        rewardedLoading = true;
         RewardedAd.load(getContext(), rewardedUnit, new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
             @Override
             public void onAdLoaded(RewardedAd ad) {
-                rewarded = ad;
+                rewardedLoading = false;
+                PluginCall c = rewardedWait;
+                if (c != null) {
+                    rewardedWait = null;
+                    showRewarded(c, ad);
+                } else if (!holdOff) rewarded = ad;
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError e) {
+                rewardedLoading = false;
                 rewarded = null;
+                PluginCall c = rewardedWait;
+                if (c != null) {
+                    rewardedWait = null;
+                    notShown(c);
+                }
             }
         });
     }
 
     private void loadInter() {
-        if (interUnit.isEmpty() || inter != null) return;
+        if (!adsReady || interUnit.isEmpty() || inter != null || interLoading) return;
+        interLoading = true;
         InterstitialAd.load(getContext(), interUnit, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(InterstitialAd ad) {
-                inter = ad;
+                interLoading = false;
+                if (!holdOff) inter = ad;
             }
 
             @Override
             public void onAdFailedToLoad(LoadAdError e) {
+                interLoading = false;
                 inter = null;
             }
         });
     }
 
-    // The game calls this on a quiet screen (result, menu): loading builds the ad's view on the UI thread, which stalls the game if it runs during play
+    private static void notShown(PluginCall c) {
+        JSObject o = new JSObject();
+        o.put("shown", false);
+        o.put("earned", false);
+        c.resolve(o);
+    }
+
+    // The game calls this on the result screen when a between-level ad is due next
     @PluginMethod
     public void adsPreload(PluginCall call) {
         getActivity().runOnUiThread(() -> {
-            if (adsReady) {
-                loadRewarded();
-                loadInter();
-            }
+            holdOff = false;
+            loadInter();
             call.resolve();
         });
     }
 
-    // -> {shown, earned}; earned only when the player watched long enough for the reward
+    // A level starts: let go of any ad still held, and of any that finishes loading during the level
     @PluginMethod
-    public void adsRewarded(PluginCall call) {
+    public void adsDrop(PluginCall call) {
         getActivity().runOnUiThread(() -> {
-            RewardedAd ad = rewarded;
-            JSObject o = new JSObject();
-            if (ad == null) {
-                loadRewarded();
-                o.put("shown", false);
-                o.put("earned", false);
-                call.resolve(o);
-                return;
-            }
+            holdOff = true;
             rewarded = null;
-            boolean[] earned = { false };
-            ad.setFullScreenContentCallback(new FullScreenContentCallback() {
-                @Override
-                public void onAdDismissedFullScreenContent() {
-                    o.put("shown", true);
-                    o.put("earned", earned[0]);
-                    call.resolve(o); // the next ad loads later, on a quiet screen (adsPreload), not over the next level
-                }
-
-                @Override
-                public void onAdFailedToShowFullScreenContent(AdError e) {
-                    o.put("shown", false);
-                    o.put("earned", false);
-                    call.resolve(o);
-                    loadRewarded();
-                }
-            });
-            ad.show(getActivity(), item -> earned[0] = true);
+            inter = null;
+            call.resolve();
         });
     }
 
-    // -> {shown}
+    // -> {rewarded}: true when a rewarded ad is ready to show at once (else the game says "loading")
+    @PluginMethod
+    public void adsHas(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            JSObject o = new JSObject();
+            o.put("rewarded", rewarded != null);
+            call.resolve(o);
+        });
+    }
+
+    // -> {shown, earned}; earned only when the player watched long enough for the reward. With no ad held, one is
+    // loaded now and shown when it arrives; after 8 s without one the answer is "not shown".
+    @PluginMethod
+    public void adsRewarded(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            holdOff = false;
+            RewardedAd ad = rewarded;
+            if (ad != null) {
+                rewarded = null;
+                showRewarded(call, ad);
+                return;
+            }
+            if (!adsReady || rewardedUnit.isEmpty()) {
+                notShown(call);
+                return;
+            }
+            if (rewardedWait != null) notShown(rewardedWait);
+            rewardedWait = call;
+            loadRewarded();
+            ui.postDelayed(() -> {
+                if (rewardedWait == call) {
+                    rewardedWait = null;
+                    notShown(call);
+                }
+            }, 8000);
+        });
+    }
+
+    private void showRewarded(PluginCall call, RewardedAd ad) {
+        boolean[] earned = { false };
+        JSObject o = new JSObject();
+        ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                o.put("shown", true);
+                o.put("earned", earned[0]);
+                call.resolve(o); // nothing is loaded after it: the next one loads when the player asks for it
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(AdError e) {
+                notShown(call);
+            }
+        });
+        ad.show(getActivity(), item -> earned[0] = true);
+    }
+
+    // -> {shown}; only an ad loaded beforehand on the result screen is shown, none is fetched here
     @PluginMethod
     public void adsInterstitial(PluginCall call) {
         getActivity().runOnUiThread(() -> {
             InterstitialAd ad = inter;
             JSObject o = new JSObject();
             if (ad == null) {
-                loadInter();
                 o.put("shown", false);
                 call.resolve(o);
                 return;
@@ -594,14 +652,13 @@ public class BhsPlugin extends Plugin {
                 @Override
                 public void onAdDismissedFullScreenContent() {
                     o.put("shown", true);
-                    call.resolve(o); // reloaded later through adsPreload
+                    call.resolve(o);
                 }
 
                 @Override
                 public void onAdFailedToShowFullScreenContent(AdError e) {
                     o.put("shown", false);
                     call.resolve(o);
-                    loadInter();
                 }
             });
             ad.show(getActivity());
