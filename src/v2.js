@@ -87,7 +87,7 @@ function v2GoldArcOn(){G2.garcT=GARC.dur;G2.garcFx={t:0};G2.immT=Math.max(G2.imm
 function v2GoldArcEat(o){o.st='dead';const p=150*MULT2(G2.combo+1);G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;totalScore+=p;levelScore+=p;G2.eaten++;
   for(let i=0;i<14&&G2.parts.length<200;i++){const a=rrnd(0,TAU),q=rrnd(.2,1);G2.parts.push({x:o.x+Math.cos(a)*o.r*q,y:o.y+Math.sin(a)*o.r*q,vx:(hX-o.x)/40*rrnd(.6,1.2),vy:(hY-o.y)/40*rrnd(.6,1.2),life:.5,max:.5,c:'#ffd76a',sz:2.6});} /* the meteor melts into gold dust that streams into the hole */
   v2Burst(o.x,o.y,16,'#ffd76a',1.6,6,.5,2);v2Pop(T('ALTIN')+' +'+p,'#ffd76a',15);v2Sfx('gem',{vol:.45,rate:1.3});vib(12);}
-const ARCPOW={need:2,dur:20},v2ArcMaxL=l=>!rel(8)?3:G2.mode==='surv'?2:G2.mode!=='level'?3:HMODE?(l<=30?2:0):l<=10?3:l<=60?2:0, /* Hard Mode: 2 arcs, none from L31; the endless storm: 2 arcs for 2 minutes, then none */v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
+const ARCPOW={need:2,dur:20},v2ArcMaxL=l=>!rel(8)?3:G2.mode==='surv'?2:G2.mode!=='level'?3:HMODE?(l<=60?2:0):l<=10?3:l<=60?2:0, /* Hard Mode: 2 arcs, none from L61; the endless storm: 2 arcs for 2 minutes, then none */v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
 function v2ArcPowOn(){const was=G2.arcs;G2.arcPow=ARCPOW.dur;G2.eN=0;G2.arcs=3;for(let i=was;i<3;i++)v2ArcForm(i,'arc',(i-was)*.08);G2.arcFill=.5;G2.arcFix={i:2,t:G2.t};v2Call(T('YAY KALKANI'),T('20 SANİYE'),'#ff8a8a',1.3,true);v2Sfx('bell',{vol:.5,rate:1.2});vib(25);}
 function v2ArcPowEnd(){const keep=G2.arcMax||0;for(let i=keep;i<G2.arcs;i++)v2ArcBreak(i,i<G2.shells?'#eaf1fb':'#ff8a8a',.5);G2.arcPow=0;G2.arcs=Math.min(G2.arcs,keep);G2.shells=Math.min(G2.shells,G2.arcs);if(G2.on&&gState==='playing')v2Pop(T('YAY KALKANI BİTTİ'),'#ff8a8a',15);}
 const shTier=l=>l<=50?0:l<=60?1:l<=70?2:3,v2ShT=()=>G2.mode==='level'?shTier(level):0;
@@ -96,8 +96,8 @@ function v2GoldEarn(why){if(G2.gold||G2.mode!=='level'||v2ShT()<3)return;G2.gold
    how long it lasts grows with the hole's evolution: star-mass, intermediate, supermassive, quasar */
 const v2Stage=()=>typeof stageOf==='function'?stageOf(mass):0,v2BtK=()=>Math.max(.25,.5-.025*labEffLv('time')),v2TimeK=()=>Math.max(.3,.65-.03*labEffLv('time')),v2BtDur=()=>[.35,.45,.55,.7][v2Stage()],v2TimeDur=()=>[4,5,6,7][v2Stage()];
 const v2BtOn=()=>!G2.hm&&!G2.dstorm&&(G2.mode==='level'?level>20:G2.lv>20); /* slow motion is a late-game help: from level 21, never in Hard Mode or the daily storm */
-const FEAT=[['arcs',2],['shield',7],['arcs2',11],['nova',21],['arcpow',31],['hawking',140],['jet',180],['worm',250],['hor',350]];
-const v2FeatReady=id=>id==='arcs2'?rel(8)&&level<=(HMODE?30:60):id==='arcpow'?rel(8)&&(HMODE||level>=61):id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
+const FEAT=[['arcs',2],['shield',7],['arcs2',11],['nova',21],['arcpow',61],['hawking',140],['jet',180],['worm',250],['hor',350]];
+const v2FeatReady=id=>id==='arcs2'?rel(8)&&level<=60:id==='arcpow'?rel(8):id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
 const HARD={t:[0,50,55],first:60,met:[1,.7,.6],stars:[0,10,20]};
 function v2Hard(l){if(l<9||l%10===0||v2LevelType(l)!=='score')return 0;if(l%10===9)return l>=39?2:1;return l>20&&l%10===5?1:0;}
 function v2HardT(l){const h=v2Hard(l);return h?(l===9?HARD.first:HARD.t[h]):0;}
@@ -518,7 +518,8 @@ function v2Update(dt){
       if(G2.acc<=0&&v2Active()<cap&&G2.t<G2.dur-3&&!v2BeltOn()){G2.acc=G2.L.iv*rrnd(.75,1.25)*(G2.boss?1.6:1);v2Spawn();}
       /* the storm: its own meteor clock on top of the mix (3 arcs per heart can take it), quieter on breather levels, none while guarding */
       if(G2.L.metIv&&!G2.guard&&!G2.ending&&!v2RadAct()&&!v2BeltOn()){const mk=G2.boss?(G2.boss.radOn?1.7:1.25):G2.rule?1.4:1; /* special levels bring their own danger: fewer storm meteors; a boss without radiation keeps most of the storm */G2.metT=(G2.metT??G2.L.metIv*mk)-dt*tk;if(G2.metT<=0){G2.metT=G2.L.metIv*mk*rrnd(.8,1.25);
-        const inF=G2.objs.filter(o=>o.k==='meteor'&&o.st==='in').length;if(inF<(v2Big()>.6?3:4)+(G2.lv>=30?1:0)+(G2.hard?1:0))v2Edge('meteor',Math.floor(rng()*Math.min(3,G2.L.dirs)));}}}
+        const inF=G2.objs.filter(o=>o.k==='meteor'&&o.st==='in').length,bs=rel(8)&&G2.dstorm&&survTime>=STORM2.black?Math.floor((survTime-STORM2.black)/STORM2.step)+1:0; /* the Black Storm: more storm meteors on screen at once, in pairs */
+        if(inF<(v2Big()>.6?3:4)+(G2.lv>=30?1:0)+(G2.hard?1:0)+bs*2)for(let i=0;i<(bs?2:1);i++)v2Edge('meteor',Math.floor(rng()*Math.min(3,G2.L.dirs)));}}}
     if(G2.t>=G2.shardAt&&!G2.script){G2.shardAt=G2.mode==='surv'?G2.t+50:1e9;v2Edge('shard',0);}
     if(G2.swarm>0&&!v2BeltOn()){G2.swarmT-=dt;if(G2.swarmT<=0&&v2Active()<20){G2.swarmT=.09;G2.swarm--;const q=rng();v2Edge(q<.08?'crystal':q<.25?'moon':'ast',rng()<.75?0:null);}}
   }
@@ -810,8 +811,8 @@ function v2SprRule(){const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RS
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
 function v2SprPlan(){const r=sprRuleOf(SPR_RUN.seed),L=[];if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);L.push([20,'belt'],[40,'neb']);return {list:L};}
 const DSTORM={dur:180,belts:[60,120],sec:20,done:3000,life:1500};
-// 1.4.8: the storm has no end. Arcs go out at 2:00; from 4:00 (the Black Storm) every 30 s brings 25 % more storm meteors and 8 % faster bodies, compounding, until no one can last
-const STORM2={arcsOut:120,black:240,step:30,met:1.25,spd:1.08};
+// 1.4.8: the storm has no end. Arcs go out at 2:00; from 4:00 (the Black Storm) every 30 s brings 35 % more storm meteors, in pairs, and 8 % faster bodies, compounding, until no one can last
+const STORM2={arcsOut:120,black:240,step:30,met:1.35,spd:1.08};
 function v2StormOver(){const t=survTime;if(t<STORM2.black)return;const n=Math.floor((t-STORM2.black)/STORM2.step)+1;G2.L.metIv=(G2.L.metIv||4.4)/Math.pow(STORM2.met,n);G2.L.w.meteor*=Math.pow(STORM2.met,n*.5);G2.L.speedK*=Math.pow(STORM2.spd,n);}
 function v2StormStep(){const t=survTime;
   if(rel(8)){if(G2.arcMax>0&&t>=STORM2.arcsOut){if(!(G2.arcPow>0)){for(let i=0;i<G2.arcs;i++)v2ArcBreak(i,'#ff8a8a');G2.arcs=0;}G2.arcMax=0;v2Call('YAYLAR SÖNDÜ',T('Her darbe bir kalp'),'#ff8a80',1.6,true);}
