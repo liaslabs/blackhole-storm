@@ -15,9 +15,9 @@ Her güncellemede:
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
-| 1.4.7 | 16 | 9 Eki | Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu. Önce Dahili test, sonra Alpha |
-| 1.4.8 | 17 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
-| 1.4.9 | 18 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
+| 1.4.7 | 17 | 9 Eki | Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı. Önce Dahili test, sonra Alpha |
+| 1.4.8 | 18 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
+| 1.4.9 | 19 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -54,6 +54,8 @@ Her güncellemede:
 - Kasma (reklam, ANDROID değişikliği): reklam kapanınca sıradaki hemen yüklenmiyordu artık; yükleme sonuç ekranı, devam teklifi ve menüde (`adsPreload`). Reklam motoru oyun sırasında hiç başlatılmıyor. Kullanıcı reklamdan sonraki seviyede takılma gözlemledi. **Önce Dahili test'te denenecek.**
 - Kasma: oyun içi güç düğmelerinde canlı bulanıklık (backdrop-filter) kaldırıldı, koyu cam arka plan; 'devam et' kaydı 0,4 sn sonra (kullanıcı devamdan sonra takılma gözlemledi).
 - Kod 16, takılma raporu: donma anındaki kare süreleri, 50 ms nabız (sayfa meşgul mü boşta mı), Chrome long-animation-frame dökümü (kod / kare / sayfa düzeni, en uzun kod parçası), hemen önceki Android çağrıları (titreşim, reklam, bildirim), müzik çözme ve sesler, devamdan / arka plandan dönüşten beri geçen süre, ekran kartı adı ve tahmin (`→ script / layout / page(no js) / gpu/os` + `ad, cont, resume, app, new, update`). Seviye başı (kuran kareden sonra) ve sonuç / devam ekranı da oturumda birer kez raporlanır; oturum başına en fazla 4 not. Gizlilik sayfası güncellendi.
+- Kod 17, takılmanın asıl sebebi (ANDROID değişikliği): kod 16 raporları takılma anında sayfanın meşgul olduğunu ama bizim kodun boşta olduğunu gösterdi; uçak modunda 4 seviyede hiç takılma olmadı. Önceden yüklenmiş tam ekran reklam, uygulamanın paylaşılan web sürecinde kendi sayfasını çalıştırıp oyunu ara ara bekletiyordu. Artık açılışta reklam yüklenmez; ödüllü reklam düğmeye basınca yüklenir ("Reklam yükleniyor…", 8 sn'de gelmezse "Şu an reklam yok"); ara reklam sadece sırası geldiğinde sonuç ekranında yüklenir; seviye başlarken elde kalan reklam bırakılır (`adsDrop`). Rapor: `held0/1`.
+- Kod 17: kalkan ve Hawking düğmelerinin nabzı her karede yeniden çizilen gölge yerine bir kez çizilen, sadece yanıp sönen parlama (`onizleme/kalkan-nabzi.png`).
 - Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
 - Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek). Kod 14'te varsayılan Kademeli (2×) Dahili test'te fazla geldi (meteorlara çarpılıyordu); kod 15/16: varsayılan **Normal** (hıza göre en fazla 1,25×), Kademeli 1,6×, Yüksek 2,2×; hızlanma daha yüksek parmak hızında başlar, normal kaçış 1:1 kalır.
 - Solucan deliği antimaddeyi ve yasaklı cisimleri almıyor (kaçılamayan isabet oluyordu).
