@@ -1179,8 +1179,8 @@ function v2RageGo(){
 
 // ── split planets, antimatter, wormholes ─────────────
 function v2Split(o){ // a split planet cracks in two: both halves (half the mass each) shoot away from the hole
-  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*(rel(7)?.85:.55),s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;if(rel(7))h.spinV=sd*rrnd(4,5.5);}
-  v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
+  o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*(rel(7)?.85:.55),s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;if(rel(7))h.spinV=sd*rrnd(4,5.5);if(rel(8)){h.seed=rrnd(0,TAU);h.crk=.4;}}
+  v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);if(rel(8)){v2Burst(o.x,o.y,16,'#cfc6b8',3,9,.9,3);flash=Math.max(flash,.18);} /* rock chips and a quick white flash */shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
 }
 // the two halves burst apart, then slow to an ordinary drift; one that still reaches an edge bounces back in, so neither is ever lost
 function v2HalfKeep(o,dt){if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(7)?120:70);if(v>cr){const f=Math.max(cr/v,Math.pow(rel(7)?.45:.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
@@ -1768,6 +1768,9 @@ function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(
   ctx.strokeStyle='rgba(200,210,240,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(o.x,o.y,d,0,TAU);ctx.stroke();
   const g=ctx.createRadialGradient(x-r*.35,y-r*.35,0,x,y,r);g.addColorStop(0,'#f2f2ee');g.addColorStop(1,'#6f7078');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const r=o.r,k=.7+.3*Math.sin(clock*6);
+  if(o.k==='half'&&rel(8)){if(o.crk>0)o.crk-=1/60;const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();
+    if(o.crk>0){const q=o.crk/.4,R=r*(o.gs??1),sd=o.seed||0,j=t=>.07*Math.sin(t*13+sd)+.045*Math.sin(t*29+sd*2.3)+.03*Math.sin(t*53+sd*.7);ctx.rotate((o.cut||0)+(o.spinA||0));ctx.strokeStyle=`rgba(255,255,255,${q})`;ctx.shadowColor='#bff6ff';ctx.shadowBlur=16;ctx.lineWidth=2.5;ctx.beginPath();for(let i=0;i<=16;i++){const v=-1+i/8,x=(j(-v)-.42)*R,y=v*R*.98;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();} /* the fresh fracture flashes white for a moment */
+    ctx.restore();return;}
   if(o.k==='half'){if(rel(7)){const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();ctx.rotate(o.spinA||0);} /* the halves blink and spin so they read apart from whole bodies */
     ctx.rotate(o.cut||0);ctx.strokeStyle=`rgba(160,245,255,${.9*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=10;ctx.lineWidth=Math.max(1.5,r*.12);ctx.beginPath();ctx.moveTo(-r*.95,0);ctx.lineTo(-r*.3,r*.08);ctx.lineTo(r*.2,-r*.06);ctx.lineTo(r*.95,0);ctx.stroke();ctx.restore();return;} // the fresh fracture face
   ctx.rotate(o.rot*.3);ctx.strokeStyle=`rgba(150,240,255,${.85*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=8;ctx.lineWidth=Math.max(1.2,r*.07);
