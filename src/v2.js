@@ -146,7 +146,7 @@ function v2Rules(l){
 }
 
 // ── start / reset ─────────────────────────────────────
-function v2Start(mode){if(typeof lagMark==='function')lagMark('st');
+function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop();}catch(e){}
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');document.body.classList.toggle('r7',rel(7));v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   if(DEV&&mode==='level'&&gameMode==='classic'&&!HMODE)devKit(v2Lv()); // the developer link keeps the Laboratory at each level's recommended power
@@ -1160,7 +1160,7 @@ function v2Fail(msg){
   if(gState==='tip'){hideModals();G2.tip=null;gState='playing';SND.duck(1,0);} // a tip card opened earlier in the same frame must not swallow the loss
   if(gState!=='playing')return;gState='over';G2.failMsg=msg;SND.setDrone(.08,300);SND.duck(.35,2);
   if(msg){if(msg!=='SÜRE DOLDU'&&msg!=='DEV GEZEGEN KAÇTI')lives=0; /* the clock running out is not a death: hearts (and stars) stay */v2Call(msg==='DEV GEZEGEN KAÇTI'?(G2.boss&&G2.boss.bt&&G2.boss.bt!=='planet'?'YILDIZ KAÇTI':'GEZEGEN KAÇTI'):msg,'','#ff7a5c',2,true);}
-  setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();try{adsPreload();}catch(e){}},850); /* a lost level: the continue offer is a quiet screen to load the next ad */
+  setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();},850); /* a lost level: the continue offer (its ad loads when the player taps for it) */
 }
 // time bought when the clock ran out: back to the fight with more seconds; hearts and the one continue stay untouched
 function v2AddTime(sec){if(typeof lagMark==='function')lagMark('cont');G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();if(rel(7))later(saveG,400);else saveG();
