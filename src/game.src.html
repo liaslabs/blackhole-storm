@@ -1626,7 +1626,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   SHOP.tok=SHOP.tok.filter(x=>typeof x==='string').slice(-60);SHOP.pend=SHOP.pend.filter(x=>Array.isArray(x)&&x.length===2&&x.every(y=>typeof y==='string')).slice(-10);
   }catch(e){}
 }
-let VIBT=0;function vib(p){if(!SET.vib)return;if(rel(7)&&!Array.isArray(p)&&gState==='playing'){const n=performance.now();if(n-VIBT<90)return;VIBT=n;} /* 1.4.7: short buzzes are thinned out during a level */const b=CAP('Bhs');if(b){b.vibrate({pattern:Array.isArray(p)?p.map(x=>Math.max(0,Math.min(400,x|0))):[Math.max(20,Math.min(400,p|0))]}).catch(()=>{});return;} // app: our own plugin, on the game vibration channel
+let VIBT=0;function vib(p){if(!SET.vib)return;if(rel(7)&&!Array.isArray(p)&&gState==='playing'){const n=performance.now();if(n-VIBT<90)return;VIBT=n;} /* 1.4.7: short buzzes are thinned out during a level */const b=CAP('Bhs');if(b){lagNat('vib');b.vibrate({pattern:Array.isArray(p)?p.map(x=>Math.max(0,Math.min(400,x|0))):[Math.max(20,Math.min(400,p|0))]}).catch(()=>{});return;} // app: our own plugin, on the game vibration channel
   if(navigator.vibrate)try{navigator.vibrate(p);}catch(e){}}
 
 // ══════════════════════════════════════════════════════
@@ -1708,7 +1708,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
   musKey(name){return name==='menu'?'mMenu':name==='game'?this.gameKey():name;},
   fetchMus(key){this.musLoad=this.musLoad||{};if(this.musLoad[key]||this.buf[key]||!this.ctx)return;this.musLoad[key]=1;
     fetch('music/'+key+'.mp3').then(r=>r.ok?r.arrayBuffer():Promise.reject(r.status)).then(ab=>new Promise((ok,no)=>this.ctx.decodeAudioData(ab,ok,no)))
-      .then(b=>{this.buf[key]=b;if(this.mus.want&&this.musKey(this.mus.want)===key)this.music(this.mus.want);})
+      .then(b=>{this.buf[key]=b;lagNat('dec:'+key);if(this.mus.want&&this.musKey(this.mus.want)===key)this.music(this.mus.want);})
       .catch(()=>{this.musLoad[key]=0;this.buf[key]=this.buf.mGame;if(this.mus.want&&this.musKey(this.mus.want)===key)this.music(this.mus.want);});}, // offline and never loaded: play the built-in track instead
   music(name){
     this.mus.want=name;if(!this.ctx)return;const key=this.musKey(name);
@@ -1727,7 +1727,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
   duck(k,sec){if(!this.musDuck)return;const t=this.ctx.currentTime;this.musDuck.gain.cancelScheduledValues(t);this.musDuck.gain.setTargetAtTime(k,t,.08);this.musDuck.gain.setTargetAtTime(1,t+sec,.6);},
   tension(on){if(!this.musF)return;this.musF.frequency.setTargetAtTime(on?1100:16000,this.ctx.currentTime,.5);}
 };
-function sfx(n,o){return SND.play(n,o);}
+function sfx(n,o){lagSnd(n);return SND.play(n,o);}
 
 // ══════════════════════════════════════════════════════
 // TEXTURES & SPRITES — planet surfaces come from a 4×4 atlas of real
@@ -2659,9 +2659,9 @@ function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()
 const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'',interstitial:''}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
 const ADS={on:false,privacy:false,t:0};
 function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
-function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload)nb.adsPreload().catch(()=>{});} /* an app with adsPreload loads the next ad here; older builds reload on their own */
+function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload){lagNat('adsPreload');nb.adsPreload().catch(()=>{});}} /* an app with adsPreload loads the next ad here; older builds reload on their own */
 async function adsInit(){const nb=CAP('Bhs');if(ADS.on||!nb||!nb.adsStart||!ADS_UNITS.rewarded)return;if(rel(7)&&gState==='playing'){setTimeout(adsInit,3000);return;} /* 1.4.7: the ad SDK never starts up mid-level */
-  try{const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
+  try{lagNat('adsStart');const r=await nb.adsStart(ADS_UNITS);ADS.privacy=!!(r&&r.privacy);
     if(r&&r.ok){ADS.on=true;window.BHS_ADS={rewarded:async()=>{ADS.showing=1;let x={};try{x=await nb.adsRewarded();}finally{ADS.showing=0;}LAG.ad=performance.now();if(!x.shown)showRewarded.none=true;return !!x.earned;},interstitial:async()=>{ADS.showing=1;try{await nb.adsInterstitial();}finally{ADS.showing=0;}LAG.ad=performance.now();}};} /* LAG.ad: when an ad last closed; the next one starts loading right then */
     monApply();if($('sSet').classList.contains('on'))syncSettingsUI();if($('sShop').classList.contains('on'))renderShop();}catch(e){}}
 async function showRewarded(){showRewarded.none=false;
@@ -3729,16 +3729,51 @@ function adaptQuality(dt){ // drop resolution only while frames are slow; climb 
   else if(avg<.0175&&(GL.quality<1||FXLITE)){if(++GL.good>=8&&gState!=='playing'){if(GL.quality<1){GL.quality=Math.min(1,GL.quality+.1);glResize();}else FXLITE=false;GL.good=0;}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
 }
 let sMapEl=null,sMenuEl=null;
-// Hitch report (published site and app): a gap of 120 ms+ between two screen refreshes in the middle of a level is a hitch. A level with two
-// hitches (or one of 300 ms+) sends one short anonymous note to the error log: level, worst gap, refresh rate, quality step, what was on
-// screen, CPU cores, memory and the phone model from the browser. No install id or name; at most 3 notes a session.
-const LAG={last:0,lv:-1,n:0,worst:0,ctx:'',sent:0,done:false,first:[],seen:new Set()};
-function lagFirst(k){if(LAG.seen.has(k))return;LAG.seen.add(k);LAG.first.push([k,performance.now()]);if(LAG.first.length>12)LAG.first.shift();} /* first sight this session of a body kind, an event or a callout: a new GPU shader may compile then */
-function lagWatch(ts){const g=ts-LAG.last,pj=LAG.js||0,hp=performance.memory?performance.memory.usedJSHeapSize:0,dh=LAG.hp?hp-LAG.hp:0;LAG.last=ts;LAG.hp=hp;LAG.j0=performance.now();queueMicrotask(()=>{LAG.js=performance.now()-LAG.j0;}); /* js: our own work in a frame */if(!G2.on||gState!=='playing'||document.hidden||G2.t<2)return;
-  if(LAG.lv!==level+'/'+gameMode){LAG.lv=level+'/'+gameMode;LAG.n=0;LAG.worst=0;LAG.done=false;}
-  if(g<120||g>5000||LAG.done)return;LAG.n++;if(g>LAG.worst){LAG.worst=g;LAG.ctx=`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(performance.now()-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((performance.now()-LAG.ad)/1000):-1}s ago t ${G2.t.toFixed(1)}s\nnew ${LAG.first.filter(f=>performance.now()-f[1]<1500).map(f=>f[0]+'@'+Math.round(performance.now()-f[1])).join(',')||'-'}`;}
-  if((LAG.n>=2||LAG.worst>=300)&&LAG.sent<3){LAG.done=true;LAG.sent++;const hz=LOOPF.iv?Math.round(1000/LOOPF.iv):0,ua=(navigator.userAgent.match(/Android [^;)]*;\s*([^;)]+)/)||[])[1]||'';
-    lagReport(`LAG ${hz}Hz q${GL.quality.toFixed(2)} fx${FXLITE?1:0}`,`L${level} ${gameMode} hitches ${LAG.n} worst ${Math.round(LAG.worst)}ms\n${LAG.ctx}\ncores ${navigator.hardwareConcurrency||0} mem ${navigator.deviceMemory||0} heap ${performance.memory?Math.round(performance.memory.usedJSHeapSize/1048576):0}MB ads ${ADS.on?1:0} dpr ${devicePixelRatio} ${innerWidth}x${innerHeight}\n${ua.replace(/\s*Build\/.*$/,'').slice(0,40)}`);}}
+// Hitch report (published site and app): a gap of 120 ms+ between two screen refreshes is a hitch. In the middle of a level, two hitches
+// (or one of 300 ms+) send one short anonymous note to the error log; so do the first hitch of a level start (first 2 s) and one of 200 ms+
+// on the result / continue screens, once a session each. The note says what was on screen and, to tell the causes apart: the frame
+// times around the gap, whether the page itself was busy (a 50 ms heartbeat and Chrome's long-animation-frame timing: our code, layout
+// or the frame's own callbacks), which app calls, sounds and new bodies came just before, and a guess (→ ...). No install id or name;
+// at most 4 notes a session.
+const LAG={last:0,lv:'',n:0,worst:0,w:null,all:[],sent:0,done:false,stS:0,ui:0,first:[],seen:new Set(),nat:[],snd:[],fr:new Float32Array(256),fi:0,hb:new Float64Array(128),hi:0,loaf:[],lf:0,vis:0,cont:0,st:0,lvN:0,upd:0,gpu:'',lost:0,rsz:0};
+try{const b=localStorage.getItem('bhs_build');LAG.upd=b&&b!==BUILD?1:0;if(b!==BUILD)localStorage.setItem('bhs_build',BUILD);}catch(e){} /* the first session after an update compiles and decodes everything anew */
+setInterval(()=>{LAG.hb[LAG.hi++&127]=performance.now();},50); /* heartbeat: if it stalls with the frames, the page itself was busy */
+try{new PerformanceObserver(l=>{for(const e of l.getEntries())LAG.loaf.push(e);if(LAG.loaf.length>24)LAG.loaf.splice(0,LAG.loaf.length-24);}).observe({type:'long-animation-frame'});LAG.lf=1;}catch(e){}
+addEventListener('resize',()=>{LAG.rsz++;});document.addEventListener('visibilitychange',()=>{if(!document.hidden)LAG.vis=performance.now();});
+{const c=document.getElementById('bg');if(c)c.addEventListener('webglcontextlost',()=>{LAG.lost++;});}
+function lagFirst(k){if(LAG.seen.has(k))return;LAG.seen.add(k);LAG.first.push([k,performance.now()]);if(LAG.first.length>12)LAG.first.shift();} /* first sight this session of a body kind, an event, a callout or a sound: a new GPU shader may compile then */
+function lagNat(k){try{LAG.nat.push([k,performance.now()]);if(LAG.nat.length>10)LAG.nat.shift();}catch(e){}} /* a call into the app (Android) side, or a music track decoded */
+function lagSnd(k){try{LAG.snd.push([k,performance.now()]);if(LAG.snd.length>10)LAG.snd.shift();lagFirst('♪'+k);}catch(e){}}
+function lagMark(k){try{LAG[k]=performance.now();if(k==='st')LAG.lvN++;}catch(e){}} /* 'st' a level starts, 'cont' play resumes after a continue */
+const lagAgo=(a,ms,now)=>a.filter(f=>now-f[1]<ms).slice(-6).map(f=>f[0].slice(0,16)+'@'+Math.round(now-f[1])).join(',')||'-';
+function lagRec(ts,g,pj,dh,kind){const now=performance.now(),fr=[];for(let i=9;i>=1;i--)fr.push(Math.round(LAG.fr[(LAG.fi-i)&255]));const m=document.querySelector('.modal.on');
+  return {ts,g,kind,fi:LAG.fi,fr,an:null,gs:gState+(m&&m.id?':'+m.id:''),
+    ctx:`objs ${G2.objs.length} parts ${G2.parts.length} sparks ${sparks.length} ev ${G2.ev?G2.ev.k:'-'} boss ${G2.boss?G2.boss.bt||'y':'-'} jet ${G2.jet?1:0} worms ${G2.worms.length} rad ${typeof v2RadAct==='function'&&v2RadAct()?1:0}\njs ${Math.round(pj)}ms heapΔ ${(dh/1048576).toFixed(1)}MB save ${LSAVE.t?Math.round(now-LSAVE.t):-1}ms ago/${Math.round(LSAVE.d)}ms ad ${LAG.ad?Math.round((now-LAG.ad)/1000):-1}s cont ${LAG.cont?Math.round((now-LAG.cont)/1000):-1}s vis ${LAG.vis?Math.round((now-LAG.vis)/1000):-1}s t ${G2.t.toFixed(1)}s`,
+    tail:`nat ${lagAgo(LAG.nat,1500,now)} snd ${lagAgo(LAG.snd,1000,now)}\nnew ${lagAgo(LAG.first,1500,now)}`};}
+function lagAn(r){const a=r.ts-r.g,b=r.ts,now=performance.now();let hb=0;const H=[];for(let i=0;i<128;i++){const t=LAG.hb[i];if(t)H.push(t);}H.sort((x,y)=>x-y); /* the longest heartbeat silence that overlaps the gap */
+  for(let i=1;i<H.length;i++)if(H[i]>a&&H[i-1]<b)hb=Math.max(hb,H[i]-H[i-1]);
+  const af=[];for(let i=0;i<6&&r.fi+i<LAG.fi;i++)af.push(Math.round(LAG.fr[(r.fi+i)&255]));
+  let L=null,ov=0;for(const e of LAG.loaf){const o=Math.min(b,e.startTime+e.duration)-Math.max(a,e.startTime);if(o>ov){ov=o;L=e;}}
+  let lf=LAG.lf?'loaf -':'loaf n/a',v;
+  if(L){const end=L.startTime+L.duration,pre=(L.renderStart||end)-L.startTime,raf=L.renderStart?(L.styleAndLayoutStart||end)-L.renderStart:0,lay=L.styleAndLayoutStart?end-L.styleAndLayoutStart:0;let scr=0,top=null;for(const s of L.scripts||[]){scr+=s.duration;if(!top||s.duration>top.duration)top=s;}
+    lf=`loaf ${Math.round(L.duration)}/${Math.round(L.blockingDuration||0)} pre${Math.round(pre)} raf${Math.round(raf)} lay${Math.round(lay)} scr${Math.round(scr)}`+(top?` top ${top.invokerType||''}:${String(top.invoker||top.sourceFunctionName||'').slice(0,28)} ${Math.round(top.duration)}ms`:'');
+    if(L.duration>=r.g*.5)v=scr>=Math.max(lay,raf)*.8&&scr>20?'script':lay>=raf?'layout':raf>20?'frame':'page';}
+  if(!v)v=hb>=r.g*.6?'page(no js)':'gpu/os'; /* page busy outside any script (GC, the WebView, the app side) vs. the page idle and the frame late */
+  const tag=[];if(LAG.ad&&now-LAG.ad<10000)tag.push('ad');if(LAG.cont&&now-LAG.cont<4000)tag.push('cont');if(LAG.vis&&now-LAG.vis<4000)tag.push('resume');if(LAG.upd&&LAG.lvN<=1)tag.push('update');
+  if(LAG.nat.some(f=>f[1]>a-300&&f[1]<b))tag.push('app');if(LAG.first.some(f=>f[1]>a-300&&f[1]<b))tag.push('new');
+  r.an={v:v+(tag.length?'+'+tag.join('+'):''),txt:`fr ${r.fr.slice(0,8).join(',')},[${Math.round(r.g)}],${af.join(',')}\nhb ${Math.round(hb)} ${lf}`};}
+function lagSend(r,n,all){if(!r.an)lagAn(r);const hz=LOOPF.iv?Math.round(1000/LOOPF.iv):0,ua=(navigator.userAgent.match(/Android [^;)]*;\s*([^;)]+)/)||[])[1]||'';
+  if(!LAG.gpu)try{const gl=GL.gl,x=gl&&gl.getExtension('WEBGL_debug_renderer_info');LAG.gpu=String(gl?gl.getParameter(x?x.UNMASKED_RENDERER_WEBGL:gl.RENDERER):'-').slice(0,32);}catch(e){LAG.gpu='?';}
+  const vs=all&&all.length>1?' v '+all.map(h=>h.an?h.an.v:'?').join(','):'';
+  lagReport(`LAG ${hz}Hz q${GL.quality.toFixed(2)} fx${FXLITE?1:0} → ${r.an.v}`,`L${level} ${gameMode} ${r.kind} ${r.gs} hitches ${n} worst ${Math.round(r.g)}ms${vs}\n${r.ctx}\n${r.an.txt}\n${r.tail}\nboot ${Math.round(performance.now()/1000)}s lv#${LAG.lvN} upd${LAG.upd} lost${LAG.lost} rsz${LAG.rsz} gpu ${LAG.gpu}\ncores ${navigator.hardwareConcurrency||0} mem ${navigator.deviceMemory||0} heap ${performance.memory?Math.round(performance.memory.usedJSHeapSize/1048576):0}MB ads ${ADS.on?1:0} dpr ${devicePixelRatio} ${innerWidth}x${innerHeight}\n${ua.replace(/\s*Build\/.*$/,'').slice(0,40)}`);}
+function lagWatch(ts){const g=ts-LAG.last,pj=LAG.js||0,hp=performance.memory?performance.memory.usedJSHeapSize:0,dh=LAG.hp?hp-LAG.hp:0;LAG.last=ts;LAG.hp=hp;if(g>0&&g<1e4)LAG.fr[LAG.fi++&255]=g;LAG.j0=performance.now();queueMicrotask(()=>{LAG.js=performance.now()-LAG.j0;}); /* js: our own work in a frame */
+  if(!G2.on||document.hidden||g<120||g>5000||LAG.sent>=4)return;
+  if(gState!=='playing'){ /* result and continue screens: ads load and show here */
+    if(gState==='paused'||ADS.showing||g<200||LAG.ui||(LAG.ad&&performance.now()-LAG.ad<1500))return;LAG.ui=1;LAG.sent++;const r=lagRec(ts,g,pj,dh,'ui');setTimeout(()=>lagSend(r,1),700);return;}
+  const k=level+'/'+gameMode+'/'+LAG.lvN;if(LAG.lv!==k){LAG.lv=k;LAG.n=0;LAG.worst=0;LAG.w=null;LAG.all=[];LAG.done=false;}
+  if(G2.t<2){if(LAG.stS||ts-g<LAG.st)return;LAG.stS=1;LAG.sent++;const r=lagRec(ts,g,pj,dh,'start');setTimeout(()=>lagSend(r,1),700);return;} /* level start, after the frame that builds it: once a session */
+  if(LAG.done)return;LAG.n++;const r=lagRec(ts,g,pj,dh,'play');setTimeout(()=>lagAn(r),600);if(LAG.all.length<6)LAG.all.push(r);if(g>LAG.worst){LAG.worst=g;LAG.w=r;}
+  if(LAG.n>=2||LAG.worst>=300){LAG.done=true;LAG.sent++;const w=LAG.w,n=LAG.n,all=LAG.all.slice();setTimeout(()=>lagSend(w,n,all),700);}}
 function lagReport(m,s){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE)return;
   fetch('https://blackhole-storm-lb.liaslabs-games.workers.dev/err',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({m:m.slice(0,300),s:s.slice(0,900),v:BUILD,p:NATIVE?'app':'web',l:(navigator.language||'').slice(0,5)})}).catch(()=>{});}catch(e){}}
 function loop(ts){
@@ -3806,7 +3841,7 @@ function notifPlan(now=Date.now()){const L=[];
   for(const n of L){const k=new Date(n.at).toDateString();if((per[k]|0)>=2)continue;per[k]=(per[k]|0)+1;out.push(n);}
   return out.sort((a,b)=>a.at-b.at);}
 function notifSync(){const nb=CAP('Bhs');if(!nb||!nb.notifSchedule)return;
-  nb.notifSchedule({channel:T('Oyun hatırlatmaları'),list:SET.notif?notifPlan().map(({at,title,body})=>({at,title,body})):[]}).catch(()=>{});}
+  lagNat('notif');nb.notifSchedule({channel:T('Oyun hatırlatmaları'),list:SET.notif?notifPlan().map(({at,title,body})=>({at,title,body})):[]}).catch(()=>{});}
 function notifShown(){const nb=CAP('Bhs');if(!nb||!nb.notifCancel)return;nb.notifCancel().then(notifSync).catch(()=>{});} // back in the game: clear the shade, plan again
 async function notifEnable(fromSettings){const nb=CAP('Bhs');if(!nb||!nb.notifPermission)return;
   let ok=false;try{ok=!!(await nb.notifPermission()).granted;}catch(e){}
