@@ -575,7 +575,7 @@ function v2Update(dt){
       else if(o.v0x!==undefined){if(d>Gr){const k=Math.min(1,odt*2.2);o.vx+=(o.v0x-o.vx)*k;o.vy+=(o.v0y-o.vy)*k;}if(Math.hypot(o.vx-o.v0x,o.vy-o.v0y)<sp2(6)||d<=Gr)o.v0x=o.v0y=undefined;} /* the push is over: bodies pick their old speed back up within half a second */
       if(d<Gr&&o.k==='bomb'&&!anti&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
       if(G2.magT>0&&ed&&o.k!=='anti'&&!o.boss&&d>=G2.R+o.r){const A=sp2(2800)*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(650);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // magnet: everything you can eat is hauled in
-      if(d<Gr&&!anti){
+      if(d<Gr&&!anti&&!(o.k==='anti'&&rel(8)&&!gA&&!G2.ending)){ /* 1.4.8: the hole's pull leaves antimatter alone: it only hurts if you steer into it */
         if(!o.inG){o.inG=true;const rx=-dx,ry=-dy,rvx=o.vx-G2.vx,rvy=o.vy-G2.vy,rv=Math.hypot(rvx,rvy)||1;o.b=Math.abs(rx*rvy-ry*rvx)/rv;}
         const q=1-d/Gr;let a=(V2K.acc.min+(V2K.acc.max-V2K.acc.min)*q*q)*rageK*overK;a=Math.min(a,G2.rageT>0?V2K.acc.rage:V2K.acc.max*overK);
         if(!ed)a*=v2Banned(o)?-.7:o.k==='prey'||o.k==='cstar'?0:.3; /* the prey ignores your pull: you ram it *//* banned bodies are pushed away; a fresh prey ignores the pull */if(G2.ending)a*=3;else if(G2.garcT>0)a*=2;const A=a*S*3600*odt;o.vx+=dx/d*A;o.vy+=dy/d*A;
@@ -1365,7 +1365,7 @@ function v2Tip(id,tg){
   $('tip2I').textContent=t[0];$('tip2T').textContent=t[1];$('tip2D').textContent=t[2];
   const y=id==='rage'?0:id==='shield'||id==='nova'||id==='hawking'?H:tg?tg.y:hY,m=$('mTip2');m.classList.toggle('tTop',y>H*.5);m.classList.toggle('tBot',y<=H*.5);
   $('rage2')&&$('rage2').classList.toggle('hl',id==='rage');$('shTop').classList.toggle('hl',id==='shield');$('diaTop').classList.toggle('hl',id==='nova');$('hkTop').classList.toggle('hl',id==='hawking');
-  v2TipAnim(id);showModal('mTip2');SND.duck(.4,1e5);sfx('bell',{vol:.5,rate:1.25});return true;
+  v2TipAnim(id);showModal('mTip2');SND.duck(.4,1e5);if(!rel(8))sfx('bell',{vol:.5,rate:1.25});return true;
 }
 // First levels: info tips flow as a strip under the top bar while play goes on; danger, power and boss cards still pause.
 const TIP_FLOW_LV=5;
@@ -1373,7 +1373,7 @@ const v2TipFlowOn=()=>G2.mode==='level'&&gameMode==='classic'&&!REPLAY&&level<=T
 function v2TipFlow(id,tg){const t=TIP2[id];if(!t)return false;
   TIPS[id]=1;saveSoon();G2.tipN=(G2.tipN||0)+1;G2.tipGap=8;const d=clamp(2.6+T(t[2]).length/45,3,7);G2.tipF={id,tg,t:d};
   const el=$('tipFlow');$('tfI').textContent=t[0];$('tfT').textContent=t[1];$('tfD').textContent=t[2];el.style.setProperty('--d',d+'s');
-  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');sfx('bell',{vol:.3,rate:1.4});return true;}
+  el.classList.remove('on');void el.offsetWidth;el.classList.add('on');if(!rel(8))sfx('bell',{vol:.3,rate:1.4});return true;} /* 1.4.8: tips and new-body cards come in silently */
 function v2TipFlowEnd(){G2.tipF=null;const el=$('tipFlow');if(el)el.classList.remove('on');}
 // power cards play a short loop in the tip card, so each power is shown, not just described
 const TIPANIM={
