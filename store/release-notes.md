@@ -15,9 +15,9 @@ Her güncellemede:
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
-| 1.4.7 | 14 | 9 Eki | Öne alındı (testçiler takılma bildirdi); önce Dahili test, sonra Alpha |
-| 1.4.8 | 15 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
-| 1.4.9 | 16 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
+| 1.4.7 | 15 | 9 Eki | Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet. Önce Dahili test, sonra Alpha |
+| 1.4.8 | 16 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
+| 1.4.9 | 17 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -54,13 +54,13 @@ Her güncellemede:
 - Kasma (reklam, ANDROID değişikliği): reklam kapanınca sıradaki hemen yüklenmiyordu artık; yükleme sonuç ekranı, devam teklifi ve menüde (`adsPreload`). Reklam motoru oyun sırasında hiç başlatılmıyor. Kullanıcı reklamdan sonraki seviyede takılma gözlemledi. **Önce Dahili test'te denenecek.**
 - Kasma: oyun içi güç düğmelerinde canlı bulanıklık (backdrop-filter) kaldırıldı, koyu cam arka plan; 'devam et' kaydı 0,4 sn sonra (kullanıcı devamdan sonra takılma gözlemledi).
 - Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
-- Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek).
+- Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek). Kod 14'te varsayılan Kademeli (2×) Dahili test'te fazla geldi (meteorlara çarpılıyordu); kod 15: varsayılan **Normal** (hıza göre en fazla 1,25×), Kademeli 1,6×, Yüksek 2,2×; hızlanma daha yüksek parmak hızında başlar, normal kaçış 1:1 kalır.
 - Solucan deliği antimaddeyi ve yasaklı cisimleri almıyor (kaçılamayan isabet oluyordu).
 - Yasaklı seviyeler: bomba, ekrandaki yasaklı cisimlerin yasağını kaldırıyor.
 
 ```
 <en-US>
-• New: graded touch sensitivity (Settings › Sensitivity): a quick swipe reaches the far edge in one move
+• New: touch sensitivity (Settings › Sensitivity): Normal, Graded or High; a quick swipe carries the hole further
 • Wormholes no longer fling antimatter or forbidden bodies at you
 • Restricted levels: a bomb lifts the ban from forbidden bodies on screen
 • Fewer hitches: no saving during play, and ads load between levels, not during them

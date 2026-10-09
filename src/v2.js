@@ -199,9 +199,10 @@ const FD2=[60,90,120]; // finger → hole distance in reference px (settings: ne
 function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
 // Graded sensitivity (settings: normal / graded / high): a slow finger moves the hole 1:1 for fine aim, a quick swipe up to SENS2× as far,
 // so a thumb that starts near one edge can still send the hole to the other in one stroke. Speeds are in reference px per ms.
-const SENS2=[1,2,2.6],SENS_V=[.25,1.4];
+// Normal (the default) adds only a touch; an ordinary dodge stays 1:1 in all three, the boost starts above SENS_V[0].
+const SENS2=[1.25,1.6,2.2],SENS_V=[.4,1.6];
 function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Math.max(4,now-DRAG.pt);DRAG.px=x;DRAG.py=y;DRAG.pt=now;
-  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=rel(7)?SENS2[SET.sens]??2:1,q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
+  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=rel(7)?SENS2[SET.sens]??1.25:1,q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
   const m=(G2.R||0)+4;DRAG.ax=clamp(DRAG.ax+dx*k,m,W-m);DRAG.ay=clamp(DRAG.ay+dy*k,m+2,H-m-70); /* the same walls the hole has; held at an edge, pulling back moves it straight away */
   G2.tx=DRAG.ax;G2.ty=DRAG.ay;}
 function v2Down(x,y,id){
