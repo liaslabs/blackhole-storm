@@ -1704,5 +1704,14 @@
 "Hassasiyet": "Sensitivitas",
 "KADEMELİ": "BERTAHAP",
 "YÜKSEK": "TINGGI",
-"YASAK KALKTI": "LARANGAN DICABUT"
+"YASAK KALKTI": "LARANGAN DICABUT",
+"ALTIN YAY": "BUSUR EMAS",
+"ALTIN YAY BİTTİ": "BUSUR EMAS BERAKHIR",
+"HER ŞEYİ YUT": "TELAN SEMUANYA",
+"YAY KALKANI": "PERISAI BUSUR",
+"YAY KALKANI BİTTİ": "PERISAI BUSUR BERAKHIR",
+"İKİ YAY": "DUA BUSUR",
+"Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.": "Mulai sekarang dua busur menjaga tiap hati: dua pukulan menghabiskan satu hati. Bola energi memulihkan busur yang patah.",
+"Artık yayların yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.": "Busurmu sudah tidak ada: tiap pukulan menghabiskan satu hati. Telan {n} bola energi dan busur kembali selama {n} detik. Titik di bawah lubang menghitung bolanya.",
+"Çok nadir bir hazine! {n} saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.": "Harta yang sangat langka! Selama {n} detik kamu menelan semuanya: meteor, antimateri, bahkan benda terlarang dan raksasa. Tak ada yang bisa melukaimu, dan semuanya memberi poin."
 }

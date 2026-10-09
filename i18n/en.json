@@ -1704,5 +1704,14 @@
 "Hassasiyet": "Sensitivity",
 "KADEMELİ": "GRADED",
 "YÜKSEK": "HIGH",
-"YASAK KALKTI": "BAN LIFTED"
+"YASAK KALKTI": "BAN LIFTED",
+"ALTIN YAY": "GOLDEN ARC",
+"ALTIN YAY BİTTİ": "GOLDEN ARC OVER",
+"HER ŞEYİ YUT": "SWALLOW EVERYTHING",
+"YAY KALKANI": "ARC SHIELD",
+"YAY KALKANI BİTTİ": "ARC SHIELD OVER",
+"İKİ YAY": "TWO ARCS",
+"Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.": "From now on two arcs guard each heart: two hits cost a heart. An energy orb mends a broken arc.",
+"Artık yayların yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.": "No more arcs: every hit costs a heart. Swallow {n} energy orbs and the arcs come back for {n} seconds. The dots under the hole count the orbs.",
+"Çok nadir bir hazine! {n} saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.": "A very rare treasure! For {n} seconds you swallow everything: meteors, antimatter, even forbidden and giant bodies. Nothing can hurt you, and all of it scores."
 }

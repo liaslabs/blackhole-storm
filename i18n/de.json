@@ -1704,5 +1704,14 @@
 "Hassasiyet": "Empfindlichkeit",
 "KADEMELİ": "GESTUFT",
 "YÜKSEK": "HOCH",
-"YASAK KALKTI": "VERBOT AUFGEHOBEN"
+"YASAK KALKTI": "VERBOT AUFGEHOBEN",
+"ALTIN YAY": "GOLDENER BOGEN",
+"ALTIN YAY BİTTİ": "GOLDENER BOGEN VORBEI",
+"HER ŞEYİ YUT": "VERSCHLINGE ALLES",
+"YAY KALKANI": "BOGENSCHILD",
+"YAY KALKANI BİTTİ": "BOGENSCHILD VORBEI",
+"İKİ YAY": "ZWEI BÖGEN",
+"Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.": "Ab jetzt schützen zwei Bögen jedes Herz: zwei Treffer kosten ein Herz. Eine Energiekugel repariert einen gebrochenen Bogen.",
+"Artık yayların yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.": "Keine Bögen mehr: Jeder Treffer kostet ein Herz. Verschlinge {n} Energiekugeln, und die Bögen kommen für {n} Sekunden zurück. Die Punkte unter dem Loch zählen die Kugeln.",
+"Çok nadir bir hazine! {n} saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.": "Ein sehr seltener Schatz! {n} Sekunden lang verschlingst du alles: Meteore, Antimaterie, sogar verbotene und riesige Körper. Nichts kann dir schaden, und alles bringt Punkte."
 }

@@ -1704,5 +1704,14 @@
 "Hassasiyet": "Sensibilité",
 "KADEMELİ": "PROGRESSIVE",
 "YÜKSEK": "ÉLEVÉE",
-"YASAK KALKTI": "INTERDICTION LEVÉE"
+"YASAK KALKTI": "INTERDICTION LEVÉE",
+"ALTIN YAY": "ARC D'OR",
+"ALTIN YAY BİTTİ": "FIN DE L'ARC D'OR",
+"HER ŞEYİ YUT": "AVALE TOUT",
+"YAY KALKANI": "BOUCLIER D'ARCS",
+"YAY KALKANI BİTTİ": "FIN DU BOUCLIER D'ARCS",
+"İKİ YAY": "DEUX ARCS",
+"Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.": "Désormais deux arcs protègent chaque cœur : deux coups coûtent un cœur. Une sphère d'énergie répare un arc brisé.",
+"Artık yayların yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.": "Tu n'as plus d'arcs : chaque coup coûte un cœur. Avale {n} sphères d'énergie et les arcs reviennent pendant {n} secondes. Les points sous le trou comptent les sphères.",
+"Çok nadir bir hazine! {n} saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.": "Un trésor très rare ! Pendant {n} secondes tu avales tout : météores, antimatière, même les corps interdits et géants. Rien ne peut te blesser, et tout rapporte des points."
 }

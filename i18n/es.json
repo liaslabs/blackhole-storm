@@ -1704,5 +1704,14 @@
 "Hassasiyet": "Sensibilidad",
 "KADEMELİ": "GRADUAL",
 "YÜKSEK": "ALTA",
-"YASAK KALKTI": "PROHIBICIÓN ANULADA"
+"YASAK KALKTI": "PROHIBICIÓN ANULADA",
+"ALTIN YAY": "ARCO DORADO",
+"ALTIN YAY BİTTİ": "FIN DEL ARCO DORADO",
+"HER ŞEYİ YUT": "TRÁGATELO TODO",
+"YAY KALKANI": "ESCUDO DE ARCOS",
+"YAY KALKANI BİTTİ": "FIN DEL ESCUDO DE ARCOS",
+"İKİ YAY": "DOS ARCOS",
+"Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.": "Ahora dos arcos protegen cada corazón: dos golpes cuestan un corazón. La esfera de energía repara un arco roto.",
+"Artık yayların yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.": "Ya no tienes arcos: cada golpe cuesta un corazón. Trágate {n} esferas de energía y los arcos vuelven durante {n} segundos. Los puntos bajo el agujero cuentan las esferas.",
+"Çok nadir bir hazine! {n} saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.": "¡Un tesoro rarísimo! Durante {n} segundos te tragas todo: meteoritos, antimateria, incluso cuerpos prohibidos y gigantes. Nada te hace daño y todo da puntos."
 }

@@ -1704,5 +1704,14 @@
 "Hassasiyet": "Чувствительность",
 "KADEMELİ": "ПЛАВНАЯ",
 "YÜKSEK": "ВЫСОКАЯ",
-"YASAK KALKTI": "ЗАПРЕТ СНЯТ"
+"YASAK KALKTI": "ЗАПРЕТ СНЯТ",
+"ALTIN YAY": "ЗОЛОТАЯ ДУГА",
+"ALTIN YAY BİTTİ": "ЗОЛОТАЯ ДУГА ЗАКОНЧИЛАСЬ",
+"HER ŞEYİ YUT": "ГЛОТАЙ ВСЁ",
+"YAY KALKANI": "ЩИТ ИЗ ДУГ",
+"YAY KALKANI BİTTİ": "ЩИТ ИЗ ДУГ ЗАКОНЧИЛСЯ",
+"İKİ YAY": "ДВЕ ДУГИ",
+"Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.": "Теперь каждое сердце защищают две дуги: два удара стоят сердца. Шар энергии восстанавливает сломанную дугу.",
+"Artık yayların yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.": "Дуг больше нет: каждый удар стоит сердца. Проглоти {n} шара энергии — и дуги вернутся на {n} секунд. Точки под дырой считают шары.",
+"Çok nadir bir hazine! {n} saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.": "Очень редкое сокровище! {n} секунд ты глотаешь всё: метеоры, антиматерию, даже запретные и гигантские тела. Ничто не может тебе навредить, и всё приносит очки."
 }
