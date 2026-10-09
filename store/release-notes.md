@@ -14,9 +14,10 @@ Her güncellemede:
 |---|---|---|---|
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
-| 1.4.6 | 13 | 8 Eki | Derleniyor (öne alındı: 1.4.5'teki başlık çubuğu hatası) |
-| 1.4.7 | 14 | 13 Eki | Hazır, `rel(7)` ile kapalı |
-| 1.4.8 | 15 | 16 Eki | Gelen geri bildirimler |
+| 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
+| 1.4.7 | 14 | 9 Eki | Öne alındı (testçiler takılma bildirdi); önce Dahili test, sonra Alpha |
+| 1.4.8 | 15 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
+| 1.4.9 | 16 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -46,7 +47,13 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.4.7 (13 Ekim) · `REL` 7 yapılacak
+## 1.4.7 (9 Ekim, öne alındı) · `REL` 7 yapılacak
+- Kasma: oyun sırasında hafızaya kayıt yapılmıyor (1.4.6'da 12 sn'de 8 kayıt vardı: atlas, başarım, ipucu); kayıt seviye sonu, duraklatma veya arka plana geçişte. Menü kalp sayacı oyun sırasında ekranı güncellemiyor.
+- Kasma: müzik parçaları (bölge ve boss) seviye içinde değil, menüde ve sonuç ekranında açılıyor (decode). Titreşim çağrıları oyun sırasında en sık 90 ms'de bir (her biri uygulamanın yerel tarafına gidip geliyor).
+- Kasma raporu artık takılma anındaki kendi JS süremizi, hafıza temizliğini (heapΔ), son kaydı, son reklamdan geçen süreyi, seviyenin kaçıncı saniyesi olduğunu ve son 1,5 sn'de oturumda ilk kez görülen cisim/olay/yazıları (yeni bir ekran kartı programı derleniyor olabilir) da yazıyor.
+- Kasma (reklam, ANDROID değişikliği): reklam kapanınca sıradaki hemen yüklenmiyordu artık; yükleme sonuç ekranı, devam teklifi ve menüde (`adsPreload`). Reklam motoru oyun sırasında hiç başlatılmıyor. Kullanıcı reklamdan sonraki seviyede takılma gözlemledi. **Önce Dahili test'te denenecek.**
+- Kasma: oyun içi güç düğmelerinde canlı bulanıklık (backdrop-filter) kaldırıldı, koyu cam arka plan; 'devam et' kaydı 0,4 sn sonra (kullanıcı devamdan sonra takılma gözlemledi).
+- Bölünen gezegen parçaları 2 kat uzaklaşır, döner ve yanıp söner; L60+ boss radyasyonu 3 dalga, L80+ daha sık.
 - Kademeli dokunma hassasiyeti + Ayarlar › Hassasiyet (Normal / Kademeli / Yüksek).
 - Solucan deliği antimaddeyi ve yasaklı cisimleri almıyor (kaçılamayan isabet oluyordu).
 - Yasaklı seviyeler: bomba, ekrandaki yasaklı cisimlerin yasağını kaldırıyor.
@@ -56,22 +63,32 @@ Her güncellemede:
 • New: graded touch sensitivity (Settings › Sensitivity): a quick swipe reaches the far edge in one move
 • Wormholes no longer fling antimatter or forbidden bodies at you
 • Restricted levels: a bomb lifts the ban from forbidden bodies on screen
+• Fewer hitches: no saving during play, and ads load between levels, not during them
+• Split planets: halves fly further apart, spin and blink
+• Later bosses send three radiation waves
 </en-US>
 ```
 
 ## 1.4.8 (16 Ekim) · `REL` 8 yapılacak
 - Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Ağ yıldızların altında çukurlaşıyor, sarmal dalgalar yayıyor,
   birleşmede kumaş gibi dalgalanıyor. Sadece görsel; dalganın hızı ve itişi aynı. `rel(8)`.
+- Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez. Deliğin etrafında kovalayan iki altın kuyruklu yay.
+- Dolu ekran: cisimler ~1,7 kat sık, ekranda en fazla 14/16/18; L2–10'da %20 hızlı; 6–8'lik kaya sağanakları; hedef puanlar L2–6'da ×2, sonra ×1,5; L1 öğretici %35 hızlı.
+- Yaylar: L1–10 3 yay, L11–40 2 yay, L41+ yaysız; L41+ 3 enerji topu = 20 sn Yay Kalkanı. L11 ve L41'de tanıtım kartı.
 - (geri bildirimlerden eklenecekler)
 
 ```
 <en-US>
 • Kilonova: see space itself ripple as two neutron stars merge
+• A fuller screen from the first level: more to swallow, faster action
+• New, very rare Golden Arc: for 10 s you swallow everything, even meteors
+• Tougher later levels: fewer arcs per heart, with an arc power from level 41
 </en-US>
 ```
 
-## Üretimden sonra (ayrı güncelleme)
+## 1.4.9 (~24 Ekim, üretimden sonra) · Android bakım güncellemesi
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
   Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
 - AGP 8.13 → 9.0 yükseltmesi (Play önerisi).
+- Uçtan uca ekran (Play önerisi): `EdgeToEdge.enable(this)` bu sefer `super.onCreate`'ten **sonra** çağrılacak (1.4.5'teki başlık çubuğu hatası önceye konduğu içindi). Önce **Dahili test** kanalında kendi telefonda denenecek, sonra kapalı/üretim kanalına.

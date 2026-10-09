@@ -530,6 +530,18 @@ public class BhsPlugin extends Plugin {
         });
     }
 
+    // The game calls this on a quiet screen (result, menu): loading builds the ad's view on the UI thread, which stalls the game if it runs during play
+    @PluginMethod
+    public void adsPreload(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            if (adsReady) {
+                loadRewarded();
+                loadInter();
+            }
+            call.resolve();
+        });
+    }
+
     // -> {shown, earned}; earned only when the player watched long enough for the reward
     @PluginMethod
     public void adsRewarded(PluginCall call) {
@@ -550,8 +562,7 @@ public class BhsPlugin extends Plugin {
                 public void onAdDismissedFullScreenContent() {
                     o.put("shown", true);
                     o.put("earned", earned[0]);
-                    call.resolve(o);
-                    loadRewarded();
+                    call.resolve(o); // the next ad loads later, on a quiet screen (adsPreload), not over the next level
                 }
 
                 @Override
@@ -583,8 +594,7 @@ public class BhsPlugin extends Plugin {
                 @Override
                 public void onAdDismissedFullScreenContent() {
                     o.put("shown", true);
-                    call.resolve(o);
-                    loadInter();
+                    call.resolve(o); // reloaded later through adsPreload
                 }
 
                 @Override
