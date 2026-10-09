@@ -1717,11 +1717,11 @@ const TAU=Math.PI*2;
 const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 /* RELEASE GATE: updates go out in steps during the closed test. REL is the release this build ships (1.4.6 -> 6, 1.4.7 -> 7 ...);
    a feature waiting for a later release checks rel(n). The developer link always sees everything, so it previews what is coming. */
-const REL=6,rel=n=>DEV||REL>=n;
+const REL=7,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v47";
+const BUILD="bhs-v48";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();

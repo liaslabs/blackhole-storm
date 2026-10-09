@@ -1405,7 +1405,7 @@ const TAU=Math.PI*2;
 const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 /* RELEASE GATE: updates go out in steps during the closed test. REL is the release this build ships (1.4.6 -> 6, 1.4.7 -> 7 ...);
    a feature waiting for a later release checks rel(n). The developer link always sees everything, so it previews what is coming. */
-const REL=6,rel=n=>DEV||REL>=n;
+const REL=7,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
