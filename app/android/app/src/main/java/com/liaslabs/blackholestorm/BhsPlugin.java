@@ -9,6 +9,7 @@ import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.os.VibrationAttributes;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -51,6 +52,7 @@ import androidx.core.app.NotificationManagerCompat;
 import org.json.JSONObject;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
 import com.google.android.play.core.integrity.StandardIntegrityManager;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +93,104 @@ public class BhsPlugin extends Plugin {
             }
         };
         getActivity().runOnUiThread(() -> getActivity().getOnBackPressedDispatcher().addCallback(getActivity(), back));
+        watchStart();
+    }
+
+    // ---- UI-thread watch (hitch report) ----
+    // The game's WebView can only show a new frame when the app's UI thread is free. A background thread checks every
+    // 50 ms that the UI thread answers; when it is held 120 ms or more, it notes for how long and where (the UI
+    // thread's stack, sampled while it is held), so the game's hitch note can name what held it. A few small
+    // checks a second, only while the app is in front.
+    private final ArrayDeque<String> stalls = new ArrayDeque<>();
+    private volatile boolean watchOn = true;
+    private Thread watch;
+
+    private void watchStart() {
+        if (watch != null) return;
+        Handler main = new Handler(Looper.getMainLooper());
+        Thread mt = Looper.getMainLooper().getThread();
+        watch = new Thread(() -> {
+            while (true) {
+                try {
+                    if (!watchOn) { Thread.sleep(1000); continue; }
+                    long[] ran = { 0 };
+                    long t0 = SystemClock.uptimeMillis();
+                    main.post(() -> ran[0] = SystemClock.uptimeMillis());
+                    Map<String, Integer> seen = new HashMap<>();
+                    int n = 0;
+                    while (ran[0] == 0 && SystemClock.uptimeMillis() - t0 < 3000) {
+                        Thread.sleep(30);
+                        if (ran[0] == 0 && SystemClock.uptimeMillis() - t0 >= 120) {
+                            String k = where(mt.getStackTrace());
+                            seen.put(k, seen.getOrDefault(k, 0) + 1);
+                            n++;
+                        }
+                    }
+                    long d = (ran[0] != 0 ? ran[0] : SystemClock.uptimeMillis()) - t0;
+                    if (d >= 120 && n > 0) {
+                        String top = "";
+                        int c = 0;
+                        for (Map.Entry<String, Integer> e : seen.entrySet()) if (e.getValue() > c) { c = e.getValue(); top = e.getKey(); }
+                        synchronized (stalls) {
+                            stalls.add(t0 + "|" + d + "|" + top + " " + c + "/" + n);
+                            while (stalls.size() > 6) stalls.poll();
+                        }
+                    }
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    return;
+                } catch (Throwable e) {
+                    try { Thread.sleep(1000); } catch (InterruptedException x) { return; }
+                }
+            }
+        }, "bhs-watch");
+        watch.setDaemon(true);
+        watch.setPriority(Thread.MIN_PRIORITY);
+        watch.start();
+    }
+
+    // the first frame of the app's own or a library's code (not Android's message loop), plus the frame on top
+    private static String where(StackTraceElement[] st) {
+        if (st.length == 0) return "?";
+        String top = brief(st[0]), mine = null;
+        for (StackTraceElement e : st) {
+            String c = e.getClassName();
+            if (c.startsWith("java.") || c.startsWith("android.") || c.startsWith("com.android.") || c.startsWith("dalvik.")
+                || c.startsWith("libcore.") || c.startsWith("sun.") || c.startsWith("androidx.")) continue;
+            mine = brief(e);
+            break;
+        }
+        return mine == null || mine.equals(top) ? top : mine + " < " + top;
+    }
+
+    private static String brief(StackTraceElement e) {
+        String c = e.getClassName().replace("com.google.android.gms.", "gms.").replace("com.getcapacitor.", "cap.").replace("com.liaslabs.blackholestorm.", "bhs.");
+        return c + "." + e.getMethodName();
+    }
+
+    @Override
+    protected void handleOnPause() {
+        watchOn = false;
+    }
+
+    @Override
+    protected void handleOnResume() {
+        watchOn = true;
+    }
+
+    // -> {now, list: ["start|ms|where n/m", ...], sdk}: UI-thread holds noted since the last call (uptime ms)
+    @PluginMethod
+    public void uiStalls(PluginCall call) {
+        JSObject o = new JSObject();
+        JSArray a = new JSArray();
+        synchronized (stalls) {
+            for (String x : stalls) a.put(x);
+            stalls.clear();
+        }
+        o.put("now", SystemClock.uptimeMillis());
+        o.put("list", a);
+        o.put("sdk", sdkOn);
+        call.resolve(o);
     }
 
     @PluginMethod
@@ -456,11 +556,13 @@ public class BhsPlugin extends Plugin {
     }
 
     // ---- AdMob ----
-    // No ad is kept loaded while a level is on: a loaded full-screen ad runs its own page in the app's shared web
-    // process and stalls the game now and then (1.4.7: no stalls at all with the network off). So a rewarded ad
-    // loads when the player taps for one (the game says "loading" meanwhile), the between-level ad loads on the
-    // result screen before it is due, and when a level starts the game lets go of whatever is still held (adsDrop).
-    private boolean adsReady;
+    // The game's frames need the app's UI thread, and the ads SDK does part of its work there (1.4.7: no hitches at
+    // all with the network off, with or without an ad held). So the SDK starts only when an ad is first needed, not
+    // at launch: a rewarded ad loads when the player taps for one, the between-level ad loads on the result screen
+    // when it is due next, and when a level starts the game lets go of whatever is still held (adsDrop).
+    private boolean adsReady; // consent allows ads
+    private volatile boolean sdkOn; // MobileAds started (on the first ad that is needed)
+    private final List<Runnable> sdkWait = new ArrayList<>();
     private RewardedAd rewarded;
     private InterstitialAd inter;
     private boolean rewardedLoading, interLoading, holdOff; // holdOff: a level is on, an ad that finishes loading now is let go
@@ -494,7 +596,6 @@ public class BhsPlugin extends Plugin {
                 .setMaxAdContentRating(RequestConfiguration.MAX_AD_CONTENT_RATING_PG) // a game for 13+: no mature ads
                 .setTagForUnderAgeOfConsent(RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE)
                 .build());
-            new Thread(() -> MobileAds.initialize(getContext(), st -> {})).start(); // nothing is loaded up front
         }
         o.put("ok", true);
         call.resolve(o);
@@ -506,8 +607,22 @@ public class BhsPlugin extends Plugin {
         getActivity().runOnUiThread(() -> UserMessagingPlatform.showPrivacyOptionsForm(getActivity(), err -> call.resolve()));
     }
 
+    // runs `then` on the UI thread once the SDK has started; the first call starts it (off the UI thread)
+    private void sdk(Runnable then) {
+        if (sdkOn) { then.run(); return; }
+        sdkWait.add(then);
+        if (sdkWait.size() > 1) return;
+        new Thread(() -> MobileAds.initialize(getContext(), st -> ui.post(() -> {
+            sdkOn = true;
+            List<Runnable> w = new ArrayList<>(sdkWait);
+            sdkWait.clear();
+            for (Runnable r : w) r.run();
+        }))).start();
+    }
+
     private void loadRewarded() {
         if (!adsReady || rewardedUnit.isEmpty() || rewarded != null || rewardedLoading) return;
+        if (!sdkOn) { sdk(this::loadRewarded); return; }
         rewardedLoading = true;
         RewardedAd.load(getContext(), rewardedUnit, new AdRequest.Builder().build(), new RewardedAdLoadCallback() {
             @Override
@@ -535,6 +650,7 @@ public class BhsPlugin extends Plugin {
 
     private void loadInter() {
         if (!adsReady || interUnit.isEmpty() || inter != null || interLoading) return;
+        if (!sdkOn) { sdk(this::loadInter); return; }
         interLoading = true;
         InterstitialAd.load(getContext(), interUnit, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
@@ -579,7 +695,7 @@ public class BhsPlugin extends Plugin {
         });
     }
 
-    // -> {rewarded}: true when a rewarded ad is ready to show at once (else the game says "loading")
+    // -> {rewarded}: true when a rewarded ad is ready to show at once
     @PluginMethod
     public void adsHas(PluginCall call) {
         getActivity().runOnUiThread(() -> {
@@ -590,7 +706,7 @@ public class BhsPlugin extends Plugin {
     }
 
     // -> {shown, earned}; earned only when the player watched long enough for the reward. With no ad held, one is
-    // loaded now and shown when it arrives; after 8 s without one the answer is "not shown".
+    // loaded now (starting the SDK first if needed) and shown when it arrives; after 10 s without one the answer is "not shown".
     @PluginMethod
     public void adsRewarded(PluginCall call) {
         getActivity().runOnUiThread(() -> {
@@ -613,7 +729,7 @@ public class BhsPlugin extends Plugin {
                     rewardedWait = null;
                     notShown(call);
                 }
-            }, 8000);
+            }, 10000);
         });
     }
 
