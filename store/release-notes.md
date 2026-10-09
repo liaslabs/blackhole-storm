@@ -15,7 +15,7 @@ Her güncellemede:
 | 1.4.4 | 11 | 5 Eki | Yayında (ilk kapalı test sürümü) |
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
-| 1.4.7 | 18 | 9 Eki | Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
+| 1.4.7 | 18 | 9 Eki | 9 Eki 15:41 Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
 | 1.4.8 | 19 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
 | 1.4.9 | 20 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
