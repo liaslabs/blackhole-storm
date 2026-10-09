@@ -4410,7 +4410,7 @@ function v2Edge(k,side,x0){
   const o=v2Obj(k,x,y,Math.cos(a)*s,Math.sin(a)*s);o.side=side;return o;
 }
 function v2Pick(){const w=G2.L.w;let tot=0;for(const k in w)tot+=w[k];let r=rng()*tot;for(const k in w){r-=w[k];if(r<=0)return k;}return 'ast';}
-function v2Active(){let n=0;for(const o of G2.objs)if(o.st==='in'&&!o.boss)n++;return n;}
+function v2Active(){let n=0;for(const o of G2.objs)if(o.st==='in'&&!o.boss)n+=o.k==='half'&&rel(8)?(o.hEsc?0:.5):1;return n;} /* 1.4.8: two halves take one place, a leaving one none */
 function v2Spawn(){
   let k=v2Pick();const l=G2.lv;if(k==='meteor'&&(G2.guard||v2RadAct()))k='ast'; /* guard levels: the danger is what falls on the planet, never a meteor on top of it */
   if(k==='meteor'&&G2.objs.filter(o=>o.k==='meteor'&&o.wait>0).length>=3)k='ast'; // never more than 3 meteors released together
@@ -5310,10 +5310,16 @@ function v2RageGo(){
 // ── split planets, antimatter, wormholes ─────────────
 function v2Split(o){ // a split planet cracks in two: both halves (half the mass each) shoot away from the hole
   o.st='dead';const a0=Math.atan2(o.y-hY,o.x-hX);for(const sd of [-1,1]){const a=a0+sd*(rel(7)?.85:.55),s=sp2(rrnd(300,360)),h=v2Obj('half',o.x+Math.cos(a)*o.r*.45,o.y+Math.sin(a)*o.r*.45,Math.cos(a)*s,Math.sin(a)*s);h.cut=a0+sd*Math.PI/2;h.noCap=.8;h.burst=1.2;if(rel(7))h.spinV=sd*rrnd(4,5.5);if(rel(8)){h.seed=rrnd(0,TAU);h.crk=.4;}}
-  v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);if(rel(8)){v2Burst(o.x,o.y,16,'#cfc6b8',3,9,.9,3);flash=Math.max(flash,.18);} /* rock chips and a quick white flash */shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
+  v2Burst(o.x,o.y,30,'#9ff4ff',2,8,.7,2.2);if(rel(8)){v2Burst(o.x,o.y,16,'#cfc6b8',3,9,.9,3);flash=Math.max(flash,.18);v2HalfCrowd();} /* rock chips and a quick white flash */shake=Math.max(shake,6);v2Sfx('boom',{vol:.55,rate:1.2});v2Call('BÖLÜNDÜ!','','#ffb35c',.9);
 }
 // the two halves burst apart, then slow to an ordinary drift; one that still reaches an edge bounces back in, so neither is ever lost
-function v2HalfKeep(o,dt){if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(7)?120:70);if(v>cr){const f=Math.max(cr/v,Math.pow(rel(7)?.45:.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
+const HALF={max:l=>l<=40?8:12,bounce:6,life:10}; // 1.4.8: halves on screen at most (8, then 12 after L40); they bounce back in for 6 s, and after 10 s uneaten (or when crowded) they fly off
+function v2HalfLeave(o){o.hEsc=1;o.burst=0;}
+function v2HalfCrowd(){const l=HALF.max(G2.lv||level),hs=G2.objs.filter(h=>h.k==='half'&&h.st==='in'&&!h.hEsc).sort((x,y)=>y.age-x.age);for(let i=0;i<hs.length-l;i++)v2HalfLeave(hs[i]);} /* the oldest go first */
+function v2HalfKeep(o,dt){if(rel(8)){if(!o.hEsc&&o.age>HALF.life)v2HalfLeave(o);
+    if(o.hEsc){let ex=o.x-W/2,ey=o.y-H/2;const e=Math.hypot(ex,ey)||1,A=sp2(520)*dt;o.vx+=ex/e*A;o.vy+=ey/e*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(460);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}return;} /* off it goes, outward from the middle; it is removed once off screen */
+    if(o.age>HALF.bounce){if(o.burst>0)o.burst=0;return;}} /* after 6 s a half may drift out on its own */
+if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(7)?120:70);if(v>cr){const f=Math.max(cr/v,Math.pow(rel(7)?.45:.15,dt));o.vx*=f;o.vy*=f;}} /* only the burst is braked: the hole's pull stays as strong as on any body */
   const m=o.r;if(o.x<m){o.x=m;o.vx=Math.abs(o.vx);}else if(o.x>W-m){o.x=W-m;o.vx=-Math.abs(o.vx);}if(o.y<m){o.y=m;o.vy=Math.abs(o.vy);}else if(o.y>H-m){o.y=H-m;o.vy=-Math.abs(o.vy);}}
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
