@@ -146,7 +146,7 @@ function v2Rules(l){
 }
 
 // ── start / reset ─────────────────────────────────────
-function v2Start(mode){
+function v2Start(mode){if(typeof lagMark==='function')lagMark('st');
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');document.body.classList.toggle('r7',rel(7));v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   if(DEV&&mode==='level'&&gameMode==='classic'&&!HMODE)devKit(v2Lv()); // the developer link keeps the Laboratory at each level's recommended power
@@ -1163,11 +1163,11 @@ function v2Fail(msg){
   setTimeout(()=>{if(!G2.on||gState!=='over')return;if(gameMode==='sprint'){sprintEnd();return;}if(gameMode==='survival'){gameOver();return;}showCont();try{adsPreload();}catch(e){}},850); /* a lost level: the continue offer is a quiet screen to load the next ad */
 }
 // time bought when the clock ran out: back to the fight with more seconds; hearts and the one continue stay untouched
-function v2AddTime(sec){G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();if(rel(7))later(saveG,400);else saveG();
+function v2AddTime(sec){if(typeof lagMark==='function')lagMark('cont');G2.dur=Math.max(G2.dur,G2.t)+sec;G2.failMsg=null;G2.immT=Math.max(G2.immT,1.5);hideModals();gState='playing';lastT=performance.now();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6});v2Call('+'+sec+' sn','','#8dffcb',1.2,true);updateUI();if(rel(7))later(saveG,400);else saveG();
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';}
 function v2Revive(){ // one continue per run (spec §42)
   G2.contUsed=true;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',i*.08);G2.arcs=am;}G2.arcFill=.5;if(G2.guard){const g=G2.guard;g.hp=Math.max(g.hp,50);if(g.keep!=null){g.t=g.keep;g.keep=null;}}lives=G2.failMsg==='SÜRE DOLDU'?Math.max(1,lives):1;G2.combo=0;comboCount=0;G2.rage=V2K.cont.rage;G2.ready=false;G2.rageT=0;G2.immT=V2K.cont.imm;
-  hideModals();updateUI();gState='playing';lastT=performance.now();if(rel(7))later(saveG,400);else saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6}); /* 1.4.7: the save waits for the first frames back in play */
+  hideModals();updateUI();gState='playing';lastT=performance.now();if(typeof lagMark==='function')lagMark('cont');if(rel(7))later(saveG,400);else saveG();SND.setDrone(.14,650);SND.duck(1,0);sfx('powerup',{vol:.6}); /* 1.4.7: the save waits for the first frames back in play */
   for(const o of G2.objs)if(o.k==='meteor'&&Math.hypot(o.x-hX,o.y-hY)<sp2(260))o.st='dead';
 }
 function v2RageGo(){
