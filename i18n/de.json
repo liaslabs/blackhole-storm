@@ -1722,5 +1722,6 @@
 "İlk {n} dakika her kalbi iki yay korur, sonra yaylar söner. Dakikada bir meteor kuşağı gelir; {n}. dakikadan sonra Kara Fırtına her {n} saniyede daha da sertleşir": "In den ersten {n} Minuten schützen zwei Bögen jedes Herz, dann erlöschen die Bögen. Jede Minute kommt ein Meteoritengürtel; ab Minute {n} wird der Schwarze Sturm alle {n} Sekunden noch härter",
 "Hayatta kaldığın her saniye puan, her dakika daha fazla. Dünya sıralaması bu skora göre": "Jede überlebte Sekunde bringt Punkte, jede Minute mehr. Die Weltrangliste nutzt diese Punktzahl",
 "{n}. seviyeyi geçince açılır. Seviye {n}'den, ayrı bir ilerlemeyle: meteorlar {n} kat, hedef puan {n} kat (süreli seviyelerde {n}), küçülme {n} kat hızlı, seviye başına {n} kalp, ağır çekim yok; her kalbi iki yay korur, {n}. seviyeden sonra yay yok. Yıldız ödülleri {n} kat": "Wird nach Level {n} freigeschaltet. Ab Level {n}, mit eigenem Fortschritt: Meteore ×{n}, Zielpunkte ×{n} (×{n} in Zeitleveln), Schrumpfen ×{n} schneller, {n} Herzen pro Level, keine Zeitlupe; zwei Bögen schützen jedes Herz, nach Level {n} keine Bögen mehr. Sternbelohnungen ×{n}",
-"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra yay yok": "{n} Herzen pro Level, keine Zeitlupe. Zwei Bögen schützen jedes Herz, nach Level {n} keine Bögen mehr"
+"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra yay yok": "{n} Herzen pro Level, keine Zeitlupe. Zwei Bögen schützen jedes Herz, nach Level {n} keine Bögen mehr",
+"HAYATTA KAL REKORU": "ÜBERLEBENSREKORD"
 }

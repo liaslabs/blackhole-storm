@@ -109,6 +109,7 @@ button{font-family:inherit;}
 .lbempty{padding:14px;color:var(--dim);font-size:13px;}
 .lbnote{margin:10px 2px 2px;font-size:12px;line-height:1.45;color:var(--dim);}
 .lbrow.me{background:rgba(242,169,59,.1);border:1px solid var(--line);}
+.lbhd{font-family:var(--fd);font-size:11px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin:12px 2px 6px;text-align:start;}.lbhd:first-child{margin-top:2px;}
 .lbrow .r{width:26px;font-family:var(--fd);font-size:13px;color:var(--gold);}
 .lbrow .n{flex:1;text-align:start;font-size:14px;font-weight:600;}
 .lbrow .p{font-family:var(--fd);font-size:12px;color:var(--cyan);font-variant-numeric:tabular-nums;}
@@ -1599,7 +1600,7 @@ const svO=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:null;
 function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{};}catch(e){d={};}
   try{stars=svI(d.stars,250,0,1e9);diamonds=svI(d.diamonds,50,0,1e9);bestScore=svI(d.bestScore,0);totalGames=svI(d.totalGames,0);totalCombos=svI(d.totalCombos,0);
   unlockedAch=new Set(Array.isArray(d.ach)?d.ach.filter(x=>typeof x==='string'):[]);
-  localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,10):[];
+  localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,40):[];
   lastLogin=typeof d.lastLogin==='string'?d.lastLogin:'';loginStreak=svI(d.loginStreak,0,0,1e5);
   rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?[...d.playerName].slice(0,NAME_MAX).join(''):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';PAUTO=!!d.pAuto&&!!playerName;
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
@@ -2327,13 +2328,20 @@ function dmClaim(i){
 // ══════════════════════════════════════════════════════
 // RECORDS (this device's own runs only; no invented rivals)
 // ══════════════════════════════════════════════════════
-const MODE_TAG={classic:'Normal',survival:'Hayatta kalma',sprint:'60 sn'};
-function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);localLB=localLB.slice(0,10);saveG();}
+const MODE_TAG={classic:'Normal',survival:'Hayatta kalma',sprint:'60 sn',hard:'Zor Mod'};
+function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:rel(8)&&HMODE&&gameMode==='classic'?'hard':gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);
+  if(rel(8)){const per={};localLB=localLB.filter(e=>(per[e.mode]=(per[e.mode]||0)+1)<=10);}else localLB=localLB.slice(0,10);saveG();} /* 1.4.8: each mode keeps its own top 10 (long classic runs crowded the survival scores out) */
 function showLB(){lbTab('w');const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
   const fmt=n=>n.toLocaleString(LOC);
-  $('lbStats').innerHTML=[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]]
+  const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
+  $('lbStats').innerHTML=(rel(8)?[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['HAYATTA KAL REKORU',fmt(svB)],['60 SN REKORU',fmt(sprintBest)]]:[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]])
     .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
+  if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
+    const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);
+    L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' me':'');const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
+      const n=document.createElement('div');n.className='n';n.textContent=e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n,p);l.appendChild(r);});}
+    $('sLB').classList.add('on');return;}
   localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' me':'');
     const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
     const n=document.createElement('div');n.className='n';n.textContent=(MODE_TAG[e.mode]||'Normal')+(e.d?` · ${e.d}`:'');

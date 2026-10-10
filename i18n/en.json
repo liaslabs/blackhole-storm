@@ -1722,5 +1722,6 @@
 "İlk {n} dakika her kalbi iki yay korur, sonra yaylar söner. Dakikada bir meteor kuşağı gelir; {n}. dakikadan sonra Kara Fırtına her {n} saniyede daha da sertleşir": "For the first {n} minutes two arcs guard each heart, then the arcs go out. A meteor belt comes every minute; after minute {n} the Black Storm grows harsher every {n} seconds",
 "Hayatta kaldığın her saniye puan, her dakika daha fazla. Dünya sıralaması bu skora göre": "Every second you survive scores, and more each minute. The world ranking uses this score",
 "{n}. seviyeyi geçince açılır. Seviye {n}'den, ayrı bir ilerlemeyle: meteorlar {n} kat, hedef puan {n} kat (süreli seviyelerde {n}), küçülme {n} kat hızlı, seviye başına {n} kalp, ağır çekim yok; her kalbi iki yay korur, {n}. seviyeden sonra yay yok. Yıldız ödülleri {n} kat": "Unlocks after clearing level {n}. From level {n}, with its own progress: meteors ×{n}, target score ×{n} (×{n} on timed levels), shrinking ×{n} faster, {n} hearts per level, no slow motion; two arcs guard each heart, none after level {n}. Star rewards ×{n}",
-"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra yay yok": "{n} hearts per level, no slow motion. Two arcs guard each heart, none after level {n}"
+"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra yay yok": "{n} hearts per level, no slow motion. Two arcs guard each heart, none after level {n}",
+"HAYATTA KAL REKORU": "SURVIVAL RECORD"
 }
