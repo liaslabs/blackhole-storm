@@ -81,9 +81,11 @@ Her güncellemede:
 - Kara delik antimaddeyi çekmez (Vortex dahil; Altın Yay ve seviye sonu hariç): sadece üstüne gidilirse zarar verir.
 - İpucu kartları ve yeni cisim tanıtımları sessiz (TAMAM düğmesinin tıkı kalır).
 - Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Sadece görsel; dalganın hızı ve itişi aynı.
+- Takılma (1.4.7 raporlarından): (1) bölge arka plan fotoğrafları menüde önceden açılır, bulanık kopyası küçük boyutta yüklenir (Hayatta Kal'da bölge değişirken 150–280 ms takılıyordu, `IMG data:jpeg` dinleyicisi); Hayatta Kal koşu boyunca bölge değiştirmez. (2) Seviye başında tuvaller boyutu değişmediyse yeniden kurulmaz (moto g67'de her seviye başında 1,4–1,6 sn `nSyncAndDrawFrame`; 3 seviye başında 12 tuval sıfırlaması → 0). (3) Arka plan çizim çözünürlüğü en fazla 1,75× (2× yerine; görüntü farkı yok, `onizleme/arkaplan-cozunurluk.png`). (4) Menüde cüzdan rozetlerinde canlı bulanıklık kalktı.
 
 ```
 <en-US>
+• Smoother level starts and storms on mid-range phones
 • My Records: each mode keeps its own best scores, Survival included
 • Split planets break into jagged half-moons that fly further apart
 • Constellations spread over the whole screen, with more time to finish

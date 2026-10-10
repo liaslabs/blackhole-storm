@@ -50,6 +50,7 @@ button{font-family:inherit;}
 .screen{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;overflow-y:auto;touch-action:pan-y;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));background:radial-gradient(ellipse at 50% 40%,rgba(10,8,22,.35),rgba(3,4,10,.82) 70%);}
 .screen.on{display:flex;}
 .card{width:100%;max-width:420px;margin:auto;padding:24px 20px 20px;border-radius:12px;background:var(--glass);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(242,169,59,.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-align:center;}
+body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backdrop-filter:none;} /* 1.4.8: no live blur over the moving sky (the cards already had none) */
 .logo{font-family:var(--fd);font-weight:900;font-size:25px;letter-spacing:3px;background:linear-gradient(180deg,#f4dcae,#f2a93b 55%,#d8872e);-webkit-background-clip:text;background-clip:text;color:transparent;text-wrap:balance;}
 .sub{font-family:var(--fd);font-size:8.5px;letter-spacing:6px;color:var(--gold);opacity:.6;margin:4px 0 18px;}
 .h{font-family:var(--fd);font-size:12px;letter-spacing:2px;color:var(--gold);margin:6px 0 10px;}
@@ -1981,19 +1982,20 @@ function glTextures(){
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,img);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t;};
-  GL.texBg=mk(IMG.bg);GL.texBgB=mk(blurCopy(IMG.bg));GL.texAtlas=mk(IMG.atlas);GL.ready=true;
+  GL.texBg=mk(IMG.bg);GL.texBgB=mk(rel(8)?blurSmall(IMG.bg):blurCopy(IMG.bg));GL.texAtlas=mk(IMG.atlas);GL.ready=true;
 }
 const BLUR={s:.09,mix:1}; // in-play background: downscale factor of the blurred copy and how much of it shows
+const BLURS=new WeakMap();function blurSmall(img){let s=BLURS.get(img);if(s)return s;s=document.createElement('canvas');s.width=Math.max(1,Math.round(img.width*BLUR.s));s.height=Math.max(1,Math.round(img.height*BLUR.s));const g=s.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(img,0,0,s.width,s.height);BLURS.set(img,s);return s;} /* 1.4.8: the small copy goes to the GPU as is; its linear filtering does the upscale (a quarter of the work, made once per zone) */
 function blurCopy(img){ // down- then up-scaling gives an even blur on every browser (canvas filters are not everywhere)
   const w=img.width,h=img.height,s=document.createElement('canvas');s.width=Math.max(1,Math.round(w*BLUR.s));s.height=Math.max(1,Math.round(h*BLUR.s));
   const sg=s.getContext('2d');sg.imageSmoothingQuality='high';sg.drawImage(img,0,0,s.width,s.height);
   const o=document.createElement('canvas');o.width=w;o.height=h;const og=o.getContext('2d');og.imageSmoothingQuality='high';og.drawImage(s,0,0,w,h);return o;}
 function glSetBg(img){if(!GL.ok||!GL.texBg||!img)return;const gl=GL.gl;gl.bindTexture(gl.TEXTURE_2D,GL.texBg);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,img);
-  if(GL.texBgB){gl.bindTexture(gl.TEXTURE_2D,GL.texBgB);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,blurCopy(img));}}
+  if(GL.texBgB){gl.bindTexture(gl.TEXTURE_2D,GL.texBgB);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,rel(8)?blurSmall(img):blurCopy(img));}}
 function glResize(){
   if(!GL.gl)return;const cv=$('bg');
-  GL.scale=Math.min(window.devicePixelRatio||1,2)*GL.quality;
-  cv.width=Math.max(1,Math.round(W*GL.scale));cv.height=Math.max(1,Math.round(H*GL.scale));
+  GL.scale=Math.min(window.devicePixelRatio||1,rel(8)?1.75:2)*GL.quality; /* 1.4.8: the blurred sky needs no more than 1.75x: a quarter less for the GPU to fill */
+  {const w=Math.max(1,Math.round(W*GL.scale)),h=Math.max(1,Math.round(H*GL.scale));if(!rel(8)||cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;}}
 }
 function holeTint(){ // target halo colours: [deep, mid]
   if(antiNear)return [[.55,.05,.25],[1,.55,.75]];
@@ -2061,6 +2063,8 @@ function setZone(z){
   const apply=img=>{if(!img||curZone!==z)return;IMG.bg=img;if(GL.ready)glSetBg(img);};
   if(IMG.bgs[z])apply(IMG.bgs[z]);else loadImg(src).then(img=>{IMG.bgs[z]=img;apply(img);});
 }
+function zonePrefetch(){if(!rel(8)||zonePrefetch.done)return;zonePrefetch.done=1;const bgs=(window.ASSETS||{}).bgs||[];let z=0; /* 1.4.8: in the menu, decode every zone photo and make its blurred copy, one at a time, so no level or storm has to do it mid-play */
+  const next=()=>{while(z<bgs.length&&IMG.bgs[z])z++;if(z>=bgs.length)return;const k=z++;loadImg(bgs[k]).then(img=>{if(!img)return;const fin=()=>{IMG.bgs[k]=IMG.bgs[k]||img;blurSmall(IMG.bgs[k]);setTimeout(next,400);};img.decode?img.decode().then(fin,fin):fin();});};next();}
 function zonePlanetCell(){const pool=(ZONES[Math.max(0,curZone)]||{}).pool||PCELLS;return rpick(pool);}
 
 // ══════════════════════════════════════════════════════
@@ -3343,7 +3347,7 @@ function checkDaily(after){
 function resize(){
   const r=$('gw').getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);
   DPR=Math.min(window.devicePixelRatio||1,2);
-  fx.width=Math.round(W*DPR);fx.height=Math.round(H*DPR);
+  {const w=Math.round(W*DPR),h=Math.round(H*DPR);if(!rel(8)||fx.width!==w||fx.height!==h){fx.width=w;fx.height=h;}} /* 1.4.8: setting a canvas size, even the same one, throws its buffer away: it was done at every level start (1.5 s GPU stalls on a mid-range phone) */
   if(G2.on)v2Resize();else{hX=clamp(hX,80,W-80);hY=clamp(hY,80,H-80);}hBaseX=hX;hBaseY=hY;hAmp={x:W*.25,y:H*.25};
   glResize();
 }
@@ -4004,7 +4008,7 @@ function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey()
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(zonePrefetch,2500);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';
@@ -4108,7 +4112,7 @@ function devKit(l){if(!DEV)return;const ms=LABT.filter(m=>!m.from||l>=m.from),r=
   for(const m of LABT)LAB.lv[m.id]=0;while(left>0&&ms.some(m=>LAB.lv[m.id]<LAB_MAX)){const m=ms[i++%ms.length];if(LAB.lv[m.id]<LAB_MAX){LAB.lv[m.id]++;left--;}}
   LAB.q=[];mass=Math.max(mass,STAGES[STAGES.length-1].m*2);saveG();const k=$('devKit');if(k)k.textContent=`🔬 ${labPower()}${LAB.tier>1?' · '+roman(LAB.tier):''} · ${T(STAGES[stageOf(mass)].n)}`;}
 icoDefs();
-setLang(SET.lang||detectLang());
+document.body.classList.toggle('r8',rel(8));setLang(SET.lang||detectLang());
 syncSettingsUI();
 SPR.ghost=ghostSprite();
 glInit();
