@@ -50,6 +50,7 @@ button{font-family:inherit;}
 .screen{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;overflow-y:auto;touch-action:pan-y;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));background:radial-gradient(ellipse at 50% 40%,rgba(10,8,22,.35),rgba(3,4,10,.82) 70%);}
 .screen.on{display:flex;}
 .card{width:100%;max-width:420px;margin:auto;padding:24px 20px 20px;border-radius:12px;background:var(--glass);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(242,169,59,.06);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-align:center;}
+body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backdrop-filter:none;} /* 1.4.8: no live blur over the moving sky (the cards already had none) */
 .logo{font-family:var(--fd);font-weight:900;font-size:25px;letter-spacing:3px;background:linear-gradient(180deg,#f4dcae,#f2a93b 55%,#d8872e);-webkit-background-clip:text;background-clip:text;color:transparent;text-wrap:balance;}
 .sub{font-family:var(--fd);font-size:8.5px;letter-spacing:6px;color:var(--gold);opacity:.6;margin:4px 0 18px;}
 .h{font-family:var(--fd);font-size:12px;letter-spacing:2px;color:var(--gold);margin:6px 0 10px;}
@@ -109,6 +110,7 @@ button{font-family:inherit;}
 .lbempty{padding:14px;color:var(--dim);font-size:13px;}
 .lbnote{margin:10px 2px 2px;font-size:12px;line-height:1.45;color:var(--dim);}
 .lbrow.me{background:rgba(242,169,59,.1);border:1px solid var(--line);}
+.lbhd{font-family:var(--fd);font-size:11px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin:12px 2px 6px;text-align:start;}.lbhd:first-child{margin-top:2px;}
 .lbrow .r{width:26px;font-family:var(--fd);font-size:13px;color:var(--gold);}
 .lbrow .n{flex:1;text-align:start;font-size:14px;font-weight:600;}
 .lbrow .p{font-family:var(--fd);font-size:12px;color:var(--cyan);font-variant-numeric:tabular-nums;}
@@ -1408,7 +1410,7 @@ const TAU=Math.PI*2;
 const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 /* RELEASE GATE: updates go out in steps during the closed test. REL is the release this build ships (1.4.6 -> 6, 1.4.7 -> 7 ...);
    a feature waiting for a later release checks rel(n). The developer link always sees everything, so it previews what is coming. */
-const REL=7,rel=n=>DEV||REL>=n;
+const REL=8,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
@@ -1599,7 +1601,7 @@ const svO=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:null;
 function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{};}catch(e){d={};}
   try{stars=svI(d.stars,250,0,1e9);diamonds=svI(d.diamonds,50,0,1e9);bestScore=svI(d.bestScore,0);totalGames=svI(d.totalGames,0);totalCombos=svI(d.totalCombos,0);
   unlockedAch=new Set(Array.isArray(d.ach)?d.ach.filter(x=>typeof x==='string'):[]);
-  localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,10):[];
+  localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,40):[];
   lastLogin=typeof d.lastLogin==='string'?d.lastLogin:'';loginStreak=svI(d.loginStreak,0,0,1e5);
   rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?[...d.playerName].slice(0,NAME_MAX).join(''):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';PAUTO=!!d.pAuto&&!!playerName;
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
@@ -1924,10 +1926,11 @@ void main(){vec2 l=a*uPad;vL=l;vec2 q=l*uRad;float c=cos(uAng),s=sin(uAng);
  gl_Position=vec4((uC+r)/uRes*2.-1.,0.,1.);}`;
 const FS_BODY=HDR+`
 uniform sampler2D uTex;uniform vec4 uCell,uAtmo;uniform vec3 uL;
-uniform float uSpin,uTilt,uPitch,uFade,uRed,uEmit,uFlashW,uLightK,uHot,uEdge,uSep,uFill;
+uniform float uSpin,uTilt,uPitch,uFade,uRed,uEmit,uFlashW,uLightK,uHot,uEdge,uSep,uFill;uniform vec4 uCut;
 varying vec2 vL;
 void main(){
  vec2 p=vL;float rr=length(p);vec3 col=vec3(0.);float a=0.;
+ float keep=1.,cutE=1.;if(uCut.x>.5){vec2 nn=uCut.yz;float t=dot(p,vec2(-nn.y,nn.x));cutE=dot(p,nn)-(.07*sin(t*13.+uCut.w)+.045*sin(t*29.+uCut.w*2.3)+.03*sin(t*53.+uCut.w*.7));keep=smoothstep(-.02,.02,cutE);} // half of a split planet: a jagged fracture keeps one side
  if(rr<1.){
   float z=sqrt(1.-rr*rr);vec3 n=vec3(p.x,p.y,z);
   float ct=cos(uTilt),st=sin(uTilt),cp=cos(uPitch),sp=sin(uPitch);
@@ -1947,12 +1950,13 @@ void main(){
   }
   col=mix(col,col*vec3(1.25,.38,.18)+vec3(.12,0.,0.),uRed);
   col+=vec3(1.,.95,.9)*uFlashW;
-  a=clamp((1.-rr)*uEdge,0.,1.);
+  if(uCut.x>.5){float f=smoothstep(.09,0.,cutE);col=mix(col,col*.45+vec3(.07,.09,.11),f*.8)+vec3(.45,.85,1.)*exp(-cutE*cutE/.0012)*.9;} // the raw fracture face, rimmed in cold light
+  a=clamp((1.-rr)*uEdge,0.,1.)*keep;
  }
- float h=rr>.97?exp(-(rr-1.)*(uEmit>.5?2.6:10.)):0.;
+ float h=(rr>.97?exp(-(rr-1.)*(uEmit>.5?2.6:10.)):0.)*keep;
  vec3 hc=uEmit>.5?vec3(1.,.36,.14)*.75:uAtmo.rgb*uAtmo.a*.45*(.3+uLightK);
  vec3 outc=col*a+hc*h*(1.-a);float outa=a+h*(1.-a)*.35;
- outa+=(1.-outa)*uSep*(1.-uEmit)*.62*step(1.,rr)*(1.-smoothstep(1.,1.3,rr)); // dark halo lifts the body off a bright sky
+ outa+=(1.-outa)*uSep*(1.-uEmit)*.62*step(1.,rr)*(1.-smoothstep(1.,1.3,rr))*keep; // dark halo lifts the body off a bright sky
  gl_FragColor=vec4(outc,outa)*uFade;
 }`;
 function glInit(){
@@ -1963,7 +1967,7 @@ function glInit(){
   const prog=(vs,fs,names)=>{const v=sh(gl.VERTEX_SHADER,vs),f=sh(gl.FRAGMENT_SHADER,fs);if(!v||!f)return null;const p=gl.createProgram();gl.attachShader(p,v);gl.attachShader(p,f);gl.linkProgram(p);
     if(!gl.getProgramParameter(p,gl.LINK_STATUS)){console.error(gl.getProgramInfoLog(p));return null;}const u={};names.forEach(n=>u[n]=gl.getUniformLocation(p,n));return {p,u,a:gl.getAttribLocation(p,vs.indexOf('attribute vec2 a;')>=0?'a':'p')};};
   GL.bg=prog(VS_BG,FS_BG,['uRes','uHole','uTexSz','uPan','uR','uRing','uT','uLock','uHeat','uShock','uFlash','uScale','uStage','uSkin','uHK','uArm','uDeep','uMid','uTex','uTexB','uBlur','uDim','uDM']);
-  GL.body=prog(VS_BODY,FS_BODY,['uRes','uC','uRad','uAng','uSt','uSq','uPad','uTex','uCell','uAtmo','uL','uSpin','uTilt','uPitch','uFade','uRed','uEmit','uFlashW','uLightK','uHot','uEdge','uSep','uFill']);
+  GL.body=prog(VS_BODY,FS_BODY,['uRes','uC','uRad','uAng','uSt','uSq','uPad','uTex','uCell','uAtmo','uL','uSpin','uTilt','uPitch','uFade','uRed','uEmit','uFlashW','uLightK','uHot','uEdge','uSep','uFill','uCut']);
   if(!GL.bg||!GL.body)return false;
   GL.qTri=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,GL.qTri);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
   GL.qStrip=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,GL.qStrip);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
@@ -1978,19 +1982,20 @@ function glTextures(){
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,img);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t;};
-  GL.texBg=mk(IMG.bg);GL.texBgB=mk(blurCopy(IMG.bg));GL.texAtlas=mk(IMG.atlas);GL.ready=true;
+  GL.texBg=mk(IMG.bg);GL.texBgB=mk(rel(8)?blurSmall(IMG.bg):blurCopy(IMG.bg));GL.texAtlas=mk(IMG.atlas);GL.ready=true;
 }
 const BLUR={s:.09,mix:1}; // in-play background: downscale factor of the blurred copy and how much of it shows
+const BLURS=new WeakMap();function blurSmall(img){let s=BLURS.get(img);if(s)return s;s=document.createElement('canvas');s.width=Math.max(1,Math.round(img.width*BLUR.s));s.height=Math.max(1,Math.round(img.height*BLUR.s));const g=s.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(img,0,0,s.width,s.height);BLURS.set(img,s);return s;} /* 1.4.8: the small copy goes to the GPU as is; its linear filtering does the upscale (a quarter of the work, made once per zone) */
 function blurCopy(img){ // down- then up-scaling gives an even blur on every browser (canvas filters are not everywhere)
   const w=img.width,h=img.height,s=document.createElement('canvas');s.width=Math.max(1,Math.round(w*BLUR.s));s.height=Math.max(1,Math.round(h*BLUR.s));
   const sg=s.getContext('2d');sg.imageSmoothingQuality='high';sg.drawImage(img,0,0,s.width,s.height);
   const o=document.createElement('canvas');o.width=w;o.height=h;const og=o.getContext('2d');og.imageSmoothingQuality='high';og.drawImage(s,0,0,w,h);return o;}
 function glSetBg(img){if(!GL.ok||!GL.texBg||!img)return;const gl=GL.gl;gl.bindTexture(gl.TEXTURE_2D,GL.texBg);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,img);
-  if(GL.texBgB){gl.bindTexture(gl.TEXTURE_2D,GL.texBgB);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,blurCopy(img));}}
+  if(GL.texBgB){gl.bindTexture(gl.TEXTURE_2D,GL.texBgB);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,rel(8)?blurSmall(img):blurCopy(img));}}
 function glResize(){
   if(!GL.gl)return;const cv=$('bg');
-  GL.scale=Math.min(window.devicePixelRatio||1,2)*GL.quality;
-  cv.width=Math.max(1,Math.round(W*GL.scale));cv.height=Math.max(1,Math.round(H*GL.scale));
+  GL.scale=Math.min(window.devicePixelRatio||1,rel(8)?1.75:2)*GL.quality; /* 1.4.8: the blurred sky needs no more than 1.75x: a quarter less for the GPU to fill */
+  {const w=Math.max(1,Math.round(W*GL.scale)),h=Math.max(1,Math.round(H*GL.scale));if(!rel(8)||cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;}}
 }
 function holeTint(){ // target halo colours: [deep, mid]
   if(antiNear)return [[.55,.05,.25],[1,.55,.75]];
@@ -2025,7 +2030,8 @@ function glDraw(t,sx=0,sy=0){
 function drawBodyGL(b,k,sx,sy){
   const gl=GL.gl,u=GL.body.u,fall=b.suck&&b.suck.ph==='fall';
   const L=litFrom(b.x,b.y),d=Math.hypot(b.x-hX,b.y-hY);
-  gl.uniform2f(u.uC,(b.x+sx)*k,(H-b.y-sy)*k);gl.uniform1f(u.uRad,b.r*k*(b.gs??1));
+  let bx=b.x,by=b.y;if(b.k==='half'&&rel(8)){const ca=Math.cos((b.cut||0)+(b.spinA||0)),sa=Math.sin((b.cut||0)+(b.spinA||0)),o=b.r*(b.gs??1)*.42;bx-=ca*o;by-=sa*o;gl.uniform4f(u.uCut,1,ca,-sa,b.seed||0);}else gl.uniform4f(u.uCut,0,1,0,0); /* a half: the sphere is drawn behind its centre so the half that shows sits on it */
+  gl.uniform2f(u.uC,(bx+sx)*k,(H-by-sy)*k);gl.uniform1f(u.uRad,b.r*k*(b.gs??1));
   if(fall){gl.uniform1f(u.uAng,-b.radAng);gl.uniform1f(u.uSt,b.stretch);gl.uniform1f(u.uSq,b.squeeze);}
   else{gl.uniform1f(u.uAng,0);gl.uniform1f(u.uSt,b.sX);gl.uniform1f(u.uSq,b.sY);}
   gl.uniform1f(u.uPad,b.isBoss?2.3:1.3);
@@ -2057,6 +2063,8 @@ function setZone(z){
   const apply=img=>{if(!img||curZone!==z)return;IMG.bg=img;if(GL.ready)glSetBg(img);};
   if(IMG.bgs[z])apply(IMG.bgs[z]);else loadImg(src).then(img=>{IMG.bgs[z]=img;apply(img);});
 }
+function zonePrefetch(){if(!rel(8)||zonePrefetch.done)return;zonePrefetch.done=1;const bgs=(window.ASSETS||{}).bgs||[];let z=0; /* 1.4.8: in the menu, decode every zone photo and make its blurred copy, one at a time, so no level or storm has to do it mid-play */
+  const next=()=>{while(z<bgs.length&&IMG.bgs[z])z++;if(z>=bgs.length)return;const k=z++;loadImg(bgs[k]).then(img=>{if(!img)return;const fin=()=>{IMG.bgs[k]=IMG.bgs[k]||img;blurSmall(IMG.bgs[k]);setTimeout(next,400);};img.decode?img.decode().then(fin,fin):fin();});};next();}
 function zonePlanetCell(){const pool=(ZONES[Math.max(0,curZone)]||{}).pool||PCELLS;return rpick(pool);}
 
 // ══════════════════════════════════════════════════════
@@ -2100,7 +2108,7 @@ function showWinBand(title,st,life){
   for(let i=0;i<4;i++)ripple('180,160,255',Math.max(W,H)*.8,3,1.6,i*.22);
   wbTimer=setTimeout(()=>{b.className='out';wbTimer=setTimeout(()=>b.className='',460);},2700);
 }
-function effLevel(){return gameMode==='survival'?(STORM.on?Math.min(40,8+Math.floor(survTime/30)*5):Math.floor(survTime/30)+1):level;} /* the daily storm starts at speed 8 and climbs 5 every 30 s */ // sprint runs set `level` to their fixed difficulty
+function effLevel(){return gameMode==='survival'?(STORM.on?(rel(9)?12+Math.floor(survTime/30)*5:Math.min(40,8+Math.floor(survTime/30)*5)):Math.floor(survTime/30)+1):level;} /* the daily storm starts at speed 8 and climbs 5 every 30 s */ // sprint runs set `level` to their fixed difficulty
 function bossActive(){return !!(G2.on&&G2.boss);}
 
 // ══════════════════════════════════════════════════════
@@ -2324,13 +2332,20 @@ function dmClaim(i){
 // ══════════════════════════════════════════════════════
 // RECORDS (this device's own runs only; no invented rivals)
 // ══════════════════════════════════════════════════════
-const MODE_TAG={classic:'Normal',survival:'Hayatta kalma',sprint:'60 sn'};
-function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);localLB=localLB.slice(0,10);saveG();}
+const MODE_TAG={classic:'Normal',survival:'Hayatta kalma',sprint:'60 sn',hard:'Zor Mod'};
+function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:rel(8)&&HMODE&&gameMode==='classic'?'hard':gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);
+  if(rel(8)){const per={};localLB=localLB.filter(e=>(per[e.mode]=(per[e.mode]||0)+1)<=10);}else localLB=localLB.slice(0,10);saveG();} /* 1.4.8: each mode keeps its own top 10 (long classic runs crowded the survival scores out) */
 function showLB(){lbTab('w');const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
   const fmt=n=>n.toLocaleString(LOC);
-  $('lbStats').innerHTML=[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]]
+  const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
+  $('lbStats').innerHTML=(rel(8)?[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['HAYATTA KAL REKORU',fmt(svB)],['60 SN REKORU',fmt(sprintBest)]]:[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]])
     .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
+  if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
+    const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);
+    L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' me':'');const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
+      const n=document.createElement('div');n.className='n';n.textContent=e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n,p);l.appendChild(r);});}
+    $('sLB').classList.add('on');return;}
   localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' me':'');
     const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
     const n=document.createElement('div');n.className='n';n.textContent=(MODE_TAG[e.mode]||'Normal')+(e.d?` · ${e.d}`:'');
@@ -2573,7 +2588,7 @@ const GUIDE={
  'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al. Nadiren bir kutuda BÜYÜK HAZİNE saklıdır: 1000 yıldız ve 50 elmas. Reklam izleyerek bulma şansını yarı yarıya çıkarabilirsin.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Yarış ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin %15’i kadar bonus puan gelir, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
   'HALKALAR':[['⭕','ÇEKİM ALANI','Kara deliğin etrafındaki soluk geniş halka çekim alanının sınırıdır: içine giren cisimler sana çekilir. Büyüdükçe genişler. Cismi alanın tam ortasından içeri alırsan KUSURSUZ YUTUŞ.'],['🟠','TURUNCU HALKA','Vortex açıkken kalan süreyi gösterir.'],['🔵','MAVİ HALKA','Süpernova koruması: meteorlar sana zarar veremez.'],['🟣','MOR TİTREYEN HALKA','Overload: daha güçlüsün ama yönetmek zor.'],['🟡','SARI HALKA','Kalkan açık: çarpan meteor parçalanır.'],['🔴','KIRMIZI YANIP SÖNEN','Darbe aldın; kısa süre dokunulmazsın.'],['💜','MOR DALGALAR','Bir süredir yemediğin için küçülüyorsun.'],['🌈','ALTTAKİ NOKTALAR','Spektrum serin: 5 farklı tür = bonus.']],
   'OLAYLAR':[['💫','KİLONOVA','İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve altın saçılır.'],['🧭','HAFTALIK SEFER','Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.'],['🔬','LABORATUVAR','Kütle ve yıldızla kalıcı geliştirmeler başlat; her biri zaman alır, elmasla hemen bitirilebilir. Aynı anda bir geliştirme; ikinci yuva elmasla ya da VIP ile açılır. Hawking ve Kuasar Jeti burada inşa edilir. Klasik ve Sefer\'de çalışır.'],['🪐','YÖRÜNGE BAHÇESİ','Atlas’ta incelediğin cisimler kara deliğinin etrafında döner ve günde yıldız getirir.'],['🌬','YILDIZ RÜZGÂRI','Bazı seviyelerde güçlü bir rüzgâr her şeyi yana sürükler. Rüzgârın geldiği yöne geç, cisimler sana aksın.'],['🌑','TUTULMA','Ekran kararır; her 2 saniyede bir radar dalgası her şeyi gösterir. Karanlıkta puan ×1,5.'],['✨','TAKIMYILDIZ','Numaralı yıldızları sırasıyla yut. Süre bitmeden tamamlarsan büyük bonus ve Atlas kaydı.'],['🌫','YAPIŞKAN NEBULA','35. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat.'],['⏳','AĞIR ÇEKİM','21. seviyeden sonra: bir meteor çarpmak üzereyken zaman bir an yavaşlar. Seviye başına 3 kez. Zor Mod\'da ve Günün Fırtınası\'nda yok.'],['☄','METEOR KUŞAĞI','Uyarıdan sonra 13 saniye sadece meteor gelir; hepsi aynı açıyla, şerit şerit akar. Boş şeridi takip et. Hasarsız geçersen +500 puan ve +25 ⭐. 8, 18 ve 28. seviyelerde, sonra arada bir; Günün Fırtınası\'nda 60. ve 120. saniyede.'],['💨','HIZLI KÜÇÜLME','6, 16 ve 22. seviyelerde (sonra arada bir): ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür.'],['🃏','RİSK KARTI','12. seviyeden itibaren her 5 seviyede bir: seviyeyi zorlaştıran bir kart seçebilirsin, bitirirsen ekstra elmas kazanırsın.'],['🗝','HAZİNE ANAHTARI','Sezon ödülü: sonraki Kaptanın Hediyesi’nde Büyük Hazine kesin çıkar.']],
- 'MODLAR':[['🌀','NORMAL','Seviye seviye ilerle, her seviyede yeni bir şey.'],['🔥','ZOR SEVİYE','Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın.'],['🔥','ZOR MOD','30. seviyeyi geçince açılır. Seviye 1\'den, ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp, ağır çekim yok. Yıldız ödülleri 2 kat.'],['☠️','HAYATTA KAL','Günün Fırtınası: 180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir, 60. ve 120. saniyede meteor kuşağı gelir; yaylar onarılmaz. Hayatta kaldığın her saniye +20 puan, sonuna kadar dayanırsan +3.000 ve kalan her kalp için +1.500. Dünya sıralaması bu skora göre.'],['📅','GÜNLÜK YARIŞ','Herkes aynı evrende 60 saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). 20. saniyede meteor kuşağı, 40. saniyede nebula gelir; uzun combo puanı 2 kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku.']]};
+ 'MODLAR':[['🌀','NORMAL','Seviye seviye ilerle, her seviyede yeni bir şey.'],['🔥','ZOR SEVİYE','Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın.'],['🔥','ZOR MOD','30. seviyeyi geçince açılır. Seviye 1\'den, ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp, ağır çekim yok'+(rel(9)?'; her kalbi iki yay korur, 61. seviyeden sonra yay yok':'')+'. Yıldız ödülleri 2 kat.'],['☠️','HAYATTA KAL',rel(9)?'Günün Fırtınası: süresiz, herkes için aynı fırtına. Her 30 saniyede hızlanır, dakikada bir meteor kuşağı gelir. İlk 2 dakika her kalbi iki yay korur, sonra her darbe bir kalp. 4. dakikadan sonra Kara Fırtına her 30 saniyede sertleşir. Hayatta kaldığın her saniye +20 puan, her dakika +10 daha. Dünya sıralaması bu skora göre.':'Günün Fırtınası: 180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir, 60. ve 120. saniyede meteor kuşağı gelir; yaylar onarılmaz. Hayatta kaldığın her saniye +20 puan, sonuna kadar dayanırsan +3.000 ve kalan her kalp için +1.500. Dünya sıralaması bu skora göre.'],['📅','GÜNLÜK YARIŞ','Herkes aynı evrende 60 saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). 20. saniyede meteor kuşağı, 40. saniyede nebula gelir; uzun combo puanı 2 kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
   if(!GUIDE[tab])tab=Object.keys(GUIDE)[0];
   $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}" data-g="${k}">${k}</button>`).join('');
@@ -3332,7 +3347,7 @@ function checkDaily(after){
 function resize(){
   const r=$('gw').getBoundingClientRect();W=Math.max(1,r.width);H=Math.max(1,r.height);
   DPR=Math.min(window.devicePixelRatio||1,2);
-  fx.width=Math.round(W*DPR);fx.height=Math.round(H*DPR);
+  {const w=Math.round(W*DPR),h=Math.round(H*DPR);if(!rel(8)||fx.width!==w||fx.height!==h){fx.width=w;fx.height=h;}} /* 1.4.8: setting a canvas size, even the same one, throws its buffer away: it was done at every level start (1.5 s GPU stalls on a mid-range phone) */
   if(G2.on)v2Resize();else{hX=clamp(hX,80,W-80);hY=clamp(hY,80,H-80);}hBaseX=hX;hBaseY=hY;hAmp={x:W*.25,y:H*.25};
   glResize();
 }
@@ -3945,8 +3960,8 @@ $('profLater').onclick=()=>{if(selAv&&selAv!==playerAvatar){playerAvatar=selAv;s
 $('editProf').onclick=()=>openProfile(null);
 const MODE_TXT={
   classic:'<b>🌀 Normal</b><ul><li>Kara deliği parmağınla sürükle, gelen cisimleri yut, büyü.</li><li>Meteorlardan kaç, combo yap, Vortex dolunca dokun.</li><li>Her seviyede yeni bir şey, her 10 seviyede dev gezegen.</li></ul>',
-  hard:'<b>🔥 Zor Mod</b><ul><li>Seviye 1\'den yeniden, sert kurallarla: meteorlar 1,6 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.</li><li>Seviye başına 2 kalp, ağır çekim yok.</li><li>Yıldız ödülleri 2 kat. Klasik ilerlemen ayrı kalır.</li></ul>',
-  survival:'<b>☠️ Hayatta Kal · Günün Fırtınası</b><ul><li>180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir.</li><li>60. ve 120. saniyede meteor kuşağı gelir. 3 canın biterse koşu erken biter.</li><li>Hayatta kaldığın her saniye puan; sonuna kadar dayanırsan büyük bonus. Dünya sıralaması bu skora göre.</li></ul>'
+  hard:'<b>🔥 Zor Mod</b><ul><li>Seviye 1\'den yeniden, sert kurallarla: meteorlar 1,6 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.</li><li>Seviye başına 2 kalp, ağır çekim yok.'+(rel(9)?' Her kalbi iki yay korur, 61. seviyeden sonra yay yok.':'')+'</li><li>Yıldız ödülleri 2 kat. Klasik ilerlemen ayrı kalır.</li></ul>',
+  survival:rel(9)?'<b>☠️ Hayatta Kal · Günün Fırtınası</b><ul><li>Süresiz: herkes için aynı fırtına, 3 canın bitene kadar sürer. Her 30 saniyede hızlanır.</li><li>İlk 2 dakika her kalbi iki yay korur, sonra yaylar söner. Dakikada bir meteor kuşağı gelir; 4. dakikadan sonra Kara Fırtına her 30 saniyede daha da sertleşir.</li><li>Hayatta kaldığın her saniye puan, her dakika daha fazla. Dünya sıralaması bu skora göre.</li></ul>':'<b>☠️ Hayatta Kal · Günün Fırtınası</b><ul><li>180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir.</li><li>60. ve 120. saniyede meteor kuşağı gelir. 3 canın biterse koşu erken biter.</li><li>Hayatta kaldığın her saniye puan; sonuna kadar dayanırsan büyük bonus. Dünya sıralaması bu skora göre.</li></ul>'
 };
 // ── menu hub: the live black hole behind the menus, the ticker, the badges ──
 const MB={on:false,t:0,last:0,st:null,sk:null,W:0,H:0,d:1};
@@ -3993,7 +4008,7 @@ function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey()
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(zonePrefetch,2500);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';
@@ -4097,7 +4112,7 @@ function devKit(l){if(!DEV)return;const ms=LABT.filter(m=>!m.from||l>=m.from),r=
   for(const m of LABT)LAB.lv[m.id]=0;while(left>0&&ms.some(m=>LAB.lv[m.id]<LAB_MAX)){const m=ms[i++%ms.length];if(LAB.lv[m.id]<LAB_MAX){LAB.lv[m.id]++;left--;}}
   LAB.q=[];mass=Math.max(mass,STAGES[STAGES.length-1].m*2);saveG();const k=$('devKit');if(k)k.textContent=`🔬 ${labPower()}${LAB.tier>1?' · '+roman(LAB.tier):''} · ${T(STAGES[stageOf(mass)].n)}`;}
 icoDefs();
-setLang(SET.lang||detectLang());
+document.body.classList.toggle('r8',rel(8));setLang(SET.lang||detectLang());
 syncSettingsUI();
 SPR.ghost=ghostSprite();
 glInit();
