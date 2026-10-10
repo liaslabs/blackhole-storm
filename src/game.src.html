@@ -4032,7 +4032,8 @@ function playFit(){requestAnimationFrame(()=>{for(const sm of $('startBtn').quer
 $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('survival');$('modeH').onclick=()=>selMode('hard');
 $('startBtn').onclick=()=>{if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
-$('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}showLB();}; // the leaderboard shows your name: offer to set it once$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');
+$('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}showLB();}; // the leaderboard shows your name: offer to set it once
+$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m'); // the tab handlers sat inside the comment above, so REKORLARIM never opened
 $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp();$('sExp').classList.add('on');};$('exClose').onclick=()=>$('sExp').classList.remove('on');
 $('treeBtn').onclick=()=>labOpenScr();$('labX').onclick=labClose;$('labCv').addEventListener('pointerdown',labHit);addEventListener('resize',()=>{if(LV.on){labSize();labFit();}});
 $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$('gdClose').onclick=()=>{$('sGarden').classList.remove('on');gdRun=false;};
