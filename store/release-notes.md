@@ -16,10 +16,10 @@ Her güncellemede:
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
 | 1.4.7 | 18 | 9 Eki | **Yayında** (9 Eki 16:04 onaylandı; main c4a0c5b). 15:41'de Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
-| 1.4.8 | 19 | 12 Eki | `REL` 8, derlendi (10 Eki): düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Önce Dahili test, sonra Alpha |
-| 1.4.9 | 20 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
-| 1.5.0 | 21 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
-| 1.5.1 | 22 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
+| 1.4.8 | 20 | 12 Eki | `REL` 8: düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Kod 19 (10 Eki) Dahili test'te denendi; kod 20 = 19 + REKORLARIM sekmesi düzeltmesi (`bhs-v54`), Alpha'ya bu gider |
+| 1.4.9 | 21 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
+| 1.5.0 | 22 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
+| 1.5.1 | 23 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -76,6 +76,7 @@ Her güncellemede:
 ```
 
 ## 1.4.8 (12 Ekim) · `REL` 8 · düzeltmeler ve görsel, zorluk 1.4.7 ile aynı
+- Sıralama › REKORLARIM sekmesi (düzeltme, kod 20): sekmenin tıklama kodu bir açıklama satırının içinde kalmıştı, sekme hiç açılmıyordu (1 Ekim'den beri). Rekorlar kaydediliyordu, sadece görünmüyordu.
 - Rekorlarım: her mod kendi en iyi 10 skorunu tutar (Normal, Zor Mod, Hayatta Kal, 60 sn), liste modlara göre bölümlü; "HAYATTA KAL REKORU" kutusu. Önceden tek bir ilk 10 vardı ve uzun Normal koşuları Hayatta Kal skorlarını dışarıda bırakıyordu.
 - Bölünen gezegen: parçalar girintili çıkıntılı yarım ay (cisim gölgelendiricisinde kesik yüz), bölünmede beyaz kırık çizgisi, kaya kırıntıları ve kısa parlama; parçalar daha hızlı (430–490) ve daha geniş açıyla ayrılır. Ekranda en fazla 8 parça (L41+ 12), fazlası ekrandan kaçar; ilk 6 sn kenardan seker, 10 sn yutulmayan kaçar; 2 parça 1 cisim yeri tutar (önceden parçalar birikip yeni cisim gelişini kesebiliyordu).
 - Takımyıldızlar bütün oyun alanına yayılır, iki yıldız arası en az 125; süre 6 sn yerine 8 sn + yıldız başına 2,2 sn.
@@ -102,7 +103,6 @@ Her güncellemede:
 - Zor Mod: L1–60 2 yay, L61+ yaysız (2 kalp, meteor ×1,6, hedef ×1,5 aynen).
 - Hayatta Kal (Günün Fırtınası) süresiz: hız 12'den başlar, her 30 sn +5, sınırsız; ilk 2 dk 2 yay sonra yaysız; dakikada bir meteor kuşağı; 4. dakikadan sonra Kara Fırtına her 30 sn'de %35 daha çok meteor (çiftler halinde) ve %8 hız. Saniye puanı +20, her dakika +10 artar; bitiş bonusu yok.
 - Koruyucu seviyeleri (düzeltme): gezegene doğru parmakla bastırınca hedef gezegenin içine giriyordu; Aşırı Yük'ün %30 aşmasıyla kara delik her karede gezegenin iki yanı arasında zıplıyor, iki simetrik titreyen delik gibi görünüyordu. Artık parmağın hedefi de atmosferde durur (bot: titreyen konum 29 → 0); geri çekince delik hemen tepki verir.
-- Sıralama › REKORLARIM sekmesi (düzeltme): sekmenin tıklama kodu bir açıklama satırının içinde kalmıştı, sekme hiç açılmıyordu (1 Ekim'den beri). Rekorlar kaydediliyordu, sadece görünmüyordu.
 - Kilonova altınları (düzeltme): düşecekleri yerler karadeliğin çekim alanının dışından seçilir (önceden sadece kenarından 50 px uzakta tutuluyordu; büyük karadelik yakına düşenleri kendiliğinden çekip yutuyordu). Altını artık oyuncu gidip toplar; ekranda yer yoksa en uzak noktalar.
 - Bölünen gezegen: mavi halka yerine yarımın kendi çizgisini (yay + kırık kenar) izleyen titrek kırmızı neon; kırık yüzün kenar ışığı da kırmızı (`onizleme/neon-yarim.png`). Parıltı bulanıklık filtresi değil, üst üste çizgi (zayıf telefonda takılma yapmaz).
 - Hedef: Normal modda bir seviye 8–10 denemede geçilebilmeli. 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
