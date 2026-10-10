@@ -118,7 +118,7 @@ Her güncellemede:
 
 ## 1.5.0 (19 Ekim → üretim) · `REL` 10 yapılacak · gerçek yayın sürümü, görsel derinlik
 - Derinlik katmanları (sadece süs; çekime kapılmaz, çarpılmaz, puan vermez): arkada yavaş süzülen küçük bulanık kayalar,
-  yan kenarlardan en fazla üçte biri görünen iki büyük bulanık kaya, karadeliğe doğru akan seyrek hız izleri (normalde 20;
+  yan kenarlardan ara sıra süzülen tek bir büyük bulanık kaya (sıra ile sol ve sağ; en fazla üçte biri görünür, ekranı ~40 sn'de geçer, sonra 45–75 sn hiç yok), karadeliğe doğru akan seyrek hız izleri (normalde 20;
   meteor kuşağı, fırtına ve Vortex'te 56, daha hızlı). Hepsi cisimlerin altında çizilir; bir cismin, karadeliğin çekim
   alanının, üst barın veya güç tepsisinin üstüne denk gelince söner, yani hiçbir şeyi örtmez. Kare süresi yavaşlarsa
   (`GL.quality` düşerse) ilk kapanan budur. Kaya resimleri menüde, birer birer hazırlanır (oyun sırasında iş yok).

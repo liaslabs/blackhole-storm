@@ -1507,7 +1507,7 @@ function v2Teaser(l){const n=new2(l),h=v2Hard(l),c=v2Chal(l),rc=labRec(l),pw=rc?
 // ── 1.5.0 depth: rocks drifting far behind the play, two big blurred rocks peeking in at the side edges, sparse speed streaks ──
 // Decoration only: nothing here feels the pull or can be hit. It is drawn under every body and fades out wherever it would sit on a body,
 // inside the hole's pull or under the top bar and the power tray, so it never hides anything. The hole itself is not touched.
-const DEPTH={far:12,near:2,st:20,stX:56,farK:.03,nearK:.06};
+const DEPTH={far:12,st:20,stX:56,farK:.03,nearK:.06};
 let DSPR=null; // rock pictures, painted in the menu one rock at a time (no frame in play pays for them)
 function v2DepthShape(seed){const rr=v2Mul(seed),h=[];for(let k=2;k<=7;k++)h.push({k,a:rr()*.075/(k*.42),p:rr()*TAU});
   const cr=[],n=4+Math.floor(rr()*5);for(let i=0;i<n;i++)cr.push({a:rr()*TAU,d:Math.sqrt(rr())*.7,r:.08+rr()*.19});
@@ -1526,10 +1526,10 @@ function v2DepthPrep(chain){if(!rel(10)||DSPR&&(DSPR.done||DSPR.run&&!chain))ret
   const [kind,v]=DSPR.q.shift(),far=kind==='far',size=far?48:160,F=far?12:8,R=size*.4,sh=v2DepthShape((far?301:501)+v*97),fr=[],tmp=document.createElement('canvas');tmp.width=tmp.height=size;const tg=tmp.getContext('2d');
   for(let f=0;f<F;f++){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');tg.clearRect(0,0,size,size);v2DepthPaint(tg,sh,f/F*TAU,size/2,size/2,R,!far);if('filter' in g)g.filter=`blur(${far?1:3}px)`;g.drawImage(tmp,0,0);fr.push(c);}
   DSPR[kind].push({fr,R});if(DSPR.q.length)setTimeout(()=>v2DepthPrep(1),150);else DSPR.done=1;}
-function v2DepthNear(i,first){const r=sp2(rnd(70,95)),L=i%2===0;return {x:L?-r*.62:W+r*.62,y:first?rnd(.3,.7)*H:-r*1.5,r,vy:sp2(rnd(10,18)),v:i,rot:rnd(0,TAU),spin:rnd(-.1,.1),a:0};} // its centre stays off screen: at most a third of it shows
+function v2DepthNear(i,first){const r=sp2(rnd(70,95)),L=i%2===0;return {x:L?-r*.62:W+r*.62,y:-r*1.5,r,vy:sp2(rnd(20,28)),v:i,rot:rnd(0,TAU),spin:rnd(-.1,.1),a:0,idle:first?rnd(8,25):rnd(45,75)};} // one big rock at a time, sides taking turns; its centre stays off screen (at most a third shows); it takes ~40 s to pass, then 45-75 s with none
 function v2DepthInit(){const d={far:[],near:[],st:[]},mx=Math.hypot(W,H)*.65;
   for(let i=0;i<DEPTH.far;i++)d.far.push({x:rnd(0,W),y:rnd(0,H),r:sp2(rnd(5,11)),vx:sp2(rnd(-4,4)),vy:sp2(rnd(5,12)),v:i,rot:rnd(0,TAU),spin:rnd(-.3,.3),a:0});
-  for(let i=0;i<DEPTH.near;i++)d.near.push(v2DepthNear(i,true));
+  d.near.push(v2DepthNear(Math.random()<.5?0:1,true));
   for(let i=0;i<DEPTH.stX;i++)d.st.push({a:rnd(0,TAU),d:rnd(sp2(80),mx),v:sp2(rnd(120,320))});return d;}
 function v2DepthFree(x,y,r){ // 0..1: how clear this spot is of the bars, the hole's pull and every body
   let q=clamp((y-sp2(80))/sp2(50),0,1)*clamp((H-sp2(120)-y)/sp2(50),0,1);if(q<=0)return 0;
@@ -1548,7 +1548,7 @@ function v2DepthDraw(dt){if(!DSPR||!DSPR.done||!G2.on||GL.quality<.75)return; /*
   const mv=gState==='playing'?dt:0;
   for(const o of d.far){o.x+=o.vx*mv;o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y>H+20){o.y=-20;o.x=rnd(0,W);o.a=0;}
     const x=o.x+px*DEPTH.farK,y=o.y+py*DEPTH.farK;o.a+=(v2DepthFree(x,y,o.r)*.55-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.far,o,x,y,o.r);}
-  for(let i=0;i<d.near.length;i++){const o=d.near[i];o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y-o.r*1.3>H){d.near[i]=v2DepthNear(i,false);continue;}
+  for(let i=0;i<d.near.length;i++){const o=d.near[i];if(o.idle>0){o.idle-=mv;continue;}o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y-o.r*1.3>H){d.near[i]=v2DepthNear(o.v+1,false);continue;}
     const y=o.y+py*DEPTH.nearK;o.a+=(v2DepthFree(o.x,y,o.r*.8)*.5-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.near,o,o.x,y,o.r);}
   ctx.globalAlpha=1;}
 
