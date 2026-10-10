@@ -125,7 +125,7 @@ Her güncellemede:
   Gökyüzünün karadeliğe göre kayması (parallax) zaten vardı, aynen kalır. Karadeliğin kendisi değişmedi.
 - Meteor: ateş topu. Beyaz-sıcak çekirdek ve önde kızgın yüz, hızlandıkça uzayan iki katlı kuyruk, kıvılcımlar (karadeliğe
   yakın geçenler çekime kıvrılır) ve hafif kül izi; girişte ünlem yerine ekran kenarında parlama (yol okları aynen).
-  Altın Yay süresince meteorlar altın alevli ve pırıltılı: yutulabildiği görünür. Hawking, bomba ve süpernova ile yok edilen
+  Altın Yay süresince meteorlar altın alevli ve pırıltılı: yutulabildiği görünür. Hawking, bomba dalgası, İkinci Ufuk veya fırtına sonuyla yok edilen
   meteor 3 kızgın parçaya bölünür. Çarpma, hız ve isabet aynen (`onizleme/meteor-onerileri.html`, `onizleme/derinlik-25d.html`).
 - Kara Fırtına'ya özel meteor rengi önerildi, seçilmedi.
 
