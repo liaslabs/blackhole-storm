@@ -109,7 +109,7 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .lbstats span{font-size:10px;letter-spacing:1px;color:var(--dim);}
 .lbempty{padding:14px;color:var(--dim);font-size:13px;}
 .lbnote{margin:10px 2px 2px;font-size:12px;line-height:1.45;color:var(--dim);}
-.lbrow.me{background:rgba(242,169,59,.1);border:1px solid var(--line);}
+.lbrow.lbtop{background:rgba(242,169,59,.1);border:1px solid var(--line);} /* not .me: that class is the bobbing 'you are here' marker on the map */
 .lbhd{font-family:var(--fd);font-size:11px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin:12px 2px 6px;text-align:start;}.lbhd:first-child{margin-top:2px;}
 .lbrow .r{width:26px;font-family:var(--fd);font-size:13px;color:var(--gold);}
 .lbrow .n{flex:1;text-align:start;font-size:14px;font-weight:600;}
@@ -1258,7 +1258,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div id="lbMine">
   <div class="lbstats" id="lbStats"></div>
   <div id="lbList"></div>
-  <div class="lbnote">Arkadaşlarınla yarışmak için Günlük Yarış sonucunu paylaş ya da meydan okuma linki gönder.</div>
+  <div class="lbnote" id="lbNote">Arkadaşlarınla yarışmak için Günlük Yarış sonucunu paylaş ya da meydan okuma linki gönder.</div>
+  <div class="row" id="lbShareRow" hidden><button class="btn cy" id="lbShare">📤 PAYLAŞ</button></div>
   </div>
   <div class="row"><button class="btn" id="lbClose">KAPAT</button></div>
  </div>
@@ -2335,7 +2336,10 @@ function dmClaim(i){
 const MODE_TAG={classic:'Normal',survival:'Hayatta kalma',sprint:'60 sn',hard:'Zor Mod'};
 function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:rel(8)&&HMODE&&gameMode==='classic'?'hard':gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);
   if(rel(8)){const per={};localLB=localLB.filter(e=>(per[e.mode]=(per[e.mode]||0)+1)<=10);}else localLB=localLB.slice(0,10);saveG();} /* 1.4.8: each mode keeps its own top 10 (long classic runs crowded the survival scores out) */
-function showLB(){lbTab('w');const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
+function recordsText(){const f=n=>nf(n),sv=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0),hi=Math.max(bestScore,localLB[0]?localLB[0].score:0);
+  const L=[`🕳️ Blackhole Storm · ${T('REKORLARIM')}`,`🏆 ${T('EN YÜKSEK')}: ${f(hi)}`,`🌀 ${T('EN İYİ SEVİYE')}: ${bestLevel}`];if(sv)L.push(`⛈ ${T('HAYATTA KAL REKORU')}: ${f(sv)}`);if(sprintBest)L.push(`⏱ ${T('60 SN REKORU')}: ${f(sprintBest)}`);
+  L.push(`⚔️ ${T('Meydan okuyorum: beni geçebilir misin?')}`);return L.join('\n');}
+function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').hidden=!localLB.length&&!bestScore;} /* 1.4.9: a share button instead of a note that pointed elsewhere */const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
   const fmt=n=>n.toLocaleString(LOC);
   const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
   $('lbStats').innerHTML=(rel(8)?[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['HAYATTA KAL REKORU',fmt(svB)],['60 SN REKORU',fmt(sprintBest)]]:[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]])
@@ -2343,10 +2347,10 @@ function showLB(){lbTab('w');const l=$('lbList');l.innerHTML='';const med=['🥇
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
     const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);
-    L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' me':'');const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
+    L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
       const n=document.createElement('div');n.className='n';n.textContent=e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n,p);l.appendChild(r);});}
     $('sLB').classList.add('on');return;}
-  localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' me':'');
+  localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');
     const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
     const n=document.createElement('div');n.className='n';n.textContent=(MODE_TAG[e.mode]||'Normal')+(e.d?` · ${e.d}`:'');
     const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);
@@ -4033,7 +4037,8 @@ $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('surviv
 $('startBtn').onclick=()=>{if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}showLB();}; // the leaderboard shows your name: offer to set it once
-$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m'); // the tab handlers sat inside the comment above, so REKORLARIM never opened
+$('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');
+$('lbShare').onclick=async()=>{const out=await shareOut(recordsText(),canLink()?baseURL():'');if(out==='copied')flashBtn($('lbShare'),'KOPYALANDI ✓');}; // 1.4.9: the records tab can be shared // the tab handlers sat inside the comment above, so REKORLARIM never opened
 $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp();$('sExp').classList.add('on');};$('exClose').onclick=()=>$('sExp').classList.remove('on');
 $('treeBtn').onclick=()=>labOpenScr();$('labX').onclick=labClose;$('labCv').addEventListener('pointerdown',labHit);addEventListener('resize',()=>{if(LV.on){labSize();labFit();}});
 $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$('gdClose').onclick=()=>{$('sGarden').classList.remove('on');gdRun=false;};
