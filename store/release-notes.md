@@ -16,7 +16,7 @@ Her güncellemede:
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
 | 1.4.7 | 18 | 9 Eki | **Yayında** (9 Eki 16:04 onaylandı; main c4a0c5b). 15:41'de Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
-| 1.4.8 | 19 | 12 Eki | Hazır, `rel(8)` ile kapalı: düzeltmeler ve görsel (zorluk 1.4.7 ile aynı). 11 Eki Dahili test, 12 Eki Alpha |
+| 1.4.8 | 19 | 12 Eki | `REL` 8, derlendi (10 Eki): düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Önce Dahili test, sonra Alpha |
 | 1.4.9 | 20 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
 | 1.5.0 | 21 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
@@ -74,7 +74,7 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.4.8 (12 Ekim) · `REL` 8 yapılacak · düzeltmeler ve görsel, zorluk 1.4.7 ile aynı
+## 1.4.8 (12 Ekim) · `REL` 8 · düzeltmeler ve görsel, zorluk 1.4.7 ile aynı
 - Rekorlarım: her mod kendi en iyi 10 skorunu tutar (Normal, Zor Mod, Hayatta Kal, 60 sn), liste modlara göre bölümlü; "HAYATTA KAL REKORU" kutusu. Önceden tek bir ilk 10 vardı ve uzun Normal koşuları Hayatta Kal skorlarını dışarıda bırakıyordu.
 - Bölünen gezegen: parçalar girintili çıkıntılı yarım ay (cisim gölgelendiricisinde kesik yüz), bölünmede beyaz kırık çizgisi, kaya kırıntıları ve kısa parlama; parçalar daha hızlı (430–490) ve daha geniş açıyla ayrılır. Ekranda en fazla 8 parça (L41+ 12), fazlası ekrandan kaçar; ilk 6 sn kenardan seker, 10 sn yutulmayan kaçar; 2 parça 1 cisim yeri tutar (önceden parçalar birikip yeni cisim gelişini kesebiliyordu).
 - Takımyıldızlar bütün oyun alanına yayılır, iki yıldız arası en az 125; süre 6 sn yerine 8 sn + yıldız başına 2,2 sn.
