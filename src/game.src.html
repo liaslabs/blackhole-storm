@@ -4008,7 +4008,7 @@ function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey()
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(zonePrefetch,2500);if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(zonePrefetch,2500);if(rel(10))setTimeout(v2DepthPrep,4000); /* 1.5.0: depth rocks painted in the menu */if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';

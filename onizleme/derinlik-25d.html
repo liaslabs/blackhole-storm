@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>2,5D Derinlik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@500;700&display=swap">
+<style>
+/* preview page: one canvas stage, a caption on top, layer switches in a dock under it (same layout as kabuk.html) */
+:root{--bg:#05040b;--ink:#f3eefe;--mute:#a79cc4;--gold:#ffd76a;--cyan:#8fe6ff;--pink:#ff8adf;--violet:#b98cff;--panel:rgba(18,12,34,.86);--line:rgba(185,140,255,.28);
+ --fd:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;--fb:"IBM Plex Sans",system-ui,sans-serif;color-scheme:dark}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--fb);overflow:hidden}
+.app{position:relative;height:100%;display:flex;flex-direction:column}
+#cv{flex:1;min-height:0;width:100%;display:block;touch-action:none}
+.cap{position:absolute;left:16px;right:16px;top:calc(12px + env(safe-area-inset-top,0px));text-align:center;pointer-events:none;transition:opacity .6s}
+.cap.hide{opacity:0}
+.cap b{display:block;font:700 clamp(18px,5vw,24px)/1.15 var(--fd);letter-spacing:.06em;text-transform:uppercase;text-wrap:balance;text-shadow:0 2px 10px #000}
+.cap span{display:block;margin:4px auto 0;max-width:34em;font-size:13px;line-height:1.35;color:var(--mute);text-wrap:pretty;text-shadow:0 1px 6px #000}
+.dock{padding:10px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--panel);border-top:1px solid var(--line);display:grid;gap:8px}
+.ev{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ev button,.ctl button{font:700 13px/1.1 var(--fd);letter-spacing:.04em;color:var(--ink);background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:10px 8px;cursor:pointer;display:flex;align-items:center;gap:8px;text-align:left;min-width:0}
+.ev button i{flex:none;width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c)}
+.ev button.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 16%,transparent)}
+.ev button:not(.on) i{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.ev.off button{opacity:.4}
+.ctl{display:flex;gap:6px;align-items:stretch}
+.ctl button{flex:1;justify-content:center;background:linear-gradient(90deg,rgba(143,230,255,.2),rgba(185,140,255,.22))}
+.ctl button.flat{background:rgba(255,255,255,.1)}
+.fps{flex:none;min-width:58px;align-self:center;text-align:right;font:700 12px/1.2 var(--fd);color:var(--mute);letter-spacing:.04em}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="app">
+ <canvas id="cv"></canvas>
+ <div class="cap" id="cap"><b id="capT"></b><span id="capS"></span></div>
+ <div class="dock">
+  <div class="ev" id="ev"></div>
+  <div class="ctl"><button id="mode"></button><button id="belt">☄ METEOR KUŞAĞI</button><span class="fps" id="fps">– fps</span></div>
+ </div>
+</div>
+<script>
+const TAU=Math.PI*2,rnd=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+let W=0,H=0,SC=1,DPR=1,clock=0,view='pick',beltT=0,combo=0,comboT=0,pulse=0,lastTouch=-9,drag=null;
+const ON={rock:true,depth:true,streak:true,disk:true}; // the four layers of the 2.5D look, each can be switched off
+const FX=k=>view==='full'?ON[k]:view==='pick'&&(k==='depth'||k==='streak'); // 'pick': only the depth layers and sparse streaks, on today's rocks and hole
+const sparse=()=>view==='pick';
+const hole={x:0,y:0,tx:0,ty:0,R:30,R0:30};
+let bgC=null,diskA=null,diskB=null,GAME=null,FAR=null,NEAR=null;
+const rocks=[],far=[],near=[],streaks=[],meteors=[],sparks=[],texts=[];
+let metT=2;
+
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+// ── rocks: a lumpy outline, craters and grit, lit from the top left; the light stays put while the rock turns ──
+const TONES=[['#e2d2bc','#6e6358','#14101a'],['#cfc7da','#5d586c','#100d18'],['#dfbd9e','#6f5341','#150e0e'],['#c4bdb3','#56504b','#0f0d10']];
+function rockShape(seed){const rr=mulberry(seed),h=[];for(let k=2;k<=7;k++)h.push({k,a:rr()*.075/(k*.42),p:rr()*TAU});
+ const cr=[],n=4+Math.floor(rr()*5);for(let i=0;i<n;i++)cr.push({a:rr()*TAU,d:Math.sqrt(rr())*.7,r:.08+rr()*.19});
+ const dots=[];for(let i=0;i<60;i++)dots.push({a:rr()*TAU,d:Math.sqrt(rr())*.95,s:.012+rr()*.03,l:rr()<.45});
+ return {rad:t=>{let s=1;for(const q of h)s+=q.a*Math.sin(q.k*t+q.p);return s*.86;},cr,dots,tone:TONES[Math.floor(rr()*TONES.length)]};}
+function paintRock(g,sh,rot,cx,cy,R,dark){
+ const P=new Path2D();for(let i=0;i<=80;i++){const t=i/80*TAU,r=R*sh.rad(t-rot),x=cx+Math.cos(t)*r,y=cy+Math.sin(t)*r;i?P.lineTo(x,y):P.moveTo(x,y);}P.closePath();
+ const T=sh.tone,b=g.createRadialGradient(cx-R*.42,cy-R*.48,R*.05,cx-R*.1,cy-R*.1,R*1.25);b.addColorStop(0,T[0]);b.addColorStop(.42,T[1]);b.addColorStop(1,T[2]);g.fillStyle=b;g.fill(P);
+ g.save();g.clip(P);
+ for(const d of sh.dots){const a=d.a+rot;g.fillStyle=d.l?'rgba(255,240,220,.10)':'rgba(0,0,0,.2)';g.beginPath();g.arc(cx+Math.cos(a)*d.d*R,cy+Math.sin(a)*d.d*R,d.s*R,0,TAU);g.fill();}
+ for(const c of sh.cr){const a=c.a+rot,x=cx+Math.cos(a)*c.d*R,y=cy+Math.sin(a)*c.d*R,rc=c.r*R,f=Math.sqrt(1-c.d*c.d),L=Math.PI/4-a; // a crater: dark bowl, lit far wall, bright lip on the side away from the light
+  g.fillStyle='rgba(6,5,9,.55)';g.beginPath();g.ellipse(x,y,rc*f,rc,a,0,TAU);g.fill();
+  g.fillStyle='rgba(255,236,214,.13)';g.beginPath();g.ellipse(x+rc*.24,y+rc*.24,rc*f*.58,rc*.58,a,0,TAU);g.fill();
+  g.strokeStyle='rgba(255,238,215,.34)';g.lineWidth=Math.max(1,rc*.16);g.beginPath();g.ellipse(x,y,rc*f*1.05,rc*1.05,a,L-1.1,L+1.1);g.stroke();}
+ const s=g.createRadialGradient(cx+R*.8,cy+R*.9,R*.1,cx+R*.5,cy+R*.6,R*1.6);s.addColorStop(0,'rgba(0,0,0,.66)');s.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=s;g.fillRect(cx-R*1.5,cy-R*1.5,R*3,R*3); // the night side
+ const e=g.createLinearGradient(cx-R,cy-R,cx,cy);e.addColorStop(0,'rgba(255,246,230,.42)');e.addColorStop(1,'rgba(255,246,230,0)');g.strokeStyle=e;g.lineWidth=R*.1;g.stroke(P); // sunlit edge
+ g.restore();
+ g.lineWidth=Math.max(1,R*.035);g.strokeStyle='rgba(205,175,255,.26)';g.stroke(P); // the disk's glow catching the rim
+ if(dark){g.globalCompositeOperation='source-atop';g.fillStyle='rgba(5,3,10,.42)';g.fillRect(0,0,g.canvas.width,g.canvas.height);g.globalCompositeOperation='source-over';}}
+// every rock is drawn once per turning step at start-up; in play it is only copied (cheap on slow phones)
+function makeSet(n,F,size,seed,opt={}){const out=[],tmp=document.createElement('canvas');tmp.width=tmp.height=size;const tg=tmp.getContext('2d');
+ for(let v=0;v<n;v++){const sh=rockShape(seed+v*97),fr=[],R=size*.4;for(let f=0;f<F;f++){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');
+   if(opt.blur&&'filter' in g){tg.clearRect(0,0,size,size);paintRock(tg,sh,f/F*TAU,size/2,size/2,R,opt.dark);g.filter=`blur(${opt.blur}px)`;g.drawImage(tmp,0,0);g.filter='none';}
+   else paintRock(g,sh,f/F*TAU,size/2,size/2,R,opt.dark);fr.push(c);}
+  out.push({fr,R});}return out;}
+function drawSprite(set,o,x,y,r){const s=set[o.v%set.length],F=s.fr.length,i=((Math.floor(o.rot/TAU*F)%F)+F)%F,img=s.fr[i],z=img.width*r/s.R;ctx.drawImage(img,x-z/2,y-z/2,z,z);}
+function drawTodayRock(o,x,y,r){const s=GAME[o.v%GAME.length],img=s.fr[0],z=img.width*r/s.R;ctx.save();ctx.translate(x,y);ctx.rotate(o.rot);ctx.drawImage(img,-z/2,-z/2,z,z);ctx.restore();} // today: one rock picture that turns, light and all
+
+// ── sky: nebula and stars, drawn once a little larger than the screen so it can slide (parallax) ──
+const M=40;
+function makeBg(){bgC=document.createElement('canvas');bgC.width=Math.round((W+M*2)*DPR);bgC.height=Math.round((H+M*2)*DPR);const g=bgC.getContext('2d'),w=W+M*2,h=H+M*2,mx=Math.max(w,h);g.setTransform(DPR,0,0,DPR,0,0);
+ g.fillStyle='#07040f';g.fillRect(0,0,w,h);g.globalCompositeOperation='lighter';
+ const blobs=[[.3,.25,.55,'110,50,190',.38],[.75,.4,.6,'40,70,200',.34],[.5,.7,.5,'200,60,170',.2],[.15,.65,.45,'30,120,210',.22],[.85,.85,.5,'120,40,200',.26],[.55,.15,.4,'60,40,160',.24]];
+ for(const [x,y,r,c,a] of blobs){const q=g.createRadialGradient(x*w,y*h,0,x*w,y*h,r*mx);q.addColorStop(0,`rgba(${c},${a})`);q.addColorStop(1,`rgba(${c},0)`);g.fillStyle=q;g.fillRect(0,0,w,h);}
+ for(let i=0;i<300;i++){const x=Math.random()*w,y=Math.random()*h,b=Math.random(),r=b>.97?1.6:b>.85?1.1:.6;g.fillStyle=`rgba(${b>.9?'220,230,255':'255,255,255'},${.25+b*.6})`;g.beginPath();g.arc(x,y,r,0,TAU);g.fill();
+  if(b>.985){g.strokeStyle='rgba(200,220,255,.35)';g.lineWidth=.8;g.beginPath();g.moveTo(x-6,y);g.lineTo(x+6,y);g.moveTo(x,y-6);g.lineTo(x,y+6);g.stroke();}}
+ g.globalCompositeOperation='source-over';}
+
+// ── the accretion disk: spiral arms and dust, drawn once, then only turned; the pattern flows inward ──
+function makeDisk(R0,arms,tw,seed,cool){const rr=mulberry(seed),s=R0*6.4,px=Math.ceil(s*2*DPR),c=document.createElement('canvas');c.width=c.height=px;const g=c.getContext('2d');g.setTransform(DPR,0,0,DPR,px/2,px/2);g.globalCompositeOperation='lighter';g.lineCap='round';
+ if(!cool){const q=g.createRadialGradient(0,0,R0*.95,0,0,s);q.addColorStop(0,'rgba(255,200,255,.5)');q.addColorStop(.16,'rgba(185,110,255,.3)');q.addColorStop(.45,'rgba(80,90,255,.12)');q.addColorStop(1,'rgba(40,40,160,0)');g.fillStyle=q;g.beginPath();g.arc(0,0,s,0,TAU);g.fill();}
+ const A=cool?[190,230,255]:[255,232,255],B=cool?[110,150,255]:[205,125,255],C=cool?[60,80,230]:[90,110,255];
+ const col=t=>{const [p,n,q]=t<.35?[A,B,t/.35]:[B,C,(t-.35)/.65];return p.map((v,i)=>Math.round(v+(n[i]-v)*q)).join(',');};
+ g.lineCap='butt';for(let a=0;a<arms;a++){const a0=a/arms*TAU+rr()*.5,len=.7+rr()*.3,N=70;let lx=null,ly=null;
+  for(let i=0;i<=N;i++){const t=i/N*len,r=R0*(1.06+5*t),th=a0+tw*Math.log(r/R0),x=Math.cos(th)*r,y=Math.sin(th)*r;
+   if(lx!==null){g.strokeStyle=`rgba(${col(t)},${.55*Math.pow(1-t,1.3)})`;g.lineWidth=R0*(.2*(1-t)+.03);g.beginPath();g.moveTo(lx,ly);g.lineTo(x,y);g.stroke();}lx=x;ly=y;}}
+ g.lineCap='round';for(let i=0;i<170;i++){const t=Math.pow(rr(),1.8),r=R0*(1.1+4.6*t),th=rr()*TAU,l=.15+rr()*.5;g.strokeStyle=`rgba(${col(t)},${(.06+rr()*.2)*(1-t)})`;g.lineWidth=.8+rr()*1.8;g.beginPath();g.arc(0,0,r,th,th+l);g.stroke();}
+ if(!cool){g.strokeStyle='rgba(255,236,255,.6)';g.lineWidth=R0*.12;g.beginPath();g.arc(0,0,R0*1.1,0,TAU);g.stroke();}
+ return c;}
+
+function drawHole(){const {x,y}=hole,R=hole.R*(1+.07*pulse);
+ if(FX('disk')){const k=R/hole.R0;for(const [c,w,ph,al,op] of [[diskA,1.15,0,1,'source-over'],[diskB,.62,1.3,.75,'lighter']]){const z=c.width/DPR;ctx.save();ctx.globalCompositeOperation=op;ctx.globalAlpha=al;ctx.translate(x,y);ctx.rotate(clock*w+ph);ctx.scale(k,k);ctx.drawImage(c,-z/2,-z/2,z,z);ctx.restore();}}
+ else{const g=ctx.createRadialGradient(x,y,R*.9,x,y,R*3.2);g.addColorStop(0,'rgba(255,170,90,.38)');g.addColorStop(.35,'rgba(185,90,255,.16)');g.addColorStop(1,'rgba(185,90,255,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,R*3.2,0,TAU);ctx.fill();}
+ const c=ctx.createRadialGradient(x,y,R*.6,x,y,R*1.04);c.addColorStop(0,'#000');c.addColorStop(.85,'#030008');c.addColorStop(1,'rgba(40,10,70,0)');ctx.fillStyle=c;ctx.beginPath();ctx.arc(x,y,R*1.04,0,TAU);ctx.fill();
+ ctx.save();if(FX('disk')){ctx.strokeStyle='rgba(235,215,255,.25)';ctx.lineWidth=5*SC;ctx.beginPath();ctx.arc(x,y,R*1.02,0,TAU);ctx.stroke();ctx.strokeStyle='rgba(250,240,255,.9)';ctx.lineWidth=1.5*SC;ctx.beginPath();ctx.arc(x,y,R*1.01,0,TAU);ctx.stroke();} // photon ring
+ else{ctx.shadowColor='#b9a8ff';ctx.shadowBlur=8;ctx.strokeStyle='rgba(255,255,255,.85)';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(x,y,R+.8,0,TAU);ctx.stroke();}ctx.restore();}
+
+// ── play: rocks drift in, the pull curls them round the hole, they are swallowed ──
+function spawnRock(inside){const big=Math.random()<.1,r=SC*(big?rnd(26,32):rnd(7,21)),o={r,v:Math.floor(Math.random()*6),rot:rnd(0,TAU),spin:rnd(-1.4,1.4)*(12/(r/SC+6)),eat:null,k:1};
+ if(inside){o.x=rnd(.08,.92)*W;o.y=rnd(.14,.86)*H;o.vx=SC*rnd(-25,25);o.vy=SC*rnd(10,45);}
+ else if(Math.random()<.6){o.x=rnd(0,W);o.y=-r-10;o.vx=SC*rnd(-40,40);o.vy=SC*rnd(45,110);}
+ else{const L=Math.random()<.5;o.x=L?-r-10:W+r+10;o.y=rnd(.1,.7)*H;o.vx=SC*rnd(40,100)*(L?1:-1);o.vy=SC*rnd(-10,40);}
+ rocks.push(o);}
+function eat(o){combo++;comboT=2.5;pulse=1;texts.push({x:o.x,y:o.y,s:combo%10===0?'+1500':'+100',c:combo%10===0?'#ffe08a':'#ffd76a',big:combo%10===0,t:0});
+ for(let i=0;i<12;i++){const a=rnd(0,TAU),v=SC*rnd(60,180);sparks.push({x:o.x,y:o.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,t:0,l:rnd(.25,.45)});}}
+function stepRocks(dt){const target=beltT>0?26:15;while(rocks.length<target)spawnRock(false);
+ const G=hole.R*3.6;for(const o of rocks){
+  if(o.eat!==null){o.eat+=dt;o.k=Math.max(0,1-o.eat/.28);const q=Math.min(1,dt*14);o.x+=(hole.x-o.x)*q;o.y+=(hole.y-o.y)*q;continue;}
+  const dx=hole.x-o.x,dy=hole.y-o.y,d=Math.hypot(dx,dy)||1;
+  if(d<G){const a=SC*(900*(1-d/G)+60);o.vx+=(dx/d+dy/d*.55)*a*dt;o.vy+=(dy/d-dx/d*.55)*a*dt;} // pull plus a curl, the same turn as the disk
+  const v=Math.hypot(o.vx,o.vy),mx=SC*380;if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}
+  o.x+=o.vx*dt;o.y+=o.vy*dt;o.rot+=o.spin*dt;
+  if(d<hole.R+o.r*.2){o.eat=0;eat(o);}}
+ for(let i=rocks.length-1;i>=0;i--){const o=rocks[i];if(o.eat!==null&&o.eat>=.28||o.x<-120||o.x>W+120||o.y>H+120||o.y<-200)rocks.splice(i,1);}}
+function stepMeteors(dt){metT-=dt;if(metT<=0){metT=beltT>0?rnd(.5,.9):rnd(2.5,4.5);const L=Math.random()<.5,sp=SC*rnd(300,380);meteors.push({x:L?rnd(-.1,.4)*W:rnd(.6,1.1)*W,y:-30,vx:sp*(L?.45:-.45),vy:sp,t:0});}
+ for(let i=meteors.length-1;i>=0;i--){const m=meteors[i];m.x+=m.vx*dt;m.y+=m.vy*dt;m.t+=dt;if(m.y>H+80)meteors.splice(i,1);}}
+function drawMeteor(m){const v=Math.hypot(m.vx,m.vy),tl=SC*120,tx=m.x-m.vx/v*tl,ty=m.y-m.vy/v*tl;ctx.save();ctx.lineCap='round';
+ const g=ctx.createLinearGradient(m.x,m.y,tx,ty);g.addColorStop(0,'rgba(255,200,90,.95)');g.addColorStop(.35,'rgba(255,130,40,.55)');g.addColorStop(1,'rgba(220,70,20,0)');ctx.strokeStyle=g;ctx.lineWidth=SC*7;ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(tx,ty);ctx.stroke();ctx.globalCompositeOperation='lighter';
+ const h=ctx.createRadialGradient(m.x,m.y,0,m.x,m.y,SC*13);h.addColorStop(0,'rgba(255,250,220,1)');h.addColorStop(.4,'rgba(255,190,90,.7)');h.addColorStop(1,'rgba(255,120,40,0)');ctx.fillStyle=h;ctx.beginPath();ctx.arc(m.x,m.y,SC*13,0,TAU);ctx.fill();ctx.restore();}
+
+// ── depth: far rocks behind, big dark blurred rocks in front at the edges; both slide against the hole (parallax) ──
+function seedDepth(){far.length=0;near.length=0;for(let i=0;i<22;i++)far.push({x:rnd(0,W),y:rnd(0,H),r:SC*rnd(3,8),vy:SC*rnd(5,14),vx:SC*rnd(-4,4),v:i,rot:rnd(0,TAU),spin:rnd(-.3,.3)});
+ for(let i=0;i<3;i++)near.push(newNear(i,true));}
+function newNear(i,first){const L=i%2===0,r=SC*rnd(60,95);return {x:L?rnd(-.16,0)*W:rnd(1,1.16)*W,y:first?rnd(.1,.9)*H:-r*1.4,r,vx:SC*rnd(-3,3),vy:SC*rnd(12,22),v:i,rot:rnd(0,TAU),spin:rnd(-.12,.12)};}
+function stepDepth(dt){for(const o of far){o.x+=o.vx*dt;o.y+=o.vy*dt;o.rot+=o.spin*dt;if(o.y>H+20){o.y=-20;o.x=rnd(0,W);}}
+ near.forEach((o,i)=>{o.x+=o.vx*dt;o.y+=o.vy*dt;o.rot+=o.spin*dt;if(o.y-o.r*1.3>H)near[i]=newNear(i,false);});}
+function par(k){return [(W/2-hole.x)*k,(H*.55-hole.y)*k];}
+
+// ── speed streaks: thin light lines rushing in toward the hole, longer and faster in a meteor belt ──
+function seedStreaks(){streaks.length=0;const mx=Math.hypot(W,H)*.65;for(let i=0;i<150;i++)streaks.push({a:rnd(0,TAU),d:rnd(hole.R0*1.4,mx),v:SC*rnd(120,320),c:Math.random()<.65?0:1});}
+function drawStreaks(dt){const n=sparse()?(beltT>0?60:24):beltT>0?150:70,mx=Math.hypot(W,H)*.65,fast=beltT>0?1.9:1,P=[[],[]];
+ for(let i=0;i<streaks.length;i++){const s=streaks[i];s.d-=s.v*dt*fast;if(s.d<hole.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
+  const len=s.v*.09*fast,q=clamp((s.d-hole.R*1.3)/(hole.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1),ca=Math.cos(s.a),sa=Math.sin(s.a);
+  if(q>.02)P[sparse()?0:s.c].push([hole.x+ca*s.d,hole.y+sa*s.d,hole.x+ca*(s.d+len),hole.y+sa*(s.d+len),q<.33?0:q<.66?1:2]);}
+ ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineWidth=1.3*SC;
+ P.forEach((list,c)=>{(sparse()?[.14,.3,.55]:[.2,.45,.8]).forEach((al,band)=>{ctx.strokeStyle=c?`rgba(255,190,250,${al})`:`rgba(170,230,255,${al})`;ctx.beginPath();for(const [x1,y1,x2,y2,b] of list)if(b===band){ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);}ctx.stroke();});}); /* batched in three brightness bands: six strokes a frame, not one per line */
+ ctx.restore();}
+
+// ── the frame ──
+function frame(dt){
+ if(clock-lastTouch>2.5){hole.tx=W/2+Math.sin(clock*.45)*W*.22;hole.ty=H*.5+Math.sin(clock*.31)*H*.1;} // no finger: the hole wanders by itself
+ const q=Math.min(1,dt*10);hole.x+=(hole.tx-hole.x)*q;hole.y+=(hole.ty-hole.y)*q;pulse=Math.max(0,pulse-dt*4);
+ if(beltT>0)beltT=Math.max(0,beltT-dt);if(comboT>0){comboT-=dt;if(comboT<=0)combo=0;}
+ stepRocks(dt);stepMeteors(dt);stepDepth(dt);
+ const [bx,by]=FX('depth')?par(.035):[0,0];ctx.drawImage(bgC,-M+bx,-M+by,W+M*2,H+M*2);
+ if(FX('depth')){const [fx,fy]=par(.06);ctx.globalAlpha=.5;for(const o of far)drawSprite(FAR,o,o.x+fx,o.y+fy,o.r);ctx.globalAlpha=1;}
+ if(FX('streak'))drawStreaks(dt);else for(const s of streaks){s.d-=s.v*dt;if(s.d<hole.R*1.3)s.d=Math.hypot(W,H)*.6;}
+ drawHole();
+ const list=rocks.slice().sort((a,b)=>a.r-b.r),rmax=SC*32;
+ for(const o of list){const r=o.r*o.k;if(r<.5)continue;
+  if(FX('rock')){ctx.globalAlpha=FX('depth')?.62+.38*Math.min(1,o.r/rmax*1.6):1;drawSprite(GAME,o,o.x,o.y,r);ctx.globalAlpha=1;} // small rocks a touch dimmer: they read as farther away
+  else drawTodayRock(o,o.x,o.y,r);}
+ for(const m of meteors)drawMeteor(m);
+ ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';for(let i=sparks.length-1;i>=0;i--){const s=sparks[i];s.t+=dt;if(s.t>s.l){sparks.splice(i,1);continue;}s.x+=s.vx*dt;s.y+=s.vy*dt;const a=1-s.t/s.l;ctx.strokeStyle=`rgba(255,220,130,${a})`;ctx.lineWidth=2*SC;ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(s.x-s.vx*.05,s.y-s.vy*.05);ctx.stroke();}ctx.restore();
+ if(FX('depth')){const [nx,ny]=par(-.14);for(const o of near){if(sparse()){const y=o.y+ny;ctx.globalAlpha=.7*clamp((y-H*.1)/(H*.12),0,1)*clamp((H*.86-y)/(H*.12),0,1);if(ctx.globalAlpha<.01){ctx.globalAlpha=1;continue;}}drawSprite(NEAR,o,o.x+nx,o.y+ny,o.r);ctx.globalAlpha=1;}}
+ drawUi(dt);}
+function drawUi(dt){ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+ for(let i=texts.length-1;i>=0;i--){const t=texts[i];t.t+=dt;const q=t.t/1.1;if(q>=1){texts.splice(i,1);continue;}ctx.globalAlpha=1-q*q;ctx.font=`700 ${Math.round(SC*(t.big?30:20))}px "IBM Plex Sans Condensed",sans-serif`;ctx.lineWidth=4;ctx.strokeStyle='rgba(60,30,0,.7)';ctx.strokeText(t.s,t.x,t.y-q*SC*40);ctx.fillStyle=t.c;ctx.fillText(t.s,t.x,t.y-q*SC*40);}
+ ctx.globalAlpha=1;
+ if(beltT>0){const y=H*.13,w=W*.6,x0=(W-w)/2;ctx.fillStyle='rgba(255,255,255,.12)';ctx.fillRect(x0,y,w,3);ctx.fillStyle='#ff4d5e';ctx.fillRect(x0,y,w*beltT/10,3);
+  ctx.font=`700 ${Math.round(SC*15)}px "IBM Plex Sans Condensed",sans-serif`;ctx.fillStyle='#ffb3bb';ctx.fillText(`☄ METEOR KUŞAĞI · ${Math.ceil(beltT)} sn`,W/2,y+SC*18);}
+ if(combo>1){ctx.font=`700 ${Math.round(SC*20)}px "IBM Plex Sans Condensed",sans-serif`;ctx.fillStyle='#f3eefe';ctx.fillText(`COMBO ×${combo}`,W/2,H-SC*34);ctx.fillStyle='rgba(255,215,106,.85)';ctx.fillRect(W/2-SC*40,H-SC*18,SC*80*Math.max(0,comboT)/2.5,2.5);}
+ ctx.restore();}
+
+// ── set-up, input, loop ──
+function size(){DPR=Math.min(2,window.devicePixelRatio||1);const r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);
+ SC=Math.min(W/400,H/700);hole.R0=hole.R=SC*30;if(!hole.x){hole.x=hole.tx=W/2;hole.y=hole.ty=H*.5;}else{hole.x=hole.tx=clamp(hole.x,0,W);hole.y=hole.ty=clamp(hole.y,0,H);}
+ makeBg();diskA=makeDisk(hole.R0,6,1.9,11,false);diskB=makeDisk(hole.R0,4,2.5,23,true);seedDepth();seedStreaks();}
+function init(){GAME=makeSet(6,24,128,101);FAR=makeSet(4,12,64,301,{blur:1.2});NEAR=makeSet(3,12,256,501,{blur:4,dark:true});size();for(let i=0;i<14;i++)spawnRock(true);}
+cv.addEventListener('pointerdown',e=>{drag={id:e.pointerId,x:e.clientX,y:e.clientY};cv.setPointerCapture(e.pointerId);if(clock-lastTouch>2.5){hole.tx=hole.x;hole.ty=hole.y;}lastTouch=clock;}); /* a finger takes over from the wander where the hole is */
+cv.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;hole.tx=clamp(hole.tx+e.clientX-drag.x,hole.R,W-hole.R);hole.ty=clamp(hole.ty+e.clientY-drag.y,hole.R,H-hole.R);drag.x=e.clientX;drag.y=e.clientY;lastTouch=clock;});
+for(const ev of ['pointerup','pointercancel'])cv.addEventListener(ev,e=>{if(drag&&e.pointerId===drag.id)drag=null;});
+window.addEventListener('resize',()=>{size();});
+
+const LAYERS=[['rock','KRATERLİ KAYALAR','#ffd76a'],['depth','DERİNLİK KATMANLARI','#8fe6ff'],['streak','HIZ İZLERİ','#ff8adf'],['disk','DÖNEN DİSK','#b98cff']];
+const evBox=document.getElementById('ev'),cap=document.getElementById('cap'),capT=document.getElementById('capT'),capS=document.getElementById('capS'),modeB=document.getElementById('mode');let capTimer=0;
+for(const [k,label,c] of LAYERS){const b=document.createElement('button');b.style.setProperty('--c',c);b.innerHTML=`<i></i>${label}`;b.className='on';b.onclick=()=>{if(view!=='full')return;ON[k]=!ON[k];b.classList.toggle('on',ON[k]);};evBox.appendChild(b);}
+const VIEWS={pick:['GÖRÜNÜM: SEÇİLEN','Seçilen: derinlik + seyrek izler','Bugünkü kayalar ve karadelik; arkada ve önde kaya katmanları, seyrek hız izleri. Kuşakta izler artar.'],
+ full:['GÖRÜNÜM: 2,5D TAM','2,5D tam önizleme','Kraterli kayalar ve dönen disk de açık. Alttaki düğmelerle her katmanı ayrı aç kapat.'],
+ today:['GÖRÜNÜM: BUGÜN','Bugünkü görünüm (yaklaşık)','Dönen kaya resimleri, sabit gökyüzü, katman yok.']};
+function showCap(){const v=VIEWS[view];capT.textContent=v[1];capS.textContent=v[2];
+ modeB.textContent=v[0];modeB.classList.toggle('flat',view!=='full');evBox.classList.toggle('off',view!=='full');cap.classList.remove('hide');clearTimeout(capTimer);capTimer=setTimeout(()=>cap.classList.add('hide'),5000);}
+modeB.onclick=()=>{view=view==='pick'?'full':view==='full'?'today':'pick';showCap();};
+document.getElementById('belt').onclick=()=>{beltT=10;metT=0;cap.classList.add('hide');};
+
+const fpsEl=document.getElementById('fps');let last=performance.now(),fn=0,ft=0;
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;clock+=dt;fn++;ft+=dt;if(ft>=1){fpsEl.textContent=Math.round(fn/ft)+' fps';fn=0;ft=0;}
+ ctx.setTransform(DPR,0,0,DPR,0,0);frame(dt);requestAnimationFrame(loop);}
+init();showCap();requestAnimationFrame(t=>{last=t;loop(t);});
+</script>
+</body>
+</html>
