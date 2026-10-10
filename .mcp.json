@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "veo": {
+      "command": "node",
+      "args": ["tools/veo-mcp/server.mjs"],
+      "env": {
+        "GEMINI_API_KEY": "${GEMINI_API_KEY:-}",
+        "NODE_USE_ENV_PROXY": "1",
+        "NODE_NO_WARNINGS": "1"
+      }
+    }
+  }
+}
