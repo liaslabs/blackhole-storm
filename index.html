@@ -2262,7 +2262,7 @@ void main(){
   }
   col=mix(col,col*vec3(1.25,.38,.18)+vec3(.12,0.,0.),uRed);
   col+=vec3(1.,.95,.9)*uFlashW;
-  if(uCut.x>.5){float f=smoothstep(.09,0.,cutE);col=mix(col,col*.45+vec3(.07,.09,.11),f*.8)+vec3(.45,.85,1.)*exp(-cutE*cutE/.0012)*.9;} // the raw fracture face, rimmed in cold light
+  if(uCut.x>.5){float f=smoothstep(.09,0.,cutE);col=mix(col,col*.45+vec3(.07,.09,.11),f*.8)+vec3(${rel(9)?'1.,.25,.32':'.45,.85,1.'})*exp(-cutE*cutE/.0012)*.9;} // the raw fracture face, rimmed in cold light (1.4.9: red, under the neon outline)
   a=clamp((1.-rr)*uEdge,0.,1.)*keep;
  }
  float h=(rr>.97?exp(-(rr-1.)*(uEmit>.5?2.6:10.)):0.)*keep;
@@ -5087,7 +5087,8 @@ function v2GuardStep(dt){const g=G2.guard;g.px=W*.5+Math.sin(G2.t*.3)*W*.14;g.py
   if(!G2.ending)g.t=Math.max(0,g.t-dt);
   g.next-=dt;if(g.next<=0&&!G2.ending&&g.t>1.5){const prog=1-g.t/g.dur;g.next=(Math.max(1.2,2.1-G2.lv*.004-prog*.5)+(G2.lv<=35?.35:0))*rrnd(.8,1.2); /* the first guardian level gives a little more room */g.wave=(g.wave||0)+1; /* it speeds up as the clock runs down */
     const two=g.wave%3===0&&(prog>.35||G2.lv>60),s0=Math.floor(rng()*3);for(let k=0;k<(two?2:1);k++){const side=(s0+k*(1+Math.floor(rng()*2)))%3,o=v2Edge('thr',side);const tx=g.px,ty=g.py,dx=tx-o.x,dy=ty-o.y,d=Math.hypot(dx,dy)||1,sp=v2Speed('ast')*(.6+.3*prog);o.vx=dx/d*sp;o.vy=dy/d*sp;o.seen=true;}} /* every third wave late in the defense comes from two sides at once */
-  const hd=Math.hypot(hX-g.px,hY-g.py)||1,min=g.pr*1.7+G2.R;if(hd<min){hX=g.px+(hX-g.px)/hd*min;hY=g.py+(hY-g.py)/hd*min;}} // the planet's atmosphere keeps the hole out
+  const hd=Math.hypot(hX-g.px,hY-g.py)||1,min=g.pr*1.7+G2.R;if(hd<min){hX=g.px+(hX-g.px)/hd*min;hY=g.py+(hY-g.py)/hd*min;}
+  if(rel(9)){const td=Math.hypot(G2.tx-g.px,G2.ty-g.py)||1;if(td<min){G2.tx=g.px+(G2.tx-g.px)/td*min;G2.ty=g.py+(G2.ty-g.py)/td*min;if(DRAG.id!=null){DRAG.ax=G2.tx;DRAG.ay=G2.ty;}}}} // the planet's atmosphere keeps the hole out; 1.4.9: the finger's aim stops at it too (with Overload's overshoot an aim inside the planet flipped the hole side to side every frame)
 function v2GuardImpact(o){const g=G2.guard;o.st='dead';g.hitT=.6;v2Burst(o.x,o.y,26,'#ff9a5c',2,8,.7,2);shake=Math.max(shake,8);vib(40);
   g.hp=Math.max(0,g.hp-g.dmg);v2Sfx('armor',{vol:.6,rate:.8}); /* the planet takes the hit, not your lives */
   if(g.hp<=0){ /* the planet falls: you lose a life and the defense starts over with a fresh planet and a full clock */
@@ -5924,8 +5925,11 @@ function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(
   ctx.strokeStyle='rgba(200,210,240,.18)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(o.x,o.y,d,0,TAU);ctx.stroke();
   const g=ctx.createRadialGradient(x-r*.35,y-r*.35,0,x,y,r);g.addColorStop(0,'#f2f2ee');g.addColorStop(1,'#6f7078');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const r=o.r,k=.7+.3*Math.sin(clock*6);
-  if(o.k==='half'&&rel(8)){if(o.crk>0)o.crk-=1/60;const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();
-    if(o.crk>0){const q=o.crk/.4,R=r*(o.gs??1),sd=o.seed||0,j=t=>.07*Math.sin(t*13+sd)+.045*Math.sin(t*29+sd*2.3)+.03*Math.sin(t*53+sd*.7);ctx.rotate((o.cut||0)+(o.spinA||0));ctx.strokeStyle=`rgba(255,255,255,${q})`;ctx.shadowColor='#bff6ff';ctx.shadowBlur=16;ctx.lineWidth=2.5;ctx.beginPath();for(let i=0;i<=16;i++){const v=-1+i/8,x=(j(-v)-.42)*R,y=v*R*.98;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();} /* the fresh fracture flashes white for a moment */
+  if(o.k==='half'&&rel(8)){if(o.crk>0)o.crk-=1/60;const R=r*(o.gs??1),sd=o.seed||0,j=t=>.07*Math.sin(t*13+sd)+.045*Math.sin(t*29+sd*2.3)+.03*Math.sin(t*53+sd*.7);ctx.rotate((o.cut||0)+(o.spinA||0));
+    if(rel(9)){const cx=-.42*R,P=new Path2D();let a0=0,a1=0;for(let i=0;i<=16;i++){const v=-1+i/8,s=j(-v),x=cx+s*R,y=v*R*Math.sqrt(Math.max(0,1-s*s));i?P.lineTo(x,y):P.moveTo(x,y);if(!i)a0=Math.atan2(y,x-cx);if(i===16)a1=Math.atan2(y,x-cx);}P.arc(cx,0,R,a1,a0,true);P.closePath(); /* 1.4.9: the half's own outline: the jagged fracture and the rim */
+      const f=.8+.2*Math.sin(clock*9+sd)*Math.sin(clock*23+sd*1.7);ctx.lineJoin='round';for(const [w,c] of [[9,.1],[5,.22],[2.4,.85]]){ctx.lineWidth=w;ctx.strokeStyle=`rgba(255,40,70,${c*f})`;ctx.stroke(P);}ctx.lineWidth=1;ctx.strokeStyle=`rgba(255,215,220,${.8*f})`;ctx.stroke(P);} /* red neon with a low buzz: soft wide strokes for the glow instead of a blur filter, cheap on slow phones */
+    else{const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();ctx.shadowBlur=0;}
+    if(o.crk>0){const q=o.crk/.4;ctx.strokeStyle=`rgba(255,255,255,${q})`;ctx.shadowColor='#bff6ff';ctx.shadowBlur=16;ctx.lineWidth=2.5;ctx.beginPath();for(let i=0;i<=16;i++){const v=-1+i/8,x=(j(-v)-.42)*R,y=v*R*.98;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();} /* the fresh fracture flashes white for a moment */
     ctx.restore();return;}
   if(o.k==='half'){if(rel(7)){const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();ctx.rotate(o.spinA||0);} /* the halves blink and spin so they read apart from whole bodies */
     ctx.rotate(o.cut||0);ctx.strokeStyle=`rgba(160,245,255,${.9*k})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=10;ctx.lineWidth=Math.max(1.5,r*.12);ctx.beginPath();ctx.moveTo(-r*.95,0);ctx.lineTo(-r*.3,r*.08);ctx.lineTo(r*.2,-r*.06);ctx.lineTo(r*.95,0);ctx.stroke();ctx.restore();return;} // the fresh fracture face

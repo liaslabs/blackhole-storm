@@ -100,6 +100,8 @@ Her güncellemede:
 - Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez.
 - Zor Mod: L1–60 2 yay, L61+ yaysız (2 kalp, meteor ×1,6, hedef ×1,5 aynen).
 - Hayatta Kal (Günün Fırtınası) süresiz: hız 12'den başlar, her 30 sn +5, sınırsız; ilk 2 dk 2 yay sonra yaysız; dakikada bir meteor kuşağı; 4. dakikadan sonra Kara Fırtına her 30 sn'de %35 daha çok meteor (çiftler halinde) ve %8 hız. Saniye puanı +20, her dakika +10 artar; bitiş bonusu yok.
+- Koruyucu seviyeleri (düzeltme): gezegene doğru parmakla bastırınca hedef gezegenin içine giriyordu; Aşırı Yük'ün %30 aşmasıyla kara delik her karede gezegenin iki yanı arasında zıplıyor, iki simetrik titreyen delik gibi görünüyordu. Artık parmağın hedefi de atmosferde durur (bot: titreyen konum 29 → 0); geri çekince delik hemen tepki verir.
+- Bölünen gezegen: mavi halka yerine yarımın kendi çizgisini (yay + kırık kenar) izleyen titrek kırmızı neon; kırık yüzün kenar ışığı da kırmızı (`onizleme/neon-yarim.png`). Parıltı bulanıklık filtresi değil, üst üste çizgi (zayıf telefonda takılma yapmaz).
 - Hedef: Normal modda bir seviye 8–10 denemede geçilebilmeli. 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
 
 ```
@@ -108,6 +110,8 @@ Her güncellemede:
 • New, very rare Golden Arc: for 10 s you swallow everything, even meteors
 • Tougher later levels: fewer arcs per heart, with an arc shield from level 61
 • Survival is now endless, and from minute 4 the Black Storm takes over
+• Split planet halves glow with a red neon edge
+• Fix: the black hole no longer flickers when pushed into a guarded planet
 </en-US>
 ```
 
