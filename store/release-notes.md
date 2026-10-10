@@ -16,8 +16,9 @@ Her güncellemede:
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
 | 1.4.7 | 18 | 9 Eki | **Yayında** (9 Eki 16:04 onaylandı; main c4a0c5b). 15:41'de Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
-| 1.4.8 | 19 | 16 Eki | Hazır, `rel(8)` ile kapalı (+ gelen geri bildirimler) |
-| 1.4.9 | 20 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
+| 1.4.8 | 19 | 12 Eki | Hazır, `rel(8)` ile kapalı: düzeltmeler ve görsel (zorluk 1.4.7 ile aynı). 11 Eki Dahili test, 12 Eki Alpha |
+| 1.4.9 | 20 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
+| 1.5.0 | 21 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -73,24 +74,42 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.4.8 (16 Ekim) · `REL` 8 yapılacak
-- Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Ağ yıldızların altında çukurlaşıyor, sarmal dalgalar yayıyor,
-  birleşmede kumaş gibi dalgalanıyor. Sadece görsel; dalganın hızı ve itişi aynı. `rel(8)`.
-- Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez. Deliğin etrafında kovalayan iki altın kuyruklu yay.
-- Dolu ekran: cisimler ~1,7 kat sık, ekranda en fazla 14/16/18; L2–10'da %20 hızlı; 6–8'lik kaya sağanakları; hedef puanlar L2–6'da ×2, sonra ×1,5; L1 öğretici %35 hızlı.
-- Yaylar: L1–10 3 yay, L11–60 2 yay, L61+ yaysız; L61+ 2 enerji topu = 20 sn Yay Kalkanı. L11 ve L61'de tanıtım kartı (bot: L41+ yaysızken 0/28 kazanma, uçurum gibiydi).
-- (geri bildirimlerden eklenecekler)
+## 1.4.8 (12 Ekim) · `REL` 8 yapılacak · düzeltmeler ve görsel, zorluk 1.4.7 ile aynı
+- Rekorlarım: her mod kendi en iyi 10 skorunu tutar (Normal, Zor Mod, Hayatta Kal, 60 sn), liste modlara göre bölümlü; "HAYATTA KAL REKORU" kutusu. Önceden tek bir ilk 10 vardı ve uzun Normal koşuları Hayatta Kal skorlarını dışarıda bırakıyordu.
+- Bölünen gezegen: parçalar girintili çıkıntılı yarım ay (cisim gölgelendiricisinde kesik yüz), bölünmede beyaz kırık çizgisi, kaya kırıntıları ve kısa parlama; parçalar daha hızlı (430–490) ve daha geniş açıyla ayrılır. Ekranda en fazla 8 parça (L41+ 12), fazlası ekrandan kaçar; ilk 6 sn kenardan seker, 10 sn yutulmayan kaçar; 2 parça 1 cisim yeri tutar (önceden parçalar birikip yeni cisim gelişini kesebiliyordu).
+- Takımyıldızlar bütün oyun alanına yayılır, iki yıldız arası en az 125; süre 6 sn yerine 8 sn + yıldız başına 2,2 sn.
+- Kara delik antimaddeyi çekmez (Vortex dahil; Altın Yay ve seviye sonu hariç): sadece üstüne gidilirse zarar verir.
+- İpucu kartları ve yeni cisim tanıtımları sessiz (TAMAM düğmesinin tıkı kalır).
+- Kilonova: iki nötron yıldızının çevresinde "uzay dalgası" ağı. Sadece görsel; dalganın hızı ve itişi aynı.
 
 ```
 <en-US>
+• My Records: each mode keeps its own best scores, Survival included
+• Split planets break into jagged half-moons that fly further apart
+• Constellations spread over the whole screen, with more time to finish
+• The black hole no longer pulls antimatter in
 • Kilonova: see space itself ripple as two neutron stars merge
-• A fuller screen from the first level: more to swallow, faster action
-• New, very rare Golden Arc: for 10 s you swallow everything, even meteors
-• Tougher later levels: fewer arcs per heart, with an arc power from level 61
 </en-US>
 ```
 
-## 1.4.9 (~24 Ekim, üretimden sonra) · Android bakım güncellemesi
+## 1.4.9 (16 Ekim) · `REL` 9 yapılacak · zorluk güncellemesi
+- Dolu ekran: cisimler ~1,7 kat sık, ekranda en fazla 14/16/18; L2–10'da %20 hızlı; 6–8'lik kaya sağanakları; hedef puanlar L2–6'da ×2, sonra ×1,5; L1 öğretici %35 hızlı.
+- Yaylar: L1–10 3 yay, L11–60 2 yay, L61+ yaysız; yaysızken 2 enerji topu = 20 sn Yay Kalkanı. L11 ve L61'de tanıtım kartı (bot: L41+ yaysızken 0/28 kazanma, uçurum gibiydi).
+- Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez.
+- Zor Mod: L1–60 2 yay, L61+ yaysız (2 kalp, meteor ×1,6, hedef ×1,5 aynen).
+- Hayatta Kal (Günün Fırtınası) süresiz: hız 12'den başlar, her 30 sn +5, sınırsız; ilk 2 dk 2 yay sonra yaysız; dakikada bir meteor kuşağı; 4. dakikadan sonra Kara Fırtına her 30 sn'de %35 daha çok meteor (çiftler halinde) ve %8 hız. Saniye puanı +20, her dakika +10 artar; bitiş bonusu yok.
+- Hedef: Normal modda bir seviye 8–10 denemede geçilebilmeli. 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
+
+```
+<en-US>
+• A fuller screen from the first level: more to swallow, faster action
+• New, very rare Golden Arc: for 10 s you swallow everything, even meteors
+• Tougher later levels: fewer arcs per heart, with an arc shield from level 61
+• Survival is now endless, and from minute 4 the Black Storm takes over
+</en-US>
+```
+
+## 1.5.0 (~24 Ekim, üretimden sonra) · Android bakım güncellemesi
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
   Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
