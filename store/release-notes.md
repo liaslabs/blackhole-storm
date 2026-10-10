@@ -17,8 +17,9 @@ Her güncellemede:
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
 | 1.4.7 | 18 | 9 Eki | **Yayında** (9 Eki 16:04 onaylandı; main c4a0c5b). 15:41'de Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
 | 1.4.8 | 19 | 12 Eki | `REL` 8, derlendi (10 Eki): düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Önce Dahili test, sonra Alpha |
-| 1.4.9 | 20 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
-| 1.5.0 | 21 | ~24 Eki | Üretimden sonra: Android bakım güncellemesi |
+| 1.4.9 | 20 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
+| 1.5.0 | 21 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
+| 1.5.1 | 22 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -115,7 +116,28 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.5.0 (~24 Ekim, üretimden sonra) · Android bakım güncellemesi
+## 1.5.0 (19 Ekim → üretim) · `REL` 10 yapılacak · gerçek yayın sürümü, görsel derinlik
+- Derinlik katmanları (sadece süs; çekime kapılmaz, çarpılmaz, puan vermez): arkada yavaş süzülen küçük bulanık kayalar,
+  yan kenarlardan en fazla üçte biri görünen iki büyük bulanık kaya, karadeliğe doğru akan seyrek hız izleri (normalde 20;
+  meteor kuşağı, fırtına ve Vortex'te 56, daha hızlı). Hepsi cisimlerin altında çizilir; bir cismin, karadeliğin çekim
+  alanının, üst barın veya güç tepsisinin üstüne denk gelince söner, yani hiçbir şeyi örtmez. Kare süresi yavaşlarsa
+  (`GL.quality` düşerse) ilk kapanan budur. Kaya resimleri menüde, birer birer hazırlanır (oyun sırasında iş yok).
+  Gökyüzünün karadeliğe göre kayması (parallax) zaten vardı, aynen kalır. Karadeliğin kendisi değişmedi.
+- Meteor: ateş topu. Beyaz-sıcak çekirdek ve önde kızgın yüz, hızlandıkça uzayan iki katlı kuyruk, kıvılcımlar (karadeliğe
+  yakın geçenler çekime kıvrılır) ve hafif kül izi; girişte ünlem yerine ekran kenarında parlama (yol okları aynen).
+  Altın Yay süresince meteorlar altın alevli ve pırıltılı: yutulabildiği görünür. Hawking, bomba ve süpernova ile yok edilen
+  meteor 3 kızgın parçaya bölünür. Çarpma, hız ve isabet aynen (`onizleme/meteor-onerileri.html`, `onizleme/derinlik-25d.html`).
+- Kara Fırtına'ya özel meteor rengi önerildi, seçilmedi.
+
+```
+<en-US>
+• A deeper sky: distant rocks drift behind the action and light streaks rush toward your black hole
+• Meteors are now blazing fireballs; during the Golden Arc they burn gold
+• Destroyed meteors break apart in glowing pieces
+</en-US>
+```
+
+## 1.5.1 (üretimden ~1 hafta sonra) · Android bakım güncellemesi
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
   Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.

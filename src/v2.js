@@ -123,7 +123,7 @@ const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[
 const v2Ach={rage:0,mega:0}; // for achievements
 const DRAG={id:null,x:0,y:0,sx:0,sy:0,t0:0,moved:false,held:false,ax:0,ay:0,px:0,py:0,pt:0,vs:0};
 
-function v2Resize(){G2.S=Math.min(W,H*.5625)/486;}
+function v2Resize(){G2.S=Math.min(W,H*.5625)/486;G2.dep=null;}
 const sp2=v=>v*G2.S;
 function v2Lv(){return gameMode==='survival'?(rel(9)&&STORM.on?effLevel():Math.min(40,effLevel())):gameMode==='sprint'?G2.sprLv:level;}
 // level rules: counts, spawn odds, directions (spec §26, §36–39)
@@ -170,7 +170,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
   if(mode==='level'&&!REPLAY&&gameMode==='classic'&&level>1&&WSTREAK>0&&wsReward(WSTREAK).s){const w=wsReward(WSTREAK);G2.shells=Math.max(G2.shells,w.s);if(w.g)G2.gold=1;const n=WSTREAK; /* win streak: the next level starts armoured; losing without a continue resets it */
     later(()=>{if(G2.on)v2Call('GALİBİYET SERİSİ '+n,wsTxt(w),'#ffd76a',1.6,true);},900);if(!FEAT.some(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id)))for(const d of [2400,6000])later(()=>{if(G2.on&&!TIPS.wstreak)v2Tip('wstreak',null);},d);} /* never on a level that opens with a power card */
   if(G2.arcMax===0&&G2.shells>0){G2.arcPow=ARCPOW.dur;G2.arcs=3;}
-  G2.garcT=0;G2.garcFx=null;G2.garcAt=rel(9)&&mode==='level'&&!REPLAY&&l>=GARC.from&&l%10!==0&&!(rule&&(rule.duel||rule.guard))&&rng()<(G2.forceGarc?1:GARC.p)?rrnd(12,35):-1; /* help after misses or a win streak brings the arcs back for the first 20 s */
+  G2.garcT=0;G2.garcFx=null;G2.dep=null;G2.ash=[];G2.mbits=[];G2.garcAt=rel(9)&&mode==='level'&&!REPLAY&&l>=GARC.from&&l%10!==0&&!(rule&&(rule.duel||rule.guard))&&rng()<(G2.forceGarc?1:GARC.p)?rrnd(12,35):-1; /* help after misses or a win streak brings the arcs back for the first 20 s */
   if(rule&&rule.guard)G2.guard={n:0,hp:100,t:rule.dur,dur:rule.dur,dmg:rule.dmg,next:3};
   if(mod){const c=RISK_CARDS.find(x=>x.id===mod);if(c)later(()=>{if(G2.on)v2Call(c.n,c.d+' · '+T('Ödül')+': '+giftTxt(c.rw),'#ffb3a8',2,true);},700);} /* the chosen card, said once at the start instead of a label that stays */
   G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
@@ -234,7 +234,7 @@ function v2DrawWorm(){if(!v2WormOn())return;const R=G2.R||20;ctx.save();
 // Second Horizon (Laboratory): once a level, the blow that would take a heart is caught: time slows, a gold wave clears the meteors, the arcs come back
 function v2HorOk(){return G2.mode==='level'&&gameMode==='classic'&&labLv('hor')>=1&&!G2.horUsed;}
 function v2Horizon(){G2.horUsed=1;{const am=v2AM();for(let i=G2.arcs;i<am;i++)v2ArcForm(i,'arc',(i-G2.arcs)*.08);G2.arcs=Math.max(G2.arcs,am);}G2.arcFill=.5;const d=Math.min(6,2+.3*labEffLv('hor'));G2.immT=Math.max(G2.immT,d);G2.horT=d;G2.horSlow=.9;G2.horFx={t:0};
-  for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';v2Burst(o.x,o.y,14,'#ffd76a',2,6,.5);}
+  for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';v2Burst(o.x,o.y,14,'#ffd76a',2,6,.5);v2MetBreak(o);}
   flash=Math.max(flash,.6);shake=Math.max(shake,8);vib([40,30,90]);sfx('powerup',{vol:.8,rate:.7});v2Sfx('achieve',{vol:.5,rate:1.2});v2Call(T('İKİNCİ UFUK'),T('YAYLAR YENİLENDİ'),'#ffd76a',1.6,true);updateUI();dmEvent('hor',1);}
 function v2DrawHor(){const f=G2.horFx,R=G2.R||20;ctx.save();ctx.globalCompositeOperation='lighter';
   if(f&&f.t<1.3){const q=f.t/1.3;ctx.strokeStyle=`rgba(255,215,106,${.9*(1-q)})`;ctx.lineWidth=7*(1-q)+1;ctx.beginPath();ctx.arc(hX,hY,R+q*Math.max(W,H),0,TAU);ctx.stroke();}else if(f)G2.horFx=null;
@@ -550,7 +550,7 @@ function v2Update(dt){
     if(!w.vis)for(const o of G2.objs){if(o.st!=='in'||o.wait>0||w.hit.has(o)||o.boss||o.orb)continue;
       if(!(o.k==='meteor'||(w.mega?o.k!=='bomb'&&o.k!=='anti'&&v2Edible(o):SMALL2.has(o.k))))continue;if(Math.hypot(o.x-w.x,o.y-w.y)>w.rad+o.r)continue;
       w.hit.add(o);w.n++;const add=Math.min(V2K.bomb.pts,V2K.bomb.max-w.bonus);w.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(w.mega?3:5);
-      if(o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,14,'#ff8a4c',2,6,.5);}else{o.noScore=false;o.chain=true;v2Swallow(o,null);}
+      if(o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,14,'#ff8a4c',2,6,.5);v2MetBreak(o);}else{o.noScore=false;o.chain=true;v2Swallow(o,null);}
       if(w.n>=2)v2Call('ZİNCİR ×'+w.n,'','#ffb35c',.9);}
     if(w.t>=w.dur){if(w.n>=3){shake=Math.max(shake,9);v2Pop('ZİNCİR ×'+w.n+'  +'+w.bonus,'#ffb35c',17);}G2.waves.splice(i,1);}}
   v2BossStep(dt,tk);
@@ -622,7 +622,8 @@ function v2Update(dt){
     if((o.seen||o.age>12)&&(o.x<-mg||o.x>W+mg||o.y<-mg||o.y>H+mg)){if(o.fromBoss&&G2.boss)G2.boss.shed=Math.min(G2.boss.shed,.3);G2.objs.splice(i,1);}
   }
   // particles
-  for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
+  if(rel(10))v2MetSparks(dt);
+  for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];if(p.pl){const dx=hX-p.x,dy=hY-p.y,d=Math.hypot(dx,dy)||1,Gp=G2.R*4;if(d<Gp){const a=(1-d/Gp)*.9*dt*60;p.vx+=(dx/d+dy/d*.8)*a;p.vy+=(dy/d-dx/d*.8)*a;}if(d<G2.R*.9)p.life=0;} /* 1.5.0: meteor embers near the hole curl in */p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
   for(let i=G2.calls.length-1;i>=0;i--){G2.calls[i].life-=dt;if(G2.calls[i].life<=0)G2.calls.splice(i,1);}
   if(G2.overT>0&&!TIPS.over)v2Tip('over',null);
   if(G2.rule&&G2.t>1.2&&!TIPS[G2.rule.tip])v2Tip(G2.rule.tip,null);
@@ -820,7 +821,7 @@ function v2StormStep(){const t=survTime;
   if(G2.beltN<DSTORM.belts.length&&t>=DSTORM.belts[G2.beltN]){if(G2.ev&&G2.ev.k!=='belt'){if(G2.ev.k==='cons')v2ConsEnd(G2.ev);G2.ev=null;}if(!G2.ev){G2.beltN++;v2EvGo('belt');}}
   if(t>=DSTORM.dur&&gState==='playing'){const b=DSTORM.done+DSTORM.life*Math.max(0,lives);totalScore+=b;levelScore+=b; /* through the whole storm: a finish bonus and more for every heart left */
     gState='lvlup_anim';G2.calls=[];v2Call('FIRTINAYI ATLATTIN','+'+b.toLocaleString(LOC),'#57c78a',2.2,true);sfx('achieve',{vol:.8});vib([30,50,30,50,60]);flash=Math.max(flash,.4);
-    for(const o of G2.objs)if(o.st==='in'&&o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,10,'#ffb07a',1.5,5,.5);}
+    for(const o of G2.objs)if(o.st==='in'&&o.k==='meteor'){o.st='dead';v2Burst(o.x,o.y,10,'#ffb07a',1.5,5,.5);v2MetBreak(o);}
     later(()=>{if(G2.on&&gState==='lvlup_anim')gameOver();},2200);}}
 // ── the sticky nebula: a shape-shifting cloud drifts in from one side and out the other; inside it the hole is a silhouette in the fog and steers heavily ──
 const ICE={dur:3,follow:.07};
@@ -1038,7 +1039,7 @@ const v2ShDur=()=>V2K.shield.dur+Math.min(8,.5*labEffLv('shield')),v2HawkCD=()=>
 function v2HawkOk(){if(!v2HawkOn()||G2.hkCD>0||G2.rageT>0||G2.ending||G2.script)return false;const ex=G2.rr-V2K.r0;return ex>6&&G2.rr>=V2K.r0+(G2.cap-V2K.r0)*V2K.hawk.min;}
 function v2Hawking(){if(G2.on&&gState==='playing'&&G2.mode==='level'&&level>=V2K.hawk.from&&labLv('hawk')<1){v2Pop(T('HAWKING REAKTÖRÜ')+' · '+T('LABORATUVARDA İNŞA ET'),'#ffffff',15);return;}
   if(!G2.on||gState!=='playing'||!v2HawkOk())return;const loss=(G2.rr-V2K.r0)*V2K.hawk.loss;G2.rr-=loss;G2.hkCD=v2HawkCD();G2.magT=Math.max(G2.magT,2.5);let n=0;
-  for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';n++;v2Burst(o.x,o.y,14,'#ffffff',2,6,.5);}
+  for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';n++;v2Burst(o.x,o.y,14,'#ffffff',2,6,.5);v2MetBreak(o);}
   if(n>=3)v2GoldEarn('HAWKING'); /* a big Hawking burst earns a gold shell */
   const pts=Math.round((loss*120+n*50)*(G2.rageT>0?2:1));totalScore+=pts;levelScore+=pts;G2.hkFx={t:0,x:hX,y:hY};flash=Math.max(flash,.7);shake=Math.max(shake,12);shock=1;
   v2Call('HAWKING SALINIMI','+'+pts.toLocaleString(LOC),'#ffffff',1.5,true);sfx('powerup',{vol:.7,rate:1.3});v2Sfx('boom',{vol:.5,rate:1.5});vib([30,20,60]);dmEvent('hawk',1);}
@@ -1503,6 +1504,85 @@ function wsReward(n){const t=shTier(level);return {s:t<2?0:Math.min(t>2?2:1,n),g
 function wsTxt(w){return [w.s?w.s+' GÜMÜŞ KABUK':'',w.g?'ALTIN KABUK':''].filter(Boolean).join(' · ');}
 function v2Teaser(l){const n=new2(l),h=v2Hard(l),c=v2Chal(l),rc=labRec(l),pw=rc?`<span class="pwT${labGap(l)?' low':''}">⚡ ${T('Önerilen güç')} ${rc} · ${T('Gücün')} ${labPower()}</span>`:'',hz=h?`<span class="hdT">🔥 ${T(h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')} · ⏱ ${T(v2HardT(l)+' sn')}</span>`:c?`<span class="hdT">${c==='belt'?'☄ '+T('METEOR KUŞAĞI'):'💨 '+T('HIZLI KÜÇÜLME')}</span>`:'';return n||h||c||rc?`<b>${T('SIRADA')}</b>${T('SEVİYE')} ${l}${n?` · ${newLbl(n)}`:''}${hz}${pw}`:'';}
 
+// ── 1.5.0 depth: rocks drifting far behind the play, two big blurred rocks peeking in at the side edges, sparse speed streaks ──
+// Decoration only: nothing here feels the pull or can be hit. It is drawn under every body and fades out wherever it would sit on a body,
+// inside the hole's pull or under the top bar and the power tray, so it never hides anything. The hole itself is not touched.
+const DEPTH={far:12,near:2,st:20,stX:56,farK:.03,nearK:.06};
+let DSPR=null; // rock pictures, painted in the menu one rock at a time (no frame in play pays for them)
+function v2DepthShape(seed){const rr=v2Mul(seed),h=[];for(let k=2;k<=7;k++)h.push({k,a:rr()*.075/(k*.42),p:rr()*TAU});
+  const cr=[],n=4+Math.floor(rr()*5);for(let i=0;i<n;i++)cr.push({a:rr()*TAU,d:Math.sqrt(rr())*.7,r:.08+rr()*.19});
+  return {rad:t=>{let s=1;for(const q of h)s+=q.a*Math.sin(q.k*t+q.p);return s*.86;},cr};}
+function v2Mul(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function v2DepthPaint(g,sh,rot,cx,cy,R,dark){ // a lumpy cratered rock lit from the top left (as onizleme/derinlik-25d.html)
+  const P=new Path2D();for(let i=0;i<=64;i++){const t=i/64*TAU,r=R*sh.rad(t-rot),x=cx+Math.cos(t)*r,y=cy+Math.sin(t)*r;i?P.lineTo(x,y):P.moveTo(x,y);}P.closePath();
+  const b=g.createRadialGradient(cx-R*.42,cy-R*.48,R*.05,cx-R*.1,cy-R*.1,R*1.25);b.addColorStop(0,'#cfc7da');b.addColorStop(.42,'#5d586c');b.addColorStop(1,'#100d18');g.fillStyle=b;g.fill(P);
+  g.save();g.clip(P);for(const c of sh.cr){const a=c.a+rot,x=cx+Math.cos(a)*c.d*R,y=cy+Math.sin(a)*c.d*R,rc=c.r*R,f=Math.sqrt(1-c.d*c.d);
+    g.fillStyle='rgba(6,5,9,.55)';g.beginPath();g.ellipse(x,y,rc*f,rc,a,0,TAU);g.fill();g.strokeStyle='rgba(255,238,215,.3)';g.lineWidth=Math.max(1,rc*.16);g.beginPath();g.ellipse(x,y,rc*f*1.05,rc*1.05,a,Math.PI/4-a-1.1,Math.PI/4-a+1.1);g.stroke();}
+  const s=g.createRadialGradient(cx+R*.8,cy+R*.9,R*.1,cx+R*.5,cy+R*.6,R*1.6);s.addColorStop(0,'rgba(0,0,0,.66)');s.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=s;g.fillRect(cx-R*1.5,cy-R*1.5,R*3,R*3);g.restore();
+  if(dark){g.globalCompositeOperation='source-atop';g.fillStyle='rgba(5,3,10,.42)';g.fillRect(0,0,g.canvas.width,g.canvas.height);g.globalCompositeOperation='source-over';}}
+function v2DepthPrep(chain){if(!rel(10)||DSPR&&(DSPR.done||DSPR.run&&!chain))return; // the menu asks every time it opens; one chain does the work
+  if(!DSPR)DSPR={far:[],near:[],q:[['far',0],['far',1],['far',2],['near',0],['near',1]],run:1};
+  if(gState==='playing'){setTimeout(()=>v2DepthPrep(1),1500);return;} // only between levels
+  const [kind,v]=DSPR.q.shift(),far=kind==='far',size=far?48:160,F=far?12:8,R=size*.4,sh=v2DepthShape((far?301:501)+v*97),fr=[],tmp=document.createElement('canvas');tmp.width=tmp.height=size;const tg=tmp.getContext('2d');
+  for(let f=0;f<F;f++){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');tg.clearRect(0,0,size,size);v2DepthPaint(tg,sh,f/F*TAU,size/2,size/2,R,!far);if('filter' in g)g.filter=`blur(${far?1:3}px)`;g.drawImage(tmp,0,0);fr.push(c);}
+  DSPR[kind].push({fr,R});if(DSPR.q.length)setTimeout(()=>v2DepthPrep(1),150);else DSPR.done=1;}
+function v2DepthNear(i,first){const r=sp2(rnd(70,95)),L=i%2===0;return {x:L?-r*.62:W+r*.62,y:first?rnd(.3,.7)*H:-r*1.5,r,vy:sp2(rnd(10,18)),v:i,rot:rnd(0,TAU),spin:rnd(-.1,.1),a:0};} // its centre stays off screen: at most a third of it shows
+function v2DepthInit(){const d={far:[],near:[],st:[]},mx=Math.hypot(W,H)*.65;
+  for(let i=0;i<DEPTH.far;i++)d.far.push({x:rnd(0,W),y:rnd(0,H),r:sp2(rnd(5,11)),vx:sp2(rnd(-4,4)),vy:sp2(rnd(5,12)),v:i,rot:rnd(0,TAU),spin:rnd(-.3,.3),a:0});
+  for(let i=0;i<DEPTH.near;i++)d.near.push(v2DepthNear(i,true));
+  for(let i=0;i<DEPTH.stX;i++)d.st.push({a:rnd(0,TAU),d:rnd(sp2(80),mx),v:sp2(rnd(120,320))});return d;}
+function v2DepthFree(x,y,r){ // 0..1: how clear this spot is of the bars, the hole's pull and every body
+  let q=clamp((y-sp2(80))/sp2(50),0,1)*clamp((H-sp2(120)-y)/sp2(50),0,1);if(q<=0)return 0;
+  q*=clamp((Math.hypot(x-hX,y-hY)-r-G2.G)/sp2(40),0,1);if(q<=0)return 0;
+  const near=(bx,by,br)=>{const e=Math.hypot(x-bx,y-by)-r-br;if(e<sp2(24))q*=clamp(e/sp2(24),0,1);};
+  for(const o of G2.objs){if(o.st==='in'||o.wait>0)near(o.x,o.y,o.r);if(q<=0)return 0;}
+  if(G2.boss)near(G2.boss.x,G2.boss.y,G2.boss.r||0);if(G2.guard&&G2.guard.px!==undefined)near(G2.guard.px,G2.guard.py,G2.guard.pr*1.7);if(G2.rv&&!G2.rv.dead)near(G2.rv.x,G2.rv.y,G2.rv.R||0);
+  return q;}
+function v2DepthSpr(set,o,x,y,r){const s=set[o.v%set.length],F=s.fr.length,img=s.fr[((Math.floor(o.rot/TAU*F)%F)+F)%F],z=img.width*r/s.R;ctx.drawImage(img,x-z/2,y-z/2,z,z);}
+function v2DepthDraw(dt){if(!DSPR||!DSPR.done||!G2.on||GL.quality<.75)return; /* slow frames drop the decoration first */
+  const d=G2.dep||(G2.dep=v2DepthInit()),px=W/2-hX,py=H*.55-hY,ease=Math.min(1,dt*5);
+  {const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stX:DEPTH.st,fast=busy?1.8:1,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks rush in toward the hole; more of them in a belt, the storm or Vortex
+   for(let i=0;i<d.st.length;i++){const s=d.st[i];if(gState==='playing')s.d-=s.v*dt*fast;if(s.d<G2.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
+    const len=s.v*.09*fast,q=clamp((s.d-G2.R*1.3)/(G2.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1);if(q<.02)continue;const ca=Math.cos(s.a),sa=Math.sin(s.a);B[q<.33?0:q<.66?1:2].push(hX+ca*s.d,hY+sa*s.d,hX+ca*(s.d+len),hY+sa*(s.d+len));}
+   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineWidth=sp2(1.2);[.12,.26,.48].forEach((al,b)=>{const L=B[b];if(!L.length)return;ctx.strokeStyle=`rgba(170,230,255,${al})`;ctx.beginPath();for(let j=0;j<L.length;j+=4){ctx.moveTo(L[j],L[j+1]);ctx.lineTo(L[j+2],L[j+3]);}ctx.stroke();});ctx.restore();}
+  const mv=gState==='playing'?dt:0;
+  for(const o of d.far){o.x+=o.vx*mv;o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y>H+20){o.y=-20;o.x=rnd(0,W);o.a=0;}
+    const x=o.x+px*DEPTH.farK,y=o.y+py*DEPTH.farK;o.a+=(v2DepthFree(x,y,o.r)*.55-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.far,o,x,y,o.r);}
+  for(let i=0;i<d.near.length;i++){const o=d.near[i];o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y-o.r*1.3>H){d.near[i]=v2DepthNear(i,false);continue;}
+    const y=o.y+py*DEPTH.nearK;o.a+=(v2DepthFree(o.x,y,o.r*.8)*.5-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.near,o,o.x,y,o.r);}
+  ctx.globalAlpha=1;}
+
+// ── 1.5.0 meteors: a fireball (white-hot core, a two-layer tail that grows with speed, embers and ash); gold while the Golden Arc lasts ──
+const MFIRE={core:'255,250,225',mid:'255,185,80',out:'255,105,35',em:'#ffbe5a',tint:'rgba(60,20,0,.3)',ash:'70,58,60'},MGOLD={core:'255,255,238',mid:'255,215,106',out:'255,165,40',em:'#ffe08c',tint:'rgba(255,200,80,.42)',ash:null};
+const v2MetPal=()=>G2.garcT>0?MGOLD:MFIRE;
+function v2MetTail(x,y,ux,uy,len,w,stops){const nx=-uy,ny=ux,tx=x-ux*len,ty=y-uy*len,g=ctx.createLinearGradient(x,y,tx,ty);for(const [o,c] of stops)g.addColorStop(o,c);ctx.fillStyle=g;
+  ctx.beginPath();ctx.moveTo(x+nx*w,y+ny*w);ctx.quadraticCurveTo(x-ux*len*.35+nx*w*.85,y-uy*len*.35+ny*w*.85,tx,ty);ctx.quadraticCurveTo(x-ux*len*.35-nx*w*.85,y-uy*len*.35-ny*w*.85,x-nx*w,y-ny*w);ctx.arc(x,y,w,Math.atan2(-ny,-nx),Math.atan2(ny,nx),false);ctx.closePath();ctx.fill();}
+function v2MetFire(o,s,r,ux,uy,sp){const P=v2MetPal(),k=clamp(sp/(v2Speed('meteor')||sp||1),0,1),fl=1+.07*Math.sin(clock*41+o.si*7)+.04*Math.sin(clock*67+o.si*3),len=r*(2.6+9*k)*fl; // the tail grows as it speeds up
+  ctx.save();ctx.globalCompositeOperation='lighter';if(o.belt)v2BeltTail(o.x,o.y,r,ux,uy,r*12);
+  v2MetTail(o.x,o.y,ux,uy,len,r*1.12*fl,[[0,`rgba(${P.mid},.75)`],[.35,`rgba(${P.out},.45)`],[1,`rgba(${P.out},0)`]]);
+  v2MetTail(o.x,o.y,ux,uy,len*.55,r*.55,[[0,`rgba(${P.core},.95)`],[.5,`rgba(${P.mid},.5)`],[1,`rgba(${P.mid},0)`]]);
+  const hg=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.6);hg.addColorStop(0,`rgba(${P.core},.9)`);hg.addColorStop(.35,`rgba(${P.mid},.45)`);hg.addColorStop(1,`rgba(${P.out},0)`);ctx.fillStyle=hg;ctx.beginPath();ctx.arc(o.x,o.y,r*2.6,0,TAU);ctx.fill();ctx.restore();
+  v2Rock(o,s,P.tint);
+  ctx.save();ctx.globalCompositeOperation='lighter';const a=Math.atan2(uy,ux),fx=o.x+ux*r*.55,fy=o.y+uy*r*.55,f=ctx.createRadialGradient(fx,fy,0,fx,fy,r*1.1);f.addColorStop(0,`rgba(${P.mid},.6)`);f.addColorStop(1,`rgba(${P.mid},0)`);ctx.fillStyle=f;ctx.beginPath();ctx.arc(o.x,o.y,r*1.05,0,TAU);ctx.fill();
+  ctx.strokeStyle=`rgba(${P.core},.9)`;ctx.lineWidth=r*.2;ctx.lineCap='round';ctx.beginPath();ctx.arc(o.x,o.y,r*.86,a-1,a+1);ctx.stroke(); // the leading face glows white-hot
+  if(P===MGOLD)for(let i=0;i<3;i++){const b=clock*3+i*2.1+o.si,gx=o.x+Math.cos(b)*r*1.7,gy=o.y+Math.sin(b*1.3)*r*1.7,z=r*(.35+.25*Math.sin(clock*9+i));ctx.strokeStyle=`rgba(255,250,220,${.5+.4*Math.sin(clock*7+i)})`;ctx.lineWidth=sp2(1.4);ctx.beginPath();ctx.moveTo(gx-z,gy);ctx.lineTo(gx+z,gy);ctx.moveTo(gx,gy-z);ctx.lineTo(gx,gy+z);ctx.stroke();} // gold: glints, safe to swallow now
+  ctx.restore();}
+function v2MetFlare(o){const P=v2MetPal(),x=clamp(o.x,0,W),y=clamp(o.y,0,H),pu=.6+.4*Math.sin(clock*12),R=sp2(52);ctx.save();ctx.globalCompositeOperation='lighter'; // the warning: the screen edge glows where it will come in
+  const q=ctx.createRadialGradient(x,y,0,x,y,R);q.addColorStop(0,`rgba(${P.core},${.75*pu})`);q.addColorStop(.3,`rgba(${P.mid},${.45*pu})`);q.addColorStop(1,`rgba(${P.out},0)`);ctx.fillStyle=q;ctx.beginPath();ctx.arc(x,y,R,0,TAU);ctx.fill();ctx.restore();}
+let ASHC=null;
+function v2MetSparks(dt){ // embers shed from the tail (more when fast) and ash left hanging; embers near the hole are caught by its pull
+  const P=v2MetPal(),A=G2.ash||(G2.ash=[]);
+  for(const o of G2.objs){if(o.k!=='meteor'||o.st!=='in'||o.wait>0||o.x<-o.r||o.x>W+o.r||o.y<-o.r||o.y>H+o.r)continue;const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp,k=clamp(sp/(v2Speed('meteor')||sp),0,1);
+    if(G2.parts.length<120&&Math.random()<dt*(10+30*k)){const a=rnd(-1,1),b=sp*rnd(.1,.35)/60;G2.parts.push({x:o.x-ux*o.r*.6,y:o.y-uy*o.r*.6,vx:-ux*b-uy*a*.8,vy:-uy*b+ux*a*.8,life:rnd(.35,.65),max:.65,c:P.em,sz:rnd(1.2,2.2),pl:1});}
+    if(P.ash&&A.length<40){o.ashT=(o.ashT||0)-dt;if(o.ashT<=0){o.ashT=.05;A.push({x:o.x-ux*o.r,y:o.y-uy*o.r,r:o.r*rnd(.6,.9),t:0,l:rnd(.8,1.2)});}}}
+  for(let i=A.length-1;i>=0;i--){A[i].t+=dt;if(A[i].t>A[i].l)A.splice(i,1);}}
+function v2DrawAsh(){const A=G2.ash;if(!A||!A.length)return;if(!ASHC){ASHC=document.createElement('canvas');ASHC.width=ASHC.height=64;const g=ASHC.getContext('2d'),q=g.createRadialGradient(32,32,0,32,32,32);q.addColorStop(0,`rgba(${MFIRE.ash},1)`);q.addColorStop(.5,`rgba(${MFIRE.ash},.45)`);q.addColorStop(1,`rgba(${MFIRE.ash},0)`);g.fillStyle=q;g.fillRect(0,0,64,64);}
+  for(const s of A){const q=s.t/s.l,r=s.r*(1+q*2.2);ctx.globalAlpha=.13*(1-q);ctx.drawImage(ASHC,s.x-r,s.y-r,r*2,r*2);}ctx.globalAlpha=1;}
+function v2MetBreak(o){if(!rel(10))return;const B=G2.mbits||(G2.mbits=[]);if(B.length>15)return;const sp=Math.hypot(o.vx,o.vy)||1,a0=Math.atan2(o.vy,o.vx); // a destroyed meteor breaks into three glowing pieces
+  for(let i=0;i<3;i++){const a=a0+(i-1)*.9+rnd(-.2,.2),v=sp2(rnd(140,220));B.push({x:o.x,y:o.y,vx:Math.cos(a)*v+o.vx*.3,vy:Math.sin(a)*v+o.vy*.3,r:o.r*rnd(.38,.5),rot:rnd(0,TAU),spin:rnd(-6,6),t:0,l:.9,si:o.si,gold:G2.garcT>0});}}
+function v2DrawBits(dt){const B=G2.mbits;if(!B||!B.length)return;for(let i=B.length-1;i>=0;i--){const b=B[i];b.t+=dt;if(b.t>b.l){B.splice(i,1);continue;}b.x+=b.vx*dt;b.y+=b.vy*dt;b.vx*=Math.pow(.4,dt);b.vy*=Math.pow(.4,dt);b.rot+=b.spin*dt;
+  const q=1-b.t/b.l,P=b.gold?MGOLD:MFIRE,sp=Math.hypot(b.vx,b.vy)||1;ctx.save();ctx.globalAlpha=q;ctx.globalCompositeOperation='lighter';v2MetTail(b.x,b.y,b.vx/sp,b.vy/sp,b.r*(2+sp/sp2(60)),b.r*.9,[[0,`rgba(${P.mid},.8)`],[1,`rgba(${P.mid},0)`]]);ctx.globalCompositeOperation='source-over';v2Rock(b,1,P.tint);ctx.restore();}}
+
 // ── drawing ───────────────────────────────────────────
 function v2Frame(dt){
   const f=dt*60;clock+=dt;
@@ -1516,6 +1596,7 @@ function v2Frame(dt){
   const gl=glDraw(clock,sx,sy);if(!gl)drawFallbackBG();
   ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);ctx.translate(sx,sy);
   ctx.save();ctx.globalCompositeOperation='lighter';for(const d of dust){d.update(dt);d.draw();}ctx.restore();ctx.globalAlpha=1;
+  if(rel(10))v2DepthDraw(dt);
   drawScreenFx(dt);
   v2DrawField();
   v2DrawMegaFx(dt);v2DrawEclipse();
@@ -1523,10 +1604,10 @@ function v2Frame(dt){
   for(const q of G2.minis)v2DrawMini(q);
   v2DrawTwin();v2DrawGuard();
   v2DrawLinks();v2DrawShield();v2DrawMono();
-  v2DrawWorms();
+  v2DrawWorms();if(rel(10))v2DrawAsh();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
-  v2DrawRival();
+  v2DrawRival();if(rel(10))v2DrawBits(dt);
   v2DrawMarks();v2DrawEv();v2DrawSpec();v2DrawJet();v2DrawHawk();v2DrawWorm();v2DrawHor();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const p of G2.parts){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.sz;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2);ctx.stroke();}
@@ -1636,6 +1717,7 @@ function v2DrawObj(o,gl){
   else if(k==='plasma'){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const c=o.pc||[255,140,50],g=ctx.createRadialGradient(0,0,0,0,0,r*1.9);
     g.addColorStop(0,'rgba(255,255,240,1)');g.addColorStop(.3,`rgba(${c[0]},${c[1]},${c[2]},.95)`);g.addColorStop(1,`rgba(${c[0]},${c[1]},${c[2]},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*1.9*(1+.08*Math.sin(clock*9+o.si)),0,TAU);ctx.fill();ctx.restore();}
   else if(k==='ast'||k==='frag'){v2Rock(o,s);if(k==='frag'){ctx.globalCompositeOperation='lighter';ctx.fillStyle='rgba(255,150,70,.25)';ctx.beginPath();ctx.arc(o.x,o.y,r*1.1,0,TAU);ctx.fill();}}
+  else if(k==='meteor'&&rel(10)){v2MetPath(o);const sp=Math.hypot(o.vx,o.vy)||1;v2MetFire(o,s,r,o.vx/sp,o.vy/sp,sp);}
   else if(k==='meteor'){v2MetPath(o);const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp;ctx.globalCompositeOperation='lighter';
     if(o.belt)v2BeltTail(o.x,o.y,r,ux,uy,r*12);const tl=r*5.5,g=ctx.createLinearGradient(o.x,o.y,o.x-ux*tl,o.y-uy*tl);g.addColorStop(0,'rgba(255,150,60,.9)');g.addColorStop(.4,'rgba(255,70,40,.45)');g.addColorStop(1,'rgba(255,40,30,0)');
     ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(o.x-uy*r*.9,o.y+ux*r*.9);ctx.lineTo(o.x-ux*tl,o.y-uy*tl);ctx.lineTo(o.x+uy*r*.9,o.y-ux*r*.9);ctx.closePath();ctx.fill();
@@ -1807,6 +1889,7 @@ function v2DrawMini(q){const r=Math.max(1,q.r);ctx.save();ctx.translate(q.x,q.y)
   ctx.globalCompositeOperation='source-over';ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawWarn(o){ // meteor about to enter: a red marker where it will come in
   if(o.k==='meteor')v2MetPath(o);
+  if(o.k==='meteor'&&rel(10)){v2MetFlare(o);return;}
   const x=clamp(o.x,14,W-14),y=clamp(o.y,14,H-14),pu=.55+.45*Math.sin(clock*18);ctx.save();ctx.translate(x,y);
   const a=Math.atan2(o.vy,o.vx);ctx.globalAlpha=pu;ctx.fillStyle='#ff5a45';ctx.beginPath();ctx.moveTo(Math.cos(a)*14,Math.sin(a)*14);ctx.lineTo(Math.cos(a+2.5)*9,Math.sin(a+2.5)*9);ctx.lineTo(Math.cos(a-2.5)*9,Math.sin(a-2.5)*9);ctx.closePath();ctx.fill();
   ctx.fillStyle='#fff';ctx.font='900 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',0,1);ctx.restore();}
