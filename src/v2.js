@@ -1024,9 +1024,9 @@ function v2DrawKilo(e){if(rel(8))v2DrawSheet(e);ctx.save();ctx.globalCompositeOp
     const ag=Math.max(0,1-(e.t-7)/2.5);if(ag>0){const g=ctx.createRadialGradient(e.cx,e.cy,0,e.cx,e.cy,sp2(70));g.addColorStop(0,`rgba(255,240,200,${ag})`);g.addColorStop(1,'rgba(255,200,120,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.cx,e.cy,sp2(70),0,TAU);ctx.fill();}}
   ctx.restore();}
 // landing spots far apart: each new spot is the one farthest from the others (and from the blast), clear of the top bar and the hole
-function v2KiloSpots(cx,cy,n){const pts=[],m=sp2(28),top=sp2(64);for(let i=0;i<n;i++){let best=null,bs=-1;
-    for(let k=0;k<28;k++){const x=rrnd(m,W-m),y=rrnd(top+m,H-m*1.5);if(Math.hypot(x-hX,y-hY)<G2.R+sp2(50)||x>W-sp2(230)&&y>H-sp2(110))continue;let dm=Math.hypot(x-cx,y-cy)*.6;for(const p of pts)dm=Math.min(dm,Math.hypot(x-p.x,y-p.y));if(dm>bs){bs=dm;best={x,y};}}
-    pts.push(best||{x:rrnd(m,W-m),y:rrnd(top+m,H-m)});}return pts;}
+function v2KiloSpots(cx,cy,n){const pts=[],m=sp2(28),top=sp2(64),keep=rel(9)?G2.G+sp2(30):G2.R+sp2(50);for(let i=0;i<n;i++){let best=null,bs=-1,far=null,fd=-1; /* 1.4.9: the gold lands outside the hole's whole pull (it was only kept 50 px off the rim, so a big hole drew the near pieces in by itself): you go and collect it */
+    for(let k=0;k<28;k++){const x=rrnd(m,W-m),y=rrnd(top+m,H-m*1.5),dh=Math.hypot(x-hX,y-hY);if(x>W-sp2(230)&&y>H-sp2(110))continue;if(dh>fd){fd=dh;far={x,y};}if(dh<keep)continue;let dm=Math.hypot(x-cx,y-cy)*.6;for(const p of pts)dm=Math.min(dm,Math.hypot(x-p.x,y-p.y));if(dm>bs){bs=dm;best={x,y};}}
+    pts.push(best||(rel(9)&&far)||{x:rrnd(m,W-m),y:rrnd(top+m,H-m)});}return pts;} /* no room outside the pull (a very big hole): the farthest spot tried */
 function v2KGoldFly(o,dt){const f=o.fly;f.t+=dt;const p=Math.min(1,f.t/f.d),e=1-Math.pow(1-p,3),u=1-e;
   o.x=u*u*f.x0+2*u*e*f.cx+e*e*f.x1;o.y=u*u*f.y0+2*u*e*f.cy+e*e*f.y1;o.vx=o.vy=0;
   const bump=f.pk?Math.pow(Math.sin(Math.PI*Math.min(1,p*1.15)),1.4):0;o.zs=.4+.6*e+f.pk*bump;o.za=1-.5*bump; /* nearer the camera: bigger and fainter, so it never hides the field */

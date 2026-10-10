@@ -102,6 +102,7 @@ Her güncellemede:
 - Zor Mod: L1–60 2 yay, L61+ yaysız (2 kalp, meteor ×1,6, hedef ×1,5 aynen).
 - Hayatta Kal (Günün Fırtınası) süresiz: hız 12'den başlar, her 30 sn +5, sınırsız; ilk 2 dk 2 yay sonra yaysız; dakikada bir meteor kuşağı; 4. dakikadan sonra Kara Fırtına her 30 sn'de %35 daha çok meteor (çiftler halinde) ve %8 hız. Saniye puanı +20, her dakika +10 artar; bitiş bonusu yok.
 - Koruyucu seviyeleri (düzeltme): gezegene doğru parmakla bastırınca hedef gezegenin içine giriyordu; Aşırı Yük'ün %30 aşmasıyla kara delik her karede gezegenin iki yanı arasında zıplıyor, iki simetrik titreyen delik gibi görünüyordu. Artık parmağın hedefi de atmosferde durur (bot: titreyen konum 29 → 0); geri çekince delik hemen tepki verir.
+- Kilonova altınları (düzeltme): düşecekleri yerler karadeliğin çekim alanının dışından seçilir (önceden sadece kenarından 50 px uzakta tutuluyordu; büyük karadelik yakına düşenleri kendiliğinden çekip yutuyordu). Altını artık oyuncu gidip toplar; ekranda yer yoksa en uzak noktalar.
 - Bölünen gezegen: mavi halka yerine yarımın kendi çizgisini (yay + kırık kenar) izleyen titrek kırmızı neon; kırık yüzün kenar ışığı da kırmızı (`onizleme/neon-yarim.png`). Parıltı bulanıklık filtresi değil, üst üste çizgi (zayıf telefonda takılma yapmaz).
 - Hedef: Normal modda bir seviye 8–10 denemede geçilebilmeli. 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
 
@@ -113,6 +114,7 @@ Her güncellemede:
 • Survival is now endless, and from minute 4 the Black Storm takes over
 • Split planet halves glow with a red neon edge
 • Fix: the black hole no longer flickers when pushed into a guarded planet
+• Kilonova gold now lands outside your pull: go and collect it
 </en-US>
 ```
 
