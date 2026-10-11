@@ -36,6 +36,9 @@ SKILLS=(
   "https://github.com/coreyhaines31/marketingskills copywriting copy-editing ad-creative ads social content-strategy launch marketing-ideas marketing-psychology seo-audit image video"
   # Video (Remotion)
   "https://github.com/remotion-dev/skills remotion-best-practices remotion-create remotion-markup remotion-captions remotion-multimedia remotion-render remotion-studio remotion-docs remotion-interactivity"
+  # Kısa cevap modları: /i-have-adhd ("stop adhd mode" ile kapanır), /caveman ("stop caveman" ile kapanır)
+  "https://github.com/ayghri/i-have-adhd i-have-adhd"
+  "https://github.com/JuliusBrussee/caveman caveman"
 )
 
 # ---------------------------------------------------------------------------
