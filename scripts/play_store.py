@@ -2,13 +2,13 @@
 
 The service account (secret PLAY_SERVICE_ACCOUNT_JSON) has only these Play Console permissions:
 view app info, release to testing tracks, manage store presence, reply to reviews.
-This script touches store listings (texts, phone screenshots, video link) and nothing else:
-no in-app products, prices, policy declarations or production releases.
+This script touches store listings (texts, phone screenshots, video link) and testing-track releases
+(internal, alpha, beta) and nothing else: no in-app products, prices, policy declarations or production.
 
 Every run works inside one Play "edit". Without --apply the edit is thrown away, so nothing changes;
 the run only prints what it would do.
 """
-import argparse, hashlib, json, os, sys
+import argparse, hashlib, json, os, re, sys
 from pathlib import Path
 
 from google.oauth2 import service_account
@@ -115,13 +115,59 @@ def listings(ed, eid, only, video_tr, apply):
     return changed
 
 
+TEST_TRACKS = ('internal', 'alpha', 'beta')  # production is never touched from here
+
+
+def notes_for(name):
+    """The release notes block (<en-US>...</en-US>) under '## <version name>' in store/release-notes.md."""
+    s = (ROOT.parent / 'release-notes.md').read_text(encoding='utf-8')
+    m = re.search(r'^## ' + re.escape(name) + r'(?![\d.]).*?(?=^## |\Z)', s, re.S | re.M)
+    if not m:
+        return []
+    return [{'language': lang, 'text': txt.strip()} for lang, txt in re.findall(r'<([a-z]{2,3}(?:-[A-Za-z0-9]+)?)>\n(.*?)\n</\1>', m.group(0), re.S)]
+
+
+def release(ed, eid, track, code, apply):
+    say(f'## Sürüm · {track} · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
+    if track not in TEST_TRACKS:
+        sys.exit(f'{track}: yalnızca test kanalları ({", ".join(TEST_TRACKS)})')
+    codes = {str(b['versionCode']) for b in ed.bundles().list(packageName=PKG, editId=eid).execute().get('bundles', [])}
+    if code not in codes:
+        sys.exit(f'Kod {code} Play\'e yüklenmemiş (yüklü kodlar: {", ".join(sorted(codes, key=int))})')
+    tracks = {t['track']: t.get('releases', []) for t in ed.tracks().list(packageName=PKG, editId=eid).execute().get('tracks', [])}
+    name = next((r['name'] for rs in tracks.values() for r in rs if code in r.get('versionCodes', []) and r.get('name')), code)
+    ver = re.search(r'\(([\d.]+)\)', name)
+    notes = notes_for(ver.group(1)) if ver else []
+    cur = tracks.get(track, [])
+    say('Şu an: ' + (', '.join(f"{r.get('name')} ({r.get('status')})" for r in cur) or '-'))
+    say(f'Yeni: **{name}** (kod {code}, tüm test kullanıcılarına)')
+    for n in notes:
+        say(f"Sürüm notu ({n['language']}, {len(n['text'])} kr):")
+        say('```')
+        say(n['text'])
+        say('```')
+    if not notes:
+        sys.exit(f'release-notes.md içinde "{name}" için <en-US> notu bulunamadı')
+    if any(len(n['text']) > 500 for n in notes):
+        sys.exit('Sürüm notu 500 karakteri geçiyor')
+    if any(code in r.get('versionCodes', []) and r.get('status') == 'completed' for r in cur):
+        say('Bu kod bu kanalda zaten yayında; değişiklik yok.')
+        return 0
+    if apply:
+        body = {'track': track, 'releases': [{'name': name, 'versionCodes': [code], 'status': 'completed', 'releaseNotes': notes}]}
+        ed.tracks().update(packageName=PKG, editId=eid, track=track, body=body).execute()
+    return 1
+
+
 def main():
     a = argparse.ArgumentParser()
-    a.add_argument('task', choices=['status', 'listings'])
+    a.add_argument('task', choices=['status', 'listings', 'release'])
     a.add_argument('--apply', action='store_true', help='keep the edit (otherwise it is discarded)')
     a.add_argument('--send-for-review', action='store_true', help='send the committed changes for review right away')
     a.add_argument('--only', default='', help='comma-separated languages, e.g. tr-TR,de-DE')
     a.add_argument('--video-tr', default='', help='YouTube link for the tr-TR listing')
+    a.add_argument('--track', default='alpha', help='release: internal, alpha or beta')
+    a.add_argument('--version-code', default='', help='release: version code already uploaded to Play')
     o = a.parse_args()
     if o.video_tr and not o.video_tr.startswith(('https://www.youtube.com/', 'https://youtu.be/', 'https://youtube.com/')):
         sys.exit('video-tr bir YouTube bağlantısı olmalı')
@@ -132,7 +178,12 @@ def main():
         if o.task == 'status':
             status(ed, eid)
         else:
-            n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
+            if o.task == 'release':
+                if not o.version_code.isdigit():
+                    sys.exit('release için --version-code gerekli')
+                n = release(ed, eid, o.track, o.version_code, o.apply)
+            else:
+                n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
             if o.apply and n:
                 ed.validate(packageName=PKG, editId=eid).execute()
                 sent = o.send_for_review
