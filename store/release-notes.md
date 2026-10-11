@@ -20,6 +20,7 @@ Her güncellemede:
 | 1.4.9 | 22 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
 | 1.5.0 | 23 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
 | 1.5.1 | 24 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
+| 1.5.2 | 25 | 1.5.1'den sonra | Dil değişimi: Japonca eklenir, Kürtçe kalkar (oyun yine 10 dil). Play Console'da ja-JP mağaza sayfası bu sürüm üretime çıkarken açılır |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -149,3 +150,22 @@ Her güncellemede:
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
 - AGP 8.13 → 9.0 yükseltmesi (Play önerisi).
 - Uçtan uca ekran (Play önerisi): `EdgeToEdge.enable(this)` bu sefer `super.onCreate`'ten **sonra** çağrılacak (1.4.5'teki başlık çubuğu hatası önceye konduğu içindi). Önce **Dahili test** kanalında kendi telefonda denenecek, sonra kapalı/üretim kanalına.
+
+## 1.5.2 (1.5.1'den sonra) · Japonca gelir, Kürtçe kalkar
+- Neden: Japonya oyuncu başına en çok kazandıran mobil pazar ve oyuncular kendi dillerinde oynamayı bekliyor; "her şeyi yut" türü orada sevilen bir tür. Kürtçe mağazada zaten yoktu (Play'in dil listesinde bulunmuyor).
+- Oyun:
+  - `i18n/ja.json`: 1.725 metin (Türkçe anahtar → Japonca). Makine desteğiyle yazılır, yayından önce Japonca bilen birine okutulur.
+  - `LANGS`: `ku` çıkar, `['ja','日本語']` girer. Telefonu Kürtçe (`ku`, `kmr`, `ckb`) olan ya da Ayarlar'da Kürtçe seçmiş oyuncu artık Türkçeye düşer (kayıtlı `ku` tercihi okunurken `tr` sayılır). `i18n/ku.json` depodan silinmez, yalnızca derlemeye girmez.
+  - Yazı tipi: Japonca karakterler gömülmez, Android'in sistem yazı tipi (Noto Sans CJK) kullanılır; `font-family` sıralarına sistem yedeği eklenir. Oyun dosyası büyümez.
+  - Ekran kontrolü: menü, Ayarlar, mağaza, laboratuvar, atlas, ipucu kartları, oyun içi çağrılar (`v2Call`), paylaşım metni ve bildirimler Japonca tek tek gözden geçirilir (dar düğmelerde taşma, harf aralığı `letter-spacing` Japoncada kapatılır).
+  - Bildirim ve paylaşım metinleri de Japonca.
+- Mağaza (Play Console):
+  - `store/listings/ja-JP/`: uygulama adı, kısa açıklama (≤80), tam açıklama ve 8 Japonca kare (sahneler oyundan Japonca çekilir).
+  - ja-JP mağaza sayfası 1.5.2 üretime çıkarken eklenir; oyun Japonca olmadan mağazayı Japonca açmıyoruz.
+- Sıra: Dahili test (kendi telefonda Japonca ve Türkçeye düşen eski Kürtçe tercihi denenir) → Alpha → üretim.
+
+```
+<en-US>
+• New language: Japanese
+</en-US>
+```
