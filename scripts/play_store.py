@@ -13,11 +13,15 @@ from pathlib import Path
 
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
 
 PKG = 'com.liaslabs.blackholestorm'
 ROOT = Path(__file__).resolve().parent.parent / 'store' / 'listings'
 FRAMES_FROM = {'es-419': 'es-ES', 'pt-PT': 'pt-BR'}  # these listings share another language's frames
+# the order the phone screenshots show in on Play (the en-US listing was arranged this way by hand: action first)
+ORDER = ['1-gameplay', '7-quasar-jet', '2-boss', '8-radiation', '6-survival', '3-laboratory', '4-map', '5-menu']
+KEEP_IMAGES = {'en-US'}  # arranged by hand in Play Console; never replaced from here
 SUMMARY = os.environ.get('GITHUB_STEP_SUMMARY')
 out = []
 
@@ -44,7 +48,8 @@ def local(lang):
         'title': read(d / 'title.txt'),
         'shortDescription': read(d / 'short.txt'),
         'fullDescription': read(d / 'full.txt'),
-        'shots': sorted(fr.glob('*.jpg')) if fr.is_dir() else [],
+        'shots': [] if lang in KEEP_IMAGES or not fr.is_dir() else
+                 sorted(fr.glob('*.jpg'), key=lambda p: ORDER.index(p.stem) if p.stem in ORDER else len(ORDER)),
     }
 
 
@@ -130,9 +135,19 @@ def main():
             n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
             if o.apply and n:
                 ed.validate(packageName=PKG, editId=eid).execute()
-                ed.commit(packageName=PKG, editId=eid, changesNotSentForReview=not o.send_for_review).execute()
+                sent = o.send_for_review
+                try:
+                    ed.commit(packageName=PKG, editId=eid, changesNotSentForReview=not sent).execute()
+                except HttpError as e:
+                    # Play refuses to send for review from the API while changes made in the Console UI are waiting;
+                    # then the edit is saved unsent and the review is started from Publishing overview.
+                    if not sent or 'changesNotSentForReview' not in str(e):
+                        raise
+                    say('Play, Console\'da bekleyen değişiklikler yüzünden API\'den incelemeye göndermeye izin vermedi; gönderilmeden kaydediliyor.')
+                    ed.commit(packageName=PKG, editId=eid, changesNotSentForReview=True).execute()
+                    sent = False
                 keep = True
-                say('Kaydedildi. ' + ('İncelemeye gönderildi.' if o.send_for_review else 'Play Console › Yayın özeti\'nde "incelemeye gönder" bekliyor.'))
+                say('Kaydedildi. ' + ('İncelemeye gönderildi.' if sent else 'Play Console › Yayın özeti\'nde "incelemeye gönder" bekliyor.'))
     finally:
         if not keep:
             ed.delete(packageName=PKG, editId=eid).execute()
