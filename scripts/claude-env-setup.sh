@@ -97,6 +97,17 @@ for entry in "${SKILLS[@]}"; do
     || log "skill kurulamadı: $names"
 done
 
+# Graphify: kod tabanını sorgulanabilir bilgi grafiğine çevirir (/graphify)
+if command -v uv >/dev/null 2>&1 && uv tool install -q graphifyy >/dev/null 2>&1; then
+  graphify install >/dev/null 2>&1 || log "graphify skill kurulamadı"
+  # Ürettiği graphify-out/ klasörü hiçbir repoya karışmasın
+  mkdir -p "$HOME/.config/git"
+  grep -qxF 'graphify-out/' "$HOME/.config/git/ignore" 2>/dev/null \
+    || echo 'graphify-out/' >> "$HOME/.config/git/ignore"
+else
+  log "graphify kurulamadı"
+fi
+
 # ---------------------------------------------------------------------------
 # C) Key/cookie hook'u: her oturum başında ortam değişkenlerinden ayarlar
 # ---------------------------------------------------------------------------
