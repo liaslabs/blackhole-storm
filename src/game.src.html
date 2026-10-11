@@ -1658,7 +1658,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
     this.musBus=c.createGain();this.musDuck=c.createGain();this.musF=c.createBiquadFilter();this.musF.type='lowpass';this.musF.frequency.value=16000;this.musF.Q.value=.6;
     this.musBus.connect(this.musDuck);this.musDuck.connect(this.musF);this.musF.connect(this.master);
     this.applySettings(true);
-    this.rev=c.createConvolver();this.rev.buffer=this.makeIR(2.6);
+    this.rev=c.createConvolver();try{this.rev.buffer=this.makeIR(2.6);}catch(e){} /* a few browsers report one sample rate and run at another (seen: 48000 vs 44100 Hz, the error stopped the game's start-up): then no reverb, everything else as usual */
     const rg=c.createGain();rg.gain.value=.55;this.rev.connect(rg);rg.connect(this.sfxBus);
     // An entry is either WAV base64, or [mp3 base64, onset s, duration s]: MP3 adds padding
     // at both ends, so re-align on the onset (first sample above 10% of peak) and cut to length.
