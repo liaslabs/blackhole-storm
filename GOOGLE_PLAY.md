@@ -152,7 +152,7 @@ Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut sk
 
 ## 5c. Kapalı test, reklamlar ve satın almalar
 
-- **Reklamlar:** Android uygulamasında AdMob var. Kapalı testte yalnızca Google'ın **test reklamları** görünür ("Test Ad" yazar; para kazandırmaz, test kullanıcılarının tıklamaları sorun çıkarmaz). Herkese açık yayında gerçek reklama geçmek için: AdMob'daki iki reklam biriminin kimliği `src/game.src.html` › `ADS_UNITS` içine yazılır ve `ADS_LIVE=true` yapılır, yeni sürüm üretilir. Ayrıca **app-ads.txt** (5f).
+- **Reklamlar:** Android uygulamasında AdMob var. Kapalı testte yalnızca Google'ın **test reklamları** görünür ("Test Ad" yazar; para kazandırmaz, test kullanıcılarının tıklamaları sorun çıkarmaz). Herkese açık yayında gerçek reklama geçmek için: `src/game.src.html` › `ADS_LIVE=true` yapılır, yeni sürüm üretilir. İki reklam biriminin kimliği `ADS_UNITS` içine yazıldı (11 Eki): `devam-odullu` (Ödüllü) `ca-app-pub-2380408512555993/4584098403`, `seviye-arasi` (Geçiş) `ca-app-pub-2380408512555993/3873651965`. AdMob uygulama kimliği `~2105829637` (AndroidManifest). Önerilen: 1.5.0 Alpha'da test reklamlarıyla kalır; üretime yalnızca `ADS_LIVE=true` farkıyla bir sonraki kod gider, önce Dahili test'te kendi telefonda görünür (tıklanmaz). Ayrıca **app-ads.txt** (5f).
 - **Satın almalar:** Play Console'da ürünler oluşturulunca kapalı testte de çalışır. Lisans test kullanıcısı olarak eklenen hesaplar (Ayarlar › Lisans testi) gerçek para ödemeden dener. Ürünleri açmadan **önce** 5e yapılmalı: uygulama hiçbir ürünü sunucu doğrulamadan vermez (MONETIZATION.md › Satın alma doğrulaması).
 
 ## 5f. app-ads.txt (AdMob, herkese açık yayından önce)

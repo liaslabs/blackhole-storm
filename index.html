@@ -2990,7 +2990,7 @@ function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()
 // rewarded ad → true when the reward is earned
 // AdMob in the Android app. ADS_LIVE stays false during closed testing: Google's own test ads only, so testers'
 // taps never count as invalid traffic. At the public launch: real unit ids below and ADS_LIVE=true.
-const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'',interstitial:''}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
+const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'ca-app-pub-2380408512555993/4584098403',interstitial:'ca-app-pub-2380408512555993/3873651965'}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
 const ADS={on:false,privacy:false,t:0};
 function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
 function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload&&(!nb.adsDrop||interDue())){lagNat('adsPreload');LAG.adh=1;nb.adsPreload().catch(()=>{});}}
