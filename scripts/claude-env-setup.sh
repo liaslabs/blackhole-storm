@@ -26,6 +26,16 @@ SKILLS=(
   "https://github.com/firebase/agent-skills firebase-basics firebase-auth-basics firebase-firestore firebase-hosting-basics firebase-security-rules-auditor firestore-rules-creation firebase-ai-logic-basics"
   # Gemini API
   "https://github.com/google-gemini/gemini-skills gemini-api-dev"
+  # Çalışma disiplini: planlama, hata ayıklama, test, kod incelemesi (Superpowers)
+  "https://github.com/obra/superpowers brainstorming dispatching-parallel-agents executing-plans finishing-a-development-branch receiving-code-review requesting-code-review subagent-driven-development systematic-debugging test-driven-development using-git-worktrees verification-before-completion writing-plans writing-skills"
+  # Arayüz tasarımı (UI/UX Pro Max)
+  "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill ui-ux-pro-max ui-styling design-system banner-design"
+  # Yapay zekâ kokan metinleri temizleme
+  "https://github.com/hardikpandya/stop-slop stop-slop"
+  # Pazarlama (oyun ve okul tanıtımı)
+  "https://github.com/coreyhaines31/marketingskills copywriting copy-editing ad-creative ads social content-strategy launch marketing-ideas marketing-psychology seo-audit image video"
+  # Video (Remotion)
+  "https://github.com/remotion-dev/skills remotion-best-practices remotion-create remotion-markup remotion-captions remotion-multimedia remotion-render remotion-studio remotion-docs remotion-interactivity"
 )
 
 # ---------------------------------------------------------------------------
