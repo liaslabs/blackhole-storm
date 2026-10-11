@@ -157,6 +157,8 @@ Yeni `reports` tablosu sunucu tarafından kendiliğinden oluşturulur; mevcut sk
 
 ## 5f. app-ads.txt (AdMob, herkese açık yayından önce)
 
+**Durum (11 Eki 2026): yapıldı.** `liaslabs/liaslabs.github.io` deposu açıldı (herkese açık); `app-ads.txt`, kök yönlendirmesi (`index.html`) ve `.nojekyll` orada. https://liaslabs.github.io/app-ads.txt yayında. Play mağaza girişindeki web sitesi `https://liaslabs.github.io/blackhole-storm/`, yani AdMob dosyayı `liaslabs.github.io` kökünde arar ve bulur. AdMob'daki doğrulama durumu, uygulama üretimden sonra AdMob'da Play Store'a bağlanınca görünür.
+
 AdMob, reklam gelirini korumak için Play mağaza sayfasındaki **geliştirici web sitesinin kök adresinde** bir `app-ads.txt` dosyası arar.
 Geliştirici sitesi `https://liaslabs.github.io` ise dosya `https://liaslabs.github.io/app-ads.txt` adresinde olmalı (yani `liaslabs/liaslabs.github.io`
 deposunun kökünde; bu oyunun deposunda değil). İçeriği tek satır, bu depodaki `app-ads.txt` ile aynı:
