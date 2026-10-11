@@ -13,32 +13,30 @@ log() { echo "[claude-env-setup] $*"; }
 #    Biçim: "<kaynak repo> <skill adı> [<skill adı> ...]"
 # ---------------------------------------------------------------------------
 SKILLS=(
+  # Not: Hesaba (claude.ai → Customize → Skills) yüklenen skill'ler her yerde
+  # zaten çalıştığı için burada TEKRAR kurulmaz. Buradakiler yalnızca Code içindir.
+  # Hesaba yüklü olanlar: pazarlama paketi (aso, copywriting, copy-editing,
+  # ad-creative, ads, social, content-strategy, launch, marketing-ideas,
+  # marketing-psychology, seo-audit, image, video), stop-slop, caveman,
+  # i-have-adhd, ui-ux-pro-max, banner-design, brainstorming, writing-plans,
+  # firestore-rules-creation, firebase-security-rules-auditor, gemini-api-dev, agent-reach.
+
   # Skill bulucu
   "https://github.com/vercel-labs/skills find-skills"
-  # Oyun geliştirme (HTML5 Canvas/WebGL) ve Google Play sayfası denetimi
+  # Oyun geliştirme (HTML5 Canvas/WebGL)
   "https://github.com/github/awesome-copilot game-engine"
-  "https://github.com/coreyhaines31/marketingskills aso"
   # Three.js
   "https://github.com/cloudai-x/threejs-skills threejs-fundamentals threejs-geometry threejs-materials threejs-lighting threejs-textures threejs-animation threejs-loaders threejs-shaders threejs-postprocessing threejs-interaction"
   # Capacitor (Android/iOS paketleme)
   "https://github.com/cap-go/capgo-skills debugging-capacitor safe-area-handling ios-android-logs capacitor-testing"
   # Firebase (CRM ve danışmanlık portalı)
-  "https://github.com/firebase/agent-skills firebase-basics firebase-auth-basics firebase-firestore firebase-hosting-basics firebase-security-rules-auditor firestore-rules-creation firebase-ai-logic-basics"
-  # Gemini API
-  "https://github.com/google-gemini/gemini-skills gemini-api-dev"
-  # Çalışma disiplini: planlama, hata ayıklama, test, kod incelemesi (Superpowers)
-  "https://github.com/obra/superpowers brainstorming dispatching-parallel-agents executing-plans finishing-a-development-branch receiving-code-review requesting-code-review subagent-driven-development systematic-debugging test-driven-development using-git-worktrees verification-before-completion writing-plans writing-skills"
-  # Arayüz tasarımı (UI/UX Pro Max)
-  "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill ui-ux-pro-max ui-styling design-system banner-design"
-  # Yapay zekâ kokan metinleri temizleme
-  "https://github.com/hardikpandya/stop-slop stop-slop"
-  # Pazarlama (oyun ve okul tanıtımı)
-  "https://github.com/coreyhaines31/marketingskills copywriting copy-editing ad-creative ads social content-strategy launch marketing-ideas marketing-psychology seo-audit image video"
+  "https://github.com/firebase/agent-skills firebase-basics firebase-auth-basics firebase-firestore firebase-hosting-basics firebase-ai-logic-basics"
+  # Çalışma disiplini: hata ayıklama, test, kod incelemesi (Superpowers)
+  "https://github.com/obra/superpowers dispatching-parallel-agents executing-plans finishing-a-development-branch receiving-code-review requesting-code-review subagent-driven-development systematic-debugging test-driven-development using-git-worktrees verification-before-completion writing-skills"
+  # Arayüz kodu (UI/UX Pro Max'in kod tarafı)
+  "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill ui-styling design-system"
   # Video (Remotion)
   "https://github.com/remotion-dev/skills remotion-best-practices remotion-create remotion-markup remotion-captions remotion-multimedia remotion-render remotion-studio remotion-docs remotion-interactivity"
-  # Kısa cevap modları: /i-have-adhd ("stop adhd mode" ile kapanır), /caveman ("stop caveman" ile kapanır)
-  "https://github.com/ayghri/i-have-adhd i-have-adhd"
-  "https://github.com/JuliusBrussee/caveman caveman"
 )
 
 # ---------------------------------------------------------------------------
@@ -70,6 +68,8 @@ fi
 if command -v agent-reach >/dev/null 2>&1; then
   agent-reach install --env=auto --system --channels=all >/dev/null 2>&1 \
     || log "agent-reach install bazı adımlarda başarısız (cookie/key gerektiren kanallar için normal)"
+  # Skill'i hesapta yüklü; kurulumun eklediği yerel kopya çift görünmesin
+  rm -rf "$HOME/.claude/skills/agent-reach"
 fi
 
 mkdir -p "$HOME/.config/yt-dlp"
@@ -89,9 +89,8 @@ fi
 # ---------------------------------------------------------------------------
 # A) devam: skill'leri kur
 # ---------------------------------------------------------------------------
+# agent-reach skill'i hesapta yüklü; burada yalnızca CLI araçları kuruluyor.
 mkdir -p "$HOME/.claude/skills"
-command -v agent-reach >/dev/null 2>&1 \
-  && { agent-reach skill --install >/dev/null 2>&1 || log "agent-reach skill kurulamadı"; }
 
 for entry in "${SKILLS[@]}"; do
   read -r src names <<<"$entry"
