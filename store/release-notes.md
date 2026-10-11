@@ -126,14 +126,21 @@ Her güncellemede:
 ## 1.5.0 (19 Ekim → üretim) · `REL` 10 yapılacak · gerçek yayın sürümü, görsel derinlik
 - Derinlik katmanları (sadece süs; çekime kapılmaz, çarpılmaz, puan vermez): arkada yavaş süzülen küçük bulanık kayalar,
   yan kenarlardan ara sıra süzülen tek bir büyük bulanık kaya (sıra ile sol ve sağ; en fazla üçte biri görünür, ekranı ~40 sn'de geçer, sonra 45–75 sn hiç yok), karadeliğe doğru akan seyrek hız izleri (normalde 20;
-  meteor kuşağı, fırtına ve Vortex'te 56, daha hızlı). Hepsi cisimlerin altında çizilir; bir cismin, karadeliğin çekim
-  alanının, üst barın veya güç tepsisinin üstüne denk gelince söner, yani hiçbir şeyi örtmez. Kare süresi yavaşlarsa
-  (`GL.quality` düşerse) ilk kapanan budur. Kaya resimleri menüde, birer birer hazırlanır (oyun sırasında iş yok).
+  meteor kuşağı, fırtına ve Vortex'te 6, hızlanmadan: ekran kalabalıkken azalır). Cisimler alttaki WebGL tuvalinde
+  çizildiği için süs, bir cismin olduğu yerde ve 0,35 sn sonra olacağı yerde **anında** söner (geri gelişi yavaş);
+  hız izleri ve kül de cisim üstüne çizilmez. Çekim alanı, üst bar ve güç tepsisi üstünde de söner, yani hiçbir şeyi
+  örtmez. Telefon yavaş çıkarsa (`FXLITE` ya da `GL.quality`<1) ilk kapanan budur, çözünürlük düşmeden önce. Kaya
+  resimleri menüde, birer birer hazırlanır (oyun, ipucu kartı ve seviye atlama animasyonu sırasında iş yok); ekran
+  boyutu değişince (adres çubuğu, döndürme) katman yeniden dağılmaz, ölçeklenir.
   Gökyüzünün karadeliğe göre kayması (parallax) zaten vardı, aynen kalır. Karadeliğin kendisi değişmedi.
 - Meteor: ateş topu. Beyaz-sıcak çekirdek ve önde kızgın yüz, hızlandıkça uzayan iki katlı kuyruk, kıvılcımlar (karadeliğe
-  yakın geçenler çekime kıvrılır) ve hafif kül izi; girişte ünlem yerine ekran kenarında parlama (yol okları aynen).
-  Altın Yay süresince meteorlar altın alevli ve pırıltılı: yutulabildiği görünür. Hawking, bomba dalgası, İkinci Ufuk veya fırtına sonuyla yok edilen
-  meteor 3 kızgın parçaya bölünür. Çarpma, hız ve isabet aynen (`onizleme/meteor-onerileri.html`, `onizleme/derinlik-25d.html`).
+  yakın geçenler çekime kıvrılır) ve hafif kül izi; girişte kırmızı ok ve "!" aynen, altında ekran kenarında parlama
+  (yol okları aynen). Hale, kuyruk ve parlama renk başına bir kez çizilen hazır resimler (meteor başına karede yeni
+  gradyan yok); renk tonu kaya resmine işlenir (parıltı üstünde kare kalmaz). Yavaş telefonda (`FXLITE`) yalnız dış
+  kuyruk kalır, kıvılcım ve kül çıkmaz.
+  Altın Yay süresince meteorlar altın alevli ve pırıltılı: yutulabildiği görünür. Hawking, bomba dalgası, İkinci Ufuk, fırtına sonu, süpernova,
+  jet, altın kabuk veya rakiple yok edilen meteor 3 kızgın parçaya bölünür (parçalar oyun durunca durur).
+  Kod incelemesi (11 Eki): 9 bulgu düzeltildi (`bdbf2b5`); 12 sn'lik ölçümde kaya cisim üstünde 4 → 0. Çarpma, hız ve isabet aynen (`onizleme/meteor-onerileri.html`, `onizleme/derinlik-25d.html`).
 - Kara Fırtına'ya özel meteor rengi önerildi, seçilmedi.
 
 ```

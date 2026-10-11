@@ -4269,7 +4269,7 @@ const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[
 const v2Ach={rage:0,mega:0}; // for achievements
 const DRAG={id:null,x:0,y:0,sx:0,sy:0,t0:0,moved:false,held:false,ax:0,ay:0,px:0,py:0,pt:0,vs:0};
 
-function v2Resize(){G2.S=Math.min(W,H*.5625)/486;G2.dep=null;}
+function v2Resize(){G2.S=Math.min(W,H*.5625)/486;}
 const sp2=v=>v*G2.S;
 function v2Lv(){return gameMode==='survival'?(rel(9)&&STORM.on?effLevel():Math.min(40,effLevel())):gameMode==='sprint'?G2.sprLv:level;}
 // level rules: counts, spawn odds, directions (spec §26, §36–39)
@@ -4866,7 +4866,7 @@ function v2RivalStep(dt){const v=G2.rv,S=G2.S;
   if(v.inT>0)return;
   // its pull and its meals; meteors that cross it bite a chunk off
   for(const o of G2.objs){if(o.st!=='in'||o.wait>0||o.orb||o.boss)continue;const ox=v.x-o.x,oy=v.y-o.y,od=Math.hypot(ox,oy)||1;
-    if(o.k==='meteor'){if(!o.hit&&od<v.R+o.r*.6){o.st='dead';v2Burst(o.x,o.y,18,'#ff8a4c',2,7,.55);if(!(v.hurtT>0))v2RivalShrink(v,.12,'RAKİBİ VURDUN');}continue;}
+    if(o.k==='meteor'){if(!o.hit&&od<v.R+o.r*.6){o.st='dead';v2Burst(o.x,o.y,18,'#ff8a4c',2,7,.55);v2MetBreak(o);if(!(v.hurtT>0))v2RivalShrink(v,.12,'RAKİBİ VURDUN');}continue;}
     if(!v2RivalCan(v,o))continue;
     const vg=v.gpA>0?Math.max(v.G,H*.45):v.G;if(od<vg){const A=sp2(v.gpA>0?2600:1500)*(1-od/vg)*dt;o.vx+=ox/od*A;o.vy+=oy/od*A;}
     if(od<v.R+o.r*.5){o.st='rv';o.t=0;o.sc=1;o.a=Math.atan2(o.y-v.y,o.x-v.x);o.d0=od;if(o.cell!==undefined){o.suck=null;o.gs=1;}
@@ -5207,7 +5207,7 @@ function v2JetStep(dt){const j=G2.jet,J=V2K.jet;j.t+=dt;if(j.t>=j.D||G2.ending){
   j.hist.push({a:j.a,t:j.t});while(j.hist.length&&j.t-j.hist[0].t>.35)j.hist.shift();
   const ux=Math.cos(j.a),uy=Math.sin(j.a),w=sp2(J.w),on=(x,y,r)=>{const dx=x-hX,dy=y-hY;return dx*ux+dy*uy>0&&Math.abs(dx*uy-dy*ux)<=w+r;};
   for(const o of G2.objs){if(o.st!=='in'||o.boss||o.orb||o.wait>0||o.jetSkip>G2.t||!on(o.x,o.y,o.r))continue; /* freed bodies and fresh halves are left alone */
-    if(o.k==='meteor'){if(!o.hit){o.st='dead';j.n++;v2Burst(o.x,o.y,18,'#ffb347',2,7,.55,2);const p=25;totalScore+=p;levelScore+=p;ftexts.push(new FText('+'+p,o.x,o.y,'#ffb347',14));}continue;}
+    if(o.k==='meteor'){if(!o.hit){o.st='dead';j.n++;v2Burst(o.x,o.y,18,'#ffb347',2,7,.55,2);v2MetBreak(o);const p=25;totalScore+=p;levelScore+=p;ftexts.push(new FText('+'+p,o.x,o.y,'#ffb347',14));}continue;}
     if(o.k==='split'){v2Split(o);for(const h of G2.objs)if(h.k==='half'&&!h.jetSkip)h.jetSkip=G2.t+.4;j.n++;continue;} /* the beam cracks a split planet on first touch */
     if(v2Banned(o)){o.freed=1;o.jetSkip=1e9;j.n++;v2Burst(o.x,o.y,18,'#8dffcb',2,6,.55,2);ftexts.push(new FText(T('SERBEST'),o.x,o.y-o.r-sp2(8),'#8dffcb',14));v2Sfx('sparkle',{vol:.45,rate:1.3});continue;} /* a forbidden body the beam touches turns normal */
     if(o.k==='prey'){j.pt-=dt;if(j.pt<=0){j.pt=J.preyIv;o.hp=(o.hp??V2K.prey.hp)-1;v2Burst(o.x,o.y,10,'#ffd76a',1.5,5,.4);if(o.hp<=0)v2PreyBurst(o);}continue;}
@@ -5292,7 +5292,7 @@ function v2Hit(o,whole){
   const tutorial=level===1&&G2.mode==='level'&&!G2.hm;
   /* 3 arcs guard each heart: a hit breaks one arc and the flow goes on; the third breaks a heart (whole=true takes the heart at once) */
   G2.pdRun=0;
-  if(G2.gold&&!whole){G2.gold=0;G2.goldT=G2.t;for(let i=0;i<G2.arcs;i++)v2ArcBreak(i,'#ffd76a',.6);let n=0;for(const q of G2.objs)if(q.k==='meteor'&&q.st==='in'&&Math.hypot(q.x-hX,q.y-hY)<sp2(320)){q.st='dead';n++;v2Burst(q.x,q.y,16,'#ffd76a',2,6,.6);}
+  if(G2.gold&&!whole){G2.gold=0;G2.goldT=G2.t;for(let i=0;i<G2.arcs;i++)v2ArcBreak(i,'#ffd76a',.6);let n=0;for(const q of G2.objs)if(q.k==='meteor'&&q.st==='in'&&Math.hypot(q.x-hX,q.y-hY)<sp2(320)){q.st='dead';n++;v2Burst(q.x,q.y,16,'#ffd76a',2,6,.6);v2MetBreak(q);}
     const pts=50+n*100;totalScore+=pts;levelScore+=pts;shake=Math.max(shake,9);flash=Math.max(flash,.3);vib([40,30,90]);v2Sfx('achieve',{vol:.55,rate:1.2});v2Call(T('ALTIN DALGA'),'+'+pts,'#ffd76a',1.2,true);return;} /* a gold shell bursts into a wave that clears the meteors around you */
   if((G2.arcs<=1||whole)&&v2HorOk()){v2Horizon();return;} /* the Second Horizon catches the blow that would take a heart */
   if(G2.shells>0&&!whole){G2.shells--;G2.shBrk={i:G2.shells,t:G2.t};v2ArcBreak(G2.shells,'#eaf1fb');shake=Math.max(shake,4);vib(30);v2Sfx('armor',{vol:.55,rate:1.35});return;} /* a silver shell soaks the hit, the arc under it stays */
@@ -5410,7 +5410,7 @@ function v2MegaStep(dt){ // play pauses while the screen pops body by body and e
     const add=Math.min(V2K.bomb.pts,V2K.bomb.max-M.bonus);M.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(2);
     G2.megaFx.push({x:o.x,y:o.y,r:o.r,t:0,c:o.k==='meteor'?'#ff5a3c':M.nova?'#8fe9ff':'#ffb35c'});v2Burst(o.x,o.y,16,o.k==='meteor'?'#ff6a4c':'#ffd29a',2,7,.6,2.4);shake=Math.max(shake,3);
     if(M.n%2)sfx('capture',{vol:.35,rate:1.1+Math.min(.8,M.n*.04),x:o.x});
-    if(o.k==='meteor'){o.st='dead';ftexts.push(new FText('+'+add,o.x,o.y,'#ff8a6b',15));}
+    if(o.k==='meteor'){o.st='dead';v2MetBreak(o);ftexts.push(new FText('+'+add,o.x,o.y,'#ff8a6b',15));}
     else{o.noScore=false;o.chain=true;o.mega2=true;o.hang=.16;o.swDur=1.05;o.eca=Math.atan2(o.y-hY,o.x-hX)+Math.PI/2;v2Swallow(o,null);}}
   for(let i=G2.objs.length-1;i>=0;i--){const o=G2.objs[i];if(o.st==='dead'){G2.objs.splice(i,1);continue;}if(o.st==='sw'&&v2SwallowStep(o,dt))G2.objs.splice(i,1);}
   for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
@@ -5651,9 +5651,10 @@ function wsTxt(w){return [w.s?w.s+' GÜMÜŞ KABUK':'',w.g?'ALTIN KABUK':''].fil
 function v2Teaser(l){const n=new2(l),h=v2Hard(l),c=v2Chal(l),rc=labRec(l),pw=rc?`<span class="pwT${labGap(l)?' low':''}">⚡ ${T('Önerilen güç')} ${rc} · ${T('Gücün')} ${labPower()}</span>`:'',hz=h?`<span class="hdT">🔥 ${T(h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')} · ⏱ ${T(v2HardT(l)+' sn')}</span>`:c?`<span class="hdT">${c==='belt'?'☄ '+T('METEOR KUŞAĞI'):'💨 '+T('HIZLI KÜÇÜLME')}</span>`:'';return n||h||c||rc?`<b>${T('SIRADA')}</b>${T('SEVİYE')} ${l}${n?` · ${newLbl(n)}`:''}${hz}${pw}`:'';}
 
 // ── 1.5.0 depth: rocks drifting far behind the play, two big blurred rocks peeking in at the side edges, sparse speed streaks ──
-// Decoration only: nothing here feels the pull or can be hit. It is drawn under every body and fades out wherever it would sit on a body,
-// inside the hole's pull or under the top bar and the power tray, so it never hides anything. The hole itself is not touched.
-const DEPTH={far:12,st:20,stX:56,farK:.03,nearK:.06};
+// Decoration only: nothing here feels the pull or can be hit. Bodies are drawn on the WebGL canvas underneath, so the decoration goes out
+// at once wherever a body is (or is about to be), inside the hole's pull and under the top bar and the power tray: it never hides anything.
+// It is the first thing a slow phone drops. The hole itself is not touched.
+const DEPTH={far:12,st:20,stBusy:6,farK:.03,nearK:.06};
 let DSPR=null; // rock pictures, painted in the menu one rock at a time (no frame in play pays for them)
 function v2DepthShape(seed){const rr=v2Mul(seed),h=[];for(let k=2;k<=7;k++)h.push({k,a:rr()*.075/(k*.42),p:rr()*TAU});
   const cr=[],n=4+Math.floor(rr()*5);for(let i=0;i<n;i++)cr.push({a:rr()*TAU,d:Math.sqrt(rr())*.7,r:.08+rr()*.19});
@@ -5668,66 +5669,85 @@ function v2DepthPaint(g,sh,rot,cx,cy,R,dark){ // a lumpy cratered rock lit from 
   if(dark){g.globalCompositeOperation='source-atop';g.fillStyle='rgba(5,3,10,.42)';g.fillRect(0,0,g.canvas.width,g.canvas.height);g.globalCompositeOperation='source-over';}}
 function v2DepthPrep(chain){if(!rel(10)||DSPR&&(DSPR.done||DSPR.run&&!chain))return; // the menu asks every time it opens; one chain does the work
   if(!DSPR)DSPR={far:[],near:[],q:[['far',0],['far',1],['far',2],['near',0],['near',1]],run:1};
-  if(gState==='playing'){setTimeout(()=>v2DepthPrep(1),1500);return;} // only between levels
+  if(G2.on&&gState!=='menu'&&gState!=='over'&&gState!=='paused'){setTimeout(()=>v2DepthPrep(1),1500);return;} // only on still screens: never in play, a tip card or the level-up animation
   const [kind,v]=DSPR.q.shift(),far=kind==='far',size=far?48:160,F=far?12:8,R=size*.4,sh=v2DepthShape((far?301:501)+v*97),fr=[],tmp=document.createElement('canvas');tmp.width=tmp.height=size;const tg=tmp.getContext('2d');
   for(let f=0;f<F;f++){const c=document.createElement('canvas');c.width=c.height=size;const g=c.getContext('2d');tg.clearRect(0,0,size,size);v2DepthPaint(tg,sh,f/F*TAU,size/2,size/2,R,!far);if('filter' in g)g.filter=`blur(${far?1:3}px)`;g.drawImage(tmp,0,0);fr.push(c);}
   DSPR[kind].push({fr,R});if(DSPR.q.length)setTimeout(()=>v2DepthPrep(1),150);else DSPR.done=1;}
 function v2DepthNear(i,first){const r=sp2(rnd(70,95)),L=i%2===0;return {x:L?-r*.62:W+r*.62,y:-r*1.5,r,vy:sp2(rnd(20,28)),v:i,rot:rnd(0,TAU),spin:rnd(-.1,.1),a:0,idle:first?rnd(8,25):rnd(45,75)};} // one big rock at a time, sides taking turns; its centre stays off screen (at most a third shows); it takes ~40 s to pass, then 45-75 s with none
-function v2DepthInit(){const d={far:[],near:[],st:[]},mx=Math.hypot(W,H)*.65;
+function v2DepthInit(){const d={far:[],near:[],st:[],W,H},mx=Math.hypot(W,H)*.65;
   for(let i=0;i<DEPTH.far;i++)d.far.push({x:rnd(0,W),y:rnd(0,H),r:sp2(rnd(5,11)),vx:sp2(rnd(-4,4)),vy:sp2(rnd(5,12)),v:i,rot:rnd(0,TAU),spin:rnd(-.3,.3),a:0});
   d.near.push(v2DepthNear(Math.random()<.5?0:1,true));
-  for(let i=0;i<DEPTH.stX;i++)d.st.push({a:rnd(0,TAU),d:rnd(sp2(80),mx),v:sp2(rnd(120,320))});return d;}
+  for(let i=0;i<DEPTH.st;i++)d.st.push({a:rnd(0,TAU),d:rnd(sp2(80),mx),v:sp2(rnd(120,320))});return d;}
 function v2DepthFree(x,y,r){ // 0..1: how clear this spot is of the bars, the hole's pull and every body
   let q=clamp((y-sp2(80))/sp2(50),0,1)*clamp((H-sp2(120)-y)/sp2(50),0,1);if(q<=0)return 0;
   q*=clamp((Math.hypot(x-hX,y-hY)-r-G2.G)/sp2(40),0,1);if(q<=0)return 0;
-  const near=(bx,by,br)=>{const e=Math.hypot(x-bx,y-by)-r-br;if(e<sp2(24))q*=clamp(e/sp2(24),0,1);};
-  for(const o of G2.objs){if(o.st==='in'||o.wait>0)near(o.x,o.y,o.r);if(q<=0)return 0;}
+  const m=sp2(40),near=(bx,by,br)=>{const e=Math.hypot(x-bx,y-by)-r-br;if(e<m)q*=clamp(e/m,0,1);};
+  for(const o of G2.objs){if(o.st==='in'||o.wait>0){near(o.x,o.y,o.r);near(o.x+o.vx*.35,o.y+o.vy*.35,o.r);}if(q<=0)return 0;} // where it is and where it will be in a third of a second
   if(G2.boss)near(G2.boss.x,G2.boss.y,G2.boss.r||0);if(G2.guard&&G2.guard.px!==undefined)near(G2.guard.px,G2.guard.py,G2.guard.pr*1.7);if(G2.rv&&!G2.rv.dead)near(G2.rv.x,G2.rv.y,G2.rv.R||0);
   return q;}
+function v2OnBody(x,y,m){ // is this point on (or within m of) a body? bodies on the WebGL canvas cannot be drawn over
+  for(const o of G2.objs)if((o.st==='in'||o.wait>0)&&Math.abs(x-o.x)<o.r+m&&Math.abs(y-o.y)<o.r+m&&Math.hypot(x-o.x,y-o.y)<o.r+m)return true;
+  const b=G2.boss;if(b&&Math.hypot(x-b.x,y-b.y)<(b.r||0)+m)return true;const g=G2.guard;if(g&&g.px!==undefined&&Math.hypot(x-g.px,y-g.py)<g.pr*1.7+m)return true;
+  const v=G2.rv;return !!(v&&!v.dead&&Math.hypot(x-v.x,y-v.y)<(v.R||0)+m);}
 function v2DepthSpr(set,o,x,y,r){const s=set[o.v%set.length],F=s.fr.length,img=s.fr[((Math.floor(o.rot/TAU*F)%F)+F)%F],z=img.width*r/s.R;ctx.drawImage(img,x-z/2,y-z/2,z,z);}
-function v2DepthDraw(dt){if(!DSPR||!DSPR.done||!G2.on||GL.quality<.75)return; /* slow frames drop the decoration first */
+function v2DepthDraw(dt){if(!DSPR||!DSPR.done||!G2.on||FXLITE||GL.quality<1)return; /* a phone that proved slow drops the decoration before anything else */
   const d=G2.dep||(G2.dep=v2DepthInit()),px=W/2-hX,py=H*.55-hY,ease=Math.min(1,dt*5);
-  {const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stX:DEPTH.st,fast=busy?1.8:1,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks rush in toward the hole; more of them in a belt, the storm or Vortex
-   for(let i=0;i<d.st.length;i++){const s=d.st[i];if(gState==='playing')s.d-=s.v*dt*fast;if(s.d<G2.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
-    const len=s.v*.09*fast,q=clamp((s.d-G2.R*1.3)/(G2.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1);if(q<.02)continue;const ca=Math.cos(s.a),sa=Math.sin(s.a);B[q<.33?0:q<.66?1:2].push(hX+ca*s.d,hY+sa*s.d,hX+ca*(s.d+len),hY+sa*(s.d+len));}
+  if(d.W!==W||d.H!==H){const kx=W/d.W,ky=H/d.H;for(const o of d.far){o.x*=kx;o.y*=ky;}for(const o of d.near)o.x=o.v%2===0?-o.r*.62:W+o.r*.62;d.W=W;d.H=H;} // a resize (URL bar, rotation) keeps the layer, only rescaled
+  {const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stBusy:DEPTH.st,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks drift in toward the hole; only a few while a belt, the storm or Vortex keeps the screen busy
+   for(let i=0;i<d.st.length;i++){const s=d.st[i];if(gState==='playing')s.d-=s.v*dt;if(s.d<G2.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
+    const len=s.v*.09,q=clamp((s.d-G2.R*1.3)/(G2.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1);if(q<.02)continue;const ca=Math.cos(s.a),sa=Math.sin(s.a),dm=s.d+len/2;
+    if(v2OnBody(hX+ca*dm,hY+sa*dm,len/2+sp2(10)))continue;B[q<.33?0:q<.66?1:2].push(hX+ca*s.d,hY+sa*s.d,hX+ca*(s.d+len),hY+sa*(s.d+len));}
    ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineWidth=sp2(1.2);[.12,.26,.48].forEach((al,b)=>{const L=B[b];if(!L.length)return;ctx.strokeStyle=`rgba(170,230,255,${al})`;ctx.beginPath();for(let j=0;j<L.length;j+=4){ctx.moveTo(L[j],L[j+1]);ctx.lineTo(L[j+2],L[j+3]);}ctx.stroke();});ctx.restore();}
   const mv=gState==='playing'?dt:0;
   for(const o of d.far){o.x+=o.vx*mv;o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y>H+20){o.y=-20;o.x=rnd(0,W);o.a=0;}
-    const x=o.x+px*DEPTH.farK,y=o.y+py*DEPTH.farK;o.a+=(v2DepthFree(x,y,o.r)*.55-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.far,o,x,y,o.r);}
+    const x=o.x+px*DEPTH.farK,y=o.y+py*DEPTH.farK,t=v2DepthFree(x,y,o.r)*.55;o.a=t<o.a?t:o.a+(t-o.a)*ease; /* out at once, back in slowly */if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.far,o,x,y,o.r);}
   for(let i=0;i<d.near.length;i++){const o=d.near[i];if(o.idle>0){o.idle-=mv;continue;}o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y-o.r*1.3>H){d.near[i]=v2DepthNear(o.v+1,false);continue;}
-    const y=o.y+py*DEPTH.nearK;o.a+=(v2DepthFree(o.x,y,o.r*.8)*.5-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.near,o,o.x,y,o.r);}
+    const y=o.y+py*DEPTH.nearK,t=v2DepthFree(o.x,y,o.r*.8)*.5;o.a=t<o.a?t:o.a+(t-o.a)*ease;if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.near,o,o.x,y,o.r);}
   ctx.globalAlpha=1;}
 
 // ── 1.5.0 meteors: a fireball (white-hot core, a two-layer tail that grows with speed, embers and ash); gold while the Golden Arc lasts ──
 const MFIRE={core:'255,250,225',mid:'255,185,80',out:'255,105,35',em:'#ffbe5a',tint:'rgba(60,20,0,.3)',ash:'70,58,60'},MGOLD={core:'255,255,238',mid:'255,215,106',out:'255,165,40',em:'#ffe08c',tint:'rgba(255,200,80,.42)',ash:null};
 const v2MetPal=()=>G2.garcT>0?MGOLD:MFIRE;
-function v2MetTail(x,y,ux,uy,len,w,stops){const nx=-uy,ny=ux,tx=x-ux*len,ty=y-uy*len,g=ctx.createLinearGradient(x,y,tx,ty);for(const [o,c] of stops)g.addColorStop(o,c);ctx.fillStyle=g;
-  ctx.beginPath();ctx.moveTo(x+nx*w,y+ny*w);ctx.quadraticCurveTo(x-ux*len*.35+nx*w*.85,y-uy*len*.35+ny*w*.85,tx,ty);ctx.quadraticCurveTo(x-ux*len*.35-nx*w*.85,y-uy*len*.35-ny*w*.85,x-nx*w,y-ny*w);ctx.arc(x,y,w,Math.atan2(-ny,-nx),Math.atan2(ny,nx),false);ctx.closePath();ctx.fill();}
-function v2MetFire(o,s,r,ux,uy,sp){const P=v2MetPal(),k=clamp(sp/(v2Speed('meteor')||sp||1),0,1),fl=1+.07*Math.sin(clock*41+o.si*7)+.04*Math.sin(clock*67+o.si*3),len=r*(2.6+9*k)*fl; // the tail grows as it speeds up
+const MSPR={}; // per palette: the halo, the warning glow, the front glow and three tail layers, painted once (no gradient is made per meteor per frame)
+function v2MetSpr(P){const key=P.core+P.mid;if(MSPR[key])return MSPR[key];const S={},cv=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
+  const disc=stops=>{const c=cv(128,128),g=c.getContext('2d'),q=g.createRadialGradient(64,64,0,64,64,64);for(const [o,col] of stops)q.addColorStop(o,col);g.fillStyle=q;g.fillRect(0,0,128,128);return c;};
+  const tail=stops=>{const c=cv(256,64),g=c.getContext('2d'),q=g.createLinearGradient(32,0,256,0),x=32,y=32,w=30,L=224;for(const [o,col] of stops)q.addColorStop(o,col);g.fillStyle=q; // head centre (32,32), half width 30, tip 224 behind it
+    g.beginPath();g.moveTo(x,y-w);g.quadraticCurveTo(x+L*.35,y-w*.85,x+L,y);g.quadraticCurveTo(x+L*.35,y+w*.85,x,y+w);g.arc(x,y,w,Math.PI/2,Math.PI*1.5,false);g.closePath();g.fill();return c;};
+  S.halo=disc([[0,`rgba(${P.core},.9)`],[.35,`rgba(${P.mid},.45)`],[1,`rgba(${P.out},0)`]]);
+  S.flare=disc([[0,`rgba(${P.core},.75)`],[.3,`rgba(${P.mid},.45)`],[1,`rgba(${P.out},0)`]]);
+  S.front=disc([[0,`rgba(${P.mid},.6)`],[1,`rgba(${P.mid},0)`]]);
+  S.outer=tail([[0,`rgba(${P.mid},.75)`],[.35,`rgba(${P.out},.45)`],[1,`rgba(${P.out},0)`]]);
+  S.inner=tail([[0,`rgba(${P.core},.95)`],[.5,`rgba(${P.mid},.5)`],[1,`rgba(${P.mid},0)`]]);
+  S.bit=tail([[0,`rgba(${P.mid},.8)`],[1,`rgba(${P.mid},0)`]]);
+  return MSPR[key]=S;}
+function v2MetTail(img,x,y,ux,uy,len,w){const sx=len/224,sy=w/30;ctx.save();ctx.translate(x,y);ctx.rotate(Math.atan2(-uy,-ux));ctx.drawImage(img,-32*sx,-32*sy,256*sx,64*sy);ctx.restore();} // a tail sprite laid behind (x,y), stretched to its length and width
+function v2MetFire(o,s,r,ux,uy,sp){const P=v2MetPal(),S=v2MetSpr(P),k=clamp(sp/(v2Speed('meteor')||sp||1),0,1),fl=1+.07*Math.sin(clock*41+o.si*7)+.04*Math.sin(clock*67+o.si*3),len=r*(2.6+9*k)*fl; // the tail grows as it speeds up
   ctx.save();ctx.globalCompositeOperation='lighter';if(o.belt)v2BeltTail(o.x,o.y,r,ux,uy,r*12);
-  v2MetTail(o.x,o.y,ux,uy,len,r*1.12*fl,[[0,`rgba(${P.mid},.75)`],[.35,`rgba(${P.out},.45)`],[1,`rgba(${P.out},0)`]]);
-  v2MetTail(o.x,o.y,ux,uy,len*.55,r*.55,[[0,`rgba(${P.core},.95)`],[.5,`rgba(${P.mid},.5)`],[1,`rgba(${P.mid},0)`]]);
-  const hg=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.6);hg.addColorStop(0,`rgba(${P.core},.9)`);hg.addColorStop(.35,`rgba(${P.mid},.45)`);hg.addColorStop(1,`rgba(${P.out},0)`);ctx.fillStyle=hg;ctx.beginPath();ctx.arc(o.x,o.y,r*2.6,0,TAU);ctx.fill();ctx.restore();
-  v2Rock(o,s,P.tint);
-  ctx.save();ctx.globalCompositeOperation='lighter';const a=Math.atan2(uy,ux),fx=o.x+ux*r*.55,fy=o.y+uy*r*.55,f=ctx.createRadialGradient(fx,fy,0,fx,fy,r*1.1);f.addColorStop(0,`rgba(${P.mid},.6)`);f.addColorStop(1,`rgba(${P.mid},0)`);ctx.fillStyle=f;ctx.beginPath();ctx.arc(o.x,o.y,r*1.05,0,TAU);ctx.fill();
+  v2MetTail(S.outer,o.x,o.y,ux,uy,len,r*1.12*fl);
+  if(!FXLITE){v2MetTail(S.inner,o.x,o.y,ux,uy,len*.55,r*.55);const R=r*2.6;ctx.drawImage(S.halo,o.x-R,o.y-R,R*2,R*2);} // a phone that proved slow keeps the outer tail only
+  ctx.restore();
+  v2Rock(o,s,P.tint);if(FXLITE)return;
+  ctx.save();ctx.globalCompositeOperation='lighter';const a=Math.atan2(uy,ux),fx=o.x+ux*r*.55,fy=o.y+uy*r*.55,fr=r*1.1;
+  ctx.save();ctx.beginPath();ctx.arc(o.x,o.y,r*1.05,0,TAU);ctx.clip();ctx.drawImage(S.front,fx-fr,fy-fr,fr*2,fr*2);ctx.restore();
   ctx.strokeStyle=`rgba(${P.core},.9)`;ctx.lineWidth=r*.2;ctx.lineCap='round';ctx.beginPath();ctx.arc(o.x,o.y,r*.86,a-1,a+1);ctx.stroke(); // the leading face glows white-hot
   if(P===MGOLD)for(let i=0;i<3;i++){const b=clock*3+i*2.1+o.si,gx=o.x+Math.cos(b)*r*1.7,gy=o.y+Math.sin(b*1.3)*r*1.7,z=r*(.35+.25*Math.sin(clock*9+i));ctx.strokeStyle=`rgba(255,250,220,${.5+.4*Math.sin(clock*7+i)})`;ctx.lineWidth=sp2(1.4);ctx.beginPath();ctx.moveTo(gx-z,gy);ctx.lineTo(gx+z,gy);ctx.moveTo(gx,gy-z);ctx.lineTo(gx,gy+z);ctx.stroke();} // gold: glints, safe to swallow now
   ctx.restore();}
-function v2MetFlare(o){const P=v2MetPal(),x=clamp(o.x,0,W),y=clamp(o.y,0,H),pu=.6+.4*Math.sin(clock*12),R=sp2(52);ctx.save();ctx.globalCompositeOperation='lighter'; // the warning: the screen edge glows where it will come in
-  const q=ctx.createRadialGradient(x,y,0,x,y,R);q.addColorStop(0,`rgba(${P.core},${.75*pu})`);q.addColorStop(.3,`rgba(${P.mid},${.45*pu})`);q.addColorStop(1,`rgba(${P.out},0)`);ctx.fillStyle=q;ctx.beginPath();ctx.arc(x,y,R,0,TAU);ctx.fill();ctx.restore();}
+function v2MetFlare(o){const S=v2MetSpr(v2MetPal()),R=sp2(46),x=clamp(o.x,sp2(12),W-sp2(12)),y=clamp(o.y,sp2(12),H-sp2(12));ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=.6+.4*Math.sin(clock*12); // the edge glows where it will come in (the red arrow is drawn over it)
+  ctx.drawImage(S.flare,x-R,y-R,R*2,R*2);ctx.restore();}
 let ASHC=null;
 function v2MetSparks(dt){ // embers shed from the tail (more when fast) and ash left hanging; embers near the hole are caught by its pull
   const P=v2MetPal(),A=G2.ash||(G2.ash=[]);
   for(const o of G2.objs){if(o.k!=='meteor'||o.st!=='in'||o.wait>0||o.x<-o.r||o.x>W+o.r||o.y<-o.r||o.y>H+o.r)continue;const sp=Math.hypot(o.vx,o.vy)||1,ux=o.vx/sp,uy=o.vy/sp,k=clamp(sp/(v2Speed('meteor')||sp),0,1);
-    if(G2.parts.length<120&&Math.random()<dt*(10+30*k)){const a=rnd(-1,1),b=sp*rnd(.1,.35)/60;G2.parts.push({x:o.x-ux*o.r*.6,y:o.y-uy*o.r*.6,vx:-ux*b-uy*a*.8,vy:-uy*b+ux*a*.8,life:rnd(.35,.65),max:.65,c:P.em,sz:rnd(1.2,2.2),pl:1});}
-    if(P.ash&&A.length<40){o.ashT=(o.ashT||0)-dt;if(o.ashT<=0){o.ashT=.05;A.push({x:o.x-ux*o.r,y:o.y-uy*o.r,r:o.r*rnd(.6,.9),t:0,l:rnd(.8,1.2)});}}}
+    if(!FXLITE&&G2.parts.length<120&&Math.random()<dt*(10+30*k)){const a=rnd(-1,1),b=sp*rnd(.1,.35)/60;G2.parts.push({x:o.x-ux*o.r*.6,y:o.y-uy*o.r*.6,vx:-ux*b-uy*a*.8,vy:-uy*b+ux*a*.8,life:rnd(.35,.65),max:.65,c:P.em,sz:rnd(1.2,2.2),pl:1});}
+    if(P.ash&&!FXLITE&&A.length<40){o.ashT=(o.ashT||0)-dt;if(o.ashT<=0){o.ashT=.05;A.push({x:o.x-ux*o.r,y:o.y-uy*o.r,r:o.r*rnd(.6,.9),t:0,l:rnd(.8,1.2)});}}}
   for(let i=A.length-1;i>=0;i--){A[i].t+=dt;if(A[i].t>A[i].l)A.splice(i,1);}}
 function v2DrawAsh(){const A=G2.ash;if(!A||!A.length)return;if(!ASHC){ASHC=document.createElement('canvas');ASHC.width=ASHC.height=64;const g=ASHC.getContext('2d'),q=g.createRadialGradient(32,32,0,32,32,32);q.addColorStop(0,`rgba(${MFIRE.ash},1)`);q.addColorStop(.5,`rgba(${MFIRE.ash},.45)`);q.addColorStop(1,`rgba(${MFIRE.ash},0)`);g.fillStyle=q;g.fillRect(0,0,64,64);}
-  for(const s of A){const q=s.t/s.l,r=s.r*(1+q*2.2);ctx.globalAlpha=.13*(1-q);ctx.drawImage(ASHC,s.x-r,s.y-r,r*2,r*2);}ctx.globalAlpha=1;}
+  for(const s of A){const q=s.t/s.l,r=s.r*(1+q*2.2);if(v2OnBody(s.x,s.y,r))continue;ctx.globalAlpha=.13*(1-q);ctx.drawImage(ASHC,s.x-r,s.y-r,r*2,r*2);}ctx.globalAlpha=1;}
 function v2MetBreak(o){if(!rel(10))return;const B=G2.mbits||(G2.mbits=[]);if(B.length>15)return;const sp=Math.hypot(o.vx,o.vy)||1,a0=Math.atan2(o.vy,o.vx); // a destroyed meteor breaks into three glowing pieces
   for(let i=0;i<3;i++){const a=a0+(i-1)*.9+rnd(-.2,.2),v=sp2(rnd(140,220));B.push({x:o.x,y:o.y,vx:Math.cos(a)*v+o.vx*.3,vy:Math.sin(a)*v+o.vy*.3,r:o.r*rnd(.38,.5),rot:rnd(0,TAU),spin:rnd(-6,6),t:0,l:.9,si:o.si,gold:G2.garcT>0});}}
-function v2DrawBits(dt){const B=G2.mbits;if(!B||!B.length)return;for(let i=B.length-1;i>=0;i--){const b=B[i];b.t+=dt;if(b.t>b.l){B.splice(i,1);continue;}b.x+=b.vx*dt;b.y+=b.vy*dt;b.vx*=Math.pow(.4,dt);b.vy*=Math.pow(.4,dt);b.rot+=b.spin*dt;
-  const q=1-b.t/b.l,P=b.gold?MGOLD:MFIRE,sp=Math.hypot(b.vx,b.vy)||1;ctx.save();ctx.globalAlpha=q;ctx.globalCompositeOperation='lighter';v2MetTail(b.x,b.y,b.vx/sp,b.vy/sp,b.r*(2+sp/sp2(60)),b.r*.9,[[0,`rgba(${P.mid},.8)`],[1,`rgba(${P.mid},0)`]]);ctx.globalCompositeOperation='source-over';v2Rock(b,1,P.tint);ctx.restore();}}
+function v2DrawBits(dt){const B=G2.mbits;if(!B||!B.length)return;const mv=gState==='playing'?dt:0; /* the pieces hold still while the game is paused or a card is up */
+  for(let i=B.length-1;i>=0;i--){const b=B[i];b.t+=mv;if(b.t>b.l){B.splice(i,1);continue;}b.x+=b.vx*mv;b.y+=b.vy*mv;b.vx*=Math.pow(.4,mv);b.vy*=Math.pow(.4,mv);b.rot+=b.spin*mv;
+  const q=1-b.t/b.l,P=b.gold?MGOLD:MFIRE,sp=Math.hypot(b.vx,b.vy)||1;ctx.save();ctx.globalAlpha=q;if(!FXLITE){ctx.globalCompositeOperation='lighter';v2MetTail(v2MetSpr(P).bit,b.x,b.y,b.vx/sp,b.vy/sp,b.r*(2+sp/sp2(60)),b.r*.9);ctx.globalCompositeOperation='source-over';}v2Rock(b,1,P.tint);ctx.restore();}}
 
 // ── drawing ───────────────────────────────────────────
 function v2Frame(dt){
@@ -5844,10 +5864,15 @@ function v2RockImg(i){ // rock photos brightened once: dark rocks were hard to s
   const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext('2d');
   if('filter' in x){x.filter='brightness(1.6) contrast(1.08) saturate(1.1)';x.drawImage(im,0,0);}else{x.drawImage(im,0,0);x.globalCompositeOperation='lighter';x.globalAlpha=.45;x.drawImage(im,0,0);}
   return ROCKB[i]=c;}
+const ROCKT={};
+function v2RockTint(i,tint){const k=i+tint;if(ROCKT[k])return ROCKT[k];const im=v2RockImg(i);if(!im||!(im.naturalWidth||im.width)||im.complete===false)return null; // 1.5.0: a tinted copy of the rock picture, so the tint never spills onto the glow around it
+  const c=document.createElement('canvas');c.width=im.naturalWidth||im.width;c.height=im.naturalHeight||im.height;const g=c.getContext('2d');g.drawImage(im,0,0);g.globalCompositeOperation='source-atop';g.fillStyle=tint;g.fillRect(0,0,c.width,c.height);return ROCKT[k]=c;}
 function v2Rock(o,s,tint){
   const im=v2RockImg(o.si%6);const r=o.r*s;ctx.save();ctx.translate(o.x,o.y);ctx.rotate(o.rot);
-  if(im){ctx.drawImage(im,-r*1.15,-r*1.15,r*2.3,r*2.3);}else{ctx.fillStyle='#8a8a86';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();}
-  if(tint){ctx.globalCompositeOperation='source-atop';ctx.fillStyle=tint;ctx.fillRect(-r*1.2,-r*1.2,r*2.4,r*2.4);}
+  const ti=tint&&rel(10)?v2RockTint(o.si%6,tint):null;
+  if(ti)ctx.drawImage(ti,-r*1.15,-r*1.15,r*2.3,r*2.3);
+  else{if(im){ctx.drawImage(im,-r*1.15,-r*1.15,r*2.3,r*2.3);}else{ctx.fillStyle='#8a8a86';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();}
+    if(tint){ctx.globalCompositeOperation='source-atop';ctx.fillStyle=tint;ctx.fillRect(-r*1.2,-r*1.2,r*2.4,r*2.4);}}
   ctx.restore();
 }
 function v2DrawObj(o,gl){
@@ -6035,7 +6060,7 @@ function v2DrawMini(q){const r=Math.max(1,q.r);ctx.save();ctx.translate(q.x,q.y)
   ctx.globalCompositeOperation='source-over';ctx.fillStyle='#000';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawWarn(o){ // meteor about to enter: a red marker where it will come in
   if(o.k==='meteor')v2MetPath(o);
-  if(o.k==='meteor'&&rel(10)){v2MetFlare(o);return;}
+  if(o.k==='meteor'&&rel(10))v2MetFlare(o); // 1.5.0: the edge glow is added under the usual red arrow, which still points the way
   const x=clamp(o.x,14,W-14),y=clamp(o.y,14,H-14),pu=.55+.45*Math.sin(clock*18);ctx.save();ctx.translate(x,y);
   const a=Math.atan2(o.vy,o.vx);ctx.globalAlpha=pu;ctx.fillStyle='#ff5a45';ctx.beginPath();ctx.moveTo(Math.cos(a)*14,Math.sin(a)*14);ctx.lineTo(Math.cos(a+2.5)*9,Math.sin(a+2.5)*9);ctx.lineTo(Math.cos(a-2.5)*9,Math.sin(a-2.5)*9);ctx.closePath();ctx.fill();
   ctx.fillStyle='#fff';ctx.font='900 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('!',0,1);ctx.restore();}
