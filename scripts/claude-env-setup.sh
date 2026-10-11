@@ -23,7 +23,9 @@ SKILLS=(
   # Capacitor (Android/iOS paketleme)
   "https://github.com/cap-go/capgo-skills debugging-capacitor safe-area-handling ios-android-logs capacitor-testing"
   # Firebase (CRM ve danışmanlık portalı)
-  "https://github.com/firebase/agent-skills firebase-basics firebase-auth-basics firebase-firestore firebase-hosting-basics firebase-security-rules-auditor firestore-rules-creation"
+  "https://github.com/firebase/agent-skills firebase-basics firebase-auth-basics firebase-firestore firebase-hosting-basics firebase-security-rules-auditor firestore-rules-creation firebase-ai-logic-basics"
+  # Gemini API
+  "https://github.com/google-gemini/gemini-skills gemini-api-dev"
 )
 
 # ---------------------------------------------------------------------------
