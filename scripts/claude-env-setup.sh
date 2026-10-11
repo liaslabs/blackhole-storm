@@ -10,10 +10,18 @@ log() { echo "[claude-env-setup] $*"; }
 
 # ---------------------------------------------------------------------------
 # A) Global skill'ler (~/.claude/skills — her repoda görünür)
-#    Biçim: "<kaynak repo> <skill adı>"
+#    Biçim: "<kaynak repo> <skill adı> [<skill adı> ...]"
 # ---------------------------------------------------------------------------
 SKILLS=(
+  # Skill bulucu
   "https://github.com/vercel-labs/skills find-skills"
+  # Oyun geliştirme (HTML5 Canvas/WebGL) ve Google Play sayfası denetimi
+  "https://github.com/github/awesome-copilot game-engine"
+  "https://github.com/coreyhaines31/marketingskills aso"
+  # Three.js
+  "https://github.com/cloudai-x/threejs-skills threejs-fundamentals threejs-geometry threejs-materials threejs-lighting threejs-textures threejs-animation threejs-loaders threejs-shaders threejs-postprocessing threejs-interaction"
+  # Capacitor (Android/iOS paketleme)
+  "https://github.com/cap-go/capgo-skills debugging-capacitor safe-area-handling ios-android-logs capacitor-testing"
 )
 
 # ---------------------------------------------------------------------------
@@ -69,9 +77,10 @@ command -v agent-reach >/dev/null 2>&1 \
   && { agent-reach skill --install >/dev/null 2>&1 || log "agent-reach skill kurulamadı"; }
 
 for entry in "${SKILLS[@]}"; do
-  read -r src name <<<"$entry"
-  (cd /tmp && npx -y skills add "$src" --skill "$name" --agent claude-code -g -y >/dev/null 2>&1) \
-    || log "skill kurulamadı: $name"
+  read -r src names <<<"$entry"
+  # shellcheck disable=SC2086  # skill adları bilerek kelimelere bölünür
+  (cd /tmp && npx -y skills add "$src" --skill $names --agent claude-code -g -y >/dev/null 2>&1) \
+    || log "skill kurulamadı: $names"
 done
 
 # ---------------------------------------------------------------------------
