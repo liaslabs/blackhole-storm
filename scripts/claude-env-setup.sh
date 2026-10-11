@@ -22,6 +22,8 @@ SKILLS=(
   "https://github.com/cloudai-x/threejs-skills threejs-fundamentals threejs-geometry threejs-materials threejs-lighting threejs-textures threejs-animation threejs-loaders threejs-shaders threejs-postprocessing threejs-interaction"
   # Capacitor (Android/iOS paketleme)
   "https://github.com/cap-go/capgo-skills debugging-capacitor safe-area-handling ios-android-logs capacitor-testing"
+  # Firebase (CRM ve danışmanlık portalı)
+  "https://github.com/firebase/agent-skills firebase-basics firebase-auth-basics firebase-firestore firebase-hosting-basics firebase-security-rules-auditor firestore-rules-creation"
 )
 
 # ---------------------------------------------------------------------------
