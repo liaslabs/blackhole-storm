@@ -2656,7 +2656,7 @@ function dmClaim(i){
 // RECORDS (this device's own runs only; no invented rivals)
 // ══════════════════════════════════════════════════════
 const MODE_TAG={classic:'Normal',survival:'Hayatta kalma',sprint:'60 sn',hard:'Zor Mod'};
-function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:rel(8)&&HMODE&&gameMode==='classic'?'hard':gameMode,d:`${t.getDate()}.${t.getMonth()+1}`});localLB.sort((a,b)=>b.score-a.score);
+function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mode:rel(8)&&HMODE&&gameMode==='classic'?'hard':gameMode,d:`${t.getDate()}.${t.getMonth()+1}`,...(rel(9)&&maxCombo>=2?{c:maxCombo}:{})});localLB.sort((a,b)=>b.score-a.score);
   if(rel(8)){const per={};localLB=localLB.filter(e=>(per[e.mode]=(per[e.mode]||0)+1)<=10);}else localLB=localLB.slice(0,10);saveG();} /* 1.4.8: each mode keeps its own top 10 (long classic runs crowded the survival scores out) */
 function recordsText(){const f=n=>nf(n),sv=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0),hi=Math.max(bestScore,localLB[0]?localLB[0].score:0);
   const L=[`🕳️ Blackhole Storm · ${T('REKORLARIM')}`,`🏆 ${T('EN YÜKSEK')}: ${f(hi)}`,`🌀 ${T('EN İYİ SEVİYE')}: ${bestLevel}`];if(sv)L.push(`⛈ ${T('HAYATTA KAL REKORU')}: ${f(sv)}`);if(sprintBest)L.push(`⏱ ${T('60 SN REKORU')}: ${f(sprintBest)}`);
@@ -2671,7 +2671,7 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
     const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);
     L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
-      const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d):e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n,p);l.appendChild(r);});}
+      const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d)+(e.c>=2?' · 🔥 ×'+e.c:''):e.d||''; /* 1.4.9: the run's best combo beside its date (older records have none) */const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n,p);l.appendChild(r);});}
     $('sLB').classList.add('on');return;}
   localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');
     const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
