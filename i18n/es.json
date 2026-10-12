@@ -1771,5 +1771,8 @@
 "TURNUVADA {n}. OLDUN!": "¡QUEDASTE {n}.º EN EL TORNEO!",
 "Turnuva ödülün": "Tu premio del torneo",
 "Dünün şampiyonu": "Campeón de ayer",
-"SEN!": "¡TÚ!"
+"SEN!": "¡TÚ!",
+"ÖDÜLÜ AL": "RECLAMAR PREMIO",
+"{d} turnuvası": "Torneo del {d}",
+"Bağlantı yok, biraz sonra tekrar dene": "Sin conexión, inténtalo de nuevo en un momento"
 }

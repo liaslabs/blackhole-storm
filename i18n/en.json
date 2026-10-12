@@ -1771,5 +1771,8 @@
 "TURNUVADA {n}. OLDUN!": "YOU PLACED #{n} IN THE TOURNAMENT!",
 "Turnuva ödülün": "Your tournament prize",
 "Dünün şampiyonu": "Yesterday's champion",
-"SEN!": "YOU!"
+"SEN!": "YOU!",
+"ÖDÜLÜ AL": "CLAIM PRIZE",
+"{d} turnuvası": "Tournament of {d}",
+"Bağlantı yok, biraz sonra tekrar dene": "No connection, try again in a moment"
 }

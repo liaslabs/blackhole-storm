@@ -364,6 +364,9 @@ body.r7.v2 #boost2 .hb2{-webkit-backdrop-filter:none;backdrop-filter:none;backgr
 #boost2 .hb2 i{font-style:normal;font-family:var(--fd);font-size:8px;letter-spacing:.02em;color:#d6dcea;max-width:58px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 #boost2 .hb2 b{position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;border-radius:11px;background:#ffd84d;color:#1c1405;font-family:var(--fm);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(7,9,12,.9);}
 #boost2 .hb2.dia b{background:#6fd0f0;color:#04131a;}
+#mPrize{position:fixed;z-index:150;background:#0c0f1e;text-align:center;border-color:rgba(159,216,255,.45);box-shadow:0 0 0 100vmax rgba(2,3,10,.75);}#mPrize.gold{border-color:#ffd76a;box-shadow:0 0 0 100vmax rgba(2,3,10,.75),0 0 40px rgba(255,215,106,.35);}
+#mPrize .przIc{font-size:54px;line-height:1;margin:4px 0 6px;}#mPrize .przIc .ico{width:60px;height:60px;}#mPrize .przT{color:#ffd76a;}#mPrize .przD{font-size:12.5px;color:var(--dim);margin-bottom:10px;}
+#mPrize .przS{font-family:var(--fd);font-size:30px;color:#fff;margin-bottom:6px;}#mPrize .przS .ico{width:26px;height:26px;}#mPrize .przMsg{min-height:16px;font-size:12px;color:#ff9a8a;margin-bottom:6px;}
 #mTour{position:fixed;z-index:150;background:#0c0f1e;border-color:rgba(255,215,106,.5);text-align:center;box-shadow:0 0 0 100vmax rgba(2,3,10,.72);}#mTour .trKit b span{font-size:inherit;letter-spacing:normal;color:inherit;}#mTour .trKit b .ico{width:22px;height:22px;}#mTour .trH{color:#ffd76a;}
 #mTour .trEq{font-family:var(--fd);font-size:13px;letter-spacing:.06em;color:#fff;margin:2px 0 12px;}
 #mTour .trKit{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}#mTour .trKit div{padding:10px 6px;border-radius:12px;background:rgba(255,215,106,.08);border:1px solid rgba(255,215,106,.35);}
@@ -896,9 +899,10 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 #mapBtn .mw .pth i:nth-of-type(4){left:59%;top:75%;}#mapBtn .mw .pth i:nth-of-type(5){left:78%;top:30%;}#mapBtn .mw .pth i:nth-of-type(6){left:97%;top:45%;}
 @media (prefers-reduced-motion:reduce){#mapBtn .mw .bg{animation:none;}}
 .mm.r9 #modeH .vx i{filter:hue-rotate(30deg) saturate(1.8) brightness(.95);}.mm.r9 #modeS .vx i,.mm.r9 #modeS .bsE{filter:hue-rotate(170deg) saturate(1.4) brightness(1.1);}
-.mm.r9 #modeS{position:relative;overflow:visible;}.mm.r9 #modeS .tb{position:absolute;top:-8px;right:-6px;padding:2px 7px;border-radius:9px;background:linear-gradient(135deg,#ffd76a,#f2a93b);color:#2a1a00;font-family:var(--fd);font-size:8.5px;font-weight:700;letter-spacing:.08em;box-shadow:0 2px 8px rgba(242,169,59,.5);white-space:nowrap;}
+.mm.r9 #modeS{position:relative;overflow:visible;}.mm.r9{margin-bottom:26px;}.mm.r9 #modeS .tb{position:absolute;top:-8px;right:-6px;padding:2px 7px;border-radius:9px;background:linear-gradient(135deg,#ffd76a,#f2a93b);color:#2a1a00;font-family:var(--fd);font-size:8.5px;font-weight:700;letter-spacing:.08em;box-shadow:0 2px 8px rgba(242,169,59,.5);white-space:nowrap;}
 .mm.r9 #modeS .tb .ico{width:9px;height:9px;}
-.mm.r9 #modeS .tt{position:absolute;left:0;right:0;top:100%;margin-top:4px;text-align:center;font-family:var(--fd);font-size:9px;letter-spacing:.06em;color:#9fd8ff;white-space:nowrap;opacity:1;}.mm.r9 #modeS .tt.last{color:#ff7a70;}.mm.r9 #modeS .tt .ico{width:9px;height:9px;}
+.mm.r9 #modeS .tt{position:absolute;left:50%;top:100%;transform:translateX(-50%);margin-top:5px;padding:3px 10px;border-radius:12px;background:rgba(10,30,40,.9);border:1.5px solid rgba(63,216,232,.75);box-shadow:0 0 10px rgba(63,216,232,.35);font-family:var(--fd);font-size:12.5px;font-weight:700;letter-spacing:.04em;color:#c8f6ff;white-space:nowrap;opacity:1;}
+.mm.r9 #modeS .tt.last{border-color:#ff6b5c;color:#ffd2cc;background:rgba(50,10,10,.9);box-shadow:0 0 12px rgba(255,90,70,.5);animation:ttPulse 1.2s ease-in-out infinite alternate;}@keyframes ttPulse{to{box-shadow:0 0 18px rgba(255,90,70,.85);}}.mm.r9 #modeS .tt .ico{width:12px;height:12px;}
 .mbot{gap:10px;padding-bottom:4px;}
 .vx{position:relative;display:block;width:52px;height:52px;flex:none;margin:-4px 0 -8px;}
 .vx i{position:absolute;inset:0;background:center/100% 100% no-repeat;}
@@ -1110,6 +1114,15 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="logo" id="tip2T"></div>
    <p id="tip2D"></p>
    <div class="row"><button class="btn big" id="tip2Ok">ANLADIM</button></div>
+  </div>
+ <div class="modal card" id="mPrize">
+   <div class="przIc" id="przIc">👑</div>
+   <div class="h przT" id="przT"></div>
+   <div class="przD" id="przD"></div>
+   <div class="przS" id="przS"></div>
+   <div class="przMsg" id="przMsg"></div>
+   <div class="row"><button class="btn big" id="przGo">ÖDÜLÜ AL</button></div>
+   <div class="row"><button class="btn sec" id="przLater">SONRA</button></div>
   </div>
  <div class="modal card" id="mTour">
    <div class="h trH">🏆 GÜNÜN TURNUVASI</div>
@@ -2944,7 +2957,7 @@ async function stormSubmit(score,secs){const day=STORM.day||utcDay();
   if(!LB_URL||!SET.lb||score<=0||secs<5)return null;const body={pid:PID,name:playerName||'PİLOT',score,secs:Math.round(secs),day};
   try{const j=await lbFetch('/score',await itScore(body));try{localStorage.removeItem('bhs_lbq');}catch(e){}return j;}catch(e){try{const q=lbQueue();if(!q||q.day!==day||q.score<score)localStorage.setItem('bhs_lbq',JSON.stringify(body));}catch(e2){}return {off:true};}}
 async function lbFlush(){const q=lbQueue();if(!q||!LB_URL||!SET.lb)return;if(q.day!==utcDay()){try{localStorage.removeItem('bhs_lbq');}catch(e){}return;}try{await lbFetch('/score',await itScore(q));localStorage.removeItem('bhs_lbq');}catch(e){}}
-async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
+async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;if(rel(9)){try{const j=await lbFetch('/prizes?pid='+PID);const L=(j&&j.list)||[];if(L.length)prizeCard(L);}catch(e){}return;} /* 1.4.9: the prize waits for the player's tap on its own card */try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
   if(c&&c.ok&&c.stars>0){grant({stars:c.stars},`🏆 ${T('GÜNÜN FIRTINASI')} · ${p.rank}.`);sfx('achieve',{vol:.7});
     if(rel(9)){const r=p.rank|0;toast(r===1?'👑':['','🥇','🥈','🥉'][r]||'🏆',r===1?T('TEBRİKLER ŞAMPİYON!'):T('TURNUVADA {n}. OLDUN!',{n:r}),T('Turnuva ödülün')+': +'+c.stars.toLocaleString(LOC)+' ⭐');const e=$('toast');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),5500);}}}}catch(e){}} /* 1.4.9: the tournament's own words, not a daily reward; held longer */
 const LBCH={d:'',h:''};async function lbChamp(){const y=new Date(Date.now()-864e5).toISOString().slice(0,10);if(LBCH.d===y)return LBCH.h;let h='';
@@ -2969,6 +2982,13 @@ const lbRepGet=()=>{try{const a=JSON.parse(localStorage.getItem('bhs_lbrep')||'[
 function lbFit(){const sc=$('sLB'),rows=[...$('lbList').querySelectorAll('.lbrow[data-g]:not(.lbcols)')],over=()=>sc.scrollHeight>sc.clientHeight+1;
   if(over()){const sp=[...$('lbList').querySelectorAll('[data-g="sprint"]')];for(const e of sp)e.hidden=true;} /* Normal, Hard and Survival first: the 60 s table stays only when there is room */
   for(let k=0;k<20&&over();k++){const n={};for(const r of rows)if(!r.hidden)n[r.dataset.g]=(n[r.dataset.g]||0)+1;const g=Object.keys(n).sort((a,b)=>n[b]-n[a])[0];if(!g||n[g]<2)break;rows.filter(r=>r.dataset.g===g&&!r.hidden).pop().hidden=true;}} /* 1.4.9: on a short screen the longest table gives up its last row until the page fits, the first place of each mode always stays */
+function prizeCard(L){const p=L[0];if(!p)return;if(!$('sMenu').classList.contains('on')){later(()=>prizeCard(L),4000);return;}const r=p.rank|0,m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);
+  const d=new Date(p.day+'T12:00:00Z');$('przIc').textContent=r===1?'👑':['','🥇','🥈','🥉'][r]||'🏆';$('przT').textContent=r===1?T('TEBRİKLER ŞAMPİYON!'):T('TURNUVADA {n}. OLDUN!',{n:r});
+  $('przD').textContent=T('{d} turnuvası',{d:d.toLocaleDateString(LOC,{day:'numeric',month:'long'})});$('przS').textContent='+'+(+p.stars).toLocaleString(LOC)+' ⭐';$('przMsg').textContent='';m.classList.toggle('gold',r===1);
+  const b=$('przGo');b.disabled=false;b.onclick=async()=>{b.disabled=true;try{const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
+    if(c&&c.ok){hideModals();if(c.stars>0){grant({stars:c.stars},(r===1?'👑 ':'🏆 ')+T('Turnuva ödülün'));sfx('achieve',{vol:.8});}later(()=>prizeCard(L.slice(1)),700);}else{hideModals();later(()=>prizeCard(L.slice(1)),300);}}
+    catch(e){b.disabled=false;$('przMsg').textContent=T('Bağlantı yok, biraz sonra tekrar dene');}};
+  $('przLater').onclick=()=>hideModals();showModal('mPrize');sfx('achieve',{vol:.6});} /* 1.4.9: a tournament prize is its own moment: who you beat, when, and a button that takes it */
 function lbTab(t){if(rel(9)){const c=$('lbClose'),sr=$('lbShareRow'),one=t!=='w'&&!sr.hidden;if(one?c.parentNode!==sr:c.parentNode===sr)(one?sr:$('lbCloseRow')).appendChild(c);$('lbCloseRow').hidden=one;$('sLB').classList.add('r9');if(t!=='w')requestAnimationFrame(lbFit);} /* 1.4.9: on My Records, share and close share one line so the page fits one screen */
   $('lbTW').classList.toggle('on',t==='w');$('lbTM').classList.toggle('on',t!=='w');$('lbWorld').hidden=t!=='w';$('lbMine').hidden=t==='w';if(t==='w')renderLBWorld();}
 
@@ -3504,7 +3524,7 @@ function litFrom(x,y){const dx=hX-x,dy=hY-y,d=Math.hypot(dx,dy)||1;return {x:dx/
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy','mTour'];
+const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy','mTour','mPrize'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function resetRun(full,fromSave){
