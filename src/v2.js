@@ -203,7 +203,7 @@ function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
 // Normal (the default) adds only a touch; an ordinary dodge stays 1:1 in all three, the boost starts above SENS_V[0].
 const SENS2=[1.25,1.6,2.2],SENS_V=[.4,1.6];
 function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Math.max(4,now-DRAG.pt);DRAG.px=x;DRAG.py=y;DRAG.pt=now;
-  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=rel(7)?SENS2[SET.sens]??1.25:1,q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
+  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=rel(7)?(rel(9)&&!SET.sens?1.45:SENS2[SET.sens]??1.25):1, /* 1.4.9: the default reaches a little further on a quick swipe */q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
   const m=(G2.R||0)+4;DRAG.ax=clamp(DRAG.ax+dx*k,m,W-m);DRAG.ay=clamp(DRAG.ay+dy*k,m+2,H-m-70); /* the same walls the hole has; held at an edge, pulling back moves it straight away */
   G2.tx=DRAG.ax;G2.ty=DRAG.ay;}
 function v2Down(x,y,id){
@@ -948,7 +948,7 @@ function v2GuardStep(dt){const g=G2.guard;g.px=W*.5+Math.sin(G2.t*.3)*W*.14;g.py
   g.next-=dt;if(g.next<=0&&!G2.ending&&g.t>1.5){const prog=1-g.t/g.dur;g.next=(Math.max(1.2,2.1-G2.lv*.004-prog*.5)+(G2.lv<=35?.35:0))*rrnd(.8,1.2); /* the first guardian level gives a little more room */g.wave=(g.wave||0)+1; /* it speeds up as the clock runs down */
     const two=g.wave%3===0&&(prog>.35||G2.lv>60),s0=Math.floor(rng()*3);for(let k=0;k<(two?2:1);k++){const side=(s0+k*(1+Math.floor(rng()*2)))%3,o=v2Edge('thr',side);const tx=g.px,ty=g.py,dx=tx-o.x,dy=ty-o.y,d=Math.hypot(dx,dy)||1,sp=v2Speed('ast')*(.6+.3*prog);o.vx=dx/d*sp;o.vy=dy/d*sp;o.seen=true;}} /* every third wave late in the defense comes from two sides at once */
   const hd=Math.hypot(hX-g.px,hY-g.py)||1,min=g.pr*1.7+G2.R;if(hd<min){hX=g.px+(hX-g.px)/hd*min;hY=g.py+(hY-g.py)/hd*min;}
-  if(rel(9)){const td=Math.hypot(G2.tx-g.px,G2.ty-g.py)||1;if(td<min){G2.tx=g.px+(G2.tx-g.px)/td*min;G2.ty=g.py+(G2.ty-g.py)/td*min;if(DRAG.id!=null){DRAG.ax=G2.tx;DRAG.ay=G2.ty;}}}} // the planet's atmosphere keeps the hole out; 1.4.9: the finger's aim stops at it too (with Overload's overshoot an aim inside the planet flipped the hole side to side every frame)
+  if(rel(9)){const td=Math.hypot(G2.tx-g.px,G2.ty-g.py)||1;if(td<min){G2.tx=g.px+(G2.tx-g.px)/td*min;G2.ty=g.py+(G2.ty-g.py)/td*min;}}} // the planet's atmosphere keeps the hole out; 1.4.9: the hole's target stops at it too, while the finger's own travel is kept, so a swipe across the planet carries the hole round to the other side (with Overload's overshoot an aim inside the planet flipped the hole side to side every frame)
 function v2GuardImpact(o){const g=G2.guard;o.st='dead';g.hitT=.6;v2Burst(o.x,o.y,26,'#ff9a5c',2,8,.7,2);shake=Math.max(shake,8);vib(40);
   g.hp=Math.max(0,g.hp-g.dmg);v2Sfx('armor',{vol:.6,rate:.8}); /* the planet takes the hit, not your lives */
   if(g.hp<=0){ /* the planet falls: you lose a life and the defense starts over with a fresh planet and a full clock */
