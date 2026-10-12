@@ -883,6 +883,9 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 #mapBtn .mw .pth i:nth-of-type(1){left:3%;top:65%;}#mapBtn .mw .pth i:nth-of-type(2){left:22%;top:30%;}#mapBtn .mw .pth i:nth-of-type(3){left:40%;top:52%;}
 #mapBtn .mw .pth i:nth-of-type(4){left:59%;top:75%;}#mapBtn .mw .pth i:nth-of-type(5){left:78%;top:30%;}#mapBtn .mw .pth i:nth-of-type(6){left:97%;top:45%;}
 @media (prefers-reduced-motion:reduce){#mapBtn .mw .bg{animation:none;}}
+.mm.r9 #modeH .vx i{filter:hue-rotate(30deg) saturate(1.8) brightness(.95);}.mm.r9 #modeS .vx i,.mm.r9 #modeS .bsE{filter:hue-rotate(170deg) saturate(1.4) brightness(1.1);}
+.mm.r9 #modeS{position:relative;overflow:visible;}.mm.r9 #modeS .tb{position:absolute;top:-8px;right:-6px;padding:2px 7px;border-radius:9px;background:linear-gradient(135deg,#ffd76a,#f2a93b);color:#2a1a00;font-family:var(--fd);font-size:8.5px;font-weight:700;letter-spacing:.08em;box-shadow:0 2px 8px rgba(242,169,59,.5);white-space:nowrap;}
+.mm.r9 #modeS .tb .ico{width:9px;height:9px;}
 .mbot{gap:10px;padding-bottom:4px;}
 .vx{position:relative;display:block;width:52px;height:52px;flex:none;margin:-4px 0 -8px;}
 .vx i{position:absolute;inset:0;background:center/100% 100% no-repeat;}
@@ -2450,7 +2453,8 @@ function renderMapWin(){const btn=$('mapBtn');btn.classList.add('mwin');let w=bt
   const nd=[];for(let l=cur-2;l<=cur+3;l++){if(l<1){nd.push('');continue;}const k=levelKind(l),hd=v2Hard(l),st=l<cur?'d':l===cur?'c':'f';nd.push(`<i class="${st}${hd?' h':''}${k&&k.t==='boss'?' b':''}">${st==='c'?'':k?k.ic:hd?'🔥':st==='d'?'':l}</i>`);}
   w.innerHTML=`<span class="bg"${bg?` style="background-image:url(${bg})"`:''}></span><span class="tx"><b>${T('HARİTA')}</b><small>${T(ZONES[z].n)} · ${cur-l0}/10</small></span><span class="pth"><svg viewBox="0 0 150 40" preserveAspectRatio="none"><path d="M5,26 C20,8 35,8 50,20 S80,34 95,20 S125,6 145,18"/></svg>${nd.join('')}</span>`;
   const me=document.createElement('span');me.className='av';setAv(me,playerAvatar||'🚀');const c=w.querySelector('i.c');if(c)c.appendChild(me);} /* 1.4.9: the map button is a window onto the map: the zone's own sky, where you stand and what comes next */
-function renderMapCard(){if(rel(9))renderMapWin();
+function modeTint(){const mm=$('modeS').parentNode;if(mm.classList.contains('r9'))return;mm.classList.add('r9');const t=document.createElement('span');t.className='tb';t.textContent='🏆 TURNUVA';$('modeS').appendChild(t);} /* 1.4.9: each mode its own vortex colour (hard crimson, survival toxic green); survival is where the daily storm is raced */
+function renderMapCard(){if(rel(9)){renderMapWin();modeTint();}
   const cur=Math.max(1,savedLevel);let nb=0;for(let l=cur;l<cur+60;l++){const k=levelKind(l);if(k&&k.t==='boss'){nb=l;break;}}
   $('mapTxt').innerHTML=`${cur>1?`${cur-1} seviye geçildi · ${totalStars()} ⭐`:'Yolculuğun burada başlıyor'}<br>Sıradaki boss: seviye ${nb}`;
   const c=$('miniMap').getContext('2d');c.clearRect(0,0,168,132);const P=[];for(let i=0;i<9;i++)P.push([84+Math.sin(i*.9)*50,122-i*14]);
