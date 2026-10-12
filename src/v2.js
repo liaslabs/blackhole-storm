@@ -151,7 +151,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
   v2Resize();G2.on=true;G2.mode=mode;document.body.classList.add('v2');document.body.classList.toggle('r7',rel(7));v2Hud();if(mode==='level'||mode==='surv')SND.music('game'); // zone track, or the boss theme on boss levels
   holeK=1;
   if(DEV&&mode==='level'&&gameMode==='classic'&&!HMODE)devKit(v2Lv()); // the developer link keeps the Laboratory at each level's recommended power
-  const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));if(mode==='surv')$('lvVal').textContent=l; /* the speed pill, not the classic level left from before */
+  document.body.classList.remove('lvc');const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));if(mode==='surv')$('lvVal').textContent=l; /* the speed pill, not the classic level left from before */
   const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)||rel(9)&&v2HmT(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
@@ -162,7 +162,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
     script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0});
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
-  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);if(mode==='level'&&!REPLAY&&SHOP.arcLv===l){G2.arcMax=Math.min(3,G2.arcMax+1);SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
+  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);if(mode==='level'&&!REPLAY&&SHOP.arcLv===l){G2.arcMax=Math.min(3,G2.arcMax+1);SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(mode==='level'&&!REPLAY&&SHOP.rageLv===l){G2.rage=100;SHOP.rageLv=0;saveG();} /* the level-end ad: start with Vortex ready */if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
   {const pl=labEffLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+Math.min(.3,.02*pl));}G2.L.comboT+=.12*labEffLv('combo');} // Laboratory upgrades (classic only)
@@ -1311,7 +1311,7 @@ const TIP2={
   shell:['⚪','GÜMÜŞ KABUK','Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.'],
   garc:['🟡','ALTIN YAY','Çok nadir bir hazine! 10 saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.'],
   arcs2:['☄️','İKİ YAY','Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.'],
-  bend:['🔥','ZİRVE SEVİYELERİ','Her bölgenin zirve seviyelerinde (Fırtına, Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır.'],
+  bend:['🔥','ZİRVE SEVİYELERİ','Her bölgenin zirve seviyelerinde (Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır.'],
   arcpow:['⚡','YAY KALKANI','Bu seviyede yay yok: her darbe bir kalp götürür. 2 enerji topu yut, yaylar 20 saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.'],
   repair:['⚡','YAY ONARILDI','Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.'],
   arcs:['☄️','METEOR VE YAYLAR','Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.'],
@@ -1478,7 +1478,7 @@ function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8
 // ── level end ─────────────────────────────────────────
 function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');adsPreload();}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
   if(gState!=='playing')return;
-  const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();}
+  const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();if(rel(9)&&G2.mode==='level'&&!REPLAY)later(()=>toast('🏆','YENİ REKOR!',T('KARA DELİK KÜTLESİ')+' '+v2SizeTxt(sz)),500);} /* 1.4.9: the record is a toast as the level ends */
   if(!G2.dmg)dmEvent('clean',1);
   if(G2.mode==='level'&&!REPLAY&&!G2.dmg&&level>1){G2.flaw=1;stars+=25*(G2.hm?2:1);saveG();} /* not a single arc lost: a small, sure reward */if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
   G2.hardW=G2.hard&&G2.mode==='level'&&!REPLAY&&v2Hard(G2.lv)?HARD.stars[G2.hard]*(G2.hm?2:1):0;if(G2.hardW){stars+=G2.hardW;saveG();} /* a peak cleared pays a little more */
@@ -1494,6 +1494,13 @@ function v2Streak(st){ // 10 levels in a row with 3 stars and no stars spent on 
 }
 function v2SizeTxt(x){return (x||0).toFixed(2)+' M';}
 function v2Result(){ // level-complete card body
+  if(rel(9)){const ch=t=>`<span class="gch">${t}</span>`,lv=levelStars(),hm=G2.hm?2:3,lh=clamp(lives,1,hm),nx=level+1,cl=!REPLAY&&gameMode==='classic',h=v2Hard(nx),gp=labGap(nx); /* 1.4.9: the record is a toast, the next level is named as it starts */
+    const gain=ch('+'+(G2.hm?10:5)+' ⭐')+(G2.flaw?ch('+'+25*(G2.hm?2:1)+' ⭐ '+T('HASARSIZ')):'')+(G2.hardW?ch('+'+G2.hardW+' ⭐ '+T(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')):'')+(level%5===0?ch('+3 💎'):'')+(G2.gift?ch('+1 🛡'):'');
+    const why=lv<3?`<div class="stc2"><span class="ok">${'♥'.repeat(lh)}</span><span>${'♥'.repeat(hm-lh)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span></div>`:'';
+    const s3=G2.mod==='glass'&&!REPLAY?'':G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b> ${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3r"><span>${T('3 yıldız serisi')} ${STREAK3}/10</span><i><b style="width:${STREAK3*10}%"></b></i><span>🎁 25 💎</span></div>`;
+    const pk=cl&&v2Peak(nx)?`<div class="pk2">🔥 ${T('SIRADAKİ SEVİYE ZİRVE')} · ${T(nx%10===0?'BOSS SEVİYESİ':h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')}</div>`:'';
+    const pw=cl&&gp?`<div class="pk2 pw">⚡ ${T('Önerilen güç')} ${labRec(nx)} · ${T('Gücün')} ${labPower()}</div>`:''; /* too weak for the next peak: the Lab, before it starts */
+    return `<div class="gain2">${gain}</div>${why}${s3}${pk}${pw}`;}
   const sz=G2.peak/V2K.r0;const row=(k,v,hl)=>`<div class="r2"><span>${T(k)}</span><b${hl?' class="hl"':''}>${v}</b></div>`;
   const hm=G2.hm?2:3,lh=clamp(lives,1,hm),lv=levelStars(),st=`<span class="ok">${'♥'.repeat(lh)}</span><span>${'♥'.repeat(hm-lh)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span>`;
   const s3=G2.mod==='glass'&&!REPLAY?`<div class="s3b">${T('Cam Kalp seviyesi 3 yıldız serisine sayılmaz')} · ${STREAK3} / 10</div>`:G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b><br>${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3b">${T('3 yıldız serisi')} ${STREAK3} / 10 · 🎁 25 💎<div class="bar"><i style="width:${STREAK3*10}%"></i></div></div>`;

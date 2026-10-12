@@ -1726,11 +1726,17 @@
 "HAYATTA KAL REKORU": "REKORA SAX MAYÎNÊ",
 "+{n} YAYLA YENİDEN OYNA": "BI +{n} KEVANÊ DÎSA BILÎZE",
 "ZİRVE SEVİYELERİ": "ASTÊN LÛTKEYÊ",
-"Her bölgenin zirve seviyelerinde (Fırtına, Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "Li astên lûtkeyê yên her herêmê (Bahoz, Asta dijwar û Boss) tu bi kevanekî kêmtir dest pê dikî. Goga enerjiyê kevana şikestî serast dike",
 "Bu seviyede yay yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar": "Di vê astê de kevan tune ne: her derb dilekî dibe. {n} gogên enerjiyê daqulipîne, kevan ji bo {n} çirkeyan vedigerin. Xalên di binê kunê de gogan dijmêrin",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Herkes {n} çirkeyan di heman gerdûnê de dilîze, bi leza bilind û bi qaydeya rojê (laşên qedexe, pencereya mezinahiyê, ba yan girtin). Di çirkeyên {n}. û {n}. de kembera meteoran, di çirkeya {n}. de nebula tê; komboya dirêj puanan heta {n} qat zêde dike. Encama xwe parve bike, hevalê xwe vexwîne",
 "{n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula": "kembera meteoran di çirkeyên {n}. û {n}. de, nebula di çirkeya {n}. de",
 "{n}. seviyeyi geçince açılır. Seviye {n}'den, ayrı bir ilerlemeyle: puan seviyeleri süreli, nefes seviyesi yok, meteorlar {n} kat, hedef puan {n} kat (süreli seviyelerde {n}), küçülme {n} kat hızlı, seviye başına {n} kalp, ağır çekim yok; her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok. Yıldız ödülleri {n} kat": "Piştî derbaskirina asta {n} vedibe. Ji asta {n}, bi pêşketina xwe ya cuda: astên puanan bi dem in, astên bêhnvedanê tune ne, meteor {n} qat, armanca puanan {n} qat (di astên bi dem de {n}), biçûkbûn {n} qat bileztir, her astê {n} dil, bê hêdîkirin; du kevan her dilî diparêzin, piştî asta {n} yek, di astên lûtkeyê de kevan tune. Xelatên stêrkan {n} qat",
 "Seviye {n}'den yeniden, sert kurallarla: puan seviyeleri süreli, meteorlar {n} kat, hedef puan {n} kat, küçülme {n} kat hızlı": "Ji asta {n} ve dîsa, bi qaydeyên hişk: astên puanan bi dem in, meteor {n} qat, armanca puanan {n} qat, biçûkbûn {n} qat bileztir",
-"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "Her astê {n} dil, bê hêdîkirin. Du kevan her dilî diparêzin, piştî asta {n} yek, di astên lûtkeyê de kevan tune"
+"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "Her astê {n} dil, bê hêdîkirin. Du kevan her dilî diparêzin, piştî asta {n} yek, di astên lûtkeyê de kevan tune",
+"Her bölgenin zirve seviyelerinde (Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "Li astên lûtkeyê yên her herêmê (Asta dijwar û Boss) tu bi kevanekî kêmtir dest pê dikî. Goga enerjiyê kevana şikestî serast dike",
+"SIRADAKİ SEVİYE ZİRVE": "ASTA PÊŞ LÛTKE YE",
+"+{n} YAYLA BAŞLA": "BI +{n} KEVANÊ DEST PÊ BIKE",
+"Zirve seviyesinde bir yay fazla": "Di asta lûtkeyê de kevanek zêdetir",
+"VORTEX DOLU BAŞLA": "BI VORTEXA TIJE DEST PÊ BIKE",
+"İstediğin an {n} sn dev ol, puanın ×{n}": "Kengî bixwazî {n} çirk dêw be, puan ×{n}",
+"Sonraki seviyede hazır": "Di asta pêş de amade ye"
 }

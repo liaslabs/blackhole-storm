@@ -100,26 +100,31 @@ Her güncellemede:
 
 ## 1.4.9 (16 Ekim) · `REL` 9 · zorluk güncellemesi
 - Dolu ekran: cisimler ~1,7 kat sık, ekranda en fazla 14/16/18; L2–10'da %20 hızlı; 6–8'lik kaya sağanakları; hedef puanlar L2–6'da ×2, sonra ×1,5; L1 öğretici %35 hızlı.
-- Yaylar: L1–10 3 yay, L11–60 2 yay, L61+ yaysız; yaysızken 2 enerji topu = 20 sn Yay Kalkanı. L11 ve L61'de tanıtım kartı (bot: L41+ yaysızken 0/28 kazanma, uçurum gibiydi).
+- Yaylar (12 Eki, "her yer zor" yerine "seyrek zor seviye"): normal seviyelerde L1–60 3 yay, L61+ 2 yay, hiç yaysız kalmaz. Zirve seviyeleri (L19'dan itibaren x5 Zor Seviye, x9 Fırtına, x0 Boss) bir yay eksik başlar. L19'da "ZİRVE SEVİYELERİ", L61'de "İKİ YAY" kartı. Yay Kalkanı (2 enerji topu = 20 sn 3 yay) yaysız seviyelerde (Zor Mod zirveleri).
 - Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez.
-- Zor Mod: L1–60 2 yay, L61+ yaysız (2 kalp, meteor ×1,6, hedef ×1,5 aynen).
+- Zor Mod gerçekten zor: puan seviyeleri süreli (50 sn, hedef ×1,15), nefes seviyesi yok, meteor ×1,8; 2 yay (L61+ 1), zirvelerde yaysız (Yay Kalkanı ile); 2 kalp. Zor Seviye yıldız ödülü yalnız gerçek Zor Seviyelerde.
+- Günlük Yarış daha zor: 24–33. seviye hızı (önceden 16–25), 3 yay, meteor kuşağı 18. ve 48. sn, nebula 32. sn. Ödül eşikleri ×1,3: 20K / 45K / 90K.
+- Seviye sonu ekranı sade: cüzdan, kütle, istatistik tablosu ve "SIRADA" kutusu kalktı. Kalan: yıldızlar, KAZANDIKLARIN rozetleri, 3 yıldız serisi çubuğu, sıradaki seviye zirveyse uyarı (güç yetersizse önerilen güç). Yeni rekor seviye biterken bildirim, sıradaki seviyenin adı seviye başında (zaten vardı).
+- Reklam teklifleri: seviye sonunda +100 ⭐ yerine sonraki seviyeye avantaj (zirve öncesi +1 yay, diğerlerinde Vortex dolu başlangıç). Zirvede kaybedince "+1 yayla yeniden oyna". Canın bitince de hedefe ya da boss'a ne kadar kaldığı yazar.
 - Hayatta Kal (Günün Fırtınası) süresiz: hız 12'den başlar, her 30 sn +5, sınırsız; ilk 2 dk 2 yay sonra yaysız; dakikada bir meteor kuşağı; 4. dakikadan sonra Kara Fırtına her 30 sn'de %35 daha çok meteor (çiftler halinde) ve %8 hız. Saniye puanı +20, her dakika +10 artar; bitiş bonusu yok.
 - Koruyucu seviyeleri (düzeltme): gezegene doğru parmakla bastırınca hedef gezegenin içine giriyordu; Aşırı Yük'ün %30 aşmasıyla kara delik her karede gezegenin iki yanı arasında zıplıyor, iki simetrik titreyen delik gibi görünüyordu. Artık parmağın hedefi de atmosferde durur (bot: titreyen konum 29 → 0); geri çekince delik hemen tepki verir.
 - REKORLARIM › PAYLAŞ: alttaki "Günlük Yarış sonucunu paylaş" notu yerine rekorları paylaşan düğme (oyunun mevcut çevirileriyle; günün ilk paylaşımı 5 elmas).
 - Ses (düzeltme): bazı tarayıcılar ses kartının örnekleme hızını farklı bildirince (48000 / 44100 Hz) yankı efekti hata veriyor ve oyunun açılışı yarıda kalıyordu (11 Eki, web, bhs-v55 raporu). Artık o durumda sadece yankı kapanır.
 - Kilonova altınları (düzeltme): düşecekleri yerler karadeliğin çekim alanının dışından seçilir (önceden sadece kenarından 50 px uzakta tutuluyordu; büyük karadelik yakına düşenleri kendiliğinden çekip yutuyordu). Altını artık oyuncu gidip toplar; ekranda yer yoksa en uzak noktalar.
 - Bölünen gezegen: mavi halka yerine yarımın kendi çizgisini (yay + kırık kenar) izleyen titrek kırmızı neon; kırık yüzün kenar ışığı da kırmızı (`onizleme/neon-yarim.png`). Parıltı bulanıklık filtresi değil, üst üste çizgi (zayıf telefonda takılma yapmaz).
-- Hedef: Normal modda bir seviye 8–10 denemede geçilebilmeli. 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
+- Hedef (12 Eki düzeltme): çoğu seviye rahat geçilir, seyrek zirve seviyeleri zordur; en zorları bile 8–10 denemede geçilebilmeli, oynanamaz olmamalı. Bot (seviye başına 3 oyun): Normal 29/51 normal seviye (1.4.8: 30/51), 10/54 zirve (21/54), önerilen Laboratuvarla zirve 14/54; Zor Mod 10/51 ve 4/54 (1.4.8: 18/51, 15/54); Günlük Yarış 3/10 koşu 60 sn'yi tamamlar (5/10). 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
 
 ```
 <en-US>
-• A fuller screen from the first level: more to swallow, faster action
-• New, very rare Golden Arc: for 10 s you swallow everything, even meteors
-• Tougher later levels: fewer arcs per heart, with an arc shield from level 61
-• Survival is now endless, and from minute 4 the Black Storm takes over
+• A fuller screen from the first level: more to swallow
+• Peak levels: hard levels and bosses start with one arc fewer
+• Very rare Golden Arc: for 10 s you swallow everything, even meteors
+• Hard Mode is truly hard; the Daily Race is faster
+• Survival is endless, and from minute 4 the Black Storm takes over
+• A cleaner level-complete screen
 • Split planet halves glow with a red neon edge
-• Fix: the black hole no longer flickers when pushed into a guarded planet
-• Kilonova gold now lands outside your pull: go and collect it
+• Fix: no more flicker at guarded planets
+• Kilonova gold lands outside your pull: go and collect it
 </en-US>
 ```
 

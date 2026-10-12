@@ -1726,11 +1726,17 @@
 "HAYATTA KAL REKORU": "ÜBERLEBENSREKORD",
 "+{n} YAYLA YENİDEN OYNA": "MIT +{n} BOGEN NEU SPIELEN",
 "ZİRVE SEVİYELERİ": "GIPFEL-LEVEL",
-"Her bölgenin zirve seviyelerinde (Fırtına, Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "In den Gipfel-Leveln jeder Zone (Sturm, schweres Level und Boss) startest du mit einem Bogen weniger. Eine Energiekugel repariert einen gebrochenen Bogen",
 "Bu seviyede yay yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar": "Keine Bögen auf diesem Level: Jeder Treffer kostet ein Herz. Verschlinge {n} Energiekugeln, und die Bögen kommen für {n} Sekunden zurück. Die Punkte unter dem Loch zählen die Kugeln",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Alle spielen {n} Sekunden im selben Universum, schnell und mit der Regel des Tages (verbotene Körper, Größenfenster, Wind oder Finsternis). In Sekunde {n} und {n} kommt ein Meteoritengürtel, in Sekunde {n} ein Nebel; eine lange Combo vervielfacht die Punkte bis ×{n}. Teile dein Ergebnis und fordere Freunde heraus",
 "{n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula": "Meteoritengürtel in Sekunde {n} und {n}, Nebel in Sekunde {n}",
 "{n}. seviyeyi geçince açılır. Seviye {n}'den, ayrı bir ilerlemeyle: puan seviyeleri süreli, nefes seviyesi yok, meteorlar {n} kat, hedef puan {n} kat (süreli seviyelerde {n}), küçülme {n} kat hızlı, seviye başına {n} kalp, ağır çekim yok; her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok. Yıldız ödülleri {n} kat": "Wird nach Level {n} freigeschaltet. Ab Level {n}, mit eigenem Fortschritt: Punkte-Level mit Zeitlimit, keine Verschnauf-Level, Meteore ×{n}, Zielpunkte ×{n} (×{n} in Zeitleveln), Schrumpfen ×{n} schneller, {n} Herzen pro Level, keine Zeitlupe; zwei Bögen schützen jedes Herz, nach Level {n} einer, in Gipfel-Leveln keiner. Sternbelohnungen ×{n}",
 "Seviye {n}'den yeniden, sert kurallarla: puan seviyeleri süreli, meteorlar {n} kat, hedef puan {n} kat, küçülme {n} kat hızlı": "Ab Level {n} von vorn, mit harten Regeln: Punkte-Level mit Zeitlimit, Meteore ×{n}, Zielpunkte ×{n}, Schrumpfen ×{n} schneller",
-"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "{n} Herzen pro Level, keine Zeitlupe. Zwei Bögen schützen jedes Herz, nach Level {n} einer, in Gipfel-Leveln keiner"
+"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "{n} Herzen pro Level, keine Zeitlupe. Zwei Bögen schützen jedes Herz, nach Level {n} einer, in Gipfel-Leveln keiner",
+"Her bölgenin zirve seviyelerinde (Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "In den Gipfel-Leveln jeder Zone (schweres Level und Boss) startest du mit einem Bogen weniger. Eine Energiekugel repariert einen gebrochenen Bogen",
+"SIRADAKİ SEVİYE ZİRVE": "NÄCHSTES LEVEL IST EIN GIPFEL",
+"+{n} YAYLA BAŞLA": "MIT +{n} BOGEN STARTEN",
+"Zirve seviyesinde bir yay fazla": "Ein Bogen mehr im Gipfel-Level",
+"VORTEX DOLU BAŞLA": "MIT VOLLEM VORTEX STARTEN",
+"İstediğin an {n} sn dev ol, puanın ×{n}": "Wann du willst {n} s riesig, Punkte ×{n}",
+"Sonraki seviyede hazır": "Im nächsten Level bereit"
 }

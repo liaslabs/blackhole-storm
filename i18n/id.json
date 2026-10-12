@@ -1726,11 +1726,17 @@
 "HAYATTA KAL REKORU": "REKOR BERTAHAN",
 "+{n} YAYLA YENİDEN OYNA": "MAIN LAGI DENGAN +{n} BUSUR",
 "ZİRVE SEVİYELERİ": "LEVEL PUNCAK",
-"Her bölgenin zirve seviyelerinde (Fırtına, Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "Di level puncak tiap zona (Badai, Level sulit, dan Bos) kamu mulai dengan satu busur lebih sedikit. Bola energi memulihkan busur yang patah",
 "Bu seviyede yay yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar": "Tidak ada busur di level ini: tiap pukulan menghabiskan satu hati. Telan {n} bola energi dan busur kembali selama {n} detik. Titik di bawah lubang menghitung bolanya",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Semua memainkan alam semesta yang sama selama {n} detik, dengan kecepatan tinggi dan aturan hari ini (benda terlarang, jendela ukuran, angin atau gerhana). Sabuk meteor datang di detik {n} dan {n}, nebula di detik {n}; combo panjang melipatgandakan poin hingga ×{n}. Bagikan hasilmu dan tantang temanmu",
 "{n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula": "sabuk meteor di detik {n} dan {n}, nebula di detik {n}",
 "{n}. seviyeyi geçince açılır. Seviye {n}'den, ayrı bir ilerlemeyle: puan seviyeleri süreli, nefes seviyesi yok, meteorlar {n} kat, hedef puan {n} kat (süreli seviyelerde {n}), küçülme {n} kat hızlı, seviye başına {n} kalp, ağır çekim yok; her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok. Yıldız ödülleri {n} kat": "Terbuka setelah menyelesaikan level {n}. Dari level {n}, dengan progres sendiri: level skor berwaktu, tanpa level jeda, meteor ×{n}, target skor ×{n} (×{n} di level berwaktu), menyusut ×{n} lebih cepat, {n} hati per level, tanpa gerak lambat; dua busur menjaga tiap hati, satu setelah level {n}, tanpa busur di level puncak. Hadiah bintang ×{n}",
 "Seviye {n}'den yeniden, sert kurallarla: puan seviyeleri süreli, meteorlar {n} kat, hedef puan {n} kat, küçülme {n} kat hızlı": "Dari level {n} lagi, dengan aturan keras: level skor berwaktu, meteor ×{n}, target skor ×{n}, menyusut ×{n} lebih cepat",
-"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "{n} hati per level, tanpa gerak lambat. Dua busur menjaga tiap hati, satu setelah level {n}, tanpa busur di level puncak"
+"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "{n} hati per level, tanpa gerak lambat. Dua busur menjaga tiap hati, satu setelah level {n}, tanpa busur di level puncak",
+"Her bölgenin zirve seviyelerinde (Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "Di level puncak tiap zona (Level sulit dan Bos) kamu mulai dengan satu busur lebih sedikit. Bola energi memulihkan busur yang patah",
+"SIRADAKİ SEVİYE ZİRVE": "LEVEL BERIKUTNYA LEVEL PUNCAK",
+"+{n} YAYLA BAŞLA": "MULAI DENGAN +{n} BUSUR",
+"Zirve seviyesinde bir yay fazla": "Satu busur lebih di level puncak",
+"VORTEX DOLU BAŞLA": "MULAI DENGAN VORTEX PENUH",
+"İstediğin an {n} sn dev ol, puanın ×{n}": "Jadi raksasa {n} dtk kapan saja, poin ×{n}",
+"Sonraki seviyede hazır": "Siap di level berikutnya"
 }

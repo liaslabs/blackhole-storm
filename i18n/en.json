@@ -1726,11 +1726,17 @@
 "HAYATTA KAL REKORU": "SURVIVAL RECORD",
 "+{n} YAYLA YENİDEN OYNA": "RETRY WITH +{n} ARC",
 "ZİRVE SEVİYELERİ": "PEAK LEVELS",
-"Her bölgenin zirve seviyelerinde (Fırtına, Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "On each zone's peak levels (Storm, Hard Level and Boss) you start with one arc fewer. An energy orb mends a broken arc",
 "Bu seviyede yay yok: her darbe bir kalp götürür. {n} enerji topu yut, yaylar {n} saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar": "No arcs on this level: every hit costs a heart. Swallow {n} energy orbs and the arcs come back for {n} seconds. The dots under the hole count the orbs",
 "Herkes aynı evrende {n} saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). {n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula gelir; uzun combo puanı {n} kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku": "Everyone plays the same universe for {n} seconds, at high speed and with today's rule (banned bodies, size window, wind or eclipse). Meteor belts come at seconds {n} and {n}, a nebula at second {n}; a long combo multiplies points up to ×{n}. Share your result and challenge a friend",
 "{n}. ve {n}. saniyede meteor kuşağı, {n}. saniyede nebula": "meteor belts at seconds {n} and {n}, nebula at second {n}",
 "{n}. seviyeyi geçince açılır. Seviye {n}'den, ayrı bir ilerlemeyle: puan seviyeleri süreli, nefes seviyesi yok, meteorlar {n} kat, hedef puan {n} kat (süreli seviyelerde {n}), küçülme {n} kat hızlı, seviye başına {n} kalp, ağır çekim yok; her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok. Yıldız ödülleri {n} kat": "Unlocks after clearing level {n}. From level {n}, with its own progress: score levels are timed, no breather levels, meteors ×{n}, target score ×{n} (×{n} on timed levels), shrinking ×{n} faster, {n} hearts per level, no slow motion; two arcs guard each heart, one after level {n}, none on peak levels. Star rewards ×{n}",
 "Seviye {n}'den yeniden, sert kurallarla: puan seviyeleri süreli, meteorlar {n} kat, hedef puan {n} kat, küçülme {n} kat hızlı": "From level {n} again, with harsh rules: score levels are timed, meteors ×{n}, target score ×{n}, shrinking ×{n} faster",
-"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "{n} hearts per level, no slow motion. Two arcs guard each heart, one after level {n}, none on peak levels"
+"Seviye başına {n} kalp, ağır çekim yok. Her kalbi iki yay korur, {n}. seviyeden sonra tek yay, zirve seviyelerinde yay yok": "{n} hearts per level, no slow motion. Two arcs guard each heart, one after level {n}, none on peak levels",
+"Her bölgenin zirve seviyelerinde (Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır": "On each zone's peak levels (Hard Level and Boss) you start with one arc fewer. An energy orb mends a broken arc",
+"SIRADAKİ SEVİYE ZİRVE": "NEXT LEVEL IS A PEAK",
+"+{n} YAYLA BAŞLA": "START WITH +{n} ARC",
+"Zirve seviyesinde bir yay fazla": "One more arc on the peak level",
+"VORTEX DOLU BAŞLA": "START WITH VORTEX FULL",
+"İstediğin an {n} sn dev ol, puanın ×{n}": "Go giant for {n} s whenever you like, points ×{n}",
+"Sonraki seviyede hazır": "Ready on the next level"
 }

@@ -331,6 +331,10 @@ body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:ba
 .how2u{text-align:center;font-size:11px;color:var(--dim);margin:-2px 0 8px;}
 .lvnext{margin:2px 0 4px;padding:8px 10px;border-radius:6px;background:rgba(111,183,216,.07);border:1px solid rgba(111,183,216,.28);font-size:13.5px;color:#b9d6e4;}
 .lvnext:empty{display:none;}
+#mLvl.r9 .wal2{display:none;}body.lvc #boost2{visibility:hidden;}#mLvl .gain2{margin:2px 0 4px;}#mLvl .gch{display:inline-block;margin:3px 4px;padding:6px 12px;border-radius:999px;border:1px solid rgba(242,169,59,.45);background:rgba(242,169,59,.08);font-family:var(--fd);font-size:14px;font-weight:700;color:#ffe2a8;}
+#mLvl .s3r{display:flex;align-items:center;gap:8px;justify-content:center;margin:12px 4px 0;font-size:13px;color:#aab1c4;}#mLvl .s3r i{flex:1;max-width:120px;height:6px;border-radius:3px;background:#2a3040;overflow:hidden;}#mLvl .s3r b{display:block;height:100%;min-width:6px;background:var(--gold);}
+#mLvl .pk2{margin-top:12px;font-family:var(--fd);font-size:13px;letter-spacing:1px;color:#ff8a80;}#mLvl .pk2.pw{color:#ffd76a;letter-spacing:.3px;}
+#lvlAd.two{display:flex;flex-direction:column;align-items:center;padding:9px 10px;}#lvlAd.two small{display:block;margin-top:3px;font-size:12px;letter-spacing:.3px;opacity:.85;font-weight:600;text-transform:none;}
 .contRes .wsRisk{flex-basis:100%;text-align:center;color:#ffd76a;font-size:12px;letter-spacing:.02em;}
 .s3b.ws{color:#ffd76a;}.s3b.ws b{color:#fff;}
 #boost2{display:none;}
@@ -1587,7 +1591,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0,arcLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0,arcLv:0,rageLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -2368,7 +2372,7 @@ function starStr(n){n=Math.max(0,n|0);return '★'.repeat(n)+'☆'.repeat(3-n);}
 function totalStars(){return Object.values(LSTARS).reduce((a,v)=>a+Math.max(0,v),0);}
 function lvlStarsShow(n,medal){$('lvlStars').innerHTML=medal?`<span>${medal}</span>`:n<0?'':[0,1,2].map(i=>`<span class="${i<n?'':'no'}" style="animation-delay:${.15+i*.15}s">★</span>`).join('');}
 function nextTeaser(l){return gameMode!=='classic'||REPLAY?'':v2Teaser(l);}
-function lvlButtons(replay){$('lvlNameRow').hidden=true;$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=0;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · 1/${LVL_AD.max}`);$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
+function lvlButtons(replay){LVL_BOOST=null;$('lvlAd').classList.remove('two');$('lvlNameRow').hidden=true;$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=0;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · 1/${LVL_AD.max}`);$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
 function v2LvlUi(replay){ // V2 level card: title with the level, stars under it, play again / continue
   $('lvlNum').style.display='none';if(!replay)$('lvlHead').textContent=`SEVİYE ${level} TAMAMLANDI`;
   $('lvlRetry').style.display=levelStars()>=3?'none':'';$('lvlRetry').textContent='🔄 TEKRAR OYNA';$('nextLvl').textContent='DEVAM ET ▶';
@@ -2823,7 +2827,7 @@ function renderShop(){
 }
 // shield: absorbs one life loss (not in Daily Cosmos / challenges)
 function revive(n){if(G2.contUsed)return;v2Revive();lives=Math.max(lives,1,n);updateUI();}
-let adReviveUsed=false,lvlAdUsed=0;
+let adReviveUsed=false,lvlAdUsed=0,LVL_BOOST=null;
 const LVL_AD={stars:100,max:1}; // level-end bonus: one ad, 100 ⭐ (a third of a star continue)
 
 // ══════════════════════════════════════════════════════
@@ -3482,6 +3486,7 @@ function levelSuccess(){
   lvlButtons(false);lvlStarsShow(st);$('lvlNext').innerHTML=nextTeaser(level+1);$('lvlHead').textContent='SEVİYE TAMAMLANDI';$('lvlNum').textContent=level;$('lvlMsg').textContent=`${totalScore.toLocaleString(LOC)} toplam puan · +${HMODE?10:5} ⭐${level%5===0?' +3 💎':''}`;
   if(G2.on&&gameMode==='classic'){savedLevel=level+1;savedScore=totalScore;bestLevel=Math.max(bestLevel,level+1);saveG();} // a cleared level counts even if the app closes on this card
   if(G2.on){v2Streak(st);$('lvlMsg').innerHTML=v2Result();$('lvlNext').innerHTML=v2Teaser(level+1);v2LvlUi(false);}
+  $('mLvl').classList.toggle('r9',rel(9)&&G2.on);document.body.classList.toggle('lvc',rel(9)&&G2.on); /* the power tray hides under the card */if(rel(9)&&G2.on){$('lvlNext').innerHTML='';if(gameMode==='classic'){LVL_BOOST=v2Peak(level+1)?'arc':'rage';lvlBoostUi();}} /* 1.4.9: the next level is named as it starts */
   {const nm=PAUTO&&gameMode==='classic'&&level<=3;$('lvlNameRow').hidden=!nm;if(nm){setAv($('lvlNameAv'),playerAvatar);$('lvlNameN').textContent=playerName;}}
   later(()=>{showModal('mLvl');gState='menu';updateUI();},2900);checkAchs();
 }
@@ -4079,7 +4084,10 @@ $('nextLvl').onclick=async e=>{e&&e.stopPropagation&&e.stopPropagation();if(REPL
   if(!heartGate(level+1,()=>{level++;levelCheck();}))return;hideModals();await maybeInterstitial();level++;levelCheck();};
 $('lvlName').onclick=e=>{e.stopPropagation();openProfile(()=>{if(!PAUTO)$('lvlNameRow').hidden=true;$('lvlNameN').textContent=playerName;setAv($('lvlNameAv'),playerAvatar);});};
 $('lvlMenu').onclick=e=>{e.stopPropagation();sfx('click',{vol:.4});if(REPLAY){endReplay(false);return;}hideModals();showMenu();}; // progress is already saved when the level is won
-$('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed>=LVL_AD.max)return;if(await showRewarded()){lvlAdUsed++;grant({stars:LVL_AD.stars},'BONUS');
+/* 1.4.9: the level-end ad gives the next level a head start: one more arc before a peak, a full Vortex bar before any other level */
+const BOOST_TXT={arc:['+1 YAYLA BAŞLA','Zirve seviyesinde bir yay fazla'],rage:['VORTEX DOLU BAŞLA','İstediğin an 5 sn dev ol, puanın ×2']};
+function lvlBoostUi(done){const t=BOOST_TXT[LVL_BOOST],b=$('lvlAd');b.classList.add('two');b.disabled=!!done;b.innerHTML=`<span>${done?'✓ '+T(t[0]):adLabel(T(t[0]))}</span><small>${T(done?'Sonraki seviyede hazır':t[1])}</small>`;}
+$('lvlAd').onclick=async e=>{e.stopPropagation();if(lvlAdUsed>=LVL_AD.max)return;if(LVL_BOOST){if(await showRewarded()){lvlAdUsed=LVL_AD.max;if(LVL_BOOST==='arc')SHOP.arcLv=level+1;else SHOP.rageLv=level+1;saveG();lvlBoostUi(true);}return;}if(await showRewarded()){lvlAdUsed++;grant({stars:LVL_AD.stars},'BONUS');
   if(lvlAdUsed>=LVL_AD.max){$('lvlAd').disabled=true;$('lvlAd').textContent=`✓ +${LVL_AD.stars*LVL_AD.max} ⭐ ${T('ALINDI')}`;}else $('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · ${lvlAdUsed+1}/${LVL_AD.max}`);}};
 $('lvlRetry').onclick=e=>{e.stopPropagation();if(!REPLAY){startReplay(level);return;}hideModals();startReplayLevel();};
 $('againBtn').onclick=()=>{if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();SND.music('game');resetRun(true,false);};
