@@ -112,6 +112,7 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 #sLB.r9 #lbList .lbrow{padding:5px 12px;margin-bottom:3px;}#sLB.r9 #lbList .lbrow .n{font-size:13px;}#sLB.r9 #lbList .lbrow.lbcols{padding:0 12px;margin:0 0 2px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2{margin:8px 0 3px;padding-top:7px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2:first-child{margin-top:0;padding-top:0;}
 #sLB.r9 #lbShareRow{margin-top:8px;gap:10px;}#sLB.r9 .lbstats .bc b span{font-size:inherit;}
 #sLB.r9 #lbList .lbrow{gap:8px;}#sLB.r9 #lbList .lbrow .r{width:38px;}#sLB.r9 #lbList .lbrow .n{white-space:nowrap;min-width:0;}#sLB.r9 #lbList .lbrow .c{width:50px;}#sLB.r9 #lbList .lbrow .p{width:76px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2 .n{overflow:hidden;text-overflow:ellipsis;letter-spacing:.05em;}#sLB.r9 #lbShareRow .btn{flex:1;min-width:0;}
+.lbchamp{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;padding:7px 12px;border-radius:10px;background:linear-gradient(90deg,rgba(255,215,106,.16),rgba(255,215,106,.04));border:1px solid rgba(255,215,106,.4);font-size:12.5px;color:#ffe8a6;text-align:start;}.lbchamp span{display:block;text-align:start;font-size:10.5px;letter-spacing:.04em;}.lbchamp b{display:block;color:#fff;font-size:15px;font-family:var(--fd);}.lbchamp i{font-style:normal;font-family:var(--fd);font-size:15px;color:#ffd76a;}
 .lbstats .bc{grid-column:1/-1;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap;}
 .lbstats .bc b{display:inline;color:#ff9a5c;font-size:17px;}
 .lbstats.r9 div{padding:5px 6px;}.lbstats.r9 b{font-size:14px;}
@@ -897,6 +898,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .mm.r9 #modeH .vx i{filter:hue-rotate(30deg) saturate(1.8) brightness(.95);}.mm.r9 #modeS .vx i,.mm.r9 #modeS .bsE{filter:hue-rotate(170deg) saturate(1.4) brightness(1.1);}
 .mm.r9 #modeS{position:relative;overflow:visible;}.mm.r9 #modeS .tb{position:absolute;top:-8px;right:-6px;padding:2px 7px;border-radius:9px;background:linear-gradient(135deg,#ffd76a,#f2a93b);color:#2a1a00;font-family:var(--fd);font-size:8.5px;font-weight:700;letter-spacing:.08em;box-shadow:0 2px 8px rgba(242,169,59,.5);white-space:nowrap;}
 .mm.r9 #modeS .tb .ico{width:9px;height:9px;}
+.mm.r9 #modeS .tt{position:absolute;left:0;right:0;top:100%;margin-top:4px;text-align:center;font-family:var(--fd);font-size:9px;letter-spacing:.06em;color:#9fd8ff;white-space:nowrap;opacity:1;}.mm.r9 #modeS .tt.last{color:#ff7a70;}.mm.r9 #modeS .tt .ico{width:9px;height:9px;}
 .mbot{gap:10px;padding-bottom:4px;}
 .vx{position:relative;display:block;width:52px;height:52px;flex:none;margin:-4px 0 -8px;}
 .vx i{position:absolute;inset:0;background:center/100% 100% no-repeat;}
@@ -2474,8 +2476,9 @@ function renderMapWin(){const btn=$('mapBtn');btn.classList.add('mwin');let w=bt
   const nd=[];for(let l=cur-2;l<=cur+3;l++){if(l<1){nd.push('');continue;}const k=levelKind(l),hd=v2Hard(l),st=l<cur?'d':l===cur?'c':'f';nd.push(`<i class="${st}${hd?' h':''}${k&&k.t==='boss'?' b':''}">${st==='c'?'':k?k.ic:hd?'🔥':st==='d'?'':l}</i>`);}
   w.innerHTML=`<span class="bg"${bg?` style="background-image:url(${bg})"`:''}></span><span class="tx"><b>${T('HARİTA')}</b><small>${T(ZONES[z].n)} · ${cur-l0}/10</small></span><span class="pth"><svg viewBox="0 0 150 40" preserveAspectRatio="none"><path d="M5,26 C20,8 35,8 50,20 S80,34 95,20 S125,6 145,18"/></svg>${nd.join('')}</span>`;
   const me=document.createElement('span');me.className='av';setAv(me,playerAvatar||'🚀');const c=w.querySelector('i.c');if(c)c.appendChild(me);} /* 1.4.9: the map button is a window onto the map: the zone's own sky, where you stand and what comes next */
-function modeTint(){const mm=$('modeS').parentNode;if(mm.classList.contains('r9'))return;mm.classList.add('r9');const t=document.createElement('span');t.className='tb';t.textContent='🏆 TURNUVA';$('modeS').appendChild(t);} /* 1.4.9: each mode its own vortex colour (hard crimson, survival toxic green); survival is where the daily storm is raced */
-function renderMapCard(){if(rel(9)){renderMapWin();modeTint();}
+function modeTint(){const mm=$('modeS').parentNode;if(mm.classList.contains('r9'))return;mm.classList.add('r9');const t=document.createElement('span');t.className='tb';t.textContent='🏆 TURNUVA';$('modeS').appendChild(t);const c=document.createElement('small');c.className='tt';$('modeS').appendChild(c);tourTick();setInterval(tourTick,30000);}
+function tourTick(){const c=$('modeS').querySelector('.tt');if(!c||!$('sMenu').classList.contains('on'))return;const t=tourLeft();c.textContent='⏱ '+(t.h?t.h+' '+T('sa')+' ':'')+t.m+' '+T('dk');c.classList.toggle('last',t.h<1);} /* 1.4.9: the time left in today's tournament, on the Survival tile; red in the last hour */ /* 1.4.9: each mode its own vortex colour (hard crimson, survival toxic green); survival is where the daily storm is raced */
+function renderMapCard(){if(rel(9)){renderMapWin();modeTint();tourTick();}
   const cur=Math.max(1,savedLevel);let nb=0;for(let l=cur;l<cur+60;l++){const k=levelKind(l);if(k&&k.t==='boss'){nb=l;break;}}
   $('mapTxt').innerHTML=`${cur>1?`${cur-1} seviye geçildi · ${totalStars()} ⭐`:'Yolculuğun burada başlıyor'}<br>Sıradaki boss: seviye ${nb}`;
   const c=$('miniMap').getContext('2d');c.clearRect(0,0,168,132);const P=[];for(let i=0;i<9;i++)P.push([84+Math.sin(i*.9)*50,122-i*14]);
@@ -2942,7 +2945,10 @@ async function stormSubmit(score,secs){const day=STORM.day||utcDay();
   try{const j=await lbFetch('/score',await itScore(body));try{localStorage.removeItem('bhs_lbq');}catch(e){}return j;}catch(e){try{const q=lbQueue();if(!q||q.day!==day||q.score<score)localStorage.setItem('bhs_lbq',JSON.stringify(body));}catch(e2){}return {off:true};}}
 async function lbFlush(){const q=lbQueue();if(!q||!LB_URL||!SET.lb)return;if(q.day!==utcDay()){try{localStorage.removeItem('bhs_lbq');}catch(e){}return;}try{await lbFetch('/score',await itScore(q));localStorage.removeItem('bhs_lbq');}catch(e){}}
 async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
-  if(c&&c.ok&&c.stars>0){grant({stars:c.stars},`🏆 ${T('GÜNÜN FIRTINASI')} · ${p.rank}.`);sfx('achieve',{vol:.7});}}}catch(e){}}
+  if(c&&c.ok&&c.stars>0){grant({stars:c.stars},`🏆 ${T('GÜNÜN FIRTINASI')} · ${p.rank}.`);sfx('achieve',{vol:.7});
+    if(rel(9)){const r=p.rank|0;toast(r===1?'👑':['','🥇','🥈','🥉'][r]||'🏆',r===1?T('TEBRİKLER ŞAMPİYON!'):T('TURNUVADA {n}. OLDUN!',{n:r}),T('Turnuva ödülün')+': +'+c.stars.toLocaleString(LOC)+' ⭐');const e=$('toast');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),5500);}}}}catch(e){}} /* 1.4.9: the tournament's own words, not a daily reward; held longer */
+const LBCH={d:'',h:''};async function lbChamp(){const y=new Date(Date.now()-864e5).toISOString().slice(0,10);if(LBCH.d===y)return LBCH.h;let h='';
+  try{const j=await lbFetch(`/top?day=${y}&pid=${PID}`),e=(j&&j.list||[])[0];if(e)h=`<div class="lbchamp"><span>👑 ${T('Dünün şampiyonu')}${e.me?' · '+T('SEN!'):''}<b class="notr">${e.me?String(playerName||'PİLOT').replace(/[<>&"]/g,''):String(e.name).replace(/[<>&"]/g,'')}</b></span><i>${(+e.score).toLocaleString(LOC)}</i></div>`;LBCH.d=y;LBCH.h=h;}catch(e){}return h;} /* 1.4.9: yesterday's winner on top of today's table */
 async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
   const head=`<div class="stormBox"><b>⛈ ${T('GÜNÜN FIRTINASI')}</b>${stormTxt()}<br><small>${T('Hayatta Kal modunda herkes aynı fırtınada yarışır.')}</small></div><div class="lbprize">${T('Gün sonunda (UTC) ödül')}: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐</div>`;
   const mine=STORMB.day===day&&STORMB.best?`<div class="lbprize">${T('Bugünkü en iyin')}: <b>${STORMB.best.toLocaleString(LOC)}</b></div>`:'';
@@ -2953,7 +2959,8 @@ async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
     const hid=lbRepGet(),rk=e=>e.k?String(e.k).replace(/[^a-f0-9]/g,''):'';
     const rows=(j.list||[]).map(e=>{const k=rk(e),gone=k&&hid.includes(k);return `<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div><div class="n notr">${gone?'•••':String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div>${!e.me&&k&&!gone?`<button class="lbRep" type="button" data-k="${k}" aria-label="${T('Bu ismi bildir')}">⚑</button>`:''}</div>`;}).join('');
     const me=j.me&&!(j.list||[]).some(e=>e.me)?`<div class="lbrow me2"><div class="r">${j.me.rank}</div><div class="n notr">${String(playerName||'PİLOT').replace(/[<>&"]/g,'')}</div><div class="p">${j.me.score.toLocaleString(LOC)}</div></div>`:'';
-    w.innerHTML=head+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;
+    const ch=rel(9)?await lbChamp():'';if(!$('sLB').classList.contains('on'))return;
+    w.innerHTML=head+ch+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;
     w.querySelectorAll('.lbRep').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=T('BİLDİR?');return;} // a second tap confirms
       const k=b.dataset.k,h=lbRepGet();if(!h.includes(k)){h.push(k);lbRepSet(h);}lbFetch('/report',{day,k,by:PID}).catch(()=>{});
       const row=b.closest('.lbrow');row.querySelector('.n').textContent='•••';b.remove();toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));});}
@@ -3953,6 +3960,8 @@ function notifPlan(now=Date.now()){const L=[];
     if(b&&m&&b.end>now)L.push({p:0,at:b.end,title:'🧪 '+T('Laboratuvar işi bitti'),body:T('{m} yükseltmesi hazır. Gel, yeni gücünü dene!',{m:T(m.n)})});}
   if(SET.nFuel&&bestLevel>=HRT.from&&!vipOn()){heartTick();if(HEARTS.n<HRT.max&&HEARTS.t)L.push({p:1,at:HEARTS.t+(HRT.max-HEARTS.n)*HRT.ms,title:'⛽ '+T('Yakıtın doldu'),body:T('Kaldığın seviye seni bekliyor.')});}
   if(SET.nDay&&lastLogin)for(const dd of [1,3]){const d=new Date(now);d.setDate(d.getDate()+dd);d.setHours(19,0,0,0);L.push({p:2,at:d.getTime(),title:'🎁 '+T('Günlük ödülün hazır'),body:T('Yeni günün fırtınası da başladı. Serini bozma!')});}
+  if(SET.nDay&&rel(9)&&lastLogin&&STORMB.day!==utcDay()){const d=new Date(now);d.setHours(19,0,0,0);const hl=Math.floor((Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()+1)-d.getTime())/36e5);
+    if(d.getTime()>now&&hl>=2)L.push({p:2,at:d.getTime(),title:'🏆 '+T('Günün turnuvası sürüyor'),body:T('Herkes eşit şartlarda yarışır')+'. '+T('Bitişe {n} saat kaldı',{n:hl})});} /* 1.4.9: this evening, if today's tournament is not played yet */
   for(const n of L){const d=new Date(n.at),h=d.getHours();if(h>=22){d.setDate(d.getDate()+1);d.setHours(9,0,0,0);}else if(h<9)d.setHours(9,0,0,0);n.at=d.getTime();}
   L.sort((a,b)=>a.p-b.p||a.at-b.at);const per={},out=[];
   for(const n of L){const k=new Date(n.at).toDateString();if((per[k]|0)>=2)continue;per[k]=(per[k]|0)+1;out.push(n);}

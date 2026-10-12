@@ -1764,5 +1764,12 @@
 "BİTİŞE": "ENDS IN",
 "sa": "h",
 "TURNUVA SÜPERNOVALARIN BİTTİ": "TOURNAMENT SUPERNOVAS USED UP",
-"HERKES EŞİT ŞARTLARDA": "EQUAL TERMS FOR ALL"
+"HERKES EŞİT ŞARTLARDA": "EQUAL TERMS FOR ALL",
+"Günün turnuvası sürüyor": "Today's tournament is on",
+"Bitişe {n} saat kaldı": "{n} hours left",
+"TEBRİKLER ŞAMPİYON!": "CONGRATULATIONS, CHAMPION!",
+"TURNUVADA {n}. OLDUN!": "YOU PLACED #{n} IN THE TOURNAMENT!",
+"Turnuva ödülün": "Your tournament prize",
+"Dünün şampiyonu": "Yesterday's champion",
+"SEN!": "YOU!"
 }
