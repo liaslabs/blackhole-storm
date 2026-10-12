@@ -139,6 +139,7 @@ Her güncellemede:
 • Records show dates, ranks and your best combo
 • Snappier swipes; smoother control at guarded planets
 • Kilonova gold lands outside your pull
+• Streak shield, comeback gift and tournament medals
 </en-US>
 ```
 
