@@ -1774,5 +1774,22 @@
 "SEN!": "ЭТО ТЫ!",
 "ÖDÜLÜ AL": "ЗАБРАТЬ НАГРАДУ",
 "{d} turnuvası": "Турнир {d}",
-"Bağlantı yok, biraz sonra tekrar dene": "Нет соединения, попробуй чуть позже"
+"Bağlantı yok, biraz sonra tekrar dene": "Нет соединения, попробуй чуть позже",
+"Seri kalkanı serini korudu": "Щит серии сохранил твою серию",
+"Tekrar hoş geldin! Geri dönüş hediyen de var": "С возвращением! Тебя ждёт и подарок",
+"Yarın": "Завтра",
+"Seri kalkanı": "Щит серии",
+"bu hafta kullanıldı": "использован на этой неделе",
+"hazır, bir gün kaçırırsan serini korur": "готов: если пропустишь день, серия сохранится",
+"GERİ DÖNÜŞ HEDİYESİ": "ПОДАРОК ЗА ВОЗВРАЩЕНИЕ",
+"Kara deliğin seni bekliyor": "Твоя чёрная дыра ждёт",
+"Geri dönüş hediyen hazır: yıldız ve elmas.": "Подарок за возвращение готов: звёзды и алмазы.",
+"DÜNKÜ TURNUVAN": "ТВОЙ ВЧЕРАШНИЙ ТУРНИР",
+"Dün {n} oyuncu arasında": "Вчера среди игроков: {n}",
+"{n}. oldun": "ты {n}-й",
+"İlk 3 için {n} puan daha": "ещё {n} очков до тройки лидеров",
+"Bugün ilk 3'e gir: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐": "Войди сегодня в тройку: 🥇 1 000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐",
+"TURNUVA MADALYALARIN": "МЕДАЛИ ТУРНИРОВ",
+"Günün turnuvasında ilk 3’e gir, madalyan burada dursun": "Войди в тройку турнира дня — медаль останется здесь",
+"GÜNÜN İLK ZAFERİ": "ПЕРВАЯ ПОБЕДА ДНЯ"
 }

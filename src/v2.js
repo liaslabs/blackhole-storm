@@ -1488,6 +1488,7 @@ function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');ads
   G2.hardW=G2.hard&&G2.mode==='level'&&!REPLAY&&v2Hard(G2.lv)?HARD.stars[G2.hard]*(G2.hm?2:1):0;if(G2.hardW){stars+=G2.hardW;saveG();} /* a peak cleared pays a little more */
   if(G2.mode==='level'&&!REPLAY){let sp=10+5*clamp(lives,1,3);if(G2.rule)sp+=10*(seasonIs('rival')&&(G2.rule.rival||G2.rule.guard)?2:1);if(G2.L.boss||G2.rule&&G2.rule.duel)sp+=25;spAdd(sp);} // season points
   if(G2.mod&&G2.mode==='level'){const c=RISK_CARDS.find(x=>x.id===G2.mod);if(c)later(()=>grant(c.rw,'🃏 '+T(c.n)),1400);}
+  if(rel(9)&&G2.mode==='level'&&!REPLAY){const d=new Date().toDateString();if(TIPS.fwDay!==d){TIPS.fwDay=d;saveG();later(()=>grant({stars:150},'☀️ '+T('GÜNÜN İLK ZAFERİ')),2000);}} /* 1.4.9: the day's first level won pays a bonus */
   G2.objs=G2.objs.filter(o=>o.st==='sw');
   if(gameMode==='survival'){gameOver();return;}
   levelSuccess();

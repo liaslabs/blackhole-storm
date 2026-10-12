@@ -113,6 +113,7 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 #sLB.r9 #lbShareRow{margin-top:8px;gap:10px;}#sLB.r9 .lbstats .bc b span{font-size:inherit;}
 #sLB.r9 #lbList .lbrow{gap:8px;}#sLB.r9 #lbList .lbrow .r{width:38px;}#sLB.r9 #lbList .lbrow .n{white-space:nowrap;min-width:0;}#sLB.r9 #lbList .lbrow .c{width:50px;}#sLB.r9 #lbList .lbrow .p{width:76px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2 .n{overflow:hidden;text-overflow:ellipsis;letter-spacing:.05em;}#sLB.r9 #lbShareRow .btn{flex:1;min-width:0;}
 .lbchamp{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 8px;padding:7px 12px;border-radius:10px;background:linear-gradient(90deg,rgba(255,215,106,.16),rgba(255,215,106,.04));border:1px solid rgba(255,215,106,.4);font-size:12.5px;color:#ffe8a6;text-align:start;}.lbchamp span{display:block;text-align:start;font-size:10.5px;letter-spacing:.04em;}.lbchamp b{display:block;color:#fff;font-size:15px;font-family:var(--fd);}.lbchamp i{font-style:normal;font-family:var(--fd);font-size:15px;color:#ffd76a;}
+.lbstats .bc.md{order:9;padding:5px 6px;gap:12px;}.lbstats .bc.md b{font-size:15px;color:#fff;}.lbstats .bc.md span{font-size:9.5px;}
 .lbstats .bc{grid-column:1/-1;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap;}
 .lbstats .bc b{display:inline;color:#ff9a5c;font-size:17px;}
 .lbstats.r9 div{padding:5px 6px;}.lbstats.r9 b{font-size:14px;}
@@ -364,6 +365,9 @@ body.r7.v2 #boost2 .hb2{-webkit-backdrop-filter:none;backdrop-filter:none;backgr
 #boost2 .hb2 i{font-style:normal;font-family:var(--fd);font-size:8px;letter-spacing:.02em;color:#d6dcea;max-width:58px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 #boost2 .hb2 b{position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;border-radius:11px;background:#ffd84d;color:#1c1405;font-family:var(--fm);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(7,9,12,.9);}
 #boost2 .hb2.dia b{background:#6fd0f0;color:#04131a;}
+#mRes{position:fixed;z-index:150;background:#0c0f1e;text-align:center;border-color:rgba(159,216,255,.5);box-shadow:0 0 0 100vmax rgba(2,3,10,.7);animation:resIn .45s cubic-bezier(.2,1.4,.4,1) both;}@keyframes resIn{from{opacity:0;transform:translate(-50%,-40%) scale(.8);}}
+#mRes .rsIc{font-size:40px;}#mRes .rsIc .ico{width:44px;height:44px;}#mRes .rsT{font-size:13px;color:var(--dim);}#mRes .rsR{font-family:var(--fd);font-size:34px;font-weight:700;color:#fff;margin:2px 0;}#mRes .rsG{font-size:14px;color:#ffd76a;margin-bottom:8px;}#mRes .rsB{font-size:12px;color:var(--dim);margin-bottom:12px;}
+.dTom{margin:2px 0 10px;font-size:13px;color:#cfe9ff;line-height:1.5;}.dTom b{color:#ffe6a8;}.dTom small{font-size:11px;color:var(--dim);}
 #mPrize{position:fixed;inset:0;left:0;top:0;transform:none;width:auto;z-index:150;background:radial-gradient(circle at 50% 42%,rgba(30,22,4,.28),rgba(2,3,10,.5) 70%);-webkit-backdrop-filter:blur(7px) saturate(.75);backdrop-filter:blur(7px) saturate(.75);perspective:900px;text-align:center;overflow:hidden;transition:background .8s ease,-webkit-backdrop-filter .8s ease,backdrop-filter .8s ease;}
 #mPrize.out{background:transparent;-webkit-backdrop-filter:blur(0) saturate(1);backdrop-filter:blur(0) saturate(1);pointer-events:none;}#mPrize.out .przRays,#mPrize.out .przConf{opacity:0;transition:opacity .6s ease;}
 #mPrize.out .przIcW,#mPrize.out .przT,#mPrize.out .przD,#mPrize.out .row,#mPrize.out .przMsg{opacity:0;transform:scale(.85) translateY(-10px);transition:opacity .45s ease,transform .45s ease;}#mPrize.out .przS{opacity:0;transform:scale(1.4);transition:opacity .5s ease .1s,transform .5s ease .1s;}
@@ -1140,6 +1144,16 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <p id="tip2D"></p>
    <div class="row"><button class="btn big" id="tip2Ok">ANLADIM</button></div>
   </div>
+ <div class="modal card" id="mRes">
+   <div class="rsIc">📊</div>
+   <div class="h">DÜNKÜ TURNUVAN</div>
+   <div class="rsT" id="rsT"></div>
+   <div class="rsR" id="rsR"></div>
+   <div class="rsG" id="rsG"></div>
+   <div class="rsB">Bugün ilk 3'e gir: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐</div>
+   <div class="row"><button class="btn big" id="rsGo">☠️ HAYATTA KAL</button></div>
+   <div class="row"><button class="btn sec" id="rsOk">TAMAM</button></div>
+  </div>
  <div class="modal" id="mPrize">
    <div class="przRays"></div><div class="przConf" id="przConf"></div>
    <div class="przCard card">
@@ -1353,6 +1367,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="box"><div class="muted" style="font-size:11px;letter-spacing:1px;">BUGÜNÜN ÖDÜLÜ</div>
    <div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:24px;color:#ffe6a8;margin-top:4px;">+<span id="dStars">100</span> ⭐</div>
    <div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:17px;color:var(--cyan);">+<span id="dDia">5</span> 💎</div><div style="font-family:'IBM Plex Sans Condensed',sans-serif;font-size:14px;color:#b9ecff;margin-top:2px;">+<span id="dBoost">10 dk</span> ⏩ <span style="font-size:12px;opacity:.8">LAB HIZLANDIRMA</span></div><div class="vipline" id="dVip" hidden>👑 VIP · +15 💎 +1 🛡 ekstra</div></div>
+  <div class="dTom" id="dTom" hidden></div>
   <button class="btn big" id="claimBtn">AL</button>
   <div class="row mon"><button class="btn sec adbtn" id="claimAd" style="width:100%;">▶ REKLAMLA 2 KATINI AL</button></div>
  </div>
@@ -2455,6 +2470,7 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
   const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
   $('lbStats').innerHTML=(rel(8)?[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['HAYATTA KAL REKORU',fmt(svB)],['60 SN REKORU',fmt(sprintBest)]]:[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]])
     .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
+  if(rel(9)){const M=TIPS.med||[0,0,0],r=document.createElement('div');r.className='bc md';r.innerHTML=M[0]+M[1]+M[2]?`<span>${T('TURNUVA MADALYALARIN')}</span><b>🥇 ${M[0]}</b><b>🥈 ${M[1]}</b><b>🥉 ${M[2]}</b>`:`<span>🏅 ${T('Günün turnuvasında ilk 3’e gir, madalyan burada dursun')}</span>`;$('lbStats').appendChild(r);} /* 1.4.9: the tournament's podiums, kept for good */
   if(rel(9)&&BCOMBO.c>=2){const r=document.createElement('div');r.className='bc';const b=document.createElement('b');b.textContent='🔥 ×'+BCOMBO.c;const k=document.createElement('span');k.textContent='EN İYİ COMBO';r.append(b,k);if(BCOMBO.d){const t=document.createElement('span');t.textContent=lbDate(BCOMBO.d);r.append(t);}$('lbStats').appendChild(r);} /* 1.4.9: its own row, since the best combo may come from a game outside the top scores */
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,rel(9)?3:5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
@@ -2985,7 +3001,7 @@ async function stormSubmit(score,secs){const day=STORM.day||utcDay();
   if(!LB_URL||!SET.lb||score<=0||secs<5)return null;const body={pid:PID,name:playerName||'PİLOT',score,secs:Math.round(secs),day};
   try{const j=await lbFetch('/score',await itScore(body));try{localStorage.removeItem('bhs_lbq');}catch(e){}return j;}catch(e){try{const q=lbQueue();if(!q||q.day!==day||q.score<score)localStorage.setItem('bhs_lbq',JSON.stringify(body));}catch(e2){}return {off:true};}}
 async function lbFlush(){const q=lbQueue();if(!q||!LB_URL||!SET.lb)return;if(q.day!==utcDay()){try{localStorage.removeItem('bhs_lbq');}catch(e){}return;}try{await lbFetch('/score',await itScore(q));localStorage.removeItem('bhs_lbq');}catch(e){}}
-async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;if(rel(9)){try{const j=await lbFetch('/prizes?pid='+PID);const L=(j&&j.list)||[];if(L.length)prizeCard(L);}catch(e){}return;} /* 1.4.9: the prize waits for the player's tap on its own card */try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
+async function lbPrizes(){if(!LB_URL||!SET.lb||!PID)return;if(rel(9)){try{const j=await lbFetch('/prizes?pid='+PID);const L=(j&&j.list)||[];if(L.length)prizeCard(L);else resCard();}catch(e){}return;} /* 1.4.9: the prize waits for the player's tap on its own card */try{const j=await lbFetch('/prizes?pid='+PID);for(const p of (j&&j.list)||[]){const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
   if(c&&c.ok&&c.stars>0){grant({stars:c.stars},`🏆 ${T('GÜNÜN FIRTINASI')} · ${p.rank}.`);sfx('achieve',{vol:.7});
     if(rel(9)){const r=p.rank|0;toast(r===1?'👑':['','🥇','🥈','🥉'][r]||'🏆',r===1?T('TEBRİKLER ŞAMPİYON!'):T('TURNUVADA {n}. OLDUN!',{n:r}),T('Turnuva ödülün')+': +'+c.stars.toLocaleString(LOC)+' ⭐');const e=$('toast');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),5500);}}}}catch(e){}} /* 1.4.9: the tournament's own words, not a daily reward; held longer */
 const LBCH={d:'',h:''};async function lbChamp(){const y=new Date(Date.now()-864e5).toISOString().slice(0,10);if(LBCH.d===y)return LBCH.h;let h='';
@@ -3010,13 +3026,18 @@ const lbRepGet=()=>{try{const a=JSON.parse(localStorage.getItem('bhs_lbrep')||'[
 function lbFit(){const sc=$('sLB'),rows=[...$('lbList').querySelectorAll('.lbrow[data-g]:not(.lbcols)')],over=()=>sc.scrollHeight>sc.clientHeight+1;
   if(over()){const sp=[...$('lbList').querySelectorAll('[data-g="sprint"]')];for(const e of sp)e.hidden=true;} /* Normal, Hard and Survival first: the 60 s table stays only when there is room */
   for(let k=0;k<20&&over();k++){const n={};for(const r of rows)if(!r.hidden)n[r.dataset.g]=(n[r.dataset.g]||0)+1;const g=Object.keys(n).sort((a,b)=>n[b]-n[a])[0];if(!g||n[g]<2)break;rows.filter(r=>r.dataset.g===g&&!r.hidden).pop().hidden=true;}} /* 1.4.9: on a short screen the longest table gives up its last row until the page fits, the first place of each mode always stays */
-function prizeCard(L){const p=L[0];if(!p)return;if(!$('sMenu').classList.contains('on')){later(()=>prizeCard(L),4000);return;}const r=p.rank|0,m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);
+async function resCard(){const y=new Date(Date.now()-864e5).toISOString().slice(0,10);if(TIPS.resDay===y)return;if($('sDaily').classList.contains('on')){later(resCard,3000);return;}let j;try{j=await lbFetch(`/top?day=${y}&pid=${PID}`);}catch(e){return;}
+  const me=j&&j.me;if(!me||me.rank<=3||!$('sMenu').classList.contains('on')||document.querySelector('.modal.on'))return;TIPS.resDay=y;saveG();
+  const third=(j.list||[])[2],gap=third?Math.max(1,third.score-me.score+1):0,m=$('mRes');if(m.parentNode!==document.body)document.body.appendChild(m);
+  $('rsT').textContent=T('Dün {n} oyuncu arasında',{n:j.total||0});$('rsR').textContent=T('{n}. oldun',{n:me.rank});
+  $('rsG').textContent=gap?T('İlk 3 için {n} puan daha',{n:gap.toLocaleString(LOC)}):'';$('rsGo').onclick=()=>{hideModals();if(gameMode!=='survival')$('modeS').click();};$('rsOk').onclick=()=>hideModals();showModal('mRes');sfx('click',{vol:.4});} /* 1.4.9: everyone who raced yesterday hears where they finished and how close the podium was */
+function prizeCard(L){const p=L[0];if(!p)return;if(!$('sMenu').classList.contains('on')||$('sDaily').classList.contains('on')||document.querySelector('.modal.on')){later(()=>prizeCard(L),3000);return;} /* after the daily reward and any open card */const r=p.rank|0,m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);
   const d=new Date(p.day+'T12:00:00Z');$('przIc').textContent=r===1?'👑':['','🥇','🥈','🥉'][r]||'🏆';$('przT').textContent=r===1?T('TEBRİKLER ŞAMPİYON!'):T('TURNUVADA {n}. OLDUN!',{n:r});
   $('przD').textContent=T('{d} turnuvası',{d:d.toLocaleDateString(LOC,{day:'numeric',month:'long'})});$('przMsg').textContent='';$('przLater').hidden=true;m.className='modal rk'+Math.min(3,Math.max(1,r));
   {const S=+p.stars,el=$('przS'),t0=performance.now()+650;el.textContent='+0';const tk=t=>{const k=Math.min(1,Math.max(0,(t-t0)/900));el.textContent='+'+Math.round(S*(1-Math.pow(1-k,3))).toLocaleString(LOC);if(k<1&&m.classList.contains('on'))requestAnimationFrame(tk);};requestAnimationFrame(tk);} /* the prize counts up once the card has landed */
   {const cf=$('przConf'),col=r===1?['#ffd76a','#fff3c4','#f2a93b','#9fd8ff','#ff8ad8']:r===2?['#e8eef8','#b8c4d8','#9fd8ff','#fff']:['#e0a070','#f2c4a0','#ffd76a','#fff'];cf.innerHTML=Array.from({length:30},(_,i)=>`<i style="--x:${(Math.random()*100).toFixed(1)}%;--d:${(Math.random()*1.4).toFixed(2)}s;--t:${(2.2+Math.random()*1.6).toFixed(2)}s;--r:${Math.round(Math.random()*720-360)}deg;--s:${(.6+Math.random()*.8).toFixed(2)};background:${col[i%col.length]}"></i>`).join('');}
   const b=$('przGo');b.disabled=false;b.onclick=async()=>{b.disabled=true;try{const c=await lbFetch('/claim',{pid:PID,day:p.day,it:await itTok(`${PID}|${p.day}|claim`)});
-    if(c&&c.ok){if(c.stars>0){stars+=c.stars;saveG();flyReward($('przS'),{stars:c.stars});sfx('achieve',{vol:.8});later(updateUI,650);}m.classList.add('out');later(()=>{hideModals();m.classList.remove('out');later(()=>prizeCard(L.slice(1)),500);},950);} /* the stars fly to the wallet while the words fade and the menu comes back into focus */
+    if(c&&c.ok){if(r>=1&&r<=3){TIPS.med=TIPS.med||[0,0,0];TIPS.med[r-1]++;}if(c.stars>0){stars+=c.stars;saveG();flyReward($('przS'),{stars:c.stars});sfx('achieve',{vol:.8});later(updateUI,650);}m.classList.add('out');later(()=>{hideModals();m.classList.remove('out');later(()=>prizeCard(L.slice(1)),500);},950);} /* the stars fly to the wallet while the words fade and the menu comes back into focus */
     else{hideModals();later(()=>prizeCard(L.slice(1)),300);}}
     catch(e){b.disabled=false;$('przMsg').textContent=T('Bağlantı yok, biraz sonra tekrar dene');$('przLater').hidden=false;}};
   $('przLater').onclick=()=>hideModals();m.classList.remove('on');void m.offsetWidth;showModal('mPrize');sfx('achieve',{vol:.6});later(()=>{sfx('powerup',{vol:.5,rate:1.2});vib([20,40,60]);},550);} /* 1.4.9: a tournament prize is its own moment: who you beat, when, and a button that takes it */
@@ -3475,14 +3496,19 @@ function checkDaily(after){
   const first=!lastLogin;
   if(!clockOk()){if(!clockOk.warned){clockOk.warned=1;later(()=>toast('🕒','CİHAZ SAATİ GERİ ALINMIŞ','Günlük ödüller saat düzelince açılır'),600);}return;}
   const yest=new Date(Date.now()-864e5).toDateString();
-  loginStreak=lastLogin===yest?loginStreak+1:1;lastLogin=today;
+  const y2=new Date(Date.now()-2*864e5).toDateString(),wk=Math.floor((Date.now()/864e5+3)/7),away=lastLogin?Math.round((Date.parse(today)-Date.parse(lastLogin))/864e5):0;let kept=0;
+  if(lastLogin===yest)loginStreak++;else if(rel(9)&&lastLogin===y2&&loginStreak>1&&TIPS.skWk!==wk){TIPS.skWk=wk;loginStreak++;kept=1;}else loginStreak=1; /* 1.4.9: one missed day a week is forgiven by the streak shield */
+  const back=rel(9)&&!first&&away>=3; /* away three days or more: a welcome-back gift on top */
+  lastLogin=today;
   const sr=Math.min(50+loginStreak*50,500),dr=Math.min(Math.floor(loginStreak/3)*5+5,10),wd=(loginStreak-1)%7+1,bm=10; // + Laboratory speed-up minutes every day // day 7 of every week opens the weekly chest
   $('dWeek').innerHTML=Array.from({length:7},(_,i)=>`<span class="${i+1<wd?'ok':i+1===wd?'on':''}">${i===6?'🎁':i+1}</span>`).join('');
   $('dWeekT').textContent=wd===7?T('Bugün haftalık sandık açılıyor!'):T('Haftalık sandığa {d} gün',{d:7-wd});
   $('dIco').textContent=first?'🎁':'🔥';$('dHead').textContent=T(first?'HOŞ GELDİN HEDİYESİ':'GÜNLÜK BONUS');$('dSub').textContent=T(first?'Giriş serin başladı: her gün gel, 7. günde sandık açılır':'Giriş serisi');
+  if(rel(9)){if(kept)$('dSub').textContent='🛡 '+T('Seri kalkanı serini korudu');else if(back)$('dSub').textContent='🎁 '+T('Tekrar hoş geldin! Geri dönüş hediyen de var');
+    const n=loginStreak+1;$('dTom').hidden=false;$('dTom').innerHTML=`${T('Yarın')}: <b>+${Math.min(50+n*50,500)} ⭐ +${Math.min(Math.floor(n/3)*5+5,10)} 💎</b><br><small>🛡 ${T('Seri kalkanı')}: ${TIPS.skWk===wk?T('bu hafta kullanıldı'):T('hazır, bir gün kaçırırsan serini korur')}</small>`;} /* 1.4.9: tomorrow's reward is shown today */
   $('dStreak').textContent=loginStreak;$('dStars').textContent=sr;$('dDia').textContent=dr;$('dBoost').textContent=labMin(bm);
   const vip=vipOn();$('dVip').hidden=!vip;
-  const claim=k=>{SND.resume();sfx('daily',{vol:.6,rev:.3});stars+=sr*k;diamonds+=dr*k;LAB.boost=(LAB.boost|0)+bm*k;flyReward(document.activeElement,{stars:sr*k,gems:dr*k});if(wd===7){const jack=Math.random()<.25;later(()=>grant({stars:150,gems:10,boost:60},T('HAFTALIK SANDIK')),700);if(jack)later(()=>grant(GIFT.jack,'🏆 '+T('BÜYÜK HAZİNE')),2600);}if(vipOn())grant(VIP.daily,'👑 VIP GÜNLÜK ÖDÜL');saveG();$('sDaily').classList.remove('on');$('dailyPrev').style.display='none';if(after)later(after,first?900:0);};
+  const claim=k=>{SND.resume();sfx('daily',{vol:.6,rev:.3});stars+=sr*k;diamonds+=dr*k;LAB.boost=(LAB.boost|0)+bm*k;flyReward(document.activeElement,{stars:sr*k,gems:dr*k});if(wd===7){const jack=Math.random()<.25;later(()=>grant({stars:150,gems:10,boost:60},T('HAFTALIK SANDIK')),700);if(jack)later(()=>grant(GIFT.jack,'🏆 '+T('BÜYÜK HAZİNE')),2600);}if(vipOn())grant(VIP.daily,'👑 VIP GÜNLÜK ÖDÜL');if(back)later(()=>grant({stars:300,gems:15},'🎁 '+T('GERİ DÖNÜŞ HEDİYESİ')),wd===7?4200:900);saveG();$('sDaily').classList.remove('on');$('dailyPrev').style.display='none';if(after)later(after,first?900:0);};
   $('claimBtn').onclick=()=>claim(1);$('claimAd').textContent=SHOP.noAds?'🎁 2 KATINI AL':'▶ REKLAMLA 2 KATINI AL';$('claimAd').parentNode.hidden=!monOn()||!adReady();
   $('claimAd').onclick=async()=>{if(await showRewarded())claim(2);};
   $('dailyPrev').style.display='block';
@@ -3555,7 +3581,7 @@ function litFrom(x,y){const dx=hX-x,dy=hY-y,d=Math.hypot(dx,dy)||1;return {x:dx/
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy','mTour','mPrize'];
+const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy','mTour','mPrize','mRes'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function resetRun(full,fromSave){
@@ -4010,7 +4036,7 @@ function notifPlan(now=Date.now()){const L=[];
   if(SET.nLab){const b=LAB.q.slice().sort((x,y)=>x.end-y.end)[0],m=b&&LABT.find(x=>x.id===b.id);
     if(b&&m&&b.end>now)L.push({p:0,at:b.end,title:'🧪 '+T('Laboratuvar işi bitti'),body:T('{m} yükseltmesi hazır. Gel, yeni gücünü dene!',{m:T(m.n)})});}
   if(SET.nFuel&&bestLevel>=HRT.from&&!vipOn()){heartTick();if(HEARTS.n<HRT.max&&HEARTS.t)L.push({p:1,at:HEARTS.t+(HRT.max-HEARTS.n)*HRT.ms,title:'⛽ '+T('Yakıtın doldu'),body:T('Kaldığın seviye seni bekliyor.')});}
-  if(SET.nDay&&lastLogin)for(const dd of [1,3]){const d=new Date(now);d.setDate(d.getDate()+dd);d.setHours(19,0,0,0);L.push({p:2,at:d.getTime(),title:'🎁 '+T('Günlük ödülün hazır'),body:T('Yeni günün fırtınası da başladı. Serini bozma!')});}
+  if(SET.nDay&&lastLogin)for(const dd of rel(9)?[1,3,7]:[1,3]){const d=new Date(now);d.setDate(d.getDate()+dd);d.setHours(19,0,0,0);L.push(rel(9)&&dd>1?{p:2,at:d.getTime(),title:'🎁 '+T('Kara deliğin seni bekliyor'),body:T('Geri dönüş hediyen hazır: yıldız ve elmas.')}:{p:2,at:d.getTime(),title:'🎁 '+T('Günlük ödülün hazır'),body:T('Yeni günün fırtınası da başladı. Serini bozma!')});}
   if(SET.nDay&&rel(9)&&lastLogin&&STORMB.day!==utcDay()){const d=new Date(now);d.setHours(19,0,0,0);const hl=Math.floor((Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()+1)-d.getTime())/36e5);
     if(d.getTime()>now&&hl>=2)L.push({p:2,at:d.getTime(),title:'🏆 '+T('Günün turnuvası sürüyor'),body:T('Herkes eşit şartlarda yarışır')+'. '+T('Bitişe {n} saat kaldı',{n:hl})});} /* 1.4.9: this evening, if today's tournament is not played yet */
   for(const n of L){const d=new Date(n.at),h=d.getHours();if(h>=22){d.setDate(d.getDate()+1);d.setHours(9,0,0,0);}else if(h<9)d.setHours(9,0,0,0);n.at=d.getTime();}

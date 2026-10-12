@@ -1774,5 +1774,22 @@
 "SEN!": "KAMU!",
 "ÖDÜLÜ AL": "AMBIL HADIAH",
 "{d} turnuvası": "Turnamen {d}",
-"Bağlantı yok, biraz sonra tekrar dene": "Tidak ada koneksi, coba lagi sebentar lagi"
+"Bağlantı yok, biraz sonra tekrar dene": "Tidak ada koneksi, coba lagi sebentar lagi",
+"Seri kalkanı serini korudu": "Perisai beruntun menyelamatkan beruntunmu",
+"Tekrar hoş geldin! Geri dönüş hediyen de var": "Selamat datang kembali! Ada hadiah kembali juga",
+"Yarın": "Besok",
+"Seri kalkanı": "Perisai beruntun",
+"bu hafta kullanıldı": "sudah dipakai minggu ini",
+"hazır, bir gün kaçırırsan serini korur": "siap: jika kamu absen sehari, beruntunmu tetap aman",
+"GERİ DÖNÜŞ HEDİYESİ": "HADIAH KEMBALI",
+"Kara deliğin seni bekliyor": "Lubang hitammu menunggu",
+"Geri dönüş hediyen hazır: yıldız ve elmas.": "Hadiah kembalimu siap: bintang dan berlian.",
+"DÜNKÜ TURNUVAN": "TURNAMENMU KEMARIN",
+"Dün {n} oyuncu arasında": "Kemarin, di antara {n} pemain",
+"{n}. oldun": "kamu peringkat {n}",
+"İlk 3 için {n} puan daha": "{n} poin lagi untuk 3 besar",
+"Bugün ilk 3'e gir: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐": "Masuk 3 besar hari ini: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐",
+"TURNUVA MADALYALARIN": "MEDALI TURNAMEN",
+"Günün turnuvasında ilk 3’e gir, madalyan burada dursun": "Masuk 3 besar turnamen hari ini, medalimu tersimpan di sini",
+"GÜNÜN İLK ZAFERİ": "KEMENANGAN PERTAMA HARI INI"
 }

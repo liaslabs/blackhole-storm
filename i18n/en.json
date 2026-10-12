@@ -1774,5 +1774,22 @@
 "SEN!": "YOU!",
 "ÖDÜLÜ AL": "CLAIM PRIZE",
 "{d} turnuvası": "Tournament of {d}",
-"Bağlantı yok, biraz sonra tekrar dene": "No connection, try again in a moment"
+"Bağlantı yok, biraz sonra tekrar dene": "No connection, try again in a moment",
+"Seri kalkanı serini korudu": "Your streak shield saved your streak",
+"Tekrar hoş geldin! Geri dönüş hediyen de var": "Welcome back! A welcome-back gift is waiting too",
+"Yarın": "Tomorrow",
+"Seri kalkanı": "Streak shield",
+"bu hafta kullanıldı": "used this week",
+"hazır, bir gün kaçırırsan serini korur": "ready: if you miss a day, it keeps your streak",
+"GERİ DÖNÜŞ HEDİYESİ": "WELCOME-BACK GIFT",
+"Kara deliğin seni bekliyor": "Your black hole is waiting",
+"Geri dönüş hediyen hazır: yıldız ve elmas.": "Your welcome-back gift is ready: stars and diamonds.",
+"DÜNKÜ TURNUVAN": "YESTERDAY'S TOURNAMENT",
+"Dün {n} oyuncu arasında": "Yesterday, among {n} players",
+"{n}. oldun": "you placed #{n}",
+"İlk 3 için {n} puan daha": "{n} more points for the top 3",
+"Bugün ilk 3'e gir: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐": "Make today's top 3: 🥇 1,000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐",
+"TURNUVA MADALYALARIN": "TOURNAMENT MEDALS",
+"Günün turnuvasında ilk 3’e gir, madalyan burada dursun": "Make the top 3 in today's tournament and your medal stays here",
+"GÜNÜN İLK ZAFERİ": "THE DAY'S FIRST WIN"
 }

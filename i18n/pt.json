@@ -1774,5 +1774,22 @@
 "SEN!": "VOCÊ!",
 "ÖDÜLÜ AL": "RESGATAR PRÊMIO",
 "{d} turnuvası": "Torneio de {d}",
-"Bağlantı yok, biraz sonra tekrar dene": "Sem conexão, tente de novo em instantes"
+"Bağlantı yok, biraz sonra tekrar dene": "Sem conexão, tente de novo em instantes",
+"Seri kalkanı serini korudu": "Seu escudo de sequência salvou sua sequência",
+"Tekrar hoş geldin! Geri dönüş hediyen de var": "Bem-vindo de volta! Há um presente de retorno também",
+"Yarın": "Amanhã",
+"Seri kalkanı": "Escudo de sequência",
+"bu hafta kullanıldı": "usado nesta semana",
+"hazır, bir gün kaçırırsan serini korur": "pronto: se você perder um dia, ele mantém sua sequência",
+"GERİ DÖNÜŞ HEDİYESİ": "PRESENTE DE RETORNO",
+"Kara deliğin seni bekliyor": "Seu buraco negro está esperando",
+"Geri dönüş hediyen hazır: yıldız ve elmas.": "Seu presente de retorno está pronto: estrelas e diamantes.",
+"DÜNKÜ TURNUVAN": "SEU TORNEIO DE ONTEM",
+"Dün {n} oyuncu arasında": "Ontem, entre {n} jogadores",
+"{n}. oldun": "você ficou em {n}º",
+"İlk 3 için {n} puan daha": "mais {n} pontos para o top 3",
+"Bugün ilk 3'e gir: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐": "Entre no top 3 hoje: 🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐",
+"TURNUVA MADALYALARIN": "MEDALHAS DE TORNEIO",
+"Günün turnuvasında ilk 3’e gir, madalyan burada dursun": "Fique no top 3 do torneio de hoje e sua medalha fica aqui",
+"GÜNÜN İLK ZAFERİ": "PRIMEIRA VITÓRIA DO DIA"
 }
