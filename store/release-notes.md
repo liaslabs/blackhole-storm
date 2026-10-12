@@ -16,8 +16,8 @@ Her güncellemede:
 | 1.4.5 | 12 | 8 Eki | Yayında (8 Eki 09:17 onaylandı; main 6e88e07) |
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
 | 1.4.7 | 18 | 9 Eki | **Yayında** (9 Eki 16:04 onaylandı; main c4a0c5b). 15:41'de Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
-| 1.4.8 | 21 | 12 Eki | `REL` 8: düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Kod 19 (10 Eki) Dahili test'te denendi; kod 20 = 19 + REKORLARIM sekmesi açılır (`bhs-v54`); kod 21 = 20 + her modun 1. satırı görünür (`bhs-v55`), Alpha'ya bu gider |
-| 1.4.9 | 22 | 16 Eki | Hazır, `rel(9)` ile kapalı: zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
+| 1.4.8 | 21 | 12 Eki | **Alpha'da** (12 Eki 06:02 incelemeye gönderildi). `REL` 8: düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Kod 19 (10 Eki) Dahili test'te denendi; kod 20 = 19 + REKORLARIM sekmesi açılır (`bhs-v54`); kod 21 = 20 + her modun 1. satırı görünür (`bhs-v55`), Alpha'ya bu gider |
+| 1.4.9 | 22 | 16 Eki | `REL` 9 (`bhs-v56`), 12 Eki derlendi: zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
 | 1.5.0 | 23 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
 | 1.5.1 | 24 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
 | 1.5.2 | 25 | 1.5.1'den sonra | Dil değişimi: Japonca eklenir, Kürtçe kalkar (oyun yine 10 dil). Play Console'da ja-JP mağaza sayfası bu sürüm üretime çıkarken açılır |
@@ -98,7 +98,7 @@ Her güncellemede:
 </en-US>
 ```
 
-## 1.4.9 (16 Ekim) · `REL` 9 yapılacak · zorluk güncellemesi
+## 1.4.9 (16 Ekim) · `REL` 9 · zorluk güncellemesi
 - Dolu ekran: cisimler ~1,7 kat sık, ekranda en fazla 14/16/18; L2–10'da %20 hızlı; 6–8'lik kaya sağanakları; hedef puanlar L2–6'da ×2, sonra ×1,5; L1 öğretici %35 hızlı.
 - Yaylar: L1–10 3 yay, L11–60 2 yay, L61+ yaysız; yaysızken 2 enerji topu = 20 sn Yay Kalkanı. L11 ve L61'de tanıtım kartı (bot: L41+ yaysızken 0/28 kazanma, uçurum gibiydi).
 - Altın Yay: çok nadir (yaklaşık 40 seviyede bir, L8'den itibaren) çift altın halka. Yutulunca 10 sn boyunca meteor, antimadde, yasaklı ve dev cisimler dahil her şey yutulur; hiçbir şey zarar vermez.
