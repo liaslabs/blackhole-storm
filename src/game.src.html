@@ -2401,7 +2401,7 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,rel(9)?3:5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
     const cols=(n,cl)=>{const c=document.createElement('div');c.className='lbrow lbcols'+(cl||'');for(const [k,t] of [['r',''],['n',n],['c','🔥 COMBO'],['p','PUAN']]){const d=document.createElement('div');d.className=k;d.textContent=t;c.appendChild(d);}l.appendChild(c);};
-    if(rel(9))cols(MODE_TAG[m],' lbhd2'); /* 1.4.9: each mode's name heads its own table, a rule between modes */
+    if(rel(9)){cols(MODE_TAG[m],' lbhd2');l.lastChild.dataset.g=m;} /* 1.4.9: each mode's name heads its own table, a rule between modes */
     else{const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);}
     L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');if(rel(9))r.dataset.g=m;const a=document.createElement('div');a.className='r';a.textContent=rel(9)?(med[i]?med[i]+' ':'')+(i+1)+'.':med[i]||(i+1);
       const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d):e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n);
@@ -2944,7 +2944,9 @@ async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
       const row=b.closest('.lbrow');row.querySelector('.n').textContent='•••';b.remove();toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));});}
   catch(e){w.innerHTML=head+mine+`<div class="lbwait">${T('Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.')}</div>`;}}
 const lbRepGet=()=>{try{const a=JSON.parse(localStorage.getItem('bhs_lbrep')||'[]');return Array.isArray(a)?a.slice(-200):[];}catch(e){return [];}},lbRepSet=a=>{try{localStorage.setItem('bhs_lbrep',JSON.stringify(a.slice(-200)));}catch(e){}};
-function lbFit(){const sc=$('sLB'),rows=[...$('lbList').querySelectorAll('.lbrow[data-g]')];for(let k=0;k<20&&sc.scrollHeight>sc.clientHeight+1;k++){const n={};for(const r of rows)if(!r.hidden)n[r.dataset.g]=(n[r.dataset.g]||0)+1;const g=Object.keys(n).sort((a,b)=>n[b]-n[a])[0];if(!g||n[g]<2)break;rows.filter(r=>r.dataset.g===g&&!r.hidden).pop().hidden=true;}} /* 1.4.9: on a short screen the longest table gives up its last row until the page fits, the first place of each mode always stays */
+function lbFit(){const sc=$('sLB'),rows=[...$('lbList').querySelectorAll('.lbrow[data-g]:not(.lbcols)')],over=()=>sc.scrollHeight>sc.clientHeight+1;
+  if(over()){const sp=[...$('lbList').querySelectorAll('[data-g="sprint"]')];for(const e of sp)e.hidden=true;} /* Normal, Hard and Survival first: the 60 s table stays only when there is room */
+  for(let k=0;k<20&&over();k++){const n={};for(const r of rows)if(!r.hidden)n[r.dataset.g]=(n[r.dataset.g]||0)+1;const g=Object.keys(n).sort((a,b)=>n[b]-n[a])[0];if(!g||n[g]<2)break;rows.filter(r=>r.dataset.g===g&&!r.hidden).pop().hidden=true;}} /* 1.4.9: on a short screen the longest table gives up its last row until the page fits, the first place of each mode always stays */
 function lbTab(t){if(rel(9)){const c=$('lbClose'),sr=$('lbShareRow'),one=t!=='w'&&!sr.hidden;if(one?c.parentNode!==sr:c.parentNode===sr)(one?sr:$('lbCloseRow')).appendChild(c);$('lbCloseRow').hidden=one;$('sLB').classList.add('r9');if(t!=='w')requestAnimationFrame(lbFit);} /* 1.4.9: on My Records, share and close share one line so the page fits one screen */
   $('lbTW').classList.toggle('on',t==='w');$('lbTM').classList.toggle('on',t!=='w');$('lbWorld').hidden=t!=='w';$('lbMine').hidden=t==='w';if(t==='w')renderLBWorld();}
 
