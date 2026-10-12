@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "سرّع {n}",
 "TARİH": "التاريخ",
 "PUAN": "النقاط",
-"TURNUVA": "بطولة"
+"TURNUVA": "بطولة",
+"HERKESE {n} KALKAN": "{n} دروع للجميع",
+"TURNUVA KALKANLARIN BİTTİ": "نفدت دروع البطولة",
+"Turnuvada herkes aynı kalkanlarla oynar": "في البطولة يلعب الجميع بالدروع نفسها"
 }

@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "ускорить на {n}",
 "TARİH": "ДАТА",
 "PUAN": "ОЧКИ",
-"TURNUVA": "ТУРНИР"
+"TURNUVA": "ТУРНИР",
+"HERKESE {n} KALKAN": "{n} ЩИТА ДЛЯ ВСЕХ",
+"TURNUVA KALKANLARIN BİTTİ": "ЩИТЫ ТУРНИРА ЗАКОНЧИЛИСЬ",
+"Turnuvada herkes aynı kalkanlarla oynar": "В турнире у всех одинаковые щиты"
 }

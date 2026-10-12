@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "percepat {n}",
 "TARİH": "TANGGAL",
 "PUAN": "SKOR",
-"TURNUVA": "TURNAMEN"
+"TURNUVA": "TURNAMEN",
+"HERKESE {n} KALKAN": "{n} PERISAI UNTUK SEMUA",
+"TURNUVA KALKANLARIN BİTTİ": "PERISAI TURNAMEN HABIS",
+"Turnuvada herkes aynı kalkanlarla oynar": "Di turnamen semua pemain bermain dengan perisai yang sama"
 }

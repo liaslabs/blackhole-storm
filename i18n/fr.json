@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "accélère de {n}",
 "TARİH": "DATE",
 "PUAN": "SCORE",
-"TURNUVA": "TOURNOI"
+"TURNUVA": "TOURNOI",
+"HERKESE {n} KALKAN": "{n} BOUCLIERS POUR TOUS",
+"TURNUVA KALKANLARIN BİTTİ": "BOUCLIERS DU TOURNOI ÉPUISÉS",
+"Turnuvada herkes aynı kalkanlarla oynar": "Dans le tournoi, tout le monde joue avec les mêmes boucliers"
 }

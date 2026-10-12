@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "speed up {n}",
 "TARİH": "DATE",
 "PUAN": "SCORE",
-"TURNUVA": "TOURNAMENT"
+"TURNUVA": "TOURNAMENT",
+"HERKESE {n} KALKAN": "{n} SHIELDS FOR ALL",
+"TURNUVA KALKANLARIN BİTTİ": "TOURNAMENT SHIELDS USED UP",
+"Turnuvada herkes aynı kalkanlarla oynar": "In the tournament everyone plays with the same shields"
 }

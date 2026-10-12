@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "{n} beschleunigen",
 "TARİH": "DATUM",
 "PUAN": "PUNKTE",
-"TURNUVA": "TURNIER"
+"TURNUVA": "TURNIER",
+"HERKESE {n} KALKAN": "{n} SCHILDE FÜR ALLE",
+"TURNUVA KALKANLARIN BİTTİ": "TURNIERSCHILDE AUFGEBRAUCHT",
+"Turnuvada herkes aynı kalkanlarla oynar": "Im Turnier spielen alle mit denselben Schilden"
 }

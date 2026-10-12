@@ -1754,5 +1754,8 @@
 "{n} hızlandır": "acelere {n}",
 "TARİH": "DATA",
 "PUAN": "PONTOS",
-"TURNUVA": "TORNEIO"
+"TURNUVA": "TORNEIO",
+"HERKESE {n} KALKAN": "{n} ESCUDOS PARA TODOS",
+"TURNUVA KALKANLARIN BİTTİ": "ESCUDOS DO TORNEIO ESGOTADOS",
+"Turnuvada herkes aynı kalkanlarla oynar": "No torneio, todos jogam com os mesmos escudos"
 }
