@@ -366,7 +366,8 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .lbstats.r9 .bc{padding:13px 6px;}.lbstats.r9 .bc b{font-size:22px;}.lbstats .bc b span{font-size:inherit;letter-spacing:normal;color:inherit;}
 .lbrow .c{width:58px;text-align:center;font-family:var(--fd);font-size:13px;color:#ff9a5c;font-variant-numeric:tabular-nums;}
 .lbrow.lbcols{background:none;padding:0 12px;margin:0 0 3px;}#lbList.r9 .lbrow .r{width:44px;white-space:nowrap;}
-.lbrow.lbcols.lbhd2{margin:12px 0 5px;}.lbrow.lbcols.lbhd2 .n{font-size:11px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;}.lbrow.lbcols.lbhd2:first-child{margin-top:2px;}.lbrow.lbcols div{font-family:var(--fd);font-size:9px;font-weight:400;letter-spacing:.12em;color:var(--dim);}
+.lbrow.lbcols.lbhd2{margin:14px 0 5px;padding-top:12px;border-top:2px solid rgba(120,138,165,.32);border-radius:0;}.lbrow.lbcols.lbhd2 .r{display:none;}
+#lbList.r9 .lbrow .c,#lbList.r9 .lbrow .p{text-align:start;}#lbList.r9 .lbrow .c{width:64px;}#lbList.r9 .lbrow .p{width:84px;min-width:0;}.lbrow.lbcols.lbhd2 .n{font-size:11px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;}.lbrow.lbcols.lbhd2:first-child{margin-top:2px;padding-top:0;border-top:0;}.lbrow.lbcols div{font-family:var(--fd);font-size:9px;font-weight:400;letter-spacing:.12em;color:var(--dim);}
 .lbrow .p{min-width:72px;text-align:end;}
 .lbempty{padding:14px;color:var(--dim);font-size:13px;}
 .lbnote{margin:10px 2px 2px;font-size:12px;line-height:1.45;color:var(--dim);}
@@ -2670,7 +2671,7 @@ function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mod
 function recordsText(){const f=n=>nf(n),sv=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0),hi=Math.max(bestScore,localLB[0]?localLB[0].score:0);
   const L=[`🕳️ Blackhole Storm · ${T('REKORLARIM')}`,`🏆 ${T('EN YÜKSEK')}: ${f(hi)}`,`🌀 ${T('EN İYİ SEVİYE')}: ${bestLevel}`];if(sv)L.push(`⛈ ${T('HAYATTA KAL REKORU')}: ${f(sv)}`);if(sprintBest)L.push(`⏱ ${T('60 SN REKORU')}: ${f(sprintBest)}`);
   L.push(`⚔️ ${T('Meydan okuyorum: beni geçebilir misin?')}`);return L.join('\n');}
-let LBV=1;function lbDate(d,bare){const m=/^(\d{1,2})\.(\d{1,2})$/.exec(d||'');if(!m)return d||'';const now=new Date();let y=now.getFullYear();const t=new Date(y,+m[2]-1,+m[1]);if(t>now)t.setFullYear(y-1);try{return (bare?'':'📅 ')+t.toLocaleDateString(LOC,{day:'numeric',month:'short'});}catch(e){return d;}} /* 1.4.9: '11.10' read like a combo multiplier; the date now says its month */
+function lbDate(d,bare){const m=/^(\d{1,2})\.(\d{1,2})$/.exec(d||'');if(!m)return d||'';const now=new Date();let y=now.getFullYear();const t=new Date(y,+m[2]-1,+m[1]);if(t>now)t.setFullYear(y-1);try{return (bare?'':'📅 ')+t.toLocaleDateString(LOC,{day:'numeric',month:'short'});}catch(e){return d;}} /* 1.4.9: '11.10' read like a combo multiplier; the date now says its month */
 function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').hidden=!localLB.length&&!bestScore;} /* 1.4.9: a share button instead of a note that pointed elsewhere */const l=$('lbList');l.innerHTML='';l.classList.toggle('r9',rel(9));const med=['🥇','🥈','🥉'];$('lbStats').classList.toggle('r9',rel(9));
   const fmt=n=>n.toLocaleString(LOC);
   const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
@@ -2680,10 +2681,10 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
     const cols=(n,cl)=>{const c=document.createElement('div');c.className='lbrow lbcols'+(cl||'');for(const [k,t] of [['r',''],['n',n],['c','🔥 COMBO'],['p','PUAN']]){const d=document.createElement('div');d.className=k;d.textContent=t;c.appendChild(d);}l.appendChild(c);};
-    if(rel(9)&&LBV===2)cols(MODE_TAG[m],' lbhd2'); /* 1.4.9: each mode's name sits in its own table's header line */
-    else{const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);if(rel(9))cols('TARİH');} /* 1.4.9: column names right under each mode's name, attached to its rows */
+    if(rel(9))cols(MODE_TAG[m],' lbhd2'); /* 1.4.9: each mode's name heads its own table, a rule between modes */
+    else{const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);}
     L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');const a=document.createElement('div');a.className='r';a.textContent=rel(9)?(med[i]?med[i]+' ':'')+(i+1)+'.':med[i]||(i+1);
-      const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d,LBV!==2):e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n);
+      const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d):e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n);
       if(rel(9)){const c=document.createElement('div');c.className='c';c.textContent=e.c>=2?'×'+e.c:'–';r.append(c);} /* 1.4.9: the run's best combo in its own column (older records have none) */r.append(p);l.appendChild(r);});}
     $('sLB').classList.add('on');return;}
   localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');
