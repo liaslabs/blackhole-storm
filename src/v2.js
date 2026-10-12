@@ -1039,7 +1039,7 @@ function v2DrawKGold(o,s){const r=o.r*s*(o.zs||1);ctx.save();if(o.za!==undefined
 function v2HawkOn(){return G2.mode!=='sprint'&&(G2.mode==='surv'||G2.mode==='level'&&labLv('hawk')>=1);} // level play: only once the Hawking reactor is built
 const v2ShDur=()=>V2K.shield.dur+Math.min(8,.5*labEffLv('shield')),v2HawkCD=()=>Math.max(12,V2K.hawk.cd-Math.max(0,labEffLv('hawk')-1)),v2JetDur=()=>V2K.jet.dur+.2*Math.max(0,labEffLv('jet')-1);
 function v2HawkOk(){if(!v2HawkOn()||G2.hkCD>0||G2.rageT>0||G2.ending||G2.script)return false;const ex=G2.rr-V2K.r0;return ex>6&&G2.rr>=V2K.r0+(G2.cap-V2K.r0)*V2K.hawk.min;}
-function v2Hawking(){if(G2.on&&gState==='playing'&&G2.mode==='level'&&level>=V2K.hawk.from&&labLv('hawk')<1){v2Pop(T('HAWKING REAKTÖRÜ')+' · '+T('LABORATUVARDA İNŞA ET'),'#ffffff',15);return;}
+function v2Hawking(){if(G2.on&&gState==='playing'&&G2.mode==='level'&&level>=V2K.hawk.from&&labLv('hawk')<1){v2Pop(T('HAWKING REAKTÖRÜ')+' · '+T('KOZMİK LAB’DA İNŞA ET'),'#ffffff',15);return;}
   if(!G2.on||gState!=='playing'||!v2HawkOk())return;const loss=(G2.rr-V2K.r0)*V2K.hawk.loss;G2.rr-=loss;G2.hkCD=v2HawkCD();G2.magT=Math.max(G2.magT,2.5);let n=0;
   for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';n++;v2Burst(o.x,o.y,14,'#ffffff',2,6,.5);v2MetBreak(o);}
   if(n>=3)v2GoldEarn('HAWKING'); /* a big Hawking burst earns a gold shell */
@@ -1051,7 +1051,7 @@ function v2JetOn(){return G2.mode==='surv'||G2.mode==='level'&&labLv('jet')>=1;}
 // quasar jet: a second finger opens a 5 s window; the beam follows that finger (a little heavy, so it sweeps rather than jumps),
 // goes out when the finger lifts (the 5 s keep running), and lights again where a finger presses inside the window
 const JET_SHATTER=new Set(['ast','moon','planet','crystal','gold','frag','comet','plasma','half','pulsar','mpair','sat','dark','thr','kgold']); // bodies that give points: the beam breaks them and pays their points
-function v2Jet(x,y){if(G2.on&&gState==='playing'&&G2.mode==='level'&&level>=V2K.jet.from&&labLv('jet')<1&&!G2.jetHint){G2.jetHint=1;v2Pop(T('KUASAR JETİ')+' · '+T('LABORATUVARDA İNŞA ET'),'#9fe8ff',15);}
+function v2Jet(x,y){if(G2.on&&gState==='playing'&&G2.mode==='level'&&level>=V2K.jet.from&&labLv('jet')<1&&!G2.jetHint){G2.jetHint=1;v2Pop(T('KUASAR JETİ')+' · '+T('KOZMİK LAB’DA İNŞA ET'),'#9fe8ff',15);}
   if(!G2.on||gState!=='playing'||!v2JetOn())return;
   if(G2.jet){const j=G2.jet;j.tx=x;j.ty=y;if(!j.held){j.held=1;j.ht=0;j.hist=[];j.a=Math.atan2(y-hY,x-hX);v2Sfx('thrust',{vol:.5,rate:.8});}return;}
   if(G2.jetCD>0)return;const JD=v2JetDur();G2.jet={a:Math.atan2(y-hY,x-hX),t:0,ht:0,tx:x,ty:y,held:1,bh:0,bt:0,pt:0,hist:[],n:0,D:JD};G2.jetCD=V2K.jet.cd+JD;G2.jetRdy=0;
