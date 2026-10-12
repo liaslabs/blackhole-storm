@@ -1260,6 +1260,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row mon"><button class="btn big cy" id="contLife">❤️ YEDEK CAN KULLAN</button></div>
    <div class="row"><button class="btn big cy" id="contDia">💎 25 · 2 CANLA DEVAM</button></div>
    <div class="row"><button class="btn big" id="contYes">DEVAM ET · 100 ⭐</button></div>
+   <div class="row mon" hidden><button class="btn adbtn" id="contArc" style="width:100%;">▶ REKLAM İZLE · +1 YAYLA YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contRetry" style="width:100%;">🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contNo" style="width:100%;">BİTİR</button></div>
   </div>
@@ -1898,7 +1899,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0,arcLv:0},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -2674,7 +2675,7 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
 // from the map for stars only: the run's saved level and total score never change during a replay.
 // ══════════════════════════════════════════════════════
 function levelStars(){return G2.on?clamp(lives+(G2.hm?1:0),1,3):1+(lostThisLevel?0:1)+(lvCombo>=6?1:0);}
-function recordStars(l,st){if(SHOP.easyLv===l)SHOP.easyLv=0;if(SHOP.failLv===l)SHOP.failN=0;const old=LSTARS[l]|0;if(st>old){LSTARS[l]=st;saveG();}return {old,gain:Math.max(0,st-old)};}
+function recordStars(l,st){if(SHOP.easyLv===l)SHOP.easyLv=0;if(SHOP.arcLv===l)SHOP.arcLv=0;if(SHOP.failLv===l)SHOP.failN=0;const old=LSTARS[l]|0;if(st>old){LSTARS[l]=st;saveG();}return {old,gain:Math.max(0,st-old)};}
 function starStr(n){n=Math.max(0,n|0);return '★'.repeat(n)+'☆'.repeat(3-n);}
 function totalStars(){return Object.values(LSTARS).reduce((a,v)=>a+Math.max(0,v),0);}
 function lvlStarsShow(n,medal){$('lvlStars').innerHTML=medal?`<span>${medal}</span>`:n<0?'':[0,1,2].map(i=>`<span class="${i<n?'':'no'}" style="animation-delay:${.15+i*.15}s">★</span>`).join('');}
@@ -2904,7 +2905,7 @@ const GUIDE={
  'EŞYALAR':[['🎁','KAPTANIN HEDİYESİ','Her 20 seviyede bir: dokuz kutudan en az üçünü aç, iki kutuda kara delik var. Üç kutudan sonra dilediğin an ödülleri al. Nadiren bir kutuda BÜYÜK HAZİNE saklıdır: 1000 yıldız ve 50 elmas. Reklam izleyerek bulma şansını yarı yarıya çıkarabilirsin.'],['🛡','KALKAN','Oyunda kalkan butonuna dokun: 10 saniye boyunca çarpan her meteor parçalanır ve kopan yayların tamir edilir. Mağazadan alınır ya da 3 kalkan parçası toplanarak kazanılır. Günlük Yarış ve meydan okumalarda kullanılmaz.'],['❤️','YEDEK CAN','Canların bitince 1 canla kaldığın yerden devam et (oyun başına bir devam hakkı).'],['⏱','ZAMAN KRİSTALİ','Dev gezegen kaçmak üzereyken otomatik devreye girer: +30 saniye.'],['💎','SÜPERNOVA','Oyunda elmas butonuna dokun (20 💎): ekrandaki her şey patlayıp kara deliğine süzülür, hedefin %15’i kadar bonus puan gelir, ardından 3 saniye meteorlar sana zarar veremez. Seviye başına 2 kez.'],['💎','ELMASLA DEVAM','Canların bitince elmasla kaldığın yerden 2 canla devam et. Her kullanımda fiyat ikiye katlanır.']],
   'HALKALAR':[['⭕','ÇEKİM ALANI','Kara deliğin etrafındaki soluk geniş halka çekim alanının sınırıdır: içine giren cisimler sana çekilir. Büyüdükçe genişler. Cismi alanın tam ortasından içeri alırsan KUSURSUZ YUTUŞ.'],['🟠','TURUNCU HALKA','Vortex açıkken kalan süreyi gösterir.'],['🔵','MAVİ HALKA','Süpernova koruması: meteorlar sana zarar veremez.'],['🟣','MOR TİTREYEN HALKA','Overload: daha güçlüsün ama yönetmek zor.'],['🟡','SARI HALKA','Kalkan açık: çarpan meteor parçalanır.'],['🔴','KIRMIZI YANIP SÖNEN','Darbe aldın; kısa süre dokunulmazsın.'],['💜','MOR DALGALAR','Bir süredir yemediğin için küçülüyorsun.'],['🌈','ALTTAKİ NOKTALAR','Spektrum serin: 5 farklı tür = bonus.']],
   'OLAYLAR':[['💫','KİLONOVA','İki nötron yıldızı çarpışır; çekim dalgası her şeyi iter ve altın saçılır.'],['🧭','HAFTALIK SEFER','Her hafta dallanan bir yol: iki duraktan birini seç, 3 sefer canıyla bossa ulaş.'],['🔬','LABORATUVAR','Kütle ve yıldızla kalıcı geliştirmeler başlat; her biri zaman alır, elmasla hemen bitirilebilir. Aynı anda bir geliştirme; ikinci yuva elmasla ya da VIP ile açılır. Hawking ve Kuasar Jeti burada inşa edilir. Klasik ve Sefer\'de çalışır.'],['🪐','YÖRÜNGE BAHÇESİ','Atlas’ta incelediğin cisimler kara deliğinin etrafında döner ve günde yıldız getirir.'],['🌬','YILDIZ RÜZGÂRI','Bazı seviyelerde güçlü bir rüzgâr her şeyi yana sürükler. Rüzgârın geldiği yöne geç, cisimler sana aksın.'],['🌑','TUTULMA','Ekran kararır; her 2 saniyede bir radar dalgası her şeyi gösterir. Karanlıkta puan ×1,5.'],['✨','TAKIMYILDIZ','Numaralı yıldızları sırasıyla yut. Süre bitmeden tamamlarsan büyük bonus ve Atlas kaydı.'],['🌫','YAPIŞKAN NEBULA','35. seviyeden sonra arada bir: şekil değiştiren bir bulut ekrandan geçer. İçindeyken kara delik sisin içinde silüet gibi görünür ve parmağını ağır takip eder. Yemeye devam edebilirsin; meteorlara dikkat.'],['⏳','AĞIR ÇEKİM','21. seviyeden sonra: bir meteor çarpmak üzereyken zaman bir an yavaşlar. Seviye başına 3 kez. Zor Mod\'da ve Günün Fırtınası\'nda yok.'],['☄','METEOR KUŞAĞI','Uyarıdan sonra 13 saniye sadece meteor gelir; hepsi aynı açıyla, şerit şerit akar. Boş şeridi takip et. Hasarsız geçersen +500 puan ve +25 ⭐. 8, 18 ve 28. seviyelerde, sonra arada bir; Günün Fırtınası\'nda 60. ve 120. saniyede.'],['💨','HIZLI KÜÇÜLME','6, 16 ve 22. seviyelerde (sonra arada bir): ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür.'],['🃏','RİSK KARTI','12. seviyeden itibaren her 5 seviyede bir: seviyeyi zorlaştıran bir kart seçebilirsin, bitirirsen ekstra elmas kazanırsın.'],['🗝','HAZİNE ANAHTARI','Sezon ödülü: sonraki Kaptanın Hediyesi’nde Büyük Hazine kesin çıkar.']],
- 'MODLAR':[['🌀','NORMAL','Seviye seviye ilerle, her seviyede yeni bir şey.'],['🔥','ZOR SEVİYE','Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın.'],['🔥','ZOR MOD','30. seviyeyi geçince açılır. Seviye 1\'den, ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp, ağır çekim yok'+(rel(9)?'; her kalbi iki yay korur, 61. seviyeden sonra yay yok':'')+'. Yıldız ödülleri 2 kat.'],['☠️','HAYATTA KAL',rel(9)?'Günün Fırtınası: süresiz, herkes için aynı fırtına. Her 30 saniyede hızlanır, dakikada bir meteor kuşağı gelir. İlk 2 dakika her kalbi iki yay korur, sonra her darbe bir kalp. 4. dakikadan sonra Kara Fırtına her 30 saniyede sertleşir. Hayatta kaldığın her saniye +20 puan, her dakika +10 daha. Dünya sıralaması bu skora göre.':'Günün Fırtınası: 180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir, 60. ve 120. saniyede meteor kuşağı gelir; yaylar onarılmaz. Hayatta kaldığın her saniye +20 puan, sonuna kadar dayanırsan +3.000 ve kalan her kalp için +1.500. Dünya sıralaması bu skora göre.'],['📅','GÜNLÜK YARIŞ','Herkes aynı evrende 60 saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). 20. saniyede meteor kuşağı, 40. saniyede nebula gelir; uzun combo puanı 2 kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku.']]};
+ 'MODLAR':[['🌀','NORMAL','Seviye seviye ilerle, her seviyede yeni bir şey.'],['🔥','ZOR SEVİYE','Haritada kırmızı halkalı ve alevli seviyeler: hedefe süre dolmadan ulaşmalısın, meteorlar daha sık. Kalkan, Süpernova ve Hawking en çok burada işe yarar. Geçince ekstra yıldız kazanırsın.'],['🔥','ZOR MOD',rel(9)?'30. seviyeyi geçince açılır. Seviye 1\'den, ayrı bir ilerlemeyle: puan seviyeleri süreli, nefes seviyesi yok, meteorlar 1,8 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp, ağır çekim yok; her kalbi iki yay korur, 61. seviyeden sonra tek yay, bölüm sonlarında yay yok. Yıldız ödülleri 2 kat.':'30. seviyeyi geçince açılır. Seviye 1\'den, ayrı bir ilerlemeyle: meteorlar 1,6 kat, hedef puan 1,5 kat (süreli seviyelerde 1,15), küçülme 2 kat hızlı, seviye başına 2 kalp, ağır çekim yok. Yıldız ödülleri 2 kat.'],['☠️','HAYATTA KAL',rel(9)?'Günün Fırtınası: süresiz, herkes için aynı fırtına. Her 30 saniyede hızlanır, dakikada bir meteor kuşağı gelir. İlk 2 dakika her kalbi iki yay korur, sonra her darbe bir kalp. 4. dakikadan sonra Kara Fırtına her 30 saniyede sertleşir. Hayatta kaldığın her saniye +20 puan, her dakika +10 daha. Dünya sıralaması bu skora göre.':'Günün Fırtınası: 180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir, 60. ve 120. saniyede meteor kuşağı gelir; yaylar onarılmaz. Hayatta kaldığın her saniye +20 puan, sonuna kadar dayanırsan +3.000 ve kalan her kalp için +1.500. Dünya sıralaması bu skora göre.'],['📅','GÜNLÜK YARIŞ','Herkes aynı evrende 60 saniye, yüksek hızda ve günün kuralıyla (yasaklı cisimler, boyut penceresi, rüzgâr ya da tutulma). '+(rel(9)?'18. ve 48. saniyede meteor kuşağı, 32. saniyede nebula gelir; her kalbi iki yay korur;':'20. saniyede meteor kuşağı, 40. saniyede nebula gelir;')+' uzun combo puanı 2 kata kadar artırır. Sonucunu paylaş, arkadaşına meydan oku.']]};
 function renderGuide(tab){
   if(!GUIDE[tab])tab=Object.keys(GUIDE)[0];
   $('gTabs').innerHTML=Object.keys(GUIDE).map(k=>`<button class="${k===tab?'on':''}" data-g="${k}">${k}</button>`).join('');
@@ -3829,7 +3830,10 @@ function showCont(){
     if($('ctStar'))$('ctStar').onclick=()=>{const o=STAR_TIME[G2.starTime];if(!o||stars<o[0]){sfx('buzz',{vol:.3});return;}stars-=o[0];G2.starTime++;saveG();v2AddTime(o[1]);};
     if($('ctCry'))$('ctCry').onclick=()=>{if(SHOP.time<=0)return;SHOP.time--;v2AddTime(sec);};
     $('ctDia').onclick=()=>{const c=TIME_DIA*2**G2.timeBuy;if(diamonds<c){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:c}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}diamonds-=c;G2.timeBuy++;dmEvent('diamond',1);v2AddTime(sec);};
-    if($('ctAd'))$('ctAd').onclick=async()=>{if(G2.timeAd)return;if(await showRewarded()){G2.timeAd=1;v2AddTime(15);}};}}
+    if($('ctAd'))$('ctAd').onclick=async()=>{if(G2.timeAd)return;if(await showRewarded()){G2.timeAd=1;v2AddTime(15);}};}
+    else if(rel(9)&&cl&&(G2.goal||G2.boss)){const b=G2.boss,pct=b?Math.max(1,Math.round(b.hp/b.max*100)):Math.min(99,Math.floor(levelScore/Math.max(1,G2.goal)*100)); /* 1.4.9: out of hearts, how close it was */
+      if(b||pct>=40){ct.hidden=false;ct.innerHTML=`<div class="ctmsg">${b?T("Boss'un kalan canı: %{n}.",{n:pct})+(pct<=35?' '+T('Az kaldı!'):''):T('Hedefin %{n} tamam.',{n:pct})+(pct>=70?' '+T('Az kaldı!'):'')}</div><div class="ctbar${b?'':' go'}"><i style="width:${pct}%"></i></div>`;}}}
+    {const ok=rel(9)&&cl&&!REPLAY&&G2.mode==='level'&&v2Peak(level)&&(G2.arc0??3)<3&&monOn()&&adReady();$('contArc').parentNode.hidden=!ok;if(ok)$('contArc').textContent=adLabel(T('+1 YAYLA YENİDEN OYNA'));} /* a failed peak: one ad, one extra arc for the next try */
     $('contYes').textContent=`${T('DEVAM ET')} · ${contStarCost()} ⭐`;$('contRetry').style.display=cl?'':'none';$('contRetry').textContent=heartsOn(level)?T('🔄 SEVİYEYİ YENİDEN OYNA · ⛽ 1 YAKIT'):T('🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA');$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');return;}
   $('contMsg').textContent=cl?`Seviye ${level}'de canların bitti.`:'Kaldığın yerden devam etmek ister misin?';
   $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');
@@ -3882,7 +3886,7 @@ function updateUI(){
 const SPR_RUN={seed:0,opt:{},t:0,dur:60,acc:0,blocks:[],caught:0,ended:true,res:null};
 function dailyNo(d=new Date()){return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5)+1;}
 function dailySeed(n){return (Math.imul(n,2654435761)^0x5bd1e995)>>>0;}
-function sprintSetup(seed){const r=mulberry(seed^0x9e3779b9);return {zone:Math.floor(r()*ZONES.length),lvl:16+Math.floor(r()*10)};}
+function sprintSetup(seed){const r=mulberry(seed^0x9e3779b9);const zone=Math.floor(r()*ZONES.length),x=r();return {zone,lvl:rel(9)?35+Math.floor(x*16):16+Math.floor(x*10)};}
 function startSprint(seed,opt={}){
   runId++;hideModals();$('sMenu').classList.remove('on');$('sChal').classList.remove('on');$('sPause').classList.remove('on');SND.duck(1,0);
   gameMode='sprint';const S=sprintSetup(seed);
@@ -3954,7 +3958,7 @@ function resultText(r,chal){
 function renderDaily(){
   const n=dailyNo(),S=sprintSetup(dailySeed(n)),done=DAILY.n===n;
   $('dcTitle').textContent=`🏁 GÜNLÜK YARIŞ #${n}`;$('dcZone').textContent=ZONES[S.zone].n;
-  $('dcTxt').textContent=done?`Bugünkü sonucun: ${DAILY.score.toLocaleString(LOC)} puan · ×${DAILY.combo} combo. Yarın yeni kozmos!`:T('Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!')+' '+T('Günün kuralı')+': '+sprRuleOf(dailySeed(dailyNo())).ic+' '+T(sprRuleOf(dailySeed(dailyNo())).n)+' · '+T('20. saniyede meteor kuşağı, 40. saniyede nebula')+'. '+raceTiersTxt(dailyNo());
+  $('dcTxt').textContent=done?`Bugünkü sonucun: ${DAILY.score.toLocaleString(LOC)} puan · ×${DAILY.combo} combo. Yarın yeni kozmos!`:T('Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!')+' '+T('Günün kuralı')+': '+sprRuleOf(dailySeed(dailyNo())).ic+' '+T(sprRuleOf(dailySeed(dailyNo())).n)+' · '+T(rel(9)?'18. ve 48. saniyede meteor kuşağı, 32. saniyede nebula':'20. saniyede meteor kuşağı, 40. saniyede nebula')+'. '+raceTiersTxt(dailyNo());
   $('dcGrid').textContent=done?DAILY.grid:'';$('dcPlay').textContent=done?'🔁 ANTRENMAN':'OYNA · 60 SN';$('dcShare').style.display=done?'':'none';
 }
 let pendingChal=readChallenge();
@@ -4233,7 +4237,8 @@ function v2GoldArcOn(){G2.garcT=GARC.dur;G2.garcFx={t:0};G2.immT=Math.max(G2.imm
 function v2GoldArcEat(o){o.st='dead';const p=150*MULT2(G2.combo+1);G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;totalScore+=p;levelScore+=p;G2.eaten++;
   for(let i=0;i<14&&G2.parts.length<200;i++){const a=rrnd(0,TAU),q=rrnd(.2,1);G2.parts.push({x:o.x+Math.cos(a)*o.r*q,y:o.y+Math.sin(a)*o.r*q,vx:(hX-o.x)/40*rrnd(.6,1.2),vy:(hY-o.y)/40*rrnd(.6,1.2),life:.5,max:.5,c:'#ffd76a',sz:2.6});} /* the meteor melts into gold dust that streams into the hole */
   v2Burst(o.x,o.y,16,'#ffd76a',1.6,6,.5,2);v2Pop(T('ALTIN')+' +'+p,'#ffd76a',15);v2Sfx('gem',{vol:.45,rate:1.3});vib(12);}
-const ARCPOW={need:2,dur:20},v2ArcMaxL=l=>!rel(9)?3:G2.mode==='surv'?2:G2.mode!=='level'?3:HMODE?(l<=60?2:0):l<=10?3:l<=60?2:0, /* Hard Mode: 2 arcs, none from L61; the endless storm: 2 arcs for 2 minutes, then none */v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
+const ARCPOW={need:2,dur:20},v2Peak=l=>l>=19&&(l%10===0||v2Hard(l)>0),v2HmT=l=>l>=2&&l%10!==0&&v2LevelType(l)==='score', /* the chapter's peaks: the boss, the x9 storm and the x5 hard level; Hard Mode times every score level */
+  v2ArcMaxL=l=>!rel(9)?3:G2.mode==='surv'||G2.mode==='sprint'?2:G2.mode!=='level'?3:HMODE?(v2Peak(l)?0:l<=60?2:1):(l<=60?3:2)-(v2Peak(l)?1:0), /* 3 arcs to L60 and 2 after, one fewer on a chapter's peaks; Hard Mode: 2 (1 from L61), none on its peaks; the endless storm and the Daily Race: 2 */v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
 function v2ArcPowOn(){const was=G2.arcs;G2.arcPow=ARCPOW.dur;G2.eN=0;G2.arcs=3;for(let i=was;i<3;i++)v2ArcForm(i,'arc',(i-was)*.08);G2.arcFill=.5;G2.arcFix={i:2,t:G2.t};v2Call(T('YAY KALKANI'),T('20 SANİYE'),'#ff8a8a',1.3,true);v2Sfx('bell',{vol:.5,rate:1.2});vib(25);}
 function v2ArcPowEnd(){const keep=G2.arcMax||0;for(let i=keep;i<G2.arcs;i++)v2ArcBreak(i,i<G2.shells?'#eaf1fb':'#ff8a8a',.5);G2.arcPow=0;G2.arcs=Math.min(G2.arcs,keep);G2.shells=Math.min(G2.shells,G2.arcs);if(G2.on&&gState==='playing')v2Pop(T('YAY KALKANI BİTTİ'),'#ff8a8a',15);}
 const shTier=l=>l<=50?0:l<=60?1:l<=70?2:3,v2ShT=()=>G2.mode==='level'?shTier(level):0;
@@ -4242,8 +4247,8 @@ function v2GoldEarn(why){if(G2.gold||G2.mode!=='level'||v2ShT()<3)return;G2.gold
    how long it lasts grows with the hole's evolution: star-mass, intermediate, supermassive, quasar */
 const v2Stage=()=>typeof stageOf==='function'?stageOf(mass):0,v2BtK=()=>Math.max(.25,.5-.025*labEffLv('time')),v2TimeK=()=>Math.max(.3,.65-.03*labEffLv('time')),v2BtDur=()=>[.35,.45,.55,.7][v2Stage()],v2TimeDur=()=>[4,5,6,7][v2Stage()];
 const v2BtOn=()=>!G2.hm&&!G2.dstorm&&(G2.mode==='level'?level>20:G2.lv>20); /* slow motion is a late-game help: from level 21, never in Hard Mode or the daily storm */
-const FEAT=[['arcs',2],['shield',7],['arcs2',11],['nova',21],['arcpow',61],['hawking',140],['jet',180],['worm',250],['hor',350]];
-const v2FeatReady=id=>id==='arcs2'?rel(9)&&level<=60:id==='arcpow'?rel(9):id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
+const FEAT=[['arcs',2],['shield',7],['arcpow',19],['bend',19],['nova',21],['arcs2',61],['hawking',140],['jet',180],['worm',250],['hor',350]];
+const v2FeatReady=id=>id==='arcs2'?rel(9)&&!HMODE:id==='bend'?rel(9)&&!HMODE&&v2Peak(level):id==='arcpow'?rel(9)&&G2.arcMax===0:id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
 const HARD={t:[0,50,55],first:60,met:[1,.7,.6],stars:[0,10,20]};
 function v2Hard(l){if(l<9||l%10===0||v2LevelType(l)!=='score')return 0;if(l%10===9)return l>=39?2:1;return l>20&&l%10===5?1:0;}
 function v2HardT(l){const h=v2Hard(l);return h?(l===9?HARD.first:HARD.t[h]):0;}
@@ -4280,7 +4285,7 @@ function v2Goal(l){if(l%10===0)return 0;const g=V2K.goal;let x=g.a+g.b*Math.pow(
 function v2Rules(l){
   const tb=(arr,d)=>arr[l]!==undefined?arr[l]:d;
   const crystal=l===1?0:tb([0,5,7,10,10,12,12,14,15,15,18],Math.min(20,18+(l-10)*.2));
-  const breather=l>10&&(l%10===1||(l>20&&l%3===0)); /* sawtooth: the level after a boss or a special level is a breather */
+  const breather=l>10&&!(rel(9)&&HMODE)&&(l%10===1||(l>20&&l%3===0)); /* sawtooth: the level after a boss or a special level is a breather */
   const meteor=tb([0,0,8,10,12,14,16,18,20,22,25],Math.min(30,25+(l-10)*.3))*(l<3?1:l<8?1.25:1.45)*(breather?.8:1); /* 3 arcs per heart: more meteors, a real storm */
   const gold=l<=3?0:l<=5?2:l<=7?3:l<=9?4:5;
   const w={crystal,meteor:l%10===9?meteor*.5:meteor,gold,moon:l===1?18:15,planet:l>=2?Math.min(10,5+l*.5):0,energy:l>=2?4:0,time:l>=4?3:0,bomb:l>=5?3:0,mini:l>=8?1.5:0,
@@ -4299,7 +4304,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
   const l=v2Lv();G2.lv=l;G2.L=v2ApplyMods(v2Rules(l));if(mode==='surv')$('lvVal').textContent=l; /* the speed pill, not the classic level left from before */
   const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
-  const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
+  const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)||rel(9)&&v2HmT(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
   Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,wormCD:0,wormFx:null,lastTap:null,horUsed:0,horT:0,horSlow:0,horFx:null,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,iceT:0,nebIn:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,starTime:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
@@ -4307,7 +4312,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
     script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0});
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
-  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);G2.arcs=G2.arcMax;if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
+  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);if(mode==='level'&&!REPLAY&&SHOP.arcLv===l){G2.arcMax=Math.min(3,G2.arcMax+1);SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
   {const pl=labEffLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+Math.min(.3,.02*pl));}G2.L.comboT+=.12*labEffLv('combo');} // Laboratory upgrades (classic only)
@@ -4320,10 +4325,10 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
   if(rule&&rule.guard)G2.guard={n:0,hp:100,t:rule.dur,dur:rule.dur,dmg:rule.dmg,next:3};
   if(mod){const c=RISK_CARDS.find(x=>x.id===mod);if(c)later(()=>{if(G2.on)v2Call(c.n,c.d+' · '+T('Ödül')+': '+giftTxt(c.rw),'#ffb3a8',2,true);},700);} /* the chosen card, said once at the start instead of a label that stays */
   G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
-  G2.hard=mode==='level'&&!mod?v2Hard(l):0;G2.novaHint=0;G2.shHint=0;G2.hkHint=0;
-  if(G2.hard){G2.dur=v2HardT(l);G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1);if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
+  G2.hard=mode==='level'&&!mod?v2Hard(l)||(G2.hm&&rel(9)&&v2HmT(l)?1:0):0;G2.novaHint=0;G2.shHint=0;G2.hkHint=0;
+  if(G2.hard){G2.dur=v2HardT(l)||HARD.t[1];G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1);if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
     later(()=>{if(G2.on&&G2.hard)v2Call(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE',Math.round(G2.dur)+' sn','#ff5a5f',1.8,true);},600);if(!TIPS.hard)later(()=>{if(G2.on&&G2.hard)v2Tip('hard',null);},2600);}
-  if(G2.hm){G2.L.w.meteor*=1.6;if(G2.L.metIv)G2.L.metIv/=1.6;else if(l>=2)G2.L.metIv=4.4/1.6;} /* Hard Mode: storm meteors from level 2, 1.6 times as many */
+  if(G2.hm){const hk=rel(9)?1.8:1.6;G2.L.w.meteor*=hk;if(G2.L.metIv)G2.L.metIv/=hk;else if(l>=2)G2.L.metIv=4.4/hk;} /* Hard Mode: storm meteors from level 2, 1.6 times as many (1.8 from 1.4.9) */
   G2.decK=G2.hm?2:1;G2.chal=mode==='level'&&!mod&&!G2.hard?v2Chal(l):null;
   if(G2.chal==='shrink'){if(!TIPS.shrinkc)later(()=>{if(G2.on&&G2.chal)v2Tip('shrinkc',null);},3200);G2.L.cap=Math.round(G2.L.cap*1.5);G2.L.iv/=1.5;G2.decK=G2.hm?4:3; /* a crowd to eat, and a hole that starves fast */
     later(()=>{if(G2.on&&G2.chal)v2Call('💨 HIZLI KÜÇÜLME','Daha çok cisim var · durursan çabuk küçülürsün','#ff8a80',2.2,true);},700);}
@@ -4956,7 +4961,7 @@ const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'�
 const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
 function v2SprRule(){const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
-function v2SprPlan(){const r=sprRuleOf(SPR_RUN.seed),L=[];if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);L.push([20,'belt'],[40,'neb']);return {list:L};}
+function v2SprPlan(){const r=sprRuleOf(SPR_RUN.seed),L=[];if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);if(rel(9))L.push([18,'belt'],[32,'neb'],[48,'belt']);else L.push([20,'belt'],[40,'neb']);return {list:L};}
 const DSTORM={dur:180,belts:[60,120],sec:20,done:3000,life:1500};
 // 1.4.8: the storm has no end. Arcs go out at 2:00; from 4:00 (the Black Storm) every 30 s brings 35 % more storm meteors, in pairs, and 8 % faster bodies, compounding, until no one can last
 const STORM2={arcsOut:120,black:240,step:30,met:1.35,spd:1.08};
@@ -5456,7 +5461,8 @@ const TIP2={
   shell:['⚪','GÜMÜŞ KABUK','Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.'],
   garc:['🟡','ALTIN YAY','Çok nadir bir hazine! 10 saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.'],
   arcs2:['☄️','İKİ YAY','Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.'],
-  arcpow:['⚡','YAY KALKANI','Artık yayların yok: her darbe bir kalp götürür. 2 enerji topu yut, yaylar 20 saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.'],
+  bend:['🔥','BÖLÜM SONU','Bölümün zirvelerinde, yani Fırtına, Zor Seviye ve Boss seviyelerinde bir yay eksik başlarsın. Enerji topu kopan yayı onarır.'],
+  arcpow:['⚡','YAY KALKANI','Bu seviyede yay yok: her darbe bir kalp götürür. 2 enerji topu yut, yaylar 20 saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.'],
   repair:['⚡','YAY ONARILDI','Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.'],
   arcs:['☄️','METEOR VE YAYLAR','Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.'],
   meteor:['☄️','METEOR','Kırmızı meteor tehlikeli: çarparsa kara deliğinin etrafındaki bir yayı koparır; 3 yay giderse 1 can gider. Önce yavaş girer, sonra hızlanır. Kırmızı oklar gideceği yolu gösterir, o yoldan çekil. Kıl payı kaçarsan KUSURSUZ KAÇIŞ!'],
@@ -5625,7 +5631,7 @@ function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');ads
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();}
   if(!G2.dmg)dmEvent('clean',1);
   if(G2.mode==='level'&&!REPLAY&&!G2.dmg&&level>1){G2.flaw=1;stars+=25*(G2.hm?2:1);saveG();} /* not a single arc lost: a small, sure reward */if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
-  G2.hardW=G2.hard&&G2.mode==='level'&&!REPLAY?HARD.stars[G2.hard]*(G2.hm?2:1):0;if(G2.hardW){stars+=G2.hardW;saveG();} /* a peak cleared pays a little more */
+  G2.hardW=G2.hard&&G2.mode==='level'&&!REPLAY&&v2Hard(G2.lv)?HARD.stars[G2.hard]*(G2.hm?2:1):0;if(G2.hardW){stars+=G2.hardW;saveG();} /* a peak cleared pays a little more */
   if(G2.mode==='level'&&!REPLAY){let sp=10+5*clamp(lives,1,3);if(G2.rule)sp+=10*(seasonIs('rival')&&(G2.rule.rival||G2.rule.guard)?2:1);if(G2.L.boss||G2.rule&&G2.rule.duel)sp+=25;spAdd(sp);} // season points
   if(G2.mod&&G2.mode==='level'){const c=RISK_CARDS.find(x=>x.id===G2.mod);if(c)later(()=>grant(c.rw,'🃏 '+T(c.n)),1400);}
   G2.objs=G2.objs.filter(o=>o.st==='sw');
@@ -6285,7 +6291,7 @@ $('profLater').onclick=()=>{if(selAv&&selAv!==playerAvatar){playerAvatar=selAv;s
 $('editProf').onclick=()=>openProfile(null);
 const MODE_TXT={
   classic:'<b>🌀 Normal</b><ul><li>Kara deliği parmağınla sürükle, gelen cisimleri yut, büyü.</li><li>Meteorlardan kaç, combo yap, Vortex dolunca dokun.</li><li>Her seviyede yeni bir şey, her 10 seviyede dev gezegen.</li></ul>',
-  hard:'<b>🔥 Zor Mod</b><ul><li>Seviye 1\'den yeniden, sert kurallarla: meteorlar 1,6 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.</li><li>Seviye başına 2 kalp, ağır çekim yok.'+(rel(9)?' Her kalbi iki yay korur, 61. seviyeden sonra yay yok.':'')+'</li><li>Yıldız ödülleri 2 kat. Klasik ilerlemen ayrı kalır.</li></ul>',
+  hard:'<b>🔥 Zor Mod</b><ul><li>'+(rel(9)?'Seviye 1\'den yeniden, sert kurallarla: puan seviyeleri süreli, meteorlar 1,8 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.':'Seviye 1\'den yeniden, sert kurallarla: meteorlar 1,6 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.')+'</li><li>Seviye başına 2 kalp, ağır çekim yok.'+(rel(9)?' Her kalbi iki yay korur, 61. seviyeden sonra tek yay, bölüm sonlarında yay yok.':'')+'</li><li>Yıldız ödülleri 2 kat. Klasik ilerlemen ayrı kalır.</li></ul>',
   survival:rel(9)?'<b>☠️ Hayatta Kal · Günün Fırtınası</b><ul><li>Süresiz: herkes için aynı fırtına, 3 canın bitene kadar sürer. Her 30 saniyede hızlanır.</li><li>İlk 2 dakika her kalbi iki yay korur, sonra yaylar söner. Dakikada bir meteor kuşağı gelir; 4. dakikadan sonra Kara Fırtına her 30 saniyede daha da sertleşir.</li><li>Hayatta kaldığın her saniye puan, her dakika daha fazla. Dünya sıralaması bu skora göre.</li></ul>':'<b>☠️ Hayatta Kal · Günün Fırtınası</b><ul><li>180 saniye, herkes için aynı fırtına. Her 30 saniyede şiddetlenir.</li><li>60. ve 120. saniyede meteor kuşağı gelir. 3 canın biterse koşu erken biter.</li><li>Hayatta kaldığın her saniye puan; sonuna kadar dayanırsan büyük bonus. Dünya sıralaması bu skora göre.</li></ul>'
 };
 // ── menu hub: the live black hole behind the menus, the ticker, the badges ──
@@ -6419,6 +6425,7 @@ const EASE={after:3,dia:15,k:.8};
 function easeGo(){SHOP.easyLv=level;SHOP.failN=0;saveG();hideModals();retryLevel();toast('🪶','SEVİYE KOLAYLAŞTI',T('Hedef %20 düştü'));}
 $('contEase').onclick=()=>{if(diamonds<EASE.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:EASE.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}diamonds-=EASE.dia;updateUI();easeGo();};
 $('contEaseAd').onclick=async()=>{if(await showRewarded())easeGo();};
+$('contArc').onclick=async()=>{if(await showRewarded()){SHOP.arcLv=level;saveG();heartLose();if(heartGate(level,retryLevel))retryLevel();}};
 $('contAd').onclick=async()=>{if(adReviveUsed)return;if(await showRewarded()){adReviveUsed=true;revive(1);}};
 $('contLife').onclick=()=>{if(SHOP.lives<=0)return;SHOP.lives--;revive(1);};
 $('contNo').onclick=()=>{hideModals();if(gameMode==='classic'){heartLose();addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;savedLevel=level;savedScore=levelStartScore;saveG();showMenu();}else gameOver();};
