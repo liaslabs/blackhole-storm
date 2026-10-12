@@ -88,7 +88,7 @@ function v2GoldArcEat(o){o.st='dead';const p=150*MULT2(G2.combo+1);G2.combo++;co
   for(let i=0;i<14&&G2.parts.length<200;i++){const a=rrnd(0,TAU),q=rrnd(.2,1);G2.parts.push({x:o.x+Math.cos(a)*o.r*q,y:o.y+Math.sin(a)*o.r*q,vx:(hX-o.x)/40*rrnd(.6,1.2),vy:(hY-o.y)/40*rrnd(.6,1.2),life:.5,max:.5,c:'#ffd76a',sz:2.6});} /* the meteor melts into gold dust that streams into the hole */
   v2Burst(o.x,o.y,16,'#ffd76a',1.6,6,.5,2);v2Pop(T('ALTIN')+' +'+p,'#ffd76a',15);v2Sfx('gem',{vol:.45,rate:1.3});vib(12);}
 const ARCPOW={need:2,dur:20},v2Peak=l=>l>=19&&(l%10===0||v2Hard(l)>0),v2HmT=l=>l>=2&&l%10!==0&&v2LevelType(l)==='score', /* the chapter's peaks: the boss, the x9 storm and the x5 hard level; Hard Mode times every score level */
-  v2ArcMaxL=l=>!rel(9)?3:G2.mode==='surv'||G2.mode==='sprint'?2:G2.mode!=='level'?3:HMODE?(v2Peak(l)?0:l<=60?2:1):(l<=60?3:2)-(v2Peak(l)?1:0), /* 3 arcs to L60 and 2 after, one fewer on a chapter's peaks; Hard Mode: 2 (1 from L61), none on its peaks; the endless storm and the Daily Race: 2 */v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
+  v2ArcMaxL=l=>!rel(9)?3:G2.mode==='surv'?2:G2.mode!=='level'?3:HMODE?(v2Peak(l)?0:l<=60?2:1):(l<=60?3:2)-(v2Peak(l)?1:0), /* 3 arcs to L60 and 2 after, one fewer on a chapter's peaks; Hard Mode: 2 (1 from L61), none on its peaks; the endless storm: 2 */v2AM=()=>G2.arcPow>0?3:G2.arcMax??3,v2AN=()=>Math.max(1,v2AM());
 function v2ArcPowOn(){const was=G2.arcs;G2.arcPow=ARCPOW.dur;G2.eN=0;G2.arcs=3;for(let i=was;i<3;i++)v2ArcForm(i,'arc',(i-was)*.08);G2.arcFill=.5;G2.arcFix={i:2,t:G2.t};v2Call(T('YAY KALKANI'),T('20 SANİYE'),'#ff8a8a',1.3,true);v2Sfx('bell',{vol:.5,rate:1.2});vib(25);}
 function v2ArcPowEnd(){const keep=G2.arcMax||0;for(let i=keep;i<G2.arcs;i++)v2ArcBreak(i,i<G2.shells?'#eaf1fb':'#ff8a8a',.5);G2.arcPow=0;G2.arcs=Math.min(G2.arcs,keep);G2.shells=Math.min(G2.shells,G2.arcs);if(G2.on&&gState==='playing')v2Pop(T('YAY KALKANI BİTTİ'),'#ff8a8a',15);}
 const shTier=l=>l<=50?0:l<=60?1:l<=70?2:3,v2ShT=()=>G2.mode==='level'?shTier(level):0;
@@ -176,7 +176,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
   if(mod){const c=RISK_CARDS.find(x=>x.id===mod);if(c)later(()=>{if(G2.on)v2Call(c.n,c.d+' · '+T('Ödül')+': '+giftTxt(c.rw),'#ffb3a8',2,true);},700);} /* the chosen card, said once at the start instead of a label that stays */
   G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
   G2.hard=mode==='level'&&!mod?v2Hard(l)||(G2.hm&&rel(9)&&v2HmT(l)?1:0):0;G2.novaHint=0;G2.shHint=0;G2.hkHint=0;
-  if(G2.hard){G2.dur=v2HardT(l)||HARD.t[1];G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1);if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
+  if(G2.hard){G2.dur=v2HardT(l)||HARD.t[1];if(v2Hard(l))G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1); /* Hard Mode's own timer brings no extra meteors: it has its own */if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
     later(()=>{if(G2.on&&G2.hard)v2Call(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE',Math.round(G2.dur)+' sn','#ff5a5f',1.8,true);},600);if(!TIPS.hard)later(()=>{if(G2.on&&G2.hard)v2Tip('hard',null);},2600);}
   if(G2.hm){const hk=rel(9)?1.8:1.6;G2.L.w.meteor*=hk;if(G2.L.metIv)G2.L.metIv/=hk;else if(l>=2)G2.L.metIv=4.4/hk;} /* Hard Mode: storm meteors from level 2, 1.6 times as many (1.8 from 1.4.9) */
   G2.decK=G2.hm?2:1;G2.chal=mode==='level'&&!mod&&!G2.hard?v2Chal(l):null;
@@ -1311,7 +1311,7 @@ const TIP2={
   shell:['⚪','GÜMÜŞ KABUK','Üst üste 3 kusursuz kaçış yaptın: bir yayın gümüş kabuk kazandı. Kabuk bir darbeyi emer, altındaki yay kopmaz.'],
   garc:['🟡','ALTIN YAY','Çok nadir bir hazine! 10 saniye boyunca her şeyi yutarsın: meteorlar, antimadde, yasaklı ve dev cisimler bile. Hiçbiri sana zarar vermez, hepsi puan getirir.'],
   arcs2:['☄️','İKİ YAY','Artık her kalbi iki yay korur: iki darbe bir kalp götürür. Enerji topu kopan yayı onarır.'],
-  bend:['🔥','BÖLÜM SONU','Bölümün zirvelerinde, yani Fırtına, Zor Seviye ve Boss seviyelerinde bir yay eksik başlarsın. Enerji topu kopan yayı onarır.'],
+  bend:['🔥','ZİRVE SEVİYELERİ','Her bölgenin zirve seviyelerinde (Fırtına, Zor Seviye ve Boss) bir yay eksik başlarsın. Enerji topu kopan yayı onarır.'],
   arcpow:['⚡','YAY KALKANI','Bu seviyede yay yok: her darbe bir kalp götürür. 2 enerji topu yut, yaylar 20 saniyeliğine geri gelsin. Deliğin altındaki noktalar topları sayar.'],
   repair:['⚡','YAY ONARILDI','Enerji topu kopmuş bir yayı onarır. Yayların tamsa Vortex barını doldurur.'],
   arcs:['☄️','METEOR VE YAYLAR','Meteor çarparsa bir yay kopar. Üç yay giderse bir kalp gider. Meteorların yolundan çekil.'],
