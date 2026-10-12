@@ -3,7 +3,7 @@
 The service account (secret PLAY_SERVICE_ACCOUNT_JSON) has only these Play Console permissions:
 view app info, release to testing tracks, manage store presence, reply to reviews.
 This script touches store listings (texts, phone screenshots, video link) and testing-track releases
-(internal, alpha, beta) and nothing else: no in-app products, prices, policy declarations or production.
+(internal, alpha, beta; a new .aab can be uploaded for them) and nothing else: no in-app products, prices, policy declarations or production.
 
 Every run works inside one Play "edit". Without --apply the edit is thrown away, so nothing changes;
 the run only prints what it would do.
@@ -127,15 +127,34 @@ def notes_for(name):
     return [{'language': lang, 'text': txt.strip()} for lang, txt in re.findall(r'<([a-z]{2,3}(?:-[A-Za-z0-9]+)?)>\n(.*?)\n</\1>', m.group(0), re.S)]
 
 
-def release(ed, eid, track, code, apply):
+def release(ed, eid, track, code, apply, aab='', vname=''):
     say(f'## Sürüm · {track} · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
     if track not in TEST_TRACKS:
         sys.exit(f'{track}: yalnızca test kanalları ({", ".join(TEST_TRACKS)})')
     codes = {str(b['versionCode']) for b in ed.bundles().list(packageName=PKG, editId=eid).execute().get('bundles', [])}
-    if code not in codes:
-        sys.exit(f'Kod {code} Play\'e yüklenmemiş (yüklü kodlar: {", ".join(sorted(codes, key=int))})')
     tracks = {t['track']: t.get('releases', []) for t in ed.tracks().list(packageName=PKG, editId=eid).execute().get('tracks', [])}
-    name = next((r['name'] for rs in tracks.values() for r in rs if code in r.get('versionCodes', []) and r.get('name')), code)
+    if aab:
+        # a new bundle from the Android build: uploaded inside this edit, so a refused run leaves nothing behind
+        p = Path(aab)
+        if not p.is_file():
+            sys.exit(f'Paket bulunamadı: {aab}')
+        if code in codes:
+            sys.exit(f'Kod {code} zaten Play\'de; paketi tekrar yüklemeye gerek yok (paketsiz çalıştır)')
+        if not re.fullmatch(r'\d+\.\d+\.\d+', vname or ''):
+            sys.exit('Paketle birlikte sürüm adı gerekli (ör. 1.4.9)')
+        say(f'Paket: {p.name} ({p.stat().st_size / 1e6:.1f} MB), kod {code} olarak yüklenecek')
+        if apply:
+            up = ed.bundles().upload(packageName=PKG, editId=eid,
+                                     media_body=MediaFileUpload(str(p), mimetype='application/octet-stream', resumable=True)).execute()
+            got = str(up.get('versionCode'))
+            if got != code:
+                sys.exit(f'Paketteki kod {got}, beklenen {code}: hiçbir şey kaydedilmedi')
+            say(f'Yüklendi: kod {got}')
+        name = f'{code} ({vname})'
+    else:
+        if code not in codes:
+            sys.exit(f'Kod {code} Play\'e yüklenmemiş (yüklü kodlar: {", ".join(sorted(codes, key=int))})')
+        name = next((r['name'] for rs in tracks.values() for r in rs if code in r.get('versionCodes', []) and r.get('name')), code)
     ver = re.search(r'\(([\d.]+)\)', name)
     notes = notes_for(ver.group(1)) if ver else []
     cur = tracks.get(track, [])
@@ -167,7 +186,9 @@ def main():
     a.add_argument('--only', default='', help='comma-separated languages, e.g. tr-TR,de-DE')
     a.add_argument('--video-tr', default='', help='YouTube link for the tr-TR listing')
     a.add_argument('--track', default='alpha', help='release: internal, alpha or beta')
-    a.add_argument('--version-code', default='', help='release: version code already uploaded to Play')
+    a.add_argument('--version-code', default='', help='release: version code already uploaded to Play (or in --aab)')
+    a.add_argument('--aab', default='', help='release: an .aab from the Android build to upload first')
+    a.add_argument('--version-name', default='', help='release: version name for an uploaded .aab, e.g. 1.4.9')
     o = a.parse_args()
     if o.video_tr and not o.video_tr.startswith(('https://www.youtube.com/', 'https://youtu.be/', 'https://youtube.com/')):
         sys.exit('video-tr bir YouTube bağlantısı olmalı')
@@ -181,7 +202,7 @@ def main():
             if o.task == 'release':
                 if not o.version_code.isdigit():
                     sys.exit('release için --version-code gerekli')
-                n = release(ed, eid, o.track, o.version_code, o.apply)
+                n = release(ed, eid, o.track, o.version_code, o.apply, o.aab, o.version_name)
             else:
                 n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
             if o.apply and n:
