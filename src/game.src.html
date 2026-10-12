@@ -107,6 +107,8 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .lbstats div{padding:8px 6px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
 .lbstats b{display:block;font-family:var(--fd);font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums;}
 .lbstats span{font-size:10px;letter-spacing:1px;color:var(--dim);}
+.lbstats .bc{grid-column:1/-1;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap;}
+.lbstats .bc b{display:inline;color:#ff9a5c;font-size:17px;}
 .lbempty{padding:14px;color:var(--dim);font-size:13px;}
 .lbnote{margin:10px 2px 2px;font-size:12px;line-height:1.45;color:var(--dim);}
 .lbrow.lbtop{background:rgba(242,169,59,.1);border:1px solid var(--line);} /* not .me: that class is the bobbing 'you are here' marker on the map */
@@ -1442,7 +1444,7 @@ function fcap(o,ts){const d=ts-(o.last||ts);o.last=ts;if(d>2&&d<40)o.iv=o.iv?o.i
 const LOOPF={next:0},MENUF={next:0},LABF={next:0};
 const SK=DEV?'bhs_dev':'bhs_v7';
 let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
-let lastLogin='',loginStreak=0,localLB=[],unlockedAch=new Set(),achQueue=[];
+let lastLogin='',loginStreak=0,localLB=[],BCOMBO={c:0,d:''},unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,PAUTO=false,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
 try{localStorage.removeItem('bhs_ghost');}catch(e){} // the record ghost was removed: drop its saved runs
 const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,sens:0,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true}; // notif: game reminders in the Android app
@@ -1604,7 +1606,7 @@ let HMODE=false,HSEL=false,HM={lv:1,sc:0,best:1,ls:{},ws:0,s3:0};const HM_OPEN=3
 function hmSwap(){[savedLevel,HM.lv]=[HM.lv,savedLevel];[savedScore,HM.sc]=[HM.sc,savedScore];[bestLevel,HM.best]=[HM.best,bestLevel];[LSTARS,HM.ls]=[HM.ls,LSTARS];[WSTREAK,HM.ws]=[HM.ws,WSTREAK];[STREAK3,HM.s3]=[HM.s3,STREAK3];HMODE=!HMODE;}
 const hmOpen=()=>(HMODE?HM.best:bestLevel)>=HM_OPEN;
 function saveG(){if(HMODE){hmSwap();try{saveG0();}finally{hmSwap();}return;}saveG0();}
-const LSAVE={t:0,d:0};function saveG0(){const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
+const LSAVE={t:0,d:0};function saveG0(){const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,bc:BCOMBO,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -1613,6 +1615,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   try{stars=svI(d.stars,250,0,1e9);diamonds=svI(d.diamonds,50,0,1e9);bestScore=svI(d.bestScore,0);totalGames=svI(d.totalGames,0);totalCombos=svI(d.totalCombos,0);
   unlockedAch=new Set(Array.isArray(d.ach)?d.ach.filter(x=>typeof x==='string'):[]);
   localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,40):[];
+  BCOMBO=svO(d.bc)?{c:svI(d.bc.c,0,0,1e6),d:typeof d.bc.d==='string'?d.bc.d.slice(0,5):''}:{c:0,d:''};for(const e of localLB)if(svI(e.c,0,0,1e6)>BCOMBO.c)BCOMBO={c:svI(e.c,0,0,1e6),d:typeof e.d==='string'?e.d.slice(0,5):''}; /* 1.4.9: the best combo of all time, whichever game it came in */
   lastLogin=typeof d.lastLogin==='string'?d.lastLogin:'';loginStreak=svI(d.loginStreak,0,0,1e5);
   rescueWins=svI(d.rescueWins,0);clockMax=svN(d.tmax,0);playerName=typeof d.playerName==='string'?[...d.playerName].slice(0,NAME_MAX).join(''):'';playerAvatar=AVATARS.includes(d.playerAvatar)?d.playerAvatar:'🚀';PAUTO=!!d.pAuto&&!!playerName;
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
@@ -2355,6 +2358,7 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
   const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
   $('lbStats').innerHTML=(rel(8)?[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['HAYATTA KAL REKORU',fmt(svB)],['60 SN REKORU',fmt(sprintBest)]]:[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]])
     .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
+  if(rel(9)&&BCOMBO.c>=2){const r=document.createElement('div');r.className='bc';const b=document.createElement('b');b.textContent='🔥 ×'+BCOMBO.c;const k=document.createElement('span');k.textContent='EN İYİ COMBO';r.append(b,k);if(BCOMBO.d){const t=document.createElement('span');t.textContent=lbDate(BCOMBO.d);r.append(t);}$('lbStats').appendChild(r);} /* 1.4.9: its own row, since the best combo may come from a game outside the top scores */
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
     const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);

@@ -1089,7 +1089,7 @@ function v2DrawJet(){const j=G2.jet;if(!j)return;const J=V2K.jet;if(!j.held)retu
 function v2WinOut(){const r=G2.rule;if(!r||!r.win)return 0;const s=G2.rr/V2K.r0;return s>r.hi?1:s<r.lo?-1:0;}
 function v2Score(o,mini){
   const K=OBJ2[o.k];G2.hungry=0;G2.combo++;comboCount=G2.combo;G2.comboT=G2.L.comboT;
-  if(G2.combo>G2.best){G2.best=G2.combo;lvCombo=G2.best;}if(G2.combo>maxCombo)maxCombo=G2.combo;
+  if(G2.combo>G2.best){G2.best=G2.combo;lvCombo=G2.best;}if(G2.combo>maxCombo)maxCombo=G2.combo;if(rel(9)&&G2.combo>BCOMBO.c){const t=new Date();BCOMBO.c=G2.combo;BCOMBO.d=`${t.getDate()}.${t.getMonth()+1}`;} /* saved with the level's own save */
   const perf=!mini&&o.inG&&o.b<V2K.perfectK*G2.G&&!o.chain;
   const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;if(G2.ev&&G2.ev.k==='eclipse')pts*=1.5;pts*=G2.modSc||1;if(o.gold2)pts=Math.max(pts*1.5,150*m);const gs=o.k==='gold'&&G2.mode!=='sprint'&&seasonIs('gold');if(gs){pts*=2;spAdd(2);}if(o.k==='icec')pts*=2;if(G2.mode==='sprint')pts*=1+Math.min(G2.combo,20)*.05; /* in the race a long combo counts double */pts=Math.round(pts);
   const wo=v2WinOut();if(wo&&o.k!=='prey'){pts=0;if(!G2.woT||G2.t-G2.woT>1.2){G2.woT=G2.t;v2Pop(wo>0?T('ÇOK BÜYÜK · 0'):T('ÇOK KÜÇÜK · 0'),'#ff8a7a',15);}} // outside the size window nothing scores
