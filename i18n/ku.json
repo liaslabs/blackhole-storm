@@ -1738,5 +1738,18 @@
 "Zirve seviyesinde bir yay fazla": "Di asta lûtkeyê de kevanek zêdetir",
 "VORTEX DOLU BAŞLA": "BI VORTEXA TIJE DEST PÊ BIKE",
 "İstediğin an {n} sn dev ol, puanın ×{n}": "Kengî bixwazî {n} çirk dêw be, puan ×{n}",
-"Sonraki seviyede hazır": "Di asta pêş de amade ye"
+"Sonraki seviyede hazır": "Di asta pêş de amade ye",
+"ALTIN KABUKLA BAŞLA": "BI QALIKÊ ZÊRÎN DEST PÊ BIKE",
+"İlk darbeyi karşılar, etraftaki meteorları siler": "Derba yekem digire û meteorên nêzîk paqij dike",
+"KALKANLA BAŞLA": "BI MERTALÊ DEST PÊ BIKE",
+"Başta meteorlar sana çarpınca parçalanır": "Di destpêkê de meteor li te dixin û dişikên",
+"GÜMÜŞ KABUKLA BAŞLA": "BI QALIKÊ ZÎVÎN DEST PÊ BIKE",
+"İlk darbeyi kabuk karşılar": "Qalik derba yekem digire",
+"+{n} YAY": "+{n} KEVAN",
+"{n} erken bitir": "{n} zûtir temam bike",
+"SÜRE HAKKIN": "LEZKIRIN",
+"hemen bitir": "niha temam bike",
+"Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Dema lezkirinê têra temamkirina niha nake: {n} din lazim e",
+"süre hakkı": "lezkirin",
+"{n} sürer": "{n} dikişîne"
 }

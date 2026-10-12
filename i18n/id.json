@@ -1738,5 +1738,18 @@
 "Zirve seviyesinde bir yay fazla": "Satu busur lebih di level puncak",
 "VORTEX DOLU BAŞLA": "MULAI DENGAN VORTEX PENUH",
 "İstediğin an {n} sn dev ol, puanın ×{n}": "Jadi raksasa {n} dtk kapan saja, poin ×{n}",
-"Sonraki seviyede hazır": "Siap di level berikutnya"
+"Sonraki seviyede hazır": "Siap di level berikutnya",
+"ALTIN KABUKLA BAŞLA": "MULAI DENGAN CANGKANG EMAS",
+"İlk darbeyi karşılar, etraftaki meteorları siler": "Menahan pukulan pertama dan menyapu meteor di dekatmu",
+"KALKANLA BAŞLA": "MULAI DENGAN PERISAI",
+"Başta meteorlar sana çarpınca parçalanır": "Di awal, meteor hancur saat menabrakmu",
+"GÜMÜŞ KABUKLA BAŞLA": "MULAI DENGAN CANGKANG PERAK",
+"İlk darbeyi kabuk karşılar": "Cangkang menahan pukulan pertama",
+"+{n} YAY": "+{n} BUSUR",
+"{n} erken bitir": "selesai {n} lebih cepat",
+"SÜRE HAKKIN": "PERCEPATAN",
+"hemen bitir": "selesaikan",
+"Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Waktu percepatan tidak cukup untuk selesai sekarang: perlu {n} lagi",
+"süre hakkı": "percepatan",
+"{n} sürer": "butuh {n}"
 }

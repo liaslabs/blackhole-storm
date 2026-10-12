@@ -1738,5 +1738,18 @@
 "Zirve seviyesinde bir yay fazla": "قوس إضافي في مستوى الذروة",
 "VORTEX DOLU BAŞLA": "ابدأ وشريط Vortex ممتلئ",
 "İstediğin an {n} sn dev ol, puanın ×{n}": "صِر عملاقًا {n} ث متى شئت، النقاط ×{n}",
-"Sonraki seviyede hazır": "جاهز في المستوى التالي"
+"Sonraki seviyede hazır": "جاهز في المستوى التالي",
+"ALTIN KABUKLA BAŞLA": "ابدأ بدرع ذهبي",
+"İlk darbeyi karşılar, etraftaki meteorları siler": "يتلقى الضربة الأولى ويزيل النيازك القريبة",
+"KALKANLA BAŞLA": "ابدأ بدرع",
+"Başta meteorlar sana çarpınca parçalanır": "في البداية تتحطم النيازك عليك",
+"GÜMÜŞ KABUKLA BAŞLA": "ابدأ بدرع فضي",
+"İlk darbeyi kabuk karşılar": "الدرع يتلقى الضربة الأولى",
+"+{n} YAY": "+{n} قوس",
+"{n} erken bitir": "أنهِ قبل {n}",
+"SÜRE HAKKIN": "التسريع",
+"hemen bitir": "أنهِ الآن",
+"Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "وقت التسريع لا يكفي للإنهاء الآن: يلزم {n} أخرى",
+"süre hakkı": "تسريع",
+"{n} sürer": "يستغرق {n}"
 }

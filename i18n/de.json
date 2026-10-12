@@ -1738,5 +1738,18 @@
 "Zirve seviyesinde bir yay fazla": "Ein Bogen mehr im Gipfel-Level",
 "VORTEX DOLU BAŞLA": "MIT VOLLEM VORTEX STARTEN",
 "İstediğin an {n} sn dev ol, puanın ×{n}": "Wann du willst {n} s riesig, Punkte ×{n}",
-"Sonraki seviyede hazır": "Im nächsten Level bereit"
+"Sonraki seviyede hazır": "Im nächsten Level bereit",
+"ALTIN KABUKLA BAŞLA": "MIT GOLDHÜLLE STARTEN",
+"İlk darbeyi karşılar, etraftaki meteorları siler": "Fängt den ersten Treffer ab und räumt Meteore in der Nähe weg",
+"KALKANLA BAŞLA": "MIT SCHILD STARTEN",
+"Başta meteorlar sana çarpınca parçalanır": "Am Anfang zerschellen Meteore an dir",
+"GÜMÜŞ KABUKLA BAŞLA": "MIT SILBERHÜLLE STARTEN",
+"İlk darbeyi kabuk karşılar": "Die Hülle fängt den ersten Treffer ab",
+"+{n} YAY": "+{n} BOGEN",
+"{n} erken bitir": "{n} früher fertig",
+"SÜRE HAKKIN": "BESCHLEUNIGUNG",
+"hemen bitir": "jetzt fertig",
+"Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Zu wenig Beschleunigung, um jetzt fertig zu werden: noch {n} nötig",
+"süre hakkı": "Beschleunigung",
+"{n} sürer": "dauert {n}"
 }

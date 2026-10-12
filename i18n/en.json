@@ -1738,5 +1738,18 @@
 "Zirve seviyesinde bir yay fazla": "One more arc on the peak level",
 "VORTEX DOLU BAŞLA": "START WITH VORTEX FULL",
 "İstediğin an {n} sn dev ol, puanın ×{n}": "Go giant for {n} s whenever you like, points ×{n}",
-"Sonraki seviyede hazır": "Ready on the next level"
+"Sonraki seviyede hazır": "Ready on the next level",
+"ALTIN KABUKLA BAŞLA": "START WITH A GOLD SHELL",
+"İlk darbeyi karşılar, etraftaki meteorları siler": "Takes the first hit and clears nearby meteors",
+"KALKANLA BAŞLA": "START WITH A SHIELD",
+"Başta meteorlar sana çarpınca parçalanır": "Meteors shatter on you at the start",
+"GÜMÜŞ KABUKLA BAŞLA": "START WITH A SILVER SHELL",
+"İlk darbeyi kabuk karşılar": "The shell takes the first hit",
+"+{n} YAY": "+{n} ARC",
+"{n} erken bitir": "finish {n} sooner",
+"SÜRE HAKKIN": "SPEED-UP",
+"hemen bitir": "finish now",
+"Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Not enough speed-up time to finish now: {n} more needed",
+"süre hakkı": "speed-up",
+"{n} sürer": "takes {n}"
 }

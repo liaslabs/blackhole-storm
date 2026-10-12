@@ -1738,5 +1738,18 @@
 "Zirve seviyesinde bir yay fazla": "На пиковом уровне на одну дугу больше",
 "VORTEX DOLU BAŞLA": "НАЧАТЬ С ПОЛНЫМ VORTEX",
 "İstediğin an {n} sn dev ol, puanın ×{n}": "Стань гигантом на {n} с когда захочешь, очки ×{n}",
-"Sonraki seviyede hazır": "Готово на следующем уровне"
+"Sonraki seviyede hazır": "Готово на следующем уровне",
+"ALTIN KABUKLA BAŞLA": "НАЧАТЬ С ЗОЛОТОЙ ОБОЛОЧКОЙ",
+"İlk darbeyi karşılar, etraftaki meteorları siler": "Принимает первый удар и сметает метеоры рядом",
+"KALKANLA BAŞLA": "НАЧАТЬ СО ЩИТОМ",
+"Başta meteorlar sana çarpınca parçalanır": "В начале метеоры разбиваются о тебя",
+"GÜMÜŞ KABUKLA BAŞLA": "НАЧАТЬ С СЕРЕБРЯНОЙ ОБОЛОЧКОЙ",
+"İlk darbeyi kabuk karşılar": "Оболочка принимает первый удар",
+"+{n} YAY": "+{n} ДУГА",
+"{n} erken bitir": "на {n} раньше",
+"SÜRE HAKKIN": "УСКОРЕНИЕ",
+"hemen bitir": "завершить",
+"Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Ускорения не хватает, чтобы завершить сейчас: нужно ещё {n}",
+"süre hakkı": "ускорение",
+"{n} sürer": "займёт {n}"
 }
