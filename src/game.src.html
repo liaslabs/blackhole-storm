@@ -860,6 +860,29 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .mhub #startBtn.play small.st{font-weight:600;opacity:.62;margin-top:1px;}
 #mapBtn.mpill{height:36px;flex-direction:row;gap:8px;padding:0 22px;border-radius:12px;background:rgba(20,24,52,.85);border-color:rgba(185,200,255,.25);}
 #mapBtn.mpill .gxy{width:24px;height:24px;}#mapBtn.mpill .k{font-size:11px;letter-spacing:.18em;}
+#mapBtn.mwin{height:64px;width:100%;max-width:360px;padding:0;overflow:hidden;border-radius:16px;border-color:rgba(185,200,255,.35);background:#0b0d22;box-shadow:0 6px 22px rgba(80,90,200,.25);}
+#mapBtn.mwin>svg,#mapBtn.mwin>.k{display:none;}
+#mapBtn .mw{position:absolute;inset:0;display:flex;align-items:center;justify-content:space-between;padding:0 14px 0 16px;}
+#mapBtn .mw .bg{position:absolute;inset:-20px;background-size:cover;background-position:50% 50%;filter:saturate(1.25) brightness(1.15);animation:mwPan 26s ease-in-out infinite alternate;}
+#mapBtn .mw::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,8,22,.8) 0%,rgba(6,8,22,.3) 45%,rgba(6,8,22,0) 100%);}
+@keyframes mwPan{from{transform:scale(1.08) translate(-10px,4px);}to{transform:scale(1.18) translate(10px,-6px);}}
+#mapBtn .mw .tx{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:3px;}
+#mapBtn .mw .tx b{font-family:var(--fd);font-size:15px;letter-spacing:.2em;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.8);}
+#mapBtn .mw .tx small{font-size:10px;letter-spacing:.12em;color:#c9d2ff;text-shadow:0 1px 4px rgba(0,0,0,.9);}
+#mapBtn .mw .pth{position:relative;z-index:1;width:150px;height:40px;}
+#mapBtn .mw .pth svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+#mapBtn .mw .pth path{fill:none;stroke:rgba(255,255,255,.55);stroke-width:2;stroke-dasharray:2 5;stroke-linecap:round;}
+#mapBtn .mw .pth i{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:var(--fd);font-size:8px;color:#cfd6ff;background:rgba(20,24,52,.9);border:1.5px solid rgba(200,210,255,.5);}
+#mapBtn .mw .pth i:empty:not(.c):not(.d){visibility:hidden;}
+#mapBtn .mw .pth i.d{background:#f2c46d;border-color:#ffe2a0;}
+#mapBtn .mw .pth i.c{width:24px;height:24px;margin:-12px 0 0 -12px;background:#3fd8e8;border:2px solid #fff;box-shadow:0 0 12px #3fd8e8;}
+#mapBtn .mw .pth i.h{border-color:#ff6b5c;box-shadow:0 0 8px rgba(255,90,70,.7);}
+#mapBtn .mw .pth i.b{width:20px;height:20px;margin:-10px 0 0 -10px;border-color:#ffb36b;}
+#mapBtn .mw .pth i .ico{width:11px;height:11px;}
+#mapBtn .mw .pth .av{position:absolute;bottom:100%;left:50%;transform:translate(-50%,-2px);font-size:17px;line-height:1;}
+#mapBtn .mw .pth i:nth-of-type(1){left:3%;top:65%;}#mapBtn .mw .pth i:nth-of-type(2){left:22%;top:30%;}#mapBtn .mw .pth i:nth-of-type(3){left:40%;top:52%;}
+#mapBtn .mw .pth i:nth-of-type(4){left:59%;top:75%;}#mapBtn .mw .pth i:nth-of-type(5){left:78%;top:30%;}#mapBtn .mw .pth i:nth-of-type(6){left:97%;top:45%;}
+@media (prefers-reduced-motion:reduce){#mapBtn .mw .bg{animation:none;}}
 .mbot{gap:10px;padding-bottom:4px;}
 .vx{position:relative;display:block;width:52px;height:52px;flex:none;margin:-4px 0 -8px;}
 .vx i{position:absolute;inset:0;background:center/100% 100% no-repeat;}
@@ -2422,7 +2445,12 @@ function endReplay(toMap){
 function levelKind(l){if(l%10===0){const b=v2BossType(l);return {t:'boss',ic:b==='red'?'🔴':b==='nova'?'💥':'🪐',n:BOSS2[b].n};}const n=new2(l);return n?{t:'new',ic:n[0],n:n[1]}:null;}
 const KIND_TXT={boss:'Her 10 seviyede boss: koptukça parçalarını topla, küçülünce bütünüyle yut.',new:'',hard:'Zor seviye: hedefe {n} saniyede ulaş, meteorlar daha sık. Kalkan, Süpernova ve Hawking burada fark yaratır.'};
 let mapPts=[],mapN=0,mapB=0; // mapB: levels before the first drawn node
-function renderMapCard(){
+function renderMapWin(){const btn=$('mapBtn');btn.classList.add('mwin');let w=btn.querySelector('.mw');if(!w){w=document.createElement('span');w.className='mw';btn.appendChild(w);}
+  const cur=Math.max(1,savedLevel),z=zoneOf(cur),bg=((window.ASSETS||{}).bgs||[])[z],l0=Math.floor((cur-1)/10)*10+1;
+  const nd=[];for(let l=cur-2;l<=cur+3;l++){if(l<1){nd.push('');continue;}const k=levelKind(l),hd=v2Hard(l),st=l<cur?'d':l===cur?'c':'f';nd.push(`<i class="${st}${hd?' h':''}${k&&k.t==='boss'?' b':''}">${st==='c'?'':k?k.ic:hd?'🔥':st==='d'?'':l}</i>`);}
+  w.innerHTML=`<span class="bg"${bg?` style="background-image:url(${bg})"`:''}></span><span class="tx"><b>${T('HARİTA')}</b><small>${T(ZONES[z].n)} · ${cur-l0}/10</small></span><span class="pth"><svg viewBox="0 0 150 40" preserveAspectRatio="none"><path d="M5,26 C20,8 35,8 50,20 S80,34 95,20 S125,6 145,18"/></svg>${nd.join('')}</span>`;
+  const me=document.createElement('span');me.className='av';setAv(me,playerAvatar||'🚀');const c=w.querySelector('i.c');if(c)c.appendChild(me);} /* 1.4.9: the map button is a window onto the map: the zone's own sky, where you stand and what comes next */
+function renderMapCard(){if(rel(9))renderMapWin();
   const cur=Math.max(1,savedLevel);let nb=0;for(let l=cur;l<cur+60;l++){const k=levelKind(l);if(k&&k.t==='boss'){nb=l;break;}}
   $('mapTxt').innerHTML=`${cur>1?`${cur-1} seviye geçildi · ${totalStars()} ⭐`:'Yolculuğun burada başlıyor'}<br>Sıradaki boss: seviye ${nb}`;
   const c=$('miniMap').getContext('2d');c.clearRect(0,0,168,132);const P=[];for(let i=0;i<9;i++)P.push([84+Math.sin(i*.9)*50,122-i*14]);
