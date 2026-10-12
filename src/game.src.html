@@ -4169,7 +4169,7 @@ function menuBgFrame(now){if(!$('sMenu').classList.contains('on')||gState!=='men
   if(fcap(MENUF,now)){requestAnimationFrame(menuBgFrame);return;}
   const dt=Math.min(.05,(now-MB.last)/1000);MB.last=now;MB.t+=dt;const c=$('menuBg').getContext('2d'),W=MB.W,H=MB.H,t=MB.t,still=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(W!==innerWidth||H!==innerHeight)menuBgSize();c.setTransform(MB.d,0,0,MB.d,0,0);
-  const R=Math.min(W*.13,H*.075),mh=$('mHole'),hr=mh&&mh.getBoundingClientRect(),cx=W/2,cy=hr&&hr.height>0?hr.top+hr.height/2:H*.42;if(!LV.tex)LV.tex=labTex(); // the hole sits in the gap between the title and the mode cards
+  const mh=$('mHole'),hr=mh&&mh.getBoundingClientRect(),cx=W/2,cy=hr&&hr.height>0?hr.top+hr.height/2:H*.42,R=window.MHK&&hr&&hr.height>0?Math.max(Math.min(W*.13,H*.075),Math.min(hr.width*window.MHK,hr.height*.34,W*.24)):Math.min(W*.13,H*.075);if(!LV.tex)LV.tex=labTex(); // the hole sits in the gap between the title and the mode cards
   const bg=c.createRadialGradient(cx,cy,R,cx,cy,Math.max(W,H)*.8);bg.addColorStop(0,'#12112a');bg.addColorStop(.55,'#05060f');bg.addColorStop(1,'#010207');c.fillStyle=bg;c.fillRect(0,0,W,H);
   for(const p of MB.st){c.fillStyle=`rgba(215,225,255,${p.a*(.7+.3*Math.sin(t*1.7+p.x))})`;c.fillRect(p.x,p.y,p.s,p.s);}
   c.save();c.globalCompositeOperation='lighter';c.lineCap='round';const far=Math.hypot(W,H)*.62; // light rushing out past the hole
