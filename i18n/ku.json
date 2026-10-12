@@ -1755,7 +1755,14 @@
 "TARİH": "DÎROK",
 "PUAN": "PÛAN",
 "TURNUVA": "TÛRNUVA",
-"HERKESE {n} KALKAN": "{n} MERTAL JI BO HEMÛYAN",
 "TURNUVA KALKANLARIN BİTTİ": "MERTALÊN TÛRNUVAYÊ QEDIYAN",
-"Turnuvada herkes aynı kalkanlarla oynar": "Di tûrnuvayê de her kes bi heman mertalan dilîze"
+"Turnuvada herkes aynı kalkanlarla oynar": "Di tûrnuvayê de her kes bi heman mertalan dilîze",
+"GÜNÜN TURNUVASI": "TÛRNUVAYA ROJÊ",
+"Herkes eşit şartlarda yarışır": "Her kes bi şertên wekhev pêşbaziyê dike",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "Di vê tûrnuvayê de elmas û mertalên te nayên bikaranîn. Hêzên laboratuwarê girtî ne",
+"BAŞLA": "DEST PÊ BIKE",
+"BİTİŞE": "DIQEDE DI",
+"sa": "s",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "SUPERNOVAYÊN TÛRNUVAYÊ QEDIYAN",
+"HERKES EŞİT ŞARTLARDA": "ŞERTÊN WEKHEV JI BO HEMÛYAN"
 }

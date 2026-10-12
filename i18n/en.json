@@ -1755,7 +1755,14 @@
 "TARİH": "DATE",
 "PUAN": "SCORE",
 "TURNUVA": "TOURNAMENT",
-"HERKESE {n} KALKAN": "{n} SHIELDS FOR ALL",
 "TURNUVA KALKANLARIN BİTTİ": "TOURNAMENT SHIELDS USED UP",
-"Turnuvada herkes aynı kalkanlarla oynar": "In the tournament everyone plays with the same shields"
+"Turnuvada herkes aynı kalkanlarla oynar": "In the tournament everyone plays with the same shields",
+"GÜNÜN TURNUVASI": "TODAY'S TOURNAMENT",
+"Herkes eşit şartlarda yarışır": "Everyone races on equal terms",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "Diamonds and your own shields are not used in this tournament. Lab powers are off",
+"BAŞLA": "START",
+"BİTİŞE": "ENDS IN",
+"sa": "h",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "TOURNAMENT SUPERNOVAS USED UP",
+"HERKES EŞİT ŞARTLARDA": "EQUAL TERMS FOR ALL"
 }

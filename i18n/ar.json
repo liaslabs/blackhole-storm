@@ -1755,7 +1755,14 @@
 "TARİH": "التاريخ",
 "PUAN": "النقاط",
 "TURNUVA": "بطولة",
-"HERKESE {n} KALKAN": "{n} دروع للجميع",
 "TURNUVA KALKANLARIN BİTTİ": "نفدت دروع البطولة",
-"Turnuvada herkes aynı kalkanlarla oynar": "في البطولة يلعب الجميع بالدروع نفسها"
+"Turnuvada herkes aynı kalkanlarla oynar": "في البطولة يلعب الجميع بالدروع نفسها",
+"GÜNÜN TURNUVASI": "بطولة اليوم",
+"Herkes eşit şartlarda yarışır": "الجميع يتنافسون بشروط متساوية",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "لا تُستخدم الماسات ودروعك الخاصة في هذه البطولة. قوى المختبر متوقفة",
+"BAŞLA": "ابدأ",
+"BİTİŞE": "ينتهي خلال",
+"sa": "س",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "نفدت مستعرات البطولة العظمى",
+"HERKES EŞİT ŞARTLARDA": "شروط متساوية للجميع"
 }

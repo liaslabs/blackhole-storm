@@ -1755,7 +1755,14 @@
 "TARİH": "TANGGAL",
 "PUAN": "SKOR",
 "TURNUVA": "TURNAMEN",
-"HERKESE {n} KALKAN": "{n} PERISAI UNTUK SEMUA",
 "TURNUVA KALKANLARIN BİTTİ": "PERISAI TURNAMEN HABIS",
-"Turnuvada herkes aynı kalkanlarla oynar": "Di turnamen semua pemain bermain dengan perisai yang sama"
+"Turnuvada herkes aynı kalkanlarla oynar": "Di turnamen semua pemain bermain dengan perisai yang sama",
+"GÜNÜN TURNUVASI": "TURNAMEN HARI INI",
+"Herkes eşit şartlarda yarışır": "Semua bertanding dengan syarat yang sama",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "Berlian dan perisaimu sendiri tidak dipakai di turnamen ini. Kekuatan lab dimatikan",
+"BAŞLA": "MULAI",
+"BİTİŞE": "BERAKHIR DALAM",
+"sa": "j",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "SUPERNOVA TURNAMEN HABIS",
+"HERKES EŞİT ŞARTLARDA": "SYARAT SAMA UNTUK SEMUA"
 }

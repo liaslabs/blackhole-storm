@@ -1755,7 +1755,14 @@
 "TARİH": "DATA",
 "PUAN": "PONTOS",
 "TURNUVA": "TORNEIO",
-"HERKESE {n} KALKAN": "{n} ESCUDOS PARA TODOS",
 "TURNUVA KALKANLARIN BİTTİ": "ESCUDOS DO TORNEIO ESGOTADOS",
-"Turnuvada herkes aynı kalkanlarla oynar": "No torneio, todos jogam com os mesmos escudos"
+"Turnuvada herkes aynı kalkanlarla oynar": "No torneio, todos jogam com os mesmos escudos",
+"GÜNÜN TURNUVASI": "TORNEIO DO DIA",
+"Herkes eşit şartlarda yarışır": "Todos competem em condições iguais",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "Diamantes e seus próprios escudos não são usados neste torneio. Os poderes do laboratório estão desligados",
+"BAŞLA": "COMEÇAR",
+"BİTİŞE": "TERMINA EM",
+"sa": "h",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "SUPERNOVAS DO TORNEIO ESGOTADAS",
+"HERKES EŞİT ŞARTLARDA": "CONDIÇÕES IGUAIS PARA TODOS"
 }

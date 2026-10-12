@@ -162,7 +162,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
     script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0});
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
-  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.tSh=mode==='surv'&&rel(9)?3:null; /* 1.4.9: the tournament gives everyone the same 3 shields, apart from their own stock and with none for sale */G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);const bst=mode==='level'&&!REPLAY&&SHOP.boostLv===l?SHOP.boostK:'';if(bst){SHOP.boostLv=0;saveG();}if(mode==='level'&&!REPLAY&&(SHOP.arcLv===l||bst==='arc')){G2.arcMax=Math.min(3,G2.arcMax+1);if(SHOP.arcLv===l)SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(bst){if(bst==='rage')G2.rage=100;else if(bst==='shell')G2.shells=Math.max(G2.shells,1);else if(bst==='gold')G2.gold=1;else if(bst==='shield'){G2.shT=v2ShDur();G2.shTick=0;}const B=BOOSTS[bst];later(()=>{if(G2.on)v2Call(B.ic+' '+T(B.c),'','#9fd8ff',1.6,true);},2400);} /* the level-end ad's head start */if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
+  G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.tSh=mode==='surv'&&rel(9)?3:null;G2.tNova=mode==='surv'&&rel(9)?V2K.nova.max:null; /* 1.4.9: the tournament gives everyone the same 3 shields, apart from their own stock and with none for sale */G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);const bst=mode==='level'&&!REPLAY&&SHOP.boostLv===l?SHOP.boostK:'';if(bst){SHOP.boostLv=0;saveG();}if(mode==='level'&&!REPLAY&&(SHOP.arcLv===l||bst==='arc')){G2.arcMax=Math.min(3,G2.arcMax+1);if(SHOP.arcLv===l)SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(bst){if(bst==='rage')G2.rage=100;else if(bst==='shell')G2.shells=Math.max(G2.shells,1);else if(bst==='gold')G2.gold=1;else if(bst==='shield'){G2.shT=v2ShDur();G2.shTick=0;}const B=BOOSTS[bst];later(()=>{if(G2.on)v2Call(B.ic+' '+T(B.c),'','#9fd8ff',1.6,true);},2400);} /* the level-end ad's head start */if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
   if(mod==='glass')lives=2;
   {const pl=labEffLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+Math.min(.3,.02*pl));}G2.L.comboT+=.12*labEffLv('combo');} // Laboratory upgrades (classic only)
@@ -496,7 +496,7 @@ function v2Update(dt){
       if(rng()<dt*30&&G2.parts.length<150){const a=rng()*TAU,v=rrnd(.5,1.2);G2.parts.push({x:hX+Math.cos(a)*G2.R,y:hY+Math.sin(a)*G2.R,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.7,max:.7,c:'#b9a8ff',sz:1.4});}}
     else G2.shrinkOn=false;}
   if(G2.mode==='surv'&&v2ShLeft()>0&&!TIPS.shield&&G2.t>1.5)v2Tip('shield',null);
-  if(G2.tSh!=null&&!G2.tShSaid&&G2.t>3.4&&!G2.tip){G2.tShSaid=1;v2Call(T('TURNUVA'),T('HERKESE {n} KALKAN',{n:3}),'#ffd76a',1.6);}
+  if(G2.tSh!=null&&!G2.tShSaid&&G2.t>3.4&&!G2.tip){G2.tShSaid=1;v2Call(T('TURNUVA'),T('HERKES EŞİT ŞARTLARDA'),'#ffd76a',1.6);}
   if(G2.combo>0&&!G2.hold){G2.comboT-=dt;if(G2.comboT<=0)v2ComboLost();}
   if(gameMode==='survival'){survTime+=dt;const sc=Math.floor(survTime);if(sc!==lastSurvSec){lastSurvSec=sc;dmEvent('surv',sc,true);if(sc>0&&sc%15===0)spAdd(1);if(G2.dstorm&&sc>0){const p=DSTORM.sec+(rel(9)?10*Math.floor(sc/60):0);totalScore+=p;levelScore+=p;}} /* 1.4.9: each minute survived adds 10 a second */ /* every second still in the storm pays */
     if(G2.dstorm){v2StormStep();if(gState!=='playing')return;}
@@ -1239,9 +1239,10 @@ function v2BombStep(o,dt){
 }
 function v2Nova(){ // 💎 Supernova: everything on screen pops into the hole, then 3 s in which meteors shatter on you
   if(!G2.on||gState!=='playing'||G2.mega||gameMode==='sprint'||G2.ending)return;const N=V2K.nova;
-  if(G2.novaN>=N.max){v2Pop('SEVİYE BAŞINA EN ÇOK '+N.max,'#8fe9ff',15);v2Sfx('buzz',{vol:.25});return;}
+  if(G2.tNova!=null){if(G2.tNova<=0){toast('💥',T('TURNUVA SÜPERNOVALARIN BİTTİ'),T('Herkes eşit şartlarda yarışır'));v2Sfx('buzz',{vol:.25});return;}G2.tNova--;G2.novaN++;G2.novaT=N.imm;} /* 1.4.9: the tournament's own Supernovas, the same for everyone, no diamonds */
+  else{if(G2.novaN>=N.max){v2Pop('SEVİYE BAŞINA EN ÇOK '+N.max,'#8fe9ff',15);v2Sfx('buzz',{vol:.25});return;}
   if(diamonds<N.cost){toast('💎','ELMASIN YETMİYOR',T('Süpernova için {n} 💎 gerekli.',{n:N.cost}));v2Sfx('buzz',{vol:.25});return;}
-  diamonds-=N.cost;G2.novaN++;dmEvent('diamond',1);saveG();updateUI();G2.novaT=N.imm;
+  diamonds-=N.cost;G2.novaN++;dmEvent('diamond',1);saveG();updateUI();G2.novaT=N.imm;}
   const nb=Math.max(500,Math.round((G2.goal||v2Goal(Math.max(1,G2.lv%10?G2.lv:G2.lv-1)))*N.bonus/100)*100);totalScore+=nb;levelScore+=nb; /* worth a real slice of the goal: 15% on top of everything it swallows */
   sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.5,rate:1.4});vib([30,20,60]);v2Blast(hX,hY,true,true);if(G2.mega)G2.mega.nb=nb;v2Call('SÜPERNOVA','+'+nb.toLocaleString(LOC),'#8fe9ff',1.6,true);v2Ui(true);
 }
@@ -2011,8 +2012,8 @@ function v2Ui(force){
     const c='hb2'+(gameMode==='sprint'?' off':G2.shT>0?' on':v2ShLeft()>0?(G2.rageT>0?'':' ready'):' empty')+(inc?' pulse':'')+(sb.classList.contains('hl')?' hl':'')+(G2.tSh!=null?' tour':'');
     if(sb.className!==c)sb.className=c;const n=G2.tSh!=null?G2.tSh+'/3':SHOP.shield>0?String(SHOP.shield):monOn()&&gameMode!=='sprint'?'+':'0';if(sb._n!==n){sb._n=n;sb.querySelector('b').textContent=n;} /* empty: a plus, tapping it offers one */
     sb.style.setProperty('--p',G2.shT>0?(G2.shT/V2K.shield.dur).toFixed(3):0);}
-  const db=$('diaTop');if(db){const nv=V2K.nova,can=diamonds>=nv.cost&&(G2.novaN||0)<nv.max,late=can&&G2.hard&&G2.goal&&!G2.ending&&G2.dur-G2.t<=15&&levelScore<G2.goal&&levelScore>=G2.goal*.55; /* a hard level's closing seconds, within reach: the moment Supernova is for */
-    if(late&&!G2.novaHint){G2.novaHint=1;v2Pop(T('SÜPERNOVA HEDEFE YETİŞTİRİR'),'#8fe9ff',15);}const c='hb2 dia'+(gameMode==='sprint'?' off':G2.novaT>0?' on':can?(late?' ready pulse':' ready'):' empty')+(db.classList.contains('hl')?' hl':''),n=String(diamonds);
+  const db=$('diaTop');if(db){const nv=V2K.nova,can=G2.tNova!=null?G2.tNova>0:diamonds>=nv.cost&&(G2.novaN||0)<nv.max,late=can&&G2.hard&&G2.goal&&!G2.ending&&G2.dur-G2.t<=15&&levelScore<G2.goal&&levelScore>=G2.goal*.55; /* a hard level's closing seconds, within reach: the moment Supernova is for */
+    if(late&&!G2.novaHint){G2.novaHint=1;v2Pop(T('SÜPERNOVA HEDEFE YETİŞTİRİR'),'#8fe9ff',15);}const c='hb2 dia'+(gameMode==='sprint'?' off':G2.novaT>0?' on':can?(late?' ready pulse':' ready'):' empty')+(db.classList.contains('hl')?' hl':'')+(G2.tNova!=null?' tour':''),n=G2.tNova!=null?G2.tNova+'/'+nv.max:String(diamonds);
     if(db.className!==c)db.className=c;if(db._n!==n){db._n=n;db.querySelector('b').textContent=n;}}const rg=Math.round(G2.rage),rd=G2.ready,rt=G2.rageT>0;
   if(force||h.rg!==rg||h.rd!==rd||h.rt!==rt){h.rg=rg;h.rd=rd;h.rt=rt;const rb=$('rage2');if(rb){rb.querySelector('i').style.width=rg+'%';rb.className=rt?'on':rd?'ready':'';}}
   const left=G2.mode==='surv'?(G2.dstorm&&!rel(9)?Math.max(0,Math.ceil(DSTORM.dur-survTime)):Math.floor(survTime)):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));

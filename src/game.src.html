@@ -363,6 +363,11 @@ body.r7.v2 #boost2 .hb2{-webkit-backdrop-filter:none;backdrop-filter:none;backgr
 #boost2 .hb2 i{font-style:normal;font-family:var(--fd);font-size:8px;letter-spacing:.02em;color:#d6dcea;max-width:58px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
 #boost2 .hb2 b{position:absolute;top:-7px;right:-7px;min-width:21px;height:21px;padding:0 5px;border-radius:11px;background:#ffd84d;color:#1c1405;font-family:var(--fm);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 2px rgba(7,9,12,.9);}
 #boost2 .hb2.dia b{background:#6fd0f0;color:#04131a;}
+#mTour{position:fixed;z-index:150;background:#0c0f1e;border-color:rgba(255,215,106,.5);text-align:center;box-shadow:0 0 0 100vmax rgba(2,3,10,.72);}#mTour .trKit b span{font-size:inherit;letter-spacing:normal;color:inherit;}#mTour .trKit b .ico{width:22px;height:22px;}#mTour .trH{color:#ffd76a;}
+#mTour .trEq{font-family:var(--fd);font-size:13px;letter-spacing:.06em;color:#fff;margin:2px 0 12px;}
+#mTour .trKit{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}#mTour .trKit div{padding:10px 6px;border-radius:12px;background:rgba(255,215,106,.08);border:1px solid rgba(255,215,106,.35);}
+#mTour .trKit b{display:block;font-family:var(--fd);font-size:24px;color:#ffd76a;}#mTour .trKit span{font-size:10px;letter-spacing:.12em;color:var(--dim);}
+#mTour .trNote{font-size:12.5px;color:var(--dim);line-height:1.4;margin-bottom:10px;}#mTour .trPrize{font-family:var(--fd);font-size:13px;color:#fff;margin-bottom:6px;}#mTour .trTime{font-size:12px;color:#9fd8ff;margin-bottom:12px;}
 .hb2.tour b{right:-10px;padding:0 6px;background:linear-gradient(135deg,#ffe9a8,#f2a93b);box-shadow:0 0 8px rgba(242,169,59,.6);}.hb2.tour.empty b{background:#59606f;box-shadow:none;}#boost2 .hb2 b:empty{display:none;}#boost2 .hb2.empty b{background:#59606f;color:#fff;}
 #boost2 .hb2.ready{border-color:rgba(255,216,77,.75);}#boost2 .hb2.dia.ready{border-color:rgba(111,208,240,.8);}
 #boost2 .hb2.pulse{animation:hbPulse2 .55s ease-in-out infinite alternate;}@keyframes hbPulse2{to{transform:scale(1.08);box-shadow:0 0 0 2px rgba(255,216,77,.95),0 0 22px rgba(255,200,60,.9);}}
@@ -1103,6 +1108,16 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="logo" id="tip2T"></div>
    <p id="tip2D"></p>
    <div class="row"><button class="btn big" id="tip2Ok">ANLADIM</button></div>
+  </div>
+ <div class="modal card" id="mTour">
+   <div class="h trH">🏆 GÜNÜN TURNUVASI</div>
+   <div class="trEq">⚖️ Herkes eşit şartlarda yarışır</div>
+   <div class="trKit"><div><b>🛡 3</b><span>KALKAN</span></div><div><b>💥 2</b><span>SÜPERNOVA</span></div></div>
+   <div class="trNote">Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı.</div>
+   <div class="trPrize">🥇 1.000 ⭐ · 🥈 500 ⭐ · 🥉 250 ⭐</div>
+   <div class="trTime" id="trTime"></div>
+   <div class="row"><button class="btn big" id="trGo">BAŞLA</button></div>
+   <div class="row"><button class="btn sec" id="trBack">ANA MENÜ</button></div>
   </div>
  <div class="modal card" id="mSprint" style="border-color:rgba(63,216,232,.45);">
    <div class="h" id="spHead" style="color:var(--cyan);">GÜNLÜK YARIŞ</div>
@@ -3482,7 +3497,7 @@ function litFrom(x,y){const dx=hX-x,dy=hY-y,d=Math.hypot(dx,dy)||1;return {x:dx/
 // ══════════════════════════════════════════════════════
 // CORE GAME LOGIC
 // ══════════════════════════════════════════════════════
-const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy'];
+const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy','mTour'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
 function resetRun(full,fromSave){
@@ -4112,7 +4127,9 @@ function playFit(){requestAnimationFrame(()=>{for(const sm of $('startBtn').quer
   let f=parseFloat(getComputedStyle(sm).fontSize);while(ov()&&f>9.5){f-=.5;sm.style.fontSize=f+'px';}
   if(ov()&&sm.querySelector('.sep')){sm.classList.add('two');sm.style.fontSize='';f=parseFloat(getComputedStyle(sm).fontSize);while(ov()&&f>7){f-=.5;sm.style.fontSize=f+'px';}}}});}
 $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('survival');$('modeH').onclick=()=>selMode('hard');
-$('startBtn').onclick=()=>{if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
+function tourLeft(){const n=new Date(),e=Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()+1),m=Math.max(1,Math.ceil((e-n.getTime())/6e4));return {h:Math.floor(m/60),m:m%60};}
+function tourCard(go){const t=tourLeft();$('trTime').textContent='⏱ '+T('BİTİŞE')+' '+(t.h?t.h+' '+T('sa')+' ':'')+t.m+' '+T('dk');$('trGo').onclick=()=>{TIPS.tourDay=utcDay();saveG();hideModals();go();};$('trBack').onclick=()=>hideModals();const m=$('mTour');if(m.parentNode!==document.body)document.body.appendChild(m);showModal('mTour');sfx('click',{vol:.4});} /* 1.4.9: before the first tournament run of the day, what everyone gets and when it ends */
+$('startBtn').onclick=()=>{if(rel(9)&&gameMode==='survival'&&TIPS.tourDay!==utcDay()){tourCard(()=>$('startBtn').click());return;}if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}showLB();}; // the leaderboard shows your name: offer to set it once
 $('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');

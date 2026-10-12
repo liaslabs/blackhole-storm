@@ -1755,7 +1755,14 @@
 "TARİH": "DATUM",
 "PUAN": "PUNKTE",
 "TURNUVA": "TURNIER",
-"HERKESE {n} KALKAN": "{n} SCHILDE FÜR ALLE",
 "TURNUVA KALKANLARIN BİTTİ": "TURNIERSCHILDE AUFGEBRAUCHT",
-"Turnuvada herkes aynı kalkanlarla oynar": "Im Turnier spielen alle mit denselben Schilden"
+"Turnuvada herkes aynı kalkanlarla oynar": "Im Turnier spielen alle mit denselben Schilden",
+"GÜNÜN TURNUVASI": "TURNIER DES TAGES",
+"Herkes eşit şartlarda yarışır": "Alle treten unter gleichen Bedingungen an",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "Diamanten und eigene Schilde zählen in diesem Turnier nicht. Laborkräfte sind aus",
+"BAŞLA": "STARTEN",
+"BİTİŞE": "ENDET IN",
+"sa": "Std",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "TURNIER-SUPERNOVAS AUFGEBRAUCHT",
+"HERKES EŞİT ŞARTLARDA": "GLEICHE BEDINGUNGEN FÜR ALLE"
 }

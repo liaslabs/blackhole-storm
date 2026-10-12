@@ -1755,7 +1755,14 @@
 "TARİH": "DATE",
 "PUAN": "SCORE",
 "TURNUVA": "TOURNOI",
-"HERKESE {n} KALKAN": "{n} BOUCLIERS POUR TOUS",
 "TURNUVA KALKANLARIN BİTTİ": "BOUCLIERS DU TOURNOI ÉPUISÉS",
-"Turnuvada herkes aynı kalkanlarla oynar": "Dans le tournoi, tout le monde joue avec les mêmes boucliers"
+"Turnuvada herkes aynı kalkanlarla oynar": "Dans le tournoi, tout le monde joue avec les mêmes boucliers",
+"GÜNÜN TURNUVASI": "TOURNOI DU JOUR",
+"Herkes eşit şartlarda yarışır": "Tout le monde joue à armes égales",
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Laboratuvar güçleri kapalı": "Les diamants et tes propres boucliers ne servent pas dans ce tournoi. Les pouvoirs du labo sont désactivés",
+"BAŞLA": "COMMENCER",
+"BİTİŞE": "FIN DANS",
+"sa": "h",
+"TURNUVA SÜPERNOVALARIN BİTTİ": "SUPERNOVAS DU TOURNOI ÉPUISÉES",
+"HERKES EŞİT ŞARTLARDA": "À ARMES ÉGALES"
 }
