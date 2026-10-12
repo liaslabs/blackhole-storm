@@ -2083,7 +2083,7 @@ function zonePlanetCell(){const pool=(ZONES[Math.max(0,curZone)]||{}).pool||PCEL
 // ══════════════════════════════════════════════════════
 const fx=$('fx'),ctx=fx.getContext('2d');
 let FXLITE=false; // a phone that proved slow drops the canvas glows: every shadowBlur is a separate blur pass on the GPU
-{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(ctx,'shadowBlur',{get(){return d.get.call(ctx);},set(v){d.set.call(ctx,FXLITE?0:v);}});}
+{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(ctx,'shadowBlur',{get(){return d.get.call(ctx);},set(v){d.set.call(ctx,FXLITE||typeof G2!=='undefined'&&G2.on&&G2.fxBusy?0:v);}});}
 let W=300,H=300,DPR=1;
 let hX=150,hY=150,hBaseX=150,hBaseY=150,hWanderT=0,hWpTimer=0,hAmp={x:0,y:0};
 const WP_INT=4.0;
@@ -3767,10 +3767,10 @@ addEventListener('popstate',()=>{
 // ══════════════════════════════════════════════════════
 // MAIN LOOP
 // ══════════════════════════════════════════════════════
-let fpsAcc=0,fpsN=0,fpsCheck=0;
-function adaptQuality(dt){ // drop resolution only while frames are slow; climb back when they recover
-  fpsAcc+=dt;fpsN++;fpsCheck+=dt;if(fpsCheck<2)return;const avg=fpsAcc/fpsN;fpsAcc=0;fpsN=0;fpsCheck=0;
-  if(avg>.022&&(GL.quality>.5||!FXLITE)){if(!FXLITE)FXLITE=true;else{GL.quality=Math.max(.5,GL.quality-.15);glResize();}GL.good=0;} /* first the glows go (free, no resize), then the resolution */ // one firm step down instead of many small ones: every resize is itself a hitch
+let fpsAcc=0,fpsN=0,fpsCheck=0,fpsLong=0;
+function adaptQuality(dt,raw){ // drop resolution only while frames are slow; climb back when they recover
+  fpsAcc+=dt;fpsN++;fpsCheck+=dt;if(rel(9)&&raw>.05&&raw<1&&gState==='playing')fpsLong++;if(fpsCheck<2)return;const avg=fpsAcc/fpsN,lg=fpsLong;fpsAcc=0;fpsN=0;fpsCheck=0;fpsLong=0;
+  if((avg>.022||lg>=3)&&(GL.quality>.5||!FXLITE)){if(!FXLITE)FXLITE=true;else{GL.quality=Math.max(.5,GL.quality-.15);glResize();}GL.good=0;} /* first the glows go (free, no resize), then the resolution */ // one firm step down instead of many small ones: every resize is itself a hitch
   else if(avg<.0175&&(GL.quality<1||FXLITE)){if(++GL.good>=8&&gState!=='playing'){if(GL.quality<1){GL.quality=Math.min(1,GL.quality+.1);glResize();}else FXLITE=false;GL.good=0;}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
 }
 let sMapEl=null,sMenuEl=null;
@@ -3825,8 +3825,8 @@ function loop(ts){
   lagWatch(ts);
   if(fcap(LOOPF,ts)){requestAnimationFrame(loop);return;}
   if((sMapEl||(sMapEl=$('sMap'))).classList.contains('on')||(!G2.on&&!cols.length&&(sMenuEl||(sMenuEl=$('sMenu'))).classList.contains('on'))){lastT=ts;requestAnimationFrame(loop);return;} // the level map is opaque and full screen: skip drawing the hidden scene
-  let dt=(ts-lastT)/1000;lastT=ts;if(!(dt>0)||dt>.1)dt=1/60;
-  adaptQuality(dt);
+  let dt=(ts-lastT)/1000;lastT=ts;const raw=dt;if(!(dt>0)||dt>.1)dt=1/60;
+  adaptQuality(dt,raw); /* raw: a 150 ms frame used to reach the quality guard as 16 ms */
   if(G2.on){v2Frame(dt);requestAnimationFrame(loop);return;}
   // outside play (menus, cards): the hole idles behind the panels
   clock+=dt;const f=dt*60;

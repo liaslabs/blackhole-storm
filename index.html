@@ -2395,7 +2395,7 @@ function zonePlanetCell(){const pool=(ZONES[Math.max(0,curZone)]||{}).pool||PCEL
 // ══════════════════════════════════════════════════════
 const fx=$('fx'),ctx=fx.getContext('2d');
 let FXLITE=false; // a phone that proved slow drops the canvas glows: every shadowBlur is a separate blur pass on the GPU
-{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(ctx,'shadowBlur',{get(){return d.get.call(ctx);},set(v){d.set.call(ctx,FXLITE?0:v);}});}
+{const d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'shadowBlur');if(d&&d.set)Object.defineProperty(ctx,'shadowBlur',{get(){return d.get.call(ctx);},set(v){d.set.call(ctx,FXLITE||typeof G2!=='undefined'&&G2.on&&G2.fxBusy?0:v);}});}
 let W=300,H=300,DPR=1;
 let hX=150,hY=150,hBaseX=150,hBaseY=150,hWanderT=0,hWpTimer=0,hAmp={x:0,y:0};
 const WP_INT=4.0;
@@ -4079,10 +4079,10 @@ addEventListener('popstate',()=>{
 // ══════════════════════════════════════════════════════
 // MAIN LOOP
 // ══════════════════════════════════════════════════════
-let fpsAcc=0,fpsN=0,fpsCheck=0;
-function adaptQuality(dt){ // drop resolution only while frames are slow; climb back when they recover
-  fpsAcc+=dt;fpsN++;fpsCheck+=dt;if(fpsCheck<2)return;const avg=fpsAcc/fpsN;fpsAcc=0;fpsN=0;fpsCheck=0;
-  if(avg>.022&&(GL.quality>.5||!FXLITE)){if(!FXLITE)FXLITE=true;else{GL.quality=Math.max(.5,GL.quality-.15);glResize();}GL.good=0;} /* first the glows go (free, no resize), then the resolution */ // one firm step down instead of many small ones: every resize is itself a hitch
+let fpsAcc=0,fpsN=0,fpsCheck=0,fpsLong=0;
+function adaptQuality(dt,raw){ // drop resolution only while frames are slow; climb back when they recover
+  fpsAcc+=dt;fpsN++;fpsCheck+=dt;if(rel(9)&&raw>.05&&raw<1&&gState==='playing')fpsLong++;if(fpsCheck<2)return;const avg=fpsAcc/fpsN,lg=fpsLong;fpsAcc=0;fpsN=0;fpsCheck=0;fpsLong=0;
+  if((avg>.022||lg>=3)&&(GL.quality>.5||!FXLITE)){if(!FXLITE)FXLITE=true;else{GL.quality=Math.max(.5,GL.quality-.15);glResize();}GL.good=0;} /* first the glows go (free, no resize), then the resolution */ // one firm step down instead of many small ones: every resize is itself a hitch
   else if(avg<.0175&&(GL.quality<1||FXLITE)){if(++GL.good>=8&&gState!=='playing'){if(GL.quality<1){GL.quality=Math.min(1,GL.quality+.1);glResize();}else FXLITE=false;GL.good=0;}}else GL.good=0; /* climbing back waits for a calm stretch and never happens mid-level, so quality does not see-saw */
 }
 let sMapEl=null,sMenuEl=null;
@@ -4137,8 +4137,8 @@ function loop(ts){
   lagWatch(ts);
   if(fcap(LOOPF,ts)){requestAnimationFrame(loop);return;}
   if((sMapEl||(sMapEl=$('sMap'))).classList.contains('on')||(!G2.on&&!cols.length&&(sMenuEl||(sMenuEl=$('sMenu'))).classList.contains('on'))){lastT=ts;requestAnimationFrame(loop);return;} // the level map is opaque and full screen: skip drawing the hidden scene
-  let dt=(ts-lastT)/1000;lastT=ts;if(!(dt>0)||dt>.1)dt=1/60;
-  adaptQuality(dt);
+  let dt=(ts-lastT)/1000;lastT=ts;const raw=dt;if(!(dt>0)||dt>.1)dt=1/60;
+  adaptQuality(dt,raw); /* raw: a 150 ms frame used to reach the quality guard as 16 ms */
   if(G2.on){v2Frame(dt);requestAnimationFrame(loop);return;}
   // outside play (menus, cards): the hole idles behind the panels
   clock+=dt;const f=dt*60;
@@ -4341,7 +4341,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');try{adsDrop(
   G2.garcT=0;G2.garcFx=null;G2.dep=null;G2.ash=[];G2.mbits=[];G2.garcAt=rel(9)&&mode==='level'&&!REPLAY&&l>=GARC.from&&l%10!==0&&!(rule&&(rule.duel||rule.guard))&&rng()<(G2.forceGarc?1:GARC.p)?rrnd(12,35):-1; /* help after misses or a win streak brings the arcs back for the first 20 s */
   if(rule&&rule.guard)G2.guard={n:0,hp:100,t:rule.dur,dur:rule.dur,dmg:rule.dmg,next:3};
   if(mod){const c=RISK_CARDS.find(x=>x.id===mod);if(c)later(()=>{if(G2.on)v2Call(c.n,c.d+' · '+T('Ödül')+': '+giftTxt(c.rw),'#ffb3a8',2,true);},700);} /* the chosen card, said once at the start instead of a label that stays */
-  G2.sigBack=null;G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
+  G2.sigBack=null;G2.fxBusy=false;G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
   G2.hard=mode==='level'&&!mod?v2Hard(l)||(G2.hm&&rel(9)&&v2HmT(l)?1:0):0;G2.novaHint=0;G2.shHint=0;G2.hkHint=0;
   if(G2.hard){G2.dur=v2HardT(l)||HARD.t[1];if(v2Hard(l))G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1); /* Hard Mode's own timer brings no extra meteors: it has its own */if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
     later(()=>{if(G2.on&&G2.hard)v2Call(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE',Math.round(G2.dur)+' sn','#ff5a5f',1.8,true);},600);if(!TIPS.hard)later(()=>{if(G2.on&&G2.hard)v2Tip('hard',null);},2600);}
@@ -4413,7 +4413,7 @@ function v2Tap(){if(G2.ready&&G2.rageT<=0)v2RageGo();}
 // ── feedback helpers ──────────────────────────────────
 const SFX2={};let sfx2n=[];
 function v2Sfx(n,o){const now=performance.now();if(now-(SFX2[n]||0)<45)return;sfx2n=sfx2n.filter(t=>now-t<220);if(sfx2n.length>=8)return;SFX2[n]=now;sfx2n.push(now);sfx(n,o);}
-function v2Burst(x,y,n,col,s0,s1,life=.5,sz=1.8){
+function v2Burst(x,y,n,col,s0,s1,life=.5,sz=1.8){if(rel(9)&&(G2.fxBusy||FXLITE))n=Math.ceil(n*.5); /* half the sparks on a busy screen */
   const P=G2.parts;for(let i=0;i<n;i++){if(P.length>=150)P.shift();const a=rnd(0,TAU),s=rnd(s0,s1);P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life,max:life,c:col,sz});}
 }
 function v2Pop(txt,col,sz=18){ftexts.push(new FText(txt,hX+rnd(-8,8),hY-G2.R-sp2(26)-rnd(0,14),col,sz));if(ftexts.length>14)ftexts.shift();}
@@ -4458,7 +4458,7 @@ function v2Spawn(){
   if(k==='magnet'&&(G2.magT>0||G2.objs.some(o=>o.k==='magnet')))k='ast';if(k==='dark'&&G2.objs.filter(o=>o.k==='dark').length>=3)k='ast';
   if(k==='time'&&(G2.timeT>0||G2.objs.some(o=>o.k==='time')))k='ast';
   if(k==='ast'&&rng()<(G2.L.dense?.55:.3)){ // a line of small rocks: combo fodder (1.4.8: often a shower of 6–8)
-    const n=G2.L.dense?rpick(rel(9)?[5,6,7]:[3,4,5]):rel(9)&&l>=2&&rng()<.45?rpick([6,7,8]):3,x=rrnd(W*.2,W*.8),gap=sp2(32);for(let i=0;i<n;i++){const o=v2Edge('ast',0,clamp(x+(i-(n-1)/2)*gap,sp2(20),W-sp2(20)));o.y-=Math.abs(i-(n-1)/2)*sp2(21);}return;}
+    let n=G2.L.dense?rpick(rel(9)?[5,6,7]:[3,4,5]):rel(9)&&l>=2&&rng()<.45?rpick([6,7,8]):3;if(rel(9))n=Math.max(1,Math.min(n,(G2.L.cap||12)-v2Active())); /* the shower fits under the cap: 8 rocks in one frame on a full screen made the hitches */const x=rrnd(W*.2,W*.8),gap=sp2(32);for(let i=0;i<n;i++){const o=v2Edge('ast',0,clamp(x+(i-(n-1)/2)*gap,sp2(20),W-sp2(20)));o.y-=Math.abs(i-(n-1)/2)*sp2(21);}return;}
   const o=v2Edge(k);
   if(k==='crystal'&&l>=3&&!G2.guard&&!v2RadAct()&&rng()<.45){ // risk/reward: the crystal rides next to a meteor
     const side=o.x<W/2?1:-1,m=v2Obj('meteor',o.x+side*sp2(45),o.y-sp2(14),o.vx*.9,Math.max(o.vy,v2Speed('meteor')*.7),{wait:.9});}
@@ -5787,6 +5787,7 @@ function v2DrawBits(dt){const B=G2.mbits;if(!B||!B.length)return;const mv=gState
 // ── drawing ───────────────────────────────────────────
 function v2Frame(dt){
   const f=dt*60;clock+=dt;
+  if(rel(9)){let n=0;for(const o of G2.objs)if(o.st==='in')n++;G2.fxBusy=G2.fxBusy?n>8:n>11;} /* 1.4.9: a full screen (12+ bodies) skips the blur passes until it thins out (8) */
   heat=Math.max(G2.rageT>0?.55:Math.min(.4,G2.combo*.02),heat-dt*.8);shock=Math.max(0,shock-dt*1.6);flash=Math.max(0,flash-dt*1.4);
   if(gState==='playing'){if(G2.mega)v2MegaStep(dt);else if(G2.freeze>0)G2.freeze-=dt;else v2Update(dt);}
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
@@ -6072,8 +6073,8 @@ function v2DrawSat(o){const a=o.sa,d=o.r*1.9,x=o.x+Math.cos(a)*d,y=o.y+Math.sin(
   const g=ctx.createRadialGradient(x-r*.35,y-r*.35,0,x,y,r);g.addColorStop(0,'#f2f2ee');g.addColorStop(1,'#6f7078');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();ctx.restore();}
 function v2DrawCracks(o){ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const r=o.r,k=.7+.3*Math.sin(clock*6);
   if(o.k==='half'&&rel(8)){if(o.crk>0)o.crk-=1/60;const R=r*(o.gs??1),sd=o.seed||0,j=t=>.07*Math.sin(t*13+sd)+.045*Math.sin(t*29+sd*2.3)+.03*Math.sin(t*53+sd*.7);ctx.rotate((o.cut||0)+(o.spinA||0));
-    if(rel(9)){const cx=-.42*R,P=new Path2D();let a0=0,a1=0;for(let i=0;i<=16;i++){const v=-1+i/8,s=j(-v),x=cx+s*R,y=v*R*Math.sqrt(Math.max(0,1-s*s));i?P.lineTo(x,y):P.moveTo(x,y);if(!i)a0=Math.atan2(y,x-cx);if(i===16)a1=Math.atan2(y,x-cx);}P.arc(cx,0,R,a1,a0,true);P.closePath(); /* 1.4.9: the half's own outline: the jagged fracture and the rim */
-      const f=.8+.2*Math.sin(clock*9+sd)*Math.sin(clock*23+sd*1.7);ctx.lineJoin='round';for(const [w,c] of [[9,.1],[5,.22],[2.4,.85]]){ctx.lineWidth=w;ctx.strokeStyle=`rgba(255,40,70,${c*f})`;ctx.stroke(P);}ctx.lineWidth=1;ctx.strokeStyle=`rgba(255,215,220,${.8*f})`;ctx.stroke(P);} /* red neon with a low buzz: soft wide strokes for the glow instead of a blur filter, cheap on slow phones */
+    if(rel(9)){if(!o.np||Math.abs(o.npR-R)>.5){const cx=-.42*R,P=new Path2D();let a0=0,a1=0;for(let i=0;i<=16;i++){const v=-1+i/8,s=j(-v),x=cx+s*R,y=v*R*Math.sqrt(Math.max(0,1-s*s));i?P.lineTo(x,y):P.moveTo(x,y);if(!i)a0=Math.atan2(y,x-cx);if(i===16)a1=Math.atan2(y,x-cx);}P.arc(cx,0,R,a1,a0,true);P.closePath();o.np=P;o.npR=R;} /* 1.4.9: the half's own outline (the jagged fracture and the rim), built once per half */
+      const P=o.np,f=.8+.2*Math.sin(clock*9+sd)*Math.sin(clock*23+sd*1.7);ctx.lineJoin='round';if(!FXLITE&&!G2.fxBusy){ctx.lineWidth=7;ctx.strokeStyle=`rgba(255,40,70,${.17*f})`;ctx.stroke(P);}ctx.lineWidth=2.4;ctx.strokeStyle=`rgba(255,70,95,${.9*f})`;ctx.stroke(P);} /* two strokes (one on a busy screen or a slow phone) instead of four */ /* red neon with a low buzz: soft wide strokes for the glow instead of a blur filter, cheap on slow phones */
     else{const b=Math.abs(Math.sin(clock*7));ctx.strokeStyle=`rgba(120,235,255,${.25+.6*b})`;ctx.shadowColor='#6fe8ff';ctx.shadowBlur=12;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,r*(1.22+.1*b),0,TAU);ctx.stroke();ctx.shadowBlur=0;}
     if(o.crk>0){const q=o.crk/.4;ctx.strokeStyle=`rgba(255,255,255,${q})`;ctx.shadowColor='#bff6ff';ctx.shadowBlur=16;ctx.lineWidth=2.5;ctx.beginPath();for(let i=0;i<=16;i++){const v=-1+i/8,x=(j(-v)-.42)*R,y=v*R*.98;i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();} /* the fresh fracture flashes white for a moment */
     ctx.restore();return;}
