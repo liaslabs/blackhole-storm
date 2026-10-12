@@ -17,10 +17,10 @@ Her güncellemede:
 | 1.4.6 | 13 | 8 Eki | Yayında (8 Eki 11:55 onaylandı; öne alındı: 1.4.5'teki başlık çubuğu hatası; main ffcbfba) |
 | 1.4.7 | 18 | 9 Eki | Yayında (9 Eki 16:04 onaylandı; main c4a0c5b). 15:41'de Alpha incelemesine gönderildi (Dahili test'te kod 18: reklamsız ve reklamlı oturumda takılma raporu yok). Öne alındı (testçiler takılma bildirdi). Kod 14 Dahili test'te denendi (reklam ve üst bar sorunsuz, hassasiyet fazla geldi); kod 15 = yumuşak hassasiyet (kullanılmadı); kod 16 = yumuşak hassasiyet + ayrıntılı takılma raporu (raporlar ve uçak modu testi: takılma önceden yüklenmiş reklamdan); kod 17 = oyun sırasında hazırda reklam yok + kalkan nabzı (takılma sürdü, held0); kod 18 = reklam kütüphanesi ihtiyaç anında başlar + ana iş parçacığı bekçisi. Önce Dahili test, sonra Alpha |
 | 1.4.8 | 21 | 12 Eki | **Yayında** (12 Eki 06:25 onaylandı; 06:02'de Play API ile Alpha incelemesine gönderildi). `REL` 8: düzeltmeler, görsel ve takılma (zorluk 1.4.7 ile aynı). Kod 19 (10 Eki) Dahili test'te denendi; kod 20 = 19 + REKORLARIM sekmesi açılır (`bhs-v54`); kod 21 = 20 + her modun 1. satırı görünür (`bhs-v55`), Alpha'ya bu gider |
-| 1.4.9 | 23 | 16 Eki | **Dahili test'te kod 23** (12 Eki): kod 22 + takılma düzeltmeleri (sağanak sınırı, neon yarımlar, kalabalıkta gölge yok, kalite koruması uzun kareleri görür), risk kartında ✕, bölge notu kartı bekler. Kod 22 (12 Eki 12:07, `blackhole` 8346407) telefonda 111–112. seviyelerde takıldı. `REL` 9 (`bhs-v56`): zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
-| 1.5.0 | 24 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
-| 1.5.1 | 25 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
-| 1.5.2 | 26 | 1.5.1'den sonra | Dil değişimi: Japonca eklenir, Kürtçe kalkar (oyun yine 10 dil). Play Console'da ja-JP mağaza sayfası bu sürüm üretime çıkarken açılır |
+| 1.4.9 | 24 | 16 Eki | **Dahili test'te kod 24** (12 Eki): kod 23 + rekor ekranı (tarih, combo, sıra), koruyucuda parmak takılması düzeltmesi, varsayılan hız 1,45, harita penceresi, mod renkleri ve TURNUVA rozeti (`bhs-v58`). Kod 23 telefonda akıcıydı (rapor yok). Kod 23 (12 Eki): kod 22 + takılma düzeltmeleri (sağanak sınırı, neon yarımlar, kalabalıkta gölge yok, kalite koruması uzun kareleri görür), risk kartında ✕, bölge notu kartı bekler. Kod 22 (12 Eki 12:07, `blackhole` 8346407) telefonda 111–112. seviyelerde takıldı. `REL` 9 (`bhs-v56`): zorluk güncellemesi, koruyucu titreme düzeltmesi, yarımlara neon. 12–15 Eki Dahili test'te ayar, 16 Eki Alpha |
+| 1.5.0 | 25 | 19 Eki → üretim | **Gerçek yayın sürümü.** `rel(10)` ile kapalı: derinlik katmanları, ateş topu meteorlar. 17–18 Eki Dahili test, 19 Eki Alpha, 20 Eki üretim başvurusu, onaydan sonra aynı derleme üretime |
+| 1.5.1 | 26 | üretimden ~1 hafta sonra | Android bakım güncellemesi (R8, AGP 9.0, uçtan uca ekran); ilk herkese açık sürüme derleme riski taşımamak için ayrı |
+| 1.5.2 | 27 | 1.5.1'den sonra | Dil değişimi: Japonca eklenir, Kürtçe kalkar (oyun yine 10 dil). Play Console'da ja-JP mağaza sayfası bu sürüm üretime çıkarken açılır |
 
 ## 1.4.5 (7 Ekim)
 - Koruyucu seviyeleri: gezegen son kalpte düşünce elmasla/yıldızla devam etmek görevi baştan başlatıyordu; artık kaldığı süreden sürüyor.
@@ -112,19 +112,25 @@ Her güncellemede:
 - Ses (düzeltme): bazı tarayıcılar ses kartının örnekleme hızını farklı bildirince (48000 / 44100 Hz) yankı efekti hata veriyor ve oyunun açılışı yarıda kalıyordu (11 Eki, web, bhs-v55 raporu). Artık o durumda sadece yankı kapanır.
 - Kilonova altınları (düzeltme): düşecekleri yerler karadeliğin çekim alanının dışından seçilir (önceden sadece kenarından 50 px uzakta tutuluyordu; büyük karadelik yakına düşenleri kendiliğinden çekip yutuyordu). Altını artık oyuncu gidip toplar; ekranda yer yoksa en uzak noktalar.
 - Bölünen gezegen: mavi halka yerine yarımın kendi çizgisini (yay + kırık kenar) izleyen titrek kırmızı neon; kırık yüzün kenar ışığı da kırmızı (`onizleme/neon-yarim.png`). Parıltı bulanıklık filtresi değil, üst üste çizgi (zayıf telefonda takılma yapmaz).
+- Kod 24 (12 Eki, telefon testinden sonra):
+  - REKORLARIM: "7.10" gibi tarihler combo çarpanı sanılıyordu; tarih artık ayıyla yazar (📅 7 Eki). Her mod kendi tablosu (mod adı · 🔥 COMBO · PUAN başlığı, aralarında ayraç çizgisi), madalyaların yanında 1. 2. 3., her rekorun o oyundaki en iyi combosu, eski rekorlarda "–". Üstte tüm zamanların en iyi combosu ayrı kutuda (rekor puanla aynı oyunda olmayabilir; combo büyüdüğü anda kaydedilir). Üstteki dört kutu biraz inceldi.
+  - Koruyucu seviyeleri: 1.4.9'daki titreme düzeltmesi parmağın kendi konumunu da atmosfer kenarına çekiyordu, kontrol yapışkan geliyordu. Artık sadece karadeliğin hedefi durur, parmak serbest; gezegenin üstünden geçen kaydırma deliği öbür yana taşır (deneme: eski halde parmak kenarda kaldı, yenide karşıya geçti). Titreme düzeltmesi yerinde.
+  - Kademeli hassasiyet: varsayılan ayarda hızlı kaydırmada en fazla 1,45 kat (önceden 1,25); yavaş hareket yine 1:1, diğer iki ayar aynı.
+  - Ana menü: HARİTA düğmesi bulunulan bölgenin gökyüzünü gösteren geniş bir pencere oldu (yavaş kayan bölge fotoğrafı, bölge adı ve 3/10 ilerleme, çevredeki 6 seviyelik yol: geçilenler, avatar, ilerideki zor, boss ve yeni cisim seviyeleri). Menüde WebGL yok; hareketi azalt ayarında durur.
+  - Mod kara delikleri: Zor kızıl, Hayatta Kal zehir yeşili (kurukafa gözleri dahil), Normal aynı; Hayatta Kal köşesinde altın 🏆 TURNUVA rozeti (Günün Fırtınası orada yarışılır).
 - Hedef (12 Eki düzeltme): çoğu seviye rahat geçilir, seyrek zirve seviyeleri zordur; en zorları bile 8–10 denemede geçilebilmeli, oynanamaz olmamalı. Bot (seviye başına 3 oyun): Normal 29/51 normal seviye (1.4.8: 30/51), 10/54 zirve (21/54), önerilen Laboratuvarla zirve 14/54; Zor Mod 10/51 ve 4/54 (1.4.8: 18/51, 15/54); Günlük Yarış 3/10 koşu 60 sn'yi tamamlar (5/10). 12–15 Ekim Dahili test'te kendi telefonda ayarlanacak.
 
 ```
 <en-US>
 • A fuller screen from the first level: more to swallow
-• Peak levels: hard levels and bosses start with one arc fewer
-• Very rare Golden Arc: for 10 s you swallow everything, even meteors
+• Peak levels start with one arc fewer
+• Very rare Golden Arc: swallow everything for 10 s
 • Hard Mode is truly hard; the Daily Race is faster
-• Survival is endless, and from minute 4 the Black Storm takes over
-• A cleaner level-complete screen
-• Split planet halves glow with a red neon edge
-• Fix: no more flicker at guarded planets
-• Kilonova gold lands outside your pull: go and collect it
+• Endless Survival, with the Black Storm from minute 4
+• A map window on the menu and new mode colours
+• Records show dates, ranks and your best combo
+• Snappier swipes; smoother control at guarded planets
+• Kilonova gold lands outside your pull
 </en-US>
 ```
 
