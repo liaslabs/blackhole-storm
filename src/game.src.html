@@ -940,7 +940,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .gfb.bad .bh{width:44%;aspect-ratio:1;border-radius:50%;background:#000;box-shadow:0 0 0 2px rgba(255,190,150,.85),0 0 18px 6px rgba(255,90,60,.55);}
 .gfb.bad small{font-size:9.5px;letter-spacing:.1em;color:#ff9a8a;}
 .gfb.peek{opacity:.42;animation:none;}
-#mRisk{width:min(94%,380px);position:fixed;z-index:160;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
+#mRisk .rkX{position:absolute;top:10px;right:10px;z-index:2;}#mRisk{width:min(94%,380px);position:fixed;z-index:160;background:#0d1017;box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}
 .rkH{color:#ffb38a;text-align:center;letter-spacing:.12em;}
 .rkc{display:grid;grid-template-columns:44px 1fr;grid-template-rows:auto auto auto;column-gap:10px;width:100%;text-align:start;margin:0 0 8px;padding:10px 12px;border-radius:10px;border:1.5px solid rgba(255,150,100,.55);background:linear-gradient(90deg,rgba(255,120,70,.12),rgba(14,16,24,.9));color:var(--ink);font:inherit;cursor:pointer;}
 .rkc:active{transform:scale(.98);}.rkc i .ico{width:32px;height:32px;}.rkc i{grid-row:1/4;font-style:normal;font-size:30px;align-self:center;text-align:center;}
@@ -1039,6 +1039,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row"><button class="btn big" id="gfTake" hidden>HEMEN AL</button></div>
   </div>
   <div class="modal card" id="mRisk">
+   <button class="shX rkX" id="rkX" aria-label="Kapat">✕</button>
    <div class="h rkH">🃏 RİSK KARTI</div>
    <p class="gfTxt">Bir kart seç: seviye zorlaşır ama bitirirsen ekstra ödül alırsın.</p>
    <div id="rkList"></div>
@@ -3288,6 +3289,7 @@ function showRisk(done){let h=Math.imul(level,2246822519)>>>0;const pool=RISK_CA
   $('rkList').innerHTML=pick.map(c=>`<button class="rkc" data-rk="${c.id}"><i>${c.ic}</i><b>${c.n}</b><span>${c.d}</span><em>${T('Ödül')}: ${giftTxt(c.rw)}</em></button>`).join('');
   $('rkList').querySelectorAll('[data-rk]').forEach(b=>b.onclick=e=>{e.stopPropagation();RISK.mod=b.dataset.rk;sfx('powerup',{vol:.5});hideModals();done();});
   $('rkNone').onclick=e=>{e.stopPropagation();RISK.mod=null;sfx('click',{vol:.4});hideModals();done();};
+  $('rkX').onclick=e=>{e.stopPropagation();RISK.lv=0;RISK.mod=null;sfx('click',{vol:.4});hideModals();showMenu();}; /* back to the menu without playing; the card is offered again next time */
   showModal('mRisk');gState='menu';sfx('bell',{vol:.5});}
 function giftDue(){if(HMODE||DEV)return 0;const m=Math.floor((Math.max(1,savedLevel,level)-1)/20)*20;const l=gameMode==='classic'&&!REPLAY&&level%20===0?level:m;return l>=20&&(SHOP.giftLv|0)<l?l:0;}
 function giftTxt(g){const p=[];if(g.stars)p.push(`⭐ ${g.stars}`);if(g.gems)p.push(`💎 ${g.gems}`);if(g.shield)p.push(`🛡 ${g.shield}`);if(g.boost)p.push(`⏩ ${labMin(g.boost)}`);return p.join(' · ');}
@@ -3503,7 +3505,7 @@ function levelSuccess(){
 const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek KUSURSUZ KAÇIŞ verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle. Radyasyon seni küçültür.'],
   prey:['🎯','AV KAÇTI','Avın kabuğunu kırmak için ona hızla çarp: hızlı çarpış 2–3 parça birden kırar. Süresi bitmeden 10 parçayı kır.'],anti:['⚛️','ANTİMADDE','Macenta halkalı, ortasında beyaz çizgi olan cismi yutma: kara deliğini küçültür.'],guard:['🛡','GEZEGEN YOK OLDU','Kırmızı çizgili asteroitleri gezegene varmadan yut. Gelen asteroitlerin yolunda, gezegenin önünde dur. Her yakaladığın gezegenin canını artırır.'],time:['⏱','SÜRE DOLDU','Zor seviyelerde süre sınırlı. Son saniyelerde 💎 Süpernova hedefin %15’ini hemen verir; uzun combo zinciri puanı katlar.'],rival:['🌑','RAKİP SENİ ISIRDI','Rakip kırmızıyken ondan uzak dur ve hızlı büyü. Maviye dönünce kaçar: o an yakala.']};
 // A short radio note over the field: zone arrivals and boss warnings (never pauses the game)
-function sigShow(h,txt,sec=5){const e=$('sig2');if(!e)return;$('sigH').textContent=h;const tt=$('sigT');tt.textContent='';e.classList.add('on');let i=0;clearInterval(e._i);clearTimeout(e._t);
+function sigShow(h,txt,sec=5){const e=$('sig2');if(!e)return;e._a=[h,txt,sec];$('sigH').textContent=h;const tt=$('sigT');tt.textContent='';e.classList.add('on');let i=0;clearInterval(e._i);clearTimeout(e._t);
   e._i=setInterval(()=>{i+=2;tt.textContent=txt.slice(0,i);if(i>=txt.length)clearInterval(e._i);},28);e._t=setTimeout(()=>e.classList.remove('on'),sec*1000);}
 function showCont(){
   if(EXPRUN){expFail();return;}$('contMsg').hidden=false;['contDia','contYes','contRetry','contNo'].forEach(id=>$(id).parentNode.classList.remove('half'));
