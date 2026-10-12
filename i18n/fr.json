@@ -1746,10 +1746,10 @@
 "GÜMÜŞ KABUKLA BAŞLA": "COMMENCE AVEC UNE COQUE D'ARGENT",
 "İlk darbeyi kabuk karşılar": "La coque encaisse le premier coup",
 "+{n} YAY": "+{n} ARC",
-"{n} erken bitir": "termine {n} plus tôt",
 "SÜRE HAKKIN": "ACCÉLÉRATION",
 "hemen bitir": "terminer",
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Pas assez d'accélération pour terminer : il manque {n}",
 "süre hakkı": "accélération",
-"{n} sürer": "dure {n}"
+"{n} sürer": "dure {n}",
+"{n} hızlandır": "accélère de {n}"
 }

@@ -1746,10 +1746,10 @@
 "GÜMÜŞ KABUKLA BAŞLA": "НАЧАТЬ С СЕРЕБРЯНОЙ ОБОЛОЧКОЙ",
 "İlk darbeyi kabuk karşılar": "Оболочка принимает первый удар",
 "+{n} YAY": "+{n} ДУГА",
-"{n} erken bitir": "на {n} раньше",
 "SÜRE HAKKIN": "УСКОРЕНИЕ",
 "hemen bitir": "завершить",
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Ускорения не хватает, чтобы завершить сейчас: нужно ещё {n}",
 "süre hakkı": "ускорение",
-"{n} sürer": "займёт {n}"
+"{n} sürer": "займёт {n}",
+"{n} hızlandır": "ускорить на {n}"
 }

@@ -1746,10 +1746,10 @@
 "GÜMÜŞ KABUKLA BAŞLA": "ابدأ بدرع فضي",
 "İlk darbeyi kabuk karşılar": "الدرع يتلقى الضربة الأولى",
 "+{n} YAY": "+{n} قوس",
-"{n} erken bitir": "أنهِ قبل {n}",
 "SÜRE HAKKIN": "التسريع",
 "hemen bitir": "أنهِ الآن",
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "وقت التسريع لا يكفي للإنهاء الآن: يلزم {n} أخرى",
 "süre hakkı": "تسريع",
-"{n} sürer": "يستغرق {n}"
+"{n} sürer": "يستغرق {n}",
+"{n} hızlandır": "سرّع {n}"
 }

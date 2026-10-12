@@ -1746,10 +1746,10 @@
 "GÜMÜŞ KABUKLA BAŞLA": "MULAI DENGAN CANGKANG PERAK",
 "İlk darbeyi kabuk karşılar": "Cangkang menahan pukulan pertama",
 "+{n} YAY": "+{n} BUSUR",
-"{n} erken bitir": "selesai {n} lebih cepat",
 "SÜRE HAKKIN": "PERCEPATAN",
 "hemen bitir": "selesaikan",
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Waktu percepatan tidak cukup untuk selesai sekarang: perlu {n} lagi",
 "süre hakkı": "percepatan",
-"{n} sürer": "butuh {n}"
+"{n} sürer": "butuh {n}",
+"{n} hızlandır": "percepat {n}"
 }

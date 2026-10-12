@@ -1746,10 +1746,10 @@
 "GÜMÜŞ KABUKLA BAŞLA": "EMPIEZA CON CAPA DE PLATA",
 "İlk darbeyi kabuk karşılar": "La capa aguanta el primer golpe",
 "+{n} YAY": "+{n} ARCO",
-"{n} erken bitir": "termina {n} antes",
 "SÜRE HAKKIN": "ACELERACIÓN",
 "hemen bitir": "terminar ya",
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "No tienes aceleración para terminar ya: faltan {n}",
 "süre hakkı": "aceleración",
-"{n} sürer": "tarda {n}"
+"{n} sürer": "tarda {n}",
+"{n} hızlandır": "acelera {n}"
 }
