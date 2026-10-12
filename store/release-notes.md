@@ -161,7 +161,7 @@ Her güncellemede:
   Altın Yay süresince meteorlar altın alevli ve pırıltılı: yutulabildiği görünür. Hawking, bomba dalgası, İkinci Ufuk, fırtına sonu, süpernova,
   jet, altın kabuk veya rakiple yok edilen meteor 3 kızgın parçaya bölünür (parçalar oyun durunca durur).
   Kod incelemesi (11 Eki): 9 bulgu düzeltildi (`bdbf2b5`); 12 sn'lik ölçümde kaya cisim üstünde 4 → 0. Çarpma, hız ve isabet aynen (`onizleme/meteor-onerileri.html`, `onizleme/derinlik-25d.html`).
-- Kara Fırtına'ya özel meteor rengi önerildi, seçilmedi.
+- Kara Fırtına (Hayatta Kal 4. dakikadan sonra) meteorları mor-siyah alevle yanar (12 Eki onaylandı): oyuncu fırtınanın döndüğünü renkten anlar. Altın Yay sürerken yine altın.
 
 ```
 <en-US>

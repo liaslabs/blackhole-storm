@@ -1579,7 +1579,8 @@ function v2DepthDraw(dt){if(!DSPR||!DSPR.done||!G2.on||FXLITE||GL.quality<1)retu
 
 // ── 1.5.0 meteors: a fireball (white-hot core, a two-layer tail that grows with speed, embers and ash); gold while the Golden Arc lasts ──
 const MFIRE={core:'255,250,225',mid:'255,185,80',out:'255,105,35',em:'#ffbe5a',tint:'rgba(60,20,0,.3)',ash:'70,58,60'},MGOLD={core:'255,255,238',mid:'255,215,106',out:'255,165,40',em:'#ffe08c',tint:'rgba(255,200,80,.42)',ash:null};
-const v2MetPal=()=>G2.garcT>0?MGOLD:MFIRE;
+const MDARK={core:'248,232,255',mid:'196,104,255',out:'96,24,170',em:'#d99cff',tint:'rgba(40,0,70,.42)',ash:'48,26,70'}; // the Black Storm burns violet: from minute 4 of Survival the meteors say the storm has turned
+const v2MetPal=()=>G2.garcT>0?MGOLD:G2.dstorm&&typeof survTime==='number'&&survTime>=STORM2.black?MDARK:MFIRE;
 const MSPR={}; // per palette: the halo, the warning glow, the front glow and three tail layers, painted once (no gradient is made per meteor per frame)
 function v2MetSpr(P){const key=P.core+P.mid;if(MSPR[key])return MSPR[key];const S={},cv=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
   const disc=stops=>{const c=cv(128,128),g=c.getContext('2d'),q=g.createRadialGradient(64,64,0,64,64,64);for(const [o,col] of stops)q.addColorStop(o,col);g.fillStyle=q;g.fillRect(0,0,128,128);return c;};
