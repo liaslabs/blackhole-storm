@@ -109,6 +109,11 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .lbstats span{font-size:10px;letter-spacing:1px;color:var(--dim);}
 .lbstats .bc{grid-column:1/-1;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap;}
 .lbstats .bc b{display:inline;color:#ff9a5c;font-size:17px;}
+.lbstats.r9 div{padding:5px 6px;}.lbstats.r9 b{font-size:14px;}
+.lbstats.r9 .bc{padding:13px 6px;}.lbstats.r9 .bc b{font-size:22px;}.lbstats .bc b span{font-size:inherit;letter-spacing:normal;color:inherit;}
+.lbrow .c{width:58px;text-align:center;font-family:var(--fd);font-size:13px;color:#ff9a5c;font-variant-numeric:tabular-nums;}
+.lbrow.lbcols{background:none;padding:0 12px;margin:2px 0 -4px;}.lbrow.lbcols div{font-family:var(--fd);font-size:9px;font-weight:400;letter-spacing:.12em;color:var(--dim);}
+.lbrow .p{min-width:72px;text-align:end;}
 .lbempty{padding:14px;color:var(--dim);font-size:13px;}
 .lbnote{margin:10px 2px 2px;font-size:12px;line-height:1.45;color:var(--dim);}
 .lbrow.lbtop{background:rgba(242,169,59,.1);border:1px solid var(--line);} /* not .me: that class is the bobbing 'you are here' marker on the map */
@@ -2352,8 +2357,8 @@ function addLB(sc){if(sc<=0)return;const t=new Date();localLB.push({score:sc,mod
 function recordsText(){const f=n=>nf(n),sv=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0),hi=Math.max(bestScore,localLB[0]?localLB[0].score:0);
   const L=[`🕳️ Blackhole Storm · ${T('REKORLARIM')}`,`🏆 ${T('EN YÜKSEK')}: ${f(hi)}`,`🌀 ${T('EN İYİ SEVİYE')}: ${bestLevel}`];if(sv)L.push(`⛈ ${T('HAYATTA KAL REKORU')}: ${f(sv)}`);if(sprintBest)L.push(`⏱ ${T('60 SN REKORU')}: ${f(sprintBest)}`);
   L.push(`⚔️ ${T('Meydan okuyorum: beni geçebilir misin?')}`);return L.join('\n');}
-function lbDate(d){const m=/^(\d{1,2})\.(\d{1,2})$/.exec(d||'');if(!m)return d||'';const now=new Date();let y=now.getFullYear();const t=new Date(y,+m[2]-1,+m[1]);if(t>now)t.setFullYear(y-1);try{return '📅 '+t.toLocaleDateString(LOC,{day:'numeric',month:'short'});}catch(e){return d;}} /* 1.4.9: '11.10' read like a combo multiplier; the date now says its month */
-function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').hidden=!localLB.length&&!bestScore;} /* 1.4.9: a share button instead of a note that pointed elsewhere */const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];
+function lbDate(d,bare){const m=/^(\d{1,2})\.(\d{1,2})$/.exec(d||'');if(!m)return d||'';const now=new Date();let y=now.getFullYear();const t=new Date(y,+m[2]-1,+m[1]);if(t>now)t.setFullYear(y-1);try{return (bare?'':'📅 ')+t.toLocaleDateString(LOC,{day:'numeric',month:'short'});}catch(e){return d;}} /* 1.4.9: '11.10' read like a combo multiplier; the date now says its month */
+function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').hidden=!localLB.length&&!bestScore;} /* 1.4.9: a share button instead of a note that pointed elsewhere */const l=$('lbList');l.innerHTML='';const med=['🥇','🥈','🥉'];$('lbStats').classList.toggle('r9',rel(9));
   const fmt=n=>n.toLocaleString(LOC);
   const svB=localLB.filter(e=>e.mode==='survival').reduce((m,e)=>Math.max(m,e.score),0);
   $('lbStats').innerHTML=(rel(8)?[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['HAYATTA KAL REKORU',fmt(svB)],['60 SN REKORU',fmt(sprintBest)]]:[['EN YÜKSEK',fmt(Math.max(bestScore,localLB[0]?localLB[0].score:0))],['EN İYİ SEVİYE',bestLevel],['60 SN REKORU',fmt(sprintBest)],['YUTULAN',fmt(swallowed)]])
@@ -2361,9 +2366,11 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
   if(rel(9)&&BCOMBO.c>=2){const r=document.createElement('div');r.className='bc';const b=document.createElement('b');b.textContent='🔥 ×'+BCOMBO.c;const k=document.createElement('span');k.textContent='EN İYİ COMBO';r.append(b,k);if(BCOMBO.d){const t=document.createElement('span');t.textContent=lbDate(BCOMBO.d);r.append(t);}$('lbStats').appendChild(r);} /* 1.4.9: its own row, since the best combo may come from a game outside the top scores */
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
   if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
+    if(rel(9)&&!l.querySelector('.lbcols')){const c=document.createElement('div');c.className='lbrow lbcols';for(const [k,t] of [['r',''],['n','TARİH'],['c','🔥 COMBO'],['p','PUAN']]){const d=document.createElement('div');d.className=k;d.textContent=t;c.appendChild(d);}l.appendChild(c);} /* 1.4.9: one line of column names over the list, so the combo column needs no explaining */
     const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);
     L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);
-      const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d)+(e.c>=2?' · 🔥 ×'+e.c:''):e.d||''; /* 1.4.9: the run's best combo beside its date (older records have none) */const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n,p);l.appendChild(r);});}
+      const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d,1):e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n);
+      if(rel(9)){const c=document.createElement('div');c.className='c';c.textContent=e.c>=2?'×'+e.c:'–';r.append(c);} /* 1.4.9: the run's best combo in its own column (older records have none) */r.append(p);l.appendChild(r);});}
     $('sLB').classList.add('on');return;}
   localLB.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');
     const a=document.createElement('div');a.className='r';a.textContent=med[i]||(i+1);

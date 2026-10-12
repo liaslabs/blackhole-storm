@@ -1751,5 +1751,7 @@
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Ускорения не хватает, чтобы завершить сейчас: нужно ещё {n}",
 "süre hakkı": "ускорение",
 "{n} sürer": "займёт {n}",
-"{n} hızlandır": "ускорить на {n}"
+"{n} hızlandır": "ускорить на {n}",
+"TARİH": "ДАТА",
+"PUAN": "ОЧКИ"
 }

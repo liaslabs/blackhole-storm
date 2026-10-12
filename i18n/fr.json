@@ -1751,5 +1751,7 @@
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Pas assez d'accélération pour terminer : il manque {n}",
 "süre hakkı": "accélération",
 "{n} sürer": "dure {n}",
-"{n} hızlandır": "accélère de {n}"
+"{n} hızlandır": "accélère de {n}",
+"TARİH": "DATE",
+"PUAN": "SCORE"
 }

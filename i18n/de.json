@@ -1751,5 +1751,7 @@
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Zu wenig Beschleunigung, um jetzt fertig zu werden: noch {n} nötig",
 "süre hakkı": "Beschleunigung",
 "{n} sürer": "dauert {n}",
-"{n} hızlandır": "{n} beschleunigen"
+"{n} hızlandır": "{n} beschleunigen",
+"TARİH": "DATUM",
+"PUAN": "PUNKTE"
 }

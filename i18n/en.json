@@ -1751,5 +1751,7 @@
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Not enough speed-up time to finish now: {n} more needed",
 "süre hakkı": "speed-up",
 "{n} sürer": "takes {n}",
-"{n} hızlandır": "speed up {n}"
+"{n} hızlandır": "speed up {n}",
+"TARİH": "DATE",
+"PUAN": "SCORE"
 }

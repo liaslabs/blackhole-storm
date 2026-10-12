@@ -1751,5 +1751,7 @@
 "Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli": "Aceleração insuficiente para terminar já: faltam {n}",
 "süre hakkı": "aceleração",
 "{n} sürer": "leva {n}",
-"{n} hızlandır": "acelere {n}"
+"{n} hızlandır": "acelere {n}",
+"TARİH": "DATA",
+"PUAN": "PONTOS"
 }
