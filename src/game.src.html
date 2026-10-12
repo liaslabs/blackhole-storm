@@ -107,6 +107,11 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .lbstats div{padding:8px 6px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);}
 .lbstats b{display:block;font-family:var(--fd);font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums;}
 .lbstats span{font-size:10px;letter-spacing:1px;color:var(--dim);}
+#sLB.r9 .card{padding-top:14px;padding-bottom:14px;}#sLB.r9 .h{margin-bottom:8px;}#sLB.r9 .lbtabs{margin-bottom:8px;}
+#sLB.r9 .lbstats{gap:5px;margin:0 0 6px;}#sLB.r9 .lbstats div{padding:4px 6px;}#sLB.r9 .lbstats b{font-size:13px;}#sLB.r9 .lbstats span{font-size:9px;}#sLB.r9 .lbstats .bc{padding:7px 6px;}#sLB.r9 .lbstats .bc b{font-size:19px;}
+#sLB.r9 #lbList .lbrow{padding:5px 12px;margin-bottom:3px;}#sLB.r9 #lbList .lbrow .n{font-size:13px;}#sLB.r9 #lbList .lbrow.lbcols{padding:0 12px;margin:0 0 2px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2{margin:8px 0 3px;padding-top:7px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2:first-child{margin-top:0;padding-top:0;}
+#sLB.r9 #lbShareRow{margin-top:8px;gap:10px;}#sLB.r9 .lbstats .bc b span{font-size:inherit;}
+#sLB.r9 #lbList .lbrow{gap:8px;}#sLB.r9 #lbList .lbrow .r{width:38px;}#sLB.r9 #lbList .lbrow .n{white-space:nowrap;min-width:0;}#sLB.r9 #lbList .lbrow .c{width:50px;}#sLB.r9 #lbList .lbrow .p{width:76px;}#sLB.r9 #lbList .lbrow.lbcols.lbhd2 .n{overflow:hidden;text-overflow:ellipsis;letter-spacing:.05em;}#sLB.r9 #lbShareRow .btn{flex:1;min-width:0;}
 .lbstats .bc{grid-column:1/-1;display:flex;align-items:baseline;justify-content:center;gap:10px;flex-wrap:wrap;}
 .lbstats .bc b{display:inline;color:#ff9a5c;font-size:17px;}
 .lbstats.r9 div{padding:5px 6px;}.lbstats.r9 b{font-size:14px;}
@@ -1306,7 +1311,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="lbnote" id="lbNote">Arkadaşlarınla yarışmak için Günlük Yarış sonucunu paylaş ya da meydan okuma linki gönder.</div>
   <div class="row" id="lbShareRow" hidden><button class="btn cy" id="lbShare">📤 PAYLAŞ</button></div>
   </div>
-  <div class="row"><button class="btn" id="lbClose">KAPAT</button></div>
+  <div class="row" id="lbCloseRow"><button class="btn" id="lbClose">KAPAT</button></div>
  </div>
 </div>
 
@@ -2393,11 +2398,11 @@ function showLB(){lbTab('w');if(rel(9)){$('lbNote').hidden=true;$('lbShareRow').
     .map(([k,v])=>`<div><b>${v}</b><span>${k}</span></div>`).join('');
   if(rel(9)&&BCOMBO.c>=2){const r=document.createElement('div');r.className='bc';const b=document.createElement('b');b.textContent='🔥 ×'+BCOMBO.c;const k=document.createElement('span');k.textContent='EN İYİ COMBO';r.append(b,k);if(BCOMBO.d){const t=document.createElement('span');t.textContent=lbDate(BCOMBO.d);r.append(t);}$('lbStats').appendChild(r);} /* 1.4.9: its own row, since the best combo may come from a game outside the top scores */
   if(!localLB.length){const e=document.createElement('div');e.className='lbempty';e.textContent='Henüz kayıtlı oyun yok. İlk rekorunu kır!';l.appendChild(e);}
-  if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
+  if(rel(8)&&localLB.length){for(const m of ['classic','hard','survival','sprint']){const L=localLB.filter(e=>e.mode===m).slice(0,rel(9)?3:5);if(!L.length)continue; /* 1.4.8: grouped by mode, the best 5 of each */
     const cols=(n,cl)=>{const c=document.createElement('div');c.className='lbrow lbcols'+(cl||'');for(const [k,t] of [['r',''],['n',n],['c','🔥 COMBO'],['p','PUAN']]){const d=document.createElement('div');d.className=k;d.textContent=t;c.appendChild(d);}l.appendChild(c);};
     if(rel(9))cols(MODE_TAG[m],' lbhd2'); /* 1.4.9: each mode's name heads its own table, a rule between modes */
     else{const h=document.createElement('div');h.className='lbhd';h.textContent=MODE_TAG[m];l.appendChild(h);}
-    L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');const a=document.createElement('div');a.className='r';a.textContent=rel(9)?(med[i]?med[i]+' ':'')+(i+1)+'.':med[i]||(i+1);
+    L.forEach((e,i)=>{const r=document.createElement('div');r.className='lbrow'+(i===0?' lbtop':'');if(rel(9))r.dataset.g=m;const a=document.createElement('div');a.className='r';a.textContent=rel(9)?(med[i]?med[i]+' ':'')+(i+1)+'.':med[i]||(i+1);
       const n=document.createElement('div');n.className='n';n.textContent=rel(9)?lbDate(e.d):e.d||'';const p=document.createElement('div');p.className='p';p.textContent=fmt(e.score);r.append(a,n);
       if(rel(9)){const c=document.createElement('div');c.className='c';c.textContent=e.c>=2?'×'+e.c:'–';r.append(c);} /* 1.4.9: the run's best combo in its own column (older records have none) */r.append(p);l.appendChild(r);});}
     $('sLB').classList.add('on');return;}
@@ -2938,7 +2943,9 @@ async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
       const row=b.closest('.lbrow');row.querySelector('.n').textContent='•••';b.remove();toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));});}
   catch(e){w.innerHTML=head+mine+`<div class="lbwait">${T('Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.')}</div>`;}}
 const lbRepGet=()=>{try{const a=JSON.parse(localStorage.getItem('bhs_lbrep')||'[]');return Array.isArray(a)?a.slice(-200):[];}catch(e){return [];}},lbRepSet=a=>{try{localStorage.setItem('bhs_lbrep',JSON.stringify(a.slice(-200)));}catch(e){}};
-function lbTab(t){$('lbTW').classList.toggle('on',t==='w');$('lbTM').classList.toggle('on',t!=='w');$('lbWorld').hidden=t!=='w';$('lbMine').hidden=t==='w';if(t==='w')renderLBWorld();}
+function lbFit(){const sc=$('sLB'),rows=[...$('lbList').querySelectorAll('.lbrow[data-g]')];for(let k=0;k<20&&sc.scrollHeight>sc.clientHeight+1;k++){const n={};for(const r of rows)if(!r.hidden)n[r.dataset.g]=(n[r.dataset.g]||0)+1;const g=Object.keys(n).sort((a,b)=>n[b]-n[a])[0];if(!g||n[g]<2)break;rows.filter(r=>r.dataset.g===g&&!r.hidden).pop().hidden=true;}} /* 1.4.9: on a short screen the longest table gives up its last row until the page fits, the first place of each mode always stays */
+function lbTab(t){if(rel(9)){const c=$('lbClose'),sr=$('lbShareRow'),one=t!=='w'&&!sr.hidden;if(one?c.parentNode!==sr:c.parentNode===sr)(one?sr:$('lbCloseRow')).appendChild(c);$('lbCloseRow').hidden=one;$('sLB').classList.add('r9');if(t!=='w')requestAnimationFrame(lbFit);} /* 1.4.9: on My Records, share and close share one line so the page fits one screen */
+  $('lbTW').classList.toggle('on',t==='w');$('lbTM').classList.toggle('on',t!=='w');$('lbWorld').hidden=t!=='w';$('lbMine').hidden=t==='w';if(t==='w')renderLBWorld();}
 
 // SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
 const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha sık gelir; atlatılan her tutulma 2 kat SP verir.'},{id:'wind',ic:'🌬',n:'RÜZGÂR SEZONU',d:'Yıldız rüzgârı daha sık eser; her rüzgâr 2 kat SP verir.'},
