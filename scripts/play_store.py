@@ -211,6 +211,14 @@ def main():
                 try:
                     ed.commit(packageName=PKG, editId=eid, changesNotSentForReview=not sent).execute()
                 except HttpError as e:
+                    if not sent and 'sent for review automatically' in str(e):
+                        # nothing else waits in the Console: Play sends every change itself and refuses the flag,
+                        # so the same edit is committed without it (the edit holds only what this run made)
+                        say('Play\'de bekleyen başka değişiklik yok, değişiklikler kendiliğinden gönderiliyor; ayarsız kaydediliyor.')
+                        ed.commit(packageName=PKG, editId=eid).execute()
+                        keep = True
+                        say('Kaydedildi ve gönderildi.')
+                        return
                     # Play refuses to send for review from the API while changes made in the Console UI are waiting;
                     # then the edit is saved unsent and the review is started from Publishing overview.
                     if not sent or 'changesNotSentForReview' not in str(e):
