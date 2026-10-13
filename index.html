@@ -422,6 +422,7 @@ html[lang=ar] *{letter-spacing:0!important;}
 .evo .s{font-size:12.5px;color:#9aa0b6;margin-top:5px;}.evo{cursor:pointer;}.evo .go{font-family:var(--fd);font-size:11px;letter-spacing:.08em;color:var(--gold);margin-top:6px;text-align:end;}
 .skc{max-width:400px;}#skBig{width:220px;height:220px;display:block;margin:6px auto 4px;border-radius:50%;}.sknm{font-family:var(--fd);font-size:17px;color:#fff;letter-spacing:.06em;}.skst{font-size:12.5px;color:var(--dim);min-height:17px;margin-top:2px;}
 .skg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}.skg button{padding:6px 4px 7px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer;font-family:var(--fd);font-size:10.5px;letter-spacing:.04em;line-height:1.25;}
+.skg button.skstar{order:-1;border-color:rgba(255,205,100,.65);background:linear-gradient(180deg,rgba(255,200,90,.12),rgba(255,255,255,.02));}.skg button.skstar small{color:#ffd76a;}.skg button.skstar.lock canvas{filter:saturate(.85) brightness(.85);} /* 1.5.0: the star collection leads the grid in full colour */
 .skg button canvas{width:100%;aspect-ratio:1;display:block;border-radius:50%;margin-bottom:4px;}.skg button.sel{border-color:var(--gold);box-shadow:0 0 12px rgba(242,169,59,.35);}.skg button.lock canvas{filter:grayscale(.75) brightness(.55);}.skg button small{display:block;font-size:10px;color:var(--dim);margin-top:1px;}
 .skmono{text-align:start;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,216,77,.3);background:rgba(255,216,77,.05);margin-bottom:8px;}.skmono b{font-family:var(--fd);font-size:12px;letter-spacing:.08em;color:#ffe7a0;}.skmono p{font-size:12.5px;color:var(--dim);margin:4px 0 8px;}
 .skmono input{width:100%;box-sizing:border-box;padding:9px 10px;border-radius:6px;border:1px solid var(--line);background:#0b0e12;color:#fff;font-family:var(--fd);font-size:18px;letter-spacing:.2em;text-transform:uppercase;}.skmono .srow{margin-top:8px;}
@@ -1053,6 +1054,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 @keyframes lShine{from{background-position:-40px 0}to{background-position:200px 0}}
 .lqb{display:flex;gap:6px;flex-wrap:wrap;}.lqb .btn{flex:1;min-width:0;padding:8px 6px;font-size:11.5px;}
 .lgem{background:linear-gradient(180deg,#8fe0ff,#3a9cc8);color:#04121c;border:0;font-weight:800;}
+.lstar{background:linear-gradient(180deg,#ffe9a6,#e0a93a);color:#2a1800;border:0;font-weight:800;}.lstar.lack{background:linear-gradient(180deg,#6b5a3a,#4a3c24);color:#d9c9a0;}.lstar.sure{background:linear-gradient(180deg,#fff3c4,#ffb340);color:#2a1600;animation:lPulse2 .5s ease-in-out infinite alternate;}
 .lgem.sure{background:linear-gradient(180deg,#ffd76a,#e0892a);color:#2a1600;animation:lPulse2 .5s ease-in-out infinite alternate;}
 @keyframes lPulse2{to{transform:scale(1.03)}}
 .lq.empty{align-items:center;color:var(--dim);font-family:var(--fd);letter-spacing:.06em;font-size:12px;border-style:dashed;border-color:rgba(255,255,255,.18);}
@@ -1072,7 +1074,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 @media (max-width:380px){.labpow{gap:4px;left:6px;right:6px;}.labpow>span{padding:3px 5px;font-size:10px;}}
 .lq.in{padding:9px 0 0;border:0;border-top:1px dashed rgba(var(--c),.4);border-radius:0;background:none;}
 @media (max-height:760px){.labw{gap:7px;}.labtop small{display:none;}.labsel{padding:9px 10px;gap:6px;}.lsh i{width:36px;height:36px;font-size:22px;}.labnote{padding-bottom:2px;}}
-@media (prefers-reduced-motion:reduce){.lchip.bld::after,.lpips s.bld,.lbar i::after,.lgem.sure{animation:none;}}
+@media (prefers-reduced-motion:reduce){.lchip.bld::after,.lpips s.bld,.lbar i::after,.lgem.sure,.lstar.sure{animation:none;}}
 /* Main menu hub: a live black hole behind, menus around it, one gold call to action */
 #sMenu{background:#02030a;align-items:stretch;padding-left:12px;padding-right:12px;}
 #menuBg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
@@ -2262,7 +2264,7 @@ precision mediump float;
 // outer-glow squeeze per look: 1 = original width, larger = tighter to the rim
 // (ALTIN DİSK, MAVİ GİRDAP, BUZ HALKASI, KOZMİK TOZ, MOR TUTULMA, PEMBE FIRTINA, PİKSEL NEBULA, KOR HALKASI, HİLAL YAYLARI)
 let CLASSIC_ARM=2; // spiral arms on the Classic look (see classicArms)
-const SKIN_HK=[1,1.6,1,2.4,1,1.6,2.4,1.6,1.6,1,1,1,1.6];
+const SKIN_HK=[1,1.6,1,2.4,1,1.6,2.4,1.6,1.6,1,1,1,1.6,1.2,1,1.2];
 // black hole looks (skins): emission around the event horizon; q is in hole radii, x=|q|, a=angle, fc=device pixel
 const SKIN_GLSL=`
 float k_h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
@@ -2316,12 +2318,26 @@ vec3 skinEm(float s,vec2 q,float x,float a,float t,vec2 fc,float R){
    vec3 col=fi<.5?vec3(.62,.59,.54):fi<1.5?vec3(.85,.83,.78):fi<2.5?vec3(1.,.84,.42):fi<3.5?vec3(.5,.82,.92):fi<4.5?vec3(1.):fi<5.5?vec3(.79,.7,1.):fi<6.5?vec3(.88,.54,.16):vec3(.5,.88,.63);
    vec2 d=q-p;c+=col*exp(-dot(d,d)/.006)*1.6+col*exp(-dot(d,d)/.05)*.25;}
   c+=V*exp(-pow((x-1.9)/.015,2.))*.12;}
- else{vec3 Q=vec3(1.,.8,.38),J=vec3(.55,.85,1.); /* quasar crown: twin jets, a turning gold crown, a hot blue-white disk */
+ else if(s<12.5){vec3 Q=vec3(1.,.8,.38),J=vec3(.55,.85,1.); /* quasar crown: twin jets, a turning gold crown, a hot blue-white disk */
   float sw=k_f(cs*2.4+x*1.7);c=mix(vec3(.2,.3,.85),vec3(1.,.95,.85),sw)*sw*exp(-e*1.6)*1.5;
   float jw=.05+.05/x;c+=J*exp(-pow(cos(a)/jw,2.))*step(1.,x)*exp(-e*.45)*(1.1+.4*sin(x*14.-t*9.));
   float sp=pow(max(cos(12.*(a-t*.25)),0.),8.),cr=smoothstep(1.1,1.18,x)*(1.-smoothstep(1.16+.34*sp,1.22+.34*sp,x));
   c+=Q*cr*(.5+1.9*sp)*(.85+.15*sin(t*3.));
   c+=vec3(1.,.93,.75)*exp(-pow((x-1.03)/.03,2.))*1.6;}
+ else if(s<13.5){vec3 A=vec3(.25,.95,.85),B=vec3(1.,.5,.2); /* supernova remnant: shells blown outward through teal and ember filaments */
+  float ph=fract(t*.18),p2=fract(ph+.5),fil=k_f(ca*5.+vec2(x*3.,0.))*k_f(ca*11.-vec2(0.,x*2.));
+  c=mix(B,A,smoothstep(1.2,1.9,x))*fil*fil*exp(-e*1.4)*3.;
+  c+=(A*exp(-pow((x-1.1-ph*1.1)/.03,2.))*(1.-ph)+B*exp(-pow((x-1.1-p2*1.1)/.03,2.))*(1.-p2))*(.5+fil)*1.6;
+  c+=vec3(1.,.85,.6)*exp(-pow((x-1.02)/.025,2.))*1.4;}
+ else if(s<14.5){vec3 P=vec3(.55,.8,1.); /* pulsar beacon: two sweeping beams, a heartbeat flash, field loops turning with them */
+  float ba=a-t*1.6,bw=pow(max(cos(ba),0.),60.)+pow(max(-cos(ba),0.),60.),beat=pow(.5+.5*cos(t*5.65),12.),sb=sin(ba)*sin(ba),fo=smoothstep(3.7,2.3,x); /* the beams fade out before the glow's outer edge */
+  c=(P*bw*exp(-e*.5)*step(1.,x)*1.8+vec3(1.)*bw*exp(-e*2.)*1.2)*fo;
+  c+=P*(exp(-pow((x-1.6*sb)/.012,2.))+exp(-pow((x-2.2*sb)/.014,2.))*.7)*step(1.04,x)*.7;
+  c+=P*exp(-e*3.)*(.3+beat*1.2)+vec3(.85,.95,1.)*exp(-pow((x-1.02)/.02,2.))*(1.2+beat);}
+ else{vec3 G=vec3(.2,1.,.55),V=vec3(.7,.35,1.); /* aurora veil: green curtains rippling round the rim, violet at their tips */
+  float ray=pow(k_n(ca*38.+vec2(t*.6,sin(t*.7)*2.)),2.),cur=k_f(ca*3.+vec2(t*.15,0.));
+  float h=x-(1.01+.07*sin(a*4.+t*.6)+.06*k_f(ca*2.+t*.1)),band=smoothstep(-.04,0.,h)*exp(-max(h,0.)*2.8);
+  c=mix(G,V,smoothstep(.05,.55,h))*band*(.35+ray*1.6)*cur*3.2+G*(exp(-pow((x-1.03)/.03,2.))*1.1+exp(-e*6.)*.6);}
  return c*smoothstep(.985,1.,x);}
 `;
 const VS_BG='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
@@ -2595,11 +2611,13 @@ const STAGES=[{n:'YILDIZ KÜTLELİ',m:0},{n:'ORTA KÜTLELİ',m:150},{n:'SÜPER K
 // black hole looks: unlocked by evolution, bought with diamonds, or in the Cosmic ID pack (with the name letters)
 const SKINS=[{n:'ALTIN DİSK',u:'free'},{n:'MAVİ GİRDAP',u:'stage',v:1},{n:'BUZ HALKASI',u:'gem',v:60},{n:'KOZMİK TOZ',u:'gem',v:60},{n:'MOR TUTULMA',u:'stage',v:2},
   {n:'PEMBE FIRTINA',u:'pack'},{n:'PİKSEL NEBULA',u:'pack'},{n:'KOR HALKASI',u:'stage',v:3},{n:'HİLAL YAYLARI',u:'gem',v:80},
-  {n:'ARŞİV USTURLABI',u:'atlas',v:10},{n:'YILDIZ HARİTASI',u:'atlas',v:20},{n:'KOZMİK KOLEKSİYON',u:'atlas',v:29},{n:'KUASAR TACI',u:'qh'}]; // Cosmic Archivist looks: mastered Atlas bodies
-const SKIN_TINT=['#c9c2ff','#9fd8ff','#bff6ff','#e8e6e2','#e2c8ff','#ffb3d9','#ffffff','#ffc58a','#d6ccff','#ffd9a0','#bff0ff','#e0d2ff','#ffd98a'];
+  {n:'ARŞİV USTURLABI',u:'atlas',v:10},{n:'YILDIZ HARİTASI',u:'atlas',v:20},{n:'KOZMİK KOLEKSİYON',u:'atlas',v:29},{n:'KUASAR TACI',u:'qh'},
+  {n:'SÜPERNOVA KALINTISI',u:'star',v:7500},{n:'PULSAR FENERİ',u:'star',v:15000},{n:'AURORA PERDESİ',u:'star',v:30000}]; // 1.5.0: star-priced looks, the big star sink // Cosmic Archivist looks: mastered Atlas bodies
+const SKIN_TINT=['#c9c2ff','#9fd8ff','#bff6ff','#e8e6e2','#e2c8ff','#ffb3d9','#ffffff','#ffc58a','#d6ccff','#ffd9a0','#bff0ff','#e0d2ff','#ffd98a','#9ff0e0','#b8dcff','#8affb8'];
 let SKIN={sel:0,own:[],mono:'',monoOn:true,seen:null};
 const atlasMastered=()=>ATLAS_DEF.filter(x=>atlasTier(x[0])>=3).length;
-function skinOwned(i){const k=SKINS[i];return !!k&&(k.u==='free'||(k.u==='stage'&&stageOf(mass)>=k.v)||(k.u==='pack'&&SHOP.cid)||(k.u==='qh'&&SHOP.qh)||(k.u==='atlas'&&atlasMastered()>=k.v)||SKIN.own.includes(i));}
+const skinOn=i=>SKINS[i]&&(SKINS[i].u!=='star'||rel(10));
+function skinOwned(i){const k=SKINS[i];return !!k&&skinOn(i)&&(k.u==='free'||(k.u==='stage'&&stageOf(mass)>=k.v)||(k.u==='pack'&&SHOP.cid)||(k.u==='qh'&&SHOP.qh)||(k.u==='atlas'&&atlasMastered()>=k.v)||SKIN.own.includes(i));}
 const monoClean=v=>[...String(v).toLocaleUpperCase('tr')].filter(ch=>/[\p{L}\p{N}]/u.test(ch)).slice(0,NAME_MAX).join('');
 function monoText(){return monoClean(SKIN.mono||playerName||'');}
 function stageOf(m){let s=0;for(let i=1;i<STAGES.length;i++)if(m>=STAGES[i].m)s=i;return s;}
@@ -2635,17 +2653,17 @@ function monoDraw(c,cx,cy,Rp,txt,tint,t=0){ // the name on a ring inside the cor
     a+=(w[i]/2+gap)/rr;}
   c.restore();}
 function skinLockTxt(i){const k=SKINS[i];if(skinOwned(i))return i===SKIN.sel?'✓ SEÇİLİ':'SEÇ';
-  return k.u==='stage'?`🔒 ${STAGES[k.v].n}`:k.u==='gem'?`💎 ${k.v}`:k.u==='atlas'?`📖 ${atlasMastered()}/${k.v}`:k.u==='qh'?'👑 KUASAR HAZİNESİ':'🌌 KOZMİK KİMLİK';}
+  return k.u==='stage'?`🔒 ${STAGES[k.v].n}`:k.u==='gem'?`💎 ${k.v}`:k.u==='star'?`⭐ ${k.v.toLocaleString(LOC)}`:k.u==='atlas'?`📖 ${atlasMastered()}/${k.v}`:k.u==='qh'?'👑 KUASAR HAZİNESİ':'🌌 KOZMİK KİMLİK';}
 function openSkins(){SKIN.seen=SKINS.map((_,i)=>i).filter(skinOwned);saveG();SKINUI.view=SKIN.sel;$('sSkin').classList.add('on');renderSkins();SKINUI.run=true;const t0=performance.now();
   const tick=now=>{if(!SKINUI.run)return;skinBig((now-t0)/1000);requestAnimationFrame(tick);};requestAnimationFrame(tick);}
 function skinBig(t){const cv=$('skBig');skinPaint(cv,SKINUI.view,t,105);const txt=SHOP.cid&&SKIN.monoOn?monoText():'';if(txt)monoDraw(cv.getContext('2d'),220,220,105,txt,SKIN_TINT[SKINUI.view],t);}
 function renderSkins(){
   const g=$('skGrid');if(!g.children.length){SKINS.forEach((k,i)=>{const b=document.createElement('button');b.innerHTML=`<canvas width="150" height="150"></canvas><span>${k.n}</span><small></small>`;b.onclick=()=>{SKINUI.view=i;sfx('click',{vol:.3});if(skinOwned(i)){SKIN.sel=i;saveG();}renderSkins();};g.appendChild(b);skinPaint(b.querySelector('canvas'),i,2.3,120);});}
-  [...g.children].forEach((b,i)=>{b.className=(i===SKINUI.view?'sel':'')+(skinOwned(i)?'':' lock');b.querySelector('small').textContent=skinLockTxt(i);});
+  [...g.children].forEach((b,i)=>{b.hidden=!skinOn(i);b.className=(i===SKINUI.view?'sel':'')+(skinOwned(i)?'':' lock')+(SKINS[i].u==='star'?' skstar':'');b.querySelector('small').textContent=skinLockTxt(i);});
   const i=SKINUI.view,k=SKINS[i],own=skinOwned(i),a=$('skAct');$('skName').textContent=k.n;
-  $('skSt').textContent=own?(i===SKIN.sel?'Oyunda bu görünüm kullanılıyor':''):k.u==='stage'?`Kara deliğin ${STAGES[k.v].n} evresine ulaşınca açılır (kütle ${STAGES[k.v].m.toLocaleString(LOC)})`:k.u==='gem'?'Elmasla açılır':k.u==='atlas'?T("Atlas'ta {n} cisimde ustalaşınca açılır",{n:k.v}):k.u==='qh'?'Kuasar Hazinesi paketiyle açılır':'Kozmik Kimlik paketiyle açılır';
-  a.parentNode.hidden=own||k.u==='stage'||k.u==='atlas'||((k.u==='pack'||k.u==='qh')&&!monOn());a.disabled=k.u==='gem'&&diamonds<k.v;
-  a.textContent=k.u==='gem'?(diamonds>=k.v?`${k.v} 💎 İLE AÇ`:`${k.v} 💎 GEREKLİ`):k.u==='qh'?'👑 KUASAR HAZİNESİ':'🌌 KOZMİK KİMLİK';
+  $('skSt').textContent=own?(i===SKIN.sel?'Oyunda bu görünüm kullanılıyor':''):k.u==='stage'?`Kara deliğin ${STAGES[k.v].n} evresine ulaşınca açılır (kütle ${STAGES[k.v].m.toLocaleString(LOC)})`:k.u==='gem'?'Elmasla açılır':k.u==='star'?T('Yıldız koleksiyonu · yıldızla açılır'):k.u==='atlas'?T("Atlas'ta {n} cisimde ustalaşınca açılır",{n:k.v}):k.u==='qh'?'Kuasar Hazinesi paketiyle açılır':'Kozmik Kimlik paketiyle açılır';
+  a.parentNode.hidden=own||k.u==='stage'||k.u==='atlas'||((k.u==='pack'||k.u==='qh')&&!monOn());a.disabled=k.u==='gem'&&diamonds<k.v||k.u==='star'&&stars<k.v;
+  a.textContent=k.u==='gem'?(diamonds>=k.v?`${k.v} 💎 İLE AÇ`:`${k.v} 💎 GEREKLİ`):k.u==='star'?(stars<k.v?T('{n} ⭐ GEREKLİ',{n:k.v.toLocaleString(LOC)})+' · '+T('sende {b}',{b:stars.toLocaleString(LOC)}):SKINUI.conf===i?T('EMİN MİSİN?')+` ⭐ ${k.v.toLocaleString(LOC)}`:T('{n} ⭐ İLE AÇ',{n:k.v.toLocaleString(LOC)})):k.u==='qh'?'👑 KUASAR HAZİNESİ':'🌌 KOZMİK KİMLİK';
   const m=$('skMono');
   if(!SHOP.cid)m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>İsmin kara deliğinin içinde: en başta ilk harf, delik büyüdükçe diğerleri (11 harfe kadar). Kozmik Kimlik paketiyle açılır.</p>`+(monOn()?`<button class="btn" id="skPack" style="width:100%;">🌌 KOZMİK KİMLİK</button>`:`<p style="margin:0">Paket, oyunun Google Play sürümünde satın alınabilir.</p>`);
   else if(!m.querySelector('input')){m.innerHTML=`<b>✨ İSİM HARFLERİ</b><p>En fazla 11 harf veya rakam. Oyunda en başta ilk harf görünür, delik büyüdükçe diğerleri açılır.</p><input id="skIn" class="notr" maxlength="11" autocomplete="off" spellcheck="false"><div class="srow"><span>Harfleri göster</span><button class="tg" id="skOn"></button></div>`;
@@ -2655,6 +2673,8 @@ function renderSkins(){
 }
 function skinAct(){const i=SKINUI.view,k=SKINS[i];if(skinOwned(i))return;
   if(k.u==='gem'){if(diamonds<k.v)return;diamonds-=k.v;SKIN.own.push(i);SKIN.sel=i;saveG();updateUI();sfx('achieve',{vol:.6});toast('🕳️',k.n,'Yeni görünüm açıldı');renderSkins();}
+  else if(k.u==='star'){if(stars<k.v)return;if(SKINUI.conf!==i){SKINUI.conf=i;renderSkins();later(()=>{if(SKINUI.conf===i){SKINUI.conf=null;renderSkins();}},4000);return;} /* a big spend asks twice */
+    SKINUI.conf=null;stars-=k.v;SKIN.own.push(i);SKIN.sel=i;saveG();updateUI();sfx('achieve',{vol:.6});toast('🕳️',T(k.n),T('Yeni görünüm açıldı'));renderSkins();}
   else if(k.u==='pack'&&monOn())buy('cosmic_id');
   else if(k.u==='qh'&&monOn())buy('quasar_hoard');}
 function renderEvo(){
@@ -3297,6 +3317,7 @@ const LVL_AD={stars:100,max:1}; // level-end bonus: one ad, 100 ⭐ (a third of 
 // cash out whenever you like. A black hole swallows everything gathered so far. One try per milestone.
 // ══════════════════════════════════════════════════════
 const GIFT={bad:2,min:3,step:.5,adBonus:{gems:10},jack:{stars:1000,gems:50},jackP:.12,jackAd:.5,/* the Big Treasure: in about 1 gift in 8; a rewarded ad raises the odds to 1 in 2 */pool:[{stars:60},{stars:100},{stars:150},{gems:8},{gems:15},{shield:1},{stars:50,gems:5},{shield:1,stars:40},{gems:10,shield:1},{boost:30},{boost:60,stars:40}]}; // ⏩ = Laboratory speed-up minutes
+if(rel(10)){GIFT.jack.stars=600;GIFT.pool.forEach(g=>{if(g.stars)g.stars=Math.round(g.stars*.07)*10;});} // 1.5.0: gifts hand out fewer stars (1000 → 600 treasure, the rest about −30%)
 let GIFTS=null;
 // RISK CARD: every 5th level from 12 (plain score levels) offers two cards that make the level harder for a bonus, or none.
 const RISK_CARDS=[{id:'storm',ic:'☄️',n:'METEOR FIRTINASI',d:'Meteorlar 2 kat. Puan ×1,5.',rw:{gems:4}},{id:'rush',ic:'⚡',n:'HIZLI EVREN',d:'Her şey %25 daha hızlı. Puan ×1,4.',rw:{gems:4}},
@@ -3472,6 +3493,7 @@ const labSlots=()=>Math.min(2,1+(LAB.slot2||vipOn()?1:0));
 const labLvOk=m=>!m.from||Math.max(savedLevel,bestLevel|0)>=m.from||labRaw(m.id)>0||labTier()>1,labStOk=m=>!m.st||stageOf(mass)>=m.st||labRaw(m.id)>0||labTier()>1,labOpen=m=>labLvOk(m)&&labStOk(m);
 const labBusy=id=>LAB.q.find(b=>b.id===id);
 function labGem(ms,lv){const m=Math.max(0,ms)/6e4;return m<=0?0:Math.max(1,Math.ceil(2.6*Math.sqrt(m)*(1+.05*lv)));} // cheaper per minute the longer it is, dearer the higher the level
+function labStar(ms,lv){const g=labGem(ms,lv);return g?Math.max(20,Math.round(g*1.5)*10):0;} // 1.5.0: stars finish a build too, at 15 ⭐ per 💎 (twice the time-crystal rate, so diamonds stay the better deal)
 function labDur(sec){sec=Math.max(0,Math.ceil(sec));const h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),s=sec%60;
   return h?T('{h} sa {m} dk',{h,m}):m?T('{m} dk {s} sn',{m,s:String(s).padStart(2,'0')}):T('{s} sn',{s});}
 function labMin(m){m=Math.max(0,Math.round(m));const h=Math.floor(m/60),r=m%60;return h?(r?T('{h} sa {m} dk',{h,m:r}):T('{h} sa',{h})):T('{m} dk',{m});}
@@ -3496,6 +3518,7 @@ function labStart(id){const m=LABT.find(x=>x.id===id),lv=labRaw(id);if(!m||lv>=L
   PERK.spent+=labCM(lv);stars-=labCS(lv);const d=labCT(lv)*6e4;LAB.q.push({id,to:lv+1,end:Date.now()+d,dur:d,ad:0});saveG();walletsRefresh();labBadge();notifAsk();notifSync();return true;}
 function labFinish(id,how){const b=labBusy(id);if(!b)return false;const left=b.end-Date.now();
   if(how==='gem'){const g=labGem(left,b.to);if(diamonds<g)return false;diamonds-=g;b.end=Date.now();}
+  else if(how==='star'){const s=labStar(left,b.to);if(stars<s)return false;stars-=s;b.end=Date.now();}
   else if(how==='ad'){if(b.ad)return false;b.ad=1;b.end-=LAB_AD*6e4;}
   else if(how==='boost'){const use=Math.min(LAB.boost|0,Math.ceil(left/6e4));if(use<=0)return false;LAB.boost-=use;b.end-=use*6e4;}
   saveG();walletsRefresh();labTick();labBadge();return true;}
@@ -3586,7 +3609,7 @@ function labRender(){const m=LABT[LV.sel],lv=labRaw(m.id),b=labBusy(m.id),open=l
 function lqBody(b){const now=Date.now(),m=LABT.find(x=>x.id===b.id),left=b.end-now,p=1-Math.max(0,left)/b.dur,g=labGem(left,b.to),cf=LV.conf===b.id;
   if(rel(9)){const lm=Math.ceil(Math.max(0,left)/6e4),bo=LAB.boost|0,ok=bo>=lm,ad=monOn()&&adReady()&&!b.ad; /* 1.4.9: each speed-up says how much sooner it finishes */
     return `<div class="lqh"><i>${m.ic}</i><b>${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})}</b><em data-t="${b.id}">${labDur(left/1000)}</em></div><div class="lbar"><i data-p="${b.id}" style="width:${(p*100).toFixed(1)}%"></i></div>
-      <div class="lqb2"><button class="btn lgem${cf?' sure':''}" data-g="${b.id}">${cf?T('EMİN MİSİN?')+' ':''}💎 ${g} · ${T('HEMEN BİTİR')}</button>${ad||bo>0?`<div class="lqduo">${ad?`<button class="btn sec lad mon" data-a="${b.id}"><span>▶ ${T('REKLAM İZLE')}</span><small>${T('{n} hızlandır',{n:labMin(Math.min(LAB_AD,lm))})}</small></button>`:''}${bo>0?`<button class="btn sec lbo${ok?'':' lack'}" data-b="${b.id}"><span>⏩ ${T('SÜRE HAKKIN')}</span><small>${ok?T('hemen bitir'):T('{n} hızlandır',{n:labMin(bo)})}</small></button>`:''}</div>`:''}
+      <div class="lqb2">${rel(10)?((s,cs)=>`<div class="lqduo"><button class="btn lgem${cf?' sure':''}" data-g="${b.id}"><span>💎 ${g}</span><small>${cf?T('EMİN MİSİN?'):T('HEMEN BİTİR')}</small></button><button class="btn lstar${cs?' sure':''}${stars<s?' lack':''}" data-s="${b.id}"><span>⭐ ${s.toLocaleString(LOC)}</span><small>${cs?T('EMİN MİSİN?'):stars<s?T('⭐ yetersiz'):T('HEMEN BİTİR')}</small></button></div>`)(labStar(left,b.to),LV.conf==='s:'+b.id):`<button class="btn lgem${cf?' sure':''}" data-g="${b.id}">${cf?T('EMİN MİSİN?')+' ':''}💎 ${g} · ${T('HEMEN BİTİR')}</button>`}${ad||bo>0?`<div class="lqduo">${ad?`<button class="btn sec lad mon" data-a="${b.id}"><span>▶ ${T('REKLAM İZLE')}</span><small>${T('{n} hızlandır',{n:labMin(Math.min(LAB_AD,lm))})}</small></button>`:''}${bo>0?`<button class="btn sec lbo${ok?'':' lack'}" data-b="${b.id}"><span>⏩ ${T('SÜRE HAKKIN')}</span><small>${ok?T('hemen bitir'):T('{n} hızlandır',{n:labMin(bo)})}</small></button>`:''}</div>`:''}
       ${bo>0&&!ok?`<div class="lshort">${T('Hemen bitirmek için süre hakkın yetmiyor: {n} daha gerekli',{n:labMin(lm-bo)})}</div>`:''}</div>`;}
   return `<div class="lqh"><i>${m.ic}</i><b>${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})}</b><em data-t="${b.id}">${labDur(left/1000)}</em></div>
         <div class="lbar"><i data-p="${b.id}" style="width:${(p*100).toFixed(1)}%"></i></div>
@@ -3598,6 +3621,10 @@ function labQBind(root){
   root.querySelectorAll('[data-g]').forEach(e=>e.onclick=()=>{const id=e.dataset.g;if(LV.conf!==id){LV.conf=id;labRender();later(()=>{if(LV.conf===id){LV.conf=null;if(LV.on)labRender();}},4000);return;} /* both cards can hold a build: redraw both */
     const b=labBusy(id),g=b&&labGem(b.end-Date.now(),b.to);if(diamonds<g){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:g}));sfx('buzz',{vol:.3});return;}
     LV.conf=null;sfx('coin',{vol:.5});labFinish(id,'gem');labAfterFinish();});
+  root.querySelectorAll('[data-s]').forEach(e=>e.onclick=()=>{const id=e.dataset.s,b=labBusy(id),s=b&&labStar(b.end-Date.now(),b.to);
+    if(stars<s){toast('⭐',T('YILDIZIN YETMİYOR'),T('{n} ⭐ gerekli.',{n:s.toLocaleString(LOC)}));sfx('buzz',{vol:.3});return;}
+    const k='s:'+id;if(LV.conf!==k){LV.conf=k;labRender();later(()=>{if(LV.conf===k){LV.conf=null;if(LV.on)labRender();}},4000);return;}
+    LV.conf=null;sfx('coin',{vol:.5});labFinish(id,'star');labAfterFinish();});
   root.querySelectorAll('[data-a]').forEach(e=>e.onclick=async()=>{const id=e.dataset.a;e.disabled=true;if(await showRewarded()){labFinish(id,'ad');labAfterFinish();}else labQueue();});
   root.querySelectorAll('[data-b]').forEach(e=>e.onclick=()=>{if(labFinish(e.dataset.b,'boost')){sfx('powerup',{vol:.4,rate:1.4});labAfterFinish();}});
 }
@@ -3610,7 +3637,8 @@ function labAfterFinish(){const d=LAB.done.splice(0);saveG();d.forEach(labCelebr
 function labLive(){if(!LV.on)return;const now=Date.now();if(LAB.q.some(b=>b.end<=now)){labTick();labAfterFinish();return;}
   const S=$('sLab');for(const b of LAB.q){const e=S.querySelector(`[data-t="${b.id}"]`),p=S.querySelector(`[data-p="${b.id}"]`),g=S.querySelector(`[data-g="${b.id}"]`);
     if(e)e.textContent=labDur((b.end-now)/1000);if(p)p.style.width=((1-Math.max(0,b.end-now)/b.dur)*100).toFixed(1)+'%';
-    if(g&&LV.conf!==b.id)g.textContent=`💎 ${labGem(b.end-now,b.to)} · ${T('HEMEN BİTİR')}`;}}
+    if(rel(10)){const gs=g&&g.querySelector('span'),st=S.querySelector(`[data-s="${b.id}"] span`);if(gs)gs.textContent=`💎 ${labGem(b.end-now,b.to)}`;if(st)st.textContent=`⭐ ${labStar(b.end-now,b.to).toLocaleString(LOC)}`;}
+    else if(g&&LV.conf!==b.id)g.textContent=`💎 ${labGem(b.end-now,b.to)} · ${T('HEMEN BİTİR')}`;}}
 function labCelebrate(id){if(LV.on)LV.celQ.push(id);} // one celebration at a time, in order
 function labCelGo(id){const i=LABT.findIndex(m=>m.id===id);if(i<0||!LV.on)return;labSelect(i);const m=LABT[i];
   LV.cel.push({i,t:0,k:labRaw(id),n:T(m.n)});LV.flash=.7;sfx('achieve',{vol:.7});sfx('bell',{vol:.5,rate:1.3,delay:.15});vib([30,40,60]);
@@ -3784,7 +3812,7 @@ function openGift(lv,done){
   GIFTS.boxes.forEach((b,i)=>{const e=document.createElement('button');e.className='gfb';e.innerHTML='<span class="q notr">?</span>';e.onclick=ev=>{ev.stopPropagation();giftPick(i);};b.el=e;grid.appendChild(e);});
   $('gfMsg').className='gfMsg';$('gfTake').hidden=true;giftHud();showModal('mGift');gState='menu';sfx('achieve',{vol:.5});
 }
-function giftHud(){const S=GIFTS;{const p=Math.round((S.boosted?GIFT.jackAd:GIFT.jackP)*100),J=$('gfJack');$('gfJackP').textContent=S.jackGot?T('BULDUN!'):S.key?'🗝 '+T('Anahtar kullanıldı: hazine bu hediyede!'):T('Bu hediyede olma şansı %{p}',{p});J.classList.toggle('hit',!!S.jackGot);
+function giftHud(){const S=GIFTS;{const p=Math.round((S.boosted?GIFT.jackAd:GIFT.jackP)*100),J=$('gfJack');$('gfJackP').textContent=S.jackGot?T('BULDUN!'):S.key?'🗝 '+T('Anahtar kullanıldı: hazine bu hediyede!'):T('Bu hediyede olma şansı %{p}',{p});J.classList.toggle('hit',!!S.jackGot);if(rel(10))J.querySelector('span').textContent=`${GIFT.jack.stars} ⭐ + ${GIFT.jack.gems} 💎`;
     $('gfBoost').hidden=!(S.boost&&!S.boosted&&S.n===0);$('gfBoost').textContent=adLabel(T('HAZİNE ŞANSI %{p}',{p:Math.round(GIFT.jackAd*100)}));}$('gfCount').textContent=`${T('AÇILAN KUTU')}: ${S.n}`;$('gfBag').textContent=S.n&&giftTxt(S.got)?`${T('KAZANÇ')}: ${giftTxt(S.got)}`:'';
   if(!S.over)$('gfMsg').textContent=S.n<GIFT.min?T('En az üç kutu aç'):`${T('Devam et ya da hemen al')} · ${T('sonraki kutu')} ×${(1+GIFT.step*(S.n+1-GIFT.min)).toLocaleString(LOC)}`;
   $('gfAd').hidden=!S.canAd;$('gfAd').textContent=adLabel(T('1 HAK DAHA'));
@@ -3829,15 +3857,15 @@ function checkDaily(after){
   if(lastLogin===yest)loginStreak++;else if(rel(9)&&lastLogin===y2&&loginStreak>1&&TIPS.skWk!==wk){TIPS.skWk=wk;loginStreak++;kept=1;}else loginStreak=1; /* 1.4.9: one missed day a week is forgiven by the streak shield */
   const back=rel(9)&&!first&&away>=3; /* away three days or more: a welcome-back gift on top */
   lastLogin=today;
-  const sr=Math.min(50+loginStreak*50,500),dr=Math.min(Math.floor(loginStreak/3)*5+5,10),wd=(loginStreak-1)%7+1,bm=10; // + Laboratory speed-up minutes every day // day 7 of every week opens the weekly chest
+  const sr=rel(10)?Math.min(40+loginStreak*30,300):Math.min(50+loginStreak*50,500),/* 1.5.0: stars piled up, so the daily login gives less */dr=Math.min(Math.floor(loginStreak/3)*5+5,10),wd=(loginStreak-1)%7+1,bm=10; // + Laboratory speed-up minutes every day // day 7 of every week opens the weekly chest
   $('dWeek').innerHTML=Array.from({length:7},(_,i)=>`<span class="${i+1<wd?'ok':i+1===wd?'on':''}">${i===6?'🎁':i+1}</span>`).join('');
   $('dWeekT').textContent=wd===7?T('Bugün haftalık sandık açılıyor!'):T('Haftalık sandığa {d} gün',{d:7-wd});
   $('dIco').textContent=first?'🎁':'🔥';$('dHead').textContent=T(first?'HOŞ GELDİN HEDİYESİ':'GÜNLÜK BONUS');$('dSub').textContent=T(first?'Giriş serin başladı: her gün gel, 7. günde sandık açılır':'Giriş serisi');
   if(rel(9)){if(kept)$('dSub').textContent='🛡 '+T('Seri kalkanı serini korudu');else if(back)$('dSub').textContent='🎁 '+T('Tekrar hoş geldin! Geri dönüş hediyen de var');
-    const n=loginStreak+1;$('dTom').hidden=false;$('dTom').innerHTML=`${T('Yarın')}: <b>+${Math.min(50+n*50,500)} ⭐ +${Math.min(Math.floor(n/3)*5+5,10)} 💎</b><br><small>🛡 ${T('Seri kalkanı')}: ${TIPS.skWk===wk?T('bu hafta kullanıldı'):T('hazır, bir gün kaçırırsan serini korur')}</small>`;} /* 1.4.9: tomorrow's reward is shown today */
+    const n=loginStreak+1;$('dTom').hidden=false;$('dTom').innerHTML=`${T('Yarın')}: <b>+${rel(10)?Math.min(40+n*30,300):Math.min(50+n*50,500)} ⭐ +${Math.min(Math.floor(n/3)*5+5,10)} 💎</b><br><small>🛡 ${T('Seri kalkanı')}: ${TIPS.skWk===wk?T('bu hafta kullanıldı'):T('hazır, bir gün kaçırırsan serini korur')}</small>`;} /* 1.4.9: tomorrow's reward is shown today */
   $('dStreak').textContent=loginStreak;$('dStars').textContent=sr;$('dDia').textContent=dr;$('dBoost').textContent=labMin(bm);
   const vip=vipOn();$('dVip').hidden=!vip;
-  const claim=k=>{SND.resume();sfx('daily',{vol:.6,rev:.3});stars+=sr*k;diamonds+=dr*k;LAB.boost=(LAB.boost|0)+bm*k;flyReward(document.activeElement,{stars:sr*k,gems:dr*k});if(wd===7){const jack=Math.random()<.25;later(()=>grant({stars:150,gems:10,boost:60},T('HAFTALIK SANDIK')),700);if(jack)later(()=>grant(GIFT.jack,'🏆 '+T('BÜYÜK HAZİNE')),2600);}if(vipOn())grant(VIP.daily,'👑 VIP GÜNLÜK ÖDÜL');if(back)later(()=>grant({stars:300,gems:15},'🎁 '+T('GERİ DÖNÜŞ HEDİYESİ')),wd===7?4200:900);saveG();$('sDaily').classList.remove('on');$('dailyPrev').style.display='none';if(after)later(after,first?900:0);};
+  const claim=k=>{SND.resume();sfx('daily',{vol:.6,rev:.3});stars+=sr*k;diamonds+=dr*k;LAB.boost=(LAB.boost|0)+bm*k;flyReward(document.activeElement,{stars:sr*k,gems:dr*k});if(wd===7){const jack=Math.random()<.25;later(()=>grant({stars:150,gems:10,boost:60},T('HAFTALIK SANDIK')),700);if(jack)later(()=>grant(GIFT.jack,'🏆 '+T('BÜYÜK HAZİNE')),2600);}if(vipOn())grant(VIP.daily,'👑 VIP GÜNLÜK ÖDÜL');if(back)later(()=>grant({stars:rel(10)?200:300,gems:15},'🎁 '+T('GERİ DÖNÜŞ HEDİYESİ')),wd===7?4200:900);saveG();$('sDaily').classList.remove('on');$('dailyPrev').style.display='none';if(after)later(after,first?900:0);};
   $('claimBtn').onclick=()=>claim(1);$('claimAd').textContent=SHOP.noAds?'🎁 2 KATINI AL':'▶ REKLAMLA 2 KATINI AL';$('claimAd').parentNode.hidden=!monOn()||!adReady();
   $('claimAd').onclick=async()=>{if(await showRewarded())claim(2);};
   $('dailyPrev').style.display='block';
@@ -5824,11 +5852,11 @@ function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');ads
   if(gState!=='playing')return;
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();if(rel(9)&&G2.mode==='level'&&!REPLAY)later(()=>toast('🏆','YENİ REKOR!',T('KARA DELİK KÜTLESİ')+' '+v2SizeTxt(sz)),500);} /* 1.4.9: the record is a toast as the level ends */
   if(!G2.dmg)dmEvent('clean',1);
-  if(G2.mode==='level'&&!REPLAY&&!G2.dmg&&level>1){G2.flaw=1;stars+=25*(G2.hm?2:1);saveG();} /* not a single arc lost: a small, sure reward */if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
+  if(G2.mode==='level'&&!REPLAY&&!G2.dmg&&level>1){G2.flaw=1;stars+=(rel(10)?15:25)*(G2.hm?2:1);saveG();} /* not a single arc lost: a small, sure reward */if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
   G2.hardW=G2.hard&&G2.mode==='level'&&!REPLAY&&v2Hard(G2.lv)?HARD.stars[G2.hard]*(G2.hm?2:1):0;if(G2.hardW){stars+=G2.hardW;saveG();} /* a peak cleared pays a little more */
   if(G2.mode==='level'&&!REPLAY){let sp=10+5*clamp(lives,1,3);if(G2.rule)sp+=10*(seasonIs('rival')&&(G2.rule.rival||G2.rule.guard)?2:1);if(G2.L.boss||G2.rule&&G2.rule.duel)sp+=25;spAdd(sp);} // season points
   if(G2.mod&&G2.mode==='level'){const c=RISK_CARDS.find(x=>x.id===G2.mod);if(c)later(()=>grant(c.rw,'🃏 '+T(c.n)),1400);}
-  if(rel(9)&&G2.mode==='level'&&!REPLAY){const d=new Date().toDateString();if(TIPS.fwDay!==d){TIPS.fwDay=d;saveG();later(()=>grant({stars:150},'☀️ '+T('GÜNÜN İLK ZAFERİ')),2000);}} /* 1.4.9: the day's first level won pays a bonus */
+  if(rel(9)&&G2.mode==='level'&&!REPLAY){const d=new Date().toDateString();if(TIPS.fwDay!==d){TIPS.fwDay=d;saveG();later(()=>grant({stars:rel(10)?100:150},'☀️ '+T('GÜNÜN İLK ZAFERİ')),2000);}} /* 1.4.9: the day's first level won pays a bonus */
   G2.objs=G2.objs.filter(o=>o.st==='sw');
   if(gameMode==='survival'){gameOver();return;}
   levelSuccess();
@@ -5844,7 +5872,7 @@ const BOOSTS={arc:{ic:'☄️',t:'+1 YAYLA BAŞLA',d:'Zirve seviyesinde bir yay 
 function v2BoostFor(l){const pool=v2Peak(l)?['arc','gold','shield']:['rage','shell','shield'];return pool[l%pool.length];} /* consecutive levels never repeat an offer */
 function v2Result(){ // level-complete card body
   if(rel(9)){const ch=t=>`<span class="gch">${t}</span>`,lv=levelStars(),hm=G2.hm?2:3,lh=clamp(lives,1,hm),nx=level+1,cl=!REPLAY&&gameMode==='classic',h=v2Hard(nx),gp=labGap(nx); /* 1.4.9: the record is a toast, the next level is named as it starts */
-    const gain=ch('+'+(G2.hm?10:5)+' ⭐')+(G2.flaw?ch('+'+25*(G2.hm?2:1)+' ⭐ '+T('HASARSIZ')):'')+(G2.hardW?ch('+'+G2.hardW+' ⭐ '+T(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')):'')+(level%5===0?ch('+3 💎'):'')+(G2.gift?ch('+1 🛡'):'');
+    const gain=ch('+'+(G2.hm?10:5)+' ⭐')+(G2.flaw?ch('+'+(rel(10)?15:25)*(G2.hm?2:1)+' ⭐ '+T('HASARSIZ')):'')+(G2.hardW?ch('+'+G2.hardW+' ⭐ '+T(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')):'')+(level%5===0?ch('+3 💎'):'')+(G2.gift?ch('+1 🛡'):'');
     const why=lv<3?`<div class="stc2"><span class="ok">${'♥'.repeat(lh)}</span><span>${'♥'.repeat(hm-lh)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span></div>`:'';
     const s3=G2.mod==='glass'&&!REPLAY?'':G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b> ${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3r"><span>${T('3 yıldız serisi')} ${STREAK3}/10</span><i><b style="width:${STREAK3*10}%"></b></i><span>🎁 25 💎</span></div>`;
     const pk=cl&&v2Peak(nx)?`<div class="pk2">🔥 ${T('SIRADAKİ SEVİYE ZİRVE')} · ${T(nx%10===0?'BOSS SEVİYESİ':h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')}</div>`:'';

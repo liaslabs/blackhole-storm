@@ -1484,11 +1484,11 @@ function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');ads
   if(gState!=='playing')return;
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();if(rel(9)&&G2.mode==='level'&&!REPLAY)later(()=>toast('🏆','YENİ REKOR!',T('KARA DELİK KÜTLESİ')+' '+v2SizeTxt(sz)),500);} /* 1.4.9: the record is a toast as the level ends */
   if(!G2.dmg)dmEvent('clean',1);
-  if(G2.mode==='level'&&!REPLAY&&!G2.dmg&&level>1){G2.flaw=1;stars+=25*(G2.hm?2:1);saveG();} /* not a single arc lost: a small, sure reward */if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
+  if(G2.mode==='level'&&!REPLAY&&!G2.dmg&&level>1){G2.flaw=1;stars+=(rel(10)?15:25)*(G2.hm?2:1);saveG();} /* not a single arc lost: a small, sure reward */if(G2.rule&&G2.mode==='level')dmEvent('rulelv',1);
   G2.hardW=G2.hard&&G2.mode==='level'&&!REPLAY&&v2Hard(G2.lv)?HARD.stars[G2.hard]*(G2.hm?2:1):0;if(G2.hardW){stars+=G2.hardW;saveG();} /* a peak cleared pays a little more */
   if(G2.mode==='level'&&!REPLAY){let sp=10+5*clamp(lives,1,3);if(G2.rule)sp+=10*(seasonIs('rival')&&(G2.rule.rival||G2.rule.guard)?2:1);if(G2.L.boss||G2.rule&&G2.rule.duel)sp+=25;spAdd(sp);} // season points
   if(G2.mod&&G2.mode==='level'){const c=RISK_CARDS.find(x=>x.id===G2.mod);if(c)later(()=>grant(c.rw,'🃏 '+T(c.n)),1400);}
-  if(rel(9)&&G2.mode==='level'&&!REPLAY){const d=new Date().toDateString();if(TIPS.fwDay!==d){TIPS.fwDay=d;saveG();later(()=>grant({stars:150},'☀️ '+T('GÜNÜN İLK ZAFERİ')),2000);}} /* 1.4.9: the day's first level won pays a bonus */
+  if(rel(9)&&G2.mode==='level'&&!REPLAY){const d=new Date().toDateString();if(TIPS.fwDay!==d){TIPS.fwDay=d;saveG();later(()=>grant({stars:rel(10)?100:150},'☀️ '+T('GÜNÜN İLK ZAFERİ')),2000);}} /* 1.4.9: the day's first level won pays a bonus */
   G2.objs=G2.objs.filter(o=>o.st==='sw');
   if(gameMode==='survival'){gameOver();return;}
   levelSuccess();
@@ -1504,7 +1504,7 @@ const BOOSTS={arc:{ic:'☄️',t:'+1 YAYLA BAŞLA',d:'Zirve seviyesinde bir yay 
 function v2BoostFor(l){const pool=v2Peak(l)?['arc','gold','shield']:['rage','shell','shield'];return pool[l%pool.length];} /* consecutive levels never repeat an offer */
 function v2Result(){ // level-complete card body
   if(rel(9)){const ch=t=>`<span class="gch">${t}</span>`,lv=levelStars(),hm=G2.hm?2:3,lh=clamp(lives,1,hm),nx=level+1,cl=!REPLAY&&gameMode==='classic',h=v2Hard(nx),gp=labGap(nx); /* 1.4.9: the record is a toast, the next level is named as it starts */
-    const gain=ch('+'+(G2.hm?10:5)+' ⭐')+(G2.flaw?ch('+'+25*(G2.hm?2:1)+' ⭐ '+T('HASARSIZ')):'')+(G2.hardW?ch('+'+G2.hardW+' ⭐ '+T(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')):'')+(level%5===0?ch('+3 💎'):'')+(G2.gift?ch('+1 🛡'):'');
+    const gain=ch('+'+(G2.hm?10:5)+' ⭐')+(G2.flaw?ch('+'+(rel(10)?15:25)*(G2.hm?2:1)+' ⭐ '+T('HASARSIZ')):'')+(G2.hardW?ch('+'+G2.hardW+' ⭐ '+T(G2.hard>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')):'')+(level%5===0?ch('+3 💎'):'')+(G2.gift?ch('+1 🛡'):'');
     const why=lv<3?`<div class="stc2"><span class="ok">${'♥'.repeat(lh)}</span><span>${'♥'.repeat(hm-lh)}</span><span>=</span><span class="ok">${'★'.repeat(lv)}</span><span>${'☆'.repeat(3-lv)}</span></div>`:'';
     const s3=G2.mod==='glass'&&!REPLAY?'':G2.lifeGift?`<div class="s3b gift"><b>🎁 +25 💎</b> ${T('10 seviye üst üste 3 yıldız')}</div>`:REPLAY?'':`<div class="s3r"><span>${T('3 yıldız serisi')} ${STREAK3}/10</span><i><b style="width:${STREAK3*10}%"></b></i><span>🎁 25 💎</span></div>`;
     const pk=cl&&v2Peak(nx)?`<div class="pk2">🔥 ${T('SIRADAKİ SEVİYE ZİRVE')} · ${T(nx%10===0?'BOSS SEVİYESİ':h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')}</div>`:'';
