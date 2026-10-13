@@ -1677,7 +1677,7 @@ const AVPK={'🔮':{rage:1},'🏍️':{jet:1},'🧠':{shield:2},'🔺':{time:1.5
 const AVPK_TXT={'🔮':'Vortex +1 sn','🏍️':'Jet +1 sn','🧠':'Kalkan +2 sn','🔺':'Zaman Topu +1,5 sn','🧙':'Mini kara delik +2 sn','🗡️':'Yay kalkanı +5 sn','⚙️':'Combo süresi +%15','👽':'Kusursuz Kaçış alanı +%20',
   '⚡':'Vortex +2 sn','🐉':'Jet +2 sn · bekleme −3 sn','🐋':'Vortex\'te +%15 büyüklük · Aşırı Yük +5 sn','🐲':'Süpernova koruması +1,5 sn','🔷':'Hawking bekleme −7 sn','👹':'Kalkan +5 sn'};
 function avPk(n){const p=rel(10)&&G2.on&&G2.mode==='level'&&AVPK[playerAvatar];return p&&p[n]||0;}
-function avPkFx(n){if(avPk(n))v2Pop(T(AVX[playerAvatar][1]),'#ffd76a',13);} // the avatar's name flashes when its boost kicks in
+const AV_IMGC={};function avPkFx(n,d){if(!avPk(n))return;const k=AVX[playerAvatar][0];let im=AV_IMGC[k];if(!im){im=AV_IMGC[k]=new Image();im.src=BHS_SPR.av[k];}G2.avFx={t0:G2.t,d:Math.max(1.6,d||1.6),im};} // the bought avatar's picture glows inside the hole while its boost runs
 let AVS={own:[],seen:null}; // bought (or carried over) avatars, and the level ones already shown in the picker
 function avOk(k){const a=AVX[k];if(!rel(10)||!a)return true;return a[2]===0||a[2]===1&&bestLevel>a[3]||AVS.own.includes(k);}
 function avNew(k){const a=AVX[k];return !!a&&a[2]===1&&avOk(k)&&!(AVS.seen||[]).includes(k);}
