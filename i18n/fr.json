@@ -1828,5 +1828,19 @@
 "{n}. seviyede açılır · Kozmik Lab’da inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "S'ouvre au niveau {n} · Construis-le au Labo cosmique ; une fois par niveau il sauve un cœur. · Une fois par niveau, le coup qui briserait ton dernier arc est arrêté : le temps ralentit, une onde dorée efface les météores et tes arcs reviennent.",
 "Kozmik Lab bitince haber verelim mi?": "On te prévient quand le Labo cosmique a fini ?",
 "Kozmik Lab işi bitti": "Le Labo cosmique a fini",
-"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "Les diamants et tes propres boucliers ne servent pas dans ce tournoi. Les pouvoirs du labo sont désactivés"
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "Les diamants et tes propres boucliers ne servent pas dans ce tournoi. Les pouvoirs du labo sont désactivés",
+"Bu ürün şu an satın alınamıyor. Biraz sonra tekrar dene": "Cet article ne peut pas être acheté pour l’instant. Réessaie dans un moment",
+"YILDIZIN YETMİYOR": "PAS ASSEZ D’ÉTOILES",
+"Yıldız koleksiyonu": "Collection étoilée",
+"yıldızla açılır": "se débloque avec des étoiles",
+"sende {b}": "tu as {b}",
+"{n} ⭐ GEREKLİ": "{n} ⭐ REQUISES",
+"{n} ⭐ gerekli": "{n} ⭐ requises",
+"{n} ⭐ İLE AÇ": "DÉBLOQUER POUR {n} ⭐",
+"yetersiz": "insuffisant",
+"SÜPERNOVA KALINTISI": "RÉMANENT DE SUPERNOVA",
+"PULSAR FENERİ": "PHARE PULSAR",
+"AURORA PERDESİ": "VOILE D’AURORE",
+"Sıradan {n}": "Commun {n}",
+"Nadir {n}": "Rare {n}"
 }

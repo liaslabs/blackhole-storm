@@ -1828,5 +1828,19 @@
 "{n}. seviyede açılır · Kozmik Lab’da inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Opens at level {n} · Build it in the Cosmic Lab; once a level it saves a heart. · Once per level, the hit that would break your last arc is caught: time slows, a gold wave clears the meteors and your arcs come back.",
 "Kozmik Lab bitince haber verelim mi?": "Shall we tell you when the Cosmic Lab is done?",
 "Kozmik Lab işi bitti": "Cosmic Lab work done",
-"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "Diamonds and your own shields are not used in this tournament. Cosmic Lab powers are off"
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "Diamonds and your own shields are not used in this tournament. Cosmic Lab powers are off",
+"Bu ürün şu an satın alınamıyor. Biraz sonra tekrar dene": "This item can't be bought right now. Try again in a moment",
+"YILDIZIN YETMİYOR": "NOT ENOUGH STARS",
+"Yıldız koleksiyonu": "Star collection",
+"yıldızla açılır": "unlocked with stars",
+"sende {b}": "you have {b}",
+"{n} ⭐ GEREKLİ": "{n} ⭐ NEEDED",
+"{n} ⭐ gerekli": "{n} ⭐ needed",
+"{n} ⭐ İLE AÇ": "UNLOCK FOR {n} ⭐",
+"yetersiz": "not enough",
+"SÜPERNOVA KALINTISI": "SUPERNOVA REMNANT",
+"PULSAR FENERİ": "PULSAR BEACON",
+"AURORA PERDESİ": "AURORA VEIL",
+"Sıradan {n}": "Common {n}",
+"Nadir {n}": "Rare {n}"
 }

@@ -1828,5 +1828,19 @@
 "{n}. seviyede açılır · Kozmik Lab’da inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Откроется на {n}-м уровне · Постройте в космолаборатории; раз за уровень спасает сердце. · Раз за уровень удар, который сломал бы последнюю дугу, гасится: время замедляется, золотая волна стирает метеоры, дуги возвращаются.",
 "Kozmik Lab bitince haber verelim mi?": "Сообщить, когда космолаборатория закончит?",
 "Kozmik Lab işi bitti": "Космокосмолаборатория закончила",
-"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "В этом турнире алмазы и свои щиты не используются. Силы космолаборатории отключены"
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "В этом турнире алмазы и свои щиты не используются. Силы космолаборатории отключены",
+"Bu ürün şu an satın alınamıyor. Biraz sonra tekrar dene": "Сейчас этот товар нельзя купить. Попробуй чуть позже",
+"YILDIZIN YETMİYOR": "НЕ ХВАТАЕТ ЗВЁЗД",
+"Yıldız koleksiyonu": "Звёздная коллекция",
+"yıldızla açılır": "открывается за звёзды",
+"sende {b}": "у тебя {b}",
+"{n} ⭐ GEREKLİ": "НУЖНО {n} ⭐",
+"{n} ⭐ gerekli": "Нужно {n} ⭐",
+"{n} ⭐ İLE AÇ": "ОТКРЫТЬ ЗА {n} ⭐",
+"yetersiz": "не хватает",
+"SÜPERNOVA KALINTISI": "ОСТАТОК СВЕРХНОВОЙ",
+"PULSAR FENERİ": "МАЯК ПУЛЬСАРА",
+"AURORA PERDESİ": "ЗАВЕСА СИЯНИЯ",
+"Sıradan {n}": "Обычный {n}",
+"Nadir {n}": "Редкий {n}"
 }

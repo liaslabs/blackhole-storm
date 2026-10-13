@@ -21,6 +21,7 @@ Her klasör bir Play Console dilidir. İçinde:
 | `ru-RU` | Русский | `ru-RU/screenshots` |
 | `ar` | العربية | `ar/screenshots` |
 | `id` | Indonesia | `id/screenshots` |
+| `ja-JP` | 日本語 | `ja-JP/screenshots` |
 
 Kürtçe Play'de mağaza dili olarak yok; Kürtçe telefonlar İngilizce sayfayı görür (oyunun kendisi Kürtçe açılır).
 

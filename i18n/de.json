@@ -1828,5 +1828,19 @@
 "{n}. seviyede açılır · Kozmik Lab’da inşa et; seviye başına bir kez kalbini korur. · Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.": "Öffnet bei Level {n} · Im Kosmo-Labor bauen; einmal pro Level rettet es ein Herz. · Einmal pro Level wird der Treffer abgefangen, der deinen letzten Bogen zerbrechen würde: die Zeit verlangsamt sich, eine goldene Welle löscht die Meteore und deine Bögen kehren zurück.",
 "Kozmik Lab bitince haber verelim mi?": "Sollen wir dir Bescheid geben, wenn das Kosmo-Labor fertig ist?",
 "Kozmik Lab işi bitti": "Kosmo-Labor-Arbeit fertig",
-"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "Diamanten und eigene Schilde zählen in diesem Turnier nicht. Kräfte des Kosmo-Labors sind aus"
+"Elmas ve kendi kalkanların bu turnuvada kullanılmaz. Kozmik Lab güçleri kapalı": "Diamanten und eigene Schilde zählen in diesem Turnier nicht. Kräfte des Kosmo-Labors sind aus",
+"Bu ürün şu an satın alınamıyor. Biraz sonra tekrar dene": "Dieser Artikel ist gerade nicht erhältlich. Versuch es gleich noch einmal",
+"YILDIZIN YETMİYOR": "NICHT GENUG STERNE",
+"Yıldız koleksiyonu": "Sternen-Kollektion",
+"yıldızla açılır": "mit Sternen freischalten",
+"sende {b}": "du hast {b}",
+"{n} ⭐ GEREKLİ": "{n} ⭐ NÖTIG",
+"{n} ⭐ gerekli": "{n} ⭐ nötig",
+"{n} ⭐ İLE AÇ": "FÜR {n} ⭐ FREISCHALTEN",
+"yetersiz": "zu wenig",
+"SÜPERNOVA KALINTISI": "SUPERNOVA-ÜBERREST",
+"PULSAR FENERİ": "PULSAR-LEUCHTFEUER",
+"AURORA PERDESİ": "POLARLICHT-SCHLEIER",
+"Sıradan {n}": "Gewöhnlich {n}",
+"Nadir {n}": "Selten {n}"
 }
