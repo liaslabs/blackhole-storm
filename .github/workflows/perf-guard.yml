@@ -1,0 +1,22 @@
+name: Performance guard
+# Plays heavy levels in Chromium and fails when a draw budget is broken (scripts/perf_guard.js):
+# no real shadowBlur on the game canvas, few text draws, few gradients per frame.
+on:
+  push:
+    branches: [blackhole, main]
+    paths: ['src/**', 'index.html', 'scripts/perf_guard.js']
+  workflow_dispatch:
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm i --no-save playwright@1.48.2 && npx playwright install --with-deps chromium
+      - run: python3 src/build.py
+      - run: |
+          python3 -m http.server 8766 >/dev/null 2>&1 &
+          sleep 2
+          node scripts/perf_guard.js http://127.0.0.1:8766/index.html

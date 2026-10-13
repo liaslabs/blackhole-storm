@@ -52,6 +52,10 @@ Tek sayfa, çerçeve yok, sunucu yok. Oyun durumu `localStorage`'da tutulur.
 
 1. Hatalar ve uç durumlar (oyun akışı, can/skor, kayıt bozulması, seviye geçişi).
 2. Performans (düşük seviye Android telefonda 60 FPS; bellek sızıntısı; her karede yapılan gereksiz iş).
+   Kurallar (1.4.9): oyun tuvalinde gerçek `shadowBlur` yok (parlama ucuz yoldan çizilir, `GLOWX`); oyun sırasında değişen
+   yazılar bir kez görüntüye çizilip tekrar kullanılır (`txtSprite`); büyük doku yüklemeleri oyun dışında yapılır (`glPrepZone`);
+   CSS animasyonları oyun sırasında yalnızca `transform`/`opacity` kullanır. `scripts/perf_guard.js` her gönderimde
+   bu bütçeleri denetler (Performance guard iş akışı).
 3. Güvenlik (XSS: `innerHTML` kullanımları, paylaşım/meydan okuma linklerinden gelen parametreler; service worker önbelleği).
 4. Play Store uygunluğu (gizlilik, reklam/satın alma akışları, geri tuşu, çevrimdışı çalışma).
 5. Çeviri sistemi (eksik anahtar, sayı biçimi, RTL yerleşimi).

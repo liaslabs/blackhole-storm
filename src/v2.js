@@ -1480,7 +1480,7 @@ function v2TipAnim(id){let cv=$('tip2Cv');const fn=TIPANIM[id];if(!fn){if(cv)cv.
 function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8;G2.tipGap=8;$('rage2')&&$('rage2').classList.remove('hl');$('shTop').classList.remove('hl');$('diaTop').classList.remove('hl');$('hkTop').classList.remove('hl');gState='playing';lastT=performance.now();SND.duck(1,0);sfx('click',{vol:.4});}
 
 // ── level end ─────────────────────────────────────────
-function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');adsPreload();}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
+function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');adsPreload();glPrepZone(level+1);}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
   if(gState!=='playing')return;
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();if(rel(9)&&G2.mode==='level'&&!REPLAY)later(()=>toast('🏆','YENİ REKOR!',T('KARA DELİK KÜTLESİ')+' '+v2SizeTxt(sz)),500);} /* 1.4.9: the record is a toast as the level ends */
   if(!G2.dmg)dmEvent('clean',1);
@@ -1665,7 +1665,11 @@ function v2Frame(dt){
 // the last one pulses; when all three are gone a heart goes and the arcs grow back.
 /* arcs and shells break into pieces you can see fly off, and mend from dust that gathers back into the arc */
 const AFX_COL={arc:'#ff6a6a',shell:'#eaf1fb',gold:'#ffd76a'};
-function v2ArcGeo(i){const R=G2.R||20,lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,seg=TAU/v2AN(),gap=.26,a0=-Math.PI/2-seg/2+i*seg+gap/2;return {R,lw,rr,a0,a1:a0+seg-gap};}
+/* arc look: 0 = the thick ring on the horizon (to 1.4.9); 1.5.0 moves them just inside the hole, thin, so the black hole's own rim stays in view.
+   ARCST (preview only): 1 thin line, 2 thin line with a soft halo, 3 a little wider with a halo */
+const v2ArcSt=()=>window.ARCST!=null?window.ARCST:rel(10)?2:0;
+function v2ArcLR(R){const s=v2ArcSt();if(!s){const lw=Math.max(4,R*.13);return [lw,R+lw*.5+1.5];}const lw=Math.max(2,R*(s===3?.075:.05));return [lw,R-lw*.5-Math.max(2,R*.07)];}
+function v2ArcGeo(i){const R=G2.R||20,[lw,rr]=v2ArcLR(R),seg=TAU/v2AN(),gap=.26,a0=-Math.PI/2-seg/2+i*seg+gap/2;return {R,lw,rr,a0,a1:a0+seg-gap};}
 function v2ArcBreak(i,col,k=1){if(!G2.afx||i<0||i>=v2AN())return;const {lw,rr,a0,a1}=v2ArcGeo(i),rn=(a,b)=>a+Math.random()*(b-a),n=Math.max(2,Math.round(4*k)),da=(a1-a0)/n;
   for(let q=0;q<n;q++){const am=a0+da*(q+.5),sp=sp2(rn(70,150));G2.afx.push({k:'chunk',x:hX+Math.cos(am)*rr,y:hY+Math.sin(am)*rr,vx:Math.cos(am)*sp+rn(-30,30),vy:Math.sin(am)*sp+rn(-30,30),a:am,h:da*.4,r:rr,lw,rot:0,vr:rn(-7,7),col,t:0,life:.85});}
   for(let q=0;q<Math.round(14*k);q++){const am=rn(a0,a1),sp=sp2(rn(110,280)),d=am+rn(-.6,.6);G2.afx.push({k:'shard',x:hX+Math.cos(am)*rr,y:hY+Math.sin(am)*rr,vx:Math.cos(d)*sp,vy:Math.sin(d)*sp,rot:rn(0,TAU),vr:rn(-14,14),s:lw*rn(.35,.85),col,t:0,life:rn(.55,.95)});}
@@ -1688,16 +1692,19 @@ function v2DrawArcFx(){const A=G2.afx;if(!A||!A.length)return;ctx.save();ctx.lin
       if(q>.55){const w=1-(q-.55)/.45;ctx.globalAlpha=w*.9;ctx.strokeStyle='#ffffff';ctx.shadowBlur=14;ctx.lineWidth=lw+4*w;ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();}
       ctx.restore();}}
   ctx.globalAlpha=1;ctx.restore();}
-function v2DrawArcs(R){const lw=Math.max(4,R*.13),rr=R+lw*.5+1.5,N=v2AM(),seg=TAU/Math.max(1,N),gap=.26,n=G2.arcs,last=n===1&&N>1,grow=Math.min(1,G2.arcFill/.5); // the arcs sit on the event horizon; their colour is the layer left: gold, silver, red
+function v2DrawArcs(R){const [lw,rr]=v2ArcLR(R),st=v2ArcSt(),N=v2AM(),seg=TAU/Math.max(1,N),gap=.26,n=G2.arcs,last=n===1&&N>1,grow=Math.min(1,G2.arcFill/.5); // the arcs sit on the event horizon; their colour is the layer left: gold, silver, red
   ctx.save();ctx.lineCap='round';
   if(N===0){if(G2.gold){ctx.strokeStyle='#ffd76a';ctx.shadowColor='#ffb020';ctx.shadowBlur=12;ctx.lineWidth=lw;ctx.beginPath();ctx.arc(0,0,rr,0,TAU);ctx.stroke();ctx.shadowBlur=0;} /* no arcs: a gold shell shows as a full ring */
     if((G2.mode==='level'||G2.mode==='surv')&&G2.arcMax===0){const k=ARCPOW.need,e=G2.eN||0,y=rr+lw+sp2(12),dx=sp2(15),pr=sp2(4.6);for(let i=0;i<k;i++){const x=(i-(k-1)/2)*dx,on=i<e;ctx.fillStyle=on?'#ff8a8a':'rgba(8,4,10,.55)';ctx.shadowColor='#ff5a5f';ctx.shadowBlur=on?10:0;ctx.beginPath();ctx.arc(x,y,pr,0,TAU);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=on?'#ffd0d0':'rgba(255,170,170,.55)';ctx.lineWidth=1.5;ctx.stroke();}}} /* the energy balls counted toward the arc power */
   if(G2.arcPow>0){const q=G2.arcPow/ARCPOW.dur,bl=G2.arcPow<3?.4+.6*Math.abs(Math.sin(clock*8)):1;ctx.globalAlpha=bl;ctx.strokeStyle='rgba(255,170,170,.85)';ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,rr+lw+3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke();ctx.globalAlpha=1;} /* the arc power's time left, blinking in its last 3 s */
   for(let i=0;i<N;i++){const a0=-Math.PI/2-seg/2+i*seg+gap/2,a1=a0+seg-gap;
-    if(i>=n){ctx.lineWidth=lw*.45;ctx.strokeStyle='rgba(255,255,255,.14)';ctx.setLineDash([2,5]);ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();ctx.setLineDash([]);} // broken
+    if(i>=n){ctx.lineWidth=st?Math.max(1.2,lw*.7):lw*.45;ctx.strokeStyle='rgba(255,255,255,.14)';ctx.setLineDash([2,5]);ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();ctx.setLineDash([]);} // broken
     else{const fm=v2ArcFormQ(i),shell=i<G2.shells&&!(fm.k==='shell'&&fm.q<.62),gold=!!G2.gold&&!(fm.k==='gold'&&fm.q<.62),pu=last&&!gold&&!shell?.55+.45*Math.sin(clock*9):1,e=a0+(a1-a0)*grow;
-      ctx.globalAlpha=fm.k==='arc'?fm.a:1;ctx.lineWidth=lw+3;ctx.strokeStyle='rgba(8,4,10,.55)';ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.globalAlpha=1; /* dark backing so the arc reads on any nebula */
-      if(fm.k==='arc')ctx.globalAlpha=fm.a;ctx.globalAlpha*=pu;ctx.lineWidth=lw+(last?1:0);ctx.strokeStyle=gold?'#ffd76a':shell?'#eaf1fb':last?'#ff6a6a':'#ff5a5f';ctx.shadowColor=gold?'#ffb020':shell?'#bcd6ff':'#ff3b3b';ctx.shadowBlur=gold?12:shell?7:last?12:5;
+      const col=gold?'#ffd76a':shell?'#eaf1fb':last?'#ff6a6a':'#ff5a5f';
+      if(st){if(st>1){ctx.globalAlpha=(fm.k==='arc'?fm.a:1)*pu*(last?.4:.28);ctx.lineWidth=lw*3.2;ctx.strokeStyle=col;ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();} /* inside the hole the black is the backing; a wide faint stroke is the glow (no shadow blur) */
+        ctx.globalAlpha=(fm.k==='arc'?fm.a:1)*pu;ctx.lineWidth=lw;ctx.strokeStyle=col;}
+      else{ctx.globalAlpha=fm.k==='arc'?fm.a:1;ctx.lineWidth=lw+3;ctx.strokeStyle='rgba(8,4,10,.55)';ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.globalAlpha=1; /* dark backing so the arc reads on any nebula */
+      if(fm.k==='arc')ctx.globalAlpha=fm.a;ctx.globalAlpha*=pu;ctx.lineWidth=lw+(last?1:0);ctx.strokeStyle=col;ctx.shadowColor=gold?'#ffb020':shell?'#bcd6ff':'#ff3b3b';ctx.shadowBlur=gold?12:shell?7:last?12:5;}
       ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.shadowBlur=0;ctx.globalAlpha=1;}
   }
   if(G2.gold){const a=-Math.PI/2+((clock*.45)%1)*TAU;ctx.fillStyle='#fff6d0';ctx.shadowColor='#ffd76a';ctx.shadowBlur=10;ctx.beginPath();ctx.arc(Math.cos(a)*rr,Math.sin(a)*rr,lw*.45,0,TAU);ctx.fill();ctx.shadowBlur=0;} // a spark runs round a gold ring
@@ -1980,10 +1987,16 @@ function v2DrawSpot(b,s){ // a glowing crack with a pulsing target ring around i
 function v2DrawCalls(){
   for(const c of G2.calls){const age=c.max-c.life,a=Math.min(1,c.life/.25,age/.08),sc=age<.12?.7+age/.12*.3+.15*Math.sin(age/.12*Math.PI):1;
     const y=c.top?H*.3:Math.max(H*.14,hY-G2.G-sp2(40));ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,y);ctx.scale(sc,sc);ctx.textAlign='center';
-    ctx.font=`900 ${c.top?28:22}px "IBM Plex Sans Condensed",sans-serif`;ctx.lineWidth=5;ctx.strokeStyle='rgba(0,0,0,.65)';ctx.strokeText(c.txt,0,0);ctx.shadowColor=c.col;ctx.shadowBlur=18;ctx.fillStyle=c.col;ctx.fillText(c.txt,0,0);
-    if(c.sub){ctx.shadowBlur=0;ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';ctx.lineWidth=3;ctx.strokeText(c.sub,0,20);ctx.fillStyle='#e7e3da';ctx.fillText(c.sub,0,20);}ctx.restore();}
+    const font=`900 ${c.top?28:22}px "IBM Plex Sans Condensed",sans-serif`,body=x=>{x.font=font;x.lineWidth=5;x.strokeStyle='rgba(0,0,0,.65)';x.strokeText(c.txt,0,0);x.shadowColor=c.col;x.shadowBlur=18;x.fillStyle=c.col;x.fillText(c.txt,0,0);
+      if(c.sub){x.shadowBlur=0;x.font='800 12px "IBM Plex Sans Condensed",sans-serif';x.lineWidth=3;x.strokeText(c.sub,0,20);x.fillStyle='#e7e3da';x.fillText(c.sub,0,20);}};
+    if(GLOWX){if(!c.spr){const m=document.createElement('canvas').getContext('2d');m.font=font;let w=m.measureText(c.txt).width;if(c.sub){m.font='800 12px "IBM Plex Sans Condensed",sans-serif';w=Math.max(w,m.measureText(c.sub).width);}
+        c.spr=txtSprite('call|'+font+'|'+c.col+'|'+c.txt+'|'+(c.sub||''),font,{w,h:(c.top?28:22)+80,cy:(c.top?28:22)+30,fn:body});}txtBlit(c.spr,0,0);} /* drawn once with its real glow, then only scaled and faded */
+    else{ctx.font=font;body(ctx);}ctx.restore();}
   if(G2.ready&&gState==='playing'){const pu=.6+.4*Math.sin(clock*8);ctx.save();ctx.textAlign='center';ctx.globalAlpha=.8+.2*pu;ctx.font='900 20px "IBM Plex Sans Condensed",sans-serif';
-    ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';const y=Math.min(H-40,hY+G2.G+sp2(40));ctx.strokeText(T('DOKUN → VORTEX'),W/2,y);ctx.fillStyle=`rgb(255,${110+60*pu|0},70)`;ctx.shadowColor='#ff6a3d';ctx.shadowBlur=16;ctx.fillText(T('DOKUN → VORTEX'),W/2,y);ctx.restore();}
+    const y=Math.min(H-40,hY+G2.G+sp2(40)),tx=T('DOKUN → VORTEX');
+    if(GLOWX){const f='900 20px "IBM Plex Sans Condensed",sans-serif',sp=k=>txtSprite('vtx|'+k+'|'+tx,f,{t:tx,fn:x=>{x.lineWidth=4;x.strokeStyle='rgba(0,0,0,.6)';x.strokeText(tx,0,0);x.fillStyle=k?'rgb(255,170,70)':'rgb(255,110,70)';x.shadowColor='#ff6a3d';x.shadowBlur=16;x.fillText(tx,0,0);}});
+      const a=ctx.globalAlpha;txtBlit(sp(0),W/2,y);ctx.globalAlpha=a*pu;txtBlit(sp(1),W/2,y);} /* the colour pulse is a cross-fade of two ready images */
+    else{ctx.lineWidth=4;ctx.strokeStyle='rgba(0,0,0,.6)';ctx.strokeText(tx,W/2,y);ctx.fillStyle=`rgb(255,${110+60*pu|0},70)`;ctx.shadowColor='#ff6a3d';ctx.shadowBlur=16;ctx.fillText(tx,W/2,y);}ctx.restore();}
 }
 function v2DrawTut(){ // level 1: a ghost finger drags the hole until the player touches
   if(G2.tut<=0)return;const a=Math.min(1,G2.tut);const fx=hX,fy=hY+v2Off();ctx.save();ctx.globalAlpha=a*.9;
