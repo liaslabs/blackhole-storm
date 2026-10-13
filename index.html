@@ -6166,8 +6166,11 @@ function v2MetPath(o){ // the lane a meteor will take: soft arrows that fade wit
   const a=o.wait>0?.5:o.slow>0?.55:Math.max(0,.55*(1-o.ramp/V2K.met.ramp));if(a<=.02)return;
   const sp=Math.hypot(o.fvx,o.fvy)||1,ux=o.fvx/sp,uy=o.fvy/sp,nx=-uy,ny=ux,r=o.r;ctx.save();
   ctx.lineCap='round';ctx.lineJoin='round';const n=5,gap=Math.max(34,r*2.6),s=Math.max(10,r*.85),lit=Math.floor(clock*7)%n;
-  for(let i=0;i<n;i++){const d=r*2+i*gap,px=o.x+ux*d,py=o.y+uy*d;ctx.globalAlpha=Math.min(1,a*(i===lit?1.8:1.1)*(1-i*.16));ctx.strokeStyle=i===lit?'#ffd2a8':'#ff7a55';ctx.lineWidth=3.5;ctx.shadowColor='#ff5a3c';ctx.shadowBlur=12;
-    ctx.beginPath();ctx.moveTo(px-ux*s+nx*s,py-uy*s+ny*s);ctx.lineTo(px,py);ctx.lineTo(px-ux*s-nx*s,py-uy*s-ny*s);ctx.stroke();}
+  for(let i=0;i<n;i++){const d=r*2+i*gap,px=o.x+ux*d,py=o.y+uy*d,al=Math.min(1,a*(i===lit?1.8:1.1)*(1-i*.16));
+    ctx.beginPath();ctx.moveTo(px-ux*s+nx*s,py-uy*s+ny*s);ctx.lineTo(px,py);ctx.lineTo(px-ux*s-nx*s,py-uy*s-ny*s);
+    if(rel(9)){ctx.globalAlpha=al*.32;ctx.strokeStyle='#ff5a3c';ctx.lineWidth=10;ctx.stroke();} /* 1.4.9: the glow is a wide soft stroke, not a blur: five blurred chevrons per meteor were most of a busy frame's blur work */
+    else{ctx.shadowColor='#ff5a3c';ctx.shadowBlur=12;}
+    ctx.globalAlpha=al;ctx.strokeStyle=i===lit?'#ffd2a8':'#ff7a55';ctx.lineWidth=3.5;ctx.stroke();}
   ctx.restore();}
 function v2Heater(c,s){c.beginPath();c.moveTo(-s,-s*.95);c.quadraticCurveTo(0,-s*1.12,s,-s*.95);c.lineTo(s,-s*.1);c.bezierCurveTo(s,s*.65,s*.45,s*1.05,0,s*1.32);c.bezierCurveTo(-s*.45,s*1.05,-s,s*.65,-s,-s*.1);c.closePath();}
 function v2ShCol(p){ // remaining share of the shield: gold, then orange, then red
