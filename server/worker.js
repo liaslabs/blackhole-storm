@@ -10,6 +10,7 @@
 //   POST /ack     {sku,token,sub}                -> {ok}   checks a Google Play purchase and acknowledges it (web/TWA version)
 //   POST /err     {m,s,v,p,l}                    -> {ok}   a script error from the game (message, top of stack, build, app/web,
 //                                                   language); counted per day, no personal data, kept 30 days
+//   /fleet..., /fleets/top                         -> fleets (1.5.1), see server/fleet.js
 //   GET  /errs?days=3                            -> {list:[{day,m,s,v,p,n}]}   the most frequent recent errors
 //   POST /verify  {pid,sku,token}                -> {ok,pending?}   the app's purchase check: asks Google whether the purchase is real
 //                                                   and paid, records the token (a consumable token counts once, for the install
@@ -31,6 +32,7 @@ const okPid = p => typeof p === 'string' && /^[a-z0-9]{12,40}$/.test(p);
 const okDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
 // Names others can see: the shared filter (src/names.js, also inlined into the game): 11 languages, look-alike letters, links, phone numbers
 import '../src/names.js';
+import { fleetRoute, fleetHousekeeping } from './fleet.js';
 const NAMES = globalThis.BHS_NAMES;
 const badName = n => NAMES.bad(n);
 function cleanName(n) {
@@ -42,6 +44,7 @@ function cleanName(n) {
 // Avatars shown next to names (1.5.0): only the game's own avatar keys are kept (keep in step with AVX in src/game.src.html)
 const AV_KEYS = new Set(['🚀','🔭','☄️','🌌','🪐','👾','🎧','✨','💠','🔥','🧭','🪖','🗺️','💫','⚓','🌠','🪶','🌑','🎯','🌗','🌀','👻','🌅','🦾','🛰️','🛸','📜','🌟','🧿','🧝','🤖','📺','🕷️','🔋','🕊️','🎛️','🔮','🧠','🏍️','⚙️','👽','🔺','🗡️','🧙','🐉','⚡','🐋','🐲','🔷','👹']);
 const cleanAv = a => typeof a === 'string' && AV_KEYS.has(a) ? a : null;
+globalThis.BHS_AV_KEYS = AV_KEYS; // fleets use the same keys for emblems and member avatars
 let avReady = false;
 async function ensureAv(DB) { // adds the column once to a database made before 1.5.0
   if (avReady) return;
@@ -174,6 +177,7 @@ async function housekeeping(DB) {
   await ensurePurchases(DB); // purchase records: two years (a consumed purchase cannot be claimed again anyway, see gpVerify)
   await DB.prepare('DELETE FROM purchases WHERE ts < ?').bind(Date.now() - 730 * 864e5).run();
   await DB.prepare('DELETE FROM purchase_installs WHERE token NOT IN (SELECT token FROM purchases)').run();
+  await fleetHousekeeping(DB); // settles the finished week, hands over from away captains, removes empty fleets
 }
 
 // Settle a finished day once: its top 3 get prize rows.
@@ -193,6 +197,7 @@ export default {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(req) });
     const url = new URL(req.url), DB = env.DB;
     try {
+      const fr = await fleetRoute(url, req, DB, json, cleanName); if (fr) return fr; // /fleet... and /fleets/top (server/fleet.js)
       if (url.pathname === '/score' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
         const today = day(), d = okDay(b.day) ? b.day : today;
