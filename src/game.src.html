@@ -910,6 +910,16 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 #sMenu .mhub.r9 .mmid{grid-template-columns:50px 1fr 50px;gap:2px;}#sMenu .mhub.r9 .sb.neon i,#sMenu .mhub.r9 .sb.neon.race i,#sMenu .mhub.r9 .sb.neon i .nb{width:40px!important;height:40px!important;}#sMenu .mhub.r9 .sb span{font-size:7.5px;letter-spacing:.04em;}#sMenu .mhub.r9 .mside{gap:4px!important;padding-top:0!important;}#sMenu .mhub.r9 .mside .sb{height:66px;justify-content:flex-start;}#sMenu .mhub.r9 .mside .sb small{position:absolute;top:56px;left:50%;transform:translateX(-50%);white-space:nowrap;} /* both columns on the same rows, the expedition's step line hangs under its label */
 #sMenu .mhub.r9 .wallet>span{padding:3px 8px;font-size:11px;}#sMenu .mhub.r9 .mtop .mav{width:38px;height:38px;}#sMenu .mhub.r9{gap:6px;}
 #sMenu .mhub.r9 .mm .mode{height:50px;flex-direction:row;gap:4px;justify-content:center;}#sMenu .mhub.r9 .mm .mode .vx{width:34px;height:34px;margin:0;}#sMenu .mhub.r9 .mm .mode b{font-size:9px;letter-spacing:.08em;}#sMenu .mhub.r9 .mm.r9{margin-top:34px!important;}
+#avGrid.r10{display:block;max-height:min(44vh,380px);overflow-y:auto;overscroll-behavior:contain;margin:8px 0 6px;padding:0 3px 4px;}
+#avGrid.r10 .avh{display:flex;justify-content:space-between;font:700 9.5px var(--fd);letter-spacing:.12em;color:#9fb3d8;margin:9px 0 5px;}#avGrid.r10 .avh b{color:var(--gold);letter-spacing:.04em;}
+#avGrid.r10 .avg{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}#avGrid.r10 .av{position:relative;border-radius:7px;}
+#avGrid.r10 .av.lock img{filter:grayscale(.45) brightness(.5);}#avGrid.r10 .av.rare{border-color:rgba(190,120,255,.75);}#avGrid.r10 .av.leg{border-color:rgba(255,190,80,.8);}#avGrid.r10 .av.rare img,#avGrid.r10 .av.leg img{filter:none;}
+#avGrid.r10 .av .tg{position:absolute;left:0;right:0;bottom:0;width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important;box-sizing:border-box;font:700 8px/1.2 var(--fm);font-style:normal;letter-spacing:0;white-space:nowrap;color:#fff;text-align:center;padding:6px 0 2px;background:linear-gradient(transparent,rgba(0,0,0,.9));}
+#avGrid.r10 .av .nw{position:absolute;top:2px;left:2px;font:700 7px/1.3 var(--fd);font-style:normal;background:#e5484d;color:#fff;padding:0 3px;border-radius:5px;}
+#avInfo{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:30px;margin:0 0 10px;font-size:12px;color:#c9d3ee;}#avInfo b{color:#ffe1a6;font:700 12px var(--fd);letter-spacing:.04em;}
+#avInfo .by{display:flex;gap:6px;flex:none;}#avInfo .avb{padding:5px 10px;border-radius:999px;border:1px solid rgba(242,169,59,.6);background:rgba(242,169,59,.12);color:#ffe1a6;font:700 11px var(--fd);white-space:nowrap;}#avInfo .avb.poor{opacity:.5;}#avInfo .avb.conf{background:var(--gold);color:#1a1206;}
+#tI .avimg{width:34px;height:34px;border-radius:8px;display:block;}
+#lvlAvI{width:34px;height:34px;border-radius:8px;overflow:hidden;display:block;flex:none;}.chipbtn.avnew{border-color:rgba(242,169,59,.55);background:rgba(242,169,59,.1);}.chipbtn.avnew .avt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;text-align:left;}.chipbtn.avnew small{font:600 10px var(--fd);color:#9fe3ff;letter-spacing:.06em;}.chipbtn.avnew b{color:var(--gold);font-size:13px;letter-spacing:.04em;}
 #sMenu .mhub.r10 .mside .sb em{top:32px;left:0;right:0;margin:0 auto;width:max-content;max-width:56px;font-size:6.5px;line-height:10px;height:10px;padding:0 4px;letter-spacing:.04em;}#sMenu .mhub.r10 .mside .sb em.sm{top:0;right:-4px;left:auto;margin:0;width:auto;font-size:9px;line-height:normal;height:auto;padding:1px 6px;letter-spacing:normal;} /* 1.5.0: one-character badges sit inside the icon's top-right corner, longer ones on the ring's bottom edge, so none reaches the row above or the glyph (13 Oct) */
 #sMenu .mhub.r9 .mm.r10 .mode{height:56px;}#sMenu .mhub.r9 .mm.r10 .mode .vx{width:48px;height:48px;margin:-6px -2px -6px -4px;}.mm.r10 .vx .vxin{left:25%;top:25%;width:50%;height:50%;} /* 1.5.0: bigger holes so the flame and the skull read (13 Oct) */
 #sMenu .mhub.r9 #mapBtn.mwin{height:52px;}#sMenu .mhub.r9 #mapBtn .mw .tx b{font-size:13px;}#sMenu .mhub.r9 .mtick{height:22px;border-radius:7px;}#sMenu .mhub.r9 .mtick div{font-size:10px;}
@@ -1211,6 +1221,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row"><button class="btn big" id="nextLvl">SONRAKİ SEVİYE</button></div>
    <div class="row"><button class="btn sec" id="lvlRetry" style="display:none;width:100%;">🔄 TEKRAR DENE</button></div>
    <div class="row mon"><button class="btn sec adbtn" id="lvlAd" style="width:100%;">▶ REKLAM İZLE · +100 ⭐</button></div>
+   <div class="row" id="lvlAvRow" hidden><button class="chipbtn avnew" id="lvlAv"><span id="lvlAvI"></span><span class="avt"><small id="lvlAvT"></small><b class="notr" id="lvlAvN"></b></span></button></div>
    <div class="row" id="lvlNameRow" hidden><button class="chipbtn" id="lvlName"><span id="lvlNameAv"></span><span class="notr" id="lvlNameN"></span><b>✏️ ADINI KOY</b></button></div>
    <div class="row"><button class="lnkbtn" id="lvlMenu">ANA MENÜ</button></div>
   </div>
@@ -1657,7 +1668,14 @@ function icoFill(w){if(w._src===undefined&&w._raw===undefined)return;const out=w
 // canvas texts cannot show SVG: keep a plain symbol for the key ones, drop other emoji
 // photo avatars: the saved avatar stays its emoji id
 const AV_IMG0={'🚀':'astro','👽':'moonwalk','👾':'visor','🧠':'earth','🎯':'mars','⚡':'jupiter','🪐':'saturn','☄️':'crab','🌌':'andromeda','💫':'earthrise','🤖':'rover','🔭':'hubble','🦾':'iss','🌠':'shuttle','🛸':'dragon'};
-const AV_IMG10={'🚀':'c01','🔮':'c02','🦾':'c04','🔭':'c05','☄️':'c06','🌠':'c07','🔺':'c08','🌌':'c09','💫':'c10','🎯':'c11','🪐':'c12','👽':'c13','🕷️':'c14','🐉':'c15','⚡':'c16','🐋':'c17','👻':'c18','🤖':'c19','🧠':'c21','👾':'c22','🛸':'c23','🌅':'c24'}; /* 1.5.0 (13 Oct): the illustrated set replaces the NASA photos; the 15 old keys stay, each drawn by its nearest new picture, so saved avatars carry over */
+/* 1.5.0 avatars (13 Oct): key -> [picture, name, tier, level or 💎 price, ⭐ price]. Tier 0 open from the start, 1 opens once the level is cleared (gaps widen as the game goes on), 2 rare (💎 or ⭐), 3 legendary (💎). The 15 old keys stay, each drawn by its nearest new picture, so saved avatars and challenge links carry over */
+const AVX={'🚀':['c01','Olay Ufku Pilotu',0],'🔭':['c05','Graviton Kaptanı',0],'☄️':['c06','Akresyon Fırtınası',0],'🌌':['c09','Bükülmüş Uzay',0],'🪐':['c12','Mor Ufuk',0],'👾':['c22','Piksel Girdap',0],'🎧':['d01','Nebula Kızı',0],'✨':['d02','Yıldız Tozu',0],'💠':['d03','Siber Çaylak',0],'🔥':['d05','Galaktik Asi',0],'🧭':['d07','Boşluk Kaşifi',0],'🪖':['d23','Kozmik Astronot',0],'🗺️':['d11','Kozmik Gezgin',1,15],'💫':['c10','Karanlık Madde',1,30],'⚓':['d14','Filo Amirali',1,45],'🌠':['c07','Altın Halka',1,60],'🪶':['d13','Kadim Avcı',1,80],'🌑':['d24','Boşluk Yolcusu',1,100],'🎯':['c11','Fırtına Arması',1,120],'🌗':['d22','Akresyon Diski',1,140],'🌀':['d06','Galaksi Girdabı',1,165],'👻':['c18','Hayalet Astronot',1,190],'⚙️':['d12','Siber Bilge',1,215],'🦾':['c04','Işık Yutan Siborg',1,240],'🛰️':['d26','Mavi Uzaylı',1,270],'👽':['c13','Girdap Gözü',1,300],'📜':['d08','Sakallı Bilge',1,330],'🌟':['d09','Yıldız Bilgesi',1,360],'🔺':['c08','Kara Monolit',1,400],'🧝':['d25','Uzaylı Bilge',1,440],'🤖':['c19','Boşluk Muhafızı',1,480],'🗡️':['d27','Boşluk Avcısı',1,520],'🕷️':['c14','Kozmik Karadul',1,570],'🔋':['d18','Plazma Robotu',1,620],'🕊️':['d28','Galaktik Elçi',1,680],'🧙':['d10','Tekillik Üstadı',1,750],'🔮':['c02','Fırtına Cadısı',2,60,3000],'🧠':['c21','Gölge Kahraman',2,60,3000],'🌅':['c24','Neon Gün Batımı',2,60,3000],'🛸':['c23','Bozuk Sinyal',2,60,3000],'🏍️':['d04','Fırtına Sürücüsü',2,60,3000],'🧿':['d19','Boşluk Çekirdeği',2,60,3000],'📺':['d20','Glitch Robotu',2,60,3000],'🎛️':['d21','Sinyal Robotu',2,60,3000],'🐉':['c15','Yıldırım Ejderi',3,120],'⚡':['c16','Fırtına Ejderhası',3,120],'🐋':['c17','Leviathan',3,120],'🐲':['d15','Mor Ejderha',3,120],'🔷':['d16','Siber Ejderha',3,120],'👹':['d17','Ufuk Ejderi',3,120]};
+const AV_IMG10=Object.fromEntries(Object.entries(AVX).map(([k,v])=>[k,v[0]]));
+let AVS={own:[],seen:null}; // bought (or carried over) avatars, and the level ones already shown in the picker
+function avOk(k){const a=AVX[k];if(!rel(10)||!a)return true;return a[2]===0||a[2]===1&&bestLevel>a[3]||AVS.own.includes(k);}
+function avNew(k){const a=AVX[k];return !!a&&a[2]===1&&avOk(k)&&!(AVS.seen||[]).includes(k);}
+function avInit(){if(!rel(10))return;if(playerAvatar in AVX&&!avOk(playerAvatar))AVS.own.push(playerAvatar); /* an avatar picked before 1.5.0 stays the player's */if(!Array.isArray(AVS.seen))AVS.seen=AVATARS.filter(avOk);} /* nothing reads as new on the first 1.5.0 start */
+function avLvl(pb){const r=$('lvlAvRow');if(!r)return;const k=rel(10)&&AVATARS.find(k=>AVX[k][2]===1&&pb<=AVX[k][3]&&AVX[k][3]<bestLevel);r.hidden=!k;if(!k)return;setAv($('lvlAvI'),k);$('lvlAvN').textContent=T(AVX[k][1]);$('lvlAvT').textContent=T('Yeni avatar açıldı');} /* the level card names the avatar this level opened, with its picture */
 const AV_IMG=rel(10)?AV_IMG10:AV_IMG0;
 function setAv(el,a){const k=AV_IMG[a],src=k&&window.BHS_SPR&&BHS_SPR.av[k];el.textContent='';el.classList.add('notr');if(src){const im=new Image();im.className='avimg';im.alt='';im.src=src;el.appendChild(im);}else el.textContent=a||'';}
 // ══════════════════════════════════════════════════════
@@ -1740,7 +1758,7 @@ let HMODE=false,HSEL=false,HM={lv:1,sc:0,best:1,ls:{},ws:0,s3:0};const HM_OPEN=3
 function hmSwap(){[savedLevel,HM.lv]=[HM.lv,savedLevel];[savedScore,HM.sc]=[HM.sc,savedScore];[bestLevel,HM.best]=[HM.best,bestLevel];[LSTARS,HM.ls]=[HM.ls,LSTARS];[WSTREAK,HM.ws]=[HM.ws,WSTREAK];[STREAK3,HM.s3]=[HM.s3,STREAK3];HMODE=!HMODE;}
 const hmOpen=()=>(HMODE?HM.best:bestLevel)>=HM_OPEN;
 function saveG(){if(HMODE){hmSwap();try{saveG0();}finally{hmSwap();}return;}saveG0();}
-const LSAVE={t:0,d:0};function saveG0(){const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,bc:BCOMBO,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
+const LSAVE={t:0,d:0};function saveG0(){const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,bc:BCOMBO,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,avs:AVS,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -1755,7 +1773,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   savedLevel=svI(d.savedLevel,1,1,1e9);savedScore=svI(d.savedScore,0);
   if(svO(d.set)){for(const k in SET)if(typeof d.set[k]===typeof SET[k])SET[k]=d.set[k];SET.musicVol=svN(SET.musicVol,.6,0,1);SET.fd=svI(SET.fd,1,0,2);SET.sens=svI(SET.sens,0,0,2);SET.sfxVol=svN(SET.sfxVol,.9,0,1);}else if(d.soundOn===false){SET.music=false;SET.sfx=false;}
   mass=svN(d.mass,0);swallowed=svI(d.swallowed,0);bestLevel=Math.max(savedLevel,svI(d.bestLevel,savedLevel,1,1e9));seen=svO(d.seen)||{};
-  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);{const h=svO(d.hm);if(h)HM={lv:svI(h.lv,1,1,1e9),sc:svI(h.sc,0),best:svI(h.best,1,1,1e9),ls:svO(h.ls)||{},ws:svI(h.ws,0,0,9999),s3:svI(h.s3,0,0,9)};}bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false,seen:Array.isArray(k.seen)?k.seen.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):null};}
+  if(svO(d.dm)&&Array.isArray(d.dm.list))DM=d.dm;if(svO(d.daily))DAILY=d.daily;sprintBest=svI(d.sprintBest,0);{const h=svO(d.hm);if(h)HM={lv:svI(h.lv,1,1,1e9),sc:svI(h.sc,0),best:svI(h.best,1,1,1e9),ls:svO(h.ls)||{},ws:svI(h.ws,0,0,9999),s3:svI(h.s3,0,0,9)};}bestSize=svN(d.bsz,0,0,100);TIPS=svO(d.tip)||{};STREAK3=svI(d.s3,0,0,9);WSTREAK=svI(d.ws,0,0,9999);{const a=svO(d.avs);AVS=a?{own:Array.isArray(a.own)?a.own.filter(k=>k in AVX):[],seen:Array.isArray(a.seen)?a.seen.filter(k=>k in AVX):null}:{own:[],seen:null};}{const k=svO(d.skin)||{};SKIN={sel:svI(k.sel,0,0,SKINS.length-1),own:Array.isArray(k.own)?k.own.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):[],mono:typeof k.mono==='string'?monoClean(k.mono):'',monoOn:k.monoOn!==false,seen:Array.isArray(k.seen)?k.seen.filter(i=>Number.isInteger(i)&&i>=0&&i<SKINS.length):null};}
   {const a=svO(d.atl)||{},c=svO(a.c)||{};COSMO={c:{},seenAll:a.seenAll?1:0,masterAll:a.masterAll?1:0,newT:svI(a.newT,0,0,999),pend:Array.isArray(a.pend)?a.pend.filter(x=>typeof x==='string').slice(0,40):[]};for(const k in c)COSMO.c[k]=svI(c[k],0,0,1e9);}
   {const a=svO(d.sea)||{};SEASON={id:typeof a.id==='string'?a.id.slice(0,7):'',sp:svI(a.sp,0,0,1e7),tier:svI(a.tier,0,0,SEA.tiers),seen:svI(a.seen,svI(a.tier,0,0,SEA.tiers),0,SEA.tiers),badges:Array.isArray(a.badges)?a.badges.filter(x=>typeof x==='string').slice(-60):[]};
     SEASON.cl=Array.isArray(a.cl)?[...new Set(a.cl.filter(i=>Number.isInteger(i)&&i>=1&&i<=SEASON.tier))]:Array.from({length:SEASON.tier},(_,i)=>i+1);}
@@ -2570,7 +2588,7 @@ function starStr(n){n=Math.max(0,n|0);return '★'.repeat(n)+'☆'.repeat(3-n);}
 function totalStars(){return Object.values(LSTARS).reduce((a,v)=>a+Math.max(0,v),0);}
 function lvlStarsShow(n,medal){$('lvlStars').innerHTML=medal?`<span>${medal}</span>`:n<0?'':[0,1,2].map(i=>`<span class="${i<n?'':'no'}" style="animation-delay:${.15+i*.15}s">★</span>`).join('');}
 function nextTeaser(l){return gameMode!=='classic'||REPLAY?'':v2Teaser(l);}
-function lvlButtons(replay){LVL_BOOST=null;$('lvlAd').classList.remove('two');$('lvlNameRow').hidden=true;$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=0;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · 1/${LVL_AD.max}`);$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
+function lvlButtons(replay){LVL_BOOST=null;{const r=$('lvlAvRow');if(r)r.hidden=true;}$('lvlAd').classList.remove('two');$('lvlNameRow').hidden=true;$('lvlStars').innerHTML='';$('lvlNext').innerHTML='';lvlAdUsed=0;$('lvlAd').parentNode.hidden=replay||!monOn()||!adReady();$('lvlAd').disabled=false;$('lvlAd').textContent=adLabel(`+${LVL_AD.stars} ⭐ · 1/${LVL_AD.max}`);$('nextLvl').textContent=replay?'🗺 HARİTAYA DÖN':'SONRAKİ SEVİYE';$('lvlRetry').style.display=replay?'':'none';}
 function v2LvlUi(replay){ // V2 level card: title with the level, stars under it, play again / continue
   $('lvlNum').style.display='none';if(!replay)$('lvlHead').textContent=`SEVİYE ${level} TAMAMLANDI`;
   $('lvlRetry').style.display=levelStars()>=3?'none':'';$('lvlRetry').textContent='🔄 TEKRAR OYNA';$('nextLvl').textContent='DEVAM ET ▶';
@@ -3743,7 +3761,7 @@ function levelSuccess(){
   for(let i=0;i<80;i++)sparks.push(new Spark(hX,hY,pick(['#ffd76a','#ffffff','#e6dcff','#8fe9ff']),rnd(0,TAU),rnd(2,7),rnd(.7,1.4),2.2));
   showWinBand('TAMAMLANDI',st,false);
   lvlButtons(false);lvlStarsShow(st);$('lvlNext').innerHTML=nextTeaser(level+1);$('lvlHead').textContent='SEVİYE TAMAMLANDI';$('lvlNum').textContent=level;$('lvlMsg').textContent=`${totalScore.toLocaleString(LOC)} toplam puan · +${HMODE?10:5} ⭐${level%5===0?' +3 💎':''}`;
-  if(G2.on&&gameMode==='classic'){savedLevel=level+1;savedScore=totalScore;bestLevel=Math.max(bestLevel,level+1);saveG();} // a cleared level counts even if the app closes on this card
+  if(G2.on&&gameMode==='classic'){const pb=bestLevel;savedLevel=level+1;savedScore=totalScore;bestLevel=Math.max(bestLevel,level+1);saveG();avLvl(pb);} // a cleared level counts even if the app closes on this card
   if(G2.on){v2Streak(st);$('lvlMsg').innerHTML=v2Result();$('lvlNext').innerHTML=v2Teaser(level+1);v2LvlUi(false);}
   $('mLvl').classList.toggle('r9',rel(9)&&G2.on);document.body.classList.toggle('lvc',rel(9)&&G2.on); /* the power tray hides under the card */if(rel(9)&&G2.on){$('lvlNext').innerHTML='';if(gameMode==='classic'){LVL_BOOST=v2BoostFor(level+1);lvlBoostUi();}} /* 1.4.9: the next level is named as it starts */
   {const nm=PAUTO&&gameMode==='classic'&&level<=3;$('lvlNameRow').hidden=!nm;if(nm){setAv($('lvlNameAv'),playerAvatar);$('lvlNameN').textContent=playerName;}}
@@ -4210,9 +4228,32 @@ else if(NATIVE)$('privRow').innerHTML=`🔒 Hesap yok. Reklamlar Google AdMob il
 {const wake=()=>{if(!SND.ctx||SND.ctx.state!=='running')SND.resume();};addEventListener('pointerup',wake,true);addEventListener('keydown',wake,true);addEventListener('pointerdown',wake,true);} // browsers start audio suspended until a gesture
 document.addEventListener('click',e=>{if(e.target.closest('button,.av,.mode,.popt'))sfx('click',{vol:.35,rev:0});},true);
 const AVATARS=rel(10)?Object.keys(AV_IMG10):['🚀','👽','👾','🧠','🎯','⚡','🪐','☄️','🌌','💫','🤖','🔭','🦾','🌠','🛸'];let selAv=null;
+let AVBUY=null; // the avatar and currency waiting for the second tap
+function avGrid10(g){g.classList.add('r10');AVBUY=null; /* 1.5.0: a scrolling picker in four groups; locked ones show their level or price */
+  const nl=AVATARS.filter(k=>AVX[k][2]===1),sec=(tier,t,r)=>{const h=document.createElement('div');h.className='avh';h.innerHTML=`<span>${T(t)}</span><b>${r}</b>`;g.appendChild(h);const d=document.createElement('div');d.className='avg';
+    AVATARS.filter(k=>AVX[k][2]===tier).forEach(k=>{const a=AVX[k],ok=avOk(k),b=document.createElement('button');b.className='av'+(k===playerAvatar?' sel':'')+(ok?'':' lock')+(tier===2?' rare':tier===3?' leg':'');b.dataset.k=k;setAv(b,k);
+      if(!ok){const t=document.createElement('i');t.className='tg';t.textContent=tier===1?'🔒 '+a[3]:a[3]+' 💎';b.appendChild(t);}
+      if(avNew(k)){const t=document.createElement('i');t.className='nw';t.textContent=T('YENİ');b.appendChild(t);}
+      b.onclick=()=>avPick(k);d.appendChild(b);});g.appendChild(d);};
+  sec(0,'BAŞLANGIÇ',String(AVATARS.filter(k=>AVX[k][2]===0).length));sec(1,'SEVİYEYLE AÇILIR',nl.filter(avOk).length+'/'+nl.length);sec(2,'NADİR','60 💎 · '+(3000).toLocaleString(LOC)+' ⭐');sec(3,'EFSANE','120 💎');
+  const nw=nl.filter(avNew);if(nw.length){AVS.seen.push(...nw);saveSoon();} /* NEW shows once */
+  avInfo(playerAvatar);requestAnimationFrame(()=>{const b=g.querySelector('.av.sel');if(b&&b.offsetTop>g.clientHeight)g.scrollTop=b.offsetTop-g.clientHeight/2;});}
+function avPick(k){document.querySelectorAll('#avGrid .av').forEach(x=>x.classList.toggle('sel',x.dataset.k===k));AVBUY=null;if(avOk(k)){selAv=k;setAv($('prevAv'),k);checkProf();}avInfo(k);}
+function avInfo(k){let e=$('avInfo');if(!e){e=document.createElement('div');e.id='avInfo';$('avGrid').after(e);}const a=AVX[k];e.hidden=!a;if(!a)return;
+  let h=`<b class="notr">${T(a[1])}</b>`;
+  if(!avOk(k)){if(a[2]===1)h+=`<span>🔒 ${T('{n}. seviyede açılır',{n:a[3]})}</span>`;
+    else h+='<span class="by">'+[['gem',a[3],'💎',diamonds]].concat(a[4]?[['star',a[4],'⭐',stars]]:[]).map(([c,v,ic,have])=>{const cf=AVBUY&&AVBUY.k===k&&AVBUY.c===c;return `<button class="avb${have<v?' poor':''}${cf?' conf':''}" data-c="${c}">${cf?T('EMİN MİSİN?')+' ':''}${ic} ${v.toLocaleString(LOC)}</button>`;}).join('')+'</span>';}
+  e.innerHTML=h;e.querySelectorAll('.avb').forEach(b=>b.onclick=()=>avBuy(k,b.dataset.c));}
+function avBuy(k,c){const a=AVX[k],v=c==='gem'?a[3]:a[4];if(!v||avOk(k))return;
+  if((c==='gem'?diamonds:stars)<v){toast(c==='gem'?'💎':'⭐',T(c==='gem'?'Yetersiz elmas':'Yetersiz yıldız'),'');return;}
+  if(!AVBUY||AVBUY.k!==k||AVBUY.c!==c){AVBUY={k,c};avInfo(k);later(()=>{if(AVBUY&&AVBUY.k===k&&AVBUY.c===c){AVBUY=null;avInfo(k);}},4000);return;} /* a spend asks twice, like the looks */
+  AVBUY=null;if(c==='gem')diamonds-=v;else stars-=v;AVS.own.push(k);saveG();updateUI();sfx('achieve',{vol:.6});
+  const b=document.querySelector(`#avGrid .av[data-k="${k}"]`);if(b){b.classList.remove('lock');const t=b.querySelector('.tg');if(t)t.remove();}
+  avPick(k);avToast(k);}
+function avToast(k){toast('',T(AVX[k][1]),T('Yeni avatar açıldı'));setAv($('tI'),k);} // the toast shows the picture itself
 function buildProfile(){
   const g=$('avGrid');g.innerHTML='';
-  AVATARS.forEach(av=>{const b=document.createElement('button');b.className='av'+(av===playerAvatar?' sel':'');setAv(b,av);
+  if(rel(10))avGrid10(g);else AVATARS.forEach(av=>{const b=document.createElement('button');b.className='av'+(av===playerAvatar?' sel':'');setAv(b,av);
     b.onclick=()=>{selAv=av;document.querySelectorAll('.av').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');setAv($('prevAv'),av);checkProf();};g.appendChild(b);});
   selAv=playerAvatar||null;setAv($('prevAv'),playerAvatar);
   $('nameInp').value=playerName&&!PAUTO?playerName:'';$('nameInp').placeholder=T('Adını buraya yaz (en az 2 harf)');$('prevName').textContent=playerName||'PİLOT';
@@ -4237,6 +4278,7 @@ $('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(!selAv){const g=$(
   if(n.length<2){const i=$('nameInp');i.classList.remove('nudge');void i.offsetWidth;i.classList.add('nudge');i.focus();return;} /* points at what is missing */if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};
 $('profLater').onclick=()=>{if(selAv&&selAv!==playerAvatar){playerAvatar=selAv;saveG();}profClose();};
 $('editProf').onclick=()=>openProfile(null);
+$('lvlAv').onclick=e=>{e.stopPropagation();openProfile(()=>{$('lvlAvRow').hidden=true;setAv($('lvlNameAv'),playerAvatar);});}; // from the level card straight to the picker; the card stays underneath
 const MODE_TXT={
   classic:'<b>🌀 Normal</b><ul><li>Kara deliği parmağınla sürükle, gelen cisimleri yut, büyü.</li><li>Meteorlardan kaç, combo yap, Vortex dolunca dokun.</li><li>Her seviyede yeni bir şey, her 10 seviyede dev gezegen.</li></ul>',
   hard:'<b>🔥 Zor Mod</b><ul><li>'+(rel(9)?'Seviye 1\'den yeniden, sert kurallarla: puan seviyeleri süreli, meteorlar 1,8 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.':'Seviye 1\'den yeniden, sert kurallarla: meteorlar 1,6 kat, hedef puan 1,5 kat, küçülme 2 kat hızlı.')+'</li><li>Seviye başına 2 kalp, ağır çekim yok.'+(rel(9)?' Her kalbi iki yay korur, 61. seviyeden sonra tek yay, zirve seviyelerinde yay yok.':'')+'</li><li>Yıldız ödülleri 2 kat. Klasik ilerlemen ayrı kalır.</li></ul>',
@@ -4388,7 +4430,7 @@ $('shareBtn').onclick=async()=>{const txt=`${playerAvatar} `+T("{p}: Blackhole S
 // ══════════════════════════════════════════════════════
 // BOOT
 // ══════════════════════════════════════════════════════
-loadG();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
+loadG();avInit();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
   const d=document.createElement('div');d.id='devBar';d.innerHTML=`<span>🛠 ${T('SEVİYEYE GİT')}</span><input id="devLv" type="number" min="1" max="${DEV_LV}" value="${savedLevel}" inputmode="numeric" aria-label="Seviye"><button id="devGo" class="btn">▶ ${T('OYNA')}</button><small id="devKit"></small>`;
   $('starterRib').before(d);devKit(savedLevel);$('devGo').onclick=()=>{const n=clamp(parseInt($('devLv').value,10)||1,1,DEV_LV);savedLevel=n;savedScore=0;saveG();selMode('classic');$('startBtn').click();};} /* jump straight to any of the first 1000 levels */
 // developer link: every level is played as a real player would meet it there: the Laboratory at that level's recommended power
@@ -4412,7 +4454,7 @@ document.body.appendChild($('mGift'));document.body.appendChild($('mHeart')); //
 monInit();
 {let seen=false;try{seen=!!localStorage.getItem('bhs_intro');}catch(e){}
   if(playerName&&playerAvatar){showMenu();offerChallenge();if(!seen&&window.BHS_INTRO)introShort(null);}
-  else{playerName=T('PİLOT')+'-'+(1000+Math.floor(Math.random()*9000));playerAvatar=pick(AVATARS);PAUTO=true;saveG(); // name and avatar can be set later, from the level card or the menu
+  else{playerName=T('PİLOT')+'-'+(1000+Math.floor(Math.random()*9000));playerAvatar=pick(AVATARS.filter(avOk));PAUTO=true;saveG(); // name and avatar can be set later, from the level card or the menu
     if(pendingChal){showMenu();offerChallenge();if(!seen)introShort(null);}
     else{const go=()=>{selMode('classic');SND.resume();SND.startDrone();SND.music('game');resize();resetRun(true,false);};if(seen)go();else introShort(go);}}}
 requestAnimationFrame(t=>{lastT=t;loop(t);});
