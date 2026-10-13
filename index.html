@@ -4917,7 +4917,11 @@ function v2Sfx(n,o){const now=performance.now();if(now-(SFX2[n]||0)<45)return;sf
 function v2Burst(x,y,n,col,s0,s1,life=.5,sz=1.8){if(rel(9)&&(G2.fxBusy||FXLITE))n=Math.ceil(n*.5); /* half the sparks on a busy screen */
   const P=G2.parts;for(let i=0;i<n;i++){if(P.length>=150)P.shift();const a=rnd(0,TAU),s=rnd(s0,s1);P.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life,max:life,c:col,sz});}
 }
-function v2Pop(txt,col,sz=18){ftexts.push(new FText(txt,hX+rnd(-8,8),hY-G2.R-sp2(26)-rnd(0,14),col,sz));if(ftexts.length>14)ftexts.shift();}
+function v2Pop(txt,col,sz=18){ftexts.push(new FText(txt,hX+rnd(-8,8),hY-G2.R-sp2(26)-rnd(0,14),col,sz));if(ftexts.length>(rel(10)?8:14))ftexts.shift();}
+// 1.5.0: points that land close together add up in one number above the hole instead of a cloud of texts (13 Oct)
+function v2PopPts(p,col,sz){const f=ftexts.find(x=>x.pts!==undefined&&x.life>.55);
+  if(f){f.pts+=p;f.t='+'+f.pts.toLocaleString(LOC);f.c=col;f.s=Math.max(f.s,sz);f.life=Math.max(f.life,.9);f.x=hX;f.y=Math.max(f.y,hY-G2.R-sp2(48));return;} /* it stays just above the hole while it keeps adding */
+  v2Pop('+'+p.toLocaleString(LOC),col,sz);ftexts[ftexts.length-1].pts=p;}
 // big centred callout (arcade terms stay English in every language)
 function v2Call(txt,sub='',col='#fff',life=1.1,top=false){if(typeof lagFirst==='function')lagFirst('call:'+String(txt).slice(0,14));G2.calls=G2.calls.filter(c=>c.top!==top);G2.calls.push({txt:T(String(txt)),sub:T(String(sub)),col,life,max:life,top});} /* every callout is shown in the player's language */
 
@@ -5767,7 +5771,8 @@ function v2Score(o,mini){
   if(gs){v2Pop('ALTIN SEZON ×2 · +'+pts,'#ffd76a',19);v2Burst(o.x,o.y,26,'#ffd76a',2,8,.8,2.2);v2Sfx('sparkle',{vol:.5,rate:.9});} // a golden-season gold planet: double points, a shower of gold
   v2AddRage((K.rage+(perf?4:0))*(G2.script?1.6:1));
   if(m>MULT2(G2.combo-1)){v2Call('COMBO ×'+m,'','#ffd76a',1,false);v2Sfx('mult',{vol:.55,rate:.8+m*.1});if(m>=4)shake=Math.max(shake,4);totalCombos++;}
-  if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('KUSURSUZ +'+pts,'#fff1b8',18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
+  if(perf){G2.perfA++;perfectCount++;dmEvent('perfect',1);v2Pop('KUSURSUZ +'+pts,'#fff1b8',rel(10)?16:18);v2Sfx('sparkle',{vol:.5,rate:1.2});shake=Math.max(shake,2.2);}
+  else if(rel(10))v2PopPts(pts,o.mega2||m>=4?'#ffcf8a':o.k==='crystal'?'#9ef3ff':o.k==='gold'?'#ffd76a':'#e7e3da',(o.k==='ast'?14:16)+Math.min(3,m)); /* 1.5.0: smaller, and summed */
   else if(o.mega2)ftexts.push(new FText('+'+pts,o.x,o.y-o.r-sp2(6),'#ffcf8a',15+Math.min(6,m)));
   else v2Pop('+'+pts,o.k==='crystal'?'#9ef3ff':o.k==='gold'?'#ffd76a':m>=4?'#ffcf8a':'#e7e3da',o.k==='ast'?15+m:19+m);
   const snd={ast:['capture',.45,1.2],moon:['capture2',.55,1],planet:['swallowBig',.7,1],crystal:['gem',.7,1.3],gold:['master',.8,1],energy:['sparkle',.6,.8],time:['slow',.7,1.2],bomb:['bomb',.7,1],mini:['magnet',.7,1],frag:['capture2',.5,1.3],shard:['gem',.7,.8],comet:['gem',.6,1.5],magnet:['magnet',.7,1],pulsar:['sparkle',.8,1],mpair:['capture2',.6,.9],sat:['capture2',.5,1.2],dark:['slow',.6,1.3]}[o.k]||['capture',.5,1];
@@ -5935,7 +5940,7 @@ function v2MegaStep(dt){ // play pauses while the screen pops body by body and e
     const add=Math.min(V2K.bomb.pts,V2K.bomb.max-M.bonus);M.bonus+=add;totalScore+=add;levelScore+=add;v2AddRage(2);
     G2.megaFx.push({x:o.x,y:o.y,r:o.r,t:0,c:o.k==='meteor'?'#ff5a3c':M.nova?'#8fe9ff':'#ffb35c'});v2Burst(o.x,o.y,16,o.k==='meteor'?'#ff6a4c':'#ffd29a',2,7,.6,2.4);shake=Math.max(shake,3);
     if(M.n%2)sfx('capture',{vol:.35,rate:1.1+Math.min(.8,M.n*.04),x:o.x});
-    if(o.k==='meteor'){o.st='dead';v2MetBreak(o);ftexts.push(new FText('+'+add,o.x,o.y,'#ff8a6b',15));}
+    if(o.k==='meteor'){o.st='dead';v2MetBreak(o);if(rel(10))v2PopPts(add,'#ff8a6b',16);else ftexts.push(new FText('+'+add,o.x,o.y,'#ff8a6b',15));}
     else{o.noScore=false;o.chain=true;o.mega2=true;o.hang=.16;o.swDur=1.05;o.eca=Math.atan2(o.y-hY,o.x-hX)+Math.PI/2;v2Swallow(o,null);}}
   for(let i=G2.objs.length-1;i>=0;i--){const o=G2.objs[i];if(o.st==='dead'){G2.objs.splice(i,1);continue;}if(o.st==='sw'&&v2SwallowStep(o,dt))G2.objs.splice(i,1);}
   for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*dt*60;p.y+=p.vy*dt*60;p.vx*=Math.pow(.95,dt*60);p.vy*=Math.pow(.95,dt*60);p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
@@ -6661,10 +6666,10 @@ function v2DrawSpot(b,s){ // a glowing crack with a pulsing target ring around i
 function v2DrawCalls(){
   for(const c of G2.calls){const age=c.max-c.life,a=Math.min(1,c.life/.25,age/.08),sc=age<.12?.7+age/.12*.3+.15*Math.sin(age/.12*Math.PI):1;
     const y=c.top?H*.3:Math.max(H*.14,hY-G2.G-sp2(40));ctx.save();ctx.globalAlpha=a;ctx.translate(W/2,y);ctx.scale(sc,sc);ctx.textAlign='center';
-    const font=`900 ${c.top?28:22}px "IBM Plex Sans Condensed",sans-serif`,body=x=>{x.font=font;x.lineWidth=5;x.strokeStyle='rgba(0,0,0,.65)';x.strokeText(c.txt,0,0);x.shadowColor=c.col;x.shadowBlur=18;x.fillStyle=c.col;x.fillText(c.txt,0,0);
+    const fs=rel(10)?(c.top?24:19):(c.top?28:22),font=`900 ${fs}px "IBM Plex Sans Condensed",sans-serif` /* 1.5.0: callouts a size smaller */,body=x=>{x.font=font;x.lineWidth=5;x.strokeStyle='rgba(0,0,0,.65)';x.strokeText(c.txt,0,0);x.shadowColor=c.col;x.shadowBlur=18;x.fillStyle=c.col;x.fillText(c.txt,0,0);
       if(c.sub){x.shadowBlur=0;x.font='800 12px "IBM Plex Sans Condensed",sans-serif';x.lineWidth=3;x.strokeText(c.sub,0,20);x.fillStyle='#e7e3da';x.fillText(c.sub,0,20);}};
     if(GLOWX){if(!c.spr){const m=document.createElement('canvas').getContext('2d');m.font=font;let w=m.measureText(c.txt).width;if(c.sub){m.font='800 12px "IBM Plex Sans Condensed",sans-serif';w=Math.max(w,m.measureText(c.sub).width);}
-        c.spr=txtSprite('call|'+font+'|'+c.col+'|'+c.txt+'|'+(c.sub||''),font,{w,h:(c.top?28:22)+80,cy:(c.top?28:22)+30,fn:body});}txtBlit(c.spr,0,0);} /* drawn once with its real glow, then only scaled and faded */
+        c.spr=txtSprite('call|'+font+'|'+c.col+'|'+c.txt+'|'+(c.sub||''),font,{w,h:fs+80,cy:fs+30,fn:body});}txtBlit(c.spr,0,0);} /* drawn once with its real glow, then only scaled and faded */
     else{ctx.font=font;body(ctx);}ctx.restore();}
   if(G2.ready&&gState==='playing'){const pu=.6+.4*Math.sin(clock*8);ctx.save();ctx.textAlign='center';ctx.globalAlpha=.8+.2*pu;ctx.font='900 20px "IBM Plex Sans Condensed",sans-serif';
     const y=Math.min(H-40,hY+G2.G+sp2(40)),tx=T('DOKUN → VORTEX');
