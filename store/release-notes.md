@@ -149,6 +149,7 @@ Her güncellemede:
 ```
 
 ## 1.5.0 (19 Ekim → üretim) · `REL` 10 yapılacak · gerçek yayın sürümü, görsel derinlik
+- Kalkan yayları (13 Eki kararı, 2. seçenek): kalın yaylar olay ufkunun üstünden kara deliğin içine, kenarın hemen içine alındı; ince çizgi + aynı renkte soluk geniş hale (gölge bulanıklığı yok, koyu alt şerit yok). Kara deliğin kendi parlak kenarı ve görünümü artık örtülmez. Kırık yay içte ince kesik çizgi. Önizleme: `window.ARCST` 0 eski, 1 ince, 2 ince+hale, 3 orta+hale.
 - Derinlik katmanları (sadece süs; çekime kapılmaz, çarpılmaz, puan vermez): arkada yavaş süzülen küçük bulanık kayalar,
   yan kenarlardan ara sıra süzülen tek bir büyük bulanık kaya (sıra ile sol ve sağ; en fazla üçte biri görünür, ekranı ~40 sn'de geçer, sonra 45–75 sn hiç yok), karadeliğe doğru akan seyrek hız izleri (normalde 20;
   meteor kuşağı, fırtına ve Vortex'te 6, hızlanmadan: ekran kalabalıkken azalır). Cisimler alttaki WebGL tuvalinde
