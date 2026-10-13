@@ -186,6 +186,17 @@ Her güncellemede:
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
 - AGP 8.13 → 9.0 yükseltmesi (Play önerisi).
 - Uçtan uca ekran (Play önerisi): `EdgeToEdge.enable(this)` bu sefer `super.onCreate`'ten **sonra** çağrılacak (1.4.5'teki başlık çubuğu hatası önceye konduğu içindi). Önce **Dahili test** kanalında kendi telefonda denenecek, sonra kapalı/üretim kanalına.
+- **Filolar** (`REL` 11, 13 Eki onayı): Sıralama penceresinde 🌍 FIRTINA · 🛸 FİLO · 📜 REKORLAR sekmeleri.
+  - 20. seviyede açılır, kurmak 30. seviye ve 100 💎. En fazla 20 üye; filo adı 3–16 yer (Japonca/CJK 2 sayılır), ortak ad süzgecinden geçer, benzersizdir; 12 kara delik armasından biri; herkese açık ya da yalnızca kodla (6 haneli, ör. K7Q-2MX, paylaşılabilir).
+  - Filo puanı: Normal'de geçilen her seviye +10, Zor modda +20, boss/zirve +10; Günün Fırtınası katılım +20, her 5.000 puan +10 (en fazla +60). Üye başına günde en fazla 300. Kişisel ilerleme, skor ve sıralamalar ayrı kalır; filo ödülleri ektir.
+  - Haftalık sandıklar (Pazartesi–Pazar UTC): hedefler oynayan üye başına 600 / 1.500 / 3.000 (en az 5 üye sayılır); ödül 150 ⭐ · 300 ⭐ + 5 💎 · 600 ⭐ + 15 💎.
+  - Hafta sonu yarışı (Cuma–Pazar): benzer güçte en fazla 20 filoluk gruplar; 1.–3.: 1.500 ⭐ + 30 💎 · 1.000 ⭐ + 20 💎 · 600 ⭐ + 10 💎, 4.–10.: 300 ⭐; sıralanmak için hafta sonu en az 3 üye puan getirmeli. Filonun en iyi 3 üyesine +200 ⭐. Ödül yalnızca en az 1 puan katana; Pazartesi açılışta ödül kartında "TOPLA".
+  - Filo duvarı: yalnızca hazır mesajlar (🔥 Hadi filo! · 👏 Harika! · ✓ Oynadım · 🏆 Rekor! · 🛸), 20 sn'de bir; otomatik haberler (katıldı, ayrıldı, yeni kaptan, rekor).
+  - Kaptan: üye çıkarma, arma ve açık/kodla değiştirme, ad değişikliği (ilk ücretsiz, sonra 50 💎 ve 30 günde bir). İki bildirim filo adını "FİLO-xxxx" olarak gizler, kaptan hemen ücretsiz yeni ad seçer.
+  - Hareketsizlik: kaptan 14 gün yoksa en aktif üyeye devreder; 21 gün giriş yapmayan "uykuda"; 30 günde filodan çıkar; filo yalnızca hiç üye kalmayınca silinir. Ayrıldıktan sonra 24 saat başka filoya girilmez; kurulum 7 günde bir.
+  - Ana ekran: oyuncu adının altında filo şeridi (arma, ad, sandık çubuğu, ödül varsa kırmızı nokta; filosu yoksa "🛸 Bir filoya katıl"). Seviye sonunda "+10 filo puanı · FİLO ADI". Günlük görevlerin üstünde "Filon için 3 seviye geç" (30 ⭐).
+  - Sunucu: `server/fleet.js` (tablolar ilk kullanımda kurulur), günlük işte hafta hesabı ve hareketsizlik kuralları.
+- **Ad süzgeci** (13 Eki): oyuncu ve filo adları için tek ortak dosya (`src/names.js`, oyun ve sunucu aynı dosyayı kullanır): 11 dil küfür/hakaret/aşırıcı listesi, ayrılmış kelimeler (admin, moderatör, resmi, destek, oyun ve stüdyo adları), harf yerine rakam, aksan, Kiril/Latin benzerleri, Arapça hareke, katakana; bağlantı, telefon numarası, uzun harf tekrarı reddedilir. Arapça ve Kürtçe listeler yayından önce anadili konuşan birine okutulmalı. Sunucu yayınlanınca sıralamadaki oyuncu adlarına da hemen uygulanır.
 
 ## 1.5.2 (1.5.1'den sonra) · Japonca gelir, Kürtçe kalkar
 - Neden: Japonya oyuncu başına en çok kazandıran mobil pazar ve oyuncular kendi dillerinde oynamayı bekliyor; "her şeyi yut" türü orada sevilen bir tür. Kürtçe mağazada zaten yoktu (Play'in dil listesinde bulunmuyor).

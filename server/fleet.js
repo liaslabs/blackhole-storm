@@ -183,7 +183,7 @@ async function view(DB, pid, m) {
   }
   return {
     fleet: { fid: f.fid, code: f.code, name: shownName(f), hidden: !!f.hidden, emb: f.emb, open: !!f.open, cap: f.cap === pid, n: members.length, max: MAX_MEMBERS,
-      pts: t.pts, race, racePts: r.pts, rank, of, targets: targets(t.players), ends: weekEnd(wk), raceFrom: Date.parse(raceFrom(wk) + 'T00:00:00Z'), freeRename: !f.renames,
+      pts: t.pts, race, racePts: r.pts, rank, of, targets: targets(t.players), ends: weekEnd(wk), raceFrom: Date.parse(raceFrom(wk) + 'T00:00:00Z'), freeRename: !f.renames || !!f.hidden,
       renameAt: f.renames ? f.renamed + RENAME_WAIT : 0 },
     members, wall: (wall.results || []).reverse()
   };
@@ -322,12 +322,12 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
     return json(req, { ok: false });
   }
   if (p === '/fleet/rename' && req.method === 'POST') {
-    if (f.renames && f.renamed + RENAME_WAIT > now) return json(req, { ok: false, err: 'soon', at: f.renamed + RENAME_WAIT });
+    if (f.renames && !f.hidden && f.renamed + RENAME_WAIT > now) return json(req, { ok: false, err: 'soon', at: f.renamed + RENAME_WAIT }); // a reported name can be changed at once
     const c = NAMES().check(body.name, 'fleet'); if (!c.ok) return json(req, { ok: false, err: c.err });
     const t = await DB.prepare('SELECT fid FROM fleets WHERE nkey = ?').bind(nkey(c.name)).first(); if (t && t.fid !== f.fid) return json(req, { ok: false, err: 'taken' });
     await DB.prepare('UPDATE fleets SET name = ?, nkey = ?, renames = renames + 1, renamed = ?, hidden = 0 WHERE fid = ?').bind(c.name, nkey(c.name), now, f.fid).run();
     await DB.prepare('DELETE FROM fleet_reports WHERE fid = ?').bind(f.fid).run();
-    return json(req, { ok: true, free: !f.renames });
+    return json(req, { ok: true, free: !f.renames || !!f.hidden });
   }
   if (p === '/fleet/set' && req.method === 'POST') {
     if (body.emb !== undefined && !okEmb(body.emb)) return json(req, { ok: false, err: 'emb' });

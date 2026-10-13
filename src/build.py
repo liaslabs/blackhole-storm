@@ -24,6 +24,8 @@ def main():
     assert src.count('//@@V2_ENGINE@@') == 1
     src = src.replace('//@@V2_ENGINE@@', read(f'{SRC}/v2.js').rstrip('\n'))
     # the name filter is shared with the leaderboard server (server/worker.js imports the same file)
+    assert src.count('//@@FLEET@@') == 1
+    src = src.replace('//@@FLEET@@', read(f'{SRC}/fleet.js').rstrip('\n'))
     assert src.count('//@@NAMES@@') == 1
     src = src.replace('//@@NAMES@@', read(f'{SRC}/names.js').rstrip('\n'))
     # build stamp for error reports: the service worker cache name (bumped with every web release)
