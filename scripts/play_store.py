@@ -87,7 +87,8 @@ def listings(ed, eid, only, video_tr, apply):
         patch = {k: L[k] for k in ('title', 'shortDescription', 'fullDescription') if L[k] is not None and L[k] != R.get(k, '')}
         if lang == 'tr-TR' and video_tr and video_tr != R.get('video', ''):
             patch['video'] = video_tr
-        imgs = ed.images().list(packageName=PKG, editId=eid, language=lang, imageType='phoneScreenshots').execute().get('images', [])
+        # a language not yet in Play has no listing to ask for images (404); it is created with the texts first, then the frames go up
+        imgs = ed.images().list(packageName=PKG, editId=eid, language=lang, imageType='phoneScreenshots').execute().get('images', []) if R else []
         same = [i.get('sha256') for i in imgs] == [sha256(p) for p in L['shots']]
         notes = []
         if not R:
