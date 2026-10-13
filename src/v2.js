@@ -1701,7 +1701,7 @@ function v2DrawArcs(R){const [lw,rr]=v2ArcLR(R),st=v2ArcSt(),N=v2AM(),seg=TAU/Ma
     if(i>=n){ctx.lineWidth=st?Math.max(1.2,lw*.7):lw*.45;ctx.strokeStyle='rgba(255,255,255,.14)';ctx.setLineDash([2,5]);ctx.beginPath();ctx.arc(0,0,rr,a0,a1);ctx.stroke();ctx.setLineDash([]);} // broken
     else{const fm=v2ArcFormQ(i),shell=i<G2.shells&&!(fm.k==='shell'&&fm.q<.62),gold=!!G2.gold&&!(fm.k==='gold'&&fm.q<.62),pu=last&&!gold&&!shell?.55+.45*Math.sin(clock*9):1,e=a0+(a1-a0)*grow;
       const col=gold?'#ffd76a':shell?'#eaf1fb':last?'#ff6a6a':'#ff5a5f';
-      if(st){if(st>1){ctx.globalAlpha=(fm.k==='arc'?fm.a:1)*pu*(last?.4:.28);ctx.lineWidth=lw*3.2;ctx.strokeStyle=col;ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();} /* inside the hole the black is the backing; a wide faint stroke is the glow (no shadow blur) */
+      if(st){if(st>1){const hk=window.ARCHK??1.8,ha=window.ARCHA??.35; /* halo 1.8× the line (13 Oct: thinner) */ctx.globalAlpha=(fm.k==='arc'?fm.a:1)*pu*(last?ha*1.4:ha);ctx.lineWidth=lw*hk;ctx.strokeStyle=col;ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();} /* inside the hole the black is the backing; a wide faint stroke is the glow (no shadow blur) */
         ctx.globalAlpha=(fm.k==='arc'?fm.a:1)*pu;ctx.lineWidth=lw;ctx.strokeStyle=col;}
       else{ctx.globalAlpha=fm.k==='arc'?fm.a:1;ctx.lineWidth=lw+3;ctx.strokeStyle='rgba(8,4,10,.55)';ctx.beginPath();ctx.arc(0,0,rr,a0,e);ctx.stroke();ctx.globalAlpha=1; /* dark backing so the arc reads on any nebula */
       if(fm.k==='arc')ctx.globalAlpha=fm.a;ctx.globalAlpha*=pu;ctx.lineWidth=lw+(last?1:0);ctx.strokeStyle=col;ctx.shadowColor=gold?'#ffb020':shell?'#bcd6ff':'#ff3b3b';ctx.shadowBlur=gold?12:shell?7:last?12:5;}
