@@ -4,7 +4,7 @@
 // Endpoints (JSON):
 //   POST /score   {pid,name,score,secs,day,av}   -> {ok,best,rank,total}   av: the player's avatar key (optional, 1.5.0+)
 //   GET  /top?day=YYYY-MM-DD&pid=...             -> {day,list:[{r,k,name,score,me,av}],me:{rank,score}|null,total}   k: opaque row handle
-//   POST /report  {day,k,by}                       -> {ok}   reports a name; two reporters hide it for that day
+//   POST /report  {day,k,by}                       -> {ok}   reports a name; three reporters hide it for that day (a reporter must have played that day, 3 reports a day)
 //   GET  /prizes?pid=...                         -> {list:[{day,rank,stars}]}   (unclaimed, last 7 days)
 //   POST /claim   {pid,day}                      -> {ok,stars}
 //   POST /ack     {sku,token,sub}                -> {ok}   checks a Google Play purchase and acknowledges it (web/TWA version)
@@ -51,7 +51,7 @@ async function ensureAv(DB) { // adds the column once to a database made before 
   try { await DB.prepare('ALTER TABLE scores ADD COLUMN av TEXT').run(); } catch (e) { /* already there */ }
   avReady = true;
 }
-// Players can report a name on the ranking; two different reporters hide it for everyone that day.
+// Players can report a name on the ranking; three different reporters hide it for everyone that day.
 let repReady = false;
 async function ensureReports(DB) {
   if (repReady) return;
@@ -62,7 +62,7 @@ async function rowKey(d, pid) { // an opaque per-day handle, so other players' i
   const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(d + ':' + pid)));
   return [...h.slice(0, 6)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
-const HIDE_AT = 2;
+const HIDE_AT = 3, REPORTS_A_DAY = 3; // three different players hide a name for the day; each may report three names a day
 function cors(req) {
   const o = req.headers.get('Origin') || '';
   return { 'Access-Control-Allow-Origin': ALLOWED.includes(o) ? o : ALLOWED[0], 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
@@ -238,7 +238,12 @@ export default {
         let target = null;
         for (const x of top.results || []) if (await rowKey(b.day, x.pid) === b.k) { target = x.pid; break; }
         if (!target || target === b.by) return json(req, { ok: false });
+        // only someone who played the day's storm may report, and only a few names, so reports cannot be thrown around to annoy
+        if (!(await DB.prepare('SELECT 1 AS x FROM scores WHERE day = ? AND pid = ?').bind(b.day, b.by).first())) return json(req, { ok: false, err: 'noplay' });
         await ensureReports(DB);
+        const done = await DB.prepare('SELECT COUNT(*) AS n, SUM(pid = ?) AS same FROM reports WHERE day = ? AND by = ?').bind(target, b.day, b.by).first();
+        if (done && done.same) return json(req, { ok: true });
+        if (done && done.n >= REPORTS_A_DAY) return json(req, { ok: false, err: 'limit' });
         await DB.prepare('INSERT OR IGNORE INTO reports (day, pid, by, ts) VALUES (?, ?, ?, ?)').bind(b.day, target, b.by, Date.now()).run();
         return json(req, { ok: true });
       }

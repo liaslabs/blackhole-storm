@@ -56,6 +56,7 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .h{font-family:var(--fd);font-size:12px;letter-spacing:2px;color:var(--gold);margin:6px 0 10px;}
 .muted{color:var(--dim);font-size:13px;}
 .avgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0 12px;}
+.namehint{display:flex;gap:6px;align-items:flex-start;text-align:start;margin:6px 2px 0;font-size:11.5px;line-height:1.4;color:#ffd76a;}.namehint::before{content:'🔒';flex:none;}.namehint[hidden]{display:none;} /* 1.5.0: the name is public */
 .inlbl{display:block;text-align:start;margin:12px 0 5px;font-family:var(--fd);font-size:12px;letter-spacing:.08em;color:var(--gold);}
 .inp.need{border-color:var(--gold);box-shadow:0 0 0 3px rgba(242,196,109,.22);animation:inpPulse 1.6s ease-in-out infinite;}
 @keyframes inpPulse{50%{box-shadow:0 0 0 6px rgba(242,196,109,.08);}}
@@ -130,7 +131,7 @@ body.r8 .mhub .wallet>span,body.r8 .mhub .evo{-webkit-backdrop-filter:none;backd
 .lbrow .r{width:26px;font-family:var(--fd);font-size:13px;color:var(--gold);}
 .lbrow .n{flex:1;text-align:start;font-size:14px;font-weight:600;}
 .lbrow .p{font-family:var(--fd);font-size:12px;color:var(--cyan);font-variant-numeric:tabular-nums;}
-.lbRep{flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:6px;border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--dim,#9aa0b6);font:700 12px/1 var(--fd);cursor:pointer;}.lbRep.ask{color:#ff8a8a;border-color:rgba(255,120,120,.5);}
+.lbRep{flex:none;min-width:28px;height:28px;padding:0 6px;border-radius:6px;border:1px solid rgba(255,255,255,.14);background:transparent;color:var(--dim,#9aa0b6);font:700 12px/1 var(--fd);cursor:pointer;}.lbRep.ask{color:#ff8a8a;border-color:rgba(255,120,120,.5);}.lbRep.r10{min-width:24px;height:24px;border-color:transparent;opacity:.45;font-size:11px;}.lbRep.r10.ask{opacity:1;border-color:rgba(255,120,120,.4);font-size:10.5px;padding:0 7px;white-space:nowrap;} /* 1.5.0: quiet until asked */
 .popt{display:flex;align-items:center;gap:12px;width:100%;padding:13px 16px;margin:6px 0;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#fff;font-size:16px;font-weight:600;cursor:pointer;text-align:start;}
 .popt em{margin-left:auto;font-style:normal;font-family:var(--fd);font-size:11px;color:var(--gold);}
 .popt em.off{color:#7d8397;}
@@ -1292,6 +1293,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="avgrid" id="avGrid"></div>
   <label class="inlbl" for="nameInp">✍️ Adını yaz</label>
   <input class="inp" id="nameInp" type="text" maxlength="11" autocomplete="off" placeholder="Adını buraya yaz (en az 2 harf)">
+  <div class="namehint" id="nameHint" hidden>Gerçek adını ve soyadını yazma. Bu ad sıralamada herkese görünür.</div>
   <div class="box" style="display:flex;align-items:center;justify-content:center;gap:12px;">
    <div id="prevAv" style="font-size:34px;">🚀</div>
    <div style="text-align:start;"><div id="prevName" style="font-family:'IBM Plex Sans Condensed',sans-serif;color:var(--gold);font-size:14px;">PİLOT</div><div class="muted" style="font-size:12px;">Hazır mısın kaptan?</div></div>
@@ -3166,13 +3168,18 @@ async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
   w.innerHTML=head+mine+`<div class="lbwait">${T('Yükleniyor…')}</div>`;
   try{const j=await lbFetch(`/top?day=${day}&pid=${PID}`);if(!$('sLB').classList.contains('on'))return;const med=['🥇','🥈','🥉'];
     const hid=lbRepGet(),rk=e=>e.k?String(e.k).replace(/[^a-f0-9]/g,''):'';
-    const rows=(j.list||[]).map(e=>{const k=rk(e),gone=k&&hid.includes(k);return `<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div>${gone?'':avHtml(e.me?playerAvatar:e.av)}<div class="n notr">${gone?'•••':String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div>${!e.me&&k&&!gone?`<button class="lbRep" type="button" data-k="${k}" aria-label="${T('Bu ismi bildir')}">⚑</button>`:''}</div>`;}).join('');
+    const rows=(j.list||[]).map(e=>{const k=rk(e),gone=k&&hid.includes(k);return `<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div>${gone?'':avHtml(e.me?playerAvatar:e.av)}<div class="n notr">${gone?'•••':String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div>${!e.me&&k&&!gone?`<button class="lbRep${rel(10)?' r10':''}" type="button" data-k="${k}" aria-label="${T('Bu ismi bildir')}">⚑</button>`:''}</div>`;}).join('');
     const me=j.me&&!(j.list||[]).some(e=>e.me)?`<div class="lbrow me2"><div class="r">${j.me.rank}</div>${avHtml(playerAvatar)}<div class="n notr">${String(playerName||'PİLOT').replace(/[<>&"]/g,'')}</div><div class="p">${j.me.score.toLocaleString(LOC)}</div></div>`:'';
     const ch=rel(9)?await lbChamp():'';if(!$('sLB').classList.contains('on'))return;
     w.innerHTML=head+ch+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;
-    w.querySelectorAll('.lbRep').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=T('BİLDİR?');return;} // a second tap confirms
-      const k=b.dataset.k,h=lbRepGet();if(!h.includes(k)){h.push(k);lbRepSet(h);}lbFetch('/report',{day,k,by:PID}).catch(()=>{});
-      const row=b.closest('.lbrow');row.querySelector('.n').textContent='•••';b.remove();toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));});}
+    w.querySelectorAll('.lbRep').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=rel(10)?T('Uygunsuz isim mi?'):T('BİLDİR?');return;} // a second tap confirms
+      const k=b.dataset.k,row=b.closest('.lbrow'),hide=()=>{const h=lbRepGet();if(!h.includes(k)){h.push(k);lbRepSet(h);}row.querySelector('.n').textContent='•••';b.remove();};
+      if(!rel(10)){hide();lbFetch('/report',{day,k,by:PID}).catch(()=>{});toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));return;}
+      /* 1.5.0: the server's answer decides: a player who has not played today cannot report, and 3 names a day is the most */
+      b.disabled=true;lbFetch('/report',{day,k,by:PID}).then(r=>r,()=>null).then(r=>{b.disabled=false;
+        if(r&&(r.err==='noplay'||r.err==='limit')){b.classList.remove('ask');b.textContent='⚑';
+          if(r.err==='noplay')toast('⚑',T('ÖNCE OYNA'),T('İsim bildirmek için bugün Hayatta Kal modunda bir kez oyna'));else toast('⚑',T('BİLDİRİM SINIRI'),T('Bugün en fazla 3 isim bildirebilirsin'));return;}
+        hide();toast('⚑',T('BİLDİRİLDİ'),T('Bu isim artık sana gösterilmeyecek'));});});}
   catch(e){w.innerHTML=head+mine+`<div class="lbwait">${T('Sunucuya ulaşılamadı. İnternet bağlantını kontrol et.')}</div>`;}}
 const lbRepGet=()=>{try{const a=JSON.parse(localStorage.getItem('bhs_lbrep')||'[]');return Array.isArray(a)?a.slice(-200):[];}catch(e){return [];}},lbRepSet=a=>{try{localStorage.setItem('bhs_lbrep',JSON.stringify(a.slice(-200)));}catch(e){}};
 function lbFit(){const sc=$('sLB'),rows=[...$('lbList').querySelectorAll('.lbrow[data-g]:not(.lbcols)')],over=()=>sc.scrollHeight>sc.clientHeight+1;
@@ -4323,7 +4330,7 @@ function checkProf(){const n=$('nameInp').value.trim(),ok=n.length>=2&&!!selAv,b
 $('nameInp').addEventListener('input',checkProf);
 $('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')$('profOk').click();});
 let profBack=null; // where the profile returns to: the level card, the leaderboard, or the menu
-function openProfile(back){profBack=back||null;$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
+function openProfile(back){profBack=back||null;$('nameHint').hidden=!rel(10);$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
 function profClose(){$('sProfile').classList.remove('on');const b=profBack;profBack=null;if(b)b();else{showMenu();offerChallenge();}}
 // Names others can see: the shared filter in src/names.js (11 languages, look-alike letters, links, phone numbers; the server runs the same file)
 //@@NAMES@@
