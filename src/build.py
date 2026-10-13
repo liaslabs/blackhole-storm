@@ -23,6 +23,9 @@ def main():
     # the V2 drag engine lives in its own file and is inlined into the game script
     assert src.count('//@@V2_ENGINE@@') == 1
     src = src.replace('//@@V2_ENGINE@@', read(f'{SRC}/v2.js').rstrip('\n'))
+    # the name filter is shared with the leaderboard server (server/worker.js imports the same file)
+    assert src.count('//@@NAMES@@') == 1
+    src = src.replace('//@@NAMES@@', read(f'{SRC}/names.js').rstrip('\n'))
     # build stamp for error reports: the service worker cache name (bumped with every web release)
     import re
     m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))

@@ -29,21 +29,15 @@ const MAX_RATE = 4000;        // points per second no real run reaches (Rage ×2
 const day = (t = Date.now()) => new Date(t).toISOString().slice(0, 10);
 const okPid = p => typeof p === 'string' && /^[a-z0-9]{12,40}$/.test(p);
 const okDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
-// Names others can see: a small word filter (keep the same list as badName() in src/game.src.html)
-const BAD_SUB = ['orospu','orspu','siktir','sikerim','sikeyim','sikik','sikis','yarrak','yarak','amcik','aminakoy','aminako','gotveren','pezevenk','kahpe','kaltak','ibne','gavat','yavsak','serefsiz','fuck','shit','bitch','cunt','nigger','nigga','faggot','whore','slut','dick','pussy','asshole','bastard','hitler','porno','porn'];
-const BAD_WORD = ['sik','pic','amk','aq','oc','mk','got','ass','nazi','sex','fag','cum','rape','anan','ananı','ananin'];
-function badName(n) {
-  const s = String(n || '').toLocaleLowerCase('tr').replace(/[ıİ]/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c')
-    .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/7/g, 't').replace(/@/g, 'a').replace(/\$/g, 's');
-  const flat = s.replace(/[^a-z]/g, '');
-  if (BAD_SUB.some(w => flat.includes(w))) return true;
-  return s.split(/[^a-z]+/).some(w => BAD_WORD.includes(w)) || BAD_WORD.includes(flat);
-}
+// Names others can see: the shared filter (src/names.js, also inlined into the game): 11 languages, look-alike letters, links, phone numbers
+import '../src/names.js';
+const NAMES = globalThis.BHS_NAMES;
+const badName = n => NAMES.bad(n);
 function cleanName(n) {
   n = typeof n === 'string' ? n : '';
   n = n.replace(/[\u0000-\u001f\u007f<>&"'`\\]/g, '').trim();
   n = [...n].slice(0, 11).join('');
-  return n && !badName(n) ? n : 'PİLOT';
+  return n && NAMES.check(n, 'player').ok ? n : 'PİLOT';
 }
 // Avatars shown next to names (1.5.0): only the game's own avatar keys are kept (keep in step with AVX in src/game.src.html)
 const AV_KEYS = new Set(['🚀','🔭','☄️','🌌','🪐','👾','🎧','✨','💠','🔥','🧭','🪖','🗺️','💫','⚓','🌠','🪶','🌑','🎯','🌗','🌀','👻','🌅','🦾','🛰️','🛸','📜','🌟','🧿','🧝','🤖','📺','🕷️','🔋','🕊️','🎛️','🔮','🧠','🏍️','⚙️','👽','🔺','🗡️','🧙','🐉','⚡','🐋','🐲','🔷','👹']);

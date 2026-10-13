@@ -4288,13 +4288,9 @@ $('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')$('profOk').click
 let profBack=null; // where the profile returns to: the level card, the leaderboard, or the menu
 function openProfile(back){profBack=back||null;$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
 function profClose(){$('sProfile').classList.remove('on');const b=profBack;profBack=null;if(b)b();else{showMenu();offerChallenge();}}
-// Names others can see: a small word filter (keep the same list in server/worker.js)
-const BAD_SUB=['orospu','orspu','siktir','sikerim','sikeyim','sikik','sikis','yarrak','yarak','amcik','aminakoy','aminako','gotveren','pezevenk','kahpe','kaltak','ibne','gavat','yavsak','serefsiz','fuck','shit','bitch','cunt','nigger','nigga','faggot','whore','slut','dick','pussy','asshole','bastard','hitler','porno','porn'],
-  BAD_WORD=['sik','pic','amk','aq','oc','mk','got','ass','nazi','sex','fag','cum','rape','anan','ananı','ananin'];
-function badName(n){const s=String(n||'').toLocaleLowerCase('tr').replace(/[ıİ]/g,'i').replace(/ş/g,'s').replace(/ğ/g,'g').replace(/ü/g,'u').replace(/ö/g,'o').replace(/ç/g,'c')
-  .replace(/0/g,'o').replace(/1/g,'i').replace(/3/g,'e').replace(/4/g,'a').replace(/5/g,'s').replace(/7/g,'t').replace(/@/g,'a').replace(/\$/g,'s');
-  const flat=s.replace(/[^a-z]/g,'');if(BAD_SUB.some(w=>flat.includes(w)))return true;
-  return s.split(/[^a-z]+/).some(w=>BAD_WORD.includes(w))||BAD_WORD.includes(flat);}
+// Names others can see: the shared filter in src/names.js (11 languages, look-alike letters, links, phone numbers; the server runs the same file)
+//@@NAMES@@
+function badName(n){return !BHS_NAMES.check(n,'player').ok;}
 $('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(!selAv){const g=$('avGrid');g.classList.remove('nudge');void g.offsetWidth;g.classList.add('nudge');return;}
   if(n.length<2){const i=$('nameInp');i.classList.remove('nudge');void i.offsetWidth;i.classList.add('nudge');i.focus();return;} /* points at what is missing */if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};
 $('profLater').onclick=()=>{if(selAv&&selAv!==playerAvatar){playerAvatar=selAv;saveG();}profClose();};
