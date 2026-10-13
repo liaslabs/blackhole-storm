@@ -6139,9 +6139,9 @@ function v2DrawArcFx(){const A=G2.afx;if(!A||!A.length)return;ctx.save();ctx.lin
       ctx.restore();}}
   ctx.globalAlpha=1;ctx.restore();}
 function v2DrawAvFx(R){const f=G2.avFx;if(!f)return;const e=G2.t-f.t0;if(e<0||e>f.d){G2.avFx=null;return;}if(!f.im.complete||!f.im.naturalWidth)return;
-  const fin=Math.min(1,e/.5)*Math.min(1,(f.d-e)/.8),pu=.5-.5*Math.cos(e*TAU/1.6),r=R*.74; /* a slow 1.6 s glow, fading in and out with the boost */
-  ctx.save();ctx.globalAlpha=fin*(.16+.5*pu);ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.clip();ctx.drawImage(f.im,-r,-r,2*r,2*r);
-  const g=ctx.createRadialGradient(0,0,r*.55,0,0,r);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,1)');ctx.globalAlpha=1;ctx.fillStyle=g;ctx.fillRect(-r,-r,2*r,2*r);ctx.restore();} // the bought avatar inside the hole while its boost runs; soft edge into the black
+  const fin=Math.min(1,e/.5)*Math.min(1,(f.d-e)/.8),pu=.5-.5*Math.cos(e*TAU/1.6),r=R*.82,sd=r*1.6; /* a slow 1.6 s glow, fading in and out with the boost */
+  ctx.save();ctx.globalAlpha=fin*(.16+.5*pu);ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.clip();ctx.drawImage(f.im,-sd/2,-sd/2,sd,sd); /* the whole picture fits inside, so no face is cut */
+  const g=ctx.createRadialGradient(0,0,r*.62,0,0,r*.8);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,1)');ctx.globalAlpha=1;ctx.fillStyle=g;ctx.fillRect(-r,-r,2*r,2*r);ctx.restore();} // the bought avatar inside the hole while its boost runs; soft edge into the black
 function v2DrawArcs(R){const [lw,rr]=v2ArcLR(R),st=v2ArcSt(),N=v2AM(),seg=TAU/Math.max(1,N),gap=v2ArcGap(),n=G2.arcs,last=n===1&&N>1,grow=Math.min(1,G2.arcFill/.5); // the arcs sit on the event horizon; their colour is the layer left: gold, silver, red
   ctx.save();ctx.lineCap='round';
   if(N===0){if(G2.gold){ctx.strokeStyle='#ffd76a';ctx.shadowColor='#ffb020';ctx.shadowBlur=12;ctx.lineWidth=lw;ctx.beginPath();ctx.arc(0,0,rr,0,TAU);ctx.stroke();ctx.shadowBlur=0;} /* no arcs: a gold shell shows as a full ring */
