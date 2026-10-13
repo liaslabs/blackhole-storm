@@ -577,7 +577,7 @@ function v2Update(dt){
     // gravity of the main hole (and any mini hole) — meteors fly straight
     let dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy)||1;
     if(o.k!=='meteor'){
-      const gA=G2.garcT>0&&!o.boss&&o.k!=='prey'&&o.k!=='cstar',anti=!gA&&G2.antiT>0&&!G2.ending&&!o.boss,ed=!anti&&(v2Edible(o)||G2.ending||gA);
+      const gA=G2.garcT>0&&!o.boss&&(rel(10)||o.k!=='prey'&&o.k!=='cstar'), /* 1.5.0: the Golden Arc swallows anything on screen in one go, the prey's shell and a star out of turn too */anti=!gA&&G2.antiT>0&&!G2.ending&&!o.boss,ed=!anti&&(v2Edible(o)||G2.ending||gA);
       if(anti){if(o.v0x===undefined){o.v0x=o.vx;o.v0y=o.vy;}if(d<Gr*1.7){const q=1-d/(Gr*1.7),A=sp2(2200)*q*odt;o.vx-=dx/d*A;o.vy-=dy/d*A;const v=Math.hypot(o.vx,o.vy),mx=sp2(320);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}}else{const f=Math.pow(.2,odt);o.vx*=f;o.vy*=f;}} // antimatter: the hole repels; pushed bodies coast to a stop instead of leaving the screen
       else if(o.v0x!==undefined){if(d>Gr){const k=Math.min(1,odt*2.2);o.vx+=(o.v0x-o.vx)*k;o.vy+=(o.v0y-o.vy)*k;}if(Math.hypot(o.vx-o.v0x,o.vy-o.v0y)<sp2(6)||d<=Gr)o.v0x=o.v0y=undefined;} /* the push is over: bodies pick their old speed back up within half a second */
       if(d<Gr&&o.k==='bomb'&&!anti&&!G2.ending&&!(o.noCap>0)&&!G2.hold){v2BombCatch(o,d);continue;}
@@ -594,8 +594,8 @@ function v2Update(dt){
       if(G2.twin&&ed&&o.st==='in'&&o.k!=='anti'&&o.k!=='bomb'&&!o.boss){const q=G2.twin,mx=q.x-o.x,my=q.y-o.y,md=Math.hypot(mx,my)||1;if(md<q.g){const A=(V2K.acc.min+1.4*(1-md/q.g))*S*3600*odt*.8;o.vx+=mx/md*A;o.vy+=my/md*A;}if(md<q.r+o.r*.65)v2Swallow(o,q);}
       if(o.st!=='in')continue;
       o.x+=o.vx*odt;o.y+=o.vy*odt;if(o.k==='half')v2HalfKeep(o,odt);dx=hX-o.x;dy=hY-o.y;d=Math.hypot(dx,dy)||1;
-      if(d<G2.R+o.r*.65&&!anti&&!(o.k==='cstar'&&!ed)&&o.k!=='prey'){ /* a star out of turn is only light: it passes through */
-        if(ed)v2Swallow(o,null);
+      if(d<G2.R+o.r*.65&&!anti&&!(o.k==='cstar'&&!ed)&&(o.k!=='prey'||gA)){ /* a star out of turn is only light: it passes through */
+        if(ed){if(o.k==='prey')v2PreyBurst(o);else v2Swallow(o,null);}
         else{ // too big: bounces off the event horizon
           const nx=-dx/d,ny=-dy/d,vn=o.vx*nx+o.vy*ny;if(vn<0){o.vx-=1.8*vn*nx;o.vy-=1.8*vn*ny;}o.x=hX+nx*(G2.R+o.r*.66);o.y=hY+ny*(G2.R+o.r*.66);
           if(o.k==='split'){v2Split(o);continue;}
@@ -669,6 +669,7 @@ function v2PreyStep(o,dt){ // flees the hole; ram it to crack its shell (a fast 
   v2PreyWall(o);
   const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;
   if(o.life<3.5&&o.life>0&&!o.warned){o.warned=1;v2Call('KAÇIYOR!','','#ff7a5c',1);v2Sfx('tickHi',{vol:.5,rate:.9});}
+  if(rel(10)&&G2.garcT>0&&d<G2.R+o.r*1.1){v2PreyBurst(o);return;} /* 1.5.0: the Golden Arc breaks the whole shell at once */
   if(o.life>0&&d<G2.R+o.r*1.1&&o.hitCD<=0){const vs=Math.hypot(G2.vx,G2.vy),dmg=1+(vs>sp2(K.fast)?1:0)+(vs>sp2(K.faster)?2:0)+(G2.rageT>0?1:0);
     o.hp-=dmg;o.hitCD=K.cd;o.daze=.35;o.life=Math.min(o.max,o.life+1.5);const ux=dx/d,uy=dy/d,kb=sp2(240+40*dmg);o.vx=ux*kb;o.vy=uy*kb;o.head=Math.atan2(uy,ux);o.x=hX+ux*(G2.R+o.r*1.2);o.y=hY+uy*(G2.R+o.r*1.2);v2PreyWall(o);
     v2Burst(o.x,o.y,8+dmg*5,'#ffd76a',1.5,5,.4);shake=Math.max(shake,2+dmg*2);vib(10+dmg*8);v2Sfx('armor',{vol:.4+dmg*.1,rate:1.5-dmg*.15});
@@ -681,7 +682,7 @@ function v2PreyStep(o,dt){ // flees the hole; ram it to crack its shell (a fast 
   const hurt=.55+.45*Math.max(0,o.hp)/(o.hpMax||K.hp),sp=sp2(o.esc?520:(flee?170+200*o.stam:110)*hurt),k=Math.min(1,dt*4); /* a cracked shell slows it down */o.vx+=(Math.cos(o.head)*sp-o.vx)*k;o.vy+=(Math.sin(o.head)*sp-o.vy)*k;
   if(o.esc&&(o.x<-o.r*3||o.x>W+o.r*3)){o.st='dead';G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('AV KAÇTI','','#ff7a5c',1.2,true);G2.hitWhy='prey';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}
 function v2PreyBurst(o){ // the shell shatters: gold sparks pour into the hole
-  o.st='dead';v2Score(o,null);const K=OBJ2.prey;G2.rr=Math.min(G2.cap,G2.rr+K.grow*(G2.growK||1));G2.pulse=1;addMass(1);
+  o.st='dead';if(rel(10)&&G2.garcT>0)o.gold2=1;v2Score(o,null);const K=OBJ2.prey;G2.rr=Math.min(G2.cap,G2.rr+K.grow*(G2.growK||1));G2.pulse=1;addMass(1);
   for(let i=0;i<18&&G2.parts.length<200;i++){const a=rng()*TAU,v=rrnd(1.5,4);G2.parts.push({x:o.x,y:o.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.7,max:.7,c:'#ffd76a',sz:2.2});}
   v2Burst(o.x,o.y,30,'#ffd76a',2,8,.7,2.2);flash=Math.max(flash,.25);shake=Math.max(shake,7);
   if(G2.hunt){dmEvent('hunt',1);G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('PARÇALANDI!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});}}
@@ -1069,7 +1070,7 @@ function v2JetStep(dt){const j=G2.jet,J=V2K.jet;j.t+=dt;if(j.t>=j.D||G2.ending){
   for(const o of G2.objs){if(o.st!=='in'||o.boss||o.orb||o.wait>0||o.jetSkip>G2.t||!on(o.x,o.y,o.r))continue; /* freed bodies and fresh halves are left alone */
     if(o.k==='meteor'){if(!o.hit){o.st='dead';j.n++;v2Burst(o.x,o.y,18,'#ffb347',2,7,.55,2);v2MetBreak(o);const p=25;totalScore+=p;levelScore+=p;ftexts.push(new FText('+'+p,o.x,o.y,'#ffb347',14));}continue;}
     if(o.k==='split'){v2Split(o);for(const h of G2.objs)if(h.k==='half'&&!h.jetSkip)h.jetSkip=G2.t+.4;j.n++;continue;} /* the beam cracks a split planet on first touch */
-    if(v2Banned(o)){o.freed=1;o.jetSkip=1e9;j.n++;v2Burst(o.x,o.y,18,'#8dffcb',2,6,.55,2);ftexts.push(new FText(T('SERBEST'),o.x,o.y-o.r-sp2(8),'#8dffcb',14));v2Sfx('sparkle',{vol:.45,rate:1.3});continue;} /* a forbidden body the beam touches turns normal */
+    if(v2Banned(o)){o.freed=1;o.jetSkip=rel(10)?G2.t+(j.D-j.t)+.05:1e9; /* 1.5.0: left alone for the rest of this jet only; the next jet turns it into points */j.n++;v2Burst(o.x,o.y,18,'#8dffcb',2,6,.55,2);ftexts.push(new FText(T('SERBEST'),o.x,o.y-o.r-sp2(8),'#8dffcb',14));v2Sfx('sparkle',{vol:.45,rate:1.3});continue;} /* a forbidden body the beam touches turns normal */
     if(o.k==='prey'){j.pt-=dt;if(j.pt<=0){j.pt=J.preyIv;o.hp=(o.hp??V2K.prey.hp)-1;v2Burst(o.x,o.y,10,'#ffd76a',1.5,5,.4);if(o.hp<=0)v2PreyBurst(o);}continue;}
     if(JET_SHATTER.has(o.k)&&!v2Banned(o)){o.mega2=true;v2Score(o,null);o.st='dead';j.n++;v2Burst(o.x,o.y,14,'#ffb347',2,6,.5,1.8);continue;} /* shattered: its points, no growth */
     const A=sp2(3200)*dt,push=v2Banned(o)||o.k==='anti'?1:v2Edible(o)?-1:0;if(!push)continue;o.vx+=ux*A*push;o.vy+=uy*A*push;const v=Math.hypot(o.vx,o.vy),mx=sp2(700);if(v>mx){o.vx*=mx/v;o.vy*=mx/v;}} // power-ups are pulled in, forbidden bodies pushed away
@@ -1252,9 +1253,10 @@ function v2Nova(){ // 💎 Supernova: everything on screen pops into the hole, t
   sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.5,rate:1.4});vib([30,20,60]);v2Blast(hX,hY,true,true);if(G2.mega)G2.mega.nb=nb;v2Call('SÜPERNOVA','+'+nb.toLocaleString(LOC),'#8fe9ff',1.6,true);v2Ui(true);
 }
 function v2Blast(x,y,mega,nova){ // mega: the whole screen falls in; otherwise ~3× your radius (spec)
-  const unb=rel(7)?v2Unban():0; /* 1.4.7; first: freed bodies can fall into a mega blast too */
-  G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,vis:mega,hit:new Set(),n:0,bonus:0});
-  if(mega){const L=G2.objs.filter(o=>o.st==='in'&&o.wait<=0&&!o.boss&&!o.orb&&o.k!=='anti'&&o.k!=='bomb'&&(o.k==='meteor'||v2Edible(o))).sort((a,b)=>Math.hypot(a.x-hX,a.y-hY)-Math.hypot(b.x-hX,b.y-hY));
+  const fr=[],unb=rel(7)?v2Unban(fr):0; /* 1.4.7; first: freed bodies can fall into a mega blast too (1.5.0: no longer, see below) */
+  if(!rel(10))fr.length=0; /* 1.5.0: this blast only lifts their ban; the next bomb or jet turns them into points */
+  G2.waves.push({x,y,t:0,rad:0,max:mega?Math.hypot(W,H):G2.R*V2K.bomb.r,dur:mega?.9:.6,mega,vis:mega,hit:new Set(fr),n:0,bonus:0});
+  if(mega){const L=G2.objs.filter(o=>o.st==='in'&&o.wait<=0&&!o.boss&&!o.orb&&o.k!=='anti'&&o.k!=='bomb'&&!fr.includes(o)&&(o.k==='meteor'||v2Edible(o))).sort((a,b)=>Math.hypot(a.x-hX,a.y-hY)-Math.hypot(b.x-hX,b.y-hY));
     G2.mega={t:0,i:0,list:L,gap:Math.min(.07,1.1/Math.max(1,L.length)),bonus:0,n:0,nova:!!nova};}
   shake=Math.max(shake,mega?12:6);flash=Math.max(flash,mega?.9:.5);sfx('boom',{vol:mega?.9:.7,rate:mega?.7:1});
   if(nova)shock=1;else if(mega){v2Ach.mega++;shock=1;v2Call('MEGA BOMBA!','','#ff8a4c',1.5,true);vib([40,30,120]);}else v2Call('BOMBA!','','#ff8a4c',.8);
@@ -1262,9 +1264,9 @@ function v2Blast(x,y,mega,nova){ // mega: the whole screen falls in; otherwise ~
 }
 
 // a bomb lifts the ban from every forbidden body on screen at that moment (bodies that come later are still forbidden)
-function v2Unban(){if(!(G2.rule&&G2.rule.ban))return 0;let n=0;
+function v2Unban(out){if(!(G2.rule&&G2.rule.ban))return 0;let n=0;
   for(const o of G2.objs){if(o.st!=='in'||o.wait>0||!v2Banned(o)||o.x<-o.r||o.x>W+o.r||o.y<-o.r||o.y>H+o.r)continue;
-    o.freed=1;o.unbanT=G2.t;n++;v2Burst(o.x,o.y,14,'#8dffcb',2,5,.5,1.8);ftexts.push(new FText(T('SERBEST'),o.x,o.y-o.r-sp2(8),'#8dffcb',13));}
+    o.freed=1;o.unbanT=G2.t;n++;if(out)out.push(o);v2Burst(o.x,o.y,14,'#8dffcb',2,5,.5,1.8);ftexts.push(new FText(T('SERBEST'),o.x,o.y-o.r-sp2(8),'#8dffcb',13));}
   if(n)v2Sfx('sparkle',{vol:.5,rate:1.2});return n;}
 function v2MegaStep(dt){ // play pauses while the screen pops body by body and everything spirals into the hole
   const M=G2.mega;M.t+=dt;
