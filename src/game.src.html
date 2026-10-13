@@ -1656,7 +1656,9 @@ const escH=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 function icoFill(w){if(w._src===undefined&&w._raw===undefined)return;const out=w._src==null?w._raw:trLookup(w._src);w.innerHTML=escH(out).replace(ICO.re,m=>ICO.svg(m));}
 // canvas texts cannot show SVG: keep a plain symbol for the key ones, drop other emoji
 // photo avatars: the saved avatar stays its emoji id
-const AV_IMG={'🚀':'astro','👽':'moonwalk','👾':'visor','🧠':'earth','🎯':'mars','⚡':'jupiter','🪐':'saturn','☄️':'crab','🌌':'andromeda','💫':'earthrise','🤖':'rover','🔭':'hubble','🦾':'iss','🌠':'shuttle','🛸':'dragon'};
+const AV_IMG0={'🚀':'astro','👽':'moonwalk','👾':'visor','🧠':'earth','🎯':'mars','⚡':'jupiter','🪐':'saturn','☄️':'crab','🌌':'andromeda','💫':'earthrise','🤖':'rover','🔭':'hubble','🦾':'iss','🌠':'shuttle','🛸':'dragon'};
+const AV_IMG10={'🚀':'c01','🔮':'c02','🦾':'c04','🔭':'c05','☄️':'c06','🌠':'c07','🔺':'c08','🌌':'c09','💫':'c10','🎯':'c11','🪐':'c12','👽':'c13','🕷️':'c14','🐉':'c15','⚡':'c16','🐋':'c17','👻':'c18','🤖':'c19','🧠':'c21','👾':'c22','🛸':'c23','🌅':'c24'}; /* 1.5.0 (13 Oct): the illustrated set replaces the NASA photos; the 15 old keys stay, each drawn by its nearest new picture, so saved avatars carry over */
+const AV_IMG=rel(10)?AV_IMG10:AV_IMG0;
 function setAv(el,a){const k=AV_IMG[a],src=k&&window.BHS_SPR&&BHS_SPR.av[k];el.textContent='';el.classList.add('notr');if(src){const im=new Image();im.className='avimg';im.alt='';im.src=src;el.appendChild(im);}else el.textContent=a||'';}
 // ══════════════════════════════════════════════════════
 // LANGUAGES. Turkish is the source: every other language is a dictionary (window.I18N[lang]) keyed by the
@@ -4207,7 +4209,7 @@ else if(NATIVE)$('privRow').innerHTML=`🔒 Hesap yok. Reklamlar Google AdMob il
 // ══════════════════════════════════════════════════════
 {const wake=()=>{if(!SND.ctx||SND.ctx.state!=='running')SND.resume();};addEventListener('pointerup',wake,true);addEventListener('keydown',wake,true);addEventListener('pointerdown',wake,true);} // browsers start audio suspended until a gesture
 document.addEventListener('click',e=>{if(e.target.closest('button,.av,.mode,.popt'))sfx('click',{vol:.35,rev:0});},true);
-const AVATARS=['🚀','👽','👾','🧠','🎯','⚡','🪐','☄️','🌌','💫','🤖','🔭','🦾','🌠','🛸'];let selAv=null;
+const AVATARS=rel(10)?Object.keys(AV_IMG10):['🚀','👽','👾','🧠','🎯','⚡','🪐','☄️','🌌','💫','🤖','🔭','🦾','🌠','🛸'];let selAv=null;
 function buildProfile(){
   const g=$('avGrid');g.innerHTML='';
   AVATARS.forEach(av=>{const b=document.createElement('button');b.className='av'+(av===playerAvatar?' sel':'');setAv(b,av);
