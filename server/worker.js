@@ -2,8 +2,8 @@
 // Daily Storm (the survival mode's daily scenario): one best score per install per UTC day.
 // The top 3 of each finished day win stars (1000 / 500 / 250), claimed once from the app.
 // Endpoints (JSON):
-//   POST /score   {pid,name,score,secs,day}      -> {ok,best,rank,total}
-//   GET  /top?day=YYYY-MM-DD&pid=...             -> {day,list:[{r,k,name,score,me}],me:{rank,score}|null,total}   k: opaque row handle
+//   POST /score   {pid,name,score,secs,day,av}   -> {ok,best,rank,total}   av: the player's avatar key (optional, 1.5.0+)
+//   GET  /top?day=YYYY-MM-DD&pid=...             -> {day,list:[{r,k,name,score,me,av}],me:{rank,score}|null,total}   k: opaque row handle
 //   POST /report  {day,k,by}                       -> {ok}   reports a name; two reporters hide it for that day
 //   GET  /prizes?pid=...                         -> {list:[{day,rank,stars}]}   (unclaimed, last 7 days)
 //   POST /claim   {pid,day}                      -> {ok,stars}
@@ -44,6 +44,15 @@ function cleanName(n) {
   n = n.replace(/[\u0000-\u001f\u007f<>&"'`\\]/g, '').trim();
   n = [...n].slice(0, 11).join('');
   return n && !badName(n) ? n : 'PİLOT';
+}
+// Avatars shown next to names (1.5.0): only the game's own avatar keys are kept (keep in step with AVX in src/game.src.html)
+const AV_KEYS = new Set(['🚀','🔭','☄️','🌌','🪐','👾','🎧','✨','💠','🔥','🧭','🪖','🗺️','💫','⚓','🌠','🪶','🌑','🎯','🌗','🌀','👻','🌅','🦾','🛰️','🛸','📜','🌟','🧿','🧝','🤖','📺','🕷️','🔋','🕊️','🎛️','🔮','🧠','🏍️','⚙️','👽','🔺','🗡️','🧙','🐉','⚡','🐋','🐲','🔷','👹']);
+const cleanAv = a => typeof a === 'string' && AV_KEYS.has(a) ? a : null;
+let avReady = false;
+async function ensureAv(DB) { // adds the column once to a database made before 1.5.0
+  if (avReady) return;
+  try { await DB.prepare('ALTER TABLE scores ADD COLUMN av TEXT').run(); } catch (e) { /* already there */ }
+  avReady = true;
 }
 // Players can report a name on the ranking; two different reporters hide it for everyone that day.
 let repReady = false;
@@ -198,12 +207,13 @@ export default {
         const score = Math.floor(+b.score), secs = Math.floor(+b.secs);
         if (!(score > 0 && score < 5e7) || !(secs >= 5 && secs <= MAX_SECS) || score / secs > MAX_RATE) return json(req, { ok: false, err: 'score' }, 400);
         if (!(await integrityGate(env, b.it, `${b.pid}|${d}|${score}|${secs}`))) return json(req, { ok: false, err: 'integrity' }, 403);
-        const name = cleanName(b.name), now = Date.now();
+        const name = cleanName(b.name), av = cleanAv(b.av), now = Date.now();
+        await ensureAv(DB);
         const cur = await DB.prepare('SELECT score, subs FROM scores WHERE day = ? AND pid = ?').bind(d, b.pid).first();
         if (cur && cur.subs >= MAX_SUBS) return json(req, { ok: false, err: 'rate' }, 429);
-        if (!cur) await DB.prepare('INSERT INTO scores (day, pid, name, score, secs, ts) VALUES (?, ?, ?, ?, ?, ?)').bind(d, b.pid, name, score, secs, now).run();
-        else if (score > cur.score) await DB.prepare('UPDATE scores SET score = ?, secs = ?, ts = ?, name = ?, subs = subs + 1 WHERE day = ? AND pid = ?').bind(score, secs, now, name, d, b.pid).run();
-        else await DB.prepare('UPDATE scores SET subs = subs + 1, name = ? WHERE day = ? AND pid = ?').bind(name, d, b.pid).run();
+        if (!cur) await DB.prepare('INSERT INTO scores (day, pid, name, score, secs, ts, av) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(d, b.pid, name, score, secs, now, av).run();
+        else if (score > cur.score) await DB.prepare('UPDATE scores SET score = ?, secs = ?, ts = ?, name = ?, av = COALESCE(?, av), subs = subs + 1 WHERE day = ? AND pid = ?').bind(score, secs, now, name, av, d, b.pid).run();
+        else await DB.prepare('UPDATE scores SET subs = subs + 1, name = ?, av = COALESCE(?, av) WHERE day = ? AND pid = ?').bind(name, av, d, b.pid).run();
         const best = Math.max(score, cur ? cur.score : 0);
         const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, best).first();
         const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ?').bind(d).first();
@@ -211,10 +221,11 @@ export default {
       }
       if (url.pathname === '/top' && req.method === 'GET') {
         const d = okDay(url.searchParams.get('day')) ? url.searchParams.get('day') : day(), pid = url.searchParams.get('pid');
-        const top = await DB.prepare('SELECT pid, name, score FROM scores WHERE day = ? ORDER BY score DESC, ts ASC LIMIT 50').bind(d).all();
+        await ensureAv(DB);
+        const top = await DB.prepare('SELECT pid, name, score, av FROM scores WHERE day = ? ORDER BY score DESC, ts ASC LIMIT 50').bind(d).all();
         await ensureReports(DB);
         const rep = await DB.prepare('SELECT pid, COUNT(*) AS n FROM reports WHERE day = ? GROUP BY pid').bind(d).all(), hidden = new Set((rep.results || []).filter(x => x.n >= HIDE_AT).map(x => x.pid));
-        const list = await Promise.all((top.results || []).map(async (x, i) => ({ r: i + 1, k: await rowKey(d, x.pid), name: hidden.has(x.pid) && x.pid !== pid ? 'PİLOT' : x.name, score: x.score, me: x.pid === pid })));
+        const list = await Promise.all((top.results || []).map(async (x, i) => ({ r: i + 1, k: await rowKey(d, x.pid), name: hidden.has(x.pid) && x.pid !== pid ? 'PİLOT' : x.name, score: x.score, me: x.pid === pid, av: hidden.has(x.pid) && x.pid !== pid ? null : cleanAv(x.av) })));
         let me = null;
         if (okPid(pid)) { const m = await DB.prepare('SELECT score FROM scores WHERE day = ? AND pid = ?').bind(d, pid).first();
           if (m) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, m.score).first(); me = { rank: r.n + 1, score: m.score }; } }
