@@ -149,7 +149,7 @@ html[lang=ar] *{letter-spacing:0!important;}
 .credits{margin-top:12px;text-align:start;font-size:12px;line-height:1.55;color:#7d8397;padding:10px 12px;border-radius:6px;background:rgba(255,255,255,.025);}
 .credits b{color:#aab0c2;}
 .modal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;width:min(92%,360px);display:none;}
-.modal.on{display:block;}
+.modal.on{display:block;}.modal.warm{opacity:.01!important;pointer-events:none!important;animation:none!important;}
 #pvCan{display:block;margin:6px auto 8px;width:96px;height:96px;}
 #toast{position:absolute;top:10px;left:50%;z-index:45;transform:translate(-50%,-120px);display:flex;gap:10px;align-items:center;padding:9px 16px;border-radius:8px;background:rgba(8,9,18,.92);border:1px solid var(--line);box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .45s cubic-bezier(.2,1.4,.4,1);pointer-events:none;min-width:220px;}
 #toast.on{transform:translate(-50%,0);}
@@ -3668,6 +3668,11 @@ function litFrom(x,y){const dx=hX-x,dy=hY-y,d=Math.hypot(dx,dy)||1;return {x:dx/
 const MODALS=['mRisk','mCont','mNoStar','mGift','mHeart','mSprint','mLvl','mOver','mTip2','mShBuy','mTour','mPrize','mRes'];
 function hideModals(){MODALS.forEach(id=>$(id).classList.remove('on'));}
 function showModal(id){hideModals();$(id).classList.add('on');}
+/* 1.4.9: the cards that open at the end of (or during) a level are drawn once, almost invisible, while the menu is idle. After an app
+   update the phone's GPU has to prepare their shadows, corners and big digits again, and the first game-over card took ~200 ms. */
+function modalWarm(){if(!rel(9)||modalWarm.done)return;modalWarm.done=1;const ids=['mLvl','mCont','mOver','mTip2','mShBuy','mRisk','mGift'].filter(id=>$(id)&&!$(id).classList.contains('on'));
+  for(const id of ids)$(id).classList.add('on','warm');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{for(const id of ids)$(id).classList.remove('warm','on');}));}
 function resetRun(full,fromSave){
   if(full&&!fromSave){totalScore=0;level=1;levelStartScore=0;}else if(full&&fromSave){totalScore=savedScore;level=savedLevel;levelStartScore=savedScore;}else{totalScore=levelStartScore;}
   lives=3;survTime=0;lastSurvSec=-1;if(full){maxCombo=0;runStartBest=bestScore;}
@@ -4278,7 +4283,7 @@ function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey()
   if(gameMode==='sprint')gameMode='classic';rngS=null;if(REC.mr)recStop();
   selMode(HSEL?'hard':gameMode);updateUI();renderEvo();renderDM();renderDaily();
   if(hmOpen()&&!TIPS.hmOpen){TIPS.hmOpen=1;saveSoon();later(()=>toast('🔥',T('ZOR MOD AÇILDI'),T('Seviye 1\'den sert kurallarla: 2 kalp, daha çok meteor, 2 kat yıldız.')),900);}
-  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(zonePrefetch,2500);later(()=>glPrepZone(Math.max(1,savedLevel)),5000);if(rel(10))setTimeout(v2DepthPrep,4000); /* 1.5.0: depth rocks painted in the menu */if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
+  $('sMenu').classList.add('on');gState='menu';SND.music('menu');SND.tension(false);checkDaily();adsKick(1200);later(zonePrefetch,2500);later(()=>glPrepZone(Math.max(1,savedLevel)),5000);later(()=>{if(gState==='menu'&&$('sMenu').classList.contains('on')&&!document.querySelector('.modal.on'))modalWarm();},3500);if(rel(10))setTimeout(v2DepthPrep,4000); /* 1.5.0: depth rocks painted in the menu */if(!showMenu.net){showMenu.net=1;later(()=>{lbFlush();lbPrizes();},1500);}menuHub();fitMenu();later(labNoteMaybe,1800);requestAnimationFrame(fitMenu); // again once the observer has translated the new text
 }
 // the main menu is one page: after the compact layout, a last-resort zoom keeps the whole card on screen
 function fitMenu(){const c=$('sMenu').querySelector('.mcard');if(!c||!$('sMenu').classList.contains('on'))return;c.style.zoom='';
