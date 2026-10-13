@@ -11,6 +11,6 @@ Fais glisser un trou noir du bout du doigt dans un univers construit à partir d
 • Tempête du jour : tout le monde affronte la même tempête, avec classement mondial et récompenses quotidiennes
 • Course du jour et liens de défi : partage ton score et défie tes amis
 • Atlas cosmique : de vraies informations scientifiques sur chaque corps avalé
-• 10 langues, sans compte, jouable hors ligne
+• 11 langues, sans compte, jouable hors ligne
 
 Images : NASA, ESA, CSA, STScI (CC BY 4.0) · Textures des planètes : Solar System Scope (CC BY 4.0) · Sons : Kenney.nl, OpenGameArt (CC0)
