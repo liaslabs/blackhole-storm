@@ -1,6 +1,7 @@
 // Names others can see (player names, fleet names): one filter for the game and the leaderboard server.
 // The game inlines this file (src/build.py, //@@NAMES@@); the server imports it (server/worker.js). Same rules on both sides,
-// the server's answer is the one that counts. Lists cover the game's 11 languages; Arabic and Kurdish want a native review.
+// the server's answer is the one that counts. Lists cover the game's 11 languages. Arabic and Kurdish (Oct 2026) come from
+// LDNOOBW, wooorm/cuss (arabizi), sweardictionary.com and youswear.com, checked against common Arabic, Kurdish and Turkish names.
 globalThis.BHS_NAMES = (() => {
   // what a name is folded to before the lists are checked: case, accents, look-alike letters, digits used as letters
   const LEET = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't', '8': 'b', '9': 'g', '@': 'a', '$': 's', '!': 'i', '|': 'i', '€': 'e', '¡': 'i' };
@@ -20,12 +21,16 @@ globalThis.BHS_NAMES = (() => {
     'bite', 'pute', 'nique', 'pd', 'conne', 'ntm', 'negre', 'neger', 'mongo', 'pedo', 'isis', 'pust', 'bego',
     // id
     'babi', 'asu', 'anjing', 'kntl', 'mmk', 'jembut',
-    // ku (kurmancî)
-    'qun', 'quz', 'kerê', 'qehbe', 'qehpe',
+    // ku (kurmancî): kûn/qûn arse, kûz pussy, kîr cock, gan fuck (whole words: "kuzey", "kuzgun", "gani" stay free)
+    'qun', 'quz', 'kerê', 'quna', 'kuna', 'kunek', 'kuz', 'kuze', 'kuzi', 'kuza', 'kire', 'kirê', 'xaye', 'xayê', 'ganim', 'dennim', 'gandin',
     // ru (after look-alikes are read as Cyrillic)
     'хуй', 'хер', 'ебу', 'еба', 'ебал', 'сука', 'суки', 'бля', 'жопа', 'хуи',
     // ar
     'كس', 'زب', 'طيز', 'نيك', 'خول', 'زق',
+    'زبي', 'زبك', 'زبر', 'زبه', 'اير', 'ايري', 'ايرك', 'طيزي', 'طيزك', 'انيك', 'ينيك', 'نيكني', 'متناك', 'عرص', 'قواد', 'خرا', 'خره', 'زنا',
+    'سكس', 'سكسي', 'مص', 'لحس', 'بزاز', 'ثدي', 'بظر', 'قضيب', 'جماع', 'شهوه', 'بيضان', 'سحاق', 'سحاقيه', 'شاذ', 'لبوه', 'منيوكه',
+    // ar in Latin letters (arabizi; 7 = h, 3 = a, 5 = kh are read by the digit rules)
+    'zebbi', 'zeby', 'zobry', 'zebak', 'teez', 'teezak', 'neek', 'nayek', 'kahba', 'qahba', 'gahba', 'katba', 'metnak', 'metnaka', 'khawal', 'luti', 'louty', 'zamel', 'zemel',
     // ja (hiragana)
     'しね', 'くそ', 'ちんこ', 'まんこ', 'ちんぽ', 'うんこ',
     // reserved short words
@@ -49,12 +54,18 @@ globalThis.BHS_NAMES = (() => {
     'porra', 'caralho', 'merda', 'buceta', 'cuzao', 'foder', 'fodase', 'arrombado', 'piroca', 'cacete', 'filhodaputa', 'vagabunda',
     // id
     'bangsat', 'kontol', 'memek', 'ngentot', 'goblok', 'tolol', 'jancok', 'jancuk', 'pepek', 'bajingan', 'lonte',
-    // ku (kurmancî), reviewed by a native speaker before release
-    'qehbik', 'dayikqehpe', 'pezewenk',
+    // ku (kurmancî)
+    'qehbik', 'dayikqehpe', 'pezewenk', 'qehbe', 'qehpe', 'qahpe', 'orispi', 'sekbav', 'segbav', 'benamus', 'qunate', 'qundek', 'kunate',
+    'kuzediya', 'kuzdiya', 'kuzedayika', 'kuzdayika', 'kuzadayika', 'kuzekere', 'kuzkere', 'kuzikeri', 'dayikatedikim', 'diyatedikim', 'kiremin', 'guxwar', 'bikimete',
+    // tr (same family)
+    'namussuz', 'sikimin',
     // ru
     'пизд', 'ебат', 'ебан', 'ёбан', 'еблан', 'блядь', 'бляд', 'мудак', 'пидор', 'пидар', 'залуп', 'гандон', 'шлюх', 'хуе', 'хуё', 'дерьм', 'нацист', 'гитлер',
     // ar
     'شرموط', 'منيوك', 'منيك', 'عاهر', 'قحب', 'لوطي', 'كسمك', 'كس امك', 'داعش', 'خنزير', 'ابن الكلب', 'يلعن',
+    'كس اختك', 'كسختك', 'كسمين', 'متناكه', 'معرص', 'ديوث', 'لواط', 'اغتصاب', 'مخنث', 'ابن الحرام', 'ولد زنا', 'كل خرا', 'خرا عليك', 'تلحس', 'مص زبي', 'زبالة', 'ابن ستين كلب',
+    'kosomak', 'kosommak', 'kusummak', 'kussummak', 'kusomak', 'kesomak', 'kosokhtak', 'kososhtak', 'kosekhtak', 'kosstak', 'kossomak', 'sharmout', 'sharmot', 'charmout', 'manyook', 'manyok', 'mnayak',
+    'mnayek', 'dayouth', 'dayooth', 'dayoos', 'ibnelkalb', 'ibnalkalb', 'ibnelsharmouta', 'sharmoot', 'sharmut',
     // ja (hiragana / kanji)
     'ちんちん', 'まんまん', 'せっくす', 'きちがい', '死ね', '殺す', 'ころす', 'ふぁっく', 'ばいた', 'くたばれ',
     // the game, the studio and the stores: nobody may pose as them

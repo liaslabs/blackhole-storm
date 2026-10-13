@@ -174,9 +174,11 @@ Her güncellemede:
 
 ```
 <en-US>
+• New: 50 illustrated avatars, unlocked by level or bought; rare and legendary ones give a power in Normal and Hard
+• Your avatar now shows next to your name on the ranking
 • A deeper sky: distant rocks drift behind the action and light streaks rush toward your black hole
 • Meteors are now blazing fireballs; during the Golden Arc they burn gold
-• Destroyed meteors break apart in glowing pieces
+• Slimmer ice-blue shield arcs, bigger mode buttons, tidier menu badges
 </en-US>
 ```
 
@@ -195,8 +197,17 @@ Her güncellemede:
   - Kaptan: üye çıkarma, arma ve açık/kodla değiştirme, ad değişikliği (ilk ücretsiz, sonra 50 💎 ve 30 günde bir). İki bildirim filo adını "FİLO-xxxx" olarak gizler, kaptan hemen ücretsiz yeni ad seçer.
   - Hareketsizlik: kaptan 14 gün yoksa en aktif üyeye devreder; 21 gün giriş yapmayan "uykuda"; 30 günde filodan çıkar; filo yalnızca hiç üye kalmayınca silinir. Ayrıldıktan sonra 24 saat başka filoya girilmez; kurulum 7 günde bir.
   - Ana ekran: oyuncu adının altında filo şeridi (arma, ad, sandık çubuğu, ödül varsa kırmızı nokta; filosu yoksa "🛸 Bir filoya katıl"). Seviye sonunda "+10 filo puanı · FİLO ADI". Günlük görevlerin üstünde "Filon için 3 seviye geç" (30 ⭐).
+  - Filo avantajları (13 Eki): filosu olmayan oyuncu "🛸 Bir filoya katıl"a dokununca 5 kart görür (haftalık sandıklar, hafta sonu yarışı, ekstra ödül ve kayıp yok, günlük filo görevi, birlikte daha güçlü); kartlar dokunarak, kaydırarak ya da İLERİ ile geçer, ATLA ile listeye gidilir. Son kartta "↺ TEKRAR GÖSTER" ve "FİLOLARA BAK"; filo listesinin altında "✨ Filo avantajları" ile kartlar yeniden açılır. Kartlardaki sayılar sunucudakilerle aynı.
   - Sunucu: `server/fleet.js` (tablolar ilk kullanımda kurulur), günlük işte hafta hesabı ve hareketsizlik kuralları.
-- **Ad süzgeci** (13 Eki): oyuncu ve filo adları için tek ortak dosya (`src/names.js`, oyun ve sunucu aynı dosyayı kullanır): 11 dil küfür/hakaret/aşırıcı listesi, ayrılmış kelimeler (admin, moderatör, resmi, destek, oyun ve stüdyo adları), harf yerine rakam, aksan, Kiril/Latin benzerleri, Arapça hareke, katakana; bağlantı, telefon numarası, uzun harf tekrarı reddedilir. Arapça ve Kürtçe listeler yayından önce anadili konuşan birine okutulmalı. Sunucu yayınlanınca sıralamadaki oyuncu adlarına da hemen uygulanır.
+- **Ad süzgeci** (13 Eki): oyuncu ve filo adları için tek ortak dosya (`src/names.js`, oyun ve sunucu aynı dosyayı kullanır): 11 dil küfür/hakaret/aşırıcı listesi, ayrılmış kelimeler (admin, moderatör, resmi, destek, oyun ve stüdyo adları), harf yerine rakam, aksan, Kiril/Latin benzerleri, Arapça hareke, katakana; bağlantı, telefon numarası, uzun harf tekrarı reddedilir. Arapça ve Kürtçe (13 Eki) webden genişletildi: LDNOOBW Arapça listesi, wooorm/cuss Arapça-Latin (arabizi) listesi, sweardictionary.com ve youswear.com; cinsel küfürler, anne/kız kardeş hakaretleri, ima ve argo (ör. كس أختك, متناك, ديوث, kosomak, sharmouta, Kuzê diya te, qundek, sekbav, bênamûs). Yaygın adlar (Zubeyde/زبيدة, İshak/إسحاق, Ferec/فرج, Kisra/كسرى, Kuzey, Kuzgun, Zana, Ata, Amina…) serbest kalsın diye kısa kelimeler yalnızca tam kelime olarak aranır; 196 deneme temiz. Sunucu yayınlanınca (13 Eki) sıralamadaki oyuncu adlarına, yani 1.5.0'a da hemen uygulanır.
+
+```
+<en-US>
+• New: Fleets! From level 20, join a fleet or found your own
+• Fill weekly chests together and race other fleets every weekend for stars and diamonds
+• Daily fleet mission, a fleet wall with quick cheers, and fleet benefits explained card by card
+</en-US>
+```
 
 ## 1.5.2 (1.5.1'den sonra) · Japonca gelir, Kürtçe kalkar
 - Neden: Japonya oyuncu başına en çok kazandıran mobil pazar ve oyuncular kendi dillerinde oynamayı bekliyor; "her şeyi yut" türü orada sevilen bir tür. Kürtçe mağazada zaten yoktu (Play'in dil listesinde bulunmuyor).
