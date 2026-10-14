@@ -4,6 +4,8 @@ Kapalı test 5 Ekim 2026'da başladı (TestMyApps: 14 testçi, 16 gün + arkada�
 Kodda `REL` (src/game.src.html) o derlemenin sürümüdür; sonraki sürümü bekleyen özellikler `rel(n)` ile kapalıdır,
 geliştirici linkinde (`?dev`) hepsi açıktır. Her derlemeden önce `REL` sürüme göre artırılır.
 
+**Web test sayfası** (14 Eki): https://liaslabs.github.io/blackhole-storm/test/ — `blackhole` dalının derlemesi (şu an 1.5.0), Play test kanallarına katılamayan testçiler için (ör. çocuk hesabı). Hiçbir yerde listelenmez, arama motorlarına kapalı; kaydı canlı web oyunundan ayrı (`bhs-test:` önekli, ilk açılışta canlı web kaydı bir kez kopyalanır). `main`'e her gönderimde ya da "Web sitesini yayınla" elle çalıştırılınca yenilenir; Ayarlar'da "Sürüm: test · v66".
+
 Her güncellemede:
 1. **Play Console** → Test edin ve yayınlayın → Kapalı test → Alpha → *Yeni sürüm oluştur* → AAB → aşağıdaki
    **sürüm notu (en-US)** → Kaydet → Yayın özeti → incelemeye gönder. Testçiler bu notu Play Store'da "Yenilikler" olarak görür.
