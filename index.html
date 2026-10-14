@@ -910,6 +910,14 @@ body.v2 .hb2{flex:0 0 auto;height:38px;min-width:44px;padding:0 7px;display:flex
 #hit2.on{animation:hit2 1.3s ease-out forwards;}@keyframes hit2{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}12%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}22%{transform:translate(-50%,-50%) scale(1)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
 #hit2 b{display:block;font-size:44px;line-height:1.1;font-weight:900;color:#ff5a4a;text-shadow:0 0 24px rgba(255,60,50,.8),0 3px 0 rgba(0,0,0,.6);white-space:nowrap;}#hit2 b .ico{width:38px;height:38px;vertical-align:-4px;}
 #hit2 .t{font-size:15px;font-weight:800;letter-spacing:.14em;color:#fff;text-shadow:0 2px 6px #000;margin-top:2px;white-space:nowrap;}
+#hit2.b10 .t{font-size:15px;letter-spacing:.14em;margin:0 0 10px;} /* 1.5.0 (14 Oct): hearts in a row instead of "-1" */
+#hit2.b10 .hr{display:flex;gap:16px;justify-content:center;}#hit2.b10 .hr>span{position:relative;display:block;width:48px;height:48px;}#hit2.b10 svg{position:absolute;left:0;top:0;width:100%;height:100%;filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));}
+#hit2.b10 .lost{animation:hitShake 1.3s linear both;}#hit2.b10 .lost .f{position:absolute;inset:0;animation:hitDrain 1.3s linear both;}
+#hit2.b10 .lost i{position:absolute;left:21px;top:21px;width:8px;height:8px;background:#ff5a5f;clip-path:polygon(50% 0,100% 100%,0 70%);opacity:0;animation:hitShard 1.3s ease-out both;}
+@keyframes hitShake{0%,12%{transform:none}15%{transform:translate(-4px,1px) rotate(-7deg)}18%{transform:translate(4px,-1px) rotate(7deg)}21%{transform:translate(-3px,0) rotate(-4deg)}24%,100%{transform:none}}
+@keyframes hitDrain{0%,22%{opacity:1;filter:none}27%{opacity:1;filter:brightness(2.2)}36%,100%{opacity:0}}
+@keyframes hitShard{0%,23%{opacity:0;transform:none}25%{opacity:1}48%,100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(200deg)}}
+@media (prefers-reduced-motion:reduce){#hit2.b10 .lost,#hit2.b10 .lost i{animation:none}#hit2.b10 .lost .f{animation:none;opacity:0}}
 #hit2 .hs{margin-top:6px;white-space:nowrap;}#hit2 .hs .ico{width:20px;height:20px;margin:0 2px;}#hit2 em{font-style:normal;opacity:.25;}
 #rage2.hl{outline:2px dashed #ffd76a;outline-offset:5px;border-radius:4px;animation:tip2 .7s ease-in-out infinite alternate;}@keyframes tip2{to{outline-color:rgba(255,215,106,.35);}}
 #mTip2,#mShBuy{z-index:60;}
@@ -5839,11 +5847,20 @@ function v2Hit(o,whole){
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
   G2.arcPow=0;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=am;}G2.arcFill=.5;G2.immT=Math.max(G2.immT,1.5); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
   if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);v2HitNote();}
-  v2Pop('-1 ♥','#ff7a5c',20);updateUI();
+  if(rel(10))v2Burst(hX,hY-G2.R-sp2(16),14,'#ff5a5f',1.5,5,.5,1.8); /* 1.5.0: red shards instead of a "-1" */else v2Pop('-1 ♥','#ff7a5c',20);updateUI();
   if(lives<=0){v2Fail(null);}
 }
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.6;const el=$('hit2');if(!el)return;
+  if(rel(10)){ /* 1.5.0 (14 Oct): the reason, then your hearts in a row; the one just lost shakes, bursts into shards and leaves an empty frame */
+    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':'METEOR ÇARPTI'),
+      P='M12 20.4s-8.4-5.1-8.4-10.9A4.7 4.7 0 0 1 12 6.7a4.7 4.7 0 0 1 8.4 2.8c0 5.8-8.4 10.9-8.4 10.9z',
+      full=`<svg viewBox="0 0 24 24"><path d="${P}" fill="url(#gHeart)" stroke="#6e0d1a" stroke-width=".8"/><path d="M7.1 8.3a2.5 2.5 0 0 1 2.9-.9" fill="none" stroke="#ffd2d6" stroke-width="1.2" stroke-linecap="round"/></svg>`,
+      empty=`<svg viewBox="0 0 24 24"><path d="${P}" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.38)" stroke-width="1.1"/></svg>`,
+      n=Math.max(3,lives+1),sh=[[-34,-30],[32,-28],[-26,30],[36,24],[2,-40]].map(([x,y])=>`<i style="--x:${x}px;--y:${y}px"></i>`).join('');
+    let h='';for(let i=0;i<n;i++)h+=i<lives?`<span>${full}</span>`:i===lives?`<span class="lost">${empty}<span class="f">${full}</span>${sh}</span>`:`<span>${empty}</span>`;
+    el.className='b10';el.innerHTML=`<div class="t notr">${why}</div><div class="hr">${h}</div>`;
+    el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);return;}
   el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
