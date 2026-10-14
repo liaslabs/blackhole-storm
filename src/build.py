@@ -33,6 +33,9 @@ def main():
     m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))
     assert src.count("'@@BUILD@@'") == 1
     src = src.replace("'@@BUILD@@'", json.dumps(m.group(1) if m else 'dev'))
+    # the Android build passes its version name and code (e.g. "1.5.0 (31)"), shown in Settings next to the install number
+    assert src.count("'@@APPVER@@'") == 1
+    src = src.replace("'@@APPVER@@'", json.dumps(os.environ.get('BHS_APPVER', '')))
     for ph in ('FONT_DATA', 'SPRITE_DATA', 'SFX_DATA', 'ASSET_DATA', 'I18N_DATA'):
         assert src.count(f'<!--{ph}-->') == 1, ph
     langs = {}
