@@ -17,6 +17,7 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  if (/\/test\//.test(new URL(req.url).pathname)) return; // the test page (unreleased build) always comes from the network and never replaces the game's offline copy
   if (req.url.endsWith('.mp4')) return; // the one-time intro video streams straight from the network (range requests)
   if (req.mode === 'navigate') {
     const app = /\/(index\.html)?$/.test(new URL(req.url).pathname); // other pages (privacy, dev, previews) never overwrite the game's offline copy
