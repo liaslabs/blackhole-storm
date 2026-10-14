@@ -1184,7 +1184,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="modal card" id="mGift">
    <div class="h gfH">🎁 KAPTANIN HEDİYESİ</div>
    <p class="gfTxt">Dokuz kutudan en az üçünü aç. İki kutuda kara delik var: çıkarsa her şey yutulur. Üç kutudan sonra dilediğin an ödülleri al.</p>
-   <div class="gfJack" id="gfJack"><b>🏆 BÜYÜK HAZİNE</b><span>1000 ⭐ + 50 💎</span><small id="gfJackP"></small></div>
+   <div class="gfJack" id="gfJack"><b>🏆 BÜYÜK HAZİNE</b><span id="gfJackV">1000 ⭐ + 50 💎</span><small id="gfJackP"></small></div>
    <div class="row"><button class="btn big adbtn" id="gfBoost" hidden>▶ REKLAM İZLE</button></div>
    <div class="gfBar"><span id="gfCount"></span><span class="gfBag" id="gfBag"></span></div>
    <div class="gfGrid" id="gfGrid"></div>
@@ -3644,7 +3644,7 @@ function openGift(lv,done){
   GIFTS.boxes.forEach((b,i)=>{const e=document.createElement('button');e.className='gfb';e.innerHTML='<span class="q notr">?</span>';e.onclick=ev=>{ev.stopPropagation();giftPick(i);};b.el=e;grid.appendChild(e);});
   $('gfMsg').className='gfMsg';$('gfTake').hidden=true;giftHud();showModal('mGift');gState='menu';sfx('achieve',{vol:.5});
 }
-function giftHud(){const S=GIFTS;{const p=Math.round((S.boosted?GIFT.jackAd:GIFT.jackP)*100),J=$('gfJack');$('gfJackP').textContent=S.jackGot?T('BULDUN!'):S.key?'🗝 '+T('Anahtar kullanıldı: hazine bu hediyede!'):T('Bu hediyede olma şansı %{p}',{p});J.classList.toggle('hit',!!S.jackGot);if(rel(10))J.querySelector('span').textContent=`${GIFT.jack.stars} ⭐ + ${GIFT.jack.gems} 💎`;
+function giftHud(){const S=GIFTS;{const p=Math.round((S.boosted?GIFT.jackAd:GIFT.jackP)*100),J=$('gfJack');$('gfJackP').textContent=S.jackGot?T('BULDUN!'):S.key?'🗝 '+T('Anahtar kullanıldı: hazine bu hediyede!'):T('Bu hediyede olma şansı %{p}',{p});J.classList.toggle('hit',!!S.jackGot);if(rel(10)){const v=$('gfJackV'),t=`${GIFT.jack.stars} ⭐ + ${GIFT.jack.gems} 💎`;if(v&&v.dataset.t!==t){v.dataset.t=t;v.innerHTML=escH(t).replace(ICO.re,m=>ICO.svg(m));}} /* the amount line itself (the title's emoji had become the first <span>, so the amount was written over the title) */
     $('gfBoost').hidden=!(S.boost&&!S.boosted&&S.n===0);$('gfBoost').textContent=adLabel(T('HAZİNE ŞANSI %{p}',{p:Math.round(GIFT.jackAd*100)}));}$('gfCount').textContent=`${T('AÇILAN KUTU')}: ${S.n}`;$('gfBag').textContent=S.n&&giftTxt(S.got)?`${T('KAZANÇ')}: ${giftTxt(S.got)}`:'';
   if(!S.over)$('gfMsg').textContent=S.n<GIFT.min?T('En az üç kutu aç'):`${T('Devam et ya da hemen al')} · ${T('sonraki kutu')} ×${(1+GIFT.step*(S.n+1-GIFT.min)).toLocaleString(LOC)}`;
   $('gfAd').hidden=!S.canAd;$('gfAd').textContent=adLabel(T('1 HAK DAHA'));
