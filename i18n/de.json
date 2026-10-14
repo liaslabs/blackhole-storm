@@ -1669,6 +1669,7 @@
 "LAB": "LABOR",
 "GÜNLÜK": "TÄGLICH",
 "EVET": "JA",
+"HAYIR": "NEIN",
 "ŞİMDİ DEĞİL": "NICHT JETZT",
 "Laboratuvar bitince haber verelim mi?": "Sollen wir dir Bescheid geben, wenn das Labor fertig ist?",
 "Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Eine kurze Mitteilung, wenn ein Upgrade fertig, dein Treibstoff voll oder deine Tagesbelohnung bereit ist. Höchstens 2 am Tag, nie zwischen 22:00 und 09:00. In den Einstellungen änderbar.",

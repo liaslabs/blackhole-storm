@@ -1669,6 +1669,7 @@
 "LAB": "LAB",
 "GÜNLÜK": "HARIAN",
 "EVET": "YA",
+"HAYIR": "TIDAK",
 "ŞİMDİ DEĞİL": "NANTI SAJA",
 "Laboratuvar bitince haber verelim mi?": "Mau kami kabari saat Laboratorium selesai?",
 "Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Notifikasi singkat saat peningkatan selesai, bahan bakar penuh, atau hadiah harian siap. Paling banyak 2 sehari, tidak pernah antara 22:00–09:00. Bisa diubah di Pengaturan.",

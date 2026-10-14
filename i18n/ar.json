@@ -1669,6 +1669,7 @@
 "LAB": "المختبر",
 "GÜNLÜK": "يومي",
 "EVET": "نعم",
+"HAYIR": "لا",
 "ŞİMDİ DEĞİL": "ليس الآن",
 "Laboratuvar bitince haber verelim mi?": "هل نخبرك عندما ينتهي المختبر؟",
 "Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "إشعار قصير عند انتهاء ترقية أو امتلاء الوقود أو جاهزية مكافأتك اليومية. مرتان في اليوم على الأكثر، ولا شيء بين 22:00 و09:00. يمكنك تغيير ذلك من الإعدادات.",

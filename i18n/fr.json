@@ -1669,6 +1669,7 @@
 "LAB": "LABO",
 "GÜNLÜK": "QUOTIDIEN",
 "EVET": "OUI",
+"HAYIR": "NON",
 "ŞİMDİ DEĞİL": "PAS MAINTENANT",
 "Laboratuvar bitince haber verelim mi?": "On te prévient quand le Laboratoire a fini ?",
 "Yükseltme bitince, yakıtın dolunca ve günlük ödülün hazır olunca kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar'dan değiştirebilirsin.": "Une courte notification quand une amélioration est finie, ton carburant plein ou ta récompense du jour prête. 2 par jour au plus, jamais entre 22 h et 9 h. Modifiable dans les Réglages.",
