@@ -37,6 +37,32 @@ jobs:
           mkdir -p _site/store/ads && cp -r store/ads/video _site/store/ads/
           touch _site/.nojekyll
 
+      # Test page: the unreleased build on the blackhole branch at <site>/test/, for testers who cannot join the Play testing tracks.
+      # Not listed anywhere and not indexed; it keeps its own save (copied once from the live web game's save on the first visit).
+      - uses: actions/checkout@v4
+        with:
+          ref: blackhole
+          path: bh
+
+      - name: Test sayfası (blackhole dalı)
+        env:
+          BHS_APPVER: test
+        run: |
+          (cd bh && python3 src/build.py)
+          mkdir -p _site/test
+          python3 - <<'PY'
+          src = open('bh/index.html', encoding='utf-8').read()
+          head = ('<head>\n<base href="../">\n<meta name="robots" content="noindex,nofollow">\n'
+                  '<script>(()=>{const P="bhs-test:",S=Storage.prototype,g=S.getItem,s=S.setItem,r=S.removeItem;'
+                  'try{const L=localStorage;if(g.call(L,P+"bhs_v7")===null){const ks=[];for(let i=0;i<L.length;i++)ks.push(L.key(i));'
+                  'ks.filter(k=>/^bhs_(v7|intro|lbrep)$/.test(k)).forEach(k=>s.call(L,P+k,g.call(L,k)));}}catch(e){}'
+                  'S.getItem=function(k){return g.call(this,P+k)};S.setItem=function(k,v){return s.call(this,P+k,v)};S.removeItem=function(k){return r.call(this,P+k)};})();</script>')
+          assert src.count('<head>') == 1
+          src = src.replace('<head>', head, 1).replace('<title>Blackhole Storm</title>', '<title>Blackhole Storm · TEST</title>', 1)
+          open('_site/test/index.html', 'w', encoding='utf-8').write(src)
+          PY
+          rm -rf bh
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
