@@ -5,6 +5,7 @@
 //   GEMINI_API_KEY   Google AI Studio'dan alınan anahtar (zorunlu, faturalandırma açık olmalı)
 //   VEO_OUTPUT_DIR   Videoların kaydedileceği klasör (varsayılan: <proje>/generated-videos)
 //   VEO_MAX_WAIT_SEC generate_video'nun sonucu bekleyeceği en uzun süre (varsayılan: 360)
+//   GEMINI_MODEL     ask_gemini'nin kullandığı model (varsayılan: gemini-4-argon)
 //
 // CLI ile deneme:  node tools/veo-mcp/server.mjs cli "bir kara delik etrafında dönen yıldızlar"
 
@@ -23,6 +24,7 @@ const OUTPUT_DIR = path.resolve(
 );
 const MAX_WAIT_MS = Number(process.env.VEO_MAX_WAIT_SEC || 360) * 1000;
 const POLL_MS = 10_000;
+const TEXT_MODEL = process.env.GEMINI_MODEL || "gemini-4-argon";
 
 function apiKey() {
   const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
@@ -110,6 +112,27 @@ async function generateVideo(args) {
   }
 }
 
+async function askGemini(args) {
+  const parts = [{ text: args.prompt }];
+  for (const file of args.file_paths || []) {
+    const ext = path.extname(file).toLowerCase();
+    const mimeType =
+      { ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".pdf": "application/pdf" }[ext] ||
+      "text/plain";
+    parts.push({ inlineData: { mimeType, data: (await readFile(file)).toString("base64") } });
+  }
+  const body = { contents: [{ role: "user", parts }] };
+  if (args.system) body.systemInstruction = { parts: [{ text: args.system }] };
+  const model = args.model || TEXT_MODEL;
+  const res = await api(`${API}/models/${model}:generateContent`, { method: "POST", body: JSON.stringify(body) });
+  const text = (res.candidates?.[0]?.content?.parts ?? [])
+    .filter((p) => p.text && !p.thought)
+    .map((p) => p.text)
+    .join("");
+  if (!text) throw new Error(`${model} boş yanıt döndü: ${JSON.stringify(res).slice(0, 500)}`);
+  return `[${model}]\n${text}`;
+}
+
 function describe(result) {
   if (result.done) return `Video hazır:\n${result.files.join("\n")}`;
   return (
@@ -119,6 +142,22 @@ function describe(result) {
 }
 
 const TOOLS = [
+  {
+    name: "ask_gemini",
+    description:
+      "Google Gemini'ye (varsayılan: Gemini 4 Argon) soru sorar ve yanıtını döner. İkinci görüş, kod incelemesi, " +
+      "uzun belge/görsel analizi veya kullanıcı açıkça Gemini/Argon istediğinde kullan. Token başına ücretlidir.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        prompt: { type: "string", description: "Gemini'ye gönderilecek soru/görev; gerekli tüm bağlamı içermeli" },
+        system: { type: "string", description: "İsteğe bağlı sistem talimatı" },
+        file_paths: { type: "array", items: { type: "string" }, description: "Eklenecek dosyalar (görsel, PDF, metin/kod)" },
+        model: { type: "string", description: "Model ID'si (varsayılan: GEMINI_MODEL veya gemini-4-argon)" },
+      },
+      required: ["prompt"],
+    },
+  },
   {
     name: "generate_video",
     description:
@@ -156,6 +195,7 @@ const TOOLS = [
 ];
 
 async function callTool(name, args) {
+  if (name === "ask_gemini") return askGemini(args);
   if (name === "generate_video") return describe(await generateVideo(args));
   if (name === "check_video") return describe(await checkVideo(args.operation, args.output_name));
   throw new Error(`Bilinmeyen araç: ${name}`);
@@ -167,7 +207,7 @@ async function handle(msg) {
       return {
         protocolVersion: msg.params?.protocolVersion || "2025-06-18",
         capabilities: { tools: {} },
-        serverInfo: { name: "veo", version: "1.0.0" },
+        serverInfo: { name: "veo", version: "1.1.0" },
       };
     case "tools/list":
       return { tools: TOOLS };

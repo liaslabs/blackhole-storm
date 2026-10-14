@@ -1,6 +1,6 @@
-# Veo MCP — Claude Code ile video üretimi
+# Veo MCP — Claude Code ile video üretimi ve Gemini 4 Argon
 
-Claude Code'a Google **Veo 3.1** (Gemini API) ile video üretme yeteneği ekler.
+Claude Code'a Google **Veo 3.1** ile video üretme ve **Gemini 4 Argon**'a danışma (`ask_gemini`) yeteneği ekler (Gemini API).
 Bağımlılık yok; sadece Node 18+ gerekir. Proje kökündeki `.mcp.json` sunucuyu otomatik tanıtır,
 `.claude/skills/video` de Claude'a nasıl kullanacağını anlatır.
 
@@ -35,6 +35,13 @@ node tools/veo-mcp/server.mjs cli "a glowing black hole swallowing stars, cinema
 | `GEMINI_API_KEY`   | —                         | Zorunlu                                    |
 | `VEO_OUTPUT_DIR`   | `<proje>/generated-videos`| Kayıt klasörü                              |
 | `VEO_MAX_WAIT_SEC` | `360`                     | Bekleme süresi; aşılırsa `check_video` ile |
+| `GEMINI_MODEL`     | `gemini-4-argon`          | `ask_gemini`'nin modeli                    |
+
+## Gemini 4 Argon
+
+"Gemini'ye sor: …" veya "Argon'dan ikinci görüş al" deyin. Gemini uygulamasındaki Argon erişimi
+(Pro/Ultra) API'yi kapsamaz; API'de ücretli katman gerekir (tanıtım fiyatı 30 Kasım 2026'ya kadar
+1M token başına $2 girdi / $10 çıktı). Argon'a erişim yoksa `GEMINI_MODEL`'i başka bir Gemini modeline çevirin.
 
 ## Modeller ve maliyet
 
