@@ -1928,7 +1928,7 @@ const REL=10,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v67",APPVER="";
+const BUILD="bhs-v68",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -4194,7 +4194,7 @@ function resize(){
   if(G2.on)v2Resize();else{hX=clamp(hX,80,W-80);hY=clamp(hY,80,H-80);}hBaseX=hX;hBaseY=hY;hAmp={x:W*.25,y:H*.25};
   glResize();
 }
-window.addEventListener('resize',resize);
+let rszT=0;window.addEventListener('resize',()=>{if(!rel(10)){resize();return;}clearTimeout(rszT);rszT=setTimeout(resize,150);}); /* 1.5.0: a burst of resizes (address bar sliding, rotation) rebuilds the big canvases once, after it settles; a tablet showed 33 resizes in a session and 174 ms for one */
 
 // ══════════════════════════════════════════════════════
 // BLACK HOLE MOTION (sinusoidal wander between random waypoints)
