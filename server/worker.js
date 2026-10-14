@@ -12,6 +12,8 @@
 //                                                   language); counted per day, no personal data, kept 30 days
 //   /fleet..., /fleets/top                         -> fleets (1.5.1), see server/fleet.js
 //   GET  /errs?days=3                            -> {list:[{day,m,s,v,p,n}]}   the most frequent recent errors
+//   POST /ping    {v,p,l}                        -> {ok}   the game was opened today (once a day per install; no id)
+//   GET  /pings?days=14                          -> {list:[{day,v,p,l,n}]}   how many installs opened which version each day
 //   POST /verify  {pid,sku,token}                -> {ok,pending?}   the app's purchase check: asks Google whether the purchase is real
 //                                                   and paid, records the token (a consumable token counts once, for the install
 //                                                   that bought it), then acknowledges or consumes it. The app grants nothing without ok.
@@ -162,6 +164,13 @@ async function integrityGate(env, it, what) {
   return ok;
 }
 let errReady = false;
+// Daily opens: one count per install per UTC day (the game sends it at most once a day), by version, app/web and language. No install number.
+let pingReady = false;
+async function ensurePings(DB) {
+  if (pingReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS pings (day TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, v, p, l))').run();
+  pingReady = true;
+}
 async function ensureErrs(DB) {
   if (errReady) return;
   await DB.prepare('CREATE TABLE IF NOT EXISTS errs (day TEXT NOT NULL, h TEXT NOT NULL, m TEXT NOT NULL, s TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, h))').run();
@@ -174,6 +183,7 @@ async function housekeeping(DB) {
   await DB.prepare('DELETE FROM scores WHERE day < ?').bind(old).run(); await DB.prepare('DELETE FROM prizes WHERE day < ?').bind(old).run();
   await ensureReports(DB); await DB.prepare('DELETE FROM reports WHERE day < ?').bind(old).run();
   await ensureErrs(DB); await DB.prepare('DELETE FROM errs WHERE day < ?').bind(day(Date.now() - 30 * 864e5)).run();
+  await ensurePings(DB); await DB.prepare('DELETE FROM pings WHERE day < ?').bind(old).run();
   await ensurePurchases(DB); // purchase records: two years (a consumed purchase cannot be claimed again anyway, see gpVerify)
   await DB.prepare('DELETE FROM purchases WHERE ts < ?').bind(Date.now() - 730 * 864e5).run();
   await DB.prepare('DELETE FROM purchase_installs WHERE token NOT IN (SELECT token FROM purchases)').run();
@@ -280,6 +290,20 @@ export default {
           if (!c || c.n < 300) await DB.prepare('INSERT OR IGNORE INTO errs (day, h, m, s, v, p, l) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(d, h, m, s2, v, p, l).run();
         }
         return json(req, { ok: true });
+      }
+      if (url.pathname === '/ping' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({}));
+        const v = typeof b.v === 'string' && /^bhs-v\d{1,4}$/.test(b.v) ? b.v : null, p = b.p === 'app' ? 'app' : 'web', l = typeof b.l === 'string' && /^[a-z]{2}$/.test(b.l) ? b.l : '--';
+        if (!v) return json(req, { ok: false }, 400);
+        await ensurePings(DB);
+        await DB.prepare('INSERT INTO pings (day, v, p, l, n) VALUES (?, ?, ?, ?, 1) ON CONFLICT (day, v, p, l) DO UPDATE SET n = n + 1').bind(day(), v, p, l).run();
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/pings' && req.method === 'GET') {
+        const days = Math.min(90, Math.max(1, +url.searchParams.get('days') || 14));
+        await ensurePings(DB);
+        const r = await DB.prepare('SELECT day, v, p, l, n FROM pings WHERE day >= ? ORDER BY day DESC, n DESC').bind(day(Date.now() - (days - 1) * 864e5)).all();
+        return json(req, { list: r.results || [] });
       }
       if (url.pathname === '/errs' && req.method === 'GET') {
         const days = Math.min(30, Math.max(1, +url.searchParams.get('days') || 3));

@@ -1928,6 +1928,11 @@ function errReport(msg,stack){try{if(DEV||!/liaslabs\.github\.io/.test(location.
     body:JSON.stringify({m:msg,s:String(stack||'').split('\n').slice(0,6).join('\n').slice(0,900),v:BUILD,p:NATIVE?'app':'web',l:(navigator.language||'').slice(0,5)})}).catch(()=>{});}catch(e){}}
 addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filename?e.filename.split('/').pop()+':'+e.lineno+':'+e.colno:'')));
 addEventListener('unhandledrejection',e=>{const r=e.reason;errReport('promise: '+(r&&r.message||r),r&&r.stack);});
+// Daily open count (published site and app only): once a UTC day the game says "opened today" with its version, app or web,
+// and the game language, so we can see how many testers are on which version. No install number, name or other personal data.
+function dayPing(){try{if(DEV||!/liaslabs\.github\.io/.test(location.hostname)&&!NATIVE||typeof gState!=='undefined'&&gState==='playing')return;const d=new Date().toISOString().slice(0,10);if(localStorage.getItem('bhs_ping')===d)return;localStorage.setItem('bhs_ping',d);
+  fetch('https://blackhole-storm-lb.liaslabs-games.workers.dev/ping',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},body:JSON.stringify({v:BUILD,p:NATIVE?'app':'web',l:LANG})}).catch(()=>{});}catch(e){}}
+setTimeout(dayPing,6000); /* after the start-up work, and again on the next day if the game stays open */setInterval(dayPing,36e5);
 // high-refresh phones (90/120/144 Hz) would draw every frame twice as often for no visible gain: cap drawing near 60 per second
 // Frame cap that follows the display: the refresh interval is measured from every vsync, and above ~105 Hz every other frame is skipped
 // (120 Hz -> 60, 144 Hz -> 72); at 90 Hz or below every frame runs. Skipping by time instead gave 22/11 ms gaps on 90 and 144 Hz screens,
