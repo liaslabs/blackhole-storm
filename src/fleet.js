@@ -147,17 +147,16 @@ function flChestBarH(f){const t=f.targets||[1,1,1],top=t[2]||1;
   return `<div class="flbox"><div class="h"><span>🎁 ${T('HAFTALIK SANDIKLAR')}</span><b dir="ltr">${flN(f.pts)} / ${flN(top)}</b></div>
   <div class="bar"><i style="width:${Math.min(100,f.pts/top*100)}%"></i>${t.map((x,i)=>`<span class="ck${f.pts>=x?' got':''}" style="left:${Math.min(97,x/top*100)}%">${i===2?'👑':'🎁'}</span>`).join('')}</div>
   <div class="barl">${t.map((x,i)=>`<span style="${i===2?'right:0':`left:${x/top*100}%;transform:translateX(-50%)`}">${flN(x)}${f.pts>=x?' ✓':''}</span>`).join('')}</div>
-  <small>${T('Herkese')}: 150 ⭐ · 300 ⭐ + 5 💎 · 600 ⭐ + 15 💎</small></div>`;}
+</div>`;}
 // GÖREVLER (the first page): today's missions and the Fleet Chain, then FİLOM: the week's standing, the chests and the daily fleet mission
 function flTasksH(j){const f=j.fleet,left=Date.parse(utcDay()+'T00:00:00Z')+864e5-Date.now();
-  return `${flHeadH(j)}${rel(10)&&j.fm?flFmH(j.fm,left):''}
-  <div class="flsep"><span>${T('FİLOM')}</span></div>${flStatH(f)}${flChestBarH(f)}${flMisH()}
-  <div class="flnote tip">${T('Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300')}${rel(10)?'<br>'+T('Filo görevlerinin madalyaları bu sınırın dışında sayılır'):''}</div><div class="flnote" id="flMsg"></div>`;}
+  return `<div class="flfit">${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}${rel(10)&&j.fm?flFmH(j.fm,left):''}
+  <div class="flsep">${flImg(f.emb)}<span class="notr">${flE(f.name)}</span></div>${flStatH(f)}${flChestBarH(f)}${flMisH()}<div class="flnote" id="flMsg"></div></div>`;} /* 16 Oct: the first page fits one screen */
 // ÜYELER: the week's contribution, who played today, the captain; the top three are on course for the race's +200; the wall and the ready messages
 function flCrewH(j){const f=j.fleet,M=j.members||[],top=Math.max(1,...M.map(m=>m.pts||0)),today=M.filter(m=>m.today).length,md=['🥇','🥈','🥉'];
   return `${flHeadH(j)}<div class="sec"><span>${T('ÜYELER · BU HAFTA')}</span><b>${T('bugün oynayan {n}/{m}',{n:today,m:M.length})}</b></div>
   ${M.map((m,i)=>`<div class="row2 mem${m.me?' mine':''}"><span class="rk">${i<3&&m.pts>0?md[i]:i+1}</span>${avHtml(m.av)}<span class="nm"><b><span class="notr">${flE(m.name)}</span>${m.cap?' 👑':''}${m.me?` <i class="chip p">${T('SEN')}</i>`:''}${m.today?` <i class="chip t">✓ ${T('bugün')}</i>`:''}${m.away?` <i class="chip z">💤</i>`:''}</b><span class="mb"><i style="width:${Math.round((m.pts||0)/top*100)}%"></i></span></span><span class="pt">${flN(m.pts)}</span>${f.cap&&!m.me?`<button class="kick" data-kick="${m.k}" aria-label="${T('Filodan çıkar')}">✕</button>`:''}</div>`).join('')}
-  <div class="flnote tip">🏅 ${T('Hafta sonu en çok puan getiren 3 üyeye ek +{n} ⭐',{n:200})}</div>
+  <div class="flnote tip">🏅 ${T('Hafta sonu en çok puan getiren 3 üyeye ek +{n} ⭐',{n:200})}<br>${T('Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300')}${rel(10)?'<br>'+T('Filo görevlerinin madalyaları bu sınırın dışında sayılır'):''}</div>
   <div class="sec"><span>${T('FİLO DUVARI')}</span><b>${T('hazır mesajlar')}</b></div>
   <div class="wall">${(j.wall||[]).slice(-6).map(flWall).join('')||`<div class="ev">${T('Henüz mesaj yok.')}</div>`}</div>
   <div class="emo">${FL_CHIPS.map(k=>`<button data-msg="${k}">${T(FL_MSG[k])}</button>`).join('')}</div>
@@ -249,7 +248,8 @@ function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNov
   if(m.anti){const w=G2.L.w;w.anti=(w.anti||0)+18;w.ast=Math.max(12,(w.ast||0)-18);
     if(m.anti>1){let t=0;for(const x in w)t+=w[x];const a=w.anti,p=Math.min(.6,a/t*m.anti);w.anti=p*(t-a)/(1-p);}} /* m.anti times the share of antimatter the storm had */
   if(m.bar)G2.gb={B:m.bar,v:0,ts:totalScore,arc:null,n:0};else if(m.ev)G2.garcAt=5;
-  {const rb=$('rage2');if(rb)rb.style.visibility=G2.noRage?'hidden':'';}} /* no Vortex in this mission: no Vortex bar either */
+  {const rb=$('rage2');if(rb)rb.style.visibility=G2.noRage?'hidden':'';} /* no Vortex in this mission: no Vortex bar either */
+  if($('pb'))$('pb').style.display='none';} /* the time is on the HUD already: no progress line under it in a mission */
 function fmChainReady(fm){if(!fm||!fm.chain)return false;const c=fm.chain;return !c.got&&c.n>=c.need&&Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);}
 function flFmH(fm,left){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','★★★']; /* easy, medium, hard: stars say it in every language */
   const card=id=>{const m=F.byId(id);if(!m)return '';const me=fm.me[id]||{best:0,tier:0,tries:0},rest=Math.max(0,F.TRIES-me.tries);
@@ -261,8 +261,8 @@ function flFmH(fm,left){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','
   const c=fm.chain,mine=Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);
   return `<div class="sec"><span>${T('BUGÜNÜN FİLO GÖREVLERİ')}</span><b>${T('yenilenmesine {t}',{t:flLeft(left)})}</b></div>
   ${fm.ids.map(card).join('')}
-  <div class="fm-ch"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small>${T('Bugün filo olarak {n} madalya toplayın: madalya alan herkese +{s} ⭐',{n:c.need,s:F.CHAIN_STARS})}</small>
-    <div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div><div class="fm-f"><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div></div>`;}
+  <div class="fm-ch"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
+    <div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div><small>${T('Bugün filo olarak {n} madalya toplayın: madalya alan herkese +{s} ⭐',{n:c.need,s:F.CHAIN_STARS})}</small></div>`;}
 const fmDur=m=>m.dur>=120&&m.dur%60===0?T('{n} dk',{n:m.dur/60}):T('{n} sn',{n:m.dur});
 // OYNA: the first time a mission is played its card explains the kit; after that it starts at once (the card stays one tap away on ⓘ)
 function fmPlay(id){if(TIPS['fm_'+id])fmStart(id);else{TIPS['fm_'+id]=1;saveSoon();fmAsk(id);}}

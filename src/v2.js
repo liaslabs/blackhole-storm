@@ -190,7 +190,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
-  if(mode==='sprint'&&FMRUN)fmSetup();else if($('rage2'))$('rage2').style.visibility=''; /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
+  if(mode==='sprint'&&FMRUN)fmSetup();else{if($('rage2'))$('rage2').style.visibility='';if($('pb'))$('pb').style.display='';} /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
   gState='playing';lastT=performance.now();v2Ui(true);
 }
 function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
@@ -461,16 +461,16 @@ function v2DrawKill(){const k=G2.killFx;if(!k)return;ctx.save();
   ctx.restore();}
 
 // ── core update ───────────────────────────────────────
-// 1.5.0: every growth and shrink of the hole (eating, antimatter, a hit, Vortex, the overload) plays out over one second,
-// the size you see is the size that touches; a new change while one is running starts a fresh second from where it stands
+// 1.5.0: every growth and shrink of the hole (eating, antimatter, a hit, Vortex, the overload) is drawn over one second; the rules
+// (what it can eat, what touches it, its pull) follow the true size at once (16 Oct). A new change while one runs starts a fresh second
 function v2Tw(k,v,dt){const t=G2.tw||(G2.tw={});let q=t[k];if(!q){t[k]=q={v,a:v,b:v,p:1};return v;}
   if(Math.abs(v-q.b)>1e-4){q.a=q.v;q.b=v;q.p=0;}if(dt&&q.p<1){q.p=Math.min(1,q.p+dt);const e=1-(1-q.p)*(1-q.p);q.v=q.a+(q.b-q.a)*e;}return q.v;}
 function v2Dims(dt){
   const S=G2.S;let rr=G2.rr;if(G2.overT>0)rr*=V2K.over.r;if(G2.rageT>0){const q=1+avPk('rageR');rr=Math.min(rr*V2K.rage.r*q,V2K.rRage*q);}
-  if(rel(10))rr=v2Tw('r',rr,dt);
   G2.R=rr*S;
-  let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;if(rel(10))g=v2Tw('g',g,dt);
+  let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;
   G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S*(1+.02*labEffLv('grav'));G2.peak=Math.max(G2.peak,rr);
+  if(rel(10)){G2.Rv=v2Tw('r',G2.R,dt);G2.Gv=v2Tw('g',G2.G,dt);} /* what is drawn */
 }
 function v2Size(){return G2.R/(V2K.r0*G2.S);}
 function v2Banned(o){return !o.freed&&!!(G2.rule&&G2.rule.ban&&G2.rule.ban.includes(o.k));} // a jet-cleansed body is no longer forbidden
@@ -682,7 +682,7 @@ function v2GBarStep(){const g=G2.gb,d=totalScore-g.ts;g.ts=totalScore;if(d>0)g.v
   if(g.arc&&g.arc.st!=='in'&&g.arc.st!=='sw')g.arc=null;
   if(g.v>=g.B&&!g.arc&&!G2.ending){g.v=0;const o=v2Edge('garc',Math.floor(rng()*3)),sp=sp2(170),a=Math.atan2(rrnd(H*.3,H*.65)-o.y,rrnd(W*.25,W*.75)-o.x);o.vx=Math.cos(a)*sp;o.vy=Math.sin(a)*sp;o.gl=GARC4;g.arc=o;v2Call(T('ALTIN YAY!'),T('4 SN · YAKALA'),'#ffd76a',1);v2Sfx('sparkle',{vol:.7,rate:1});}}
 const GARC4=4,GBAR_Y=46; /* the bar sits under the mission's name */
-function v2GArcStep(o,dt){if(o.st!=='in')return false;const p=o.r*1.1,top=sp2(100)+p,bot=H-p-sp2(90); /* clear of the HUD and the power tray */
+function v2GArcStep(o,dt){if(o.st!=='in')return false;const p=o.r*1.1,top=v2GBarY()+sp2(40)+p,bot=H-p-sp2(90); /* clear of the HUD and the power tray */
   if(!o.inside){if(o.x>p&&o.x<W-p&&o.y>top&&o.y<bot){o.inside=1;o.vx*=.4;o.vy*=.4;}return false;} /* the 4 s start once it is fully on screen; then it drifts slowly */
   o.gl-=dt;if(o.x<p||o.x>W-p)o.vx=-o.vx;if(o.y<top||o.y>bot)o.vy=-o.vy;o.x=clamp(o.x,p,W-p);o.y=clamp(o.y,top,bot);
   if(o.gl<=0){o.st='dead';G2.gb.arc=null;v2Burst(o.x,o.y,18,'#c9b27a',1.4,5,.5,1.6);v2Pop(T('YAY KAÇTI'),'#c9b27a',14);return true;}return false;}
@@ -1695,7 +1695,8 @@ function v2Frame(dt){
   if(gState==='playing'){if(G2.mega)v2MegaStep(dt);else if(G2.freeze>0)G2.freeze-=dt;else v2Update(dt);}
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
-  v2Dims();curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;
+  v2Dims();const Rl=G2.R,Gl=G2.G;if(rel(10)&&G2.Rv){G2.R=G2.Rv;G2.G=G2.Gv;} /* drawing uses the size on its way; the true size comes back below */
+  curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;
   G2.gl.length=0;for(const o of G2.objs)if(o.cell!==undefined&&o.wait<=0)G2.gl.push(o);if(G2.boss&&G2.boss.cell!==undefined)G2.gl.push(G2.boss);
   let sx=0,sy=0;if(shake>0){sx=(Math.random()-.5)*shake;sy=(Math.random()-.5)*shake;shake*=Math.pow(.8,f);if(shake<.3)shake=0;}
   const gl=glDraw(clock,sx,sy);if(!gl)drawFallbackBG();
@@ -1723,6 +1724,7 @@ function v2Frame(dt){
   if(explA>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(230,220,255,${explA})`;ctx.lineWidth=14*explA+2;ctx.beginPath();ctx.arc(hX,hY,explR,0,TAU);ctx.stroke();ctx.restore();explR+=9*f;explA-=.012*f;}
   v2DrawAntiRing();v2DrawRule();v2DrawGBar();v2DrawTimers();v2DrawTipMark();v2DrawCalls();v2DrawTut();v2DrawAlarm(gState==='playing'?dt:0);
   recFrame();
+  G2.R=Rl;G2.G=Gl;
   G2.uiT-=dt;if(G2.uiT<=0){G2.uiT=.1;v2Ui(false);}
   if(gState==='playing'){G2.achT=(G2.achT||0)-dt;if(G2.achT<=0){G2.achT=.4;checkAchs();}} // achievements show the moment they are earned, not at the end of the level
 }
@@ -1947,7 +1949,7 @@ function v2DrawTimers(){if(gState==="menu"||!G2.on)return;const bars=[];
   if(G2.iceT>0)bars.push({f:G2.iceT/ICE.dur,s:G2.iceT,c1:'rgba(170,220,255,.75)',g0:'#5aa8e6',g1:'#e6f6ff',ic:'❄'});
   if(G2.antiT>0)bars.push({f:G2.antiT/3,s:G2.antiT,c1:'rgba(255,79,216,.75)',g0:'#c42aa8',g1:'#ffc4f2',ic:'⚛️'});
   if(G2.jet)bars.push({f:1-G2.jet.t/G2.jet.D,s:G2.jet.D-G2.jet.t,c1:'rgba(255,138,60,.75)',g0:'#ff3a10',g1:'#ffd27a',ic:'🔥',off:!G2.jet.held});
-  if(!bars.length)return;const r=G2.rule;let y=G2.gb?sp2(GBAR_Y+44):r?sp2(20)+(r.win||r.rival?38:18):sp2(10);const bw=Math.min(W*.62,sp2(290)),bx=W/2-bw/2,bh=sp2(9);
+  if(!bars.length)return;const r=G2.rule;let y=G2.gb?v2GBarY()+sp2(44):r?sp2(20)+(r.win||r.rival?38:18):sp2(10);const bw=Math.min(W*.62,sp2(290)),bx=W/2-bw/2,bh=sp2(9);
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
   for(const b of bars){const low=b.f<.3,pu=low?.55+.45*Math.sin(clock*14):1;ctx.globalAlpha=b.off?.55:1;ctx.fillStyle='rgba(12,6,8,.8)';ctx.strokeStyle=b.c1;ctx.lineWidth=1.3;ctx.beginPath();ctx.roundRect(bx,y,bw,bh+sp2(12),sp2(8));ctx.fill();ctx.stroke();
     const ix=bx+sp2(26),iw=bw-sp2(26)-sp2(46),iy=y+sp2(6);ctx.fillStyle='rgba(255,255,255,.1)';ctx.beginPath();ctx.roundRect(ix,iy,iw,bh,bh/2);ctx.fill();
@@ -1955,7 +1957,8 @@ function v2DrawTimers(){if(gState==="menu"||!G2.on)return;const bars=[];
     ctx.font=`${Math.round(bh*1.35)}px sans-serif`;ctx.fillText(b.ic,bx+sp2(13),iy+bh/2+1);ctx.fillStyle='#f2e6d8';ctx.font=`700 ${Math.round(bh*1.2)}px "IBM Plex Mono",monospace`;ctx.fillText(T(Math.max(0,b.s).toFixed(1)+' sn'),bx+bw-sp2(23),iy+bh/2+1);
     y+=bh+sp2(18);}
   ctx.restore();}
-function v2DrawGBar(){const g=G2.gb;if(!g||gState==='menu'||G2.ending)return;const y=sp2(GBAR_Y),bw=Math.min(W*.66,sp2(300)),bx=W/2-bw/2,bh=sp2(10),full=g.arc!=null;ctx.save();
+function v2GBarY(){const g=G2.gb,t=Math.floor(G2.t);if(g.y==null||g.yt!==t){g.yt=t;let y=sp2(GBAR_Y);try{const b=$('badge'),cv=ctx.canvas.getBoundingClientRect(),r=b&&b.getBoundingClientRect();if(r&&r.height)y=Math.max(y,r.bottom-cv.top+sp2(8));}catch(e){}g.y=y;}return g.y;} /* under the mission's name, wherever the HUD puts it */
+function v2DrawGBar(){const g=G2.gb;if(!g||gState==='menu'||G2.ending)return;const y=v2GBarY(),bw=Math.min(W*.66,sp2(300)),bx=W/2-bw/2,bh=sp2(10),full=g.arc!=null;ctx.save();
   ctx.fillStyle='rgba(10,12,18,.78)';ctx.strokeStyle='rgba(255,215,106,.7)';ctx.lineWidth=1.3;ctx.beginPath();ctx.roundRect(bx,y,bw,sp2(34),sp2(10));ctx.fill();ctx.stroke();
   ctx.textAlign='left';ctx.textBaseline='middle';ctx.font=`800 ${Math.round(sp2(10.5))}px "IBM Plex Sans Condensed",sans-serif`;ctx.fillStyle='#ffd76a';ctx.fillText(T(full?'ALTIN YAY EKRANDA':'SONRAKİ ALTIN YAY'),bx+sp2(10),y+sp2(10));
   ctx.textAlign='right';ctx.fillStyle='#fff';ctx.fillText(T('{n} yay',{n:g.n}),bx+bw-sp2(10),y+sp2(10));
