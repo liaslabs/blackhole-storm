@@ -25,7 +25,9 @@ const CHEST = [600, 1500, 3000];                 // per member who played, at le
 const CHEST_PAY = [[150, 0], [300, 5], [600, 15]];
 const RACE_PAY = [[1500, 30], [1000, 20], [600, 10], [300, 0], [300, 0], [300, 0], [300, 0], [300, 0], [300, 0], [300, 0]];
 const TOP3_PAY = 200, GROUP = 20, RACE_MIN = 3; // a fleet needs 3 members scoring in the race to be ranked
-const MSGS = ['go', 'gj', 'done', 'rec', 'ufo'];
+const MSGS = ['go', 'gj', 'done', 'rec', 'ufo', 'hi', 'chest', 'race', 'eat']; // 'ufo' stays for older apps
+// news the server writes on the wall by itself: 'chest:<n>' (a weekly chest opened), 'rank:<n>' (the fleet climbed to place n in the
+// weekend race, top 10 only) and 'mis' (a member finished the daily fleet mission; once a day each)
 const CAP_AWAY = 14 * 864e5, MEMBER_AWAY = 30 * 864e5, LEAVE_WAIT = 24 * 36e5, MAKE_WAIT = 7 * 864e5, RENAME_WAIT = 30 * 864e5;
 const CODE_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -78,6 +80,20 @@ async function weekTotal(DB, wk, fid, from) {
 const targets = players => CHEST.map(t => t * Math.max(5, players));
 const shownName = f => f.hidden ? 'FİLO-' + f.fid.slice(0, 4).toUpperCase() : f.name;
 async function event(DB, fid, name, m) { await DB.prepare('INSERT INTO fleet_msgs (fid, name, m, ts) VALUES (?, ?, ?, ?)').bind(fid, name, m, Date.now()).run(); }
+
+// automatic wall news after points arrive: a weekly chest that just opened, and a climb into the race's top 10
+async function news(DB, fid, add) {
+  const wk = weekOf(), t = await weekTotal(DB, wk, fid), was = t.pts - add;
+  targets(t.players).forEach((x, i) => { if (was < x && t.pts >= x) t.open = i + 1; });
+  if (t.open) await event(DB, fid, '', 'chest:' + t.open);
+  const rf = raceFrom(wk), now = Date.now();
+  if (now < Date.parse(rf + 'T00:00:00Z') || now >= weekEnd(wk)) return;
+  const grp = await groupOf(DB, wk, fid);
+  const rows = (await DB.prepare('SELECT g.fid, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = g.fid AND p.day >= ?),0) AS s FROM fleet_groups g WHERE g.wk = ? AND g.grp = ?').bind(wk, rf, wk, grp).all()).results || [];
+  const me = rows.find(r => r.fid === fid); if (!me) return;
+  const place = v => 1 + rows.filter(r => r.fid !== fid && r.s > v).length, before = place(me.s - add), after = place(me.s);
+  if (after < before && after <= 10) await event(DB, fid, '', 'rank:' + after);
+}
 
 // race groups: on the first look at a week's race, fleets are sorted by last week's total and cut into groups of 20;
 // a fleet that turns up later joins the last group, or opens a new one when that is full
@@ -291,10 +307,15 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
       if (cur) await DB.prepare('UPDATE fleet_pts SET pts = pts + ? WHERE day = ? AND pid = ?').bind(add, d, m.pid).run();
       else await DB.prepare('INSERT INTO fleet_pts (day, pid, fid, wk, pts) VALUES (?, ?, ?, ?, ?)').bind(d, m.pid, m.fid, weekOf(Date.parse(d + 'T12:00:00Z')), add).run();
       await DB.prepare('UPDATE fleets SET last = ? WHERE fid = ?').bind(now, m.fid).run();
+      if (d === today) await news(DB, m.fid, add);
     }
     const nm = body.pname ? pname(body.pname, cleanName) : m.name;
     await DB.prepare('UPDATE fleet_members SET seen = ?, name = ?, av = COALESCE(?, av) WHERE pid = ?').bind(now, nm, av(body.av), m.pid).run();
     if (body.src === 'rec') await event(DB, m.fid, nm, 'prec'); // a personal record, told to the fleet
+    if (body.mis === 1) { // the daily fleet mission is done: told once a day
+      const seen = await DB.prepare("SELECT id FROM fleet_msgs WHERE fid = ? AND name = ? AND m = 'mis' AND ts >= ?").bind(m.fid, nm, Date.parse(today + 'T00:00:00Z')).first();
+      if (!seen) await event(DB, m.fid, nm, 'mis');
+    }
     return json(req, { ok: true, added: add, today: have + add });
   }
   if (p === '/fleet/msg' && req.method === 'POST') {

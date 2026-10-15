@@ -2056,5 +2056,12 @@
 "Oyunda: Sıralama › Filo › Kodla katıl (filolar {n}. seviyede açılır)": "In the game: Ranking › Fleet › Join by code (fleets open at level {n})",
 "Davet kopyalandı: WhatsApp’a yapıştırıp gönder": "Invite copied: paste it in WhatsApp and send",
 "Panoda filo kodu yok": "No fleet code on the clipboard",
-"Kutuya uzun bas › Yapıştır": "Long-press the box › Paste"
+"Kutuya uzun bas › Yapıştır": "Long-press the box › Paste",
+"👋 Hoş geldin!": "👋 Welcome!",
+"🎁 Sandığa az kaldı!": "🎁 Chest almost full!",
+"🏁 Yarış başladı!": "🏁 The race is on!",
+"🕳️ Hepsini yut!": "🕳️ Swallow it all!",
+"günlük filo görevini tamamladı": "finished the daily fleet mission",
+"{n}. sandık açıldı!": "Chest {n} opened!",
+"Filo yarışta {n}. sıraya yükseldi": "The fleet climbed to place {n} in the race"
 }
