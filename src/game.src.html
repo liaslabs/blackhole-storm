@@ -4480,7 +4480,7 @@ $('spClip').onclick=shareClip;
 $('spAgain').onclick=()=>startSprint(SPR_RUN.seed,SPR_RUN.res&&SPR_RUN.res.chal?{chal:SPR_RUN.res.chal}:SPR_RUN.opt.daily?{daily:SPR_RUN.opt.daily}:{});
 $('spMenu').onclick=()=>{hideModals();showMenu();};
 $('chNo').onclick=()=>$('sChal').classList.remove('on');
-$('lbClose').onclick=()=>$('sLB').classList.remove('on');
+$('lbClose').onclick=()=>{$('sLB').classList.remove('on');if(rel(10)&&gState==='menu'&&!document.querySelector('.screen.on,.modal.on'))showMenu();}; // nothing left behind the window: back to the menu
 
 $('pauseBtn').onclick=e=>{e.stopPropagation();if(gState==='paused')resumeGame();else pauseGame();};
 $('pResume').onclick=resumeGame;

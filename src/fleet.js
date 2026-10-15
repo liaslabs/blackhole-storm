@@ -20,7 +20,7 @@ function fleetInit(){if(!rel(10)||$('lbTF'))return;const b=document.createElemen
   const d=document.createElement('div');d.id='lbFleet';d.className='fx';d.hidden=true;$('lbWorld').after(d);$('sLB').classList.add('r11');}
 function fleetTabs(){if(!$('lbTF'))return;$('lbTW').textContent='🌍 '+T('FIRTINA');$('lbTF').textContent='🛸 '+T('FİLO');$('lbTM').textContent='📜 '+T('REKORLAR');
   $('lbTF').classList.toggle('dot',FL.prz>0);}
-function fleetOpen(){FLS=FL.fid?'main':'intro';FLI=0;$('sMenu').classList.remove('on');showLB();lbTab('f');} // from the menu strip or the level card
+function fleetOpen(){FLS=FL.fid?'main':'intro';FLI=0;showLB();lbTab('f');} /* the window opens over the menu: hiding the menu left a bare game screen after KAPAT (15 Oct) */ // from the menu strip or the level card
 
 async function fleetFetch(force){
   if(!flOn())return null;if(!force&&FLV&&Date.now()-FL.at<60e3)return FLV;
