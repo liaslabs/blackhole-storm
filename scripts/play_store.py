@@ -20,7 +20,7 @@ PKG = 'com.liaslabs.blackholestorm'
 ROOT = Path(__file__).resolve().parent.parent / 'store' / 'listings'
 FRAMES_FROM = {'es-419': 'es-ES', 'pt-PT': 'pt-BR'}  # these listings share another language's frames
 # the order the phone screenshots show in on Play (the en-US listing was arranged this way by hand: action first)
-ORDER = ['1-gameplay', '7-quasar-jet', '2-boss', '8-radiation', '6-survival', '3-laboratory', '4-map', '5-menu']
+ORDER = ['1-gameplay', '7-quasar-jet', '2-boss', '8-fleet', '6-survival', '3-laboratory', '4-map', '5-menu']
 KEEP_IMAGES = {'en-US'}  # arranged by hand in Play Console; never replaced from here
 SUMMARY = os.environ.get('GITHUB_STEP_SUMMARY')
 out = []
