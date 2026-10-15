@@ -1940,7 +1940,7 @@ const REL=10,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v74",APPVER="";
+const BUILD="bhs-v75",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -2155,7 +2155,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0,arcLv:0,boostLv:0,boostK:''},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={rvAt:0,rvN:0,noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0,arcLv:0,boostLv:0,boostK:''},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -4412,8 +4412,14 @@ function levelSuccess(){
   if(G2.on){v2Streak(st);$('lvlMsg').innerHTML=v2Result();$('lvlNext').innerHTML=v2Teaser(level+1);v2LvlUi(false);}
   $('mLvl').classList.toggle('r9',rel(9)&&G2.on);document.body.classList.toggle('lvc',rel(9)&&G2.on); /* the power tray hides under the card */if(rel(9)&&G2.on){$('lvlNext').innerHTML='';if(gameMode==='classic'){LVL_BOOST=v2BoostFor(level+1);lvlBoostUi();}} /* 1.4.9: the next level is named as it starts */
   {const nm=PAUTO&&gameMode==='classic'&&level<=3;$('lvlNameRow').hidden=!nm;if(nm){setAv($('lvlNameAv'),playerAvatar);$('lvlNameN').textContent=playerName;}}
-  later(()=>{showModal('mLvl');gState='menu';updateUI();},2900);checkAchs();
+  later(()=>{showModal('mLvl');gState='menu';updateUI();rateMaybe(st);},2900);checkAchs();
 }
+// 1.5.0: Google Play's own rating card, right after a good moment on the level card: a 3-star or boss clear from level 15, never in the
+// first games, at most once in 60 days and 4 times in all. Google decides whether the card really shows; the game never learns the rating,
+// and nothing is given for it (Play rules)
+function rateMaybe(st){if(!rel(10)||!NATIVE||REPLAY||HMODE||gameMode!=='classic'||level<15)return;const nb=CAP('Bhs');if(!nb||!nb.review)return;
+  if(!(st>=3||G2.L&&G2.L.boss)||totalGames<8||SHOP.rvN>=4||Date.now()-SHOP.rvAt<60*864e5||!clockOk())return;
+  later(()=>{if(!$('mLvl').classList.contains('on')||achShowing)return;SHOP.rvAt=Date.now();SHOP.rvN++;saveG();nb.review().catch(()=>{});},1800);} // counted only when the request really goes out
 // Classic never throws you back to level 1: out of lives you can pay to continue, replay the level for free, or leave with progress saved.
 // what took the last life, and how to avoid it next time
 const HIT_WHY={meteor:['☄️','METEOR ÇARPTI','Meteorların önündeki ok izine bak. Kıl payı geçmek KUSURSUZ KAÇIŞ verir.'],rad:['☢','RADYASYON','Kırmızı yönlerden uzak dur; dalga geçerken yayların arasındaki boşlukta bekle. Radyasyon seni küçültür.'],

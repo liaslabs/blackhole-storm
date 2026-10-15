@@ -51,6 +51,8 @@ import com.getcapacitor.annotation.PermissionCallback;
 import androidx.core.app.NotificationManagerCompat;
 import org.json.JSONObject;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.integrity.StandardIntegrityManager;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -438,6 +440,24 @@ public class BhsPlugin extends Plugin {
         JSObject o = new JSObject();
         o.put("ok", v);
         return o;
+    }
+
+    // ---- Play in-app review ----
+    // Google decides whether the card shows (it limits how often); the result says nothing about whether a rating was given.
+    @PluginMethod
+    public void review(PluginCall call) {
+        if (getActivity() == null) {
+            call.reject("review: no activity");
+            return;
+        }
+        ReviewManager m = ReviewManagerFactory.create(getContext());
+        m.requestReviewFlow().addOnCompleteListener(t -> {
+            if (!t.isSuccessful() || getActivity() == null) {
+                call.reject("review: " + (t.getException() != null ? t.getException().getMessage() : "no flow"));
+                return;
+            }
+            m.launchReviewFlow(getActivity(), t.getResult()).addOnCompleteListener(x -> call.resolve());
+        });
     }
 
     // ---- Play Integrity (standard requests) ----
