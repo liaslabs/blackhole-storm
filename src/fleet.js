@@ -1,7 +1,7 @@
 // FLEETS (1.5.1): the Fleet tab on the ranking, the strip under the menu name, points from play, the daily fleet mission,
 // weekly prizes. The server (server/fleet.js) keeps the fleets; FL is the game's last look at mine, kept in the save.
 let FL={fid:'',name:'',emb:'',pts:0,tg:[],prz:0,race:0,at:0,mis:{d:'',p:0,cl:0}};
-let FLV=null,FLS='main',FLI=0,FLQ={n:0,src:'',busy:0},FLE=''; // the server's view, the sub-screen, points waiting to go, the last error
+let FLV=null,FLS='main',FLT='home',FLI=0,FLQ={n:0,src:'',busy:0},FLE=''; // the server's view, the sub-screen, points waiting to go, the last error
 const FL_EMB=['🌀','🎯','🪐','☄️','🌌','🌑','🌗','💫','🌠','👾','🔭','🚀'],FL_LV=20,FL_MAKE_LV=30,FL_COST=100,FL_RENAME=50;
 const FL_MSG={go:'🔥 Hadi filo!',gj:'👏 Harika!',done:'✓ Oynadım',rec:'🏆 Rekor!',ufo:'🛸',hi:'👋 Hoş geldin!',chest:'🎁 Sandığa az kaldı!',race:'🏁 Yarış başladı!',eat:'🕳️ Hepsini yut!'};
 const FL_CHIPS=['go','gj','done','rec','hi','chest','race','eat']; // the ready-made messages on offer ('ufo' is only shown when an older app sent it)
@@ -19,8 +19,11 @@ function flErr(e){return T(FL_ERR[e]||FL_ERR.off);}
 function fleetInit(){if(!rel(10)||$('lbTF'))return;const b=document.createElement('button');b.id='lbTF';$('lbTW').after(b);b.onclick=()=>lbTab('f');
   const d=document.createElement('div');d.id='lbFleet';d.className='fx';d.hidden=true;$('lbWorld').after(d);$('sLB').classList.add('r11');}
 function fleetTabs(){if(!$('lbTF'))return;$('lbTW').textContent='🌍 '+T('FIRTINA');$('lbTF').textContent='🛸 '+T('FİLO');$('lbTM').textContent='📜 '+T('REKORLAR');
-  $('lbTF').classList.toggle('dot',FL.prz>0);}
-function fleetOpen(){FLS=FL.fid?'main':'intro';FLI=0;showLB();lbTab('f');} /* the window opens over the menu: hiding the menu left a bare game screen after KAPAT (15 Oct) */ // from the menu strip or the level card
+}
+// 1.5.0 (15 Oct): the Fleet is its own screen, opened from the FLEET button in the menu (it reuses the ranking window in 'fleet mode':
+// own title, own tabs FİLOM · GÖREVLER · ÜYELER · YARIŞ); the ranking window itself is back to Storm and Records
+function fleetMode(on){const s=$('sLB');if(!s)return;s.classList.toggle('flm',!!on);const h=s.querySelector('.card>.h');if(h){if(!h.dataset.t)h.dataset.t=h.textContent;h.textContent=on?'🛸 '+T('FİLO'):h.dataset.t;}}
+function fleetOpen(tab){FLS=FL.fid?'main':(TIPS.flIntro?'main':'intro');FLT=tab||'home';FLI=0;fleetMode(true);showLB();lbTab('f');} /* the window opens over the menu: hiding the menu left a bare game screen after KAPAT (15 Oct) */ // from the menu strip or the level card
 
 async function fleetFetch(force){
   if(!flOn())return null;if(!force&&FLV&&Date.now()-FL.at<60e3)return FLV;
@@ -45,16 +48,22 @@ function fleetLevel(){if(!rel(10)||!FL.fid||gameMode!=='classic'||REPLAY)return;
 // the Daily Storm: 20 points for taking part, 10 more for each 5,000 points up to 60
 function fleetStorm(score,rec){if(score>0)fleetAdd(20+Math.min(60,10*Math.floor(score/5000)),rec?'rec':'');}
 
-// the strip under the player's name in the menu: emblem, fleet name, the week's chest bar; a red dot when a prize waits
-function fleetMenu(){const s=$('menuSub');if(!s||!rel(10))return;s.onclick=null;s.classList.remove('fl','fljoin');
+const flHot=()=>!!FL.fid&&(FL.prz>0||FL.mis.d===utcDay()&&FL.mis.p>=3&&!FL.mis.cl);
+// the FLEET button in the menu (in REHBER's place, which moved to Settings): one pulsing badge when a fleet reward waits
+function fleetBtn(){const b=$('flBtn');if(!b||!rel(10))return;b.hidden=false;const g=$('guideBtn');if(g)g.hidden=true;const sr=$('sGuideRow');if(sr)sr.hidden=false;
+  const i=b.querySelector('i');if(i&&!i.dataset.nb){i.dataset.nb=1;i.innerHTML=ICO.badge('🤝').replace('class="ico"','class="nb"');b.classList.add('neon');}
+  const lock=!flOn()||bestLevel<FL_LV,hot=!lock&&flHot(),e=$('flBadge'),t=$('flTxt');b.classList.toggle('lock',lock);
+  if(e){e.textContent=hot?T('AL')+'!':'';e.className=hot?'hot':'';}if(t)t.textContent=lock&&flOn()?T('{n}. seviye',{n:FL_LV}):'';}
+// the strip under the player's name in the menu: emblem, fleet name, the week's chest bar
+function fleetMenu(){fleetBtn();const s=$('menuSub');if(!s||!rel(10))return;s.onclick=null;s.classList.remove('fl','fljoin');
   if(FL.fid){const t=FL.tg&&FL.tg[2]||1,q=Math.min(1,FL.pts/t);s.classList.add('fl');
-    s.innerHTML=`${flImg(FL.emb)}<b class="notr">${flE(FL.name)}</b><span class="fb"><i style="width:${Math.round(q*100)}%"></i></span><span class="fc${FL.prz>0||FL.race?' dot':''}">🎁</span>`;s.onclick=e=>{e.stopPropagation();fleetOpen();};}
+    s.innerHTML=`${flImg(FL.emb)}<b class="notr">${flE(FL.name)}</b><span class="fb"><i style="width:${Math.round(q*100)}%"></i></span><span class="fc">🎁</span>`;s.onclick=e=>{e.stopPropagation();fleetOpen();};}
   else if(flOn()&&bestLevel>=FL_LV){s.classList.add('fljoin');s.innerHTML=`🛸 ${T('Bir filoya katıl')}`;s.onclick=e=>{e.stopPropagation();fleetOpen();};}}
 
 // the daily fleet mission, shown above the three daily missions
 function fleetMission(){if(!rel(10)||!FL.fid)return '';const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
   return `<div class="dmr flm"><div class="x">🛸 ${T('Filon için {n} seviye geç',{n:3})}<small>${m.p} / 3 · ${T('ödül')} 30 ⭐ · ${T('filoya puan')}</small><div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button id="flMisGo" ${done?'':'disabled'}>${T('AL')}</button>`}</div>`;}
-function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>{if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();updateUI();sfx('achieve',{vol:.5});renderDM();};}
+function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>{if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();updateUI();sfx('achieve',{vol:.5});renderDM();fleetMenu();};}
 
 // the Fleet tab
 async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
@@ -65,7 +74,9 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   const j=await fleetFetch(FLS==='main');if(!$('sLB').classList.contains('on'))return;
   if(!j){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${flErr('off')}</div><div class="two"><button class="btn sec" id="flRetry">${T('TEKRAR DENE')}</button></div>`;$('flRetry').onclick=()=>fleetRender();return;}
   let h=fleetPrizes(j);
-  if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);else h+=j.fleet?fleetPageH(j):fleetNoneH(j);
+  if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);
+  else if(!j.fleet)h+=fleetNoneH(j);
+  else{h=flTabsH()+(FLT==='home'?h:'');h+=FLT==='tasks'?flTasksH(j):FLT==='crew'?flCrewH(j):FLT==='race'?await fleetRaceH(1):fleetPageH(j);}
   w.innerHTML=h;fleetWire(j);}
 
 function fleetPrizes(j){return (j.prizes||[]).map(z=>`<div class="hero przc">${flImg(z.emb,'big')}<b class="notr">${flE(z.name||'')}</b>
@@ -87,15 +98,18 @@ function fleetIntroH(){const cs=flCards(),c=cs[FLI],last=FLI===cs.length-1;
   <div class="two">${last?`<button class="btn sec" id="flAgain">↺ ${T('TEKRAR GÖSTER')}</button><button class="btn" id="flSeen">${T('FİLOLARA BAK')} ›</button>`
     :`<button class="btn sec" id="flSeen">${T('ATLA')}</button><button class="btn" id="flNext">${T('İLERİ')} ›</button>`}</div>`;}
 function fleetIntroWire(){const n=flCards().length,go=k=>{FLI=(k+n)%n;fleetRender();sfx('click');};
-  if($('flNext'))$('flNext').onclick=()=>go(FLI+1);if($('flAgain'))$('flAgain').onclick=()=>go(0);$('flSeen').onclick=()=>{FLS='main';fleetRender();};
+  if($('flNext'))$('flNext').onclick=()=>go(FLI+1);if($('flAgain'))$('flAgain').onclick=()=>go(0);$('flSeen').onclick=()=>{FLS='main';TIPS.flIntro=1;saveSoon();fleetRender();};
   const c=$('flCard');let x0=null;c.onclick=()=>{if(FLI<n-1)go(FLI+1);}; // a tap or a swipe turns the card
   c.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;},{passive:true});
   c.addEventListener('touchend',e=>{if(x0==null)return;const d=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(d)<40)return;const k=FLI+((d<0)!==(document.dir==='rtl')?1:-1);if(k>=0&&k<n)go(k);},{passive:true});}
 
 function fleetNoneH(j){const canMake=bestLevel>=FL_MAKE_LV,wait=j.wait&&j.wait>Date.now();
-  return `<div class="hero"><b>🛸 ${T('FİLO')}</b>${T('Bir filoya katıl: oynadığın her seviye filona puan kazandırır. Hafta boyunca sandıklar açılır, hafta sonu filolar yarışır.')}</div>
+  return `<div class="hero" style="padding:10px">${T('Filonla birlikte sandık aç, hafta sonu yarış. Puanların sana da kalır.')}</div>
   ${wait?`<div class="flnote">⏳ ${T('Yeni bir filoya katılmak için')} ${flLeft(j.wait-Date.now())}</div>`:''}
-  <div class="two"><button class="btn" id="flMake" ${canMake?'':'disabled'}>➕ ${T('FİLO KUR')}${canMake?'':` · ${T('{n}. seviye',{n:FL_MAKE_LV})}`}</button><button class="btn sec" id="flCode">🔑 ${T('KODLA KATIL')}</button></div>
+  <div class="flbig"><div class="hero"><i>${ICO.badge('🤝')}</i><b>${T('FİLO KUR')}</b><small>${T('Kendi filonu kur, kaptanı ol')}</small>
+    <small class="${canMake?'ok':'no'}">${canMake?`${T('{n}. seviye',{n:FL_MAKE_LV})} ✓`:T('{n}. seviyede açılır',{n:FL_MAKE_LV})} · ${diamonds} 💎</small>
+    <button class="btn" id="flMake" ${canMake?'':'disabled'}>${T('KUR')} · ${FL_COST} 💎</button></div>
+  <div class="hero"><i>${ICO.badge('🏁')}</i><b>${T('FİLOYA KATIL')}</b><small>${T('Açık bir filo seç ya da arkadaşının kodunu yaz')}</small><button class="btn" id="flCode">🔑 ${T('KODLA KATIL')}</button></div></div>
   <div class="sec"><span>${T('AÇIK FİLOLAR')}</span><b>${T('yer var')}</b></div>
   ${(j.open||[]).map(f=>`<div class="row2">${flImg(f.emb)}<span class="nm"><b class="notr">${flE(f.name)}</b><small>${f.n}/20 ${T('üye')} · ${flN(f.pts)} ${T('puan')}</small></span><button class="go" data-join="${f.fid}">${T('KATIL')}</button></div>`).join('')||`<div class="lbwait">${T('Henüz açık filo yok. İlk filoyu sen kur!')}</div>`}
   <div class="flnote" id="flMsg"></div><div class="two"><button class="btn sec" id="flIntro">✨ ${T('Filo avantajları')}</button></div>`;}
@@ -110,24 +124,48 @@ function fleetCodeH(){return `<div class="hero" style="text-align:start"><b>🔑
   <div class="flnote tip">${T('Kodu ya da gelen mesajın tamamını yapıştırabilirsin; kod kendiliğinden bulunur.')}</div>
   <div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button><button class="btn" id="flCodeGo">${T('KATIL')}</button></div><div class="flnote" id="flMsg"></div>`;}
 
-function fleetPageH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap),t=f.targets||[1,1,1],top=t[2]||1,now=Date.now();
-  const code=String(f.code||'').replace(/^(...)(...)$/,'$1-$2');
+const FLT_ALL=[['home','FİLOM'],['tasks','GÖREVLER'],['crew','ÜYELER'],['race','YARIŞ']];
+function flTabsH(){return `<div class="fltabs">${FLT_ALL.map(([k,t])=>`<button data-flt="${k}" class="${k===FLT?'on':''}">${T(t)}</button>`).join('')}</div>`;}
+// the daily fleet mission card: three levels for the fleet today, 30 stars
+function flMisH(){const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
+  return `<div class="hero flmis"><b>🎯 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})} · ${T('ödül')} 30 ⭐
+  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')}</button>`}</div></div>`;}
+function flHeadH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap),now=Date.now(),code=String(f.code||'').replace(/^(...)(...)$/,'$1-$2');
   return `${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}
   <div class="fc">${flImg(f.emb,'big')}<span class="t"><b class="notr">${flE(f.name)}</b><small>${f.n}/${f.max} ${T('üye')} · ${T('Kaptan')}: <span class="notr">${flE(cap?cap.name:'')}</span></small><span class="code">🔑 ${code}</span></span></div>
-  <div class="stat"><div><b>#${f.rank||'–'}</b><small>${f.race?T('yarışta'):T('bu hafta')} / ${f.of||1}</small></div><div><b>${flN(f.pts)}</b><small>${T('filo puanı')}</small></div><div><b>${flLeft((f.race?f.ends:f.raceFrom)-now)}</b><small>${f.race?T('yarışın bitişi'):T('yarışa kalan')}</small></div></div>
+  <div class="stat"><div><b>#${f.rank||'–'}</b><small>${f.race?T('yarışta'):T('bu hafta')} / ${f.of||1}</small></div><div><b>${flN(f.pts)}</b><small>${T('filo puanı')}</small></div><div><b>${flLeft((f.race?f.ends:f.raceFrom)-now)}</b><small>${f.race?T('yarışın bitişi'):T('yarışa kalan')}</small></div></div>`;}
+function flChestBarH(f){const t=f.targets||[1,1,1],top=t[2]||1;
+  return `<div class="sec"><span>${T('HAFTALIK SANDIKLAR')}</span><b>${T('herkese')}</b></div>
+  <div class="bar"><i style="width:${Math.min(100,f.pts/top*100)}%"></i>${t.map((x,i)=>`<span class="ck${f.pts>=x?' got':''}" style="left:${Math.min(97,x/top*100)}%">${i===2?'👑':'🎁'}</span>`).join('')}</div>
+  <div class="barl">${t.map((x,i)=>`<span style="${i===2?'right:0':`left:${x/top*100}%;transform:translateX(-50%)`}">${flN(x)}${f.pts>=x?' ✓':''}</span>`).join('')}</div>`;}
+// FİLOM: who we are, today's mission, the week's chests and the invite
+function fleetPageH(j){const f=j.fleet,code=String(f.code||'').replace(/^(...)(...)$/,'$1-$2');
+  return `${flHeadH(j)}${flMisH()}${flChestBarH(f)}
   ${f.n<f.max?`<div class="finv"><b>📨 ${T('ARKADAŞINI FİLOYA ÇAĞIR')}</b><div class="fic"><small>${T('FİLO KODU')}</small><span class="notr">${code}</span></div>
   <div class="two"><button class="btn" id="flShare">📤 ${T('DAVET GÖNDER')}</button><button class="btn sec" id="flCopy">${T('KOPYALA')}</button></div>
-  <small>${T('WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Sıralama › Filo › Kodla katıl’a bu kodu yazar.')}</small></div>`:''}
-  <div class="sec"><span>${T('HAFTALIK SANDIKLAR')}</span><b>${T('herkese')}</b></div>
-  <div class="bar"><i style="width:${Math.min(100,f.pts/top*100)}%"></i>${t.map((x,i)=>`<span class="ck${f.pts>=x?' got':''}" style="left:${Math.min(97,x/top*100)}%">${i===2?'👑':'🎁'}</span>`).join('')}</div>
-  <div class="barl">${t.map((x,i)=>`<span style="${i===2?'right:0':`left:${x/top*100}%;transform:translateX(-50%)`}">${flN(x)}${f.pts>=x?' ✓':''}</span>`).join('')}</div>
-  <div class="sec"><span>${T('ÜYELER · BU HAFTA')}</span><b>${T('bugün oynayan')} ✓</b></div>
+  <small>${T('WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.')}</small></div>`:''}
+  <div class="two"><button class="btn sec" data-flt="crew">👥 ${T('ÜYELER VE DUVAR')} ›</button></div><div class="flnote" id="flMsg"></div>`;}
+// GÖREVLER: everything the fleet works for, in one place
+function flTasksH(j){const f=j.fleet,t=f.targets||[1,1,1],pay=[[150,0],[300,5],[600,15]],now=Date.now(),me=(j.members||[]).find(m=>m.me);
+  const row=(ic,a,b,c,cls)=>`<div class="row2 ${cls||''}"><span class="ti">${ic}</span><span class="nm"><b>${a}</b><small>${b}</small></span><span class="pt">${c}</span></div>`;
+  const left=Date.parse(utcDay()+'T00:00:00Z')+864e5-now;
+  return `<div class="sec"><span>${T('BUGÜN')}</span><b>${T('yenilenmesine {t}',{t:flLeft(left)})}</b></div>${flMisH()}
+  <div class="sec"><span>${T('BU HAFTA · SANDIKLAR')}</span><b>${T('herkese')}</b></div>
+  ${t.map((x,i)=>row(i===2?'👑':'🎁',T('{n}. sandık',{n:i+1})+' · '+flN(x)+' '+T('puan'),flN(pay[i][0])+' ⭐'+(pay[i][1]?' + '+pay[i][1]+' 💎':''),f.pts>=x?'✓':(i===0||f.pts>=t[i-1]?'<span dir="ltr">'+flN(f.pts)+' / '+flN(x)+'</span>':T('sırada')),f.pts>=x?'got':'')).join('')}
+  <div class="sec"><span>${T('HAFTA SONU YARIŞI')}</span><b>${f.race?T('yarışın bitişi')+' '+flLeft(f.ends-now):T('yarışa kalan')+' '+flLeft(f.raceFrom-now)}</b></div>
+  ${row('🏁',f.race?T('Yarış sürüyor'):T('Yarış Cuma başlar'),T('En az 3 üye puan getirmeli'),f.race?'#'+(f.rank||'–'):'')}
+  ${row('🥇',T('İlk 3 filo'),'1.500 ⭐ + 30 💎 · 1.000 ⭐ + 20 💎 · 600 ⭐ + 10 💎','')}
+  ${row('🏅',T('Filonun en iyi 3 oyuncusu'),'+200 ⭐','')}
+  <div class="sec"><span>${T('SENİN KATKIN')}</span><b>${T('bu hafta')} ${flN(me?me.pts:0)}</b></div>
+  <div class="flnote tip">${T('Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300')}</div>`;}
+// ÜYELER: the crew, the wall and the ready-made messages
+function flCrewH(j){const f=j.fleet;
+  return `<div class="sec"><span>${T('ÜYELER · BU HAFTA')}</span><b>${T('bugün oynayan')} ✓</b></div>
   ${(j.members||[]).map((m,i)=>`<div class="row2${m.me?' mine':''}"><span class="rk">${i+1}</span>${avHtml(m.av)}<span class="nm"><b class="notr">${flE(m.name)}${m.cap?' 👑':''}${m.today?' <i class="ok">✓</i>':''}${m.away?' 💤':''}</b></span><span class="pt">${flN(m.pts)}</span>${f.cap&&!m.me?`<button class="kick" data-kick="${m.k}" aria-label="${T('Filodan çıkar')}">✕</button>`:''}</div>`).join('')}
   <div class="sec"><span>${T('FİLO DUVARI')}</span><b>${T('hazır mesajlar')}</b></div>
   <div class="wall">${(j.wall||[]).slice(-6).map(flWall).join('')||`<div class="ev">${T('Henüz mesaj yok.')}</div>`}</div>
   <div class="emo">${FL_CHIPS.map(k=>`<button data-msg="${k}">${T(FL_MSG[k])}</button>`).join('')}</div>
-  <div class="two"><button class="btn sec" id="flRace">🏆 ${T('FİLO SIRALAMASI')}</button>${f.cap?`<button class="btn sec" id="flSet">⚙️</button>`:''}<button class="btn sec" id="flLeave">${T('AYRIL')}</button></div><div class="flnote" id="flMsg"></div>`;}
-
+  <div class="two">${f.cap?`<button class="btn sec" id="flSet">⚙️ ${T('AYARLAR')}</button>`:''}<button class="btn sec" id="flLeave">${T('AYRIL')}</button></div><div class="flnote" id="flMsg"></div>`;}
 function flWall(w){const m=String(w.m||''),n=+m.split(':')[1]||0;
   if(FL_MSG[m])return `<div><b class="notr">${flE(w.name)}:</b> ${T(FL_MSG[m])}</div>`;
   if(m.startsWith('chest:'))return `<div class="ev nw">🎁 ${T('{n}. sandık açıldı!',{n})}</div>`;
@@ -140,12 +178,12 @@ function fleetSetH(j){const f=j.fleet;return `<div class="hero" style="text-alig
   <div class="sec"><span>${T('KİMLER KATILABİLİR')}</span></div><div class="tog"><button class="${f.open?'on':''}" data-open="1">🌍 ${T('HERKES')}</button><button class="${f.open?'':'on'}" data-open="0">🔑 ${T('YALNIZCA KODLA')}</button></div>
   <div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button></div><div class="flnote" id="flMsg"></div>`;}
 
-async function fleetRaceH(){let j;try{j=await lbFetch('/fleets/top?pid='+PID);}catch(e){return `<div class="hero">${flErr('off')}</div><div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button></div>`;}
+async function fleetRaceH(inTab){let j;try{j=await lbFetch('/fleets/top?pid='+PID);}catch(e){return `<div class="hero">${flErr('off')}</div><div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button></div>`;}
   const now=Date.now();
   return `<div class="hero" style="padding:9px"><b>🏆 ${j.race?T('HAFTA SONU YARIŞI'):T('FİLOLAR · BU HAFTA')}</b>${j.race?T('Bitişe {t}. İlk 3 filonun her üyesine: 1.500 ⭐ + 30 💎 · 1.000 ⭐ + 20 💎 · 600 ⭐ + 10 💎; 4.–10.: 300 ⭐. Sıralanmak için hafta sonu en az 3 üyenin puan getirmesi gerekir.',{t:flLeft(j.ends-now)})
     :T('Yarış Cuma 00:00 UTC\'de başlar ({t}). Benzer güçte en fazla 20 filo aynı grupta yarışır.',{t:flLeft(j.raceFrom-now)})}</div>
   ${(j.list||[]).map(x=>`<div class="row2${x.me?' mine':''}"><span class="rk">${['🥇','🥈','🥉'][x.r-1]||x.r}</span>${flImg(x.emb)}<span class="nm"><b class="notr">${flE(x.name)}</b><small>${x.n}/20 ${T('üye')}</small></span><span class="pt">${flN(x.pts)}</span></div>`).join('')||`<div class="lbwait">${T('Henüz puan yok.')}</div>`}
-  <div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button></div>`;}
+  ${inTab?'':`<div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button></div>`}`;}
 
 function flMsg(t,ok){const e=$('flMsg');if(e){e.textContent=t;e.classList.toggle('good',!!ok);}}
 function fleetNameCheck(){const i=$('flName'),e=$('flNameE');if(!i||!e)return null;const r=BHS_NAMES.check(i.value,'fleet'),wv=BHS_NAMES.width(BHS_NAMES.tidy(i.value)),c=$('flCnt');
@@ -154,6 +192,8 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
   const go=async(path,body,after)=>{flMsg('…');try{const r=await lbFetch(path,body);if(r&&r.ok){after&&after(r);}else flMsg(flErr(r&&r.err));return r;}catch(e){flMsg(flErr('off'));return null;}};
   all('[data-claim]').forEach(b=>b.onclick=()=>go('/fleet/claim',{pid:PID,wk:b.dataset.claim},r=>{if(r.stars||r.gems)grant({stars:r.stars,gems:r.gems},'🛸 '+T('FİLO ÖDÜLÜ'));FLV=null;fleetRender();}));
   if(q('#flBack'))q('#flBack').onclick=()=>{FLS='main';fleetRender();};
+  all('[data-flt]').forEach(b=>b.onclick=()=>{FLT=b.dataset.flt;FLS='main';fleetRender();$('sLB').scrollTop=0;});
+  if(q('#flMisGo2'))q('#flMisGo2').onclick=()=>{if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();updateUI();sfx('achieve',{vol:.5});fleetMenu();fleetRender();};
   if(q('#flIntro'))q('#flIntro').onclick=()=>{FLS='intro';FLI=0;fleetRender();};
   if(q('#flMake'))q('#flMake').onclick=()=>{FLS='make';fleetRender();};
   if(q('#flCode'))q('#flCode').onclick=()=>{FLS='code';fleetRender();};
@@ -174,7 +214,7 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
   all('[data-kick]').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=T('ÇIKAR?');return;}go('/fleet/kick',{pid:PID,k:b.dataset.kick},()=>{FLV=null;fleetRender();});});
   // the invite goes out through the phone's own share sheet (WhatsApp, Telegram, SMS…); without one it is copied
   const flCode=()=>String(j.fleet&&j.fleet.code||'').replace(/^(...)(...)$/,'$1-$2');
-  if(q('#flShare'))q('#flShare').onclick=async()=>{const txt=['🛸 '+T('{f} filosuna katıl!',{f:j.fleet.name}),T('Blackhole Storm’da birlikte sandık açıp hafta sonu yarışalım.'),T('Filo kodu: {c}',{c:flCode()}),T('Oyunda: Sıralama › Filo › Kodla katıl (filolar {n}. seviyede açılır)',{n:FL_LV})].join('\n');
+  if(q('#flShare'))q('#flShare').onclick=async()=>{const txt=['🛸 '+T('{f} filosuna katıl!',{f:j.fleet.name}),T('Blackhole Storm’da birlikte sandık açıp hafta sonu yarışalım.'),T('Filo kodu: {c}',{c:flCode()}),T('Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)',{n:FL_LV})].join('\n');
     const out=await shareOut(txt,NATIVE?'https://play.google.com/store/apps/details?id=com.liaslabs.blackholestorm':APP_URL);if(out==='copied')flMsg(T('Davet kopyalandı: WhatsApp’a yapıştırıp gönder'),1);else if(out==='fail')flMsg(flCode(),1);};
   if(q('#flCopy'))q('#flCopy').onclick=async()=>{try{await navigator.clipboard.writeText(flCode());flMsg(T('Kod kopyalandı'),1);}catch(e){flMsg(flCode(),1);}};
   // a pasted message is searched for the code (three letters or digits, a dash, three more)

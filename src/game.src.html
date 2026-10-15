@@ -953,7 +953,13 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .fx .stat{display:flex;gap:6px;margin-top:9px;}.fx .stat div{flex:1;text-align:center;padding:6px 4px;border-radius:8px;background:rgba(255,255,255,.04);}.fx .stat b{display:block;font:700 14px var(--fd);color:#ffe1a6;}.fx .stat small{font-size:9.5px;color:#9fb3d8;}
 .fx .bar{position:relative;height:10px;border-radius:6px;background:rgba(255,255,255,.08);margin:14px 4px 4px;}.fx .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,#4fb6ff,#9fe3ff);}
 .fx .bar .ck{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:17px;filter:drop-shadow(0 0 4px #000);}.fx .bar .ck.got{filter:drop-shadow(0 0 6px #ffd76a);}.fx .barl{position:relative;height:16px;font:700 9.5px var(--fd);color:#9fb3d8;}.fx .barl span{position:absolute;white-space:nowrap;}
-.fx .wall{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.03);font-size:11.5px;line-height:1.6;}.fx .wall b{color:#ffe1a6;}.fx .wall .ev{color:#9fb3d8;}.fx .wall .nw{color:#ffd76a;}.fx .wall .ev b{color:#cfe8ff;}
+.fx .wall{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,.03);font-size:11.5px;line-height:1.6;}.fx .wall b{color:#ffe1a6;}.fx .wall .ev{color:#9fb3d8;}
+#sLB.flm .lbtabs{display:none;}#sLB:not(.flm) #lbTF{display:none;}
+.fx .fltabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px;}.fx .fltabs button{padding:8px 2px;border-radius:8px;border:1px solid var(--line);background:var(--pan);color:var(--dim);font:600 11px var(--fd);letter-spacing:.04em;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.fx .fltabs button.on{border-color:var(--gold);color:#ffe6a8;background:rgba(242,169,59,.12);}
+.fx .flmis{text-align:start;border-color:rgba(255,207,90,.5);margin-top:10px;}.fx .flmis .bar{margin:8px 0 2px;}.fx .flmis .mr{display:flex;justify-content:space-between;align-items:center;margin-top:6px;}.fx .flmis .mr small{color:#9fb3d8;}
+.fx .flbig{display:grid;grid-template-columns:1fr 1fr;gap:8px;}.fx .flbig .hero{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 8px;margin:0;}.fx .flbig i{font-style:normal;}.fx .flbig i .ico{width:54px;height:54px;}.fx .flbig b{margin:0;}.fx .flbig small{font-size:11px;line-height:1.35;color:#cfd9f0;}.fx .flbig small.ok{color:#8dffcb;}.fx .flbig small.no{color:#ffb3a0;}.fx .flbig .btn{width:100%;margin-top:auto;}
+.fx .row2 .ti{width:30px;text-align:center;font-size:19px;flex:0 0 auto;}.fx .row2.got .pt{color:#8dffcb;}.fx .row2 .nm small{white-space:normal;}
+#flBtn.lock{opacity:.55;}#flBtn em.hot{animation:bdgPulse 1.2s ease-out infinite,flBlink 1s ease-in-out infinite;}@keyframes flBlink{50%{opacity:.35;}}@media (prefers-reduced-motion:reduce){#flBtn em.hot{animation:none;}}.fx .wall .nw{color:#ffd76a;}.fx .wall .ev b{color:#cfe8ff;}
 .fx .emo{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px;}.fx .emo button{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.fx .emo button{padding:5px 9px;border-radius:999px;background:rgba(159,227,255,.1);border:1px solid rgba(159,227,255,.35);font:600 11px var(--fd);color:#dff6ff;}
 .fx .inp{width:100%;box-sizing:border-box;padding:11px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:#fff;font:600 15px var(--fd);text-align:center;letter-spacing:.04em;}
 .fx .embs{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;}.fx .embs button{aspect-ratio:1;border-radius:9px;overflow:hidden;border:1px solid rgba(185,200,255,.2);padding:0;background:none;}.fx .embs button.on{outline:2px solid var(--gold);outline-offset:1px;}.fx .embs .fem{width:100%;height:100%;border:0;border-radius:0;}
@@ -1346,6 +1352,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
     <button class="sb" id="atBtn"><i>📖</i><span>ATLAS</span><em id="atBadge"></em></button>
     <button class="sb" id="lbBtn"><i>🏆</i><span>SIRALAMA</span></button>
     <button class="sb" id="guideBtn"><i>❓</i><span>REHBER</span></button>
+    <button class="sb" id="flBtn" hidden><i></i><span>FİLO</span><em id="flBadge"></em><small id="flTxt"></small></button>
    </div>
   </div>
   <div class="box" id="dailyPrev" style="display:none;"></div>
@@ -1576,6 +1583,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow" id="sNotifRow" hidden><span>🔔 Hatırlatmalar</span><button class="tg" id="sNotif"></button></div>
   <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ FÜZYON</button><button id="sNDay">🎁 GÜNLÜK</button></div></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
+  <div class="srow" id="sGuideRow" hidden><span>❓ REHBER</span><button class="btn sec" id="sGuideB" style="padding:6px 12px;font-size:12px;">AÇ</button></div>
   <div class="srow"><span>🎬 Açılış videosu</span><button class="btn sec" id="sIntro" style="padding:6px 12px;font-size:12px;">İZLE</button></div>
   <div class="srow wide" id="sSensRow"><span>👆 Hassasiyet</span><div class="seg" id="sSens"><button>NORMAL</button><button>KADEMELİ</button><button>YÜKSEK</button></div></div>
   <div class="credits"><b>Emeği geçenler</b><br>
@@ -4455,7 +4463,7 @@ function tourLeft(){const n=new Date(),e=Date.UTC(n.getUTCFullYear(),n.getUTCMon
 function tourCard(go){const t=tourLeft();$('trTime').textContent='⏱ '+T('BİTİŞE')+' '+(t.h?t.h+' '+T('sa')+' ':'')+t.m+' '+T('dk');$('trGo').onclick=()=>{TIPS.tourDay=utcDay();saveG();hideModals();go();};$('trBack').onclick=()=>hideModals();const m=$('mTour');if(m.parentNode!==document.body)document.body.appendChild(m);showModal('mTour');sfx('click',{vol:.4});} /* 1.4.9: before the first tournament run of the day, what everyone gets and when it ends */
 $('startBtn').onclick=()=>{if(rel(9)&&gameMode==='survival'&&TIPS.tourDay!==utcDay()){tourCard(()=>$('startBtn').click());return;}if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
-$('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}showLB();}; // the leaderboard shows your name: offer to set it once
+$('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}if(typeof fleetMode==='function')fleetMode(false);showLB();}; // the leaderboard shows your name: offer to set it once
 $('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');fleetInit();
 $('lbShare').onclick=async()=>{const out=await shareOut(recordsText(),canLink()?baseURL():'');if(out==='copied')flashBtn($('lbShare'),'KOPYALANDI ✓');}; // 1.4.9: the records tab can be shared // the tab handlers sat inside the comment above, so REKORLARIM never opened
 $('expBtn').onclick=()=>{if(bestLevel<12)return;sfx('click',{vol:.4});renderExp();$('sExp').classList.add('on');};$('exClose').onclick=()=>$('sExp').classList.remove('on');
@@ -4466,7 +4474,8 @@ $('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.ti
   document.querySelectorAll('.screen,.modal').forEach(sc=>mo.observe(sc,{attributes:true,attributeFilter:['class'],attributeOldValue:true}));}
 $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();fillWallets();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');$('atCollect').onclick=atlasCollect;
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
-$('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
+$('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};if($('sGuideB'))$('sGuideB').onclick=()=>$('guideBtn').onclick(); /* 1.5.0: the guide moved to Settings, FLEET took its place in the menu */
+if($('flBtn'))$('flBtn').onclick=()=>{if(!flOn()){toast('🛸',T('FİLO'),T('Filolar internet bağlantısı ister.'));return;}if(bestLevel<FL_LV){toast('🛸',T('FİLO'),T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV}));return;}fleetOpen();};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
 $('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('raceBtn').onclick=()=>{sfx('click',{vol:.4});renderDaily();$('raceSheet').hidden=false;};$('raceClose').onclick=()=>{$('raceSheet').hidden=true;};$('shopBtn').onclick=openShop;$('starterRib').onclick=openShop;$('pShop').onclick=openShop;
 $('shopX').onclick=()=>$('shopClose').click();
 $('shopClose').onclick=()=>{$('sShop').classList.remove('on');if($('sMenu').classList.contains('on'))showMenu();};$('shopRestore').onclick=()=>MON.mode==='test'?toast('🔄','GERİ YÜKLEME','Test modunda geri yüklenecek bir şey yok'):restorePurchases(false);$('mapBack').onclick=closeMap;$('shClose').onclick=()=>$('mSheet').classList.remove('on');
@@ -4480,7 +4489,7 @@ $('spClip').onclick=shareClip;
 $('spAgain').onclick=()=>startSprint(SPR_RUN.seed,SPR_RUN.res&&SPR_RUN.res.chal?{chal:SPR_RUN.res.chal}:SPR_RUN.opt.daily?{daily:SPR_RUN.opt.daily}:{});
 $('spMenu').onclick=()=>{hideModals();showMenu();};
 $('chNo').onclick=()=>$('sChal').classList.remove('on');
-$('lbClose').onclick=()=>{$('sLB').classList.remove('on');if(rel(10)&&gState==='menu'&&!document.querySelector('.screen.on,.modal.on'))showMenu();}; // nothing left behind the window: back to the menu
+$('lbClose').onclick=()=>{$('sLB').classList.remove('on');if(typeof fleetMode==='function')fleetMode(false);if(rel(10)&&gState==='menu'&&!document.querySelector('.screen.on,.modal.on'))showMenu();}; // nothing left behind the window: back to the menu
 
 $('pauseBtn').onclick=e=>{e.stopPropagation();if(gState==='paused')resumeGame();else pauseGame();};
 $('pResume').onclick=resumeGame;
