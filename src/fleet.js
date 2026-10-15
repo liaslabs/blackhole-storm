@@ -23,7 +23,7 @@ function fleetTabs(){if(!$('lbTF'))return;$('lbTW').textContent='🌍 '+T('FIRTI
 // 1.5.0 (15 Oct): the Fleet is its own screen, opened from the FLEET button in the menu (it reuses the ranking window in 'fleet mode':
 // own title, a ✕, four icons at the bottom: GÖREVLER (missions and FİLOM) · ÜYELER · YARIŞ · DAVET); the ranking window itself is back to Storm and Records
 function fleetMode(on){const s=$('sLB');if(!s)return;s.classList.toggle('flm',!!on);flInvClose();
-  if(on&&!$('flX')){const c=s.querySelector('.card'),x=document.createElement('button');x.id='flX';x.className='icb';x.setAttribute('aria-label',T('KAPAT'));x.textContent='✕';x.onclick=()=>$('lbClose').click();if(c)c.appendChild(x);}const h=s.querySelector('.card>.h');if(h){if(!h.dataset.t)h.dataset.t=h.textContent;h.textContent=on?'🛸 '+T('FİLO'):h.dataset.t;}}
+  if(on&&!$('flX')){const c=s.querySelector('.card'),x=document.createElement('button');x.id='flX';x.className='icb';x.setAttribute('aria-label',T('KAPAT'));x.textContent='✕';x.onclick=()=>$('lbClose').click();if(c)c.appendChild(x);}const h=s.querySelector('.card>.h');if(h){if(!h.dataset.t)h.dataset.t=h.textContent;if(on)h.innerHTML=ICO.svg('🛸')+' '+escH(T('FİLO'));else h.textContent=h.dataset.t;}}
 function fleetOpen(tab){FLS=FL.fid?'main':(TIPS.flIntro?'main':'intro');FLT=tab&&tab!=='home'?tab:'tasks';FLI=0;fleetMode(true);showLB();lbTab('f');} /* the window opens over the menu: hiding the menu left a bare game screen after KAPAT (15 Oct) */ // from the menu strip or the level card
 
 async function fleetFetch(force){
@@ -56,6 +56,15 @@ function fleetBtn(){const b=$('flBtn');if(!b||!rel(10))return;b.hidden=false;con
   const i=b.querySelector('i');if(i&&!i.dataset.nb){i.dataset.nb=1;i.innerHTML=ICO.badge('🤝').replace('class="ico"','class="nb"');b.classList.add('neon');}
   const lock=!flOn()||bestLevel<FL_LV,hot=!lock&&flHot(),e=$('flBadge'),t=$('flTxt');b.classList.toggle('lock',lock);
   if(e){e.textContent=hot?T('AL')+'!':'';e.className=hot?'hot':'';}if(t)t.textContent=lock&&flOn()?T('{n}. seviye',{n:FL_LV}):'';flRaceTick();}
+// FLEET REMINDERS (Android app, local like the other reminders; nothing goes through a server): today's missions this evening
+// if none was played, tomorrow's new missions, and the weekend race (Friday evening when it starts, Sunday evening before it ends)
+function flNotifPlan(now){const L=[],at=(dd,h,m=0)=>{const d=new Date(now);d.setDate(d.getDate()+dd);d.setHours(h,m,0,0);return d.getTime();},fl=flE(FL.name||'');
+  if(FL.fmd!==utcDay()&&at(0,18,30)>now+18e5)L.push({p:1.5,at:at(0,18,30),title:'🛸 '+T('Filo görevleri seni bekliyor'),body:T('Bugün 3 görev, her birinde 3 hak. {f} madalyanı bekliyor.',{f:fl})});
+  L.push({p:1.5,at:at(1,18,30),title:'🛸 '+T('Yeni filo görevleri'),body:T('Bugünün 3 görevi hazır. Filo Zinciri için madalya topla!')});
+  const r=flRaceT(now);
+  if(!r.race){const fri=now+r.ms;const d=new Date(fri);d.setHours(19,0,0,0);if(d.getTime()<fri)d.setDate(d.getDate()+1);if(d.getTime()-now<7*864e5)L.push({p:1.5,at:d.getTime(),title:'🏁 '+T('Hafta sonu yarışı başladı'),body:T('{f} yarışta. Puan getir: ilk 3 filonun her üyesine büyük ödül.',{f:fl})});}
+  else{const end=now+r.ms,d=new Date(end-6*36e5);d.setMinutes(0,0,0);if(d.getTime()>now+36e5)L.push({p:1.5,at:d.getTime(),title:'🏁 '+T('Yarışın bitmesine az kaldı'),body:T('{f} için son puanları getir.',{f:fl})});}
+  return L;}
 // the weekend race on the menu: a small two-line violet tag right under FİLO (the tournament's pill is cyan), counting to Friday 00:00 UTC, then (pink, pulsing) to the race's end
 function flRaceT(now=Date.now()){const d=new Date(now),dow=(d.getUTCDay()+6)%7,mon=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()-dow),fri=mon+4*864e5,end=mon+7*864e5;return now>=fri?{race:1,ms:end-now}:{race:0,ms:fri-now};}
 function flRaceTick(){const b=$('flBtn');if(!b||b.hidden)return;let c=$('flRace');if(!c){c=document.createElement('b');c.id='flRace';b.appendChild(c);}
@@ -137,7 +146,7 @@ const FLT_ALL=[['tasks','GÖREVLER','📋'],['crew','ÜYELER','🤝'],['race','Y
 function flNavH(){return `<div class="flnav">${FLT_ALL.map(([k,t,i])=>`<button data-flt="${k}" class="${k===FLT?'on':''}">${ICO.svg(i)}<span>${T(t)}</span></button>`).join('')}</div>`;}
 // the daily fleet mission card: three levels for the fleet today, 30 stars
 function flMisH(){const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
-  return `<div class="hero flmis"><b>🎯 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})} · ${T('ödül')} 30 ⭐
+  return `<div class="hero flmis"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})} · ${T('ödül')} 30 ⭐
   <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')}</button>`}</div></div>`;}
 function flHeadH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap);
   return `${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}
@@ -255,7 +264,7 @@ function flFmH(fm,left){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','
   const card=id=>{const m=F.byId(id);if(!m)return '';const me=fm.me[id]||{best:0,tier:0,tries:0},rest=Math.max(0,F.TRIES-me.tries);
     const tg=m.tg.map((x,i)=>`<span class="${me.tier>i?'got':''}"><b>${m.m==='score'||m.m==='caught'?flN(x):fmFmt(m,x)}</b><i>+${F.pts(m,i+1)}</i></span>`).join(''); /* points and bodies: the number alone fits in every language */
     const btn=rest>0?`<button class="play${me.tries?' again':''}" data-fm="${id}">▶ ${me.tries?T('TEKRAR'):T('OYNA')}</button>`:`<span class="end">${T('Haklar bitti')}</span>`;
-    return `<div class="fm-c${me.tier===3?' done':''}"><div class="fm-t"><span class="ic">${m.ic}</span><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></div>
+    return `<div class="fm-c${me.tier===3?' done':''}"><div class="fm-t"><span class="ic">${fmIc(m)}</span><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></div>
       <div class="fm-m"><small>${fmDur(m)} · ${me.tries?T('En iyin: {v}',{v:fmFmt(m,me.best)}):T('Henüz oynamadın')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}</small>
       <div class="fm-r"><div class="fm-tg">${tg}</div><button class="fm-i" data-fmi="${id}" aria-label="${T('Görev kartı')}">i</button>${btn}</div></div></div>`;};
   const c=fm.chain,mine=Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);
@@ -263,6 +272,15 @@ function flFmH(fm,left){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','
   ${fm.ids.map(card).join('')}
   <div class="fm-ch"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
     <div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div><small>${T('Bugün filo olarak {n} madalya toplayın: madalya alan herkese +{s} ⭐',{n:c.need,s:F.CHAIN_STARS})}</small></div>`;}
+// 1.5.0 (16 Oct): the missions' own pictures, drawn like the fleet's space symbols (neon line, gold, the bodies as the game draws them)
+const FMIC={
+ combo:'<path d="M3.5 5Q5 13 13.5 14.5" fill="none" stroke="#ffcf5a" stroke-width="1.1" stroke-dasharray="1.4 1.3"/><circle cx="3.6" cy="5.2" r="2.2" fill="#9fe3ff"/><circle cx="5.8" cy="10.8" r="2.5" fill="#c9a8ff"/><circle cx="10.2" cy="14" r="2.4" fill="url(#nGold)"/><ellipse cx="16.2" cy="15.3" rx="6" ry="2.2" fill="none" stroke="#f2a93b" stroke-width="1.1" transform="rotate(-15 16.2 15.3)"/><circle cx="16.2" cy="15.3" r="3.6" fill="#05070a" stroke="#5ff2ff" stroke-width="1.1"/><path d="M17.4 2.6l3.8 3.8M21.2 2.6l-3.8 3.8" stroke="#ffd76a" stroke-width="1.9" stroke-linecap="round"/>',
+ garc:'<circle cx="12" cy="12" r="11" fill="url(#fmGl)"/><circle cx="12" cy="12" r="7.6" fill="none" stroke="#ffd76a" stroke-width="1.7"/><circle cx="12" cy="12" r="7.6" fill="none" stroke="#fffbe6" stroke-width=".6"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#ffd76a" stroke-width="1.1"/><circle cx="12" cy="12" r="5.4" fill="none" stroke="#fffbe6" stroke-width=".4"/><g fill="#ffe7a0"><circle cx="20.6" cy="7.4" r=".9"/><circle cx="3.6" cy="15.6" r=".8"/><circle cx="16.4" cy="21" r=".7"/><circle cx="6.4" cy="3.6" r=".6"/></g>',
+ hunt:'<circle cx="12" cy="12" r="9.3" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2" pathLength="10" stroke-dasharray=".78 .22"/><circle cx="12" cy="12" r="9.3" fill="none" stroke="#ff7a1a" stroke-width="2" pathLength="10" stroke-dasharray=".78 .22 .78 .22 .78 .22 .78 .22 .78 .22 .78 .22 .78 3.22" transform="rotate(-90 12 12)"/><circle cx="12" cy="12" r="6.2" fill="url(#fmOr)"/><path d="M10.2 9.6l1.8 2.2 1.4-1" stroke="rgba(90,30,0,.55)" stroke-width=".7" fill="none" stroke-linecap="round"/>',
+ eclipse:'<circle cx="12" cy="12" r="11" fill="url(#fmCo)"/><circle cx="11.2" cy="12.8" r="7" fill="#ffe9a8"/><circle cx="12.7" cy="11.4" r="7" fill="#04060c"/><circle cx="12.7" cy="11.4" r="7" fill="none" stroke="#fff3c4" stroke-width=".5" opacity=".6"/>',
+ belt:'<path d="M2 18.5L21 5" stroke="#ff5a5f" stroke-width="5" stroke-linecap="round" opacity=".14"/><path d="M4.2 13.4L6 3.6L7.8 13.4z" fill="url(#fmTr)"/><path d="M10 16.4L12.2 4.6L14.4 16.4z" fill="url(#fmTr)"/><path d="M16.8 12.8L18.4 2.4L20 12.8z" fill="url(#fmTr)"/><circle cx="6" cy="13.6" r="2.2" fill="url(#fmMt)"/><circle cx="12.2" cy="16.8" r="2.7" fill="url(#fmMt)"/><circle cx="18.4" cy="13" r="2" fill="url(#fmMt)"/>',
+ anti:'<circle cx="12" cy="12" r="10.5" fill="url(#fmPk)"/><g fill="none" stroke="#ffd6f5" stroke-width=".9"><ellipse cx="12" cy="12" rx="8.6" ry="3.1"/><ellipse cx="12" cy="12" rx="8.6" ry="3.1" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="8.6" ry="3.1" transform="rotate(-60 12 12)"/></g><circle cx="12" cy="12" r="2.2" fill="#fff"/>'};
+const fmIc=(m,c='')=>FMIC[m.id]?`<svg class="ico fmic ${c}" viewBox="0 0 24 24" aria-hidden="true">${FMIC[m.id]}</svg>`:m.ic;
 const fmDur=m=>m.dur>=120&&m.dur%60===0?T('{n} dk',{n:m.dur/60}):T('{n} sn',{n:m.dur});
 // OYNA: the first time a mission is played its card explains the kit; after that it starts at once (the card stays one tap away on ⓘ)
 function fmPlay(id){if(TIPS['fm_'+id])fmStart(id);else{TIPS['fm_'+id]=1;saveSoon();fmAsk(id);}}
@@ -272,7 +290,7 @@ function fmAsk(id){const F=BHS_FMIS,m=F.byId(id),fm=FLV&&FLV.fm;if(!m||!fm)retur
     k.rage?['🌀',T('Vortex açık')]:['🌀',T('Vortex kapalı'),1],['🧪',T('Lab güçleri kapalı'),1],['👤',T('Avatar gücü kapalı'),1]];
   const keep=[['⛽',T('Füzyon yakıtı harcanmaz')],['🛡️',T('Kendi kalkanların harcanmaz')],['⭐',T('Normal puana eklenmez')],['🗺️',T('Seviye ilerlemen değişmez')]];
   const o=document.createElement('div');o.className='fm-ov';o.id='fmOv';
-  o.innerHTML=`<div class="fm-card"><div class="big">${m.ic}</div><h3>${T(m.n)}</h3><p>${T(m.d)}</p><p class="dur">⏱ ${fmDur(m)}</p>
+  o.innerHTML=`<div class="fm-card"><div class="big">${fmIc(m,"lg")}</div><h3>${T(m.n)}</h3><p>${T(m.d)}</p><p class="dur">⏱ ${fmDur(m)}</p>
     <div class="fm-sec">⚖️ ${T('HERKESE EŞİT DONANIM')}</div><div class="fm-kit">${kit.map(([i,t,off])=>`<div class="${off?'off':''}">${i} ${t}</div>`).join('')}</div>
     <div class="fm-sec">${T('SENİN STOĞUN KORUNUR')}</div><div class="fm-kit">${keep.map(([i,t])=>`<div>${i} ${t}</div>`).join('')}</div>
     <div class="fm-tg">${m.tg.map((x,i)=>`<span><b>${fmFmt(m,x)}</b><i>+${F.pts(m,i+1)} ${T('filo puanı')}</i></span>`).join('')}</div>
@@ -285,7 +303,7 @@ async function fmStart(id){const F=BHS_FMIS,m=F.byId(id),b=$('fmGo');if(!m||b&&b
   const pb=document.querySelector(`[data-fm="${id}"]`);if(pb){pb.disabled=true;pb.textContent='…';}
   let r=null;fmStart.busy=1;try{r=await lbFetch('/fleet/fm/start',{pid:PID,id});}catch(e){}fmStart.busy=0;
   if(!r||!r.ok){fmClose();toast('🛸',T(r&&r.err==='tries'?'Bu görevin bugünkü hakları bitti':'Bağlantı yok, biraz sonra tekrar dene'),'');FLV=null;fleetRender();return;}
-  const fm=FLV&&FLV.fm;if(fm)(fm.me[id]=fm.me[id]||{best:0,tier:0,tries:0}).tries=r.tries;
+  const fm=FLV&&FLV.fm;if(fm)(fm.me[id]=fm.me[id]||{best:0,tier:0,tries:0}).tries=r.tries;FL.fmd=utcDay();saveSoon();
   fmClose();$('sLB').classList.remove('on');fleetMode(false);startSprint(F.seed(r.d,id),{fm:m,fmDay:r.d});}
 // the result goes to the server; with no connection it waits in the save and goes with the next look at the fleet
 async function fmPost(x){try{const r=await lbFetch('/fleet/fm',{pid:PID,...x});if(r&&(r.ok||r.err))return r;}catch(e){}FL.fmq=(FL.fmq||[]).concat([x]).slice(-9);saveSoon();return null;}
@@ -295,7 +313,7 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
   const best=Math.max(me.best||0,v),tier=F.tier(m,best),was=me.tier||0,run=F.tier(m,v),rest=Math.max(0,F.TRIES-(me.tries||1));
   const md=['','🥉','🥈','🥇'];sfx(run>0?'levelup':'gameover',{vol:.8,rev:.4});
   const o=document.createElement('div');o.className='fm-ov';o.id='fmOv';
-  o.innerHTML=`<div class="fm-card"><div class="big">${run?md[run]:m.ic}</div><h3>${run?T(['','BRONZ MADALYA','GÜMÜŞ MADALYA','ALTIN MADALYA'][run]):T('MADALYA ÇIKMADI')}</h3><p>${T(m.n)}</p>
+  o.innerHTML=`<div class="fm-card"><div class="big">${run?md[run]:fmIc(m,"lg")}</div><h3>${run?T(['','BRONZ MADALYA','GÜMÜŞ MADALYA','ALTIN MADALYA'][run]):T('MADALYA ÇIKMADI')}</h3><p>${T(m.n)}</p>
     <div class="res"><div class="w"><small>${T('BU KOŞU')}</small><b>${fmFmt(m,v)}</b></div><div><small>${T('BUGÜN EN İYİN')}</small><b>${fmFmt(m,best)}</b></div></div>
     <div class="fm-tg">${m.tg.map((x,i)=>`<span class="${tier>i?'got':''}"><b>${fmFmt(m,x)}</b><i>+${F.pts(m,i+1)} ${T('puan')}</i></span>`).join('')}</div>
     <p class="gain" id="fmGain">${tier>was?'🛸 +'+(F.pts(m,tier)-F.pts(m,was))+' '+T('filo puanı'):T('Filo puanı için daha iyi bir sonuç gerek')}</p>
@@ -303,5 +321,5 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
     <div class="fm-note">${T('Normal puanına, rekorlarına ve seviye ilerlemene eklenmez.')}</div></div>`;
   document.body.appendChild(o);
   fmPost({day:R.d,id:m.id,v,t}).then(r=>{if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');});
-  const back=()=>{fmClose();hideModals();showMenu();fleetOpen('tasks');};
+  const back=()=>{fmClose();hideModals();showMenu();fleetOpen('tasks');if(rel(10))notifAsk('fleet');};
   o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>fmPlay(m.id),500);};}
