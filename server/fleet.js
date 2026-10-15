@@ -263,7 +263,9 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
         FROM fleets f ORDER BY s DESC, f.created ASC LIMIT 50`).bind(wk).all()).results || [];
     }
     const list = rows.map((x, i) => ({ r: i + 1, name: x.hidden ? 'FİLO-' + x.fid.slice(0, 4).toUpperCase() : x.name, emb: x.emb, n: x.n, pts: x.s, me: !!m && x.fid === m.fid }));
-    return json(req, { wk, race, ends: weekEnd(wk), raceFrom: Date.parse(rf + 'T00:00:00Z'), list });
+    // 1.5.0 (16 Oct): during the race, how many of your members have scored since Friday (a fleet needs RACE_MIN to be ranked)
+    const racers = race && m ? (await weekTotal(DB, wk, m.fid, rf)).players : null;
+    return json(req, { wk, race, ends: weekEnd(wk), raceFrom: Date.parse(rf + 'T00:00:00Z'), list, racers, need: RACE_MIN });
   }
   if (p === '/fleet/create' && req.method === 'POST') {
     if (!okPid(body.pid)) return json(req, { ok: false }, 400);

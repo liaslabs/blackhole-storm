@@ -7,16 +7,18 @@ globalThis.BHS_FMIS = (() => {
   // lv: 0 easy, 1 medium, 2 hard · m: what is measured · tg: bronze, silver, gold · max: the most a real run can show (the server's check)
   // plan: events at [second, kind] · kit: shields, Supernovas, Vortex (rage) on or off
   // targets set on 15 Oct 2026 from the recorder's bot over three seeded days (no immunity): bronze about a third of what it reached,
-  // gold about its median; the hunt's prey is hard to break (the bot broke 1 of 4), so its targets are low. To be tuned with real play.
+  // gold about its median. Re-measured on 16 Oct for the new rules: the Golden Arc's bar (the bot caught 9–13 arcs in 3 min), the
+  // four-prey hunt (15–59 hits) and the antimatter storm at 2.5 times the antimatter (7–27 thousand). To be tuned with real play.
   const L = [
     { id: 'combo', lv: 0, ic: '🔗', n: 'KOMBO USTASI', d: 'Zinciri koparmadan yut, en yüksek komboya ulaş.', dur: 60, m: 'combo', tg: [12, 25, 45], max: 400 },
-    { id: 'garc', lv: 0, ic: '✨', n: 'ALTIN YAY AVCISI', d: 'Altın Yaylar sık gelir. Yakala, altın anı uzat.', dur: 75, m: 'garc', tg: [2, 4, 6], max: 7, ev: 13 },
-    { id: 'hunt', lv: 1, ic: '🎯', n: 'AV ZİNCİRİ', d: 'Kaçan avları kovala ve parçala.', dur: 75, m: 'hunt', tg: [1, 2, 4], max: 12 },
+    { id: 'garc', lv: 0, ic: '✨', n: 'ALTIN YAY AVCISI', d: 'Yuttukça çubuk dolar, dolunca bir Altın Yay gelir. 4 saniyede yakala.', dur: 180, m: 'garc', tg: [4, 7, 11], max: 60, bar: 20000 },
+    { id: 'hunt', lv: 1, ic: '🎯', n: 'AV ZİNCİRİ', d: 'Aynı anda 4 av. Parçaladığın avın vuruşları puanın olur.', dur: 180, m: 'hunt', tg: [15, 30, 50], max: 600, hunt: 1,
+      kit: { sh: 2, nova: 0, rage: 0 } },
     { id: 'eclipse', lv: 1, ic: '🌑', n: 'KARANLIKTA YUT', d: 'Tutulmalar arka arkaya. Karanlıkta cisim yut.', dur: 60, m: 'caught', tg: [45, 85, 125], max: 600,
       plan: [[3, 'eclipse'], [14, 'eclipse'], [25, 'eclipse'], [36, 'eclipse'], [47, 'eclipse']] },
     { id: 'belt', lv: 2, ic: '☄️', n: 'METEOR KUŞAĞINDAN KAÇ', d: 'Kuşaklar arka arkaya. Kalkan yok, Vortex yok: dayan.', dur: 60, m: 'time', tg: [30, 45, 60], max: 60,
       plan: [[2, 'belt'], [14.5, 'belt'], [27, 'belt'], [39.5, 'belt'], [52, 'belt']], kit: { sh: 0, nova: 0, rage: 0 } },
-    { id: 'anti', lv: 2, ic: '⚛️', n: 'ANTİMADDE FIRTINASI', d: 'Antimadde her yerde. Dokunmadan puan topla.', dur: 60, m: 'score', tg: [12000, 25000, 40000], max: 2e6, anti: 1 }
+    { id: 'anti', lv: 2, ic: '⚛️', n: 'ANTİMADDE FIRTINASI', d: 'Antimadde her yerde. Dokunmadan puan topla.', dur: 60, m: 'score', tg: [4000, 9000, 18000], max: 2e6, anti: 2.5 }
   ];
   const PTS = [[10, 15, 20], [20, 30, 40], [30, 45, 60]]; // filo puanı for bronze, silver, gold (a gold medal pays the gold amount, not the sum)
   const KIT = { lives: 3, sh: 2, nova: 1, rage: 1 }, TRIES = 3;

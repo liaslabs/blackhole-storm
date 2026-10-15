@@ -155,11 +155,11 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)||rel(9)&&v2HmT(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
-  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:2.5,prey:null}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,wormCD:0,wormFx:null,lastTap:null,horUsed:0,horT:0,horSlow:0,horFx:null,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,iceT:0,nebIn:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,starTime:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:rule.multi?.6:2.5,prey:null,multi:rule.multi?1:0,list:[],bag:rule.multi?rshuf([3,5,7,10]):null,mt:2}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,wormCD:0,wormFx:null,lastTap:null,horUsed:0,horT:0,horSlow:0,horFx:null,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,iceT:0,nebIn:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,starTime:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
-    script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0,noRage:0,tSh0:0,tNova0:0});
+    script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0,noRage:0,tSh0:0,tNova0:0,tw:null,gb:null});
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.tSh=mode==='surv'&&rel(9)?3:null;G2.tNova=mode==='surv'&&rel(9)?V2K.nova.max:null; /* 1.4.9: the tournament gives everyone the same 3 shields, apart from their own stock and with none for sale */G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);const bst=mode==='level'&&!REPLAY&&SHOP.boostLv===l?SHOP.boostK:'';if(bst){SHOP.boostLv=0;saveG();}if(mode==='level'&&!REPLAY&&(SHOP.arcLv===l||bst==='arc')){G2.arcMax=Math.min(3,G2.arcMax+1);if(SHOP.arcLv===l)SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(bst){if(bst==='rage')G2.rage=100;else if(bst==='shell')G2.shells=Math.max(G2.shells,1);else if(bst==='gold')G2.gold=1;else if(bst==='shield'){G2.shT=v2ShDur();G2.shTick=0;}const B=BOOSTS[bst];later(()=>{if(G2.on)v2Call(B.ic+' '+T(B.c),'','#9fd8ff',1.6,true);},2400);} /* the level-end ad's head start */if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
@@ -190,7 +190,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
-  if(mode==='sprint'&&FMRUN)fmSetup(); /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
+  if(mode==='sprint'&&FMRUN)fmSetup();else if($('rage2'))$('rage2').style.visibility=''; /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
   gState='playing';lastT=performance.now();v2Ui(true);
 }
 function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
@@ -287,7 +287,7 @@ function v2Edge(k,side,x0){
 }
 function v2Pick(){const w=G2.L.w;let tot=0;for(const k in w)tot+=w[k];let r=rng()*tot;for(const k in w){r-=w[k];if(r<=0)return k;}return 'ast';}
 function v2Active(){let n=0;for(const o of G2.objs)if(o.st==='in'&&!o.boss)n+=o.k==='half'&&rel(8)?(o.hEsc?0:.5):1;return n;} /* 1.4.8: two halves take one place, a leaving one none */
-function v2Spawn(){
+function v2Spawn(){if(G2.hunt&&G2.hunt.multi)return; /* the mission hunt brings its own meteors and antimatter */
   let k=v2Pick();const l=G2.lv;if(k==='meteor'&&(G2.guard||v2RadAct()))k='ast'; /* guard levels: the danger is what falls on the planet, never a meteor on top of it */
   if(k==='meteor'&&G2.objs.filter(o=>o.k==='meteor'&&o.wait>0).length>=3)k='ast'; // never more than 3 meteors released together
   if(k==='meteor'){const big=v2Big(),cap=(big>.6?2:3)+(l>=8?1:0);if(rng()<big*.35||G2.objs.filter(o=>o.k==='meteor'&&o.st==='in').length>=cap)k='ast';} // a big hole meets fewer meteors
@@ -461,10 +461,15 @@ function v2DrawKill(){const k=G2.killFx;if(!k)return;ctx.save();
   ctx.restore();}
 
 // ── core update ───────────────────────────────────────
-function v2Dims(){
+// 1.5.0: every growth and shrink of the hole (eating, antimatter, a hit, Vortex, the overload) plays out over one second,
+// the size you see is the size that touches; a new change while one is running starts a fresh second from where it stands
+function v2Tw(k,v,dt){const t=G2.tw||(G2.tw={});let q=t[k];if(!q){t[k]=q={v,a:v,b:v,p:1};return v;}
+  if(Math.abs(v-q.b)>1e-4){q.a=q.v;q.b=v;q.p=0;}if(dt&&q.p<1){q.p=Math.min(1,q.p+dt);const e=1-(1-q.p)*(1-q.p);q.v=q.a+(q.b-q.a)*e;}return q.v;}
+function v2Dims(dt){
   const S=G2.S;let rr=G2.rr;if(G2.overT>0)rr*=V2K.over.r;if(G2.rageT>0){const q=1+avPk('rageR');rr=Math.min(rr*V2K.rage.r*q,V2K.rRage*q);}
+  if(rel(10))rr=v2Tw('r',rr,dt);
   G2.R=rr*S;
-  let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;
+  let g=G2.rr*(G2.overT>0?V2K.over.r:1)*V2K.gK;if(G2.rageT>0)g*=V2K.rage.g;if(rel(10))g=v2Tw('g',g,dt);
   G2.G=Math.min(g,G2.overT>0?V2K.gMaxOver:V2K.gMax)*S*(1+.02*labEffLv('grav'));G2.peak=Math.max(G2.peak,rr);
 }
 function v2Size(){return G2.R/(V2K.r0*G2.S);}
@@ -475,6 +480,7 @@ function v2ComboLost(){if(G2.combo>=5)v2Pop('COMBO BİTTİ','#9aa3b2',13);G2.com
 
 function v2Update(dt){
   G2.arcFill+=dt;if(G2.lastArcT>0)G2.lastArcT-=dt;if(G2.arcPow>0){G2.arcPow-=dt;if(G2.arcPow<=0)v2ArcPowEnd();}
+  if(G2.gb&&gState==='playing')v2GBarStep();
   if(G2.garcAt>0&&G2.t>=G2.garcAt&&!G2.ending&&gState==='playing'){G2.garcAt=FMRUN&&FMRUN.m.ev?G2.t+FMRUN.m.ev:-1;v2Edge('garc');}
   if(G2.garcFx)G2.garcFx.t+=dt;if(G2.garcT>0&&G2.parts.length<220){const Rk=v2GarcR();for(const ph of [0,Math.PI]){const h=G2.t*GARC.w+ph,x=hX+Math.cos(h)*Rk,y=hY+Math.sin(h)*Rk,ta=h-Math.PI/2;for(let k=0;k<2;k++)G2.parts.push({x:x+rnd(-3,3),y:y+rnd(-3,3),vx:Math.cos(ta)*rnd(.2,.9)+Math.cos(h)*rnd(0,.5),vy:Math.sin(ta)*rnd(.2,.9)+Math.sin(h)*rnd(0,.5),life:rnd(.35,.7),max:.7,c:k?'#ffe9a8':'#ffc040',sz:rnd(1.2,2.4)});}} /* gold dust shed behind each head */
   if(G2.garcT>0){const was=G2.garcT;G2.garcT-=dt;if(G2.garcT<3&&Math.ceil(was)!==Math.ceil(G2.garcT)&&G2.garcT>0)v2Sfx('tickHi',{vol:.45,rate:1.2});if(G2.garcT<=0){G2.garcT=0;G2.immT=Math.max(G2.immT,1);v2Pop(T('ALTIN YAY BİTTİ'),'#ffd76a',16);}}
@@ -514,7 +520,7 @@ function v2Update(dt){
   const k=1-Math.pow(1-(v2Heavy()?ICE.follow:V2K.follow),dt*60),kk=G2.overT>0?Math.min(1.3,k*V2K.over.ctl+.05):k;
   const ox=hX,oy=hY;hX+=(G2.tx-hX)*kk;hY+=(G2.ty-hY)*kk;
   if(G2.overT>0){hX+=Math.sin(G2.t*7.3)*sp2(1.2);hY+=Math.cos(G2.t*6.1)*sp2(1.2);}
-  v2Dims();const R=G2.R,m=R+4;hX=clamp(hX,m,W-m);hY=clamp(hY,m+2,H-m-70); /* keep clear of the hearts and the power tray */
+  v2Dims(dt);const R=G2.R,m=R+4;hX=clamp(hX,m,W-m);hY=clamp(hY,m+2,H-m-70); /* keep clear of the hearts and the power tray */
   const ivx=(hX-ox)/Math.max(dt,1e-3),ivy=(hY-oy)/Math.max(dt,1e-3);G2.vx+=(ivx-G2.vx)*.35;G2.vy+=(ivy-G2.vy)*.35;
   if(G2.touched&&G2.tut>=1)G2.tut=.99;if(G2.tut<1&&G2.tut>0)G2.tut=Math.max(0,G2.tut-dt*2);
 
@@ -535,7 +541,7 @@ function v2Update(dt){
   if(G2.guard)v2GuardStep(dt);if(G2.twin)v2TwinStep(dt);v2EvStep(dt);
   // level timer
   if(G2.mode==='level'&&!G2.ending){
-    if(G2.guard&&G2.guard.t<=0&&G2.guard.hp>0||G2.hunt&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
+    if(G2.guard&&G2.guard.t<=0&&G2.guard.hp>0||G2.hunt&&!G2.hunt.multi&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
     if(G2.boss&&G2.t>=G2.dur){
       v2Fail('DEV GEZEGEN KAÇTI');return;} // the time window offers a crystal, diamonds or an ad
     if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
@@ -572,7 +578,7 @@ function v2Update(dt){
     if(o.wait>0){o.wait-=dt*tk;continue;}
     if(o.fly){v2KGoldFly(o,dt*tk);continue;}
     const odt=dt*tk;
-    if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;if(o.k==='prey')v2PreyStep(o,odt);
+    if(o.orb){v2BombStep(o,dt);continue;}if(o.noCap>0)o.noCap-=dt;if(o.k==='prey')v2PreyStep(o,odt);else if(o.gl!=null&&v2GArcStep(o,dt))continue;
     if(o.k==='pulsar'){o.ph+=dt;o.lit=(o.ph%1.6)<.8;}if(o.k==='mpair')o.sa+=dt*2.4;if(G2.ev)v2EvWind(o,odt);if(o.k==='kgold'){const f=Math.pow(.3,odt);o.vx*=f;o.vy*=f;o.age=Math.min(o.age,5);}
     if(o.k==='thr'&&G2.guard&&o.st==='in'&&Math.hypot(o.x-G2.guard.px,o.y-G2.guard.py)<G2.guard.pr+o.r*.6){v2GuardImpact(o);continue;}
     // gravity of the main hole (and any mini hole) — meteors fly straight
@@ -659,10 +665,28 @@ function v2SwallowStep(o,dt){
   if(o.cell!==undefined){o.gs=o.sc;o.radAng=Math.atan2(cy-o.y,cx-o.x);o.stretch=1+p*1.4;o.squeeze=1-p*.5;o.fade=1-p*.6;o.sp=p;}
   if(p>=1){v2Eaten(o);return true;}return false;
 }
-function v2HuntStep(dt){const h=G2.hunt;
+function v2HuntStep(dt){const h=G2.hunt;if(h.multi){v2Hunt4(dt);return;}
   if(!h.prey){h.next-=dt;if(h.next<=0){const o=v2Edge('prey',rng()<.5?1:2);o.life=G2.rule.life;o.max=o.life;o.stam=1;o.head=Math.atan2(o.vy,o.vx);h.prey=o;v2Call('AV!',`${h.n+1}/${h.need}`,'#ffd76a',1,false);v2Sfx('sparkle',{vol:.6,rate:.8});}}
   else if(h.prey.st!=='in'&&h.prey.st!=='sw')h.prey=null;}
-function v2PreyWall(o){const p=o.r*1.3;if(o.esc)return;if(!o.inside){if(o.x>p&&o.x<W-p&&o.y>p&&o.y<H-p)o.inside=1;return;} /* once it has entered, until its time runs out it stays on screen: a ram near the edge bounces it off the wall instead of knocking it out of sight */
+// 1.5.0 fleet mission "Hunt": four prey at once, 3, 5, 7 or 10 hits each (bigger and slower the more hits it takes),
+// none ever leaves the screen and a broken one is replaced at once; besides them only meteors and antimatter come
+const PREY4={3:{k:.8,v:1.15,c:'#2fbf6a',g:'47,191,106'},5:{k:1,v:1,c:'#2f8fe8',g:'47,143,232'},7:{k:1.25,v:.85,c:'#9440e0',g:'148,64,224'},10:{k:1.55,v:.72,c:'#ff7a1a',g:'255,122,26'}};
+function v2Hunt4(dt){const h=G2.hunt;h.list=h.list.filter(o=>o.st==='in');
+  h.next-=dt;if(h.list.length<4&&h.next<=0){const hp=h.bag&&h.bag.length?h.bag.pop():rpick([3,5,7,10]),P=PREY4[hp],o=v2Edge('prey',Math.floor(rng()*4));
+    o.r*=P.k;o.rr*=P.k;o.hp=o.hpMax=hp;o.multi=1;o.life=o.max=1e9;o.stam=1;o.head=Math.atan2(o.vy,o.vx);o.p4=P;h.list.push(o);h.next=h.list.length<4&&h.bag&&h.bag.length?.5:0;}
+  h.mt-=dt;if(h.mt<=0){let nm=0,na=0;for(const o of G2.objs)if(o.st==='in'){if(o.k==='meteor')nm++;else if(o.k==='anti')na++;}
+    const ka=rng()<(FMRUN&&FMRUN.m.antiP||.45);h.mt=rrnd(1.2,2);if(ka&&na<5)v2Edge('anti');else if(!ka&&nm<3)v2Edge('meteor');}}
+// 1.5.0 fleet mission "Golden Arc Hunter": a bar of fixed size fills with the real points of what you swallow; when it is full a
+// Golden Arc comes in from a random edge and stays 4 s; a touch is one arc (no golden moment), and the bar starts over at once
+function v2GBarStep(){const g=G2.gb,d=totalScore-g.ts;g.ts=totalScore;if(d>0)g.v=Math.min(g.B,g.v+d);
+  if(g.arc&&g.arc.st!=='in'&&g.arc.st!=='sw')g.arc=null;
+  if(g.v>=g.B&&!g.arc&&!G2.ending){g.v=0;const o=v2Edge('garc',Math.floor(rng()*3)),sp=sp2(170),a=Math.atan2(rrnd(H*.3,H*.65)-o.y,rrnd(W*.25,W*.75)-o.x);o.vx=Math.cos(a)*sp;o.vy=Math.sin(a)*sp;o.gl=GARC4;g.arc=o;v2Call(T('ALTIN YAY!'),T('4 SN · YAKALA'),'#ffd76a',1);v2Sfx('sparkle',{vol:.7,rate:1});}}
+const GARC4=4,GBAR_Y=46; /* the bar sits under the mission's name */
+function v2GArcStep(o,dt){if(o.st!=='in')return false;const p=o.r*1.1,top=sp2(100)+p,bot=H-p-sp2(90); /* clear of the HUD and the power tray */
+  if(!o.inside){if(o.x>p&&o.x<W-p&&o.y>top&&o.y<bot){o.inside=1;o.vx*=.4;o.vy*=.4;}return false;} /* the 4 s start once it is fully on screen; then it drifts slowly */
+  o.gl-=dt;if(o.x<p||o.x>W-p)o.vx=-o.vx;if(o.y<top||o.y>bot)o.vy=-o.vy;o.x=clamp(o.x,p,W-p);o.y=clamp(o.y,top,bot);
+  if(o.gl<=0){o.st='dead';G2.gb.arc=null;v2Burst(o.x,o.y,18,'#c9b27a',1.4,5,.5,1.6);v2Pop(T('YAY KAÇTI'),'#c9b27a',14);return true;}return false;}
+function v2PreyWall(o){const p=o.r*1.3;if(o.esc)return;if(o.multi&&o.hitCD>0)o.inside=1;if(!o.inside){if(o.x>p&&o.x<W-p&&o.y>p&&o.y<H-p)o.inside=1;return;} /* once it has entered, until its time runs out it stays on screen: a ram near the edge bounces it off the wall instead of knocking it out of sight */
   if(o.x<p){o.x=p;o.vx=Math.abs(o.vx)*.7;}else if(o.x>W-p){o.x=W-p;o.vx=-Math.abs(o.vx)*.7;}
   if(o.y<p){o.y=p;o.vy=Math.abs(o.vy)*.7;}else if(o.y>H-p){o.y=H-p;o.vy=-Math.abs(o.vy)*.7;}}
 function v2PreyStep(o,dt){ // flees the hole; ram it to crack its shell (a fast ram hits harder); when the shell is gone it bursts
@@ -671,23 +695,24 @@ function v2PreyStep(o,dt){ // flees the hole; ram it to crack its shell (a fast 
   const dx=o.x-hX,dy=o.y-hY,d=Math.hypot(dx,dy)||1,flee=d<G2.G*2.2&&o.life>0;
   if(o.life<3.5&&o.life>0&&!o.warned){o.warned=1;v2Call('KAÇIYOR!','','#ff7a5c',1);v2Sfx('tickHi',{vol:.5,rate:.9});}
   if(rel(10)&&G2.garcT>0&&d<G2.R+o.r*1.1){v2PreyBurst(o);return;} /* 1.5.0: the Golden Arc breaks the whole shell at once */
-  if(o.life>0&&d<G2.R+o.r*1.1&&o.hitCD<=0){const vs=Math.hypot(G2.vx,G2.vy),dmg=1+(vs>sp2(K.fast)?1:0)+(vs>sp2(K.faster)?2:0)+(G2.rageT>0?1:0);
+  if(o.life>0&&d<G2.R+o.r*1.1&&o.hitCD<=0&&!(o.multi&&G2.antiT>0)){const vs=Math.hypot(G2.vx,G2.vy),dmg=o.multi?1:1+(vs>sp2(K.fast)?1:0)+(vs>sp2(K.faster)?2:0)+(G2.rageT>0?1:0);
     o.hp-=dmg;o.hitCD=K.cd;o.daze=.35;o.life=Math.min(o.max,o.life+1.5);const ux=dx/d,uy=dy/d,kb=sp2(240+40*dmg);o.vx=ux*kb;o.vy=uy*kb;o.head=Math.atan2(uy,ux);o.x=hX+ux*(G2.R+o.r*1.2);o.y=hY+uy*(G2.R+o.r*1.2);v2PreyWall(o);
     v2Burst(o.x,o.y,8+dmg*5,'#ffd76a',1.5,5,.4);shake=Math.max(shake,2+dmg*2);vib(10+dmg*8);v2Sfx('armor',{vol:.4+dmg*.1,rate:1.5-dmg*.15});
-    if(o.hp<=0){v2PreyBurst(o);return;}v2Pop(dmg>1?`DARBE ×${dmg}`:'VURUŞ','#ffd76a',14+dmg*2);if(!G2.hunt.slamTip&&dmg===1){G2.hunt.slamTip=1;v2Call('DAHA HIZLI ÇARP','HIZLI ÇARPIŞ DAHA ÇOK KIRAR','#ffd76a',1.1);}}
+    if(o.hp<=0){v2PreyBurst(o);return;}v2Pop(dmg>1?`DARBE ×${dmg}`:'VURUŞ',o.p4?o.p4.c:'#ffd76a',14+dmg*2);if(!o.multi&&!G2.hunt.slamTip&&dmg===1){G2.hunt.slamTip=1;v2Call('DAHA HIZLI ÇARP','HIZLI ÇARPIŞ DAHA ÇOK KIRAR','#ffd76a',1.1);}}
   if(o.daze>0)return; // knocked back: it tumbles for a moment
   if(flee){o.stam=Math.max(0,o.stam-dt*.08);const a=Math.atan2(dy,dx);o.head+=((a-o.head+Math.PI*3)%TAU-Math.PI)*Math.min(1,dt*4);}
   else{o.stam=Math.min(1,o.stam+dt*.05);o.head+=Math.sin(G2.t*1.7+o.si)*dt*1.2;}
   const m=sp2(40);if(o.life>0){if(o.x<m)o.head=0;else if(o.x>W-m)o.head=Math.PI;if(o.y<m)o.head=Math.PI/2;else if(o.y>H-m-70)o.head=-Math.PI/2;}
   else if(!o.esc){o.esc=1;o.head=o.x<W/2?Math.PI:0;}
-  const hurt=.55+.45*Math.max(0,o.hp)/(o.hpMax||K.hp),sp=sp2(o.esc?520:(flee?170+200*o.stam:110)*hurt),k=Math.min(1,dt*4); /* a cracked shell slows it down */o.vx+=(Math.cos(o.head)*sp-o.vx)*k;o.vy+=(Math.sin(o.head)*sp-o.vy)*k;
+  const hurt=.55+.45*Math.max(0,o.hp)/(o.hpMax||K.hp),sp=sp2(o.esc?520:(flee?170+200*o.stam:110)*hurt*(o.p4?o.p4.v:1)),k=Math.min(1,dt*4); /* a cracked shell slows it down */o.vx+=(Math.cos(o.head)*sp-o.vx)*k;o.vy+=(Math.sin(o.head)*sp-o.vy)*k;
   if(o.esc&&(o.x<-o.r*3||o.x>W+o.r*3)){o.st='dead';G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('AV KAÇTI','','#ff7a5c',1.2,true);G2.hitWhy='prey';v2Hit({x:hX,y:hY});G2.hitWhy=null;}}
 function v2PreyBurst(o){ // the shell shatters: gold sparks pour into the hole
-  o.st='dead';if(rel(10)&&G2.garcT>0)o.gold2=1;v2Score(o,null);const K=OBJ2.prey;G2.rr=Math.min(G2.cap,G2.rr+K.grow*(G2.growK||1));G2.pulse=1;addMass(1);
+  o.st='dead';if(rel(10)&&G2.garcT>0)o.gold2=1;v2Score(o,null);const K=OBJ2.prey;G2.rr=Math.min(G2.cap,G2.rr+(o.multi?.8*o.hpMax:K.grow*(G2.growK||1)));G2.pulse=1;addMass(1);
   for(let i=0;i<18&&G2.parts.length<200;i++){const a=rng()*TAU,v=rrnd(1.5,4);G2.parts.push({x:o.x,y:o.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.7,max:.7,c:'#ffd76a',sz:2.2});}
   v2Burst(o.x,o.y,30,'#ffd76a',2,8,.7,2.2);flash=Math.max(flash,.25);shake=Math.max(shake,7);
+  if(o.multi){fmAdd('hunt',o.hpMax);G2.hunt.n++;v2Call('PARÇALANDI!','+'+o.hpMax,o.p4.c,1.1,true);sfx('achieve',{vol:.55});return;}
   if(G2.hunt){if(FMRUN)fmAdd('hunt',1);else dmEvent('hunt',1);G2.hunt.n++;G2.hunt.prey=null;G2.hunt.next=2.2;v2Call('PARÇALANDI!',`${G2.hunt.n}/${G2.hunt.need}`,'#ffd76a',1.3,true);sfx('achieve',{vol:.55});}}
-function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.hypot(o.vx,o.vy)||1,hp=o.hp??V2K.prey.hp,hm=o.hpMax||V2K.prey.hp;ctx.save();ctx.globalCompositeOperation='lighter';
+function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.hypot(o.vx,o.vy)||1,hp=o.hp??V2K.prey.hp,hm=o.hpMax||V2K.prey.hp,P=o.p4;if(P){v2DrawPrey4(o,r,hp,hm,P);return;}ctx.save();ctx.globalCompositeOperation='lighter';
   const tl=r*(2+sp/sp2(120)),tx=-o.vx/sp*tl,ty=-o.vy/sp*tl,g=ctx.createLinearGradient(o.x,o.y,o.x+tx,o.y+ty);g.addColorStop(0,'rgba(255,215,110,.8)');g.addColorStop(1,'rgba(255,160,60,0)');
   ctx.strokeStyle=g;ctx.lineWidth=r*1.3;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(o.x,o.y);ctx.lineTo(o.x+tx,o.y+ty);ctx.stroke(); // tail
   const gl=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.4);gl.addColorStop(0,'rgba(255,250,220,1)');gl.addColorStop(.35,'rgba(255,200,80,.85)');gl.addColorStop(1,'rgba(255,170,40,0)');ctx.fillStyle=gl;ctx.beginPath();ctx.arc(o.x,o.y,r*2.4,0,TAU);ctx.fill();
@@ -695,6 +720,13 @@ function v2DrawPrey(o,s){const r=o.r*s*1.35,q=Math.max(0,o.life/o.max),sp=Math.h
   if(hp<hm){ctx.strokeStyle='rgba(90,40,0,.75)';ctx.lineWidth=1.4;ctx.beginPath();for(let i=0;i<hm-hp;i++){const a=i*2.4+o.si,x0=o.x+Math.cos(a)*r*.2,y0=o.y+Math.sin(a)*r*.2;ctx.moveTo(x0,y0);ctx.lineTo(o.x+Math.cos(a+.3)*r*.9,o.y+Math.sin(a+.3)*r*.9);}ctx.stroke();} // cracks
   if(!o.esc){ctx.strokeStyle=q<.3?'#ff6a5a':'rgba(255,215,106,.75)';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(o.x,o.y,r*2.3,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke(); // time left
     const seg=TAU/hm;ctx.lineWidth=5;for(let i=0;i<hm;i++){ctx.strokeStyle=i<hp?'#fff3c4':'rgba(255,255,255,.12)';ctx.beginPath();ctx.arc(o.x,o.y,r*1.6,-Math.PI/2+i*seg+.06,-Math.PI/2+(i+1)*seg-.06);ctx.stroke();}} // shell left
+  ctx.restore();}
+function v2DrawPrey4(o,r,hp,hm,P){const g=P.g;ctx.save();ctx.globalCompositeOperation='lighter'; // the mission's prey: its colour and size say how many hits it takes, the number how many are left
+  const gl=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.2);gl.addColorStop(0,'rgba(255,255,255,.95)');gl.addColorStop(.3,`rgba(${g},.9)`);gl.addColorStop(1,`rgba(${g},0)`);ctx.fillStyle=gl;ctx.beginPath();ctx.arc(o.x,o.y,r*2.2,0,TAU);ctx.fill();
+  ctx.globalCompositeOperation='source-over';const ph=ctx.createRadialGradient(o.x-r*.35,o.y-r*.35,r*.1,o.x,o.y,r);ph.addColorStop(0,'rgba(255,255,255,.9)');ph.addColorStop(.45,P.c);ph.addColorStop(1,`rgba(${g},.85)`);ctx.fillStyle=ph;ctx.beginPath();ctx.arc(o.x,o.y,r,0,TAU);ctx.fill();
+  if(hp<hm){ctx.strokeStyle='rgba(20,10,30,.55)';ctx.lineWidth=1.3;ctx.beginPath();for(let i=0;i<hm-hp;i++){const a=i*2.4+o.si;ctx.moveTo(o.x+Math.cos(a)*r*.2,o.y+Math.sin(a)*r*.2);ctx.lineTo(o.x+Math.cos(a+.3)*r*.9,o.y+Math.sin(a+.3)*r*.9);}ctx.stroke();} // cracks
+  const seg=TAU/hm,rr=r+sp2(7);ctx.lineWidth=sp2(4);ctx.lineCap='butt';for(let i=0;i<hm;i++){ctx.strokeStyle=i<hp?P.c:'rgba(255,255,255,.14)';ctx.beginPath();ctx.arc(o.x,o.y,rr,-Math.PI/2+i*seg+.05,-Math.PI/2+(i+1)*seg-.05);ctx.stroke();} // the hits left
+  const fs=Math.round(Math.max(sp2(15),r*.95));ctx.font=`900 ${fs}px "IBM Plex Sans Condensed",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=sp2(3.5);ctx.strokeStyle='rgba(0,0,0,.75)';ctx.strokeText(hp,o.x,o.y+1);ctx.fillStyle='#fff';ctx.fillText(hp,o.x,o.y+1);
   ctx.restore();}
 // ── Package C: the rival black hole ─────────────────────
 // A second hole that eats the same bodies and grows. Bigger than you: it glows red and hunts you (a touch costs a life).
@@ -816,7 +848,7 @@ const BELT={warn:2.8,end:1.4};
 // ── the Daily Race: the same 60 s for everyone, at speed 16–25, with the day's rule, a short meteor belt at 20 s and a nebula at 40 s ──
 const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'📏',n:'BOYUT PENCERESİ'},{id:'wind',ic:'🌬',n:'YILDIZ RÜZGÂRI'},{id:'eclipse',ic:'🌑',n:'TUTULMA'}];
 const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
-function v2SprRule(){if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+function v2SprRule(){if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
 function v2SprPlan(){if(FMRUN)return {list:(FMRUN.m.plan||[]).map(x=>x.slice())};const r=sprRuleOf(SPR_RUN.seed),L=[];if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);if(rel(9))L.push([18,'belt'],[32,'neb'],[48,'belt']);else L.push([20,'belt'],[40,'neb']);return {list:L};}
 const DSTORM={dur:180,belts:[60,120],sec:20,done:3000,life:1500};
@@ -1122,7 +1154,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   const K=OBJ2[o.k];const cx=o.mini?o.mini.x:hX,cy=o.mini?o.mini.y:hY;
   const n=Math.min(G2.rageT>0?12:8,4+Math.floor(G2.combo/3));const col={icec:'#dff4ff',crystal:'#9ef3ff',gold:'#ffd76a',energy:'#b6ff4a',time:'#8fd0ff',bomb:'#ff8a4c',mini:'#c9a8ff',shard:'#ffd84d',comet:'#bff6ff',anti:'#ff4fd8',magnet:'#ff8a8a',pulsar:'#bfe6ff',dark:'#b9a8ff'}[o.k]||'#e6dcff';
   v2Burst(cx,cy,n,col,1.2,3.5+Math.min(3,G2.combo*.1),.45,1.6);
-  if(o.k==='garc'){if(FMRUN)fmAdd('garc',1);v2GoldArcOn();return;}
+  if(o.k==='garc'){if(G2.gb){fmAdd('garc',1);G2.gb.n++;G2.gb.arc=null;v2Burst(cx,cy,40,'#ffd76a',2.2,9,.8,2.4);flash=Math.max(flash,.3);vib([30,20,60]);v2Sfx('bell',{vol:.55,rate:1.1});v2Call(T('ALTIN YAY'),'+1 · '+G2.gb.n,'#ffd76a',1,true);return;}if(FMRUN)fmAdd('garc',1);v2GoldArcOn();return;}
   if(o.anti){v2Anti();return;}
   if(o.noScore)return;
   {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow*(G2.growK||1));if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
@@ -1149,7 +1181,7 @@ function v2Dodge(o){
 }
 function v2Hit(o,whole){
   v2Burst(o.x,o.y,22,'#ff7a5c',2,7,.6,2.2);
-  if(G2.immT>0||G2.garcT>0)return;G2.immT=V2K.imm;
+  if(G2.immT>0||G2.garcT>0)return;G2.immT=V2K.imm;if(G2.hunt&&G2.hunt.multi)G2.rr=V2K.r0; /* the mission hunt: a hit costs the growth too */
   if(G2.hold){const b=G2.hold;G2.hold=null;b.orb=null;b.st='dead';v2Blast(b.x,b.y,false);}
   G2.dmg++;G2.lastHit=G2.hitWhy||(o&&o.k)||'meteor';lostThisLevel=true;v2ComboLost();G2.rage=G2.ready?G2.rage:Math.max(0,G2.rage-15);
   const tutorial=level===1&&G2.mode==='level'&&!G2.hm;
@@ -1222,7 +1254,7 @@ if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(8)?190:rel(7)
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NÖTRLENDİ +'+p,'#ff4fd8',15);return;}
-  G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9);flash=Math.max(flash,.4);G2.antiT=3;for(const q of G2.objs)if(q.k!=='meteor'&&!q.boss&&q.v0x===undefined){q.v0x=q.vx;q.v0y=q.vy;} // for 3 s the hole pushes everything away and can swallow nothing; each body remembers its cruise speed
+  G2.rr=G2.hunt&&G2.hunt.multi?V2K.r0:Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9); /* the mission hunt: back to the starting size */flash=Math.max(flash,.4);G2.antiT=3;for(const q of G2.objs)if(q.k!=='meteor'&&!q.boss&&q.v0x===undefined){q.v0x=q.vx;q.v0y=q.vy;} // for 3 s the hole pushes everything away and can swallow nothing; each body remembers its cruise speed
   v2Burst(hX,hY,30,'#ff4fd8',2,7,.6,2);v2Call('ANTİMADDE!','3 SN HİÇBİR ŞEY YUTAMAZSIN','#ff4fd8',1.4);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
 }
 function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the screen, a blue one above the hole
@@ -1689,7 +1721,7 @@ function v2Frame(dt){
   for(let i=ftexts.length-1;i>=0;i--){if(!ftexts[i].update(dt))ftexts.splice(i,1);else ftexts[i].draw();}
   for(let i=cols.length-1;i>=0;i--){if(!cols[i].update(dt,f)){const c=cols.splice(i,1)[0];if(c.gem){diamonds++;sfx('gem',{vol:.45,rate:1+Math.random()*.2});}else{stars++;sfx('coin',{vol:.4,rate:1+Math.random()*.25});}updateUI();}else cols[i].draw();}
   if(explA>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(230,220,255,${explA})`;ctx.lineWidth=14*explA+2;ctx.beginPath();ctx.arc(hX,hY,explR,0,TAU);ctx.stroke();ctx.restore();explR+=9*f;explA-=.012*f;}
-  v2DrawAntiRing();v2DrawRule();v2DrawTimers();v2DrawTipMark();v2DrawCalls();v2DrawTut();v2DrawAlarm(gState==='playing'?dt:0);
+  v2DrawAntiRing();v2DrawRule();v2DrawGBar();v2DrawTimers();v2DrawTipMark();v2DrawCalls();v2DrawTut();v2DrawAlarm(gState==='playing'?dt:0);
   recFrame();
   G2.uiT-=dt;if(G2.uiT<=0){G2.uiT=.1;v2Ui(false);}
   if(gState==='playing'){G2.achT=(G2.achT||0)-dt;if(G2.achT<=0){G2.achT=.4;checkAchs();}} // achievements show the moment they are earned, not at the end of the level
@@ -1821,6 +1853,8 @@ function v2DrawObj(o,gl){
   else if(k==='garc'){const R0=r*1.2,pu=1+.06*Math.sin(clock*5);ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';
     const g=ctx.createRadialGradient(0,0,R0*.6,0,0,R0*2.4);g.addColorStop(0,'rgba(255,200,80,.0)');g.addColorStop(.42,'rgba(255,200,80,.35)');g.addColorStop(1,'rgba(255,170,40,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,R0*2.4,0,TAU);ctx.fill();
     for(const [k2,w] of [[1,.2],[.84,.13]]){ctx.strokeStyle='#ffd76a';ctx.shadowColor='#ffb020';ctx.shadowBlur=16;ctx.lineWidth=Math.max(1.5,R0*w);ctx.beginPath();ctx.arc(0,0,R0*k2*pu,0,TAU);ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='rgba(255,250,225,.9)';ctx.lineWidth=Math.max(.8,R0*w*.35);ctx.beginPath();ctx.arc(0,0,R0*k2*pu,0,TAU);ctx.stroke();} // two thin rings, white-hot cores
+    if(o.gl!=null){const q=clamp(o.gl/GARC4,0,1);ctx.globalCompositeOperation='source-over';ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=sp2(4);ctx.beginPath();ctx.arc(0,0,R0*1.75,0,TAU);ctx.stroke();ctx.strokeStyle=q<.3&&Math.sin(clock*16)>0?'#ff7a5c':'#fff3c4';ctx.beginPath();ctx.arc(0,0,R0*1.75,-Math.PI/2,-Math.PI/2+TAU*q);ctx.stroke();
+      ctx.font=`900 ${Math.round(sp2(15))}px "IBM Plex Sans Condensed",sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=sp2(3);ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(Math.ceil(o.gl),0,-R0*2.35);ctx.fillStyle='#fff';ctx.fillText(Math.ceil(o.gl),0,-R0*2.35);ctx.globalCompositeOperation='lighter';}
     for(let i=0;i<22;i++){const a=i*2.39996+o.si,ph=(clock*.45+i*.137)%1,d=R0*(.7+.9*ph+.25*Math.sin(i*1.7)),q=Math.sin(Math.PI*ph);ctx.fillStyle=`rgba(255,${215+(i%3)*12},${110+(i%4)*25},${.85*q})`;ctx.beginPath();ctx.arc(Math.cos(a+clock*.3)*d,Math.sin(a+clock*.3)*d,Math.max(.8,R0*(.05+.04*(i%3))),0,TAU);ctx.fill();}} // gold dust drifting out of the rings
   else if(k==='energy'){const pu=.8+.2*Math.sin(clock*9+o.si);ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,r*2.4);g.addColorStop(0,'rgba(255,255,255,1)');g.addColorStop(.25,'rgba(170,255,70,.95)');g.addColorStop(1,'rgba(120,230,40,0)');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(o.x,o.y,r*2.4*pu,0,TAU);ctx.fill();ctx.strokeStyle='rgba(210,255,150,.85)';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(o.x,o.y,Math.max(.5,r*1.3+Math.sin(clock*5)*2*s),0,TAU);ctx.stroke();
@@ -1913,7 +1947,7 @@ function v2DrawTimers(){if(gState==="menu"||!G2.on)return;const bars=[];
   if(G2.iceT>0)bars.push({f:G2.iceT/ICE.dur,s:G2.iceT,c1:'rgba(170,220,255,.75)',g0:'#5aa8e6',g1:'#e6f6ff',ic:'❄'});
   if(G2.antiT>0)bars.push({f:G2.antiT/3,s:G2.antiT,c1:'rgba(255,79,216,.75)',g0:'#c42aa8',g1:'#ffc4f2',ic:'⚛️'});
   if(G2.jet)bars.push({f:1-G2.jet.t/G2.jet.D,s:G2.jet.D-G2.jet.t,c1:'rgba(255,138,60,.75)',g0:'#ff3a10',g1:'#ffd27a',ic:'🔥',off:!G2.jet.held});
-  if(!bars.length)return;const r=G2.rule;let y=r?sp2(20)+(r.win||r.rival?38:18):sp2(10);const bw=Math.min(W*.62,sp2(290)),bx=W/2-bw/2,bh=sp2(9);
+  if(!bars.length)return;const r=G2.rule;let y=G2.gb?sp2(GBAR_Y+44):r?sp2(20)+(r.win||r.rival?38:18):sp2(10);const bw=Math.min(W*.62,sp2(290)),bx=W/2-bw/2,bh=sp2(9);
   ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
   for(const b of bars){const low=b.f<.3,pu=low?.55+.45*Math.sin(clock*14):1;ctx.globalAlpha=b.off?.55:1;ctx.fillStyle='rgba(12,6,8,.8)';ctx.strokeStyle=b.c1;ctx.lineWidth=1.3;ctx.beginPath();ctx.roundRect(bx,y,bw,bh+sp2(12),sp2(8));ctx.fill();ctx.stroke();
     const ix=bx+sp2(26),iw=bw-sp2(26)-sp2(46),iy=y+sp2(6);ctx.fillStyle='rgba(255,255,255,.1)';ctx.beginPath();ctx.roundRect(ix,iy,iw,bh,bh/2);ctx.fill();
@@ -1921,8 +1955,15 @@ function v2DrawTimers(){if(gState==="menu"||!G2.on)return;const bars=[];
     ctx.font=`${Math.round(bh*1.35)}px sans-serif`;ctx.fillText(b.ic,bx+sp2(13),iy+bh/2+1);ctx.fillStyle='#f2e6d8';ctx.font=`700 ${Math.round(bh*1.2)}px "IBM Plex Mono",monospace`;ctx.fillText(T(Math.max(0,b.s).toFixed(1)+' sn'),bx+bw-sp2(23),iy+bh/2+1);
     y+=bh+sp2(18);}
   ctx.restore();}
-function v2DrawRule(){const r=G2.rule;if(!r||gState==='menu'||G2.ending)return;const y=sp2(20);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
-  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.guard&&G2.guard)txt=`🛡 ${T('KORUYUCU')} · ${T(Math.ceil(G2.guard.t)+' sn')}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
+function v2DrawGBar(){const g=G2.gb;if(!g||gState==='menu'||G2.ending)return;const y=sp2(GBAR_Y),bw=Math.min(W*.66,sp2(300)),bx=W/2-bw/2,bh=sp2(10),full=g.arc!=null;ctx.save();
+  ctx.fillStyle='rgba(10,12,18,.78)';ctx.strokeStyle='rgba(255,215,106,.7)';ctx.lineWidth=1.3;ctx.beginPath();ctx.roundRect(bx,y,bw,sp2(34),sp2(10));ctx.fill();ctx.stroke();
+  ctx.textAlign='left';ctx.textBaseline='middle';ctx.font=`800 ${Math.round(sp2(10.5))}px "IBM Plex Sans Condensed",sans-serif`;ctx.fillStyle='#ffd76a';ctx.fillText(T(full?'ALTIN YAY EKRANDA':'SONRAKİ ALTIN YAY'),bx+sp2(10),y+sp2(10));
+  ctx.textAlign='right';ctx.fillStyle='#fff';ctx.fillText(T('{n} yay',{n:g.n}),bx+bw-sp2(10),y+sp2(10));
+  const ix=bx+sp2(10),iw=bw-sp2(20),iy=y+sp2(19);ctx.fillStyle='rgba(255,255,255,.1)';ctx.beginPath();ctx.roundRect(ix,iy,iw,bh,bh/2);ctx.fill();
+  const gr=ctx.createLinearGradient(ix,0,ix+iw,0);gr.addColorStop(0,'#f2a93b');gr.addColorStop(1,'#ffe08c');ctx.fillStyle=gr;ctx.shadowColor='#ffd76a';ctx.shadowBlur=g.v>=g.B?12:0;ctx.beginPath();ctx.roundRect(ix,iy,Math.max(bh,iw*clamp(g.v/g.B,0,1)),bh,bh/2);ctx.fill();
+  ctx.restore();}
+function v2DrawRule(){const r=G2.rule;if(!r||gState==='menu'||G2.ending||G2.hunt&&G2.hunt.multi)return; /* the mission hunt: its hits are the score on the HUD */const y=sp2(20);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
+  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=G2.hunt.multi?`🎯 ${T('{n} vuruş',{n:FMRUN?FMRUN.v:0})}`:`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.guard&&G2.guard)txt=`🛡 ${T('KORUYUCU')} · ${T(Math.ceil(G2.guard.t)+' sn')}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
   const w=ctx.measureText(txt).width+22,out=v2WinOut();ctx.fillStyle='rgba(10,12,18,.72)';ctx.strokeStyle=r.ban?'rgba(255,90,74,.8)':r.win?(out?'rgba(255,120,100,.9)':'rgba(141,255,203,.8)'):'rgba(255,215,106,.85)';ctx.lineWidth=1.5;
   const x0=W/2-w/2;ctx.beginPath();ctx.roundRect(x0,y-11,w,22,11);ctx.fill();ctx.stroke();ctx.fillStyle='#e8ebf4';ctx.fillText(txt,W/2,y+1);
   if(r.win){const bw=Math.min(W*.6,sp2(220)),bx=W/2-bw/2,by=y+19,s0=1,s1=Math.max(r.hi+.6,2.6),X=s=>bx+bw*clamp((s-s0)/(s1-s0),0,1),s=G2.rr/V2K.r0; // the size bar: green = scoring range
@@ -2076,8 +2117,8 @@ function v2Ui(force){
   const left=G2.mode==='surv'?(G2.dstorm&&!rel(9)?Math.max(0,Math.ceil(DSTORM.dur-survTime)):Math.floor(survTime)):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));
   {const tp=$('tmr2'),showT=G2.mode==='sprint'||!!G2.dstorm||(!!G2.L.boss||!!G2.hard)&&G2.mode==='level';if(tp&&tp.hidden!==!showT)tp.hidden=!showT;if(tp)tp.classList.toggle('hard',!!G2.hard); // the clock only matters in timed runs and boss fights
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',(G2.mode==='level'||G2.dstorm)&&left<=10);}
-  const pct=G2.mode==='surv'?0:G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt?G2.hunt.n/G2.hunt.need*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
-  {const sc=G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?-1-G2.hunt.n:G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`:G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
+  const pct=G2.mode==='surv'?0:G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt&&!G2.hunt.multi?G2.hunt.n/G2.hunt.need*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
+  {const sc=G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?(G2.hunt.multi?-1e6-(FMRUN?FMRUN.v:0):-1-G2.hunt.n):G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?(G2.hunt.multi?`🎯 ${FMRUN?FMRUN.v:0}<small class="gl"> ${T('vuruş')}</small>`:`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`):G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));
