@@ -104,15 +104,19 @@ function fleetMakeH(){return `<div class="hero" style="text-align:start"><b>➕ 
   <div class="sec"><span>${T('ARMA')}</span></div><div class="embs">${FL_EMB.map((k,i)=>`<button class="${i?'':'on'}" data-emb="${k}">${flImg(k)}</button>`).join('')}</div>
   <div class="sec"><span>${T('KİMLER KATILABİLİR')}</span></div><div class="tog"><button class="on" data-open="1">🌍 ${T('HERKES')}</button><button data-open="0">🔑 ${T('YALNIZCA KODLA')}</button></div>
   <div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button><button class="btn" id="flMakeGo" ${diamonds<FL_COST?'disabled':''}>${T('KUR')} · ${FL_COST} 💎</button></div><div class="flnote" id="flMsg"></div>`;}
-function fleetCodeH(){return `<div class="hero" style="text-align:start"><b>🔑 ${T('KODLA KATIL')}</b>${T('Arkadaşının paylaştığı 6 haneli filo kodunu yaz.')}</div>
-  <input class="inp notr" id="flCodeIn" maxlength="9" autocomplete="off" spellcheck="false" placeholder="K7Q-2MX">
+function fleetCodeH(){return `<div class="hero" style="text-align:start"><b>🔑 ${T('KODLA KATIL')}</b>${T('Kodu filodaki bir arkadaşın verir: kendi Filo sayfasındaki 📤 DAVET GÖNDER ile sana WhatsApp, Telegram ya da SMS ile yollar.')}</div>
+  <div class="fcin"><input class="inp notr" id="flCodeIn" maxlength="400" autocomplete="off" spellcheck="false" placeholder="K7Q-2MX"><button class="btn sec" id="flPaste">${T('YAPIŞTIR')}</button></div>
+  <div class="flnote tip">${T('Kodu ya da gelen mesajın tamamını yapıştırabilirsin; kod kendiliğinden bulunur.')}</div>
   <div class="two"><button class="btn sec" id="flBack">${T('GERİ')}</button><button class="btn" id="flCodeGo">${T('KATIL')}</button></div><div class="flnote" id="flMsg"></div>`;}
 
 function fleetPageH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap),t=f.targets||[1,1,1],top=t[2]||1,now=Date.now();
   const code=String(f.code||'').replace(/^(...)(...)$/,'$1-$2');
   return `${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}
-  <div class="fc">${flImg(f.emb,'big')}<span class="t"><b class="notr">${flE(f.name)}</b><small>${f.n}/${f.max} ${T('üye')} · ${T('Kaptan')}: <span class="notr">${flE(cap?cap.name:'')}</span></small><button class="code" id="flShare">🔑 ${code} · ${T('PAYLAŞ')}</button></span></div>
+  <div class="fc">${flImg(f.emb,'big')}<span class="t"><b class="notr">${flE(f.name)}</b><small>${f.n}/${f.max} ${T('üye')} · ${T('Kaptan')}: <span class="notr">${flE(cap?cap.name:'')}</span></small><span class="code">🔑 ${code}</span></span></div>
   <div class="stat"><div><b>#${f.rank||'–'}</b><small>${f.race?T('yarışta'):T('bu hafta')} / ${f.of||1}</small></div><div><b>${flN(f.pts)}</b><small>${T('filo puanı')}</small></div><div><b>${flLeft((f.race?f.ends:f.raceFrom)-now)}</b><small>${f.race?T('yarışın bitişi'):T('yarışa kalan')}</small></div></div>
+  ${f.n<f.max?`<div class="finv"><b>📨 ${T('ARKADAŞINI FİLOYA ÇAĞIR')}</b><div class="fic"><small>${T('FİLO KODU')}</small><span class="notr">${code}</span></div>
+  <div class="two"><button class="btn" id="flShare">📤 ${T('DAVET GÖNDER')}</button><button class="btn sec" id="flCopy">${T('KOPYALA')}</button></div>
+  <small>${T('WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Sıralama › Filo › Kodla katıl’a bu kodu yazar.')}</small></div>`:''}
   <div class="sec"><span>${T('HAFTALIK SANDIKLAR')}</span><b>${T('herkese')}</b></div>
   <div class="bar"><i style="width:${Math.min(100,f.pts/top*100)}%"></i>${t.map((x,i)=>`<span class="ck${f.pts>=x?' got':''}" style="left:${Math.min(97,x/top*100)}%">${i===2?'👑':'🎁'}</span>`).join('')}</div>
   <div class="barl">${t.map((x,i)=>`<span style="${i===2?'right:0':`left:${x/top*100}%;transform:translateX(-50%)`}">${flN(x)}${f.pts>=x?' ✓':''}</span>`).join('')}</div>
@@ -162,7 +166,14 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
     go('/fleet/rename',{pid:PID,name:r.name},x=>{if(!x.free){diamonds-=FL_RENAME;saveG();updateUI();}FL.name=r.name;FLS='main';FLV=null;fleetRender();fleetMenu();});};
   all('[data-msg]').forEach(b=>b.onclick=()=>go('/fleet/msg',{pid:PID,m:b.dataset.msg},()=>{FLV=null;fleetRender();}));
   all('[data-kick]').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=T('ÇIKAR?');return;}go('/fleet/kick',{pid:PID,k:b.dataset.kick},()=>{FLV=null;fleetRender();});});
-  if(q('#flShare'))q('#flShare').onclick=async()=>{const code=j.fleet.code,txt=T('{f} filosuna katıl! Blackhole Storm\'da Sıralama › Filo › Kodla katıl: {c}',{f:j.fleet.name,c:code});
-    try{if(navigator.share){await navigator.share({text:txt});return;}}catch(e){return;}try{await navigator.clipboard.writeText(code);flMsg(T('Kod kopyalandı'),1);}catch(e){flMsg(code,1);}};
+  // the invite goes out through the phone's own share sheet (WhatsApp, Telegram, SMS…); without one it is copied
+  const flCode=()=>String(j.fleet&&j.fleet.code||'').replace(/^(...)(...)$/,'$1-$2');
+  if(q('#flShare'))q('#flShare').onclick=async()=>{const txt=['🛸 '+T('{f} filosuna katıl!',{f:j.fleet.name}),T('Blackhole Storm’da birlikte sandık açıp hafta sonu yarışalım.'),T('Filo kodu: {c}',{c:flCode()}),T('Oyunda: Sıralama › Filo › Kodla katıl (filolar {n}. seviyede açılır)',{n:FL_LV})].join('\n');
+    const out=await shareOut(txt,NATIVE?'https://play.google.com/store/apps/details?id=com.liaslabs.blackholestorm':APP_URL);if(out==='copied')flMsg(T('Davet kopyalandı: WhatsApp’a yapıştırıp gönder'),1);else if(out==='fail')flMsg(flCode(),1);};
+  if(q('#flCopy'))q('#flCopy').onclick=async()=>{try{await navigator.clipboard.writeText(flCode());flMsg(T('Kod kopyalandı'),1);}catch(e){flMsg(flCode(),1);}};
+  // a pasted message is searched for the code (three letters or digits, a dash, three more)
+  const cIn=q('#flCodeIn'),pick=v=>{const u=String(v).toUpperCase(),d=u.match(/\b([A-Z0-9]{3})-([A-Z0-9]{3})\b/);if(d)return d[1]+'-'+d[2];const c=u.replace(/[^A-Z0-9]/g,'');return c.length===6?c.slice(0,3)+'-'+c.slice(3):'';};
+  if(cIn)cIn.oninput=()=>{if(cIn.value.length>7){const c=pick(cIn.value);if(c)cIn.value=c;}};
+  if(q('#flPaste'))q('#flPaste').onclick=async()=>{try{const v=await navigator.clipboard.readText();const c=pick(v);if(c){cIn.value=c;flMsg('',0);}else flMsg(T('Panoda filo kodu yok'));}catch(e){cIn.focus();flMsg(T('Kutuya uzun bas › Yapıştır'));}};
   if(q('#flLeave'))q('#flLeave').onclick=()=>{const b=q('#flLeave'),last=j.fleet.n<=1;if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=last?T('FİLO KAPANACAK, EMİN MİSİN?'):T('AYRIL?');return;}
     go('/fleet/leave',{pid:PID},()=>{FL.fid='';FLS='main';FLV=null;saveG();fleetMenu();fleetRender();});};}
