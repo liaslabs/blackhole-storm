@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: 'status = sadece oku, listings = metinler + telefon kareleri, release = test kanalına sürüm'
+        description: 'status = sadece oku, listings = metinler + telefon kareleri, release = test kanalına sürüm, video = yalnızca tanıtım videosu bağlantıları'
         type: choice
-        options: [status, listings, release]
+        options: [status, listings, release, video]
         default: status
       apply:
         description: 'Değişiklikleri Play Console''a kaydet (kapalıysa yalnızca önizleme)'
@@ -27,6 +27,10 @@ on:
         default: ''
       video_tr:
         description: 'tr-TR için YouTube bağlantısı (boş = dokunma)'
+        required: false
+        default: ''
+      video_en:
+        description: 'video: tr-TR dışındaki tüm diller için YouTube bağlantısı (boş = dokunma)'
         required: false
         default: ''
       track:
@@ -83,13 +87,14 @@ jobs:
           TASK: ${{ inputs.task }}
           ONLY: ${{ inputs.only }}
           VIDEO_TR: ${{ inputs.video_tr }}
+          VIDEO_EN: ${{ inputs.video_en }}
           TRACK: ${{ inputs.track }}
           VERSION_CODE: ${{ inputs.version_code }}
           VERSION_NAME: ${{ inputs.version_name }}
           AAB_DIR: ${{ inputs.artifact_run != '' && format('{0}/aab', runner.temp) || '' }}
         run: |
           if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret'ı yok."; exit 1; fi
-          args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --track "$TRACK" --version-code "$VERSION_CODE")
+          args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --video-en "$VIDEO_EN" --track "$TRACK" --version-code "$VERSION_CODE")
           if [ -n "$AAB_DIR" ]; then aab=$(ls "$AAB_DIR"/*.aab | head -1); args+=(--aab "$aab" --version-name "$VERSION_NAME"); fi
           if [ "${{ inputs.apply }}" = "true" ]; then args+=(--apply); fi
           if [ "${{ inputs.send_for_review }}" = "true" ]; then args+=(--send-for-review); fi

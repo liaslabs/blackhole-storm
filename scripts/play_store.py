@@ -116,6 +116,29 @@ def listings(ed, eid, only, video_tr, apply):
     return changed
 
 
+def videos(ed, eid, only, video_tr, video_en, apply):
+    """Only the promo video link of each listing: tr-TR gets the Turkish video, every other language the English one.
+    Texts and images are left exactly as they are in Play."""
+    say('## Tanıtım videosu · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
+    remote = {l['language']: l for l in ed.listings().list(packageName=PKG, editId=eid).execute().get('listings', [])}
+    changed = 0
+    for lang in sorted(remote):
+        if only and lang not in only:
+            continue
+        R, want = remote[lang], (video_tr if lang == 'tr-TR' else video_en)
+        if not want or want == R.get('video', ''):
+            say(f"- **{lang}**: aynı, dokunulmaz" if want else f"- **{lang}**: bağlantı verilmedi, dokunulmaz")
+            continue
+        say(f"- **{lang}**: video {R.get('video') or '(yok)'} → {want}")
+        changed += 1
+        if apply:
+            body = {'language': lang, **{k: R.get(k, '') for k in ('title', 'shortDescription', 'fullDescription') if k in R}, 'video': want}
+            ed.listings().update(packageName=PKG, editId=eid, language=lang, body=body).execute()
+    say('')
+    say(f'{changed} dilde video ' + ('değişti.' if apply else 'değişecek.'))
+    return changed
+
+
 TEST_TRACKS = ('internal', 'alpha', 'beta')  # production is never touched from here
 
 
@@ -181,18 +204,20 @@ def release(ed, eid, track, code, apply, aab='', vname=''):
 
 def main():
     a = argparse.ArgumentParser()
-    a.add_argument('task', choices=['status', 'listings', 'release'])
+    a.add_argument('task', choices=['status', 'listings', 'release', 'video'])
     a.add_argument('--apply', action='store_true', help='keep the edit (otherwise it is discarded)')
     a.add_argument('--send-for-review', action='store_true', help='send the committed changes for review right away')
     a.add_argument('--only', default='', help='comma-separated languages, e.g. tr-TR,de-DE')
     a.add_argument('--video-tr', default='', help='YouTube link for the tr-TR listing')
+    a.add_argument('--video-en', default='', help='video: YouTube link for every listing other than tr-TR')
     a.add_argument('--track', default='alpha', help='release: internal, alpha or beta')
     a.add_argument('--version-code', default='', help='release: version code already uploaded to Play (or in --aab)')
     a.add_argument('--aab', default='', help='release: an .aab from the Android build to upload first')
     a.add_argument('--version-name', default='', help='release: version name for an uploaded .aab, e.g. 1.4.9')
     o = a.parse_args()
-    if o.video_tr and not o.video_tr.startswith(('https://www.youtube.com/', 'https://youtu.be/', 'https://youtube.com/')):
-        sys.exit('video-tr bir YouTube bağlantısı olmalı')
+    for v in (o.video_tr, o.video_en):
+        if v and not v.startswith(('https://www.youtube.com/', 'https://youtu.be/', 'https://youtube.com/')):
+            sys.exit('video bağlantısı bir YouTube bağlantısı olmalı')
     ed = api().edits()
     eid = ed.insert(packageName=PKG, body={}).execute()['id']
     keep = False
@@ -204,6 +229,8 @@ def main():
                 if not o.version_code.isdigit():
                     sys.exit('release için --version-code gerekli')
                 n = release(ed, eid, o.track, o.version_code, o.apply, o.aab, o.version_name)
+            elif o.task == 'video':
+                n = videos(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.video_en.strip(), o.apply)
             else:
                 n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
             if o.apply and n:
