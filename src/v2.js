@@ -1542,7 +1542,7 @@ function v2Teaser(l){const n=new2(l),h=v2Hard(l),c=v2Chal(l),rc=labRec(l),pw=rc?
 // Decoration only: nothing here feels the pull or can be hit. Bodies are drawn on the WebGL canvas underneath, so the decoration goes out
 // at once wherever a body is (or is about to be), inside the hole's pull and under the top bar and the power tray: it never hides anything.
 // It is the first thing a slow phone drops. The hole itself is not touched.
-const DEPTH={far:12,st:20,stBusy:6,farK:.03,nearK:.06};
+const DEPTH={far:12,st:20,stBusy:6,farK:.03,nearK:.06,dust:1}; // dust:1 draws the star dust (1.5.0); 0 brings the 2.5D rocks back
 let DSPR=null; // rock pictures, painted in the menu one rock at a time (no frame in play pays for them)
 function v2DepthShape(seed){const rr=v2Mul(seed),h=[];for(let k=2;k<=7;k++)h.push({k,a:rr()*.075/(k*.42),p:rr()*TAU});
   const cr=[],n=4+Math.floor(rr()*5);for(let i=0;i<n;i++)cr.push({a:rr()*TAU,d:Math.sqrt(rr())*.7,r:.08+rr()*.19});
@@ -1555,7 +1555,7 @@ function v2DepthPaint(g,sh,rot,cx,cy,R,dark){ // a lumpy cratered rock lit from 
     g.fillStyle='rgba(6,5,9,.55)';g.beginPath();g.ellipse(x,y,rc*f,rc,a,0,TAU);g.fill();g.strokeStyle='rgba(255,238,215,.3)';g.lineWidth=Math.max(1,rc*.16);g.beginPath();g.ellipse(x,y,rc*f*1.05,rc*1.05,a,Math.PI/4-a-1.1,Math.PI/4-a+1.1);g.stroke();}
   const s=g.createRadialGradient(cx+R*.8,cy+R*.9,R*.1,cx+R*.5,cy+R*.6,R*1.6);s.addColorStop(0,'rgba(0,0,0,.66)');s.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=s;g.fillRect(cx-R*1.5,cy-R*1.5,R*3,R*3);g.restore();
   if(dark){g.globalCompositeOperation='source-atop';g.fillStyle='rgba(5,3,10,.42)';g.fillRect(0,0,g.canvas.width,g.canvas.height);g.globalCompositeOperation='source-over';}}
-function v2DepthPrep(chain){if(!rel(10)||DSPR&&(DSPR.done||DSPR.run&&!chain))return; // the menu asks every time it opens; one chain does the work
+function v2DepthPrep(chain){if(!rel(10)||DEPTH.dust||DSPR&&(DSPR.done||DSPR.run&&!chain))return; // the menu asks every time it opens; one chain does the work (the star dust needs no pictures)
   if(!DSPR)DSPR={far:[],near:[],q:[['far',0],['far',1],['far',2],['near',0],['near',1]],run:1};
   if(G2.on&&gState!=='menu'&&gState!=='over'&&gState!=='paused'){setTimeout(()=>v2DepthPrep(1),1500);return;} // only on still screens: never in play, a tip card or the level-up animation
   const [kind,v]=DSPR.q.shift(),far=kind==='far',size=far?48:160,F=far?12:8,R=size*.4,sh=v2DepthShape((far?301:501)+v*97),fr=[],tmp=document.createElement('canvas');tmp.width=tmp.height=size;const tg=tmp.getContext('2d');
@@ -1578,14 +1578,29 @@ function v2OnBody(x,y,m){ // is this point on (or within m of) a body? bodies on
   const b=G2.boss;if(b&&Math.hypot(x-b.x,y-b.y)<(b.r||0)+m)return true;const g=G2.guard;if(g&&g.px!==undefined&&Math.hypot(x-g.px,y-g.py)<g.pr*1.7+m)return true;
   const v=G2.rv;return !!(v&&!v.dead&&Math.hypot(x-v.x,y-v.y)<(v.R||0)+m);}
 function v2DepthSpr(set,o,x,y,r){const s=set[o.v%set.length],F=s.fr.length,img=s.fr[((Math.floor(o.rot/TAU*F)%F)+F)%F],z=img.width*r/s.R;ctx.drawImage(img,x-z/2,y-z/2,z,z);}
-function v2DepthDraw(dt){if(!DSPR||!DSPR.done||!G2.on||FXLITE||GL.quality<1)return; /* a phone that proved slow drops the decoration before anything else */
+const DUST=[{n:40,k:.05,vy:3,r:[.9,1.4],c:'190,210,255',a:.6},{n:24,k:.11,vy:7,r:[1.3,2],c:'225,228,255',a:.85,h:3},{n:12,k:.2,vy:13,r:[1.8,2.8],c:'255,236,210',a:1,h:4.5},{n:5,k:.34,vy:20,r:[12,24],c:'200,150,255',a:.16,b:1}]; // 1.5.0: star dust in place of the rocks: three layers of glinting stars and a few soft out-of-focus lights in front; nearer layers are brighter and slide further as the hole moves
+const DUSTSPR={};function v2DustSpr(c){if(DUSTSPR[c])return DUSTSPR[c];const k=document.createElement('canvas');k.width=k.height=64;const g=k.getContext('2d'),r=g.createRadialGradient(32,32,0,32,32,32);r.addColorStop(0,`rgba(${c},1)`);r.addColorStop(.35,`rgba(${c},.45)`);r.addColorStop(1,`rgba(${c},0)`);g.fillStyle=r;g.fillRect(0,0,64,64);return DUSTSPR[c]=k;}
+function v2DustInit(){return DUST.map(L=>Array.from({length:L.n},()=>({x:rnd(0,W),y:rnd(0,H),r:sp2(rnd(L.r[0],L.r[1])),tw:rnd(0,TAU),ts:rnd(.6,1.8),c:L.b?['200,150,255','255,190,120','140,200,255'][Math.floor(rnd(0,3))]:L.c})));}
+function v2DustDraw(d,dt,px,py){const ds=d.ds||(d.ds=v2DustInit()),mv=gState==='playing'?dt:0,vx=d.hx===undefined?0:(hX-d.hx)/Math.max(dt,1e-3),vy=d.hy===undefined?0:(hY-d.hy)/Math.max(dt,1e-3);d.hx=hX;d.hy=hY;
+  const sp=Math.hypot(vx,vy),jet=!!G2.jet;ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
+  DUST.forEach((L,li)=>{const k=L.k,st=L.b?0:Math.min(sp2(30),(sp*k*.06)+(jet?sp2(6+li*8):0)),ux=sp>1?-vx/sp:0,uy=sp>1?-vy/sp:(jet?1:0);
+    for(const o of ds[li]){o.y+=sp2(L.vy)*mv*(jet?3:1);o.tw+=o.ts*dt;const x=((o.x+px*k)%W+W)%W,y=((o.y+py*k)%H+H)%H;if(o.y>H*4)o.y-=H*4;
+      if(!L.b&&(Math.hypot(x-hX,y-hY)<G2.R*1.4||v2OnBody(x,y,sp2(6))))continue;const al=L.a*(.6+.4*Math.sin(o.tw));
+      if(L.b){const t=v2DepthFree(x,y,o.r*.6);o.a=t<(o.a||0)?t:(o.a||0)+(t-(o.a||0))*Math.min(1,dt*3);if(o.a<.02)continue;ctx.globalAlpha=al*o.a;const z=o.r*2;ctx.drawImage(v2DustSpr(o.c),x-z/2,y-z/2,z,z);continue;} /* the soft lights fade out over bodies, the bars and the pull, as the rocks did */
+      if(L.h){ctx.globalAlpha=al*.55;const z=o.r*L.h*2;ctx.drawImage(v2DustSpr(o.c),x-z/2,y-z/2,z,z);}ctx.globalAlpha=1;
+      if(st>o.r*1.5){ctx.strokeStyle=`rgba(${o.c},${al})`;ctx.lineWidth=o.r*1.3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+ux*st,y+uy*st);ctx.stroke();}
+      else{ctx.fillStyle=`rgba(${o.c},${al})`;ctx.beginPath();ctx.arc(x,y,o.r,0,TAU);ctx.fill();}}});
+  ctx.restore();}
+function v2DepthDraw(dt){if(!G2.on||FXLITE||GL.quality<1)return; /* a phone that proved slow drops the decoration before anything else */
   const d=G2.dep||(G2.dep=v2DepthInit()),px=W/2-hX,py=H*.55-hY,ease=Math.min(1,dt*5);
+  if(DEPTH.dust){v2DustDraw(d,dt,px,py);}else if(!DSPR||!DSPR.done)return;
   if(d.W!==W||d.H!==H){const kx=W/d.W,ky=H/d.H;for(const o of d.far){o.x*=kx;o.y*=ky;}for(const o of d.near)o.x=o.v%2===0?-o.r*.62:W+o.r*.62;d.W=W;d.H=H;} // a resize (URL bar, rotation) keeps the layer, only rescaled
   {const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stBusy:DEPTH.st,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks drift in toward the hole; only a few while a belt, the storm or Vortex keeps the screen busy
    for(let i=0;i<d.st.length;i++){const s=d.st[i];if(gState==='playing')s.d-=s.v*dt;if(s.d<G2.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
     const len=s.v*.09,q=clamp((s.d-G2.R*1.3)/(G2.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1);if(q<.02)continue;const ca=Math.cos(s.a),sa=Math.sin(s.a),dm=s.d+len/2;
     if(v2OnBody(hX+ca*dm,hY+sa*dm,len/2+sp2(10)))continue;B[q<.33?0:q<.66?1:2].push(hX+ca*s.d,hY+sa*s.d,hX+ca*(s.d+len),hY+sa*(s.d+len));}
    ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';ctx.lineWidth=sp2(1.2);[.12,.26,.48].forEach((al,b)=>{const L=B[b];if(!L.length)return;ctx.strokeStyle=`rgba(170,230,255,${al})`;ctx.beginPath();for(let j=0;j<L.length;j+=4){ctx.moveTo(L[j],L[j+1]);ctx.lineTo(L[j+2],L[j+3]);}ctx.stroke();});ctx.restore();}
+  if(DEPTH.dust)return;
   const mv=gState==='playing'?dt:0;
   for(const o of d.far){o.x+=o.vx*mv;o.y+=o.vy*mv;o.rot+=o.spin*mv;if(o.y>H+20){o.y=-20;o.x=rnd(0,W);o.a=0;}
     const x=o.x+px*DEPTH.farK,y=o.y+py*DEPTH.farK,t=v2DepthFree(x,y,o.r)*.55;o.a=t<o.a?t:o.a+(t-o.a)*ease; /* out at once, back in slowly */if(o.a<.02)continue;ctx.globalAlpha=o.a;v2DepthSpr(DSPR.far,o,x,y,o.r);}
