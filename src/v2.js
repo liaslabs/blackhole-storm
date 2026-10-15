@@ -164,7 +164,6 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.tSh=mode==='surv'&&rel(9)?3:null;G2.tNova=mode==='surv'&&rel(9)?V2K.nova.max:null; /* 1.4.9: the tournament gives everyone the same 3 shields, apart from their own stock and with none for sale */G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);const bst=mode==='level'&&!REPLAY&&SHOP.boostLv===l?SHOP.boostK:'';if(bst){SHOP.boostLv=0;saveG();}if(mode==='level'&&!REPLAY&&(SHOP.arcLv===l||bst==='arc')){G2.arcMax=Math.min(3,G2.arcMax+1);if(SHOP.arcLv===l)SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(bst){if(bst==='rage')G2.rage=100;else if(bst==='shell')G2.shells=Math.max(G2.shells,1);else if(bst==='gold')G2.gold=1;else if(bst==='shield'){G2.shT=v2ShDur();G2.shTick=0;}const B=BOOSTS[bst];later(()=>{if(G2.on)v2Call(B.ic+' '+T(B.c),'','#9fd8ff',1.6,true);},2400);} /* the level-end ad's head start */if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
   if(rule&&rule.rival)G2.rv=v2RivalNew(!!rule.duel);
-  if(mode==='sprint'&&FMRUN)fmSetup();
   if(mod==='glass')lives=2;
   {const pl=labEffLv('start');if(pl){G2.rr=G2.peak=V2K.r0*(1+Math.min(.3,.02*pl));}G2.L.comboT+=.12*labEffLv('combo');} // Laboratory upgrades (classic only)
   if(mode==='level'&&!REPLAY&&shTier(level)>0&&typeof SHOP!=='undefined'&&SHOP.failLv===level&&SHOP.failN>=2){G2.shells=1;later(()=>{if(G2.on)v2Call(T('YARDIM'),T('GÜMÜŞ KABUK'),'#dfe8f5',1.6,true);},1200);} /* visible help after two misses, never a hidden change */
@@ -191,6 +190,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
+  if(mode==='sprint'&&FMRUN)fmSetup(); /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
   gState='playing';lastT=performance.now();v2Ui(true);
 }
 function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
