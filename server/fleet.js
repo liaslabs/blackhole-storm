@@ -159,6 +159,7 @@ export async function fleetHousekeeping(DB) {
   await DB.prepare('DELETE FROM fleet_prizes WHERE wk < ?').bind(old).run();
   await DB.prepare('DELETE FROM fleet_msgs WHERE ts < ?').bind(now - 14 * 864e5).run();
   await DB.prepare('DELETE FROM fleet_reports WHERE ts < ?').bind(now - 30 * 864e5).run();
+  await DB.prepare('DELETE FROM fleet_marks WHERE gone < ? AND made < ?').bind(now - MAKE_WAIT, now - MAKE_WAIT).run(); // the join and found waits are over: nothing left to keep
 }
 
 async function view(DB, pid, m) {
