@@ -19,6 +19,9 @@
 //   POST /fleet/report {by,fid}                       -> {ok}          two reporters hide the fleet's name
 //   GET  /fleets/top?pid=                        -> {wk,race,ends,list:[{r,name,emb,n,pts,me}],me}
 //   POST /fleet/claim  {pid,wk}                       -> {ok,stars,gems}
+//   POST /fleet/fm/start {pid,id}                    -> {ok,tries}    one of today's fleet missions begins (a try is used)
+//   POST /fleet/fm     {pid,id,v,t}                   -> {ok,best,tier,add}  its result: the best one counts, a new medal pays fleet points
+//   POST /fleet/fmchain {pid}                         -> {ok,stars}     the Fleet Chain's stars, once a day, for a member who won a medal
 
 const MAX_MEMBERS = 20, DAY_CAP = 300, CALL_CAP = 80;
 const CHEST = [600, 1500, 3000];                 // per member who played, at least 5 counted
@@ -27,7 +30,8 @@ const RACE_PAY = [[1500, 30], [1000, 20], [600, 10], [300, 0], [300, 0], [300, 0
 const TOP3_PAY = 200, GROUP = 20, RACE_MIN = 3; // a fleet needs 3 members scoring in the race to be ranked
 const MSGS = ['go', 'gj', 'done', 'rec', 'ufo', 'hi', 'chest', 'race', 'eat']; // 'ufo' stays for older apps
 // news the server writes on the wall by itself: 'chest:<n>' (a weekly chest opened), 'rank:<n>' (the fleet climbed to place n in the
-// weekend race, top 10 only) and 'mis' (a member finished the daily fleet mission; once a day each)
+// weekend race, top 10 only), 'mis' (a member finished the daily fleet mission; once a day each) and 'fmg:<id>' (a member won a
+// fleet mission's gold medal)
 const CAP_AWAY = 14 * 864e5, MEMBER_AWAY = 30 * 864e5, LEAVE_WAIT = 24 * 36e5, MAKE_WAIT = 7 * 864e5, RENAME_WAIT = 30 * 864e5;
 const CODE_ABC = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 
@@ -58,14 +62,19 @@ async function ensure(DB) {
     'CREATE TABLE IF NOT EXISTS fleet_results (wk TEXT NOT NULL, fid TEXT NOT NULL, name TEXT NOT NULL, emb TEXT NOT NULL, total INTEGER NOT NULL, race INTEGER NOT NULL, rank INTEGER NOT NULL, grpn INTEGER NOT NULL, tier INTEGER NOT NULL, PRIMARY KEY (wk, fid))',
     'CREATE TABLE IF NOT EXISTS fleet_prizes (wk TEXT NOT NULL, pid TEXT NOT NULL, fid TEXT NOT NULL, stars INTEGER NOT NULL, gems INTEGER NOT NULL, tier INTEGER NOT NULL, rank INTEGER NOT NULL, mine INTEGER NOT NULL, top3 INTEGER NOT NULL, claimed INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (wk, pid))',
     'CREATE TABLE IF NOT EXISTS fleet_marks (pid TEXT PRIMARY KEY, gone INTEGER NOT NULL DEFAULT 0, made INTEGER NOT NULL DEFAULT 0)',
-    'CREATE TABLE IF NOT EXISTS fleet_reports (fid TEXT NOT NULL, by TEXT NOT NULL, ts INTEGER NOT NULL, PRIMARY KEY (fid, by))'
+    'CREATE TABLE IF NOT EXISTS fleet_reports (fid TEXT NOT NULL, by TEXT NOT NULL, ts INTEGER NOT NULL, PRIMARY KEY (fid, by))',
+    'CREATE TABLE IF NOT EXISTS fleet_fm (day TEXT NOT NULL, pid TEXT NOT NULL, fid TEXT NOT NULL, id TEXT NOT NULL, best INTEGER NOT NULL DEFAULT 0, tier INTEGER NOT NULL DEFAULT 0, tries INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, pid, id))',
+    'CREATE INDEX IF NOT EXISTS fleet_fm_fid ON fleet_fm (day, fid)'
   ]) await DB.prepare(q).run();
+  // 1.5.1: fleet mission medals are fleet points of their own (mpts), outside the 300 a day that play brings
+  try { await DB.prepare('ALTER TABLE fleet_pts ADD COLUMN mpts INTEGER NOT NULL DEFAULT 0').run(); } catch (e) { /* already there */ }
   ready = true;
 }
 
 const NAMES = () => globalThis.BHS_NAMES;
 const nkey = n => NAMES().tidy(n).normalize('NFKC').toLowerCase().replace(/\s+/g, ' ');
 const AVS = () => globalThis.BHS_AV_KEYS || new Set();
+const FM = () => globalThis.BHS_FMIS;
 const okEmb = e => typeof e === 'string' && AVS().has(e);
 const pname = (n, clean) => clean(n);
 const av = a => typeof a === 'string' && AVS().has(a) ? a : null;
@@ -74,7 +83,7 @@ async function memberOf(DB, pid) { return okPid(pid) ? await DB.prepare('SELECT 
 async function fleetRow(DB, fid) { return await DB.prepare('SELECT * FROM fleets WHERE fid = ?').bind(fid).first(); }
 async function count(DB, fid) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM fleet_members WHERE fid = ?').bind(fid).first(); return r ? r.n : 0; }
 async function weekTotal(DB, wk, fid, from) {
-  const r = await DB.prepare(`SELECT COALESCE(SUM(pts),0) AS s, COUNT(DISTINCT pid) AS p FROM fleet_pts WHERE wk = ? AND fid = ?${from ? ' AND day >= ?' : ''}`).bind(...(from ? [wk, fid, from] : [wk, fid])).first();
+  const r = await DB.prepare(`SELECT COALESCE(SUM(pts + mpts),0) AS s, COUNT(DISTINCT pid) AS p FROM fleet_pts WHERE wk = ? AND fid = ?${from ? ' AND day >= ?' : ''}`).bind(...(from ? [wk, fid, from] : [wk, fid])).first();
   return { pts: r ? r.s : 0, players: r ? r.p : 0 };
 }
 const targets = players => CHEST.map(t => t * Math.max(5, players));
@@ -89,7 +98,7 @@ async function news(DB, fid, add) {
   const rf = raceFrom(wk), now = Date.now();
   if (now < Date.parse(rf + 'T00:00:00Z') || now >= weekEnd(wk)) return;
   const grp = await groupOf(DB, wk, fid);
-  const rows = (await DB.prepare('SELECT g.fid, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = g.fid AND p.day >= ?),0) AS s FROM fleet_groups g WHERE g.wk = ? AND g.grp = ?').bind(wk, rf, wk, grp).all()).results || [];
+  const rows = (await DB.prepare('SELECT g.fid, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = g.fid AND p.day >= ?),0) AS s FROM fleet_groups g WHERE g.wk = ? AND g.grp = ?').bind(wk, rf, wk, grp).all()).results || [];
   const me = rows.find(r => r.fid === fid); if (!me) return;
   const place = v => 1 + rows.filter(r => r.fid !== fid && r.s > v).length, before = place(me.s - add), after = place(me.s);
   if (after < before && after <= 10) await event(DB, fid, '', 'rank:' + after);
@@ -103,7 +112,7 @@ async function groupOf(DB, wk, fid) {
   const any = await DB.prepare('SELECT COUNT(*) AS n FROM fleet_groups WHERE wk = ?').bind(wk).first();
   if (!any || !any.n) {
     const prev = day(Date.parse(wk + 'T00:00:00Z') - 7 * 864e5);
-    const all = await DB.prepare('SELECT f.fid, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid),0) AS s FROM fleets f ORDER BY s DESC, f.created ASC').bind(prev).all();
+    const all = await DB.prepare('SELECT f.fid, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid),0) AS s FROM fleets f ORDER BY s DESC, f.created ASC').bind(prev).all();
     const rows = all.results || [];
     for (let i = 0; i < rows.length; i++) await DB.prepare('INSERT OR IGNORE INTO fleet_groups (wk, fid, grp) VALUES (?, ?, ?)').bind(wk, rows[i].fid, Math.floor(i / GROUP)).run();
     g = await DB.prepare('SELECT grp FROM fleet_groups WHERE wk = ? AND fid = ?').bind(wk, fid).first();
@@ -139,7 +148,7 @@ export async function settleWeek(DB, wk) {
   }
   for (const x of res) {
     await DB.prepare('INSERT OR REPLACE INTO fleet_results (wk, fid, name, emb, total, race, rank, grpn, tier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').bind(wk, x.fid, shownName(x.f), x.f.emb, x.total, x.race, x.rank, x.grpn, x.tier).run();
-    const ms = await DB.prepare('SELECT pid, SUM(pts) AS s FROM fleet_pts WHERE wk = ? AND fid = ? GROUP BY pid ORDER BY s DESC').bind(wk, x.fid).all();
+    const ms = await DB.prepare('SELECT pid, SUM(pts + mpts) AS s FROM fleet_pts WHERE wk = ? AND fid = ? GROUP BY pid ORDER BY s DESC').bind(wk, x.fid).all();
     const rows = (ms.results || []).filter(m => m.s > 0);
     for (let i = 0; i < rows.length; i++) {
       let stars = 0, gems = 0;
@@ -170,6 +179,7 @@ export async function fleetHousekeeping(DB) {
   await DB.prepare('DELETE FROM fleets WHERE NOT EXISTS (SELECT 1 FROM fleet_members m WHERE m.fid = fleets.fid)').run();
   const old = day(now - 42 * 864e5);
   await DB.prepare('DELETE FROM fleet_pts WHERE day < ?').bind(old).run();
+  await DB.prepare('DELETE FROM fleet_fm WHERE day < ?').bind(old).run();
   await DB.prepare('DELETE FROM fleet_groups WHERE wk < ?').bind(old).run();
   await DB.prepare('DELETE FROM fleet_results WHERE wk < ?').bind(old).run();
   await DB.prepare('DELETE FROM fleet_prizes WHERE wk < ?').bind(old).run();
@@ -183,7 +193,7 @@ async function view(DB, pid, m) {
   if (!f) return null;
   const t = await weekTotal(DB, wk, f.fid), race = Date.now() >= Date.parse(raceFrom(wk) + 'T00:00:00Z');
   const r = await weekTotal(DB, wk, f.fid, raceFrom(wk));
-  const ms = await DB.prepare(`SELECT m.pid, m.name, m.av, m.seen, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.pid = m.pid AND p.fid = m.fid),0) AS s,
+  const ms = await DB.prepare(`SELECT m.pid, m.name, m.av, m.seen, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.pid = m.pid AND p.fid = m.fid),0) AS s,
     EXISTS (SELECT 1 FROM fleet_pts p WHERE p.day = ? AND p.pid = m.pid) AS today FROM fleet_members m WHERE m.fid = ? ORDER BY s DESC, m.joined ASC`).bind(wk, day(), f.fid).all();
   const members = [];
   for (const x of ms.results || []) members.push({ k: await key(f.fid, x.pid), name: x.name, av: x.av, pts: x.s, today: !!x.today, cap: x.pid === f.cap, me: x.pid === pid, away: x.seen < Date.now() - 21 * 864e5 });
@@ -191,10 +201,10 @@ async function view(DB, pid, m) {
   let rank = 0, of = 0;
   if (race) {
     const grp = await groupOf(DB, wk, f.fid);
-    const g = await DB.prepare('SELECT g.fid, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = g.fid AND p.day >= ?),0) AS s FROM fleet_groups g WHERE g.wk = ? AND g.grp = ? ORDER BY s DESC').bind(wk, raceFrom(wk), wk, grp).all();
+    const g = await DB.prepare('SELECT g.fid, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = g.fid AND p.day >= ?),0) AS s FROM fleet_groups g WHERE g.wk = ? AND g.grp = ? ORDER BY s DESC').bind(wk, raceFrom(wk), wk, grp).all();
     const rows = g.results || []; of = rows.length; rank = rows.findIndex(x => x.fid === f.fid) + 1;
   } else {
-    const a = await DB.prepare('SELECT COUNT(*) AS n FROM (SELECT fid, SUM(pts) AS s FROM fleet_pts WHERE wk = ? GROUP BY fid HAVING s > ?)').bind(wk, t.pts).first();
+    const a = await DB.prepare('SELECT COUNT(*) AS n FROM (SELECT fid, SUM(pts + mpts) AS s FROM fleet_pts WHERE wk = ? GROUP BY fid HAVING s > ?)').bind(wk, t.pts).first();
     const all = await DB.prepare('SELECT COUNT(*) AS n FROM fleets').first();
     rank = (a ? a.n : 0) + 1; of = all ? all.n : 1;
   }
@@ -202,8 +212,16 @@ async function view(DB, pid, m) {
     fleet: { fid: f.fid, code: f.code, name: shownName(f), hidden: !!f.hidden, emb: f.emb, open: !!f.open, cap: f.cap === pid, n: members.length, max: MAX_MEMBERS,
       pts: t.pts, race, racePts: r.pts, rank, of, targets: targets(t.players), ends: weekEnd(wk), raceFrom: Date.parse(raceFrom(wk) + 'T00:00:00Z'), freeRename: !f.renames || !!f.hidden,
       renameAt: f.renames ? f.renamed + RENAME_WAIT : 0 },
-    members, wall: (wall.results || []).reverse()
+    members, wall: (wall.results || []).reverse(), fm: await fmView(DB, pid, f.fid, members.length)
   };
+}
+// today's three fleet missions, this member's tries and medals, and the Fleet Chain (medals the fleet won together today)
+async function fmView(DB, pid, fid, n) {
+  const F = FM(), d = day(); if (!F) return null;
+  const r = (await DB.prepare('SELECT id, best, tier, tries FROM fleet_fm WHERE day = ? AND pid = ?').bind(d, pid).all()).results || [];
+  const me = {}; for (const x of r) me[x.id] = { best: x.best, tier: x.tier, tries: x.tries };
+  const c = await DB.prepare("SELECT COALESCE(SUM(tier),0) AS n FROM fleet_fm WHERE day = ? AND fid = ? AND id != 'chain'").bind(d, fid).first();
+  return { d, ids: F.day(d).map(m => m.id), me, chain: { n: c ? c.n : 0, need: F.chainNeed(n), got: !!me.chain } };
 }
 async function prizes(DB, pid) {
   await settleWeek(DB, weekOf(Date.now() - 7 * 864e5));
@@ -213,7 +231,7 @@ async function prizes(DB, pid) {
 async function openList(DB) {
   const wk = weekOf();
   const r = await DB.prepare(`SELECT f.fid, f.name, f.hidden, f.emb, (SELECT COUNT(*) FROM fleet_members m WHERE m.fid = f.fid) AS n,
-    COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid),0) AS s FROM fleets f
+    COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid),0) AS s FROM fleets f
     WHERE f.open = 1 AND f.last >= ? ORDER BY s DESC, f.created DESC LIMIT 30`).bind(wk, Date.now() - 30 * 864e5).all();
   return (r.results || []).filter(x => x.n < MAX_MEMBERS).slice(0, 8).map(x => ({ fid: x.fid, name: x.hidden ? 'FİLO-' + x.fid.slice(0, 4).toUpperCase() : x.name, emb: x.emb, n: x.n, pts: x.s }));
 }
@@ -238,10 +256,10 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
     let rows;
     if (race && m) {
       const grp = await groupOf(DB, wk, m.fid);
-      rows = (await DB.prepare(`SELECT f.fid, f.name, f.hidden, f.emb, (SELECT COUNT(*) FROM fleet_members x WHERE x.fid = f.fid) AS n, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid AND p.day >= ?),0) AS s
+      rows = (await DB.prepare(`SELECT f.fid, f.name, f.hidden, f.emb, (SELECT COUNT(*) FROM fleet_members x WHERE x.fid = f.fid) AS n, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid AND p.day >= ?),0) AS s
         FROM fleet_groups g JOIN fleets f ON f.fid = g.fid WHERE g.wk = ? AND g.grp = ? ORDER BY s DESC LIMIT 20`).bind(wk, rf, wk, grp).all()).results || [];
     } else {
-      rows = (await DB.prepare(`SELECT f.fid, f.name, f.hidden, f.emb, (SELECT COUNT(*) FROM fleet_members x WHERE x.fid = f.fid) AS n, COALESCE((SELECT SUM(pts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid),0) AS s
+      rows = (await DB.prepare(`SELECT f.fid, f.name, f.hidden, f.emb, (SELECT COUNT(*) FROM fleet_members x WHERE x.fid = f.fid) AS n, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.fid = f.fid),0) AS s
         FROM fleets f ORDER BY s DESC, f.created ASC LIMIT 50`).bind(wk).all()).results || [];
     }
     const list = rows.map((x, i) => ({ r: i + 1, name: x.hidden ? 'FİLO-' + x.fid.slice(0, 4).toUpperCase() : x.name, emb: x.emb, n: x.n, pts: x.s, me: !!m && x.fid === m.fid }));
@@ -317,6 +335,45 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
       if (!seen) await event(DB, m.fid, nm, 'mis');
     }
     return json(req, { ok: true, added: add, today: have + add });
+  }
+  if (p === '/fleet/fm/start' && req.method === 'POST') { // a try is used when the run begins, so quitting a bad run does not give it back
+    const F = FM(), d = day(), mm = F && F.day(d).find(x => x.id === body.id);
+    if (!mm) return json(req, { ok: false, err: 'id' });
+    const cur = await DB.prepare('SELECT tries FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
+    if (cur && cur.tries >= F.TRIES) return json(req, { ok: false, err: 'tries', tries: cur.tries });
+    if (cur) await DB.prepare('UPDATE fleet_fm SET tries = tries + 1 WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).run();
+    else await DB.prepare('INSERT INTO fleet_fm (day, pid, fid, id, tries) VALUES (?, ?, ?, ?, 1)').bind(d, m.pid, m.fid, mm.id).run();
+    await DB.prepare('UPDATE fleet_members SET seen = ? WHERE pid = ?').bind(now, m.pid).run();
+    return json(req, { ok: true, tries: (cur ? cur.tries : 0) + 1, d });
+  }
+  if (p === '/fleet/fm' && req.method === 'POST') {
+    const F = FM(), today = day(), d = okDay(body.day) ? body.day : today;
+    if (d !== today && d !== day(now - 36e5 * 2)) return json(req, { ok: false, err: 'day' }, 400); // a run begun just before midnight UTC still counts
+    const mm = F && F.day(d).find(x => x.id === body.id); if (!mm) return json(req, { ok: false, err: 'id' });
+    const cur = await DB.prepare('SELECT best, tier, tries FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
+    if (!cur || !cur.tries) return json(req, { ok: false, err: 'nostart' });
+    const t = Math.max(0, +body.t || 0), v = Math.max(0, Math.floor(+body.v || 0));
+    if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
+    const best = Math.max(cur.best, v), tier = F.tier(mm, best), add = F.pts(mm, tier) - F.pts(mm, cur.tier);
+    if (best > cur.best) await DB.prepare('UPDATE fleet_fm SET best = ?, tier = ? WHERE day = ? AND pid = ? AND id = ?').bind(best, tier, d, m.pid, mm.id).run();
+    if (add > 0) { // fleet points only, outside the day's 300 from play
+      const row = await DB.prepare('SELECT pid FROM fleet_pts WHERE day = ? AND pid = ?').bind(d, m.pid).first();
+      if (row) await DB.prepare('UPDATE fleet_pts SET mpts = mpts + ? WHERE day = ? AND pid = ?').bind(add, d, m.pid).run();
+      else await DB.prepare('INSERT INTO fleet_pts (day, pid, fid, wk, pts, mpts) VALUES (?, ?, ?, ?, 0, ?)').bind(d, m.pid, m.fid, weekOf(Date.parse(d + 'T12:00:00Z')), add).run();
+      await DB.prepare('UPDATE fleets SET last = ? WHERE fid = ?').bind(now, m.fid).run();
+      if (d === today) await news(DB, m.fid, add);
+      if (tier === 3) await event(DB, m.fid, m.name, 'fmg:' + mm.id);
+    }
+    return json(req, { ok: true, best, tier, add });
+  }
+  if (p === '/fleet/fmchain' && req.method === 'POST') { // the Fleet Chain's stars: once a day, for a member who won at least one medal toward it
+    const F = FM(), d = day(), n = await count(DB, m.fid);
+    const mine = await DB.prepare("SELECT COALESCE(SUM(tier),0) AS n FROM fleet_fm WHERE day = ? AND pid = ? AND id != 'chain'").bind(d, m.pid).first();
+    const all = await DB.prepare("SELECT COALESCE(SUM(tier),0) AS n FROM fleet_fm WHERE day = ? AND fid = ? AND id != 'chain'").bind(d, m.fid).first();
+    if (!F || !mine || !mine.n || !all || all.n < F.chainNeed(n)) return json(req, { ok: false, stars: 0 });
+    const r = await DB.prepare("INSERT OR IGNORE INTO fleet_fm (day, pid, fid, id, tries) VALUES (?, ?, ?, 'chain', 1)").bind(d, m.pid, m.fid).run();
+    const ok = !!(r.meta && r.meta.changes);
+    return json(req, { ok, stars: ok ? F.CHAIN_STARS : 0 });
   }
   if (p === '/fleet/msg' && req.method === 'POST') {
     if (!MSGS.includes(body.m)) return json(req, { ok: false }, 400);

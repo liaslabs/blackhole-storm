@@ -7,7 +7,7 @@ placeholder comments; the translations come from i18n/*.json.
 
 Usage:  python3 src/build.py            -> writes index.html in the repo root
 """
-import glob, json, os
+import glob, json, os, sys
 
 SRC = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SRC)
@@ -28,6 +28,9 @@ def main():
     src = src.replace('//@@FLEET@@', read(f'{SRC}/fleet.js').rstrip('\n'))
     assert src.count('//@@NAMES@@') == 1
     src = src.replace('//@@NAMES@@', read(f'{SRC}/names.js').rstrip('\n'))
+    # the fleet missions' catalogue is shared with the leaderboard server too
+    assert src.count('//@@FMIS@@') == 1
+    src = src.replace('//@@FMIS@@', read(f'{SRC}/fmis.js').rstrip('\n'))
     # build stamp for error reports: the service worker cache name (bumped with every web release)
     import re
     m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))
@@ -55,9 +58,10 @@ def main():
               .replace('<!--SFX_DATA-->', read(f'{SRC}/blocks/sfx.html').rstrip('\n'))
               .replace('<!--ASSET_DATA-->', read(f'{SRC}/blocks/assets.html').rstrip('\n'))
               .replace('<!--I18N_DATA-->', i18n))
-    with open(f'{ROOT}/index.html', 'w', encoding='utf-8') as f:
+    dest = sys.argv[1] if len(sys.argv) > 1 else f'{ROOT}/index.html'  # another file for a side build (the default is the game itself)
+    with open(dest, 'w', encoding='utf-8') as f:
         f.write(out)
-    print('built index.html', len(out), 'bytes;', {k: len(v) for k, v in langs.items()})
+    print('built', os.path.basename(dest), len(out), 'bytes;', {k: len(v) for k, v in langs.items()})
 
 
 if __name__ == '__main__':

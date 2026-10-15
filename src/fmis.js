@@ -1,0 +1,31 @@
+// Fleet missions (1.5.1): three a day (easy, medium, hard), the same three for everyone on a UTC day, each played on its own
+// seeded cosmos with the same kit for everyone (3 lives, the mission's shields and Supernova; no Laboratory, no avatar power,
+// none of the player's own stock). A mission has three medal targets; a medal pays fleet points only (never stars, the
+// ranking or the season). Three tries a mission a day, the best one counts. One file for the game and the leaderboard server
+// (the game inlines it, src/build.py //@@FMIS@@; the server imports it), so both pick the same missions and the same targets.
+globalThis.BHS_FMIS = (() => {
+  // lv: 0 easy, 1 medium, 2 hard · m: what is measured · tg: bronze, silver, gold · max: the most a real run can show (the server's check)
+  // plan: events at [second, kind] · kit: shields, Supernovas, Vortex (rage) on or off
+  const L = [
+    { id: 'combo', lv: 0, ic: '🔗', n: 'KOMBO USTASI', d: 'Zinciri koparmadan yut, en yüksek komboya ulaş.', dur: 60, m: 'combo', tg: [6, 10, 14], max: 400 },
+    { id: 'garc', lv: 0, ic: '✨', n: 'ALTIN YAY AVCISI', d: 'Altın Yaylar sık gelir. Yakala, altın anı uzat.', dur: 75, m: 'garc', tg: [2, 4, 5], max: 7, ev: 11 },
+    { id: 'hunt', lv: 1, ic: '🎯', n: 'AV ZİNCİRİ', d: 'Kaçan avları kovala ve parçala.', dur: 75, m: 'hunt', tg: [2, 4, 6], max: 12 },
+    { id: 'eclipse', lv: 1, ic: '🌑', n: 'KARANLIKTA YUT', d: 'Tutulmalar arka arkaya. Karanlıkta cisim yut.', dur: 60, m: 'caught', tg: [45, 75, 105], max: 600,
+      plan: [[3, 'eclipse'], [14, 'eclipse'], [25, 'eclipse'], [36, 'eclipse'], [47, 'eclipse']] },
+    { id: 'belt', lv: 2, ic: '☄️', n: 'METEOR KUŞAĞINDAN KAÇ', d: 'Kuşaklar arka arkaya. Kalkan yok, Vortex yok: dayan.', dur: 60, m: 'time', tg: [30, 45, 60], max: 60,
+      plan: [[2, 'belt'], [14.5, 'belt'], [27, 'belt'], [39.5, 'belt'], [52, 'belt']], kit: { sh: 0, nova: 0, rage: 0 } },
+    { id: 'anti', lv: 2, ic: '⚛️', n: 'ANTİMADDE FIRTINASI', d: 'Antimadde her yerde. Dokunmadan puan topla.', dur: 60, m: 'score', tg: [20000, 40000, 65000], max: 2e6, anti: 1 }
+  ];
+  const PTS = [[10, 15, 20], [20, 30, 40], [30, 45, 60]]; // filo puanı for bronze, silver, gold (a gold medal pays the gold amount, not the sum)
+  const KIT = { lives: 3, sh: 2, nova: 1, rage: 1 }, TRIES = 3;
+  const hash = s => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
+  const byId = id => L.find(m => m.id === id) || null;
+  // the day's three: one of each level, picked by the day so that neighbouring days differ
+  function day(d) { const h = hash('fm:' + d); return [0, 1, 2].map((lv, i) => { const p = L.filter(m => m.lv === lv); return p[(h >>> (i * 5)) % p.length]; }); }
+  const seed = (d, id) => hash(d + ':' + id);
+  const kit = m => ({ ...KIT, ...(m.kit || {}) });
+  const tier = (m, v) => m.tg.filter(x => v >= x).length;
+  const pts = (m, t) => t ? PTS[m.lv][t - 1] : 0;
+  const chainNeed = n => Math.max(6, Math.min(30, 2 * n)); // the Fleet Chain: medals the fleet earns together today
+  return { L, byId, day, seed, kit, tier, pts, chainNeed, TRIES, CHAIN_STARS: 20 };
+})();

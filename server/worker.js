@@ -34,6 +34,7 @@ const okPid = p => typeof p === 'string' && /^[a-z0-9]{12,40}$/.test(p);
 const okDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
 // Names others can see: the shared filter (src/names.js, also inlined into the game): 11 languages, look-alike letters, links, phone numbers
 import '../src/names.js';
+import '../src/fmis.js';
 import { fleetRoute, fleetHousekeeping } from './fleet.js';
 const NAMES = globalThis.BHS_NAMES;
 const badName = n => NAMES.bad(n);
