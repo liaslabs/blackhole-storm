@@ -3607,9 +3607,9 @@ function fleetOpen(tab){FLS=FL.fid?'main':(TIPS.flIntro?'main':'intro');FLT=tab|
 
 async function fleetFetch(force){
   if(!flOn())return null;if(!force&&FLV&&Date.now()-FL.at<60e3)return FLV;
-  try{if(rel(11)&&(FL.fmq||[]).length)await fmFlush();const j=await lbFetch('/fleet?pid='+PID);FLV=j;FLE='';
+  try{if(rel(10)&&(FL.fmq||[]).length)await fmFlush();const j=await lbFetch('/fleet?pid='+PID);FLV=j;FLE='';
     if(j.fleet){const f=j.fleet;Object.assign(FL,{fid:f.fid,name:f.name,emb:f.emb,pts:f.pts,tg:f.targets||[],race:f.race?1:0});}else FL.fid='';
-    FL.fmc=rel(11)&&fmChainReady(j.fm)?1:0;
+    FL.fmc=rel(10)&&fmChainReady(j.fm)?1:0;
     FL.prz=(j.prizes||[]).length;FL.at=Date.now();saveSoon();fleetMenu();fleetTabs();return j;}
   catch(e){FLE='off';return null;}}
 
@@ -3735,7 +3735,7 @@ function fleetPageH(j){const f=j.fleet,code=String(f.code||'').replace(/^(...)(.
 function flTasksH(j){const f=j.fleet,t=f.targets||[1,1,1],pay=[[150,0],[300,5],[600,15]],now=Date.now(),me=(j.members||[]).find(m=>m.me);
   const row=(ic,a,b,c,cls)=>`<div class="row2 ${cls||''}"><span class="ti">${ic}</span><span class="nm"><b>${a}</b><small>${b}</small></span><span class="pt">${c}</span></div>`;
   const left=Date.parse(utcDay()+'T00:00:00Z')+864e5-now;
-  return `${rel(11)&&j.fm?flFmH(j.fm,left):`<div class="sec"><span>${T('BUGÜN')}</span><b>${T('yenilenmesine {t}',{t:flLeft(left)})}</b></div>${flMisH()}`}
+  return `${rel(10)&&j.fm?flFmH(j.fm,left):`<div class="sec"><span>${T('BUGÜN')}</span><b>${T('yenilenmesine {t}',{t:flLeft(left)})}</b></div>${flMisH()}`}
   <div class="sec"><span>${T('BU HAFTA · SANDIKLAR')}</span><b>${T('herkese')}</b></div>
   ${t.map((x,i)=>row(i===2?'👑':'🎁',T('{n}. sandık',{n:i+1})+' · '+flN(x)+' '+T('puan'),flN(pay[i][0])+' ⭐'+(pay[i][1]?' + '+pay[i][1]+' 💎':''),f.pts>=x?'✓':(i===0||f.pts>=t[i-1]?'<span dir="ltr">'+flN(f.pts)+' / '+flN(x)+'</span>':T('sırada')),f.pts>=x?'got':'')).join('')}
   <div class="sec"><span>${T('HAFTA SONU YARIŞI')}</span><b>${f.race?T('yarışın bitişi')+' '+flLeft(f.ends-now):T('yarışa kalan')+' '+flLeft(f.raceFrom-now)}</b></div>
@@ -3743,7 +3743,7 @@ function flTasksH(j){const f=j.fleet,t=f.targets||[1,1,1],pay=[[150,0],[300,5],[
   ${row('🥇',T('İlk 3 filo'),'1.500 ⭐ + 30 💎 · 1.000 ⭐ + 20 💎 · 600 ⭐ + 10 💎','')}
   ${row('🏅',T('Filonun en iyi 3 oyuncusu'),'+200 ⭐','')}
   <div class="sec"><span>${T('SENİN KATKIN')}</span><b>${T('bu hafta')} ${flN(me?me.pts:0)}</b></div>
-  <div class="flnote tip">${T('Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300')}${rel(11)?'<br>'+T('Filo görevlerinin madalyaları bu sınırın dışında sayılır'):''}</div>`;}
+  <div class="flnote tip">${T('Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300')}${rel(10)?'<br>'+T('Filo görevlerinin madalyaları bu sınırın dışında sayılır'):''}</div>`;}
 // ÜYELER: the crew, the wall and the ready-made messages
 function flCrewH(j){const f=j.fleet;
   return `<div class="sec"><span>${T('ÜYELER · BU HAFTA')}</span><b>${T('bugün oynayan')} ✓</b></div>
@@ -3813,7 +3813,7 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
   if(q('#flLeave'))q('#flLeave').onclick=()=>{const b=q('#flLeave'),last=j.fleet.n<=1;if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=last?T('FİLO KAPANACAK, EMİN MİSİN?'):T('AYRIL?');return;}
     go('/fleet/leave',{pid:PID},()=>{FL.fid='';FLS='main';FLV=null;saveG();fleetMenu();fleetRender();});};}
 
-// ── FLEET MISSIONS (1.5.1): three a day, one easy, one medium, one hard (src/fmis.js), each played on its own seeded cosmos
+// ── FLEET MISSIONS (1.5.0, added to the internal test on 15 Oct): three a day, one easy, one medium, one hard (src/fmis.js), each played on its own seeded cosmos
 // on the Daily Race's engine with the mission's kit; three tries a day, the best counts, a medal pays fleet points only ──
 var FMRUN=null; // the mission being played: {m, v (what it counts), d (its day)}; var, so the engine may look before this line runs
 const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} av',caught:'{n} cisim',time:'{n} sn',score:'{n} puan'};
@@ -7221,7 +7221,7 @@ globalThis.BHS_NAMES = (() => {
   return { check, bad: n => !!badKind(n), width, tidy };
 })();
 // Fleet missions: the shared catalogue in src/fmis.js (the day's three, targets and fleet points; the server runs the same file)
-// Fleet missions (1.5.1): three a day (easy, medium, hard), the same three for everyone on a UTC day, each played on its own
+// Fleet missions (1.5.0): three a day (easy, medium, hard), the same three for everyone on a UTC day, each played on its own
 // seeded cosmos with the same kit for everyone (3 lives, the mission's shields and Supernova; no Laboratory, no avatar power,
 // none of the player's own stock). A mission has three medal targets; a medal pays fleet points only (never stars, the
 // ranking or the season). Three tries a mission a day, the best one counts. One file for the game and the leaderboard server

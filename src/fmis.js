@@ -1,4 +1,4 @@
-// Fleet missions (1.5.1): three a day (easy, medium, hard), the same three for everyone on a UTC day, each played on its own
+// Fleet missions (1.5.0): three a day (easy, medium, hard), the same three for everyone on a UTC day, each played on its own
 // seeded cosmos with the same kit for everyone (3 lives, the mission's shields and Supernova; no Laboratory, no avatar power,
 // none of the player's own stock). A mission has three medal targets; a medal pays fleet points only (never stars, the
 // ranking or the season). Three tries a mission a day, the best one counts. One file for the game and the leaderboard server
