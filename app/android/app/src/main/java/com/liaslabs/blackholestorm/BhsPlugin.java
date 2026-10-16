@@ -1,10 +1,13 @@
 package com.liaslabs.blackholestorm;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.ApplicationExitInfo;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Handler;
@@ -54,6 +57,9 @@ import com.google.android.play.core.integrity.IntegrityManagerFactory;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.integrity.StandardIntegrityManager;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,6 +143,9 @@ public class BhsPlugin extends Plugin {
                             stalls.add(t0 + "|" + d + "|" + top + " " + c + "/" + n);
                             while (stalls.size() > 6) stalls.poll();
                         }
+                        // a hold this long may end with Android closing the app ("not responding"): it is written down
+                        // at once, so the next start can still tell where the UI thread was stuck
+                        if (d >= 2500) diag().edit().putString("freeze", System.currentTimeMillis() + "|" + d + "|" + whereDeep(mt.getStackTrace()) + " " + c + "/" + n).apply();
                     }
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -163,6 +172,86 @@ public class BhsPlugin extends Plugin {
             break;
         }
         return mine == null || mine.equals(top) ? top : mine + " < " + top;
+    }
+
+    // the top frames of the UI thread, for a long hold
+    private static String whereDeep(StackTraceElement[] st) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < st.length && i < 12; i++) { if (i > 0) b.append(" < "); b.append(brief(st[i])); }
+        return b.length() > 700 ? b.substring(0, 700) : b.toString();
+    }
+
+    private SharedPreferences diag() {
+        return getContext().getSharedPreferences("bhs_diag", Context.MODE_PRIVATE);
+    }
+
+    // -> {list: [{kind, ts, desc, at}]}: how the app ended since the last call, if it did not end well (Android 11+:
+    // "not responding" or a crash, from Android's own record; any Android: a UI-thread hold of 2.5 s or more noted by the
+    // watch above). Only code locations, nothing personal. Each one is told once.
+    @PluginMethod
+    public void lastExit(PluginCall call) {
+        JSArray a = new JSArray();
+        SharedPreferences p = diag();
+        try {
+            String fz = p.getString("freeze", null);
+            if (fz != null) {
+                String[] x = fz.split("\\|", 3);
+                JSObject o = new JSObject();
+                o.put("kind", "freeze");
+                o.put("ts", Long.parseLong(x[0]));
+                o.put("desc", x.length > 1 ? x[1] + " ms" : "");
+                o.put("at", x.length > 2 ? x[2] : "");
+                a.put(o);
+            }
+        } catch (Throwable e) {}
+        long seen = p.getLong("exitSeen", 0), max = seen;
+        if (Build.VERSION.SDK_INT >= 30) {
+            try {
+                ActivityManager am = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+                List<ApplicationExitInfo> list = am.getHistoricalProcessExitReasons(getContext().getPackageName(), 0, 8);
+                for (ApplicationExitInfo i : list) {
+                    if (i.getTimestamp() <= seen) continue;
+                    max = Math.max(max, i.getTimestamp());
+                    int r = i.getReason();
+                    if (r != ApplicationExitInfo.REASON_ANR && r != ApplicationExitInfo.REASON_CRASH && r != ApplicationExitInfo.REASON_CRASH_NATIVE) continue;
+                    JSObject o = new JSObject();
+                    o.put("kind", r == ApplicationExitInfo.REASON_ANR ? "anr" : r == ApplicationExitInfo.REASON_CRASH ? "crash" : "native");
+                    o.put("ts", i.getTimestamp());
+                    String d = i.getDescription();
+                    o.put("desc", d == null ? "" : d.length() > 200 ? d.substring(0, 200) : d);
+                    o.put("at", r == ApplicationExitInfo.REASON_ANR ? mainOf(i) : "");
+                    a.put(o);
+                }
+            } catch (Throwable e) {}
+        }
+        p.edit().remove("freeze").putLong("exitSeen", max).apply();
+        JSObject o = new JSObject();
+        o.put("list", a);
+        call.resolve(o);
+    }
+
+    // the UI thread's frames from Android's "not responding" trace (the "main" thread's block), shortened
+    private static String mainOf(ApplicationExitInfo i) {
+        try (InputStream in = i.getTraceInputStream()) {
+            if (in == null) return "";
+            BufferedReader r = new BufferedReader(new InputStreamReader(in));
+            StringBuilder b = new StringBuilder();
+            String line;
+            boolean on = false;
+            int n = 0, read = 0;
+            while ((line = r.readLine()) != null && read++ < 20000) {
+                if (!on) { if (line.startsWith("\"main\"")) on = true; continue; }
+                if (line.trim().isEmpty()) break;
+                String t = line.trim();
+                if (!t.startsWith("at ") && !t.startsWith("- waiting") && !t.startsWith("- locked") && !t.startsWith("- sleeping")) continue;
+                if (b.length() > 0) b.append(" < ");
+                b.append(t.replace("com.google.android.gms.", "gms.").replace("com.getcapacitor.", "cap.").replace("com.liaslabs.blackholestorm.", "bhs.").replaceAll("\\(.*?\\)", ""));
+                if (++n >= 14 || b.length() > 800) break;
+            }
+            return b.toString();
+        } catch (Throwable e) {
+            return "";
+        }
     }
 
     private static String brief(StackTraceElement e) {

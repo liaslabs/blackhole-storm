@@ -1989,7 +1989,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v82",APPVER="";
+const BUILD="bhs-v83",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -1997,6 +1997,10 @@ function errReport(msg,stack){try{if(DEV||!/liaslabs\.github\.io/.test(location.
   fetch('https://blackhole-storm-lb.liaslabs-games.workers.dev/err',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},
     body:JSON.stringify({m:msg,s:String(stack||'').split('\n').slice(0,6).join('\n').slice(0,900),v:BUILD,p:NATIVE?'app':'web',l:(navigator.language||'').slice(0,5)})}).catch(()=>{});}catch(e){}}
 addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filename?e.filename.split('/').pop()+':'+e.lineno+':'+e.colno:'')));
+// 1.5.1: how the last run of the app ended, if badly. Android's own record of a "not responding" close or a crash (Android
+// 11+), or a UI-thread hold of 2.5 s or more noted by the app's watch; sent once, as an error report (code locations only)
+setTimeout(async()=>{try{const nb=CAP('Bhs');if(!rel(11)||!nb||!nb.lastExit)return;const j=await nb.lastExit();
+  for(const x of (j&&j.list)||[])errReport(`EXIT ${x.kind} ${new Date(+x.ts).toISOString().slice(0,16)} ${String(x.desc||'').slice(0,160)}`,String(x.at||''));}catch(e){}},12000);
 addEventListener('unhandledrejection',e=>{const r=e.reason;errReport('promise: '+(r&&r.message||r),r&&r.stack);});
 // Daily open count (published site and app only): once a UTC day the game says "opened today" with its version, app or web,
 // and the game language, so we can see how many testers are on which version. No install number, name or other personal data.
