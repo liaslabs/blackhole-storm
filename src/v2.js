@@ -210,7 +210,7 @@ function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Mat
 function v2Down(x,y,id){
   if(!G2.on||gState!=='playing'||DRAG.id!==null)return;
   DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;DRAG.ax=hX;DRAG.ay=hY;DRAG.px=x;DRAG.py=y;DRAG.pt=DRAG.t0;DRAG.vs=0; /* the hole moves by the finger's travel from here: touching the screen never makes it jump */
-  if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);}
+  if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);if(rel(11)&&G2.script)evOnce('tut1');}
 }
 function v2Move(x,y,id){
   if(id!==DRAG.id||!G2.on)return;DRAG.x=x;DRAG.y=y;
@@ -321,7 +321,8 @@ function v2RunScript(dt){
     const xx=x==='hole'?clamp(hX+rnd(-10,10),sp2(30),W-sp2(30)):W*x;const o=v2Edge(k,0,xx);o.vx=0;if(k==='ast'&&G2.si<=1)o.vy*=.75;}
   if(G2.st>=42&&!G2.firstRage&&G2.rage<100&&G2.rageT<=0&&!G2.ready)G2.rage=Math.min(100,G2.rage+dt*40); // the first Rage always arrives, once
   if(G2.ready&&G2.readyT>5)v2RageGo(); // tutorial only: nobody leaves level 1 without seeing Rage
-  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2)G2.script=null; // the tutorial script is over: normal spawning takes it from here
+  if(rel(11)&&G2.st>=30&&!G2.ev2){G2.ev2=1;evOnce('tut2');} // halfway through the tutorial
+  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2){G2.script=null;if(rel(11))evOnce('tut3');} // the tutorial script is over: normal spawning takes it from here
 }
 
 // ── giant planet boss (every 10th level) ─────────────
@@ -1199,6 +1200,7 @@ function v2Hit(o,whole){
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
   G2.arcPow=0;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=am;}G2.arcFill=.5;G2.immT=Math.max(G2.immT,1.5); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
   if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);v2HitNote();}
+  if(rel(11)&&G2.mode==='level'&&gameMode==='classic'&&!REPLAY){const t=G2.t;evOnce('d1_'+(t<10?'a':t<30?'b':t<60?'c':'d'),'d1');} // the first life ever lost: how many seconds into the level
   if(rel(10))v2Burst(hX,hY-G2.R-sp2(16),14,'#ff5a5f',1.5,5,.5,1.8); /* 1.5.0: red shards instead of a "-1" */else v2Pop('-1 ♥','#ff7a5c',20);updateUI();
   if(lives<=0){v2Fail(null);}
 }

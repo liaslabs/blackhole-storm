@@ -64,6 +64,12 @@ A determined cheater can still post a fake score (there are no accounts); if tha
 Fleet missions: `/fleet/fm/start` records when a try began; `/fleet/fm` refuses a result that claims more play time than has
 passed since (10 s slack; the try before also counts, so a late, queued result still lands), on top of the mission's `max`.
 
+## Play counts (1.5.1)
+`POST /ev` takes anonymous daily totals from the game (only the keys in `EV_KEY`), `POST /live` counts installs open in each
+5-minute slot, and the daily ping may carry the install's age band. No install id is stored. Read them all at once with
+`node tools/rapor.mjs [days]`: opens, return by install age, the first-ten-minutes funnel, stars by screen, players at the same
+time, frequent errors and results near the ceilings (`GET /sus`, for a look by hand; nothing is removed automatically).
+
 ## Yedek (backup)
 Two layers, both free:
 1. **D1 Time Travel** (built in): restores the database to any minute of the last days:

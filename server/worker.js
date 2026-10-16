@@ -14,6 +14,14 @@
 //   GET  /errs?days=3                            -> {list:[{day,m,s,v,p,n}]}   the most frequent recent errors
 //   POST /ping    {v,p,l}                        -> {ok}   the game was opened today (once a day per install; no id)
 //   GET  /pings?days=14                          -> {list:[{day,v,p,l,n}]}   how many installs opened which version each day
+//                                                   (1.5.1: the ping may carry a: the install's age band, counted as the event age_<a>)
+//   POST /ev      {v,p,d,e:{key:n}}             -> {ok}   play counts since the last send (1.5.1): only these keys, summed per day,
+//                                                   version and app/web; no install id. Kept 120 days
+//   GET  /evs?days=14                            -> {list:[{day,v,p,e,n}]}
+//   POST /live    {}                             -> {ok}   the game is open: each install says so once per 5-minute slot, so a slot's
+//                                                   count is how many play at the same time (no id). Kept 3 days
+//   GET  /live?days=3                            -> {list:[{slot,n}]}   slot: minutes since 1970 / 5
+//   GET  /sus?day=YYYY-MM-DD                     -> {scores:[...],fm:[...]}   results close to the ceilings, for a look by hand
 //   POST /verify  {pid,sku,token}                -> {ok,pending?}   the app's purchase check: asks Google whether the purchase is real
 //                                                   and paid, records the token (a consumable token counts once, for the install
 //                                                   that bought it), then acknowledges or consumes it. The app grants nothing without ok.
@@ -172,6 +180,17 @@ async function ensurePings(DB) {
   await DB.prepare('CREATE TABLE IF NOT EXISTS pings (day TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, v, p, l))').run();
   pingReady = true;
 }
+// 1.5.1 play counts: the keys the game may send (anything else is dropped)
+const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8})$/;
+const AGE = /^(0|1|2|4|8|15|31|x)$/;
+let evReady = false;
+async function ensureEvs(DB) {
+  if (evReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS evs (day TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, e TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, v, p, e))').run();
+  await DB.prepare('CREATE TABLE IF NOT EXISTS live (slot INTEGER PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0)').run();
+  evReady = true;
+}
+const evAdd = (DB, d, v, p, e, n) => DB.prepare('INSERT INTO evs (day, v, p, e, n) VALUES (?, ?, ?, ?, ?) ON CONFLICT (day, v, p, e) DO UPDATE SET n = n + excluded.n').bind(d, v, p, e, n);
 async function ensureErrs(DB) {
   if (errReady) return;
   await DB.prepare('CREATE TABLE IF NOT EXISTS errs (day TEXT NOT NULL, h TEXT NOT NULL, m TEXT NOT NULL, s TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, h))').run();
@@ -185,6 +204,8 @@ async function housekeeping(DB) {
   await ensureReports(DB); await DB.prepare('DELETE FROM reports WHERE day < ?').bind(old).run();
   await ensureErrs(DB); await DB.prepare('DELETE FROM errs WHERE day < ?').bind(day(Date.now() - 30 * 864e5)).run();
   await ensurePings(DB); await DB.prepare('DELETE FROM pings WHERE day < ?').bind(old).run();
+  await ensureEvs(DB); await DB.prepare('DELETE FROM evs WHERE day < ?').bind(day(Date.now() - 120 * 864e5)).run();
+  await DB.prepare('DELETE FROM live WHERE slot < ?').bind(Math.floor(Date.now() / 3e5) - 3 * 288).run();
   await ensurePurchases(DB); // purchase records: two years (a consumed purchase cannot be claimed again anyway, see gpVerify)
   await DB.prepare('DELETE FROM purchases WHERE ts < ?').bind(Date.now() - 730 * 864e5).run();
   await DB.prepare('DELETE FROM purchase_installs WHERE token NOT IN (SELECT token FROM purchases)').run();
@@ -298,7 +319,45 @@ export default {
         if (!v) return json(req, { ok: false }, 400);
         await ensurePings(DB);
         await DB.prepare('INSERT INTO pings (day, v, p, l, n) VALUES (?, ?, ?, ?, 1) ON CONFLICT (day, v, p, l) DO UPDATE SET n = n + 1').bind(day(), v, p, l).run();
+        if (typeof b.a === 'string' && AGE.test(b.a)) { await ensureEvs(DB); await evAdd(DB, day(), v, p, 'age_' + b.a, 1).run(); }
         return json(req, { ok: true });
+      }
+      if (url.pathname === '/ev' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({}));
+        const v = typeof b.v === 'string' && /^bhs-v\d{1,4}$/.test(b.v) ? b.v : null, p = b.p === 'app' ? 'app' : 'web', today = day();
+        const d = okDay(b.d) && b.d <= today && b.d >= day(Date.now() - 3 * 864e5) ? b.d : today; // counts kept on the phone a few days still land on their day
+        const e = b.e && typeof b.e === 'object' && !Array.isArray(b.e) ? Object.entries(b.e).filter(([k, n]) => EV_KEY.test(k) && Number.isFinite(+n) && +n >= 1).slice(0, 40) : [];
+        if (!v || !e.length) return json(req, { ok: false }, 400);
+        await ensureEvs(DB);
+        await DB.batch(e.map(([k, n]) => evAdd(DB, d, v, p, k, Math.min(k[0] === 's' && k[2] === '_' ? 1e6 : 50, Math.floor(+n)))));
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/evs' && req.method === 'GET') {
+        const days = Math.min(120, Math.max(1, +url.searchParams.get('days') || 14));
+        await ensureEvs(DB);
+        const r = await DB.prepare('SELECT day, v, p, e, n FROM evs WHERE day >= ? ORDER BY day DESC, e').bind(day(Date.now() - (days - 1) * 864e5)).all();
+        return json(req, { list: r.results || [] });
+      }
+      if (url.pathname === '/live' && req.method === 'POST') {
+        await ensureEvs(DB);
+        await DB.prepare('INSERT INTO live (slot, n) VALUES (?, 1) ON CONFLICT (slot) DO UPDATE SET n = n + 1').bind(Math.floor(Date.now() / 3e5)).run();
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/live' && req.method === 'GET') {
+        const days = Math.min(3, Math.max(1, +url.searchParams.get('days') || 1));
+        await ensureEvs(DB);
+        const r = await DB.prepare('SELECT slot, n FROM live WHERE slot >= ? ORDER BY slot').bind(Math.floor(Date.now() / 3e5) - days * 288).all();
+        return json(req, { list: r.results || [] });
+      }
+      if (url.pathname === '/sus' && req.method === 'GET') { // results near the ceilings: a list to look at by hand, nothing is removed
+        const d = okDay(url.searchParams.get('day')) ? url.searchParams.get('day') : day(Date.now() - 864e5);
+        const sc = await DB.prepare('SELECT substr(pid, 1, 6) AS k, name, score, secs, subs FROM scores WHERE day = ? AND score > secs * ? ORDER BY score * 1.0 / secs DESC LIMIT 20').bind(d, MAX_RATE * 0.6).all();
+        const F = globalThis.BHS_FMIS, ms = F ? F.day(d) : [], fm = [];
+        for (const m of ms) {
+          let r = { results: [] }; try { r = await DB.prepare('SELECT substr(pid, 1, 6) AS k, id, best, tries FROM fleet_fm WHERE day = ? AND id = ? AND best >= ? ORDER BY best DESC LIMIT 10').bind(d, m.id, Math.max(m.tg[2] * 2, Math.floor(m.max * 0.6))).all(); } catch (e) {}
+          fm.push(...(r.results || []));
+        }
+        return json(req, { day: d, rate: MAX_RATE, scores: sc.results || [], fm });
       }
       if (url.pathname === '/pings' && req.method === 'GET') {
         const days = Math.min(90, Math.max(1, +url.searchParams.get('days') || 14));

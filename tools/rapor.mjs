@@ -1,0 +1,51 @@
+// Daily report from the leaderboard server's anonymous counts (1.5.1): opens, install age bands, the first-ten-minutes funnel,
+// stars by screen, players at the same time, frequent errors and results near the ceilings. Only totals: no install ids.
+// usage: node tools/rapor.mjs [days=7] [server=https://blackhole-storm-lb.liaslabs-games.workers.dev]
+const days = +process.argv[2] || 7, B = process.argv[3] || 'https://blackhole-storm-lb.liaslabs-games.workers.dev';
+const get = async p => { try { const r = await fetch(B + p); return r.ok ? await r.json() : { list: [] }; } catch (e) { return { list: [] }; } };
+const [pings, evs, live, errs, sus] = await Promise.all([get(`/pings?days=${days}`), get(`/evs?days=${days}`), get('/live?days=3'), get(`/errs?days=${Math.min(days, 30)}`), get('/sus')]);
+const sum = (l, f) => l.filter(f).reduce((a, x) => a + x.n, 0);
+const E = evs.list || [], P = pings.list || [], ev = k => sum(E, x => x.e === k), pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '–';
+const line = (t, ...c) => console.log(t.padEnd(30) + c.map(x => String(x).padStart(10)).join(''));
+
+console.log(`\n== Son ${days} gün ==`);
+const dayList = [...new Set(P.map(x => x.day))].sort();
+line('Gün', 'Açılış', 'Uygulama', 'Yeni(0)');
+for (const d of dayList) line(d, sum(P, x => x.day === d), sum(P, x => x.day === d && x.p === 'app'), sum(E, x => x.day === d && x.e === 'age_0'));
+
+console.log('\n== Kurulum yaşına göre açılış (geri dönüş) ==');
+const AG = [['0', 'ilk gün'], ['1', '1. gün'], ['2', '2–3. gün'], ['4', '4–7. gün'], ['8', '8–14. gün'], ['15', '15–30. gün'], ['31', '31+ gün'], ['x', '1.5.1 öncesi']];
+const a0 = ev('age_0');
+for (const [k, t] of AG) line(t, ev('age_' + k), k === '0' || k === 'x' ? '' : pct(ev('age_' + k), a0));
+console.log('  (oran: o banttaki açılışların, aynı dönemdeki ilk gün açılışlarına oranı; kaba bir geri dönüş göstergesi)');
+
+console.log('\n== İlk 10 dakika hunisi (kurulum başına bir kez) ==');
+const F = [['tut1', 'Eğitim: ilk dokunuş'], ['tut2', 'Eğitim: yarı yol'], ['tut3', 'Eğitim: bitti'], ['lv1', '1. seviye geçildi'], ['lv3', '3. seviye'], ['lv5', '5. seviye'], ['lv10', '10. seviye'], ['fl_join', 'Filoya katıldı']];
+const f0 = ev('tut1');
+for (const [k, t] of F) line(t, ev(k), pct(ev(k), f0));
+const d1 = ['a', 'b', 'c', 'd'].map(k => ev('d1_' + k)), dn = d1.reduce((a, b) => a + b, 0);
+line('İlk can kaybı (sn)', '0–10', '10–30', '30–60', '60+');
+line('', ...d1.map(n => `${n} ${pct(n, dn)}`));
+
+console.log('\n== Kullanım ==');
+for (const [k, t] of [['fm_play', 'Filo görevi oynandı'], ['shop', 'Mağaza açıldı'], ['ad', 'Ödüllü reklam izlendi'], ['ntf_y', 'Bildirim: evet'], ['ntf_n', 'Bildirim: hayır']]) line(t, ev(k));
+
+console.log('\n== Yıldız: hangi ekranda kazanıldı / harcandı ==');
+const src = [...new Set(E.filter(x => /^s[io]_/.test(x.e)).map(x => x.e.slice(3)))].sort();
+line('Ekran', 'Kazanılan', 'Harcanan');
+let ti = 0, to = 0;
+for (const s of src) { const i = ev('si_' + s), o = ev('so_' + s); ti += i; to += o; line(s, i, o); }
+line('TOPLAM', ti, to); console.log(`  harcanan / kazanılan: ${pct(to, ti)} (çok düşükse yıldız birikiyor: enflasyon)`);
+
+console.log('\n== Aynı anda oynayan (5 dk dilimleri, son 3 gün) ==');
+const L = live.list || [], byDay = {};
+for (const x of L) { const t = new Date(x.slot * 3e5), d = t.toISOString().slice(0, 10); if (!byDay[d] || x.n > byDay[d].n) byDay[d] = { n: x.n, at: t.toISOString().slice(11, 16) }; }
+for (const d of Object.keys(byDay).sort()) line(d, `en çok ${byDay[d].n}`, `${byDay[d].at} UTC`);
+
+console.log('\n== En sık hatalar ==');
+for (const x of (errs.list || []).slice(0, 8)) console.log(`  ${String(x.n).padStart(4)}×  ${x.v}  ${x.p}  ${String(x.m).slice(0, 90)}`);
+
+console.log(`\n== Tavana yakın sonuçlar (${sus.day || '–'}, elle bakmak için) ==`);
+for (const x of sus.scores || []) console.log(`  skor  ${x.k}  ${x.name}  ${x.score} puan / ${x.secs} sn  (${Math.round(x.score / x.secs)}/sn, sınır ${sus.rate})`);
+for (const x of sus.fm || []) console.log(`  görev ${x.k}  ${x.id}  ${x.best}  (${x.tries} deneme)`);
+if (!(sus.scores || []).length && !(sus.fm || []).length) console.log('  yok');
