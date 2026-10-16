@@ -157,21 +157,29 @@ async function gpVerify(env, DB, pid, sku, token) {
 }
 // Play Integrity: the request hash ties a token to one request, so a token cannot be reused for another score
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
-async function integrityOk(env, it, hash) {
-  if (typeof it !== 'string' || it.length < 20 || it.length > 8000 || !env.GP_SA || !env.GP_PKG) return false;
+async function integrityOk(env, it, hash) { return (await integrityWhy(env, it, hash)) === 'ok'; }
+// 'ok', or why not, in a few letters (kept as the daily total it_bad_<why>, so a failing check can be told apart without logs)
+async function integrityWhy(env, it, hash) {
+  if (typeof it !== 'string' || it.length < 20 || it.length > 8000) return 'tok';
+  if (!env.GP_SA || !env.GP_PKG) return 'cfg';
   const t = await gpToken(env, 'https://www.googleapis.com/auth/playintegrity');
   const r = await fetch('https://playintegrity.googleapis.com/v1/' + encodeURIComponent(env.GP_PKG) + ':decodeIntegrityToken', { method: 'POST',
     headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: JSON.stringify({ integrity_token: it }) });
-  if (!r.ok) return false;
+  if (!r.ok) return 'http' + r.status;
   const v = (await r.json()).tokenPayloadExternal || {}, rd = v.requestDetails || {}, app = v.appIntegrity || {}, dev = (v.deviceIntegrity || {}).deviceRecognitionVerdict || [];
-  return rd.requestHash === hash && rd.requestPackageName === env.GP_PKG && Math.abs(Date.now() - +rd.timestampMillis) < 10 * 6e4
-    && app.appRecognitionVerdict === 'PLAY_RECOGNIZED' && dev.includes('MEETS_DEVICE_INTEGRITY');
+  if (rd.requestHash !== hash) return 'hash';
+  if (rd.requestPackageName !== env.GP_PKG) return 'pkg';
+  if (!(Math.abs(Date.now() - +rd.timestampMillis) < 10 * 6e4)) return 'time';
+  if (app.appRecognitionVerdict !== 'PLAY_RECOGNIZED') return 'app_' + String(app.appRecognitionVerdict || 'none').toLowerCase().replace(/[^a-z]/g, '').slice(0, 12);
+  if (!dev.includes('MEETS_DEVICE_INTEGRITY')) return 'dev_' + (dev.length ? dev.map(x => x.split('_')[1] || x).join('').toLowerCase().replace(/[^a-z]/g, '').slice(0, 12) : 'none');
+  return 'ok';
 }
 async function integrityGate(env, it, what) {
   const mode = env.INTEGRITY || 'off'; if (mode === 'off') return true;
-  let ok = false; try { ok = await integrityOk(env, it, await sha(what)); } catch (e) {}
-  // a daily total of the verdicts (it_ok, it_bad: a token that failed, it_none: no token, as from the web), read by tools/rapor.mjs
-  try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', ok ? 'it_ok' : it ? 'it_bad' : 'it_none', 1).run(); } catch (e) {}
+  let why = 'err'; try { why = await integrityWhy(env, it, await sha(what)); } catch (e) { why = 'err'; }
+  const ok = why === 'ok';
+  // a daily total of the verdicts (it_ok; it_none: no token, as from the web; it_bad_<why>: a token that failed), read by tools/rapor.mjs
+  try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', ok ? 'it_ok' : it ? 'it_bad_' + why : 'it_none', 1).run(); } catch (e) {}
   if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', what.split('|')[0].slice(0, 4)); return true; }
   return ok;
 }
