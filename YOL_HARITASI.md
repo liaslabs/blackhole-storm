@@ -64,8 +64,11 @@ yedek hazır değilse üretim beklemez.
 
 **Kurulum durumu (16 Eki):** Play Games Services projesi oluşturuldu, `blackhole-storm-play` (595525021870) bulut projesine
 bağlı; bu numara oyunun Play Games uygulama kimliği. Özellikler: Arcade, kayıtlı oyunlar açık, simge ve özellik grafiği yüklü,
-ad ve açıklama en-US (varsayılan) + tr, de, es-ES, es-419, fr, pt-BR, pt-PT, ru, id, ja, ar. Kalan: OAuth onay ekranı, iki
-Android OAuth istemcisi (uygulama imzalama ve yükleme anahtarı SHA-1), kimlik bilgilerinin bağlanması. Yayınlama testlerden sonra.
+ad ve açıklama en-US (varsayılan) + tr, de, es-ES, es-419, fr, pt-BR, pt-PT, ru, id, ja, ar. OAuth onay ekranı (Google Auth Platform) üretimde: harici, kapsamlar `games`, `games_lite`, `drive.appdata` (üçü de hassas
+değil), logo yok. Android OAuth istemcileri (paket `com.liaslabs.blackholestorm`; SHA-1'ler gizli değildir):
+- Play uygulama imzalama anahtarı: `51:F3:53:1D:A6:CB:28:7D:45:24:3F:DB:46:6F:0C:8D:64:DF:87:20`
+- Yükleme anahtarı (CI derlemeleri, APK kurulumları): `32:9B:58:6E:3C:24:E2:F4:38:42:5D:E2:AA:55:19:CE:0E:E6:46:56`
+Kalan: iki istemcinin Play Console'a kimlik bilgisi olarak bağlanması; Play Games Services yayını testlerden sonra.
 
 ### Ödeme ve gelir (sahibinin işleri, 16 Ekim'de sıraya alındı)
 
