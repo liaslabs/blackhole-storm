@@ -928,25 +928,37 @@ public class BhsPlugin extends Plugin {
     // Only a backup: the game writes the "main" slot now and then, and reads it back only into an empty save (a new phone,
     // a new install). "old" keeps the backup a player passed over by starting fresh. The text is gzipped JSON.
 
-    // -> {signed}: Play Games signs the player in by itself at start when it can; this only asks
+    // -> {signed, name, err}: Play Games signs the player in by itself at start when it can; this only asks. name is the
+    // player's Play Games name, so the settings row can show which profile the backup goes to
     @PluginMethod
     public void pgsState(PluginCall call) {
         if (getActivity() == null) { call.reject("pgs: no activity"); return; }
-        PlayGames.getGamesSignInClient(getActivity()).isAuthenticated().addOnCompleteListener(t -> {
-            JSObject r = new JSObject();
-            r.put("signed", t.isSuccessful() && t.getResult() != null && t.getResult().isAuthenticated());
-            call.resolve(r);
-        });
+        pgsAnswer(call, PlayGames.getGamesSignInClient(getActivity()).isAuthenticated());
     }
 
     // the player's own tap on CONNECT: Play Games shows its sign-in
     @PluginMethod
     public void pgsSignIn(PluginCall call) {
         if (getActivity() == null) { call.reject("pgs: no activity"); return; }
-        PlayGames.getGamesSignInClient(getActivity()).signIn().addOnCompleteListener(t -> {
+        pgsAnswer(call, PlayGames.getGamesSignInClient(getActivity()).signIn());
+    }
+
+    private void pgsAnswer(PluginCall call, Task<com.google.android.gms.games.AuthenticationResult> task) {
+        task.addOnCompleteListener(t -> {
             JSObject r = new JSObject();
-            r.put("signed", t.isSuccessful() && t.getResult() != null && t.getResult().isAuthenticated());
-            call.resolve(r);
+            boolean ok = t.isSuccessful() && t.getResult() != null && t.getResult().isAuthenticated();
+            r.put("signed", ok);
+            if (!ok) {
+                Exception e = t.getException();
+                r.put("err", e instanceof ApiException ? "api" + ((ApiException) e).getStatusCode() : e != null ? String.valueOf(e.getMessage()) : "notauth");
+                call.resolve(r);
+                return;
+            }
+            if (getActivity() == null) { call.resolve(r); return; }
+            PlayGames.getPlayersClient(getActivity()).getCurrentPlayer().addOnCompleteListener(p -> {
+                if (p.isSuccessful() && p.getResult() != null) r.put("name", p.getResult().getDisplayName());
+                call.resolve(r);
+            });
         });
     }
 

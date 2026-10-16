@@ -233,6 +233,12 @@ Her güncellemede:
   (BAĞLAN / YEDEKLE, son yedek zamanı) ve 30 gün "Eski yedek" (iki dokunuşla, yer değiştirerek geri yükleme). 21 yeni metin
   11 dilde. Sayaçlar `cl_found`, `cl_rest`, `cl_new` (sunucu). Gizlilik metnine "Bulut yedek" bölümü. Ayrıca HyperOS'un
   "son uygulamalardan kaydırma" kapanışı (SwipeUpClean) artık donma kaydı sayılmaz. Web sürümünde bulut yedek yok.
+  Telefonda (16 Eki): gurkansinan@gmail.com Play Games test kullanıcısı değilken bağlantı sessizce düştü; liaslabs ile bağlanıp
+  yedeklendi; sonra gurkansinan test kullanıcısı yapıldı, liaslabs'ın izni (Google Hesabı › Bağlı uygulamalar) silinip
+  gurkansinan ile bağlanıp yedeklendi.
+- **Kod 54 (hazırlanıyor, geri yükleme testinden sonra)**: bağlanma başarısız olunca uyarı + hata raporu (`CLOUD signin`,
+  Google kodu), yedek gönderilemezse oturumda bir kez `CLOUD push` raporu; Bulut yedek satırında Play Games oyuncu adı ve
+  ⓘ ile hesap değiştirme tarifi. 2 yeni metin 11 dilde. `bhs-v87`.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 

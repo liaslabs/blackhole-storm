@@ -1700,7 +1700,7 @@ document.addEventListener('visibilitychange',()=>natMark(document.hidden?'backgr
 // server of ours). It comes back only into a brand-new save, and only when the player says so: a new phone or a new install
 // finds its backup while the intro plays. Starting fresh instead keeps that backup in a second slot for 30 days. Pushes wait
 // until that check is over, and a session's first push keeps a further-along backup of another install rather than overwrite it.
-const CLOUD={st:'off',signed:false,dirty:false,busy:false,last:0,guard:false,paused:false,oldAt:0};
+const CLOUD={st:'off',signed:false,who:'',errSent:false,dirty:false,busy:false,last:0,guard:false,paused:false,oldAt:0};
 const cloudNb=()=>{const nb=CAP('Bhs');return rel(11)&&NATIVE&&nb&&nb.cloudRead?nb:null;};
 const cloudWait=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
 const CLOUD_KEYS=['bhs_v7','bhs_intro','bhs_d0'];
@@ -1713,7 +1713,7 @@ const cloudWhen=ts=>{try{return new Date(ts).toLocaleString(LOC,{day:'numeric',m
 function cloudOldAt(){let t=0;try{t=+localStorage.getItem('bhs_cold')||0;}catch(e){}return Date.now()-t<30*864e5?t:0;}
 // a new install: look for a backup while the intro (or the first level) runs; nothing is pushed until this is settled
 async function cloudFresh(){const nb=cloudNb();if(!nb)return;CLOUD.st='wait';let f=null;
-  try{const s=await cloudWait(nb.pgsState(),6000);CLOUD.signed=!!(s&&s.signed);if(CLOUD.signed){const r=await cloudWait(nb.cloudRead({slot:'main'}),8000);if(r&&r.found)f=cloudParse(r);}}catch(e){}
+  try{const s=await cloudWait(nb.pgsState(),6000);CLOUD.signed=!!(s&&s.signed);CLOUD.who=s&&s.name||'';if(CLOUD.signed){const r=await cloudWait(nb.cloudRead({slot:'main'}),8000);if(r&&r.found)f=cloudParse(r);}}catch(e){}
   if(!f||!f.d.lv){CLOUD.st='ready';return;}
   ev('cl_found');if(gState==='playing'){pausedFrom=gState;gState='paused';CLOUD.paused=true;}cloudCard(f);}
 function cloudCard(f){const d=f.d,bg=document.createElement('div'),m=document.createElement('div');bg.id='mCloudBg';m.id='mCloud';m.className='modal card on';
@@ -1739,20 +1739,25 @@ async function cloudPush(force){const nb=cloudNb();if(!nb||!CLOUD.signed||CLOUD.
       CLOUD.guard=true;}
     const w=await cloudWait(nb.cloudWrite({slot:'main',data:cloudPack(),desc:cloudDesc(),level:bestLevel|0}),10000);if(!w||!w.ok)throw 0;
     CLOUD.dirty=false;CLOUD.last=Date.now();try{localStorage.setItem('bhs_clast',String(CLOUD.last));}catch(e){}return true;}
-  catch(e){return false;}finally{CLOUD.busy=false;if($('sSet').classList.contains('on'))cloudUI();}}
+  catch(e){cloudErr('push',e);return false;}finally{CLOUD.busy=false;if($('sSet').classList.contains('on'))cloudUI();}}
 function cloudDirty(){if(CLOUD.st!=='off')CLOUD.dirty=true;}
 // every half minute between levels, at most every 2 minutes; and when the game goes to the background
 setInterval(()=>{if(CLOUD.dirty&&gState!=='playing'&&Date.now()-CLOUD.last>12e4)cloudPush();},3e4);
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&CLOUD.dirty&&Date.now()-CLOUD.last>2e4)cloudPush();});
 // an install that already had a save: ask Play Games once whether the player is signed in
 async function cloudInit(){const nb=cloudNb();if(!nb||CLOUD.st!=='off')return;CLOUD.st='ready';try{CLOUD.last=+localStorage.getItem('bhs_clast')||0;}catch(e){}
-  try{const s=await cloudWait(nb.pgsState(),8000);CLOUD.signed=!!(s&&s.signed);}catch(e){}if(CLOUD.signed)CLOUD.dirty=true;}
+  try{const s=await cloudWait(nb.pgsState(),8000);CLOUD.signed=!!(s&&s.signed);CLOUD.who=s&&s.name||'';}catch(e){}if(CLOUD.signed)CLOUD.dirty=true;}
+// a failed sign-in or backup is told once a session, as an error report, with Google's code
+function cloudErr(what,e){if(CLOUD.errSent)return;CLOUD.errSent=true;try{errReport(`CLOUD ${what} ${String(e&&(e.err||e.message)||e||'').slice(0,120)}`,'');}catch(x){}}
 function cloudUI(){const row=$('sCloudRow'),orow=$('sCloudOldRow');if(!row)return;const on=!!cloudNb();row.hidden=!on;orow.hidden=true;if(!on)return;
-  $('sCloudT').textContent='☁️ '+T('Bulut yedek');const b=$('sCloudB');
+  const tt=$('sCloudT');tt.textContent='☁️ '+T('Bulut yedek')+' ⓘ';tt.style.cursor='pointer';
+  tt.onclick=()=>toast('☁️',T('BULUT YEDEK'),T('Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.'));const b=$('sCloudB');
   if(!CLOUD.signed){$('sCloudS').textContent=T('Telefon değişince ilerlemen kaybolmasın');$('sCloudOk').textContent='';b.textContent=T('BAĞLAN');
-    b.onclick=async()=>{const nb=cloudNb();b.disabled=true;try{const r=await nb.pgsSignIn();CLOUD.signed=!!(r&&r.signed);if(CLOUD.signed){CLOUD.dirty=true;await cloudPush(true);}}catch(e){}b.disabled=false;cloudUI();};return;}
+    b.onclick=async()=>{const nb=cloudNb();b.disabled=true;let r=null;try{r=await nb.pgsSignIn();}catch(e){r={err:e&&e.message||'reject'};}
+      CLOUD.signed=!!(r&&r.signed);CLOUD.who=r&&r.name||'';if(CLOUD.signed){CLOUD.dirty=true;await cloudPush(true);}
+      else{cloudErr('signin',r);toast('☁️',T('BULUT YEDEK'),T('Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.'));}b.disabled=false;cloudUI();};return;}
   const ago=CLOUD.last?Math.max(0,Math.round((Date.now()-CLOUD.last)/6e4)):-1;$('sCloudOk').textContent='';
-  $('sCloudS').textContent='Google Play Games'+(CLOUD.busy?' · …':ago<0?'':' · ✓ '+(ago<1?T('şimdi'):ago<60?T('{n} dk önce',{n:ago}):cloudWhen(CLOUD.last)));
+  $('sCloudS').textContent=(CLOUD.who||'Google Play Games')+(CLOUD.busy?' · …':ago<0?'':' · ✓ '+(ago<1?T('şimdi'):ago<60?T('{n} dk önce',{n:ago}):cloudWhen(CLOUD.last)));
   b.textContent=T('YEDEKLE');b.onclick=async()=>{b.disabled=true;CLOUD.dirty=true;const ok=await cloudPush(true);b.disabled=false;toast('☁️',T('BULUT YEDEK'),ok?T('İlerlemen yedeklendi.'):T('Yedeklenemedi. İnternet bağlantını kontrol edip tekrar dene.'));cloudUI();};
   const t=cloudOldAt();if(!t||CLOUD.st!=='ready')return;orow.hidden=false;$('sCloudOT').textContent='☁️ '+T('Eski yedek');$('sCloudOS').textContent=T('{n} gün daha saklanır',{n:Math.max(1,30-Math.floor((Date.now()-t)/864e5))});
   const ob=$('sCloudOB');ob.textContent=T('GERİ YÜKLE');let arm=false;

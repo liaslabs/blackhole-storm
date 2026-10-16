@@ -2212,5 +2212,7 @@
 "ESKİ YEDEK": "ANCIENNE SAUVEGARDE",
 "Bu telefondaki ilerleme eski yedekle yer değiştirir; şimdiki ilerlemen eski yedek olarak saklanır.": "La progression de ce téléphone échange sa place avec l'ancienne sauvegarde ; ta progression actuelle est conservée comme ancienne sauvegarde.",
 "İLERLEMEN GERİ GELDİ": "TA PROGRESSION EST DE RETOUR",
-"Seviye {n} · filon ve sıralaman da taşındı": "Niveau {n} · ta flotte et ton classement ont suivi"
+"Seviye {n} · filon ve sıralaman da taşındı": "Niveau {n} · ta flotte et ton classement ont suivi",
+"Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Impossible de se connecter à Google Play Jeux. Réessaie un peu plus tard.",
+"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Pour passer à un autre compte Google : Compte Google › Connexions tierces › Blackhole Storm › Tout supprimer ; puis touche CONNECTER ici."
 }

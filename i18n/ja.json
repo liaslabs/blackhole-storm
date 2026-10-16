@@ -2212,5 +2212,7 @@
 "ESKİ YEDEK": "以前のバックアップ",
 "Bu telefondaki ilerleme eski yedekle yer değiştirir; şimdiki ilerlemen eski yedek olarak saklanır.": "この端末の進行状況と以前のバックアップが入れ替わります。今の進行状況は以前のバックアップとして保存されます。",
 "İLERLEMEN GERİ GELDİ": "進行状況が戻りました",
-"Seviye {n} · filon ve sıralaman da taşındı": "レベル{n}・フリートとランキングも引き継がれました"
+"Seviye {n} · filon ve sıralaman da taşındı": "レベル{n}・フリートとランキングも引き継がれました",
+"Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Google Play ゲームに接続できませんでした。少し時間をおいてもう一度お試しください。",
+"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "別の Google アカウントに切り替えるには: Google アカウント › サードパーティとの接続 › Blackhole Storm › すべて削除 のあと、ここで「接続」をタップ。"
 }

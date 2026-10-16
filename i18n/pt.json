@@ -2212,5 +2212,7 @@
 "ESKİ YEDEK": "BACKUP ANTERIOR",
 "Bu telefondaki ilerleme eski yedekle yer değiştirir; şimdiki ilerlemen eski yedek olarak saklanır.": "O progresso deste celular troca de lugar com o backup anterior; seu progresso atual fica guardado como backup anterior.",
 "İLERLEMEN GERİ GELDİ": "SEU PROGRESSO VOLTOU",
-"Seviye {n} · filon ve sıralaman da taşındı": "Nível {n} · sua frota e seu ranking vieram junto"
+"Seviye {n} · filon ve sıralaman da taşındı": "Nível {n} · sua frota e seu ranking vieram junto",
+"Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Não foi possível conectar ao Google Play Games. Tente de novo daqui a pouco.",
+"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Para trocar de conta Google: Conta do Google › Conexões de terceiros › Blackhole Storm › Excluir tudo; depois toque em CONECTAR aqui."
 }
