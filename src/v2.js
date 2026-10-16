@@ -1372,7 +1372,7 @@ const TIP2={
   crystal:['🔷','KRİSTAL','Kristal çok değerli: +200 puan ve hızlı büyüme. Ama çoğu zaman yanında bir meteor olur, dikkat et.'],
   energy:['⚡','ENERJİ','Enerji topu Vortex barını hızla doldurur. Kaçırma!'],
   gold:['🌕','ALTIN GEZEGEN','Nadir ve çok hızlı: +500 puan. Yutmak için biraz büyümüş olman gerekir.'],
-  time:['⏱','ZAMAN TOPU','Yut: her şey 4 saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar.'],
+  time:[rel(10)?'⏳':'⏱','ZAMAN TOPU','Yut: her şey 4 saniye yavaşlar, sen hızlı kalırsın. Kara deliğin evrimleştikçe süre uzar.'],
   bomb:['💣','BOMBA GEZEGEN','Bombayı çekim alanına al: etrafında döner, fitili yanar. 3 saniye alanında tutarsan MEGA BOMBA ekrandaki her şeyi sana çeker. Çok hızlı hareket edersen bomba kaçar.'],
   mini:['🌀','MİNİ KARA DELİK','Yut: 6 saniye boyunca etrafında dönen yardımcı bir kara delik açılır. Onun yuttukları sana akar. Meteor ona çarparsa can gitmez.'],
   big:['🪐','ÇOK BÜYÜK','Bu cisim şimdilik senden büyük: çarpınca seker. Küçük cisimleri yiyerek büyü, sonra onu da yut.'],
@@ -1407,7 +1407,7 @@ const TIP2={
   ev_belt:['☄','METEOR KUŞAĞI','Uyarıdan sonra 13 saniye boyunca sadece meteorlar gelir; hepsi aynı açıyla, şerit şerit akar. Boş şeridi takip et; şerit yavaşça kayar. Hiç çarpmadan geçersen +500 puan ve +25 ⭐.'],
   shrinkc:['💨','HIZLI KÜÇÜLME','Bu seviyede ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür. Durmadan ye.'],
   ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
-  hawking:['💨','HAWKING SALINIMI','Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir.'],
+  hawking:[rel(10)?'\ue104':'💨','HAWKING SALINIMI','Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir.'],
   worm:['🌌','SOLUCAN DELİĞİ','Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.'],
   hor:['♾️','İKİNCİ UFUK','Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.'],
   jet:['🔥','KUASAR JETİ','Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır.'],
@@ -2095,11 +2095,11 @@ function v2Hud(){
   if(G2.hud.done)return;G2.hud.done=true;
   const sb=$('scoreBox');const rb=document.createElement('div');rb.id='rage2';rb.innerHTML='<span class="l notr">VORTEX</span><div class="bar"><i></i></div>';sb.appendChild(rb);
   const tm=document.createElement('div');tm.id='tmr2';tm.className='notr';tm.innerHTML='<span>⏱</span><b id="tmr2v">60</b>';$('hdr').insertBefore(tm,$('pauseBtn'));
-  const jc=document.createElement('div');jc.id='jet2';jc.className='notr';jc.hidden=true;jc.innerHTML='<i>🔥</i>';$('hdr').insertBefore(jc,tm); /* the jet's charge: a ring that fills, then glows when it is ready */
+  const jc=document.createElement('div');jc.id='jet2';jc.className='notr';jc.hidden=true;jc.innerHTML=rel(10)?'<i>'+ICO.svg('\ue105')+'</i>':'<i>🔥</i>';$('hdr').insertBefore(jc,tm); /* the jet's charge: a ring that fills, then glows when it is ready */
   const tray=document.createElement('div');tray.id='boost2';$('hdr').appendChild(tray); /* the power tray: big buttons under the right thumb, not icons lost in the top bar */
   const hb=(id,ic,fn,lb)=>{const b=document.createElement('button');b.id=id;b.className='hb2';b.innerHTML=`<span class="ic">${ic}</span><i>${lb}</i><b></b>`;tray.appendChild(b);
     b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn();});b.addEventListener('click',e=>e.stopPropagation());return b;};
-  hb('hkTop','💨',v2Hawking,'HAWKING');hb('shTop','🛡',v2Shield,'KALKAN');hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')v2Nova();},'SÜPERNOVA');
+  hb('hkTop',rel(10)?'\ue104':'💨',v2Hawking,'HAWKING');hb('shTop','🛡',v2Shield,'KALKAN');hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')v2Nova();},'SÜPERNOVA');
   rb.addEventListener('pointerdown',e=>{e.preventDefault();if(G2.on&&gState==='playing')v2Tap();});
 }
 function v2ScFit(mk,force){const sv=$('scVal'),full=mk(x=>x.toLocaleString(LOC)),key=full.replace(/\d/g,'0');if(!force&&sv._k===key&&sv._full){sv.innerHTML=full;return;} /* same shape as last time: the fitted size still holds, so no layout read on every point scored */

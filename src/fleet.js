@@ -287,11 +287,11 @@ function fmPlay(id){if(TIPS['fm_'+id])fmStart(id);else{TIPS['fm_'+id]=1;saveSoon
 // the card before a run: what the mission asks, the same kit for everyone, what is never touched, the medals
 function fmAsk(id){const F=BHS_FMIS,m=F.byId(id),fm=FLV&&FLV.fm;if(!m||!fm)return;const me=fm.me[id]||{tries:0},rest=F.TRIES-me.tries,k=F.kit(m);if(rest<=0)return;fmClose();
   const kit=[['❤️',T('{n} can (göreve özel)',{n:k.lives})],k.sh?['🛡️',T('{n} kalkan (görevin)',{n:k.sh})]:['🛡️',T('Kalkan yok'),1],k.nova?['💎',T('{n} Süpernova (görevin)',{n:k.nova})]:['💎',T('Süpernova yok'),1],
-    k.rage?['🌀',T('Vortex açık')]:['🌀',T('Vortex kapalı'),1],['🧪',T('Lab güçleri kapalı'),1],['👤',T('Avatar gücü kapalı'),1]];
+    k.rage?['💢',T('Vortex açık')]:['💢',T('Vortex kapalı'),1],['🔬',T('Lab güçleri kapalı'),1],['🧑‍🚀',T('Avatar gücü kapalı'),1]];
   const keep=[['⛽',T('Füzyon yakıtı harcanmaz')],['🛡️',T('Kendi kalkanların harcanmaz')],['⭐',T('Normal puana eklenmez')],['🗺️',T('Seviye ilerlemen değişmez')]];
   const o=document.createElement('div');o.className='fm-ov';o.id='fmOv';
   o.innerHTML=`<div class="fm-card"><div class="big">${fmIc(m,"lg")}</div><h3>${T(m.n)}</h3><p>${T(m.d)}</p><p class="dur">⏱ ${fmDur(m)}</p>
-    <div class="fm-sec">⚖️ ${T('HERKESE EŞİT DONANIM')}</div><div class="fm-kit">${kit.map(([i,t,off])=>`<div class="${off?'off':''}">${i} ${t}</div>`).join('')}</div>
+    <div class="fm-sec">${T('HERKESE EŞİT DONANIM')}</div><div class="fm-kit">${kit.map(([i,t,off])=>`<div class="${off?'off':''}">${i} ${t}</div>`).join('')}</div>
     <div class="fm-sec">${T('SENİN STOĞUN KORUNUR')}</div><div class="fm-kit">${keep.map(([i,t])=>`<div>${i} ${t}</div>`).join('')}</div>
     <div class="fm-tg">${m.tg.map((x,i)=>`<span><b>${fmFmt(m,x)}</b><i>+${F.pts(m,i+1)} ${T('filo puanı')}</i></span>`).join('')}</div>
     <div class="row"><button class="b2" id="fmNo">${T('KAPAT')}</button><button class="b1" id="fmGo">▶ ${T('BAŞLA')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}</button></div>
