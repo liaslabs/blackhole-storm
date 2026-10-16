@@ -26,6 +26,9 @@ numaralı, tek parçalık yayın yapmış (ör. Vol. 57: 25 Haziran 2025, "Howea
 yükleyen hesapların tipik görüntüsü. Parçanın OpenGameArt'taki CC0 kaydı (25 Ocak 2017) bu yayından yıllarca eskidir;
 CC0 bir kaydı sonradan yükleyen kişi onun sahibi olmaz.
 
+Sahibi parçayı dinledi: yalnız perküsyon ritmi benziyor, melodi ve düzenleme bizim parçayla ilgisiz. Yani Shazam'ın
+benzer davul kalıbından yanlış eşleşmesi; aynı kayıt değil.
+
 **Bir talep gelirse:** YouTube Content ID talebine itiraz (gerekçe: kamu malı / CC0, kaynak sayfası ve tarihi), Google Play'e
 telif şikâyeti gelirse karşı bildirim; bu kayıt ve `lisans/muzik/` kopyaları kanıt. Hukuki görüş değildir; gerçek bir
 şikâyette bir uzmana danışılmalı.
