@@ -241,6 +241,10 @@ Her güncellemede:
   ⓘ ile hesap değiştirme tarifi; YEDEKLE'den sonra yedek buluttan geri okunup yazılanla karşılaştırılır (yeni telefondaki
   okumanın aynısı; sahibi silip yeniden kurarak deneyemediği için gerçek cihazda okuma böyle doğrulanır), uyuşmazsa `CLOUD verify`
   raporu. 4 yeni metin 11 dilde. `bhs-v87`.
+  **Telefonda doğrulandı (16 Eki 22:25 TSİ):** gurkansinan hesabıyla bağlanma, oyuncu adı satırda, YEDEKLE → "yedek geri
+  okunarak doğrulandı"; `CLOUD` hata raporu yok. Silip yeniden kurma testi 20 Eki sonrasına (kapalı test süresi dolana kadar
+  test kullanıcısı uygulamayı silmesin). Not (sonraki derleme): `r13 ISOLATED NOT NEEDED` ve bağlantı kaldırılırken gelen `r2`
+  sistem kapanışları olağan sayılıp raporlanmasın.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 

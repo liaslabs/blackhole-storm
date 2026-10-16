@@ -69,7 +69,8 @@ değil), logo yok. Android OAuth istemcileri (paket `com.liaslabs.blackholestorm
 - Play uygulama imzalama anahtarı: `51:F3:53:1D:A6:CB:28:7D:45:24:3F:DB:46:6F:0C:8D:64:DF:87:20`
 - Yükleme anahtarı (CI derlemeleri, APK kurulumları): `32:9B:58:6E:3C:24:E2:F4:38:42:5D:E2:AA:55:19:CE:0E:E6:46:56`
 İki istemci Play Console'a Android kimlik bilgisi olarak bağlandı (korsanlık koruması kapalı; yeni yüklemelerde Play
-istemcisi). Kurulum 4/6: kalan SDK'nın uygulamaya eklenmesi (oyun tarafı) ve Play Games Services yayını (testlerden sonra).
+istemcisi). Kurulum 5/6: SDK kod 53–54'te; telefonda yedekleme ve geri okuma doğrulandı (16 Eki). Kalan: Play Games Services yayını
+("İncele ve yayınla", sahibinin onayıyla, üretimden önce; yayınlanmadan yalnız test kullanıcıları bağlanabilir).
 
 ### Ödeme ve gelir (sahibinin işleri, 16 Ekim'de sıraya alındı)
 
