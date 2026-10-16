@@ -2214,5 +2214,7 @@
 "İLERLEMEN GERİ GELDİ": "ПРОГРЕСС ВЕРНУЛСЯ",
 "Seviye {n} · filon ve sıralaman da taşındı": "Уровень {n} · флот и рейтинг тоже перенесены",
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Не удалось подключиться к Google Play Играм. Попробуй чуть позже.",
-"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Чтобы сменить аккаунт Google: Аккаунт Google › Сторонние подключения › Blackhole Storm › Удалить все; затем нажми здесь ПОДКЛЮЧИТЬ."
+"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Чтобы сменить аккаунт Google: Аккаунт Google › Сторонние подключения › Blackhole Storm › Удалить все; затем нажми здесь ПОДКЛЮЧИТЬ.",
+"İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Прогресс сохранён: копия прочитана обратно и проверена.",
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Копия записана, но прочитать её не удалось. Попробуй чуть позже."
 }

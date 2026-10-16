@@ -238,7 +238,9 @@ Her güncellemede:
   gurkansinan ile bağlanıp yedeklendi.
 - **Kod 54 (hazırlanıyor, geri yükleme testinden sonra)**: bağlanma başarısız olunca uyarı + hata raporu (`CLOUD signin`,
   Google kodu), yedek gönderilemezse oturumda bir kez `CLOUD push` raporu; Bulut yedek satırında Play Games oyuncu adı ve
-  ⓘ ile hesap değiştirme tarifi. 2 yeni metin 11 dilde. `bhs-v87`.
+  ⓘ ile hesap değiştirme tarifi; YEDEKLE'den sonra yedek buluttan geri okunup yazılanla karşılaştırılır (yeni telefondaki
+  okumanın aynısı; sahibi silip yeniden kurarak deneyemediği için gerçek cihazda okuma böyle doğrulanır), uyuşmazsa `CLOUD verify`
+  raporu. 4 yeni metin 11 dilde. `bhs-v87`.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 

@@ -2214,5 +2214,7 @@
 "İLERLEMEN GERİ GELDİ": "SEU PROGRESSO VOLTOU",
 "Seviye {n} · filon ve sıralaman da taşındı": "Nível {n} · sua frota e seu ranking vieram junto",
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Não foi possível conectar ao Google Play Games. Tente de novo daqui a pouco.",
-"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Para trocar de conta Google: Conta do Google › Conexões de terceiros › Blackhole Storm › Excluir tudo; depois toque em CONECTAR aqui."
+"Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Para trocar de conta Google: Conta do Google › Conexões de terceiros › Blackhole Storm › Excluir tudo; depois toque em CONECTAR aqui.",
+"İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Seu progresso está salvo; o backup foi lido de volta e conferido.",
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "O backup foi gravado, mas não pôde ser lido de volta. Tente de novo daqui a pouco."
 }

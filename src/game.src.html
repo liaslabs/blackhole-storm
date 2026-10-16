@@ -1737,7 +1737,7 @@ async function cloudPush(force){const nb=cloudNb();if(!nb||!CLOUD.signed||CLOUD.
   try{if(!CLOUD.guard){const r=await cloudWait(nb.cloudRead({slot:'main'}),8000);if(!r)throw 0;const f=r.found&&cloudParse(r);
       if(f&&f.pid&&f.pid!==PID&&f.d.lv>bestLevel){await nb.cloudWrite({slot:'old',data:f.raw,desc:`${f.d.n} · ${T('Seviye')} ${f.d.lv}`.slice(0,90),level:f.d.lv|0});localStorage.setItem('bhs_cold',String(Date.now()));}
       CLOUD.guard=true;}
-    const w=await cloudWait(nb.cloudWrite({slot:'main',data:cloudPack(),desc:cloudDesc(),level:bestLevel|0}),10000);if(!w||!w.ok)throw 0;
+    const pk=cloudPack(),w=await cloudWait(nb.cloudWrite({slot:'main',data:pk,desc:cloudDesc(),level:bestLevel|0}),10000);if(!w||!w.ok)throw 0;CLOUD.pk=pk;
     CLOUD.dirty=false;CLOUD.last=Date.now();try{localStorage.setItem('bhs_clast',String(CLOUD.last));}catch(e){}return true;}
   catch(e){cloudErr('push',e);return false;}finally{CLOUD.busy=false;if($('sSet').classList.contains('on'))cloudUI();}}
 function cloudDirty(){if(CLOUD.st!=='off')CLOUD.dirty=true;}
@@ -1758,7 +1758,11 @@ function cloudUI(){const row=$('sCloudRow'),orow=$('sCloudOldRow');if(!row)retur
       else{cloudErr('signin',r);toast('☁️',T('BULUT YEDEK'),T('Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.'));}b.disabled=false;cloudUI();};return;}
   const ago=CLOUD.last?Math.max(0,Math.round((Date.now()-CLOUD.last)/6e4)):-1;$('sCloudOk').textContent='';
   $('sCloudS').textContent=(CLOUD.who||'Google Play Games')+(CLOUD.busy?' · …':ago<0?'':' · ✓ '+(ago<1?T('şimdi'):ago<60?T('{n} dk önce',{n:ago}):cloudWhen(CLOUD.last)));
-  b.textContent=T('YEDEKLE');b.onclick=async()=>{b.disabled=true;CLOUD.dirty=true;const ok=await cloudPush(true);b.disabled=false;toast('☁️',T('BULUT YEDEK'),ok?T('İlerlemen yedeklendi.'):T('Yedeklenemedi. İnternet bağlantını kontrol edip tekrar dene.'));cloudUI();};
+  b.textContent=T('YEDEKLE');b.onclick=async()=>{b.disabled=true;CLOUD.dirty=true;let ok=await cloudPush(true),msg=ok?T('İlerlemen yedeklendi.'):T('Yedeklenemedi. İnternet bağlantını kontrol edip tekrar dene.');
+    if(ok){ /* the backup is read back the way a new phone would read it */
+      try{const r=await cloudWait(cloudNb().cloudRead({slot:'main'}),10000);if(r&&r.found&&r.data===CLOUD.pk)msg=T('İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.');else{msg=T('Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.');cloudErr('verify',{err:r?(r.found?'differs':'notfound'):'timeout'});}}
+      catch(e){msg=T('Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.');cloudErr('verify',e);}}
+    b.disabled=false;toast('☁️',T('BULUT YEDEK'),msg);cloudUI();};
   const t=cloudOldAt();if(!t||CLOUD.st!=='ready')return;orow.hidden=false;$('sCloudOT').textContent='☁️ '+T('Eski yedek');$('sCloudOS').textContent=T('{n} gün daha saklanır',{n:Math.max(1,30-Math.floor((Date.now()-t)/864e5))});
   const ob=$('sCloudOB');ob.textContent=T('GERİ YÜKLE');let arm=false;
   ob.onclick=async()=>{if(!arm){arm=true;ob.textContent=T('EMİN MİSİN?');toast('☁️',T('ESKİ YEDEK'),T('Bu telefondaki ilerleme eski yedekle yer değiştirir; şimdiki ilerlemen eski yedek olarak saklanır.'));return;}
