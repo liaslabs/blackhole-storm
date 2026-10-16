@@ -17,11 +17,11 @@ oyuncu bekler, sıkılır ve bir daha denemez.
 
 | Sürüm | Hedef | İçerik | Eşik |
 |---|---|---|---|
-| **1.5.0** | 17–20 Eki üretim | Filolar, avatarlar, değerlendirme kartı, yıldız tozu arka planı, menüde yarış sayacı, yeni mağaza kartları. **Filo görevleri** de bu sürüme girdi (kod 44–47): günde 3 görev, eşit donanım, 3 hak, Filo Zinciri, yeni filo menüsü, filo hatırlatıcıları. | – |
-| **1.5.1** | ~4 Kas | **Ölç + koru:** kimliksiz olay sayaçları (eğitim adımları, 1/3/5/10. seviye, ilk ölüm saniyesi, filoya katılma, görev, mağaza, reklam, bildirim izni), kurulum yaşı aralığıyla geri dönüş (kimliksiz D1/D7), yıldız giriş/çıkış sayaçları, Play Integrity (1 hafta yalnız kayıt, sonra zorunlu), şüpheli skor raporu, eşzamanlı oyuncu sayacı, şifreli okuma sayfası. | – |
-| **1.5.2** | ~18 Kas | **Sağlamlaştır:** Android bakım (R8, AGP 9.0), eski `rel(≤10)` dallarını silme, test botlarını `tools/` + CI'ya taşıma, otomatik düşük kalite (ilk 10 sn FPS < 45), yedekten geri yükleme provası. Yeni özellik içermez. | – |
-| **1.5.3** | ~2 Ara | **İlk 10 dakika:** 1.5.1 verisine göre sade ilk oturum (önce yalnız OYNA; Lab, Atlas, Filo seviyeyle açılır), Atlas/rehber/mağazadaki eski emojiler ICO stiline, görev hedeflerinin gerçek dağılımla ayarı, ekonomi raporu. Mağaza deneyi (Play Console, onayla). | – |
-| **1.5.4** | ~16 Ara | **Büyüt:** derin bağlantı (App Links, `assetlinks.json`), davet bağlantısı filo koduyla açar, "arkadaşını getir" ödülü (davetli 5. seviyeye ulaşınca), klip paylaşımı (son 8 sn + bağlantılı filigran). **Çok oyuncu 1. aşama(canlı bağlantı gerektirmez):** Yardım İste (aynı seviyede 3 yenilgiden sonra; filo üyelerine ve paylaşım bağlantısıyla dışarıya), Destek paketi (o seviyeye +1 kalkan; yardım edene filo puanı ve "Yardımsever" rozeti), **Hayalet Düello** (aynı tohum, rakibin kara deliği yarı saydam hayalet, skor karşılaştırma; eşit donanım). **Oyuncu etiketi** (NOVA #4821), **dünya filo sıralaması** (Bu hafta / Tüm zamanlar / Kupalar), **filo profili**. Japonca mağaza sayfası. | – |
+| **1.5.0** | yedek (kod 47) | Filolar, avatarlar, değerlendirme kartı, yıldız tozu arka planı, menüde yarış sayacı, yeni mağaza kartları. **Filo görevleri** de bu sürüme girdi (kod 44–47): günde 3 görev, eşit donanım, 3 hak, Filo Zinciri, yeni filo menüsü, filo hatırlatıcıları. | – |
+| **1.5.1** | ~27–30 Eki, ilk üretim (kod 48) | 1.5.0'ın hepsi + **ölç + koru:** kimliksiz olay sayaçları (eğitim adımları, 1/3/5/10. seviye, ilk ölüm saniyesi, filoya katılma, görev, mağaza, reklam, bildirim izni), kurulum yaşı aralığıyla geri dönüş (kimliksiz D1/D7), yıldız giriş/çıkış sayaçları, Play Integrity (1 hafta yalnız kayıt, sonra zorunlu), şüpheli skor raporu, eşzamanlı oyuncu sayacı, şifreli okuma sayfası. | – |
+| **1.5.2** | ~20 Kas | **Sağlamlaştır:** Android bakım (R8, AGP 9.0), eski `rel(≤10)` dallarını silme, test botlarını `tools/` + CI'ya taşıma, otomatik düşük kalite (ilk 10 sn FPS < 45), yedekten geri yükleme provası. Yeni özellik içermez. | – |
+| **1.5.3** | ~4 Ara | **İlk 10 dakika:** 1.5.1 verisine göre sade ilk oturum (önce yalnız OYNA; Lab, Atlas, Filo seviyeyle açılır), Atlas/rehber/mağazadaki eski emojiler ICO stiline, görev hedeflerinin gerçek dağılımla ayarı, ekonomi raporu. Mağaza deneyi (Play Console, onayla). | – |
+| **1.5.4** | ~18 Ara | **Büyüt:** derin bağlantı (App Links, `assetlinks.json`), davet bağlantısı filo koduyla açar, "arkadaşını getir" ödülü (davetli 5. seviyeye ulaşınca), klip paylaşımı (son 8 sn + bağlantılı filigran). **Çok oyuncu 1. aşama(canlı bağlantı gerektirmez):** Yardım İste (aynı seviyede 3 yenilgiden sonra; filo üyelerine ve paylaşım bağlantısıyla dışarıya), Destek paketi (o seviyeye +1 kalkan; yardım edene filo puanı ve "Yardımsever" rozeti), **Hayalet Düello** (aynı tohum, rakibin kara deliği yarı saydam hayalet, skor karşılaştırma; eşit donanım). **Oyuncu etiketi** (NOVA #4821), **dünya filo sıralaması** (Bu hafta / Tüm zamanlar / Kupalar), **filo profili**. Japonca mağaza sayfası. | – |
 | – | 21 Ara – 4 Oca | **Dondurma:** üretime yayın yok; izleme ve acil düzeltme. | – |
 | **1.6.0** | ~Ocak sonu | **Kimlik:** Google Play Games ile giriş, kalıcı kimlik ve buluta kayıt (telefon değişince ilerleme ve filo kaybolmaz). Filo kozmetikleri (yıldızla). Günde sınırlı ödüllü reklam. | – |
 | **1.6.x** | Eşik 1'den sonra | **Arkadaşlar:** etiketle ya da filo profilinden EKLE, istek + kabul (tek taraflı ekleme yok), en fazla 100, engelle. Oyun içinde "Filoma davet et" kartı. Premium avatar üretici (kask, kıyafet, renk, arka plan; ücretli parçalar). | **Eşik 1:** GAC ≥ 300 |
@@ -30,6 +30,10 @@ oyuncu bekler, sıkılır ve bir daha denemez.
 | (karar sonra) | – | **Gerçek fotoğraf:** aşağıdaki şartlar sağlanmadan açılmaz. | GAC ≥ 10.000 + hukuki görüş + moderasyon bütçesi |
 
 Takvim, 1.5.0'ın üretim onayına göre kayar; her sürüm önce Dahili test, sonra Alpha, sonra üretim.
+
+**16 Ekim düzeltmesi:** kişisel hesapta üretim için 12 testçi × 14 gün kapalı test şart; süre 19 Ekim'de doluyor, üretim
+erişimi başvurusu 20 Ekim, Google incelemesi ~7 gün. Üretim ay sonuna kaydığı için ilk üretim sürümü 1.5.1 (kod 48: 1.5.0 +
+ölçüm ve Integrity) olacak; böylece ilk oyuncuların verisi ilk günden toplanır. Sorun çıkarsa test edilmiş kod 47 çıkar.
 
 ### Sıra ve neden (16 Ekim'de onaylandı)
 
@@ -44,7 +48,7 @@ FCM, App Links, mağaza deneyleri, GitHub Actions).
 
 | Hafta | Tarih | İş | Kabul |
 |---|---|---|---|
-| 0 | 16–20 Eki | Kod 47 Alpha → üretim (onayla); mağaza listesi ve video (önizleme + onay); filo görevi süre kontrolü (sunucu); haftalık şifreli D1 yedeği; günlük izleme (`/errs`, `/pings`, Android vitals) | Üretimde 47; ilk yedek; sahte anlık sonuç reddedilir; çökme < %1,09 |
+| 0 | 16–20 Eki | Kod 48 (1.5.1) Dahili test → kapalı test (Alpha); 20 Eki üretim erişimi başvurusu (sahibi); mağaza listesi ve video (önizleme + onay); filo görevi süre kontrolü (sunucu); haftalık şifreli D1 yedeği; günlük izleme (`/errs`, `/pings`, Android vitals) | Üretimde 47; ilk yedek; sahte anlık sonuç reddedilir; çökme < %1,09 |
 | 1–2 | 19 Eki – 1 Kas | 1.5.1: olay sayaçları (günde tek toplu gönderim, kimliksiz), kurulum yaşı, yıldız giriş/çıkış, Integrity proje numarası + kayıt modu, şüpheli skor raporu, okuma sayfası. Kod 48 Dahili test ~29 Eki | Sayaçlar sunucuda; Veri güvenliği formu güncel (sahibi doldurur) |
 | 2 | 2–4 Kas | 1.5.1 Alpha → üretim; Integrity bir hafta kayıttan sonra zorunlu | Üretimde 1.5.1 |
 | 3–4 | 2–15 Kas | 1.5.2: R8 + AGP 9; `rel(≤10)` temizliği (her adım bot + seviye testi); `tools/` + CI duman testi; otomatik düşük kalite; geri yükleme provası | Davranış farkı yok; CI yeşil; yedek yerelde açılır |

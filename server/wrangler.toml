@@ -15,4 +15,4 @@ crons = ["7 0 * * *"]
 # Play Integrity on /score and /claim: off | log | enforce (see the top of worker.js). Switch to "log" once the Android app
 # sends integrity tokens (INTEG_PROJECT in src/game.src.html), watch the Worker log, then "enforce".
 [vars]
-INTEGRITY = "off"
+INTEGRITY = "log"
