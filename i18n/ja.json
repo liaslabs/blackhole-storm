@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "通常レベル +10 · ハード +20 · ボス +10 · 今日の嵐 +20–80 · 1日最大300",
 "ÜYELER VE DUVAR": "メンバーと掲示板",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "WhatsApp、Telegram、SMSで送ろう。友だちはゲームの艦隊 › コードで参加 にこのコードを入力します。",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "ゲーム内：艦隊 › コードで参加（艦隊はレベル{n}で解放）"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "ゲーム内：艦隊 › コードで参加（艦隊はレベル{n}で解放）",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "ランキングと賞品は認証済み端末のみ",
+"Doğrulanmamış cihaz": "未認証の端末",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "スコアは保存されましたが、メインランキングには表示されず、賞品も獲得できません。全プレイヤー中の順位：{n}位。",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "端末が Google Play の確認を通過しない場合（例：ブートローダーのロック解除、root）やウェブ版で起こります。艦隊ポイントも艦隊に加算されません。"
 }

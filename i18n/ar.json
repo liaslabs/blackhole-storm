@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "مستوى عادي +10 · صعب +20 · زعيم +10 · عاصفة اليوم +20–80 · بحد أقصى 300 يوميًا",
 "ÜYELER VE DUVAR": "الأعضاء والجدار",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "أرسله عبر واتساب أو تيليغرام أو رسالة نصية. يكتب صديقك هذا الرمز في اللعبة من الأسطول › انضمام برمز.",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "في اللعبة: الأسطول › انضمام برمز (تُفتح الأساطيل في المستوى {n})"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "في اللعبة: الأسطول › انضمام برمز (تُفتح الأساطيل في المستوى {n})",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "الترتيب والجوائز للأجهزة الموثّقة فقط",
+"Doğrulanmamış cihaz": "جهاز غير موثّق",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "تم حفظ نتيجتك، لكنها لا تظهر في الترتيب الرئيسي ولا تفوز بجائزة. ترتيبك بين جميع اللاعبين: {n}.",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "يحدث هذا عندما لا يجتاز الهاتف فحص Google Play (مثل محمّل إقلاع غير مقفل أو روت) أو في نسخة الويب. نقاط أسطولك أيضًا لا تُحتسب لأسطولك."
 }

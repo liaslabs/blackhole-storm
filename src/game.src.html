@@ -1162,7 +1162,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .wk7t{font-size:12px;color:var(--dim);text-align:center;margin-bottom:6px;}
 .lbtabs{display:flex;gap:6px;margin:0 0 10px;}.lbtabs button{flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--line);background:var(--pan);color:var(--dim);font:600 12px var(--fd);letter-spacing:.04em;cursor:pointer;}.lbtabs button.on{border-color:var(--gold);color:#ffe6a8;background:rgba(242,169,59,.12);}
 .stormBox{border:1px solid rgba(143,216,255,.35);background:rgba(143,216,255,.06);border-radius:9px;padding:8px 10px;margin:0 0 8px;font-size:12.5px;color:#cfe6f5;text-align:center;}.stormBox b{display:block;font-family:var(--fd);letter-spacing:.08em;color:#8fd8ff;font-size:13px;margin-bottom:2px;}
-.lbprize{font-size:11.5px;color:var(--dim);text-align:center;margin:0 0 8px;}.lbwait{text-align:center;color:var(--dim);font-size:13px;padding:14px 0;}.lbrow.me2{border-color:var(--gold);background:rgba(242,169,59,.1);}
+.lbprize{font-size:11.5px;color:var(--dim);text-align:center;margin:0 0 8px;}.lbVf{text-align:center;font-size:12px;opacity:.8;margin:-2px 0 8px}.lbrow.unv{border:2px dashed rgba(255,190,90,.75);opacity:.9}.lbrow.unv .r{color:#ffbe5a}.lbUnv{text-align:left;line-height:1.45;font-size:13px;padding:10px 12px;border:1px solid rgba(255,190,90,.35);border-radius:12px;margin:8px 0;color:rgba(255,255,255,.88)}.lbUnv small{display:block;opacity:.7;margin-top:4px;font-size:12px}.lbwait{text-align:center;color:var(--dim);font-size:13px;padding:14px 0;}.lbrow.me2{border-color:var(--gold);background:rgba(242,169,59,.1);}
 .finRank{font-family:var(--fd);font-size:14px;color:#8fd8ff;text-align:center;margin:-2px 0 6px;letter-spacing:.04em;}
 .snHead{text-align:center;margin:-2px 0 10px;}.snHead b{display:block;font-family:var(--fd);font-size:16px;letter-spacing:.08em;color:#c9b4ff;}.snHead span{display:block;font-size:12.5px;color:#cdd3e0;margin-top:2px;}.snHead small{display:block;font-size:11.5px;color:var(--dim);margin-top:3px;}
 .snBar{margin:0 0 10px;}.snT{display:flex;justify-content:space-between;font-family:var(--fm,monospace);font-size:11px;color:var(--dim);margin-bottom:4px;}.snBar .bar{height:7px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden;}.snBar i{display:block;height:100%;background:linear-gradient(90deg,#8f6bff,#c9b4ff);}
@@ -3283,6 +3283,11 @@ const INTEG_PROJECT=rel(11)?'595525021870':''; // 1.5.1: Google Cloud project bl
 async function itTok(what){const nb=CAP('Bhs');if(!INTEG_PROJECT||!nb||!nb.integrity||!(window.crypto&&crypto.subtle))return undefined;
   try{const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(what)))].map(b=>b.toString(16).padStart(2,'0')).join('');return (await Promise.race([nb.integrity({project:INTEG_PROJECT,hash:h}),new Promise(r=>setTimeout(()=>r({}),5000))])).token;}catch(e){return undefined;}} // never holds a score more than 5 s
 const itScore=async b=>({...b,it:await itTok(`${b.pid}|${b.day}|${Math.floor(b.score)}|${Math.floor(b.secs)}`)});
+// 1.5.1: once a UTC day the app asks Play to vouch for this install; the server keeps the verdict for the day, so fleet
+// points (which carry no token of their own) count only from a verified device. Never during a level.
+async function itDaily(){if(!rel(11)||!NATIVE||!INTEG_PROJECT||!LB_URL||!PID||typeof gState!=='undefined'&&gState==='playing')return;const d=utcDay();
+  try{if(localStorage.getItem('bhs_itv')===d)return;const it=await itTok(`${PID}|${d}|itv`);const j=await lbFetch('/itv',{pid:PID,day:d,it});if(j&&j.ok)localStorage.setItem('bhs_itv',d);}catch(e){}}
+setTimeout(itDaily,9000);setInterval(itDaily,36e5);
 async function lbFetch(path,body){if(!LB_URL)throw new Error('off');const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
   try{const r=await fetch(LB_URL+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ac.signal}:{signal:ac.signal});const j=await r.json();if(!r.ok&&!j)throw new Error(r.status);return j;}finally{clearTimeout(tm);}}
 function lbQueue(){try{return JSON.parse(localStorage.getItem('bhs_lbq')||'null');}catch(e){return null;}}
@@ -3305,9 +3310,12 @@ async function renderLBWorld(){const w=$('lbWorld'),day=utcDay();
   try{const j=await lbFetch(`/top?day=${day}&pid=${PID}`);if(!$('sLB').classList.contains('on'))return;const med=['🥇','🥈','🥉'];
     const hid=lbRepGet(),rk=e=>e.k?String(e.k).replace(/[^a-f0-9]/g,''):'';
     const rows=(j.list||[]).map(e=>{const k=rk(e),gone=k&&hid.includes(k);return `<div class="lbrow${e.me?' me2':''}"><div class="r">${med[e.r-1]||e.r}</div>${gone?'':avHtml(e.me?playerAvatar:e.av)}<div class="n notr">${gone?'•••':String(e.name).replace(/[<>&"]/g,'')}</div><div class="p">${(+e.score).toLocaleString(LOC)}</div>${!e.me&&k&&!gone?`<button class="lbRep${rel(10)?' r10':''}" type="button" data-k="${k}" aria-label="${T('Bu ismi bildir')}">⚑</button>`:''}</div>`;}).join('');
-    const me=j.me&&!(j.list||[]).some(e=>e.me)?`<div class="lbrow me2"><div class="r">${j.me.rank}</div>${avHtml(playerAvatar)}<div class="n notr">${String(playerName||'PİLOT').replace(/[<>&"]/g,'')}</div><div class="p">${j.me.score.toLocaleString(LOC)}</div></div>`:'';
+    const unv=rel(11)&&j.me&&j.me.vf===0; /* 1.5.1 trust model: this device's score is kept out of the main ranking */
+    const me=j.me&&!(j.list||[]).some(e=>e.me)?`<div class="lbrow me2${unv?' unv':''}"><div class="r">${unv?'🔒':j.me.rank}</div>${avHtml(playerAvatar)}<div class="n notr">${String(playerName||'PİLOT').replace(/[<>&"]/g,'')}</div><div class="p">${j.me.score.toLocaleString(LOC)}</div></div>`
+      +(unv?`<div class="lbUnv"><b>🔒 ${T('Doğrulanmamış cihaz')}</b><br>${T('Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.',{n:j.me.rall})}<small>${T('Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.')}</small></div>`:''):'';
+    const vn=rel(11)&&j.vfo?`<div class="lbVf">🛡 ${T('Sıralama ve ödüller yalnız doğrulanmış cihazlar için')}</div>`:'';
     const ch=rel(9)?await lbChamp():'';if(!$('sLB').classList.contains('on'))return;
-    w.innerHTML=head+ch+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;
+    w.innerHTML=head+vn+ch+(rows||`<div class="lbwait">${T('Bugün henüz kimse oynamadı. İlk sen ol!')}</div>`)+me+`<div class="lbprize">${T('Oyuncu')}: ${(j.total||0).toLocaleString(LOC)}</div>`;
     w.querySelectorAll('.lbRep').forEach(b=>b.onclick=()=>{
       if(rel(10)){ /* 1.5.0: the flag asks with its own YES and NO; NO puts the flag back */
         w.querySelectorAll('.lbAsk').forEach(a=>a._no());const row=b.closest('.lbrow'),a=document.createElement('span');a.className='lbAsk';
@@ -4037,7 +4045,7 @@ function gameOver(){
   $('finScore').textContent=totalScore.toLocaleString(LOC);const sv=gameMode==='survival';$('finLvLbl').textContent=sv?'Ulaşılan hız':'Ulaşılan seviye';$('finLevel').textContent=sv?`${effLevel()} · ${Math.floor(survTime/60)}:${String(Math.floor(survTime%60)).padStart(2,'0')}`:level;
   $('finBest').textContent=bestScore.toLocaleString(LOC);$('finCombo').textContent=maxCombo;
   {const fr=$('finRank');fr.hidden=true;if(sv&&STORM.on){const run=runId;fr.hidden=false;fr.textContent='⛈ '+T('GÜNÜN FIRTINASI');STORM.on=false;
-    stormSubmit(totalScore,survTime).then(j=>{if(run!==runId||!j)return;fr.textContent=j.off?'⛈ '+T('Çevrimdışı: skorun sonra gönderilecek'):j.ok?`🌍 ${T('Dünya sırası')}: #${j.rank} / ${j.total}`:'⛈ '+T('GÜNÜN FIRTINASI');});}}
+    stormSubmit(totalScore,survTime).then(j=>{if(run!==runId||!j)return;fr.textContent=j.off?'⛈ '+T('Çevrimdışı: skorun sonra gönderilecek'):j.ok&&rel(11)&&j.vf===0?`🌍 ${T('Doğrulanmamış cihaz')} · #${j.rall}`:j.ok?`🌍 ${T('Dünya sırası')}: #${j.rank} / ${j.total}`:'⛈ '+T('GÜNÜN FIRTINASI');});}}
   showModal('mOver');sfx('gameover',{vol:.8,rev:.4});gState='over';SND.music('menu');
 }
 function fillWallets(){const t=`<span data-w="stars">⭐ ${stars.toLocaleString(LOC)}</span><span data-w="gems">💎 ${diamonds.toLocaleString(LOC)}</span><span data-w="shield">🛡 ${SHOP.shield}${SHOP.shards?` <small>+${SHOP.shards}/3</small>`:''}</span>`+(LAB.boost>0||COSMO.pend.some(k=>!k.startsWith('*')&&atlasRar(k)==='v')?`<span data-w="boost">⏩ ${labMin(LAB.boost)}</span>`:'');

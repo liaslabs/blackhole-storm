@@ -240,7 +240,7 @@ async function openList(DB) {
 }
 
 // the route table; returns null for paths that are not about fleets
-export async function fleetRoute(url, req, DB, json, cleanName) {
+export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async () => true) {
   const p = url.pathname;
   if (!p.startsWith('/fleet')) return null;
   await ensure(DB);
@@ -325,7 +325,8 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
     if (d !== today && d !== day(now - 36e5 * 2)) return json(req, { ok: false, err: 'day' }, 400);
     const n = Math.max(0, Math.min(CALL_CAP, Math.floor(+body.n || 0)));
     const cur = await DB.prepare('SELECT pts FROM fleet_pts WHERE day = ? AND pid = ?').bind(d, m.pid).first();
-    const have = cur ? cur.pts : 0, add = Math.max(0, Math.min(n, DAY_CAP - have));
+    const vok = await deviceOk(m.pid); // 1.5.1 trust model: an unverified device's play is not counted for the fleet
+    const have = cur ? cur.pts : 0, add = vok ? Math.max(0, Math.min(n, DAY_CAP - have)) : 0;
     if (add > 0) {
       if (cur) await DB.prepare('UPDATE fleet_pts SET pts = pts + ? WHERE day = ? AND pid = ?').bind(add, d, m.pid).run();
       else await DB.prepare('INSERT INTO fleet_pts (day, pid, fid, wk, pts) VALUES (?, ?, ?, ?, ?)').bind(d, m.pid, m.fid, weekOf(Date.parse(d + 'T12:00:00Z')), add).run();
@@ -339,7 +340,7 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
       const seen = await DB.prepare("SELECT id FROM fleet_msgs WHERE fid = ? AND name = ? AND m = 'mis' AND ts >= ?").bind(m.fid, nm, Date.parse(today + 'T00:00:00Z')).first();
       if (!seen) await event(DB, m.fid, nm, 'mis');
     }
-    return json(req, { ok: true, added: add, today: have + add });
+    return json(req, { ok: true, added: add, today: have + add, ...(vok ? {} : { vf: 0 }) });
   }
   if (p === '/fleet/fm/start' && req.method === 'POST') { // a try is used when the run begins, so quitting a bad run does not give it back
     const F = FM(), d = day(), mm = F && F.day(d).find(x => x.id === body.id);
@@ -361,8 +362,9 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
     if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
     const since = Math.max(cur.st ? now - cur.st : Infinity, cur.st0 ? now - cur.st0 : -1);
     if (since < (t - 10) * 1000) return json(req, { ok: false, err: 'bad' }); // claims more play than has passed since the try began
-    const best = Math.max(cur.best, v), tier = F.tier(mm, best), add = F.pts(mm, tier) - F.pts(mm, cur.tier);
-    if (best > cur.best) await DB.prepare('UPDATE fleet_fm SET best = ?, tier = ? WHERE day = ? AND pid = ? AND id = ?').bind(best, tier, d, m.pid, mm.id).run();
+    const vok = await deviceOk(m.pid); // an unverified device keeps its result but wins no medal for the fleet
+    const best = Math.max(cur.best, v), tier = vok ? F.tier(mm, best) : cur.tier, add = F.pts(mm, tier) - F.pts(mm, cur.tier);
+    if (best > cur.best || tier !== cur.tier) await DB.prepare('UPDATE fleet_fm SET best = ?, tier = ? WHERE day = ? AND pid = ? AND id = ?').bind(best, tier, d, m.pid, mm.id).run();
     if (add > 0) { // fleet points only, outside the day's 300 from play
       const row = await DB.prepare('SELECT pid FROM fleet_pts WHERE day = ? AND pid = ?').bind(d, m.pid).first();
       if (row) await DB.prepare('UPDATE fleet_pts SET mpts = mpts + ? WHERE day = ? AND pid = ?').bind(add, d, m.pid).run();
@@ -371,7 +373,7 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
       if (d === today) await news(DB, m.fid, add);
       if (tier === 3) await event(DB, m.fid, m.name, 'fmg:' + mm.id);
     }
-    return json(req, { ok: true, best, tier, add });
+    return json(req, { ok: true, best, tier, add, ...(vok ? {} : { vf: 0 }) });
   }
   if (p === '/fleet/fmchain' && req.method === 'POST') { // the Fleet Chain's stars: once a day, for a member who won at least one medal toward it
     const F = FM(), d = day(), n = await count(DB, m.fid);

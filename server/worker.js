@@ -21,6 +21,7 @@
 //   POST /live    {}                             -> {ok}   the game is open: each install says so once per 5-minute slot, so a slot's
 //                                                   count is how many play at the same time (no id). Kept 3 days
 //   GET  /live?days=3                            -> {list:[{slot,n}]}   slot: minutes since 1970 / 5
+//   POST /itv     {pid,day,it}                   -> {ok,vf}   the app's daily device check (Play Integrity), used for fleet points
 //   GET  /sus?day=YYYY-MM-DD                     -> {scores:[...],fm:[...]}   results close to the ceilings, for a look by hand
 //   POST /verify  {pid,sku,token}                -> {ok,pending?}   the app's purchase check: asks Google whether the purchase is real
 //                                                   and paid, records the token (a consumable token counts once, for the install
@@ -60,6 +61,8 @@ let avReady = false;
 async function ensureAv(DB) { // adds the column once to a database made before 1.5.0
   if (avReady) return;
   try { await DB.prepare('ALTER TABLE scores ADD COLUMN av TEXT').run(); } catch (e) { /* already there */ }
+  // 1.5.1: vs = the day's best verified score (0: none yet); rows from before have none, and their score counts as verified
+  try { await DB.prepare('ALTER TABLE scores ADD COLUMN vs INTEGER').run(); } catch (e) { /* already there */ }
   avReady = true;
 }
 // Players can report a name on the ranking; three different reporters hide it for everyone that day.
@@ -176,16 +179,34 @@ async function integrityWhy(env, it, hash) {
   if (app.appRecognitionVerdict !== 'PLAY_RECOGNIZED' || !dev.includes('MEETS_DEVICE_INTEGRITY')) return all;
   return 'ok';
 }
-async function integrityGate(env, it, what) {
-  const mode = env.INTEGRITY || 'off'; if (mode === 'off') return true;
+// 1.5.1 trust model: 'ok' (Play vouches for the app and the device, or one of the owner's test phones), 'unv' (nobody can
+// vouch: no token, the web, an unlocked or rooted phone) or 'mod' (Play does not know this build: a modified copy). Only in
+// enforce mode does it change anything: 'mod' is refused, 'unv' is kept out of the main ranking, the prizes and the fleets.
+async function integrityClass(env, it, what) {
+  const mode = env.INTEGRITY || 'off'; if (mode === 'off') return 'ok';
   const pid = what.split('|')[0], trusted = String(env.TRUST_PIDS || '').split(',').map(x => x.trim()).filter(Boolean).includes(pid);
   let why = 'err'; try { why = await integrityWhy(env, it, await sha(what)); } catch (e) { why = 'err'; }
   if (why !== 'ok' && trusted) why = 'trust'; // the owner's own test phones (secret TRUST_PIDS), e.g. with an unlocked bootloader
   const ok = why === 'ok' || why === 'trust';
   // a daily total of the verdicts (it_ok; it_none: no token, as from the web; it_bad_<why>: a token that failed), read by tools/rapor.mjs
   try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', why === 'trust' ? 'it_trust' : ok ? 'it_ok' : it ? 'it_bad_' + why : 'it_none', 1).run(); } catch (e) {}
-  if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', what.split('|')[0].slice(0, 4)); return true; }
-  return ok;
+  if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', pid.slice(0, 4)); return 'ok'; }
+  return ok ? 'ok' : why.startsWith('app_unrecognized') ? 'mod' : 'unv';
+}
+const vfOn = env => env.INTEGRITY === 'enforce'; // the main ranking shows only verified scores
+// the install's device verdict for the day (POST /itv), used where a request carries no token of its own (fleet points)
+let itvReady = false;
+async function ensureItv(DB) {
+  if (itvReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS itv (day TEXT NOT NULL, pid TEXT NOT NULL, cls TEXT NOT NULL, PRIMARY KEY (day, pid))').run();
+  itvReady = true;
+}
+async function deviceOk(env, DB, pid) {
+  if (!vfOn(env)) return true;
+  if (String(env.TRUST_PIDS || '').split(',').map(x => x.trim()).includes(pid)) return true;
+  await ensureItv(DB);
+  const r = await DB.prepare("SELECT 1 AS x FROM itv WHERE pid = ? AND day IN (?, ?) AND cls = 'ok'").bind(pid, day(), day(Date.now() - 36e5 * 2)).first();
+  return !!r;
 }
 let errReady = false;
 // Daily opens: one count per install per UTC day (the game sends it at most once a day), by version, app/web and language. No install number.
@@ -221,6 +242,7 @@ async function housekeeping(DB) {
   await ensurePings(DB); await DB.prepare('DELETE FROM pings WHERE day < ?').bind(old).run();
   await ensureEvs(DB); await DB.prepare('DELETE FROM evs WHERE day < ?').bind(day(Date.now() - 120 * 864e5)).run();
   await DB.prepare('DELETE FROM live WHERE slot < ?').bind(Math.floor(Date.now() / 3e5) - 3 * 288).run();
+  await ensureItv(DB); await DB.prepare('DELETE FROM itv WHERE day < ?').bind(day(Date.now() - 3 * 864e5)).run();
   await ensurePurchases(DB); // purchase records: two years (a consumed purchase cannot be claimed again anyway, see gpVerify)
   await DB.prepare('DELETE FROM purchases WHERE ts < ?').bind(Date.now() - 730 * 864e5).run();
   await DB.prepare('DELETE FROM purchase_installs WHERE token NOT IN (SELECT token FROM purchases)').run();
@@ -232,7 +254,8 @@ async function settle(DB, d) {
   if (d >= day()) return;
   const done = await DB.prepare('SELECT COUNT(*) AS n FROM prizes WHERE day = ?').bind(d).first();
   if (done && done.n) return;
-  const top = await DB.prepare('SELECT pid FROM scores WHERE day = ? ORDER BY score DESC, ts ASC LIMIT 3').bind(d).all();
+  await ensureAv(DB); // verified scores only (vs; rows from before 1.5.1 count with their score)
+  const top = await DB.prepare('SELECT pid FROM scores WHERE day = ? AND COALESCE(vs, score) > 0 ORDER BY COALESCE(vs, score) DESC, ts ASC LIMIT 3').bind(d).all();
   const rows = top.results || [];
   for (let i = 0; i < rows.length; i++)
     await DB.prepare('INSERT OR IGNORE INTO prizes (day, pid, rank, stars) VALUES (?, ?, ?, ?)').bind(d, rows[i].pid, i + 1, PRIZE[i]).run();
@@ -244,7 +267,7 @@ export default {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(req) });
     const url = new URL(req.url), DB = env.DB;
     try {
-      const fr = await fleetRoute(url, req, DB, json, cleanName); if (fr) return fr; // /fleet... and /fleets/top (server/fleet.js)
+      const fr = await fleetRoute(url, req, DB, json, cleanName, pid => deviceOk(env, DB, pid)); if (fr) return fr; // /fleet... and /fleets/top (server/fleet.js)
       if (url.pathname === '/score' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
         const today = day(), d = okDay(b.day) ? b.day : today;
@@ -252,15 +275,24 @@ export default {
         if (!okPid(b.pid)) return json(req, { ok: false, err: 'pid' }, 400);
         const score = Math.floor(+b.score), secs = Math.floor(+b.secs);
         if (!(score > 0 && score < 5e7) || !(secs >= 5 && secs <= MAX_SECS) || score / secs > MAX_RATE) return json(req, { ok: false, err: 'score' }, 400);
-        if (!(await integrityGate(env, b.it, `${b.pid}|${d}|${score}|${secs}`))) return json(req, { ok: false, err: 'integrity' }, 403);
-        const name = cleanName(b.name), av = cleanAv(b.av), now = Date.now();
+        const cls = await integrityClass(env, b.it, `${b.pid}|${d}|${score}|${secs}`);
+        if (cls === 'mod') return json(req, { ok: false, err: 'integrity' }, 403);
+        const name = cleanName(b.name), av = cleanAv(b.av), now = Date.now(), vsc = cls === 'ok' ? score : 0;
         await ensureAv(DB);
         const cur = await DB.prepare('SELECT score, subs FROM scores WHERE day = ? AND pid = ?').bind(d, b.pid).first();
         if (cur && cur.subs >= MAX_SUBS) return json(req, { ok: false, err: 'rate' }, 429);
-        if (!cur) await DB.prepare('INSERT INTO scores (day, pid, name, score, secs, ts, av) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(d, b.pid, name, score, secs, now, av).run();
+        if (cur) await DB.prepare('UPDATE scores SET vs = MAX(COALESCE(vs, score), ?) WHERE day = ? AND pid = ?').bind(vsc, d, b.pid).run();
+        if (!cur) await DB.prepare('INSERT INTO scores (day, pid, name, score, secs, ts, av, vs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(d, b.pid, name, score, secs, now, av, vsc).run();
         else if (score > cur.score) await DB.prepare('UPDATE scores SET score = ?, secs = ?, ts = ?, name = ?, av = COALESCE(?, av), subs = subs + 1 WHERE day = ? AND pid = ?').bind(score, secs, now, name, av, d, b.pid).run();
         else await DB.prepare('UPDATE scores SET subs = subs + 1, name = ?, av = COALESCE(?, av) WHERE day = ? AND pid = ?').bind(name, av, d, b.pid).run();
         const best = Math.max(score, cur ? cur.score : 0);
+        if (vfOn(env)) { // the main ranking counts verified scores only; an unverified best gets its place among everyone (rall)
+          const v = await DB.prepare('SELECT COALESCE(vs, score) AS v FROM scores WHERE day = ? AND pid = ?').bind(d, b.pid).first(), vb = v ? v.v : 0;
+          const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND COALESCE(vs, score) > 0').bind(d).first();
+          if (vb > 0) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND COALESCE(vs, score) > ?').bind(d, vb).first(); return json(req, { ok: true, best: vb, rank: r.n + 1, total: t ? t.n : 1, vf: 1 }); }
+          const ra = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, best).first();
+          return json(req, { ok: true, best, rank: null, rall: ra.n + 1, total: t ? t.n : 0, vf: 0 });
+        }
         const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, best).first();
         const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ?').bind(d).first();
         return json(req, { ok: true, best, rank: (r ? r.n : 0) + 1, total: t ? t.n : 1 });
@@ -268,15 +300,17 @@ export default {
       if (url.pathname === '/top' && req.method === 'GET') {
         const d = okDay(url.searchParams.get('day')) ? url.searchParams.get('day') : day(), pid = url.searchParams.get('pid');
         await ensureAv(DB);
-        const top = await DB.prepare('SELECT pid, name, score, av FROM scores WHERE day = ? ORDER BY score DESC, ts ASC LIMIT 50').bind(d).all();
+        const vfo = vfOn(env), SC = vfo ? 'COALESCE(vs, score)' : 'score'; // with the trust model on, only verified scores are listed
+        const top = await DB.prepare(`SELECT pid, name, ${SC} AS score, av FROM scores WHERE day = ? AND ${SC} > 0 ORDER BY ${SC} DESC, ts ASC LIMIT 50`).bind(d).all();
         await ensureReports(DB);
         const rep = await DB.prepare('SELECT pid, COUNT(*) AS n FROM reports WHERE day = ? GROUP BY pid').bind(d).all(), hidden = new Set((rep.results || []).filter(x => x.n >= HIDE_AT).map(x => x.pid));
         const list = await Promise.all((top.results || []).map(async (x, i) => ({ r: i + 1, k: await rowKey(d, x.pid), name: hidden.has(x.pid) && x.pid !== pid ? 'PİLOT' : x.name, score: x.score, me: x.pid === pid, av: hidden.has(x.pid) && x.pid !== pid ? null : cleanAv(x.av) })));
         let me = null;
-        if (okPid(pid)) { const m = await DB.prepare('SELECT score FROM scores WHERE day = ? AND pid = ?').bind(d, pid).first();
-          if (m) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, m.score).first(); me = { rank: r.n + 1, score: m.score }; } }
-        const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ?').bind(d).first();
-        return json(req, { day: d, list, me, total: t ? t.n : 0 });
+        if (okPid(pid)) { const m = await DB.prepare(`SELECT score, ${SC} AS v FROM scores WHERE day = ? AND pid = ?`).bind(d, pid).first();
+          if (m && m.v > 0) { const r = await DB.prepare(`SELECT COUNT(*) AS n FROM scores WHERE day = ? AND ${SC} > ?`).bind(d, m.v).first(); me = { rank: r.n + 1, score: m.v }; }
+          else if (m) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, m.score).first(); me = { rank: null, rall: r.n + 1, score: m.score, vf: 0 }; } }
+        const t = await DB.prepare(`SELECT COUNT(*) AS n FROM scores WHERE day = ? AND ${SC} > 0`).bind(d).first();
+        return json(req, { day: d, list, me, total: t ? t.n : 0, vfo: vfo ? 1 : 0 });
       }
       if (url.pathname === '/report' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
@@ -303,7 +337,7 @@ export default {
       if (url.pathname === '/claim' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
         if (!okPid(b.pid) || !okDay(b.day)) return json(req, { ok: false }, 400);
-        if (!(await integrityGate(env, b.it, `${b.pid}|${b.day}|claim`))) return json(req, { ok: false, err: 'integrity' }, 403);
+        if ((await integrityClass(env, b.it, `${b.pid}|${b.day}|claim`)) === 'mod') return json(req, { ok: false, err: 'integrity' }, 403); // prizes go to verified scores only (settle)
         const p = await DB.prepare('SELECT stars, claimed FROM prizes WHERE day = ? AND pid = ?').bind(b.day, b.pid).first();
         if (!p || p.claimed) return json(req, { ok: false, stars: 0 });
         const u = await DB.prepare('UPDATE prizes SET claimed = 1 WHERE day = ? AND pid = ? AND claimed = 0').bind(b.day, b.pid).run();
@@ -336,6 +370,14 @@ export default {
         await DB.prepare('INSERT INTO pings (day, v, p, l, n) VALUES (?, ?, ?, ?, 1) ON CONFLICT (day, v, p, l) DO UPDATE SET n = n + 1').bind(day(), v, p, l).run();
         if (typeof b.a === 'string' && AGE.test(b.a)) { await ensureEvs(DB); await evAdd(DB, day(), v, p, 'age_' + b.a, 1).run(); }
         return json(req, { ok: true });
+      }
+      if (url.pathname === '/itv' && req.method === 'POST') { // the app's device check, once a day (fleet points have no token of their own)
+        const b = await req.json().catch(() => ({})), today = day();
+        if (!okPid(b.pid) || !okDay(b.day) || (b.day !== today && b.day !== day(Date.now() - 36e5 * 2))) return json(req, { ok: false }, 400);
+        const cls = await integrityClass(env, b.it, `${b.pid}|${b.day}|itv`);
+        await ensureItv(DB);
+        await DB.prepare('INSERT OR REPLACE INTO itv (day, pid, cls) VALUES (?, ?, ?)').bind(b.day, b.pid, cls).run();
+        return json(req, { ok: true, vf: cls === 'ok' ? 1 : 0 });
       }
       if (url.pathname === '/ev' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));

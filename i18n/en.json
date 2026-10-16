@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "Normal level +10 · Hard +20 · boss +10 · Daily Storm +20–80 · at most 300 a day",
 "ÜYELER VE DUVAR": "MEMBERS AND WALL",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "Send it on WhatsApp, Telegram or SMS. Your friend types this code in the game under Fleet › Join by code.",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "In the game: Fleet › Join by code (fleets open at level {n})"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "In the game: Fleet › Join by code (fleets open at level {n})",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "Ranking and prizes are for verified devices only",
+"Doğrulanmamış cihaz": "Unverified device",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "Your score is saved, but it does not appear in the main ranking and wins no prize. Your place among all players: {n}.",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "This happens when the phone does not pass Google Play's check (e.g. unlocked bootloader, root) or on the web version. Your fleet points do not count for your fleet either."
 }

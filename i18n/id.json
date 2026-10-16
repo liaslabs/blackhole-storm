@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "Level normal +10 · Sulit +20 · bos +10 · Badai Harian +20–80 · maksimal 300 per hari",
 "ÜYELER VE DUVAR": "ANGGOTA DAN DINDING",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "Kirim lewat WhatsApp, Telegram, atau SMS. Temanmu mengetik kode ini di game: Armada › Gabung dengan kode.",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "Di game: Armada › Gabung dengan kode (armada terbuka di level {n})"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "Di game: Armada › Gabung dengan kode (armada terbuka di level {n})",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "Peringkat dan hadiah hanya untuk perangkat terverifikasi",
+"Doğrulanmamış cihaz": "Perangkat belum terverifikasi",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "Skormu tersimpan, tetapi tidak muncul di peringkat utama dan tidak mendapat hadiah. Posisimu di antara semua pemain: {n}.",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "Ini terjadi jika ponsel tidak lolos pemeriksaan Google Play (mis. bootloader terbuka, root) atau di versi web. Poin armadamu juga tidak dihitung untuk armadamu."
 }

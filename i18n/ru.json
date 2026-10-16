@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "Обычный уровень +10 · Сложный +20 · босс +10 · Буря дня +20–80 · не более 300 в день",
 "ÜYELER VE DUVAR": "УЧАСТНИКИ И СТЕНА",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "Отправь его в WhatsApp, Telegram или по SMS. Друг вводит этот код в игре: Флот › Вступить по коду.",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "В игре: Флот › Вступить по коду (флоты открываются с уровня {n})"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "В игре: Флот › Вступить по коду (флоты открываются с уровня {n})",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "Рейтинг и призы — только для проверенных устройств",
+"Doğrulanmamış cihaz": "Непроверенное устройство",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "Твой результат сохранён, но не попадает в основной рейтинг и не получает приз. Твоё место среди всех игроков: {n}.",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "Так бывает, если телефон не проходит проверку Google Play (например, разблокированный загрузчик, root) или в веб-версии. Очки флота тоже не засчитываются твоему флоту."
 }

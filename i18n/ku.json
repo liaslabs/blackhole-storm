@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "Asta normal +10 · Zehmet +20 · boss +10 · Bahoza Rojê +20–80 · rojê herî zêde 300",
 "ÜYELER VE DUVAR": "ENDAM Û DÎWAR",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "Bi WhatsApp, Telegram an SMS bişîne. Hevalê te vê kodê di lîstikê de li Fîlo › Bi kodê tevlî bibe dinivîse.",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "Di lîstikê de: Fîlo › Bi kodê tevlî bibe (fîlo di asta {n}. de vedibin)"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "Di lîstikê de: Fîlo › Bi kodê tevlî bibe (fîlo di asta {n}. de vedibin)",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "Rêzbendî û xelat tenê ji bo cîhazên piştrastkirî ne",
+"Doğrulanmamış cihaz": "Cîhaza nepiştrastkirî",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "Puana te hate tomarkirin, lê di rêzbendiya sereke de xuya nake û xelatê nagire. Cihê te di nav hemû lîstikvanan de: {n}.",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "Ev çêdibe dema ku telefon ji kontrola Google Play derbas nabe (mînak: bootloader vekirî, root) an di guhertoya webê de. Xalên te yên fîloyê jî ji bo fîloya te nayên hesibandin."
 }

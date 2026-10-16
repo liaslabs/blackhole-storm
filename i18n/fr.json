@@ -2187,5 +2187,9 @@
 "Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300": "Niveau normal +10 · Difficile +20 · boss +10 · Tempête du jour +20–80 · 300 max par jour",
 "ÜYELER VE DUVAR": "MEMBRES ET MUR",
 "WhatsApp, Telegram ya da SMS ile gönder. Arkadaşın oyunda Filo › Kodla katıl’a bu kodu yazar.": "Envoie-le par WhatsApp, Telegram ou SMS. Ton ami tape ce code dans le jeu : Flotte › Rejoindre par code.",
-"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "Dans le jeu : Flotte › Rejoindre par code (les flottes s’ouvrent au niveau {n})"
+"Oyunda: Filo › Kodla katıl (filolar {n}. seviyede açılır)": "Dans le jeu : Flotte › Rejoindre par code (les flottes s’ouvrent au niveau {n})",
+"Sıralama ve ödüller yalnız doğrulanmış cihazlar için": "Classement et récompenses réservés aux appareils vérifiés",
+"Doğrulanmamış cihaz": "Appareil non vérifié",
+"Skorun kaydedildi ama ana sıralamada görünmez ve ödül almaz. Tüm oyuncular arasında sıran: {n}.": "Ton score est enregistré, mais il n'apparaît pas dans le classement principal et ne gagne aucune récompense. Ta place parmi tous les joueurs : {n}.",
+"Telefon Google Play doğrulamasından geçmediğinde (ör. kilidi açık önyükleyici, root) ya da web sürümünde olur. Filo puanların da filona sayılmaz.": "Cela arrive quand le téléphone ne passe pas la vérification Google Play (ex. bootloader déverrouillé, root) ou sur la version web. Tes points de flotte ne comptent pas non plus pour ta flotte."
 }
