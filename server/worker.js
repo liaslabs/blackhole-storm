@@ -178,10 +178,12 @@ async function integrityWhy(env, it, hash) {
 }
 async function integrityGate(env, it, what) {
   const mode = env.INTEGRITY || 'off'; if (mode === 'off') return true;
+  const pid = what.split('|')[0], trusted = String(env.TRUST_PIDS || '').split(',').map(x => x.trim()).filter(Boolean).includes(pid);
   let why = 'err'; try { why = await integrityWhy(env, it, await sha(what)); } catch (e) { why = 'err'; }
-  const ok = why === 'ok';
+  if (why !== 'ok' && trusted) why = 'trust'; // the owner's own test phones (secret TRUST_PIDS), e.g. with an unlocked bootloader
+  const ok = why === 'ok' || why === 'trust';
   // a daily total of the verdicts (it_ok; it_none: no token, as from the web; it_bad_<why>: a token that failed), read by tools/rapor.mjs
-  try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', ok ? 'it_ok' : it ? 'it_bad_' + why : 'it_none', 1).run(); } catch (e) {}
+  try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', why === 'trust' ? 'it_trust' : ok ? 'it_ok' : it ? 'it_bad_' + why : 'it_none', 1).run(); } catch (e) {}
   if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', what.split('|')[0].slice(0, 4)); return true; }
   return ok;
 }

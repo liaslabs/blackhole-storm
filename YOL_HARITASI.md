@@ -44,6 +44,20 @@ testi sıfırlar; ayarların yarısı gerçek veriyle yapılır. Yayın haftası
 Üretime çıkış her sürümde aşamalı (%20 → %100). Maliyet: hepsi ücretsiz katmanlarda (Cloudflare, Play Integrity, Play Games,
 FCM, App Links, mağaza deneyleri, GitHub Actions).
 
+### Güven modeli (16 Ekim onaylandı, kod 49 + sunucu, üretimden önce)
+
+Play Integrity'nin kararına göre üç sınıf:
+1. **Değiştirilmiş APK** (`UNRECOGNIZED_VERSION`): skor tamamen reddedilir, hiçbir listede görünmez.
+2. **Doğrulanmış** (Play'den kurulmuş, güvenilir cihaz): ana dünya sıralaması ve günlük yıldız ödülü.
+3. **Doğrulanamayan** (kilidi açık/root'lu cihaz, token yok, web): ana sıralamaya girmez; oyuncu kendi skorunu ve
+   "doğrulanmamış" sırasını görür, ödül almaz. Oyunda 11 dilde kısa açıklama.
+
+Filolar da aynı kurala bağlı: doğrulanamayan cihazın oyun puanları ve görev madalyaları filo yarışına ve sandıklara sayılmaz
+(filo puanı istekleri de token taşır). Sahibinin test telefonları istisna: kurulum numaraları GitHub secret'ı `TRUST_PIDS`
+(depoda değil), sunucu yayınında Cloudflare'e aktarılır. Kayıt haftası (kod 48 kapalı testte) sınıflar yalnız sayılır
+(`node tools/rapor.mjs`); ayrım kod 49 ile ve `INTEGRITY = "enforce"` ile açılır. Her sınıfta mevcut kontroller sürer:
+puan/süre tavanı, günde 40 gönderim, bildir, tavana yakın sonuç listesi, filoda günde 300 puan ve görev süre kontrolü.
+
 ### Haftalık iş planı
 
 | Hafta | Tarih | İş | Kabul |
