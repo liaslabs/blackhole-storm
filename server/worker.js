@@ -170,8 +170,10 @@ async function integrityWhy(env, it, hash) {
   if (rd.requestHash !== hash) return 'hash';
   if (rd.requestPackageName !== env.GP_PKG) return 'pkg';
   if (!(Math.abs(Date.now() - +rd.timestampMillis) < 10 * 6e4)) return 'time';
-  if (app.appRecognitionVerdict !== 'PLAY_RECOGNIZED') return 'app_' + String(app.appRecognitionVerdict || 'none').toLowerCase().replace(/[^a-z]/g, '').slice(0, 12);
-  if (!dev.includes('MEETS_DEVICE_INTEGRITY')) return 'dev_' + (dev.length ? dev.map(x => x.split('_')[1] || x).join('').toLowerCase().replace(/[^a-z]/g, '').slice(0, 12) : 'none');
+  // the app, device and licence verdicts in short (app_unevaluated.dev_none.lic_unevaluated), so a refusal says which part failed
+  const sh = x => String(x || 'none').toLowerCase().replace(/^(play_|meets_)/, '').replace(/_integrity$/, '').replace(/[^a-z]/g, '').slice(0, 12);
+  const all = `app_${sh(app.appRecognitionVerdict)}.dev_${dev.length ? dev.map(sh).join('+') : 'none'}.lic_${sh((v.accountDetails || {}).appLicensingVerdict)}`;
+  if (app.appRecognitionVerdict !== 'PLAY_RECOGNIZED' || !dev.includes('MEETS_DEVICE_INTEGRITY')) return all;
   return 'ok';
 }
 async function integrityGate(env, it, what) {
