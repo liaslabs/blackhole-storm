@@ -1,0 +1,64 @@
+# Weekly backup of the leaderboard database (Cloudflare D1 "blackhole-storm"): a full SQL export, encrypted with the repository
+# secret BACKUP_KEY (a long passphrase kept outside GitHub as well), kept as a workflow artifact for 90 days. Without the key the
+# job stops: the export holds install ids and player names, so it is never stored unencrypted.
+# D1's own Time Travel already restores any minute of the last days; this keeps a longer, independent copy.
+# Restore (see server/README.md, "Yedek"): download the artifact, then
+#   openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:BACKUP_KEY -in d1.sql.gz.enc | gunzip > d1.sql
+#   npx wrangler d1 execute blackhole-storm --local --file d1.sql   (try it locally first; --remote only on purpose)
+name: Veritabanı yedeği
+
+on:
+  schedule:
+    - cron: "17 3 * * 1" # Mondays 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: d1-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Anahtarlar var mı
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          KEY: ${{ secrets.BACKUP_KEY }}
+        run: |
+          if [ -z "$TOKEN" ]; then echo "::error::CLOUDFLARE_API_TOKEN secret'ı eksik."; exit 1; fi
+          if [ ${#KEY} -lt 20 ]; then echo "::error::BACKUP_KEY secret'ı eksik ya da 20 karakterden kısa. Yedek şifresiz saklanmaz."; exit 1; fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Dışa aktar ve şifrele
+        working-directory: server
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          BACKUP_KEY: ${{ secrets.BACKUP_KEY }}
+        run: |
+          set -euo pipefail
+          umask 077
+          npx --yes wrangler@4 d1 export blackhole-storm --remote --output "$RUNNER_TEMP/d1.sql"
+          lines=$(wc -l < "$RUNNER_TEMP/d1.sql"); echo "Satır: $lines"
+          if [ "$lines" -lt 10 ]; then echo "::error::Dışa aktarma beklenenden küçük."; exit 1; fi
+          grep -o 'CREATE TABLE [^ (]*' "$RUNNER_TEMP/d1.sql" | sort | uniq -c
+          mkdir -p "$RUNNER_TEMP/out"
+          gzip -9 -c "$RUNNER_TEMP/d1.sql" | openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -pass env:BACKUP_KEY -out "$RUNNER_TEMP/out/d1.sql.gz.enc"
+          rm -f "$RUNNER_TEMP/d1.sql"
+          sha256sum "$RUNNER_TEMP/out/d1.sql.gz.enc"
+          # the copy opens again with the same key
+          openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:BACKUP_KEY -in "$RUNNER_TEMP/out/d1.sql.gz.enc" | gunzip -t
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: d1-yedek-${{ github.run_number }}
+          path: ${{ runner.temp }}/out/d1.sql.gz.enc
+          retention-days: 90
+          if-no-files-found: error

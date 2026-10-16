@@ -68,6 +68,9 @@ async function ensure(DB) {
   ]) await DB.prepare(q).run();
   // 1.5.1: fleet mission medals are fleet points of their own (mpts), outside the 300 a day that play brings
   try { await DB.prepare('ALTER TABLE fleet_pts ADD COLUMN mpts INTEGER NOT NULL DEFAULT 0').run(); } catch (e) { /* already there */ }
+  // when the latest two tries began (ms), so a result cannot claim more play time than has passed since (a late, queued result of
+  // the try before still fits the earlier one); rows from before this have none and are not checked
+  for (const c of ['st', 'st0']) try { await DB.prepare(`ALTER TABLE fleet_fm ADD COLUMN ${c} INTEGER`).run(); } catch (e) { /* already there */ }
   ready = true;
 }
 
@@ -343,8 +346,8 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
     if (!mm) return json(req, { ok: false, err: 'id' });
     const cur = await DB.prepare('SELECT tries FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
     if (cur && cur.tries >= F.TRIES) return json(req, { ok: false, err: 'tries', tries: cur.tries });
-    if (cur) await DB.prepare('UPDATE fleet_fm SET tries = tries + 1 WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).run();
-    else await DB.prepare('INSERT INTO fleet_fm (day, pid, fid, id, tries) VALUES (?, ?, ?, ?, 1)').bind(d, m.pid, m.fid, mm.id).run();
+    if (cur) await DB.prepare('UPDATE fleet_fm SET tries = tries + 1, st0 = st, st = ? WHERE day = ? AND pid = ? AND id = ?').bind(now, d, m.pid, mm.id).run();
+    else await DB.prepare('INSERT INTO fleet_fm (day, pid, fid, id, tries, st) VALUES (?, ?, ?, ?, 1, ?)').bind(d, m.pid, m.fid, mm.id, now).run();
     await DB.prepare('UPDATE fleet_members SET seen = ? WHERE pid = ?').bind(now, m.pid).run();
     return json(req, { ok: true, tries: (cur ? cur.tries : 0) + 1, d });
   }
@@ -352,10 +355,12 @@ export async function fleetRoute(url, req, DB, json, cleanName) {
     const F = FM(), today = day(), d = okDay(body.day) ? body.day : today;
     if (d !== today && d !== day(now - 36e5 * 2)) return json(req, { ok: false, err: 'day' }, 400); // a run begun just before midnight UTC still counts
     const mm = F && F.day(d).find(x => x.id === body.id); if (!mm) return json(req, { ok: false, err: 'id' });
-    const cur = await DB.prepare('SELECT best, tier, tries FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
+    const cur = await DB.prepare('SELECT best, tier, tries, st, st0 FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
     if (!cur || !cur.tries) return json(req, { ok: false, err: 'nostart' });
     const t = Math.max(0, +body.t || 0), v = Math.max(0, Math.floor(+body.v || 0));
     if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
+    const since = Math.max(cur.st ? now - cur.st : Infinity, cur.st0 ? now - cur.st0 : -1);
+    if (since < (t - 10) * 1000) return json(req, { ok: false, err: 'bad' }); // claims more play than has passed since the try began
     const best = Math.max(cur.best, v), tier = F.tier(mm, best), add = F.pts(mm, tier) - F.pts(mm, cur.tier);
     if (best > cur.best) await DB.prepare('UPDATE fleet_fm SET best = ?, tier = ? WHERE day = ? AND pid = ? AND id = ?').bind(best, tier, d, m.pid, mm.id).run();
     if (add > 0) { // fleet points only, outside the day's 300 from play

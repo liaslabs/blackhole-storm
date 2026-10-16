@@ -60,3 +60,20 @@ This matches `privacy.html`; update both together.
 Checks: allowed origins (`ALLOWED` in `worker.js`), a points-per-second ceiling, 40 submissions per install per day.
 A determined cheater can still post a fake score (there are no accounts); if that happens, delete the row with
 `npx wrangler d1 execute blackhole-storm --remote --command "DELETE FROM scores WHERE pid='...'"`.
+
+Fleet missions: `/fleet/fm/start` records when a try began; `/fleet/fm` refuses a result that claims more play time than has
+passed since (10 s slack; the try before also counts, so a late, queued result still lands), on top of the mission's `max`.
+
+## Yedek (backup)
+Two layers, both free:
+1. **D1 Time Travel** (built in): restores the database to any minute of the last days:
+   `npx wrangler d1 time-travel info blackhole-storm`, then `... time-travel restore blackhole-storm --timestamp=<ISO time>`.
+2. **Weekly export** (`.github/workflows/d1-backup.yml`, Mondays 03:17 UTC, or by hand): a full SQL export, gzipped and
+   encrypted with the repository secret `BACKUP_KEY`, kept 90 days as a workflow artifact. Keep the key somewhere outside
+   GitHub too; without it a backup cannot be opened, and the job refuses to run without it. The export holds install ids and
+   player names, so it is never stored unencrypted. Restore: download the artifact, then
+   ```
+   openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -pass env:BACKUP_KEY -in d1.sql.gz.enc | gunzip > d1.sql
+   npx wrangler d1 execute blackhole-storm --local --file d1.sql    # try locally first; --remote only on purpose
+   ```
+   A schedule only runs from the default branch, so the file must also be on `main`.

@@ -1,4 +1,4 @@
-# Yol haritası (15 Ekim 2026)
+# Yol haritası (16 Ekim 2026)
 
 Sosyal ve çok oyunculu özellikler **kademeli** gelir: oyuncu sayısı gerektirmeyenler hemen, oyuncu sayısına
 dayananlar (canlı eşleşme gibi) ancak o sayıya ulaşınca. Eşik dolmadan açılan canlı mod boş kuyruk demektir;
@@ -9,7 +9,7 @@ oyuncu bekler, sıkılır ve bir daha denemez.
 - **Günlük aktif cihaz (GAC):** 1.5.0'daki günlük açılış sayacı (`/pings`). Her cihaz günde bir kez sayılır;
   kimlik tutulmaz. Bugün yalnızca test cihazları var (günde 3–9 açılış). Gerçek sayı 1.5.0 üretime çıkınca başlar.
 - **Play Console:** yüklemeler, aylık aktif kullanıcı, elde tutma (1. / 7. / 30. gün).
-- **Eşzamanlı oyuncu (eklenecek, 1.5.2):** canlı mod kararı için gerekir. Sunucu son 5 dakikada oyunda olan
+- **Eşzamanlı oyuncu (eklenecek, 1.5.1):** canlı mod kararı için gerekir. Sunucu son 5 dakikada oyunda olan
   cihazları sayar (kimliksiz, yalnızca sayı). Akşam en yoğun saatteki değer esas alınır.
 - Eşik, **14 gün üst üste** tutunca geçilmiş sayılır (tek günlük sıçrama sayılmaz).
 
@@ -17,16 +17,41 @@ oyuncu bekler, sıkılır ve bir daha denemez.
 
 | Sürüm | Hedef | İçerik | Eşik |
 |---|---|---|---|
-| **1.5.0** | 17–20 Eki üretim | Filolar, avatarlar, değerlendirme kartı, yıldız tozu arka planı, menüde yarış sayacı, yeni mağaza kartları | – |
-| **1.5.1** | ~3 Kas | **Filo görevleri** (geliştiriliyor, `rel(11)`): günde 3 değişen görev (★/★★/★★★), OYNA düğmesi, eşit donanım (göreve özel 3 can, kalkan ve Süpernova; Lab ve avatar güçleri kapalı), günde görev başına 3 hak, füzyon yakıtı ve kişisel stok harcanmaz, puan yalnızca filoya. Filo Zinciri (ortak hedef). **Oyuncu etiketi** (NOVA #4821). **Dünya filo sıralaması:** Bu hafta / Tüm zamanlar / Kupalar, ilk 50 dışındaki filo kendi sırasını görür. **Filo profili:** amblem, kaptan, üyelerin avatarı, seviyesi ve başarıları, KATIL. | – |
-| **1.5.2** | 1.5.1'den sonra | Android bakım güncellemesi (R8, AGP 9.0); yeni özellik içermez. | – |
-| **1.5.3** | ~24 Kas | **Çok oyuncu 1. aşama (canlı bağlantı gerektirmez):** Yardım İste (aynı seviyede 3 yenilgiden sonra; filo üyelerine ve paylaşım bağlantısıyla dışarıya), Destek paketi (o seviyeye +1 kalkan; yardım edene filo puanı ve "Yardımsever" rozeti), **Hayalet Düello** (aynı tohum, rakibin kara deliği yarı saydam hayalet, skor karşılaştırma; eşit donanım). Eşzamanlı oyuncu sayacı. Japonca mağaza sayfası. | – |
-| **1.6.0** | Eşik 1'den sonra | **Arkadaşlar:** etiketle ya da filo profilinden EKLE, istek + kabul (tek taraflı ekleme yok), en fazla 100, engelle. Oyun içinde "Filoma davet et" kartı. Tıklayınca oyunu açıp kodu kendiliğinden yazan davet bağlantısı (liaslabs alan adında doğrulama dosyası). **Google Play Games ile giriş:** kalıcı kimlik ve buluta kayıt (telefon değişince arkadaşlar ve filo kaybolmaz). Premium avatar üretici (kask, kıyafet, renk, arka plan; ücretli parçalar). | **Eşik 1:** GAC ≥ 300 |
+| **1.5.0** | 17–20 Eki üretim | Filolar, avatarlar, değerlendirme kartı, yıldız tozu arka planı, menüde yarış sayacı, yeni mağaza kartları. **Filo görevleri** de bu sürüme girdi (kod 44–47): günde 3 görev, eşit donanım, 3 hak, Filo Zinciri, yeni filo menüsü, filo hatırlatıcıları. | – |
+| **1.5.1** | ~4 Kas | **Ölç + koru:** kimliksiz olay sayaçları (eğitim adımları, 1/3/5/10. seviye, ilk ölüm saniyesi, filoya katılma, görev, mağaza, reklam, bildirim izni), kurulum yaşı aralığıyla geri dönüş (kimliksiz D1/D7), yıldız giriş/çıkış sayaçları, Play Integrity (1 hafta yalnız kayıt, sonra zorunlu), şüpheli skor raporu, eşzamanlı oyuncu sayacı, şifreli okuma sayfası. | – |
+| **1.5.2** | ~18 Kas | **Sağlamlaştır:** Android bakım (R8, AGP 9.0), eski `rel(≤10)` dallarını silme, test botlarını `tools/` + CI'ya taşıma, otomatik düşük kalite (ilk 10 sn FPS < 45), yedekten geri yükleme provası. Yeni özellik içermez. | – |
+| **1.5.3** | ~2 Ara | **İlk 10 dakika:** 1.5.1 verisine göre sade ilk oturum (önce yalnız OYNA; Lab, Atlas, Filo seviyeyle açılır), Atlas/rehber/mağazadaki eski emojiler ICO stiline, görev hedeflerinin gerçek dağılımla ayarı, ekonomi raporu. Mağaza deneyi (Play Console, onayla). | – |
+| **1.5.4** | ~16 Ara | **Büyüt:** derin bağlantı (App Links, `assetlinks.json`), davet bağlantısı filo koduyla açar, "arkadaşını getir" ödülü (davetli 5. seviyeye ulaşınca), klip paylaşımı (son 8 sn + bağlantılı filigran). **Çok oyuncu 1. aşama(canlı bağlantı gerektirmez):** Yardım İste (aynı seviyede 3 yenilgiden sonra; filo üyelerine ve paylaşım bağlantısıyla dışarıya), Destek paketi (o seviyeye +1 kalkan; yardım edene filo puanı ve "Yardımsever" rozeti), **Hayalet Düello** (aynı tohum, rakibin kara deliği yarı saydam hayalet, skor karşılaştırma; eşit donanım). **Oyuncu etiketi** (NOVA #4821), **dünya filo sıralaması** (Bu hafta / Tüm zamanlar / Kupalar), **filo profili**. Japonca mağaza sayfası. | – |
+| – | 21 Ara – 4 Oca | **Dondurma:** üretime yayın yok; izleme ve acil düzeltme. | – |
+| **1.6.0** | ~Ocak sonu | **Kimlik:** Google Play Games ile giriş, kalıcı kimlik ve buluta kayıt (telefon değişince ilerleme ve filo kaybolmaz). Filo kozmetikleri (yıldızla). Günde sınırlı ödüllü reklam. | – |
+| **1.6.x** | Eşik 1'den sonra | **Arkadaşlar:** etiketle ya da filo profilinden EKLE, istek + kabul (tek taraflı ekleme yok), en fazla 100, engelle. Oyun içinde "Filoma davet et" kartı. Premium avatar üretici (kask, kıyafet, renk, arka plan; ücretli parçalar). | **Eşik 1:** GAC ≥ 300 |
 | **1.7.0** | Eşik 2'den sonra | **Canlı 1v1 kapışma:** 90 sn, aynı alanda iki kara delik (bugünkü rakip kara delik yapısı), rastgele eşleşme ya da arkadaşı çağırma; 20 sn'de eşleşme yoksa **açıkça "bot" yazan** rakip. Tartışmalı cisimde son söz sunucunun (hile önlemi). Yalnızca hazır mesaj ve emoji. **Anlık bildirimler** (yardım isteği, davet, yarış başladı); gizlilik metni ve Data safety güncellenir. | **Eşik 2:** GAC ≥ 1.000 ve en yoğun saatte ≥ 50 eşzamanlı |
 | **1.8.0** | Eşik 3'ten sonra | **Canlı birlikte kazan:** yardım çağrısına dost kara delik olarak katılma, geçilirse ikisine de ödül. Kapışma ligi ve sezon sıralaması. | **Eşik 3:** GAC ≥ 5.000 |
 | (karar sonra) | – | **Gerçek fotoğraf:** aşağıdaki şartlar sağlanmadan açılmaz. | GAC ≥ 10.000 + hukuki görüş + moderasyon bütçesi |
 
 Takvim, 1.5.0'ın üretim onayına göre kayar; her sürüm önce Dahili test, sonra Alpha, sonra üretim.
+
+### Sıra ve neden (16 Ekim'de onaylandı)
+
+**Ölç → Koru → Sağlamlaştır → Sadeleştir → Büyüt → Kimlik → Gelir → Push.** Her basamak bir sonrakinin ön şartı:
+veri olmadan ilk 10 dakika neye göre sadeleşir bilinmez; koruma olmadan büyüme hileciyi de büyütür; bulut kayıt temiz kod
+ve Integrity üstüne kurulur. İyileştirmeler 1.5.0'dan **sonra** gelir: kod 47 test edildi, uygulamaya dokunan her değişiklik
+testi sıfırlar; ayarların yarısı gerçek veriyle yapılır. Yayın haftası yalnız uygulamaya dokunmayan sunucu ve işletim işleri.
+Üretime çıkış her sürümde aşamalı (%20 → %100). Maliyet: hepsi ücretsiz katmanlarda (Cloudflare, Play Integrity, Play Games,
+FCM, App Links, mağaza deneyleri, GitHub Actions).
+
+### Haftalık iş planı
+
+| Hafta | Tarih | İş | Kabul |
+|---|---|---|---|
+| 0 | 16–20 Eki | Kod 47 Alpha → üretim (onayla); mağaza listesi ve video (önizleme + onay); filo görevi süre kontrolü (sunucu); haftalık şifreli D1 yedeği; günlük izleme (`/errs`, `/pings`, Android vitals) | Üretimde 47; ilk yedek; sahte anlık sonuç reddedilir; çökme < %1,09 |
+| 1–2 | 19 Eki – 1 Kas | 1.5.1: olay sayaçları (günde tek toplu gönderim, kimliksiz), kurulum yaşı, yıldız giriş/çıkış, Integrity proje numarası + kayıt modu, şüpheli skor raporu, okuma sayfası. Kod 48 Dahili test ~29 Eki | Sayaçlar sunucuda; Veri güvenliği formu güncel (sahibi doldurur) |
+| 2 | 2–4 Kas | 1.5.1 Alpha → üretim; Integrity bir hafta kayıttan sonra zorunlu | Üretimde 1.5.1 |
+| 3–4 | 2–15 Kas | 1.5.2: R8 + AGP 9; `rel(≤10)` temizliği (her adım bot + seviye testi); `tools/` + CI duman testi; otomatik düşük kalite; geri yükleme provası | Davranış farkı yok; CI yeşil; yedek yerelde açılır |
+| 5–6 | 16–29 Kas | 1.5.3: 2 haftalık huniden en çok kayıp veren 2 nokta (önizleme) → sade ilk oturum; emoji temizliği; görev hedefleri gerçek dağılımla; ekonomi raporu; mağaza deneyi (onayla) | Önizleme onaylı; hedefler veriye dayalı |
+| 7–8 | 30 Kas – 13 Ara | 1.5.4: `assetlinks.json` (main'e onayla); davet bağlantısı; arkadaşını getir; klip paylaşımı; Yardım İste, Destek, Hayalet Düello; oyuncu etiketi; dünya filo sıralaması; filo profili | Bağlantı uygulamayı açar; ödül kötüye kullanılamaz |
+| – | 21 Ara – 4 Oca | Dondurma | – |
+| 9+ | Ocak | 1.6.0: Play Games girişi + bulut kayıt; filo kozmetikleri; sınırlı ödüllü reklam (yeni ürün gerekirse sahibi ekler) | Telefon değişince ilerleme korunur |
 
 ## Gerçek fotoğraf: şartlar
 
