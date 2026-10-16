@@ -1989,7 +1989,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v84",APPVER="";
+const BUILD="bhs-v85",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -2000,6 +2000,7 @@ addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filen
 // what the game is doing (menu, fleet, a level starting...), told to the app's freeze watch so a long hold says where it happened
 function natMark(s){try{const nb=CAP('Bhs');if(rel(11)&&nb&&nb.mark)nb.mark({s}).catch(()=>{});}catch(e){}}
 document.addEventListener('visibilitychange',()=>natMark(document.hidden?'background':'front'));
+natMark('game loading');
 // 1.5.1: how the last run of the app ended, if badly. Android's own record of a "not responding" close or a crash (Android
 // 11+), or a UI-thread hold of 2.5 s or more noted by the app's watch; sent once, as an error report (code locations only)
 setTimeout(async()=>{try{const nb=CAP('Bhs');if(!rel(11)||!nb||!nb.lastExit)return;const j=await nb.lastExit();
@@ -4591,7 +4592,7 @@ function zoneWarp(mid,done){const gw=$('gw'),box=document.createElement('div');b
     if(fl>0){x.globalAlpha=1;x.fillStyle=`rgba(235,245,255,${fl})`;x.fillRect(0,0,w,h);}
     if(t>1.9){fin();return;}requestAnimationFrame(fr);};
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){fin();return;}requestAnimationFrame(fr);}
-function initLevel(){natMark('level start L'+level);
+function initLevel(){natMark(level===1&&!REPLAY&&!HMODE?'tutorial start':'level start L'+level);
   if(riskDue(level)&&RISK.lv!==level){RISK.lv=level;RISK.mod=null;showRisk(initLevel);return;} // the card is offered once per level; a retry keeps it
   runId++;pendingWin=false;levelStartScore=totalScore;levelScore=0;comboCount=0;curR=BASE_R;tgtR=BASE_R;
   lostThisLevel=false;lvCombo=0;adReviveUsed=false;ftexts=[];livesAtStart=lives;updateCombo();
@@ -5205,7 +5206,7 @@ function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Mat
 function v2Down(x,y,id){
   if(!G2.on||gState!=='playing'||DRAG.id!==null)return;
   DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;DRAG.ax=hX;DRAG.ay=hY;DRAG.px=x;DRAG.py=y;DRAG.pt=DRAG.t0;DRAG.vs=0; /* the hole moves by the finger's travel from here: touching the screen never makes it jump */
-  if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);if(rel(11)&&G2.script)evOnce('tut1');}
+  if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);if(rel(11)&&G2.script){evOnce('tut1');natMark('tutorial touched');}}
 }
 function v2Move(x,y,id){
   if(id!==DRAG.id||!G2.on)return;DRAG.x=x;DRAG.y=y;
@@ -5317,7 +5318,7 @@ function v2RunScript(dt){
   if(G2.st>=42&&!G2.firstRage&&G2.rage<100&&G2.rageT<=0&&!G2.ready)G2.rage=Math.min(100,G2.rage+dt*40); // the first Rage always arrives, once
   if(G2.ready&&G2.readyT>5)v2RageGo(); // tutorial only: nobody leaves level 1 without seeing Rage
   if(rel(11)&&G2.st>=30&&!G2.ev2){G2.ev2=1;evOnce('tut2');} // halfway through the tutorial
-  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2){G2.script=null;if(rel(11))evOnce('tut3');} // the tutorial script is over: normal spawning takes it from here
+  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2){G2.script=null;if(rel(11)){evOnce('tut3');natMark('tutorial over');}} // the tutorial script is over: normal spawning takes it from here
 }
 
 // ── giant planet boss (every 10th level) ─────────────
@@ -7201,7 +7202,7 @@ $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};
 // Lias Labs intro: plays once on the very first launch (and on demand from settings); tries sound, falls back to muted
 // First launch: a 3.5 s canvas intro (a star collapses into your black hole), then straight into level 1. Tap skips it.
-function introShort(done){const ov=$('intro'),c=$('introC'),cap=$('introCap'),x=c.getContext('2d');let fin=false,t0=performance.now();
+function introShort(done){natMark('intro');const ov=$('intro'),c=$('introC'),cap=$('introCap'),x=c.getContext('2d');let fin=false,t0=performance.now();
   const end=()=>{if(fin)return;fin=true;try{localStorage.setItem('bhs_intro','1');}catch(e){}SND.resume();ov.style.opacity=0;setTimeout(()=>{ov.hidden=true;c.hidden=true;cap.textContent='';ov.onpointerdown=null;},500);done&&done();};
   $('introV').hidden=true;c.hidden=false;$('introSnd').hidden=true;ov.hidden=false;ov.style.opacity=1;$('introSkip').onclick=e=>{e.stopPropagation();end();};ov.onpointerdown=end;
   const d=Math.min(2,devicePixelRatio||1),st=Array.from({length:130},()=>({x:Math.random(),y:Math.random(),a:.2+Math.random()*.6,s:.4+Math.random()*1.1}));

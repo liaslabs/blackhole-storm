@@ -1688,6 +1688,7 @@ addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filen
 // what the game is doing (menu, fleet, a level starting...), told to the app's freeze watch so a long hold says where it happened
 function natMark(s){try{const nb=CAP('Bhs');if(rel(11)&&nb&&nb.mark)nb.mark({s}).catch(()=>{});}catch(e){}}
 document.addEventListener('visibilitychange',()=>natMark(document.hidden?'background':'front'));
+natMark('game loading');
 // 1.5.1: how the last run of the app ended, if badly. Android's own record of a "not responding" close or a crash (Android
 // 11+), or a UI-thread hold of 2.5 s or more noted by the app's watch; sent once, as an error report (code locations only)
 setTimeout(async()=>{try{const nb=CAP('Bhs');if(!rel(11)||!nb||!nb.lastExit)return;const j=await nb.lastExit();
@@ -3955,7 +3956,7 @@ function zoneWarp(mid,done){const gw=$('gw'),box=document.createElement('div');b
     if(fl>0){x.globalAlpha=1;x.fillStyle=`rgba(235,245,255,${fl})`;x.fillRect(0,0,w,h);}
     if(t>1.9){fin();return;}requestAnimationFrame(fr);};
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){fin();return;}requestAnimationFrame(fr);}
-function initLevel(){natMark('level start L'+level);
+function initLevel(){natMark(level===1&&!REPLAY&&!HMODE?'tutorial start':'level start L'+level);
   if(riskDue(level)&&RISK.lv!==level){RISK.lv=level;RISK.mod=null;showRisk(initLevel);return;} // the card is offered once per level; a retry keeps it
   runId++;pendingWin=false;levelStartScore=totalScore;levelScore=0;comboCount=0;curR=BASE_R;tgtR=BASE_R;
   lostThisLevel=false;lvCombo=0;adReviveUsed=false;ftexts=[];livesAtStart=lives;updateCombo();
@@ -4435,7 +4436,7 @@ $('tip2Ok').onclick=e=>{e.stopPropagation();v2TipOk();};
 $('shbYes').onclick=e=>{e.stopPropagation();v2ShieldBuyOk();};$('shbNo').onclick=e=>{e.stopPropagation();v2TipOk();};
 // Lias Labs intro: plays once on the very first launch (and on demand from settings); tries sound, falls back to muted
 // First launch: a 3.5 s canvas intro (a star collapses into your black hole), then straight into level 1. Tap skips it.
-function introShort(done){const ov=$('intro'),c=$('introC'),cap=$('introCap'),x=c.getContext('2d');let fin=false,t0=performance.now();
+function introShort(done){natMark('intro');const ov=$('intro'),c=$('introC'),cap=$('introCap'),x=c.getContext('2d');let fin=false,t0=performance.now();
   const end=()=>{if(fin)return;fin=true;try{localStorage.setItem('bhs_intro','1');}catch(e){}SND.resume();ov.style.opacity=0;setTimeout(()=>{ov.hidden=true;c.hidden=true;cap.textContent='';ov.onpointerdown=null;},500);done&&done();};
   $('introV').hidden=true;c.hidden=false;$('introSnd').hidden=true;ov.hidden=false;ov.style.opacity=1;$('introSkip').onclick=e=>{e.stopPropagation();end();};ov.onpointerdown=end;
   const d=Math.min(2,devicePixelRatio||1),st=Array.from({length:130},()=>({x:Math.random(),y:Math.random(),a:.2+Math.random()*.6,s:.4+Math.random()*1.1}));

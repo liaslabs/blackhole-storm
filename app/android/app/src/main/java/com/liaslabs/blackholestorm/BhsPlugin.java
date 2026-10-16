@@ -182,7 +182,7 @@ public class BhsPlugin extends Plugin {
     }
 
     // what the game was doing (menu, fleet, level start...), set by the game at each change of screen, for the notes above
-    private volatile String phase = "";
+    private volatile String phase = "app start, game not loaded yet";
 
     @PluginMethod
     public void mark(PluginCall call) {

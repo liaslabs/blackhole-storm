@@ -210,7 +210,7 @@ function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Mat
 function v2Down(x,y,id){
   if(!G2.on||gState!=='playing'||DRAG.id!==null)return;
   DRAG.id=id;DRAG.sx=x;DRAG.sy=y;DRAG.x=x;DRAG.y=y;DRAG.t0=performance.now();DRAG.moved=false;DRAG.ax=hX;DRAG.ay=hY;DRAG.px=x;DRAG.py=y;DRAG.pt=DRAG.t0;DRAG.vs=0; /* the hole moves by the finger's travel from here: touching the screen never makes it jump */
-  if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);if(rel(11)&&G2.script)evOnce('tut1');}
+  if(!G2.touched){G2.touched=true;G2.tut=Math.min(G2.tut,.99);if(rel(11)&&G2.script){evOnce('tut1');natMark('tutorial touched');}}
 }
 function v2Move(x,y,id){
   if(id!==DRAG.id||!G2.on)return;DRAG.x=x;DRAG.y=y;
@@ -322,7 +322,7 @@ function v2RunScript(dt){
   if(G2.st>=42&&!G2.firstRage&&G2.rage<100&&G2.rageT<=0&&!G2.ready)G2.rage=Math.min(100,G2.rage+dt*40); // the first Rage always arrives, once
   if(G2.ready&&G2.readyT>5)v2RageGo(); // tutorial only: nobody leaves level 1 without seeing Rage
   if(rel(11)&&G2.st>=30&&!G2.ev2){G2.ev2=1;evOnce('tut2');} // halfway through the tutorial
-  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2){G2.script=null;if(rel(11))evOnce('tut3');} // the tutorial script is over: normal spawning takes it from here
+  if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2){G2.script=null;if(rel(11)){evOnce('tut3');natMark('tutorial over');}} // the tutorial script is over: normal spawning takes it from here
 }
 
 // ── giant planet boss (every 10th level) ─────────────

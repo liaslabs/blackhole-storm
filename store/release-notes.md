@@ -219,6 +219,10 @@ Her güncellemede:
   OYNA'ya basıldı, seviye başı, sonuç, arka plan/ön plan; oyun her ekran değişiminde uygulamaya bildirir). Android'in çıkış
   kayıtlarından sıradan olanlar (oyuncunun kapatması, bellek boşaltma, güncelleme) dışındakilerin hepsi kodlarıyla gider:
   HyperOS "yanıt vermiyor" kapatmasını ANR olarak yazmayabilir. Kod 49–51 ANR nedeni anlaşılana kadar Alpha'ya gitmez.
+- **Kod 52** (16 Eki): donma kaydına açılış ve eğitim aşamaları da eklendi ("app start, game not loaded yet", "game
+  loading", "intro", "tutorial start", "tutorial touched", "tutorial over"). Kod 51'in ilk kayıtları: sahibinin telefonunda
+  (Xiaomi 14 Ultra, seviye 203) donma yok; robotun (OnePlus 8 Pro, Android 11, 2 çekirdek) ~3 sn'lik tutulmaları aşama
+  boş geldi, yani oyun henüz aşama bildirmeden önce (yeni kurulum: açılış ya da eğitim). 5 sn'nin altında, ANR değil.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 
