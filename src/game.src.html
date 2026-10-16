@@ -3279,9 +3279,9 @@ function stormTxt(){return stormToday().map(m=>`${m.ic} ${T(m.n)}`).join(' + ');
 function newPid(){const a='abcdefghijklmnopqrstuvwxyz0123456789';let s='';const c=window.crypto&&crypto.getRandomValues?crypto.getRandomValues(new Uint8Array(20)):null;for(let i=0;i<20;i++)s+=a[(c?c[i]:Math.floor(Math.random()*256))%36];return s;}
 // Play Integrity (Android app): a token from Google vouching for this exact request, so the server can refuse scores and
 // prize claims from modified copies. Off until the Google Cloud project number is set here (Play Console → App integrity).
-const INTEG_PROJECT='';
+const INTEG_PROJECT=rel(11)?'595525021870':''; // 1.5.1: Google Cloud project blackhole-storm-play, linked in Play Console → App integrity
 async function itTok(what){const nb=CAP('Bhs');if(!INTEG_PROJECT||!nb||!nb.integrity||!(window.crypto&&crypto.subtle))return undefined;
-  try{const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(what)))].map(b=>b.toString(16).padStart(2,'0')).join('');return (await nb.integrity({project:INTEG_PROJECT,hash:h})).token;}catch(e){return undefined;}}
+  try{const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(what)))].map(b=>b.toString(16).padStart(2,'0')).join('');return (await Promise.race([nb.integrity({project:INTEG_PROJECT,hash:h}),new Promise(r=>setTimeout(()=>r({}),5000))])).token;}catch(e){return undefined;}} // never holds a score more than 5 s
 const itScore=async b=>({...b,it:await itTok(`${b.pid}|${b.day}|${Math.floor(b.score)}|${Math.floor(b.secs)}`)});
 async function lbFetch(path,body){if(!LB_URL)throw new Error('off');const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),7000);
   try{const r=await fetch(LB_URL+path,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal:ac.signal}:{signal:ac.signal});const j=await r.json();if(!r.ok&&!j)throw new Error(r.status);return j;}finally{clearTimeout(tm);}}
