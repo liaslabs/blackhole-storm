@@ -126,7 +126,8 @@ async function gpVerify(env, DB, pid, sku, token) {
   const kind = SKUS[sku];
   const t = await gpToken(env), h = { Authorization: 'Bearer ' + t };
   const base = GP + encodeURIComponent(env.GP_PKG) + (kind === 's' ? '/purchases/subscriptions/' : '/purchases/products/') + encodeURIComponent(sku) + '/tokens/' + encodeURIComponent(token);
-  const r = await fetch(base, { headers: h }); if (!r.ok) return { ok: false };
+  const r = await fetch(base, { headers: h });
+  if (!r.ok) return [400, 404, 410].includes(r.status) ? { ok: false } : { ok: false, err: 'gp' + r.status }; // a bad token is refused; our access or Google failing is "ask again later" (err), so a real purchase is never turned away
   const p = await r.json();
   if (kind === 's') { if (!((p.paymentState === 1 || p.paymentState === 2) && +p.expiryTimeMillis > Date.now())) return { ok: false }; }
   else if (p.purchaseState === 2) return { ok: false, pending: true };   // paid later (cash, bank transfer): the app asks again
