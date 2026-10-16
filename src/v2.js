@@ -186,7 +186,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   if(EXPRUN&&EXPRUN.kind==='event'&&mode==='level'){const ks=Object.keys(EVK).filter(k=>level>=EVK[k].from);G2.evPlan={k:ks.length?ks[Math.floor(rng()*ks.length)]:'wind',at:6};} // an expedition EVENT stop always brings one
   if(rule&&rule.duel&&!REPLAY)sigShow('📡 '+T('SİNYAL · GÖZLEM İSTASYONU-7'),T('Aynadaki gibi: senin kütlende, senin açlığında bir kara delik. Bu sefer iki kez yutman gerekecek.'),6);
   if(G2.L.boss&&mode==='level')v2BossInit();
-  else if(mode==='level'&&level%10===1&&level>1&&!REPLAY){const z=zoneOf(level),Z=ZONES[z],sg=['🌌 '+T('YENİ BÖLGE')+' · '+T(Z.n),T(Z.d),6];if(G2.featCard||rule&&!TIPS[rule.tip])G2.sigBack=sg;else sigShow(...sg);} /* a card comes first: the zone note waits for ANLADIM */
+  else if(mode==='level'&&level%10===1&&level>1&&!REPLAY){const z=zoneOf(level),Z=ZONES[z],sg=[(rel(10)?'\ue109 ':'🌌 ')+T('YENİ BÖLGE')+' · '+T(Z.n),T(Z.d),6];if(G2.featCard||rule&&!TIPS[rule.tip])G2.sigBack=sg;else sigShow(...sg);} /* a card comes first: the zone note waits for ANLADIM */
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
@@ -1379,7 +1379,7 @@ const TIP2={
   over:['🟣','AŞIRI YÜK','Sınıra kadar büyüdün! 15 saniye boyunca daha güçlüsün ama yönetmek zorlaşır. Sonra kara delik biraz küçülür.'],
   shield:['🛡','KALKAN','İlk kalkanın hediye! Sağ alttaki kalkana dokun: 10 saniye meteorlar parçalanır, yayların onarılır.'],
   shard:['🛡','KALKAN PARÇASI','Kalkan parçasını yut: 3 parça toplayınca 1 kalkan kazanırsın.'],
-  shrink:['💨','KÜÇÜLÜYOR','Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.'],
+  shrink:[rel(10)?'\ue107':'💨','KÜÇÜLÜYOR','Bir süre bir şey yutmazsan kara deliğin yavaşça küçülür. Yemeye devam et! Seviye sonunda ulaştığın en büyük boyut sayılır.'],
   comet:['☄️','KUYRUKLU YILDIZ','Çok hızlı geçer. Yakalarsan combo süren 2 saniye uzar.'],
   split:['🌋','BÖLÜNEN GEZEGEN','Bu buzlu gezegen bütün olarak yutulmaz: kara deliğine çarpınca ikiye bölünür ve yarım kütleli iki parça hızla uzaklaşır. Peşlerinden git, ikisini de yut!'],
   anti:['⚛️','ANTİMADDE','Yutma! Antimadde kara deliğini hemen küçültür ve 3 saniye boyunca cisimleri iter: o sürede hiçbir şey yutamazsın. Çekim alanına girerse içeri çekilir, uzak tut. Vortex açıkken zararsızdır.'],
@@ -1405,10 +1405,10 @@ const TIP2={
   icec:['❄','DONMUŞ KUYRUKLU YILDIZ','Yutarsan puanı 2 kat, ama kara delik 3 saniye buz tutar ve ağır hareket eder. Yakında meteor varken dikkat.'],
   ev_neb:['🌫','YAPIŞKAN NEBULA','Şekil değiştiren bir bulut ekrandan geçer. İçine girersen kara delik sisin içinde kaybolur ve ağır hareket eder. Yemeye devam edebilirsin ama meteorlardan kaçmak zorlaşır.'],
   ev_belt:['☄','METEOR KUŞAĞI','Uyarıdan sonra 13 saniye boyunca sadece meteorlar gelir; hepsi aynı açıyla, şerit şerit akar. Boş şeridi takip et; şerit yavaşça kayar. Hiç çarpmadan geçersen +500 puan ve +25 ⭐.'],
-  shrinkc:['💨','HIZLI KÜÇÜLME','Bu seviyede ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür. Durmadan ye.'],
+  shrinkc:[rel(10)?'\ue108':'💨','HIZLI KÜÇÜLME','Bu seviyede ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür. Durmadan ye.'],
   ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
   hawking:[rel(10)?'\ue104':'💨','HAWKING SALINIMI','Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir.'],
-  worm:['🌌','SOLUCAN DELİĞİ','Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.'],
+  worm:[rel(10)?'\ue106':'🌌','SOLUCAN DELİĞİ','Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.'],
   hor:['♾️','İKİNCİ UFUK','Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.'],
   jet:['🔥','KUASAR JETİ','Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır.'],
   rad:['☢','RADYASYON','Boss dalga saçar. Dalgaların arasındaki boşlukta dur; kalkan seni korur.'],
@@ -1459,7 +1459,7 @@ const TIPANIM={
   hawking:(c,t,H)=>{const x=130,y=86,go=t>.9,R=go?Math.max(16,22-(t-.9)*12):22;H.hole(c,x,y,R,3,{});
     if(go&&t<2){const q=(t-.9)/1.1;c.strokeStyle=`rgba(255,255,255,${1-q})`;c.lineWidth=3;c.beginPath();c.arc(x,y,R+q*170,0,TAU);c.stroke();}
     [[40,40],[215,34],[60,120],[220,112]].forEach(([mx,my],i)=>{const hitT=.9+Math.hypot(mx-x,my-y)/170*1.1;if(go&&t>hitT){if(t<hitT+.35)H.burst(c,mx,my,(t-hitT)/.35,'255,255,255');return;}H.meteor(c,mx+Math.sin(t*2+i)*3,my,Math.atan2(y-my,x-mx));});
-    H.button(c,222,118,'💨',t>.6&&t<1,'#ffffff');},
+    H.button(c,222,118,rel(10)?'\ue104':'💨',t>.6&&t<1,'#ffffff');},
   jet:(c,t,H)=>{const x=130,y=128,A0=-2.75,A1=-.4,on=t>.5&&t<3.5,k=clamp((t-.5)/3,0,1),a=A0+(A1-A0)*k;
     [[-2.55,78,'m'],[-2.2,104,'a'],[-1.75,86,'m'],[-1.3,110,'a'],[-.95,82,'m'],[-.62,100,'a']].forEach(([ba,br,bk])=>{const bx=x+Math.cos(ba)*br,by=y+Math.sin(ba)*br;if(on&&a>ba||t>=3.5){const q=(t-.5-(ba-A0)/(A1-A0)*3)/.35;if(q>=0&&q<1)H.burst(c,bx,by,q,bk==='m'?'255,170,70':'255,230,160');return;}if(bk==='m')H.meteor(c,bx,by,1.9);else H.rock(c,bx,by);});
     if(on){H.beam(c,x,y,14,a,t);const fx=x+Math.cos(a)*120,fy=y+Math.sin(a)*120;H.finger(c,fx,fy,'159,232,255');H.bar(c,1-k,'#ff8a3c');}
@@ -1517,7 +1517,7 @@ const TIPH={
   hearts:(c,n)=>{c.font='12px sans-serif';c.textAlign='left';c.textBaseline='middle';c.fillStyle='#ff5a6a';c.fillText([0,1,2].map(i=>i<n?'♥':'♡').join(' '),10,14);},
   crest:(c,x,y,s)=>{c.save();c.translate(x,y);c.beginPath();c.moveTo(-s,-s*.8);c.quadraticCurveTo(0,-s*1.1,s,-s*.8);c.lineTo(s,s*.1);c.quadraticCurveTo(s*.8,s*.9,0,s*1.2);c.quadraticCurveTo(-s*.8,s*.9,-s,s*.1);c.closePath();c.fillStyle='rgba(255,230,140,.35)';c.fill();c.strokeStyle='#ffd84d';c.lineWidth=1.5;c.stroke();c.restore();},
   bar:(c,f,col)=>{const bw=110,bx=75;c.fillStyle='rgba(255,255,255,.12)';c.fillRect(bx,8,bw,5);c.fillStyle=col;c.fillRect(bx,8,bw*clamp(f,0,1),5);},
-  button:(c,x,y,ic,press,col)=>{const s=26*(press?.9:1);c.fillStyle='rgba(20,24,32,.95)';c.strokeStyle=col;c.lineWidth=press?2.5:1.3;c.beginPath();c.roundRect(x-s/2,y-s/2,s,s,7);c.fill();c.stroke();c.font=`${Math.round(s*.55)}px sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fff';c.fillText(ic,x,y+1);if(press){c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.arc(x+6,y+6,8,0,TAU);c.fill();}},
+  button:(c,x,y,ic,press,col)=>{const s=26*(press?.9:1);c.fillStyle='rgba(20,24,32,.95)';c.strokeStyle=col;c.lineWidth=press?2.5:1.3;c.beginPath();c.roundRect(x-s/2,y-s/2,s,s,7);c.fill();c.stroke();if(!(typeof labImgDraw==='function'&&labImgDraw(c,ic,x,y+1,s*.74))){c.font=`${Math.round(s*.55)}px sans-serif`;c.textAlign='center';c.textBaseline='middle';c.fillStyle='#fff';c.fillText(ic,x,y+1);} /* 16 Oct: the game's own icon, drawn as a picture */if(press){c.fillStyle='rgba(255,255,255,.35)';c.beginPath();c.arc(x+6,y+6,8,0,TAU);c.fill();}},
   beam:(c,x,y,R,a,t)=>{c.save();c.globalCompositeOperation='lighter';c.translate(x,y);c.rotate(a);const L=260;c.strokeStyle='rgba(255,70,20,.18)';c.lineWidth=16;c.beginPath();c.moveTo(R,0);c.lineTo(L,0);c.stroke();
     for(let i=3;i>=0;i--){const f=i/3;c.strokeStyle=f>.5?'rgba(255,100,30,.7)':'rgba(255,220,150,.85)';c.lineWidth=1+1.5*f;c.beginPath();for(let q=R;q<=L;q+=6){const e=Math.min(1,(q-R)/30),yy=(3+5*f)*e*Math.sin(q*(.06+.01*i)+i*1.4+t*(i%2?-10:10));q===R?c.moveTo(q,yy):c.lineTo(q,yy);}c.stroke();}
     c.strokeStyle='rgba(255,245,215,.95)';c.lineWidth=2.5;c.lineCap='round';c.beginPath();c.moveTo(R,0);c.lineTo(L,0);c.stroke();c.restore();}};
@@ -1570,7 +1570,7 @@ function v2Result(){ // level-complete card body
 // win streak: 1 win → 1 silver shell next level, 2 → 2, 3+ → 2 silver and a gold one
 function wsReward(n){const t=shTier(level);return {s:t<2?0:Math.min(t>2?2:1,n),g:0};} // gold shells come from the end of each universe, missions and powers, never from a streak
 function wsTxt(w){return [w.s?w.s+' GÜMÜŞ KABUK':'',w.g?'ALTIN KABUK':''].filter(Boolean).join(' · ');}
-function v2Teaser(l){const n=new2(l),h=v2Hard(l),c=v2Chal(l),rc=labRec(l),pw=rc?`<span class="pwT${labGap(l)?' low':''}">⚡ ${T('Önerilen güç')} ${rc} · ${T('Gücün')} ${labPower()}</span>`:'',hz=h?`<span class="hdT">🔥 ${T(h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')} · ⏱ ${T(v2HardT(l)+' sn')}</span>`:c?`<span class="hdT">${c==='belt'?'☄ '+T('METEOR KUŞAĞI'):'💨 '+T('HIZLI KÜÇÜLME')}</span>`:'';return n||h||c||rc?`<b>${T('SIRADA')}</b>${T('SEVİYE')} ${l}${n?` · ${newLbl(n)}`:''}${hz}${pw}`:'';}
+function v2Teaser(l){const n=new2(l),h=v2Hard(l),c=v2Chal(l),rc=labRec(l),pw=rc?`<span class="pwT${labGap(l)?' low':''}">⚡ ${T('Önerilen güç')} ${rc} · ${T('Gücün')} ${labPower()}</span>`:'',hz=h?`<span class="hdT">🔥 ${T(h>1?'ÇOK ZOR SEVİYE':'ZOR SEVİYE')} · ⏱ ${T(v2HardT(l)+' sn')}</span>`:c?`<span class="hdT">${c==='belt'?'☄ '+T('METEOR KUŞAĞI'):(rel(10)?'\ue108 ':'💨 ')+T('HIZLI KÜÇÜLME')}</span>`:'';return n||h||c||rc?`<b>${T('SIRADA')}</b>${T('SEVİYE')} ${l}${n?` · ${newLbl(n)}`:''}${hz}${pw}`:'';}
 
 // ── 1.5.0 depth: rocks drifting far behind the play, two big blurred rocks peeking in at the side edges, sparse speed streaks ──
 // Decoration only: nothing here feels the pull or can be hit. Bodies are drawn on the WebGL canvas underneath, so the decoration goes out
