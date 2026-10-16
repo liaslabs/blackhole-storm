@@ -19,7 +19,7 @@ oyuncu bekler, sıkılır ve bir daha denemez.
 |---|---|---|---|
 | **1.5.0** | yedek (kod 47) | Filolar, avatarlar, değerlendirme kartı, yıldız tozu arka planı, menüde yarış sayacı, yeni mağaza kartları. **Filo görevleri** de bu sürüme girdi (kod 44–47): günde 3 görev, eşit donanım, 3 hak, Filo Zinciri, yeni filo menüsü, filo hatırlatıcıları. | – |
 | **1.5.1** | ~27–30 Eki, ilk üretim (kod 48) | 1.5.0'ın hepsi + **ölç + koru:** kimliksiz olay sayaçları (eğitim adımları, 1/3/5/10. seviye, ilk ölüm saniyesi, filoya katılma, görev, mağaza, reklam, bildirim izni), kurulum yaşı aralığıyla geri dönüş (kimliksiz D1/D7), yıldız giriş/çıkış sayaçları, Play Integrity (1 hafta yalnız kayıt, sonra zorunlu), şüpheli skor raporu, eşzamanlı oyuncu sayacı, şifreli okuma sayfası. **Bulut yedek (yalnız yedek modu)**, testten geçerse ilk üretimde; geçmezse 1–2 hafta sonra 1.5.1.x ile (aşağıda). | – |
-| **1.5.2** | ~20 Kas | **Sağlamlaştır:** Android bakım (R8, AGP 9.0), eski `rel(≤10)` dallarını silme, test botlarını `tools/` + CI'ya taşıma, otomatik düşük kalite (ilk 10 sn FPS < 45), yedekten geri yükleme provası. Yeni özellik içermez. | – |
+| **1.5.2** | ~20 Kas | **Sağlamlaştır:** Android bakım (R8, AGP 9.0), eski `rel(≤10)` dallarını silme, test botlarını `tools/` + CI'ya taşıma, otomatik düşük kalite (ilk 10 sn FPS < 45), yedekten geri yükleme provası. **Canlı filo** (aşağıda): filo ekranında "Filoda neler oldu" şeridi, menüde "X filosu sizi geçti" uyarısı, yarış sekmesinde 30 sn'de bir yenilenen skorlar. | – |
 | **1.5.3** | ~4 Ara | **İlk 10 dakika:** 1.5.1 verisine göre sade ilk oturum (önce yalnız OYNA; Lab, Atlas, Filo seviyeyle açılır), Atlas/rehber/mağazadaki eski emojiler ICO stiline, görev hedeflerinin gerçek dağılımla ayarı, ekonomi raporu. Mağaza deneyi (Play Console, onayla). | – |
 | **1.5.4** | ~18 Ara | **Büyüt:** derin bağlantı (App Links, `assetlinks.json`), davet bağlantısı filo koduyla açar, "arkadaşını getir" ödülü (davetli 5. seviyeye ulaşınca), klip paylaşımı (son 8 sn + bağlantılı filigran). **Çok oyuncu 1. aşama(canlı bağlantı gerektirmez):** Yardım İste (aynı seviyede 3 yenilgiden sonra; filo üyelerine ve paylaşım bağlantısıyla dışarıya), Destek paketi (o seviyeye +1 kalkan; yardım edene filo puanı ve "Yardımsever" rozeti), **Hayalet Düello** (aynı tohum, rakibin kara deliği yarı saydam hayalet, skor karşılaştırma; eşit donanım). **Oyuncu etiketi** (NOVA #4821), **dünya filo sıralaması** (Bu hafta / Tüm zamanlar / Kupalar), **filo profili**. Japonca mağaza sayfası. | – |
 | – | 21 Ara – 4 Oca | **Dondurma:** üretime yayın yok; izleme ve acil düzeltme. | – |
@@ -62,6 +62,21 @@ Sıra: önce önizleme (kayıt bulundu kartı + ayar satırı) → onay → sahi
 kur, geri yükle; dolu kayda dokunmama) → Dahili test → kapalı test. Üretim erişimi başvurusu (20 Eki) buna bağlı değil;
 yedek hazır değilse üretim beklemez.
 
+### Canlı filo ve ad (16 Ekim kararı)
+
+- **Ad "Filo" kalır.** "İttifak" strateji oyunlarında yaygın ama savaş çağrıştırır; "Filo" uzay temasına uyar, bize özgü
+  ve düğmede kısa. Değiştirmek puan getirmez; 11 dilde ~100 metin, 12 dilde mağaza kartı ve üretimden hemen önce risk demek.
+- **Canlı filo, 1.5.2** (oyuncular filolara dağıldıktan sonra en çok işe yarar):
+  1. Filo ekranının ilk sayfasında kısa **"Filoda neler oldu"** şeridi. Duvardaki olaylara (sandık, sıra yükseldi, altın
+     madalya) eklenir: her 10 seviye, Günün Fırtınası sonucu, kişisel rekor, günün en çok puan getireni.
+  2. **"Geçildin" uyarısı:** oyun açılınca, son bakıştan beri yarış sırası düştüyse menüde FİLO'nun altında
+     "🏁 Nova filosu sizi geçti · 120 puan geride". Bildirim gerektirmez.
+  3. **Canlı yarış sekmesi:** açıkken 30 sn'de bir yenilenir, sırası değişen filo ▲/▼ ile parlar, "üstündeki filoya X puan"
+     satırı canlı.
+- **Telefona "geçildin" bildirimi** sunucudan gönderim (FCM) ister: ücretsiz, ama Firebase projesi, bildirim adresi saklama,
+  gizlilik metni ve Veri güvenliği formu güncellemesi gerekir. 1.7.0'da (eşik 2) kalır; filolar büyürse öne alınır. Kural:
+  yalnız hafta sonu yarışında, günde en fazla 1.
+
 ### Güven modeli (16 Ekim onaylandı, kod 49 + sunucu, üretimden önce)
 
 Play Integrity'nin kararına göre üç sınıf:
@@ -84,7 +99,7 @@ puan/süre tavanı, günde 40 gönderim, bildir, tavana yakın sonuç listesi, f
 | 0–1 | 17–26 Eki | Bulut yedek: önizleme + onay (17–18 Eki); Play Games Services kurulumu (sahibi); yazım + iki cihaz testi (20–25 Eki, Google incelemesi sürerken); Dahili test → kapalı test | Boş telefonda geri yükler, dolu kayda dokunmaz; testten geçerse ilk üretimde |
 | 1–2 | 19 Eki – 1 Kas | 1.5.1: olay sayaçları (günde tek toplu gönderim, kimliksiz), kurulum yaşı, yıldız giriş/çıkış, Integrity proje numarası + kayıt modu, şüpheli skor raporu, okuma sayfası. Kod 48 Dahili test ~29 Eki | Sayaçlar sunucuda; Veri güvenliği formu güncel (sahibi doldurur) |
 | 2 | 2–4 Kas | 1.5.1 Alpha → üretim; Integrity bir hafta kayıttan sonra zorunlu | Üretimde 1.5.1 |
-| 3–4 | 2–15 Kas | 1.5.2: R8 + AGP 9; `rel(≤10)` temizliği (her adım bot + seviye testi); `tools/` + CI duman testi; otomatik düşük kalite; geri yükleme provası | Davranış farkı yok; CI yeşil; yedek yerelde açılır |
+| 3–4 | 2–15 Kas | 1.5.2: Canlı filo (önizleme + onay); R8 + AGP 9; `rel(≤10)` temizliği (her adım bot + seviye testi); `tools/` + CI duman testi; otomatik düşük kalite; geri yükleme provası | Davranış farkı yok; CI yeşil; yedek yerelde açılır |
 | 5–6 | 16–29 Kas | 1.5.3: 2 haftalık huniden en çok kayıp veren 2 nokta (önizleme) → sade ilk oturum; emoji temizliği; görev hedefleri gerçek dağılımla; ekonomi raporu; mağaza deneyi (onayla) | Önizleme onaylı; hedefler veriye dayalı |
 | 7–8 | 30 Kas – 13 Ara | 1.5.4: `assetlinks.json` (main'e onayla); davet bağlantısı; arkadaşını getir; klip paylaşımı; Yardım İste, Destek, Hayalet Düello; oyuncu etiketi; dünya filo sıralaması; filo profili | Bağlantı uygulamayı açar; ödül kötüye kullanılamaz |
 | – | 21 Ara – 4 Oca | Dondurma | – |
