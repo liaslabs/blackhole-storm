@@ -62,6 +62,24 @@ Sıra: önce önizleme (kayıt bulundu kartı + ayar satırı) → onay → sahi
 kur, geri yükle; dolu kayda dokunmama) → Dahili test → kapalı test. Üretim erişimi başvurusu (20 Eki) buna bağlı değil;
 yedek hazır değilse üretim beklemez.
 
+### Ödeme ve gelir (sahibinin işleri, 16 Ekim'de sıraya alındı)
+
+Ürünler ve fiyatlar yalnız sahibi tarafından Play Console'da oluşturulur; robot hesap ve oturum bunlara dokunmaz.
+Vergi ayrıntıları mali müşavirle teyit edilir; aşağıdaki sıra bir yol gösterici, hukuki/vergisel görüş değildir.
+
+| Sıra | Hedef | İş | Not |
+|---|---|---|---|
+| 1 | 17–20 Eki | **GVK 20/B istisnası:** İnternet Vergi Dairesi'nden "sosyal içerik üreticiliği ve mobil uygulama geliştiriciliği" kazanç istisnası başvurusu, belgenin alınması | Müşavirle: yıllık sınır, AdMob reklam gelirinin de kapsama girip girmediği |
+| 2 | 20–23 Eki | **Bu işe ayrılmış banka hesabı:** bankaya 20/B hesabı olarak bildirilir (stopajı banka keser) | Play'in ödeme para birimi ve hesap türü bankayla teyit |
+| 3 | 20–25 Eki | **Play Console ödeme profili:** banka hesabı + doğrulama (küçük deneme yatırımı birkaç gün sürebilir); ABD vergi bilgisi (W-8BEN) | Doğrulama bitmeden ödeme alınmaz |
+| 4 | 20–25 Eki | **%15 hizmet bedeli:** Play Console'da hesap grubu beyanı (ilk 1 milyon $ için %15) | Beyan yapılmazsa %30 |
+| 5 | 23–26 Eki | **Uygulama içi ürünler** (oyunun beklediği kimlikler): tek seferlik `starter`, `cosmic_id`, `no_ads`, `gems_s`, `gems_m`, `gems_l`, `stars_pack`, `lives_pack`, `time_pack`; abonelik `vip_monthly` | Oyundaki ₺ fiyatlar yalnız yedek gösterim; gerçek fiyat Play'den gelir. Ürünler etkin olunca mağaza "Paketler yakında" yerine paketleri gösterir |
+| 6 | 23–26 Eki | **Lisans testi:** kendi hesabınla test satın alımı (ücret alınmaz); sunucu doğrulaması (`GP_SA`) kontrol | Ben raporu okurum |
+| 7 | üretimden önce | **AdMob:** ödeme bilgisi, test cihazları, GDPR mesajı; sonra `ADS_LIVE` derlemesi (ben) | Gerçek reklam yalnız üretim derlemesinde |
+
+Hepsi üretime (~27–30 Eki) yetişmezse oyun yine çıkar; mağaza "Paketler yakında" der, ürünler etkinleşince
+uygulama güncellemesi gerekmeden açılır.
+
 ### Canlı filo ve ad (16 Ekim kararı)
 
 - **Ad "Filo" kalır.** "İttifak" strateji oyunlarında yaygın ama savaş çağrıştırır; "Filo" uzay temasına uyar, bize özgü
