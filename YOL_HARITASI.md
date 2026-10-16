@@ -62,6 +62,11 @@ Sıra: önce önizleme (kayıt bulundu kartı + ayar satırı) → onay → sahi
 kur, geri yükle; dolu kayda dokunmama) → Dahili test → kapalı test. Üretim erişimi başvurusu (20 Eki) buna bağlı değil;
 yedek hazır değilse üretim beklemez.
 
+**Kurulum durumu (16 Eki):** Play Games Services projesi oluşturuldu, `blackhole-storm-play` (595525021870) bulut projesine
+bağlı; bu numara oyunun Play Games uygulama kimliği. Özellikler: Arcade, kayıtlı oyunlar açık, simge ve özellik grafiği yüklü,
+ad ve açıklama en-US (varsayılan) + tr, de, es-ES, es-419, fr, pt-BR, pt-PT, ru, id, ja, ar. Kalan: OAuth onay ekranı, iki
+Android OAuth istemcisi (uygulama imzalama ve yükleme anahtarı SHA-1), kimlik bilgilerinin bağlanması. Yayınlama testlerden sonra.
+
 ### Ödeme ve gelir (sahibinin işleri, 16 Ekim'de sıraya alındı)
 
 Ürünler ve fiyatlar yalnız sahibi tarafından Play Console'da oluşturulur; robot hesap ve oturum bunlara dokunmaz.
