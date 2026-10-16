@@ -145,7 +145,7 @@ public class BhsPlugin extends Plugin {
                         }
                         // a hold this long may end with Android closing the app ("not responding"): it is written down
                         // at once, so the next start can still tell where the UI thread was stuck
-                        if (d >= 2500) diag().edit().putString("freeze", System.currentTimeMillis() + "|" + d + "|" + whereDeep(mt.getStackTrace()) + " " + c + "/" + n).apply();
+                        if (d >= 2500) diag().edit().putString("freeze", System.currentTimeMillis() + "|" + d + " ms · " + phase + " · " + device() + "|" + whereDeep(mt.getStackTrace()) + " " + c + "/" + n).apply();
                     }
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -181,6 +181,20 @@ public class BhsPlugin extends Plugin {
         return b.length() > 700 ? b.substring(0, 700) : b.toString();
     }
 
+    // what the game was doing (menu, fleet, level start...), set by the game at each change of screen, for the notes above
+    private volatile String phase = "";
+
+    @PluginMethod
+    public void mark(PluginCall call) {
+        String v = call.getString("s", "");
+        phase = v == null ? "" : v.length() > 40 ? v.substring(0, 40) : v;
+        call.resolve();
+    }
+
+    private static String device() {
+        return Build.MANUFACTURER + " " + Build.MODEL + " a" + Build.VERSION.SDK_INT;
+    }
+
     private SharedPreferences diag() {
         return getContext().getSharedPreferences("bhs_diag", Context.MODE_PRIVATE);
     }
@@ -199,7 +213,7 @@ public class BhsPlugin extends Plugin {
                 JSObject o = new JSObject();
                 o.put("kind", "freeze");
                 o.put("ts", Long.parseLong(x[0]));
-                o.put("desc", x.length > 1 ? x[1] + " ms" : "");
+                o.put("desc", x.length > 1 ? x[1] : "");
                 o.put("at", x.length > 2 ? x[2] : "");
                 a.put(o);
             }
@@ -213,12 +227,17 @@ public class BhsPlugin extends Plugin {
                     if (i.getTimestamp() <= seen) continue;
                     max = Math.max(max, i.getTimestamp());
                     int r = i.getReason();
-                    if (r != ApplicationExitInfo.REASON_ANR && r != ApplicationExitInfo.REASON_CRASH && r != ApplicationExitInfo.REASON_CRASH_NATIVE) continue;
+                    // the ordinary ends are left out: the game closing itself, the player swiping it away, Android freeing memory for
+                    // another app, an update; anything else is told, with Android's code (a phone maker's own "not responding"
+                    // close may not be filed as an ANR)
+                    if (r == ApplicationExitInfo.REASON_EXIT_SELF || r == ApplicationExitInfo.REASON_LOW_MEMORY || r == ApplicationExitInfo.REASON_USER_REQUESTED
+                        || r == ApplicationExitInfo.REASON_USER_STOPPED || r == ApplicationExitInfo.REASON_DEPENDENCY_DIED || r == 15 || r == 16) continue;
                     JSObject o = new JSObject();
-                    o.put("kind", r == ApplicationExitInfo.REASON_ANR ? "anr" : r == ApplicationExitInfo.REASON_CRASH ? "crash" : "native");
+                    o.put("kind", r == ApplicationExitInfo.REASON_ANR ? "anr" : r == ApplicationExitInfo.REASON_CRASH ? "crash" : r == ApplicationExitInfo.REASON_CRASH_NATIVE ? "native" : "r" + r);
                     o.put("ts", i.getTimestamp());
                     String d = i.getDescription();
-                    o.put("desc", d == null ? "" : d.length() > 200 ? d.substring(0, 200) : d);
+                    d = device() + " · " + (d == null ? "" : d);
+                    o.put("desc", d.length() > 200 ? d.substring(0, 200) : d);
                     o.put("at", r == ApplicationExitInfo.REASON_ANR ? mainOf(i) : "");
                     a.put(o);
                 }

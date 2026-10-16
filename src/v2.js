@@ -1631,7 +1631,7 @@ function v2DepthDraw(dt){if(!G2.on||FXLITE||GL.quality<1)return; /* a phone that
   const d=G2.dep||(G2.dep=v2DepthInit()),px=W/2-hX,py=H*.55-hY,ease=Math.min(1,dt*5);
   if(DEPTH.dust){v2DustDraw(d,dt,px,py);}else if(!DSPR||!DSPR.done)return;
   if(d.W!==W||d.H!==H){const kx=W/d.W,ky=H/d.H;for(const o of d.far){o.x*=kx;o.y*=ky;}for(const o of d.near)o.x=o.v%2===0?-o.r*.62:W+o.r*.62;d.W=W;d.H=H;} // a resize (URL bar, rotation) keeps the layer, only rescaled
-  {const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stBusy:DEPTH.st,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks drift in toward the hole; only a few while a belt, the storm or Vortex keeps the screen busy
+  if(!rel(11))/* 1.5.1: no speed streaks toward the hole (they crowded the screen and could be taken for bodies) */{const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stBusy:DEPTH.st,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks drift in toward the hole; only a few while a belt, the storm or Vortex keeps the screen busy
    for(let i=0;i<d.st.length;i++){const s=d.st[i];if(gState==='playing')s.d-=s.v*dt;if(s.d<G2.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
     const len=s.v*.09,q=clamp((s.d-G2.R*1.3)/(G2.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1);if(q<.02)continue;const ca=Math.cos(s.a),sa=Math.sin(s.a),dm=s.d+len/2;
     if(v2OnBody(hX+ca*dm,hY+sa*dm,len/2+sp2(10)))continue;B[q<.33?0:q<.66?1:2].push(hX+ca*s.d,hY+sa*s.d,hX+ca*(s.d+len),hY+sa*(s.d+len));}

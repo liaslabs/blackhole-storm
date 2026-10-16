@@ -1989,7 +1989,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v83",APPVER="";
+const BUILD="bhs-v84",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -1997,10 +1997,13 @@ function errReport(msg,stack){try{if(DEV||!/liaslabs\.github\.io/.test(location.
   fetch('https://blackhole-storm-lb.liaslabs-games.workers.dev/err',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},
     body:JSON.stringify({m:msg,s:String(stack||'').split('\n').slice(0,6).join('\n').slice(0,900),v:BUILD,p:NATIVE?'app':'web',l:(navigator.language||'').slice(0,5)})}).catch(()=>{});}catch(e){}}
 addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filename?e.filename.split('/').pop()+':'+e.lineno+':'+e.colno:'')));
+// what the game is doing (menu, fleet, a level starting...), told to the app's freeze watch so a long hold says where it happened
+function natMark(s){try{const nb=CAP('Bhs');if(rel(11)&&nb&&nb.mark)nb.mark({s}).catch(()=>{});}catch(e){}}
+document.addEventListener('visibilitychange',()=>natMark(document.hidden?'background':'front'));
 // 1.5.1: how the last run of the app ended, if badly. Android's own record of a "not responding" close or a crash (Android
 // 11+), or a UI-thread hold of 2.5 s or more noted by the app's watch; sent once, as an error report (code locations only)
 setTimeout(async()=>{try{const nb=CAP('Bhs');if(!rel(11)||!nb||!nb.lastExit)return;const j=await nb.lastExit();
-  for(const x of (j&&j.list)||[])errReport(`EXIT ${x.kind} ${new Date(+x.ts).toISOString().slice(0,16)} ${String(x.desc||'').slice(0,160)}`,String(x.at||''));}catch(e){}},12000);
+  for(const x of (j&&j.list)||[])errReport(`EXIT ${x.kind} ${new Date(+x.ts).toISOString().slice(0,16)} ${String(x.desc||'').slice(0,220)}`,String(x.at||''));}catch(e){}},12000);
 addEventListener('unhandledrejection',e=>{const r=e.reason;errReport('promise: '+(r&&r.message||r),r&&r.stack);});
 // Daily open count (published site and app only): once a UTC day the game says "opened today" with its version, app or web,
 // and the game language, so we can see how many testers are on which version. No install number, name or other personal data.
@@ -3694,7 +3697,7 @@ function fleetTabs(){if(!$('lbTF'))return;$('lbTW').textContent='🌍 '+T('FIRTI
 }
 // 1.5.0 (15 Oct): the Fleet is its own screen, opened from the FLEET button in the menu (it reuses the ranking window in 'fleet mode':
 // own title, a ✕, four icons at the bottom: GÖREVLER (missions and FİLOM) · ÜYELER · YARIŞ · DAVET); the ranking window itself is back to Storm and Records
-function fleetMode(on){const s=$('sLB');if(!s)return;s.classList.toggle('flm',!!on);flInvClose();
+function fleetMode(on){natMark(on?'fleet':'fleet closed');const s=$('sLB');if(!s)return;s.classList.toggle('flm',!!on);flInvClose();
   if(on&&!$('flX')){const c=s.querySelector('.card'),x=document.createElement('button');x.id='flX';x.className='icb';x.setAttribute('aria-label',T('KAPAT'));x.textContent='✕';x.onclick=()=>$('lbClose').click();if(c)c.appendChild(x);}const h=s.querySelector('.card>.h');if(h){if(!h.dataset.t)h.dataset.t=h.textContent;if(on)h.innerHTML=ICO.svg('🛸')+' '+escH(T('FİLO'));else h.textContent=h.dataset.t;}}
 function fleetOpen(tab){FLS=FL.fid?'main':(TIPS.flIntro?'main':'intro');FLT=tab&&tab!=='home'?tab:'tasks';FLI=0;fleetMode(true);showLB();lbTab('f');} /* the window opens over the menu: hiding the menu left a bare game screen after KAPAT (15 Oct) */ // from the menu strip or the level card
 
@@ -4588,14 +4591,14 @@ function zoneWarp(mid,done){const gw=$('gw'),box=document.createElement('div');b
     if(fl>0){x.globalAlpha=1;x.fillStyle=`rgba(235,245,255,${fl})`;x.fillRect(0,0,w,h);}
     if(t>1.9){fin();return;}requestAnimationFrame(fr);};
   if(matchMedia('(prefers-reduced-motion: reduce)').matches){fin();return;}requestAnimationFrame(fr);}
-function initLevel(){
+function initLevel(){natMark('level start L'+level);
   if(riskDue(level)&&RISK.lv!==level){RISK.lv=level;RISK.mod=null;showRisk(initLevel);return;} // the card is offered once per level; a retry keeps it
   runId++;pendingWin=false;levelStartScore=totalScore;levelScore=0;comboCount=0;curR=BASE_R;tgtR=BASE_R;
   lostThisLevel=false;lvCombo=0;adReviveUsed=false;ftexts=[];livesAtStart=lives;updateCombo();
   if(!REPLAY&&!EXPRUN){savedLevel=level;savedScore=totalScore;saveG();}
   updateUI();gState='playing';lastT=performance.now();v2Start('level');
 }
-function startSurvival(){runId++;STORM={on:true,mods:stormToday(),day:utcDay()};rngS=mulberry(daySeed(STORM.day)^0x5bd1e995);setZone(0);gState='playing';lastT=performance.now();livesAtStart=lives;v2Start('surv');}
+function startSurvival(){natMark('storm start');runId++;STORM={on:true,mods:stormToday(),day:utcDay()};rngS=mulberry(daySeed(STORM.day)^0x5bd1e995);setZone(0);gState='playing';lastT=performance.now();livesAtStart=lives;v2Start('surv');}
 function updateCombo(){
   const el=$('combo');
   if(comboCount>=3){el.textContent=comboCount>=10?`×${comboCount} ÇILGIN!`:comboCount>=7?`×${comboCount} ATEŞ!`:comboCount>=5?`×${comboCount} COMBO!`:`×${comboCount} COMBO`;
@@ -4677,7 +4680,7 @@ function showCont(){
   $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');
 }
 function retryLevel(){hideModals();SND.duck(1,0);SND.setDrone(.14,650);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();resetRun(false);}
-function gameOver(){
+function gameOver(){natMark('game over');
   rngS=null; // the daily storm's seeded spawns end with the run
   dmEvent('score',totalScore,true);
   $('finNear').textContent=totalScore>runStartBest&&totalScore>0?'🏆 YENİ REKOR!':runStartBest>0?`Rekoruna ${(runStartBest-totalScore).toLocaleString(LOC)} puan kaldı`:'';
@@ -4725,7 +4728,7 @@ const SPR_RUN={seed:0,opt:{},t:0,dur:60,acc:0,blocks:[],caught:0,ended:true,res:
 function dailyNo(d=new Date()){return Math.floor((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,0,1))/864e5)+1;}
 function dailySeed(n){return (Math.imul(n,2654435761)^0x5bd1e995)>>>0;}
 function sprintSetup(seed){const r=mulberry(seed^0x9e3779b9);const zone=Math.floor(r()*ZONES.length),x=r();return {zone,lvl:(rel(9)?24:16)+Math.floor(x*10)};} /* 1.4.9: level 24-33 speed */
-function startSprint(seed,opt={}){
+function startSprint(seed,opt={}){natMark('sprint start');
   runId++;hideModals();$('sMenu').classList.remove('on');$('sChal').classList.remove('on');$('sPause').classList.remove('on');SND.duck(1,0);
   gameMode='sprint';const S=sprintSetup(seed);FMRUN=opt.fm?{m:opt.fm,v:0,d:opt.fmDay}:null; /* 1.5.1: a fleet mission runs on the race's engine with its own clock, kit and goal */
   Object.assign(SPR_RUN,{seed,opt,t:0,acc:0,dur:opt.fm?opt.fm.dur:60,gp:[],gt:0,blocks:Array.from({length:10},()=>({c:0,p:0})),caught:0,ended:false,res:null,zone:S.zone});
@@ -6623,7 +6626,7 @@ function v2DepthDraw(dt){if(!G2.on||FXLITE||GL.quality<1)return; /* a phone that
   const d=G2.dep||(G2.dep=v2DepthInit()),px=W/2-hX,py=H*.55-hY,ease=Math.min(1,dt*5);
   if(DEPTH.dust){v2DustDraw(d,dt,px,py);}else if(!DSPR||!DSPR.done)return;
   if(d.W!==W||d.H!==H){const kx=W/d.W,ky=H/d.H;for(const o of d.far){o.x*=kx;o.y*=ky;}for(const o of d.near)o.x=o.v%2===0?-o.r*.62:W+o.r*.62;d.W=W;d.H=H;} // a resize (URL bar, rotation) keeps the layer, only rescaled
-  {const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stBusy:DEPTH.st,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks drift in toward the hole; only a few while a belt, the storm or Vortex keeps the screen busy
+  if(!rel(11))/* 1.5.1: no speed streaks toward the hole (they crowded the screen and could be taken for bodies) */{const busy=v2BeltOn()||G2.dstorm||G2.rageT>0,n=busy?DEPTH.stBusy:DEPTH.st,mx=Math.hypot(W,H)*.65,B=[[],[],[]]; // streaks drift in toward the hole; only a few while a belt, the storm or Vortex keeps the screen busy
    for(let i=0;i<d.st.length;i++){const s=d.st[i];if(gState==='playing')s.d-=s.v*dt;if(s.d<G2.R*1.3){s.d=rnd(.55,1)*mx;s.a=rnd(0,TAU);}if(i>=n)continue;
     const len=s.v*.09,q=clamp((s.d-G2.R*1.3)/(G2.R*3),0,1)*clamp((mx-s.d)/(mx*.35),0,1);if(q<.02)continue;const ca=Math.cos(s.a),sa=Math.sin(s.a),dm=s.d+len/2;
     if(v2OnBody(hX+ca*dm,hY+sa*dm,len/2+sp2(10)))continue;B[q<.33?0:q<.66?1:2].push(hX+ca*s.d,hY+sa*s.d,hX+ca*(s.d+len),hY+sa*(s.d+len));}
@@ -7478,7 +7481,7 @@ function menuTick(){const th=seasonTheme(),cur=Math.max(1,savedLevel);let nb=0;f
   $('menuTick').innerHTML=L.join('<span style="opacity:.4">  ·  </span>');}
 function menuHub(){labBadge();menuTick();$('snBtn').classList.toggle('gold',seasonIs('gold'));const rb=$('raceBadge');if(rb){const d=DAILY.n!==dailyNo();rb.textContent=d?'!':'';rb.className=d?'hot sm':'';}menuBgStart();}
 setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTickQuiet();labMenuRing();}},1000);
-function showMenu(){if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
+function showMenu(){natMark('menu');if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
   if(G2.on)v2Stop();if(HMODE)hmSwap(); // the menu always shows the classic run
   runId++;pendingWin=false;EXPRUN=null;renderExpBtn();
   setAv($('menuAv'),playerAvatar);{const e=$('editProf');let m=e.querySelector('.avn');const nw=rel(10)&&AVATARS.some(avNew);if(nw&&!m){m=document.createElement('i');m.className='avn';e.appendChild(m);}if(m){m.hidden=!nw;m.textContent=T('YENİ');}} /* 1.5.0: a new avatar waits in the picker */$('menuName').textContent=playerName;$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;fillWallets();heartUI();atlasBadge();seasonBadge();
@@ -7511,7 +7514,7 @@ function playFit(){requestAnimationFrame(()=>{for(const sm of $('startBtn').quer
 $('modeC').onclick=()=>selMode('classic');$('modeS').onclick=()=>selMode('survival');$('modeH').onclick=()=>selMode('hard');
 function tourLeft(){const n=new Date(),e=Date.UTC(n.getUTCFullYear(),n.getUTCMonth(),n.getUTCDate()+1),m=Math.max(1,Math.ceil((e-n.getTime())/6e4));return {h:Math.floor(m/60),m:m%60};}
 function tourCard(go){const t=tourLeft();$('trTime').textContent='⏱ '+T('BİTİŞE')+' '+(t.h?t.h+' '+T('sa')+' ':'')+t.m+' '+T('dk');$('trGo').onclick=()=>{TIPS.tourDay=utcDay();saveG();hideModals();go();};$('trBack').onclick=()=>hideModals();const m=$('mTour');if(m.parentNode!==document.body)document.body.appendChild(m);showModal('mTour');sfx('click',{vol:.4});} /* 1.4.9: before the first tournament run of the day, what everyone gets and when it ends */
-$('startBtn').onclick=()=>{if(rel(9)&&gameMode==='survival'&&TIPS.tourDay!==utcDay()){tourCard(()=>$('startBtn').click());return;}if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
+$('startBtn').onclick=()=>{natMark('play pressed');if(rel(9)&&gameMode==='survival'&&TIPS.tourDay!==utcDay()){tourCard(()=>$('startBtn').click());return;}if(gameMode==='classic'&&!HSEL&&giftDue()){openGift(giftDue(),()=>$('startBtn').click());return;}if(gameMode==='classic'&&!heartGate(HSEL?HM.lv:savedLevel,()=>$('startBtn').click()))return;if(HSEL&&!HMODE)hmSwap();SND.resume();SND.startDrone();SND.music('game');sfx('confirm',{vol:.5});$('sMenu').classList.remove('on');$('sDaily').classList.remove('on');resize();
   if(gameMode==='classic'&&savedLevel>1)resetRun(true,true);else resetRun(true,false);};
 $('lbBtn').onclick=()=>{if(PAUTO&&!TIPS.lbName){TIPS.lbName=1;saveG();openProfile(()=>{showMenu();showLB();});return;}if(typeof fleetMode==='function')fleetMode(false);showLB();}; // the leaderboard shows your name: offer to set it once
 $('lbTW').onclick=()=>lbTab('w');$('lbTM').onclick=()=>lbTab('m');fleetInit();

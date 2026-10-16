@@ -214,6 +214,11 @@ Her güncellemede:
   2,5 sn'yi aşan her UI iş parçacığı tutulmasını yerini yazarak hemen telefona kaydeder; Android 11+ ise sistemin kendi
   ANR/çökme kaydından ana iş parçacığının yığını okunur. İkisi bir sonraki açılışta (12 sn sonra) `EXIT anr|crash|freeze`
   hata raporu olarak gider. Gizlilik metnine bir cümle.
+- **Kod 51** (16 Eki): karadeliğe akan hız izleri kaldırıldı (sahibinin isteği; ekranı kalabalık gösteriyordu, yıldız tozu
+  ve uzak kayalar duruyor). Donma kaydına telefon modeli + Android sürümü ve oyunun o anki aşaması eklendi (menü, filo,
+  OYNA'ya basıldı, seviye başı, sonuç, arka plan/ön plan; oyun her ekran değişiminde uygulamaya bildirir). Android'in çıkış
+  kayıtlarından sıradan olanlar (oyuncunun kapatması, bellek boşaltma, güncelleme) dışındakilerin hepsi kodlarıyla gider:
+  HyperOS "yanıt vermiyor" kapatmasını ANR olarak yazmayabilir. Kod 49–51 ANR nedeni anlaşılana kadar Alpha'ya gitmez.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 
