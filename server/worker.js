@@ -170,6 +170,8 @@ async function integrityOk(env, it, hash) {
 async function integrityGate(env, it, what) {
   const mode = env.INTEGRITY || 'off'; if (mode === 'off') return true;
   let ok = false; try { ok = await integrityOk(env, it, await sha(what)); } catch (e) {}
+  // a daily total of the verdicts (it_ok, it_bad: a token that failed, it_none: no token, as from the web), read by tools/rapor.mjs
+  try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', ok ? 'it_ok' : it ? 'it_bad' : 'it_none', 1).run(); } catch (e) {}
   if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', what.split('|')[0].slice(0, 4)); return true; }
   return ok;
 }

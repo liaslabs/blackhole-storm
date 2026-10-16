@@ -30,6 +30,9 @@ line('', ...d1.map(n => `${n} ${pct(n, dn)}`));
 console.log('\n== Kullanım ==');
 for (const [k, t] of [['fm_play', 'Filo görevi oynandı'], ['shop', 'Mağaza açıldı'], ['ad', 'Ödüllü reklam izlendi'], ['ntf_y', 'Bildirim: evet'], ['ntf_n', 'Bildirim: hayır']]) line(t, ev(k));
 
+console.log('\n== Play Integrity (skor ve ödül istekleri) ==');
+line('Geçti', ev('it_ok')); line('Geçmedi (token var)', ev('it_bad')); line('Token yok (web ya da eski sürüm)', ev('it_none'));
+
 console.log('\n== Yıldız: hangi ekranda kazanıldı / harcandı ==');
 const src = [...new Set(E.filter(x => /^s[io]_/.test(x.e)).map(x => x.e.slice(3)))].sort();
 line('Ekran', 'Kazanılan', 'Harcanan');
