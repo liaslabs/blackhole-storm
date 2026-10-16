@@ -54,6 +54,19 @@ import com.getcapacitor.annotation.PermissionCallback;
 import androidx.core.app.NotificationManagerCompat;
 import org.json.JSONObject;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.games.GamesClientStatusCodes;
+import com.google.android.gms.games.PlayGames;
+import com.google.android.gms.games.SnapshotsClient;
+import com.google.android.gms.games.snapshot.Snapshot;
+import com.google.android.gms.games.snapshot.SnapshotMetadata;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.tasks.Task;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import com.google.android.play.core.review.ReviewManager;
 import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.integrity.StandardIntegrityManager;
@@ -232,6 +245,8 @@ public class BhsPlugin extends Plugin {
                     // close may not be filed as an ANR)
                     if (r == ApplicationExitInfo.REASON_EXIT_SELF || r == ApplicationExitInfo.REASON_LOW_MEMORY || r == ApplicationExitInfo.REASON_USER_REQUESTED
                         || r == ApplicationExitInfo.REASON_USER_STOPPED || r == ApplicationExitInfo.REASON_DEPENDENCY_DIED || r == 15 || r == 16) continue;
+                    // a phone maker's "clear from recents" (HyperOS: SwipeUpClean) is the player closing the game, not a fault
+                    if (r == ApplicationExitInfo.REASON_OTHER && i.getDescription() != null && i.getDescription().contains("SwipeUpClean")) continue;
                     JSObject o = new JSObject();
                     o.put("kind", r == ApplicationExitInfo.REASON_ANR ? "anr" : r == ApplicationExitInfo.REASON_CRASH ? "crash" : r == ApplicationExitInfo.REASON_CRASH_NATIVE ? "native" : "r" + r);
                     o.put("ts", i.getTimestamp());
@@ -907,5 +922,121 @@ public class BhsPlugin extends Plugin {
             });
             ad.show(getActivity());
         });
+    }
+
+    // ---- Cloud backup (1.5.1): Google Play Games saved games, in the player's own Google account ----
+    // Only a backup: the game writes the "main" slot now and then, and reads it back only into an empty save (a new phone,
+    // a new install). "old" keeps the backup a player passed over by starting fresh. The text is gzipped JSON.
+
+    // -> {signed}: Play Games signs the player in by itself at start when it can; this only asks
+    @PluginMethod
+    public void pgsState(PluginCall call) {
+        if (getActivity() == null) { call.reject("pgs: no activity"); return; }
+        PlayGames.getGamesSignInClient(getActivity()).isAuthenticated().addOnCompleteListener(t -> {
+            JSObject r = new JSObject();
+            r.put("signed", t.isSuccessful() && t.getResult() != null && t.getResult().isAuthenticated());
+            call.resolve(r);
+        });
+    }
+
+    // the player's own tap on CONNECT: Play Games shows its sign-in
+    @PluginMethod
+    public void pgsSignIn(PluginCall call) {
+        if (getActivity() == null) { call.reject("pgs: no activity"); return; }
+        PlayGames.getGamesSignInClient(getActivity()).signIn().addOnCompleteListener(t -> {
+            JSObject r = new JSObject();
+            r.put("signed", t.isSuccessful() && t.getResult() != null && t.getResult().isAuthenticated());
+            call.resolve(r);
+        });
+    }
+
+    private static String slotName(PluginCall call) {
+        String s = call.getString("slot", "main");
+        return "old".equals(s) ? "bhs-old" : "bhs-main";
+    }
+
+    // {slot} -> {found, data, ts, device, level}
+    @PluginMethod
+    public void cloudRead(PluginCall call) {
+        if (getActivity() == null) { call.reject("cloud: no activity"); return; }
+        SnapshotsClient sc = PlayGames.getSnapshotsClient(getActivity());
+        sc.open(slotName(call), false, SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED).addOnCompleteListener(t -> {
+            JSObject r = new JSObject();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                // no such slot yet: not an error, there is just nothing to restore
+                if (e instanceof ApiException && ((ApiException) e).getStatusCode() == GamesClientStatusCodes.SNAPSHOT_NOT_FOUND) { r.put("found", false); call.resolve(r); }
+                else call.reject("cloud: " + (e instanceof ApiException ? ((ApiException) e).getStatusCode() : String.valueOf(e)));
+                return;
+            }
+            SnapshotsClient.DataOrConflict<Snapshot> d = t.getResult();
+            Snapshot snap = d.isConflict() ? d.getConflict().getSnapshot() : d.getData();
+            try {
+                SnapshotMetadata m = snap.getMetadata();
+                r.put("found", true);
+                r.put("data", unzip(snap.getSnapshotContents().readFully()));
+                r.put("ts", m.getLastModifiedTimestamp());
+                r.put("device", m.getDeviceName());
+                r.put("level", m.getProgressValue());
+                call.resolve(r);
+            } catch (Exception e) {
+                call.reject("cloud: read " + e.getMessage());
+            } finally {
+                if (!d.isConflict()) sc.discardAndClose(snap);
+            }
+        });
+    }
+
+    // {slot, data, desc, level} -> {ok, ts}
+    @PluginMethod
+    public void cloudWrite(PluginCall call) {
+        if (getActivity() == null) { call.reject("cloud: no activity"); return; }
+        String data = call.getString("data", "");
+        if (data == null || data.isEmpty()) { call.reject("cloud: nothing to write"); return; }
+        SnapshotsClient sc = PlayGames.getSnapshotsClient(getActivity());
+        sc.open(slotName(call), true, SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED).addOnCompleteListener(t -> {
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                call.reject("cloud: " + (e instanceof ApiException ? ((ApiException) e).getStatusCode() : String.valueOf(e)));
+                return;
+            }
+            SnapshotsClient.DataOrConflict<Snapshot> d = t.getResult();
+            if (d.isConflict()) { call.reject("cloud: conflict"); return; }
+            Snapshot snap = d.getData();
+            try {
+                snap.getSnapshotContents().writeBytes(zip(data));
+            } catch (Exception e) {
+                sc.discardAndClose(snap);
+                call.reject("cloud: write " + e.getMessage());
+                return;
+            }
+            String desc = call.getString("desc", "");
+            SnapshotMetadataChange ch = new SnapshotMetadataChange.Builder()
+                .setDescription(desc == null ? "" : desc.length() > 90 ? desc.substring(0, 90) : desc)
+                .setProgressValue(call.getInt("level", 0))
+                .build();
+            sc.commitAndClose(snap, ch).addOnCompleteListener(c -> {
+                if (!c.isSuccessful()) { call.reject("cloud: commit"); return; }
+                JSObject r = new JSObject();
+                r.put("ok", true);
+                r.put("ts", c.getResult() != null ? c.getResult().getLastModifiedTimestamp() : System.currentTimeMillis());
+                call.resolve(r);
+            });
+        });
+    }
+
+    private static byte[] zip(String s) throws java.io.IOException {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        try (GZIPOutputStream z = new GZIPOutputStream(b)) { z.write(s.getBytes(StandardCharsets.UTF_8)); }
+        return b.toByteArray();
+    }
+
+    private static String unzip(byte[] a) throws java.io.IOException {
+        try (GZIPInputStream z = new GZIPInputStream(new ByteArrayInputStream(a)); ByteArrayOutputStream b = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = z.read(buf)) > 0) b.write(buf, 0, n);
+            return new String(b.toByteArray(), StandardCharsets.UTF_8);
+        }
     }
 }

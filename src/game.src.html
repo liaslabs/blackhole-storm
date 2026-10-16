@@ -706,6 +706,12 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .res2 .r2 span{color:var(--dim);}.res2 .r2 b{font-family:var(--fm);font-weight:500;}.res2 .r2 b.hl{color:var(--gold);}
 #contMsg .k2{color:var(--dim);font-size:12px;}#contMsg b{font-family:var(--fm);font-weight:500;color:var(--gold);}
 
+#mCloud{position:fixed;z-index:650;}#mCloud .h{font-size:17px;}#mCloud p{margin:6px 0 2px;opacity:.85;font-size:13.5px;}
+.cbx{display:flex;gap:12px;align-items:center;background:rgba(120,180,255,.08);border:1px solid rgba(140,200,255,.25);border-radius:14px;padding:12px;margin:10px 0;text-align:start;}
+.cbx .lbav{width:54px;height:54px;border-radius:50%;box-shadow:0 0 0 2px #ffd76a,0 0 18px rgba(255,215,106,.35);}.cbx b{display:block;font-size:16px;letter-spacing:.5px;}.cbx small{display:block;opacity:.75;font-size:12px;margin-top:2px;}
+.cbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}.cbs span{background:rgba(255,255,255,.08);border-radius:999px;padding:3px 9px;font-size:12px;}
+.cnote{font-size:11.5px;opacity:.7;margin:8px 2px 0;line-height:1.45;}#mCloudBg{position:fixed;inset:0;z-index:640;background:rgba(3,4,10,.72);}
+.srow .cst{display:flex;flex-direction:column;align-items:flex-start;flex:1;min-width:0;}.srow .cst,.srow .cst *{font-family:var(--fb);}.srow .cst small{font-size:11.5px;opacity:.7;margin-top:3px;letter-spacing:0;}.srow .crt{display:flex;align-items:center;gap:8px;flex:none;}.srow .cok{color:#7dffb0;font-size:12px;}
 #intro{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 46%,#0e1b27 0%,#070d14 62%,#020407 100%);transition:opacity .5s;}
 #intro[hidden]{display:none;}
 #introC{position:absolute;inset:0;width:100%;height:100%;}#intro video[hidden]{display:none;}
@@ -1627,6 +1633,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow"><span>📳 Titreşim</span><button class="tg" id="sVib"></button></div>
   <div class="srow"><span>🎬 60 sn koşuları kaydet</span><button class="tg" id="sRec"></button></div>
   <div class="srow"><span>🌍 Dünya sıralamasına katıl</span><button class="tg" id="sLbOn"></button></div>
+  <div class="srow" id="sCloudRow" hidden><span class="cst"><span id="sCloudT"></span><small id="sCloudS"></small></span><span class="crt"><span class="cok" id="sCloudOk"></span><button class="btn sec" id="sCloudB" style="padding:6px 12px;font-size:12px;"></button></span></div>
+  <div class="srow" id="sCloudOldRow" hidden><span class="cst"><span id="sCloudOT"></span><small id="sCloudOS"></small></span><button class="btn sec" id="sCloudOB" style="padding:6px 12px;font-size:12px;"></button></div>
   <div class="srow" id="sAdPrivRow" hidden><span>🛡 Reklam gizlilik seçenekleri</span><button class="btn sec" id="sAdPriv" style="padding:6px 12px;font-size:12px;">AÇ</button></div>
   <div class="srow" id="sNotifRow" hidden><span>🔔 Hatırlatmalar</span><button class="tg" id="sNotif"></button></div>
   <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ FÜZYON</button><button id="sNDay">🎁 GÜNLÜK</button><button id="sNFleet" hidden>🛸 FİLO</button></div></div>
@@ -1688,6 +1696,70 @@ addEventListener('error',e=>errReport(e.message,e.error&&e.error.stack||(e.filen
 // what the game is doing (menu, fleet, a level starting...), told to the app's freeze watch so a long hold says where it happened
 function natMark(s){try{const nb=CAP('Bhs');if(rel(11)&&nb&&nb.mark)nb.mark({s}).catch(()=>{});}catch(e){}}
 document.addEventListener('visibilitychange',()=>natMark(document.hidden?'background':'front'));
+// 1.5.1 cloud backup: the save goes now and then to Google Play Games saved games, in the player's own Google account (no
+// server of ours). It comes back only into a brand-new save, and only when the player says so: a new phone or a new install
+// finds its backup while the intro plays. Starting fresh instead keeps that backup in a second slot for 30 days. Pushes wait
+// until that check is over, and a session's first push keeps a further-along backup of another install rather than overwrite it.
+const CLOUD={st:'off',signed:false,dirty:false,busy:false,last:0,guard:false,paused:false,oldAt:0};
+const cloudNb=()=>{const nb=CAP('Bhs');return rel(11)&&NATIVE&&nb&&nb.cloudRead?nb:null;};
+const cloudWait=(p,ms)=>Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))]);
+const CLOUD_KEYS=['bhs_v7','bhs_intro','bhs_d0'];
+function cloudPack(){const k={};for(const n of CLOUD_KEYS){try{const v=localStorage.getItem(n);if(v!=null)k[n]=v;}catch(e){}}
+  return JSON.stringify({v:1,k,lv:bestLevel,n:playerName,av:playerAvatar,s:stars,g:diamonds,fl:typeof FL!=='undefined'&&FL.fid?FL.name:''});}
+function cloudParse(r){try{const d=JSON.parse(r.data);if(!d||d.v!==1||!d.k||typeof d.k.bhs_v7!=='string')return null;let pid='';try{pid=JSON.parse(d.k.bhs_v7).pid||'';}catch(e){}
+  return {d,pid,raw:r.data,ts:+r.ts||0,dev:String(r.device||'')};}catch(e){return null;}}
+const cloudDesc=()=>`${playerName} · ${T('Seviye')} ${bestLevel}`.slice(0,90);
+const cloudWhen=ts=>{try{return new Date(ts).toLocaleString(LOC,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}};
+function cloudOldAt(){let t=0;try{t=+localStorage.getItem('bhs_cold')||0;}catch(e){}return Date.now()-t<30*864e5?t:0;}
+// a new install: look for a backup while the intro (or the first level) runs; nothing is pushed until this is settled
+async function cloudFresh(){const nb=cloudNb();if(!nb)return;CLOUD.st='wait';let f=null;
+  try{const s=await cloudWait(nb.pgsState(),6000);CLOUD.signed=!!(s&&s.signed);if(CLOUD.signed){const r=await cloudWait(nb.cloudRead({slot:'main'}),8000);if(r&&r.found)f=cloudParse(r);}}catch(e){}
+  if(!f||!f.d.lv){CLOUD.st='ready';return;}
+  ev('cl_found');if(gState==='playing'){pausedFrom=gState;gState='paused';CLOUD.paused=true;}cloudCard(f);}
+function cloudCard(f){const d=f.d,bg=document.createElement('div'),m=document.createElement('div');bg.id='mCloudBg';m.id='mCloud';m.className='modal card on';
+  const nf=n=>{try{return (+n||0).toLocaleString(LOC);}catch(e){return String(+n||0);}};
+  const E=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  m.innerHTML=`<div class="h">☁️ ${T('KAYDIN BULUNDU')}</div><p>${T('Google Play Games hesabında bu oyunun bir yedeği var.')}</p>
+  <div class="cbx">${avHtml(d.av)}<div><b class="notr">${E(d.n)}</b><small>${T('Son yedek')}: ${cloudWhen(f.ts)}${f.dev?' · <span class="notr">'+E(f.dev)+'</span>':''}</small>
+  <div class="cbs"><span>${T('Seviye')} ${nf(d.lv)}</span><span>${nf(d.s)} ⭐</span><span>${nf(d.g)} 💎</span>${d.fl?`<span class="notr">🛸 ${E(d.fl)}</span>`:''}</div></div></div>
+  <div class="row"><button class="btn big" id="clRest">${T('GERİ YÜKLE')}</button></div><div class="row"><button class="btn sec" id="clNew" style="width:100%">${T('YENİ BAŞLA')}</button></div>
+  <p class="cnote">${T('Yeni başlarsan yedeğin silinmez; 30 gün boyunca Ayarlar › Bulut yedek\'ten geri yükleyebilirsin.')}</p>`;
+  document.body.appendChild(bg);document.body.appendChild(m);const close=()=>{m.remove();bg.remove();};
+  const iv=setInterval(()=>{if(!m.isConnected){clearInterval(iv);return;}if(gState==='playing'){pausedFrom=gState;gState='paused';CLOUD.paused=true;}},200); /* the intro may start the first level under the card */
+  $('clRest').onclick=()=>{sfx('click',{vol:.5});ev('cl_rest');try{evSend(true);}catch(e){}cloudApply(f.d,f.d.lv);};
+  $('clNew').onclick=async()=>{sfx('click',{vol:.4});ev('cl_new');close();const nb=cloudNb();
+    try{await nb.cloudWrite({slot:'old',data:f.raw,desc:`${d.n} · ${T('Seviye')} ${d.lv}`.slice(0,90),level:d.lv|0});localStorage.setItem('bhs_cold',String(Date.now()));CLOUD.st='ready';CLOUD.guard=true;}
+    catch(e){CLOUD.st='hold';} /* the old backup could not be kept aside: nothing overwrites it this session */
+    if(CLOUD.paused){CLOUD.paused=false;gState=pausedFrom;lastT=performance.now();}};}
+// write a backup into this phone's storage and start again from it
+function cloudApply(d,lv){CLOUD.applying=true;try{for(const n of CLOUD_KEYS){if(typeof d.k[n]==='string')localStorage.setItem(n,d.k[n]);}localStorage.setItem('bhs_restored',String(lv|0));}catch(e){}location.reload();}
+async function cloudPush(force){const nb=cloudNb();if(!nb||!CLOUD.signed||CLOUD.st!=='ready'||CLOUD.busy)return false;CLOUD.busy=true;
+  try{if(!CLOUD.guard){const r=await cloudWait(nb.cloudRead({slot:'main'}),8000);if(!r)throw 0;const f=r.found&&cloudParse(r);
+      if(f&&f.pid&&f.pid!==PID&&f.d.lv>bestLevel){await nb.cloudWrite({slot:'old',data:f.raw,desc:`${f.d.n} · ${T('Seviye')} ${f.d.lv}`.slice(0,90),level:f.d.lv|0});localStorage.setItem('bhs_cold',String(Date.now()));}
+      CLOUD.guard=true;}
+    const w=await cloudWait(nb.cloudWrite({slot:'main',data:cloudPack(),desc:cloudDesc(),level:bestLevel|0}),10000);if(!w||!w.ok)throw 0;
+    CLOUD.dirty=false;CLOUD.last=Date.now();try{localStorage.setItem('bhs_clast',String(CLOUD.last));}catch(e){}return true;}
+  catch(e){return false;}finally{CLOUD.busy=false;if($('sSet').classList.contains('on'))cloudUI();}}
+function cloudDirty(){if(CLOUD.st!=='off')CLOUD.dirty=true;}
+// every half minute between levels, at most every 2 minutes; and when the game goes to the background
+setInterval(()=>{if(CLOUD.dirty&&gState!=='playing'&&Date.now()-CLOUD.last>12e4)cloudPush();},3e4);
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&CLOUD.dirty&&Date.now()-CLOUD.last>2e4)cloudPush();});
+// an install that already had a save: ask Play Games once whether the player is signed in
+async function cloudInit(){const nb=cloudNb();if(!nb||CLOUD.st!=='off')return;CLOUD.st='ready';try{CLOUD.last=+localStorage.getItem('bhs_clast')||0;}catch(e){}
+  try{const s=await cloudWait(nb.pgsState(),8000);CLOUD.signed=!!(s&&s.signed);}catch(e){}if(CLOUD.signed)CLOUD.dirty=true;}
+function cloudUI(){const row=$('sCloudRow'),orow=$('sCloudOldRow');if(!row)return;const on=!!cloudNb();row.hidden=!on;orow.hidden=true;if(!on)return;
+  $('sCloudT').textContent='☁️ '+T('Bulut yedek');const b=$('sCloudB');
+  if(!CLOUD.signed){$('sCloudS').textContent=T('Telefon değişince ilerlemen kaybolmasın');$('sCloudOk').textContent='';b.textContent=T('BAĞLAN');
+    b.onclick=async()=>{const nb=cloudNb();b.disabled=true;try{const r=await nb.pgsSignIn();CLOUD.signed=!!(r&&r.signed);if(CLOUD.signed){CLOUD.dirty=true;await cloudPush(true);}}catch(e){}b.disabled=false;cloudUI();};return;}
+  const ago=CLOUD.last?Math.max(0,Math.round((Date.now()-CLOUD.last)/6e4)):-1;$('sCloudOk').textContent='';
+  $('sCloudS').textContent='Google Play Games'+(CLOUD.busy?' · …':ago<0?'':' · ✓ '+(ago<1?T('şimdi'):ago<60?T('{n} dk önce',{n:ago}):cloudWhen(CLOUD.last)));
+  b.textContent=T('YEDEKLE');b.onclick=async()=>{b.disabled=true;CLOUD.dirty=true;const ok=await cloudPush(true);b.disabled=false;toast('☁️',T('BULUT YEDEK'),ok?T('İlerlemen yedeklendi.'):T('Yedeklenemedi. İnternet bağlantını kontrol edip tekrar dene.'));cloudUI();};
+  const t=cloudOldAt();if(!t||CLOUD.st!=='ready')return;orow.hidden=false;$('sCloudOT').textContent='☁️ '+T('Eski yedek');$('sCloudOS').textContent=T('{n} gün daha saklanır',{n:Math.max(1,30-Math.floor((Date.now()-t)/864e5))});
+  const ob=$('sCloudOB');ob.textContent=T('GERİ YÜKLE');let arm=false;
+  ob.onclick=async()=>{if(!arm){arm=true;ob.textContent=T('EMİN MİSİN?');toast('☁️',T('ESKİ YEDEK'),T('Bu telefondaki ilerleme eski yedekle yer değiştirir; şimdiki ilerlemen eski yedek olarak saklanır.'));return;}
+    ob.disabled=true;const nb=cloudNb();try{const r=await nb.cloudRead({slot:'old'});const f=r&&r.found&&cloudParse(r);if(!f)throw 0;
+      await nb.cloudWrite({slot:'old',data:cloudPack(),desc:cloudDesc(),level:bestLevel|0});localStorage.setItem('bhs_cold',String(Date.now()));cloudApply(f.d,f.d.lv);}
+    catch(e){ob.disabled=false;arm=false;toast('☁️',T('ESKİ YEDEK'),T('Yedeklenemedi. İnternet bağlantını kontrol edip tekrar dene.'));cloudUI();}};}
 natMark('game loading');
 // 1.5.1: how the last run of the app ended, if badly. Android's own record of a "not responding" close or a crash (Android
 // 11+), or a UI-thread hold of 2.5 s or more noted by the app's watch; sent once, as an error report (code locations only)
@@ -1955,7 +2027,7 @@ let HMODE=false,HSEL=false,HM={lv:1,sc:0,best:1,ls:{},ws:0,s3:0};const HM_OPEN=3
 function hmSwap(){[savedLevel,HM.lv]=[HM.lv,savedLevel];[savedScore,HM.sc]=[HM.sc,savedScore];[bestLevel,HM.best]=[HM.best,bestLevel];[LSTARS,HM.ls]=[HM.ls,LSTARS];[WSTREAK,HM.ws]=[HM.ws,WSTREAK];[STREAK3,HM.s3]=[HM.s3,STREAK3];HMODE=!HMODE;}
 const hmOpen=()=>(HMODE?HM.best:bestLevel)>=HM_OPEN;
 function saveG(){if(HMODE){hmSwap();try{saveG0();}finally{hmSwap();}return;}saveG0();}
-const LSAVE={t:0,d:0};function saveG0(){const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,bc:BCOMBO,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,avs:AVS,fl:FL,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
+const LSAVE={t:0,d:0};function saveG0(){if(typeof CLOUD!=='undefined'){if(CLOUD.applying)return;cloudDirty();} /* a backup being restored is not overwritten on the way out */const t0=performance.now();try{localStorage.setItem(SK,JSON.stringify({hm:HM,stars,diamonds,bestScore,totalGames,totalCombos,ach:[...unlockedAch],lb:localLB,bc:BCOMBO,lastLogin,loginStreak,rescueWins,playerName,playerAvatar,pAuto:PAUTO?1:0,savedLevel,savedScore,set:SET,mass,swallowed,bestLevel,seen,dm:DM,daily:DAILY,sprintBest,ls:LSTARS,shop:SHOP,bsz:bestSize,tip:TIPS,s3:STREAK3,ws:WSTREAK,skin:SKIN,avs:AVS,fl:FL,hrt:HEARTS,atl:COSMO,sea:SEASON,prk:PERK,lab:LAB,gdn:GARDEN,exp:EXP,pid:PID,stb:STORMB,tmax:Math.max(clockMax,Date.now())}));}catch(e){}LSAVE.t=performance.now();LSAVE.d=LSAVE.t-t0;}
 // every value from storage is checked: a corrupt or hand-edited save falls back to defaults field by field instead of breaking the game
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
@@ -4403,7 +4475,7 @@ async function notifEnable(fromSettings){const nb=CAP('Bhs');if(!nb||!nb.notifPe
 function notifAsk(kind){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission))return;SET.nAsked=true;saveG();
   if(kind==='fleet'){const q=$('nAsk'),b=q&&q.querySelector('b'),g=q&&q.querySelector('.gp');if(b)b.textContent=T('Filo görevleri ve yarış için haber verelim mi?');if(g)g.textContent=T('Yeni filo görevleri, hafta sonu yarışı ve Lab bitince kısa bir bildirim. Günde en fazla 2, gece 22:00–09:00 arası hiç. Ayarlar’dan değiştirebilirsin.');} /* 16 Oct: a fleet member who never built in the Lab is asked after a mission */
   setTimeout(()=>$('nAsk').classList.add('on'),900);}
-function syncSettingsUI(){if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-',''); /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
+function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-',''); /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
   $('sSensRow').hidden=!rel(7);[...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??0)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
@@ -4690,11 +4762,13 @@ updateUI();
 {const t=$('toast');document.body.appendChild(t);t.style.position='fixed';t.style.zIndex=400;} // toasts show above panels too
 document.body.appendChild($('mGift'));document.body.appendChild($('mHeart')); // these can open over the menu too
 monInit();
-{let seen=false;try{seen=!!localStorage.getItem('bhs_intro');}catch(e){}
-  if(playerName&&playerAvatar){showMenu();offerChallenge();if(!seen&&window.BHS_INTRO)introShort(null);}
+{let seen=false;const fresh=!(playerName&&playerAvatar);try{seen=!!localStorage.getItem('bhs_intro');}catch(e){}
+  if(!fresh){showMenu();offerChallenge();if(!seen&&window.BHS_INTRO)introShort(null);}
   else{playerName=T('PİLOT')+'-'+(1000+Math.floor(Math.random()*9000));playerAvatar=pick(AVATARS.filter(avOk));PAUTO=true;saveG(); // name and avatar can be set later, from the level card or the menu
     if(pendingChal){showMenu();offerChallenge();if(!seen)introShort(null);}
-    else{const go=()=>{selMode('classic');SND.resume();SND.startDrone();SND.music('game');resize();resetRun(true,false);};if(seen)go();else introShort(go);}}}
+    else{const go=()=>{selMode('classic');SND.resume();SND.startDrone();SND.music('game');resize();resetRun(true,false);};if(seen)go();else introShort(go);}}
+  if(cloudNb()){if(fresh)cloudFresh();else setTimeout(cloudInit,6000);} // cloud backup: a new install looks for one, others check sign-in
+  {let r=null;try{r=localStorage.getItem('bhs_restored');localStorage.removeItem('bhs_restored');}catch(e){}if(r!==null)setTimeout(()=>toast('☁️',T('İLERLEMEN GERİ GELDİ'),T('Seviye {n} · filon ve sıralaman da taşındı',{n:+r||1})),900);}}
 requestAnimationFrame(t=>{lastT=t;loop(t);});
 if('serviceWorker' in navigator&&canLink()&&!NATIVE&&window.top===window){navigator.serviceWorker.register('sw.js').catch(()=>{}); /* the app carries its files itself */
   later(()=>{if(navigator.serviceWorker.controller&&navigator.onLine!==false)['z1','z2','z3','z4','boss'].forEach((k,i)=>later(()=>fetch('music/'+k+'.mp3').catch(()=>{}),i*2000));},25000);} // the worker caches what passes through

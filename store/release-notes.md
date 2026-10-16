@@ -223,6 +223,16 @@ Her güncellemede:
   loading", "intro", "tutorial start", "tutorial touched", "tutorial over"). Kod 51'in ilk kayıtları: sahibinin telefonunda
   (Xiaomi 14 Ultra, seviye 203) donma yok; robotun (OnePlus 8 Pro, Android 11, 2 çekirdek) ~3 sn'lik tutulmaları aşama
   boş geldi, yani oyun henüz aşama bildirmeden önce (yeni kurulum: açılış ya da eğitim). 5 sn'nin altında, ANR değil.
+- **Kod 53: bulut yedek (yalnız yedek modu)** (16 Eki onayı, önizleme `onizleme/bulut-*.png`). Google Play Games kayıtlı
+  oyunlar (Play Games Services projesi = `blackhole-storm-play`, 595525021870; SDK `play-services-games-v2` 22.1.0). Kayıt
+  (`bhs_v7` + `bhs_intro` + `bhs_d0`) oyuncunun kendi Google hesabındaki "bhs-main" yuvasına gzip'li yedeklenir: kayıttan
+  sonra, aralarda en fazla 2 dk'da bir ve arka plana geçerken; giriş yoksa hiç. Yeni kurulumda giriş videosu sırasında yedek
+  aranır; bulunursa "Kaydın bulundu" kartı (oyun durur): GERİ YÜKLE kaydı yazıp yeniden başlatır (kurulum numarası da gelir:
+  filo ve sıralama taşınır), YENİ BAŞLA eskiyi 30 gün "bhs-old" yuvasında tutar. Yedek, dolu bir kaydın üstüne asla kendiliğinden
+  yazılmaz; oturumun ilk gönderiminde başka kurulumun daha ileri bir yedeği varsa önce eski yuvaya alınır. Ayarlar: "Bulut yedek"
+  (BAĞLAN / YEDEKLE, son yedek zamanı) ve 30 gün "Eski yedek" (iki dokunuşla, yer değiştirerek geri yükleme). 21 yeni metin
+  11 dilde. Sayaçlar `cl_found`, `cl_rest`, `cl_new` (sunucu). Gizlilik metnine "Bulut yedek" bölümü. Ayrıca HyperOS'un
+  "son uygulamalardan kaydırma" kapanışı (SwipeUpClean) artık donma kaydı sayılmaz. Web sürümünde bulut yedek yok.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 

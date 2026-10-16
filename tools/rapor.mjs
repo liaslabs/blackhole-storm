@@ -28,7 +28,7 @@ line('İlk can kaybı (sn)', '0–10', '10–30', '30–60', '60+');
 line('', ...d1.map(n => `${n} ${pct(n, dn)}`));
 
 console.log('\n== Kullanım ==');
-for (const [k, t] of [['fm_play', 'Filo görevi oynandı'], ['shop', 'Mağaza açıldı'], ['ad', 'Ödüllü reklam izlendi'], ['ntf_y', 'Bildirim: evet'], ['ntf_n', 'Bildirim: hayır']]) line(t, ev(k));
+for (const [k, t] of [['fm_play', 'Filo görevi oynandı'], ['shop', 'Mağaza açıldı'], ['ad', 'Ödüllü reklam izlendi'], ['ntf_y', 'Bildirim: evet'], ['ntf_n', 'Bildirim: hayır'], ['cl_found', 'Bulut: yeni kurulumda yedek bulundu'], ['cl_rest', 'Bulut: geri yüklendi'], ['cl_new', 'Bulut: yeni başladı']]) line(t, ev(k));
 
 console.log('\n== Play Integrity (skor ve ödül istekleri) ==');
 line('Geçti', ev('it_ok')); line('İstisna listesi', ev('it_trust')); line('Token yok (web ya da eski sürüm)', ev('it_none'));

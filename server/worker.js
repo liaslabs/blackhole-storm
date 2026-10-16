@@ -217,7 +217,7 @@ async function ensurePings(DB) {
   pingReady = true;
 }
 // 1.5.1 play counts: the keys the game may send (anything else is dropped)
-const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8})$/;
+const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new))$/;
 const AGE = /^(0|1|2|4|8|15|31|x)$/;
 let evReady = false;
 async function ensureEvs(DB) {
