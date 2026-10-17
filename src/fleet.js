@@ -84,10 +84,10 @@ function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>flMisClaim(b
 // 18 Oct: a fleet reward shown big: a gold tag with the stars and the diamonds
 function flPay(p){return `<span class="flpay">🎁 <b>+${flN(p[0])}</b> ⭐${p[1]?` <b>+${p[1]}</b> 💎`:''}</span>`;}
 // a claim: "+100 ⭐ +5 💎" rises from the button, the stars and diamonds fly from it into the wallet
-function flClaimFx(btn,g){const t=[g.stars?`+${flN(g.stars)} ⭐`:'',g.gems?`+${g.gems} 💎`:''].filter(Boolean).join('  ');
+function flClaimFx(btn,g){const t=[g.stars?`+${flN(g.stars)} ⭐`:'',g.gems?`+${g.gems} 💎`:'',g.shield?`+${g.shield} 🛡`:''].filter(Boolean).join('  ');
   if(btn){btn.disabled=true;btn.classList.add('got');btn.textContent=t;const R=btn.getBoundingClientRect(),e=document.createElement('div');e.className='flmpop';e.textContent=t;
     e.style.left=Math.max(70,Math.min(innerWidth-70,R.left+R.width/2))+'px';e.style.top=(R.top-4)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}
-  flyReward(btn,{stars:g.stars,gems:g.gems});sfx('achieve',{vol:.55});vib([20,40,30]);}
+  flyReward(btn,{stars:g.stars,gems:g.gems,shield:g.shield});sfx('achieve',{vol:.55});vib([20,40,30]);}
 // 18 Oct: the 30 stars of the daily fleet mission: the button says what it gives, a "+30 ⭐" rises from it and the stars fly into the wallet
 function flMisClaim(btn,after){if(FL.mis.p<3||FL.mis.cl)return;const [st,gm]=BHS_FMIS.PAY.mis;FL.mis.cl=1;stars+=st;diamonds+=gm;saveG();
   flClaimFx(btn,{stars:st,gems:gm});fleetMenu();setTimeout(()=>{updateUI();after&&after();},1150);}
@@ -111,8 +111,9 @@ function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.
   if(!$('sMenu').classList.contains('on')||$('sDaily').classList.contains('on')||document.querySelector('.modal.on')||$('flChamp')){later(()=>flChampCard(j),3000);return;}
   TIPS.chM=c.wk;saveSoon();const m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);m.className='modal rk1 chf';
   $('przIc').innerHTML=f.emb?flImg(f.emb,'big'):'👑';$('przT').textContent=T('TEBRİKLER ŞAMPİYON!');
-  $('przD').innerHTML=T('{f} geçen haftanın şampiyon filosu',{f:`<b class="notr">${flE(f.name)}</b>`});$('przMsg').textContent='';
+  $('przD').innerHTML=T('{f} geçen haftanın şampiyon filosu',{f:`<b class="notr">${flE(f.name)}</b>`});
   {const cf=$('przConf'),col=['#ffd76a','#fff3c4','#f2a93b','#9fd8ff','#c9a8ff'];cf.innerHTML=Array.from({length:34},(_,i)=>`<i style="--x:${(Math.random()*100).toFixed(1)}%;--d:${(Math.random()*1.4).toFixed(2)}s;--t:${(2.2+Math.random()*1.6).toFixed(2)}s;--r:${Math.round(Math.random()*720-360)}deg;--s:${(.6+Math.random()*.8).toFixed(2)};background:${col[i%col.length]}"></i>`).join('');}
+  const pz=(j.prizes||[]).find(z=>z.champ===1&&!z.claimed);$('przMsg').innerHTML=pz?`<span class="chw">${T('Ödülünü almak için')}</span>${flPay([pz.stars,pz.gems])}${pz.sh?` <b class="chsh">+${pz.sh} 🛡</b>`:''}`:''; /* only a player the prize waits for (6 full days) hears of it */
   const b=$('przGo'),lt=$('przLater');b.textContent=T('FİLOYA GİT');b.disabled=false;lt.hidden=false;
   const close=go=>{m.classList.add('out');later(()=>{hideModals();m.classList.remove('out');if(go)fleetOpen();},go?650:900);};
   b.onclick=()=>{b.disabled=true;close(true);};lt.onclick=()=>close(false);
@@ -309,10 +310,12 @@ function fleetNameCheck(){const i=$('flName'),e=$('flNameE');if(!i||!e)return nu
   if(c)c.textContent=wv+'/16';e.textContent=i.value.trim()?(r.ok?'✓':'✕ '+flErr(r.err)):'';e.classList.toggle('good',r.ok);return r;}
 function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.querySelectorAll(s);
   const go=async(path,body,after)=>{flMsg('…');try{const r=await lbFetch(path,body);if(r&&r.ok){after&&after(r);}else flMsg(flErr(r&&r.err));return r;}catch(e){flMsg(flErr('off'));return null;}};
-  all('[data-claim]').forEach(b=>b.onclick=()=>go('/fleet/claim',{pid:PID,wk:b.dataset.claim},r=>{if(r.stars||r.gems||r.sh)grant({stars:r.stars,gems:r.gems,shield:r.sh||0},'🛸 '+T('FİLO ÖDÜLÜ'));FLV=null;fleetRender();}));
+  all('[data-claim]').forEach(b=>b.onclick=()=>{if(b.disabled)return;b.disabled=true;go('/fleet/claim',{pid:PID,wk:b.dataset.claim},r=>{const g={stars:r.stars|0,gems:r.gems|0,shield:r.sh|0};if(!(g.stars||g.gems||g.shield)){FLV=null;fleetRender();return;}
+    if(!rel(11)){grant(g,'🛸 '+T('FİLO ÖDÜLÜ'));FLV=null;fleetRender();return;}stars+=g.stars;diamonds+=g.gems;SHOP.shield+=g.shield;saveG();flClaimFx(b,g);later(()=>{updateUI();FLV=null;fleetRender();},1150);});}); /* 18 Oct: the week's prize rises from its button and flies to the wallet */
   if(q('#flDClaim'))q('#flDClaim').onclick=async()=>{const b=q('#flDClaim');if(b.disabled)return;b.disabled=true;let st=0,gm=0; // every waiting day at once
     for(const z of j.dprizes||[]){try{const r=await lbFetch('/fleet/dclaim',{pid:PID,day:z.day});if(r&&r.ok){st+=r.stars;gm+=r.gems;}}catch(e){}}
-    if(st||gm)grant({stars:st,gems:gm},'🏆 '+T('GÜNLÜK FİLO ÖDÜLLERİ'));FLV=null;fleetRender();};
+    if(!(st||gm)){FLV=null;fleetRender();return;}if(!rel(11)){grant({stars:st,gems:gm},'🏆 '+T('GÜNLÜK FİLO ÖDÜLLERİ'));FLV=null;fleetRender();return;}
+    stars+=st;diamonds+=gm;saveG();flClaimFx(b,{stars:st,gems:gm});later(()=>{updateUI();FLV=null;fleetRender();},1150);};
   if(q('#flDayTop'))flDayFill();
   if(q('#flBack'))q('#flBack').onclick=()=>{FLS='main';fleetRender();};
   all('[data-flt]').forEach(b=>b.onclick=()=>{if(b.dataset.flt==='inv'){flInvOpen(j);return;}FLT=b.dataset.flt;FLS='main';fleetRender();$('sLB').scrollTop=0;});
