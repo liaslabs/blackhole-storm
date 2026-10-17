@@ -2279,5 +2279,6 @@
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Fleet prizes come on top of your normal rewards: your records, stars and ranking stay as they are. Every level you clear earns your fleet points for the weekend race",
 "HAFTA": "WEEK",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Win {n} medals as a fleet today: everyone who won a medal gets the prize",
-"bir görevde en fazla {n} puan": "at most {n} points in one mission"
+"bir görevde en fazla {n} puan": "at most {n} points in one mission",
+"Bugünkü görevler tamam": "Today’s missions done"
 }
