@@ -16,8 +16,8 @@ globalThis.BHS_FMIS = (() => {
       kit: { sh: 2, nova: 0, rage: 0 } },
     { id: 'eclipse', lv: 1, ic: '🌑', n: 'KARANLIKTA YUT', d: 'Tutulmalar arka arkaya. Karanlıkta cisim yut.', dur: 60, m: 'caught', tg: [45, 85, 125], max: 600,
       plan: [[3, 'eclipse'], [14, 'eclipse'], [25, 'eclipse'], [36, 'eclipse'], [47, 'eclipse']] },
-    { id: 'belt', lv: 2, ic: '☄️', n: 'METEOR KUŞAĞINDAN KAÇ', d: 'Kuşaklar ara vermeden, başka yönlerden gelir. Her duvarda tek bir boş şerit var. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.', dur: 90, m: 'dodge', tg: [150, 300, 450], max: 900,
-      plan: [[2, 'belt']], chain: 18, mid: .6, kit: { sh: 0, nova: 0, rage: 0 } }, // 17 Oct: one endless belt in turns of 18 s, every wall has one open lane, every meteor that gets past counts; the bot that follows the gap 426–516, standing still 123–136 (dead by 28 s)
+    { id: 'belt', lv: 2, ic: '☄️', n: 'METEOR KUŞAĞINDAN KAÇ', d: 'Kuşaklar ara vermeden, başka yönlerden gelir. Meteorların arasında kıvrılan bir güvenli rota var, bazen iki. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.', dur: 90, m: 'dodge', tg: [250, 350, 450], max: 900,
+      plan: [[2, 'belt']], chain: 18, mid: .6, kit: { sh: 0, nova: 0, rage: 0 } }, // 17 Oct: one endless belt in turns of 18 s, a loose field with a winding route (two for a while now and then); every meteor that gets past counts. The bot that follows the route 493–605 in 90 s, standing still 155–221 (dead in 28–40 s)
     { id: 'anti', lv: 2, ic: '⚛️', n: 'ANTİMADDE FIRTINASI', d: 'Antimadde her yerde. Dokunmadan puan topla.', dur: 60, m: 'score', tg: [4000, 9000, 18000], max: 2e6, anti: 2.5 }
   ];
   const PTS = [[10, 15, 20], [20, 30, 40], [30, 45, 60]]; // filo puanı for bronze, silver, gold (a gold medal pays the gold amount, not the sum)

@@ -854,7 +854,7 @@ function v2EvGo(k){const e={k,t:0,dur:EVK[k].dur};G2.ev=e;if(typeof lagFirst==='
 /* sprinkled through the easy stretch: FAST SHRINK (more bodies, the hole shrinks three times as fast when it stops eating) and the METEOR BELT
    (a warning, then meteors only, in parallel lanes on one slant with one lane open; through it unhurt pays +500 and +25 stars). After 30 they keep coming back. */
 function v2Chal(l){if(l<6||l%10===0||v2LevelType(l)!=='score'||v2Hard(l))return null;if(l===6||l===16||l===22||(l>30&&l%10===4))return 'shrink';if(l===8||l===18||l===28||(l>30&&l%10===7))return 'belt';return null;}
-const BELT={warn:2.8,end:1.4},BELTN=9;
+const BELT={warn:2.8,end:1.4},BELTN=9,BELTR=9;
 // ── the Daily Storm: 180 s, the same storm for everyone, fiercer every 30 s, a meteor belt at 60 s and 120 s ──
 // ── the Daily Race: the same 60 s for everyone, at speed 16–25, with the day's rule, a short meteor belt at 20 s and a nebula at 40 s ──
 const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'📏',n:'BOYUT PENCERESİ'},{id:'wind',ic:'🌬',n:'YILDIZ RÜZGÂRI'},{id:'eclipse',ic:'🌑',n:'TUTULMA'}];
@@ -915,13 +915,30 @@ function v2BeltLanes(e){const ux=Math.cos(e.a),uy=Math.sin(e.a),nx=-uy,ny=ux,D=M
   if(fc){n=BELTN;lw=Math.max(lw,2*D/n);} /* the fleet's belt has the same lanes on every screen, so every phone can reach the same count */
   const c0=-(n-1)/2*lw;return {ux,uy,nx,ny,D,lw,n,c0};}
 function v2BeltStep(e,dt){if(e.t<e.next||e.t>e.dur-BELT.end)return;const L=v2BeltLanes(e),hard=(G2.hm?1:0)+(G2.dstorm?1:0),lv=G2.lv,fc=FMRUN&&FMRUN.m.chain;
-  e.next=e.t+(fc?1:Math.max(.36,.78-lv*.012-hard*.1)); /* waves come faster further in; the fleet's belt keeps the pace of ordinary meteors */
+  if(fc){v2BeltFlow(e,dt,L);return;}
+  e.next=e.t+Math.max(.36,.78-lv*.012-hard*.1); /* waves come faster further in */
   if(e.wave===0){const p=(hX-W/2)*L.nx+(hY-H/2)*L.ny;e.open=clamp(Math.round((p-L.c0)/L.lw),1,L.n-2);} /* the open lane starts where you are */
-  else if(e.wave%(fc?2:4)===0)e.open=clamp(e.open+(rng()<.5?-1:1),1,L.n-2); /* and drifts a lane at a time: keep moving with it */
-  e.wave++;const k=fc?L.n-1:Math.min(L.n-1,2+Math.floor(rng()*(2+hard))+(lv>20?1:0)),lanes=[];for(let i=0;i<L.n;i++)if(i!==e.open)lanes.push(i);
+  else if(e.wave%4===0)e.open=clamp(e.open+(rng()<.5?-1:1),1,L.n-2); /* and drifts a lane at a time: keep moving with it */
+  e.wave++;const k=Math.min(L.n-1,2+Math.floor(rng()*(2+hard))+(lv>20?1:0)),lanes=[];for(let i=0;i<L.n;i++)if(i!==e.open)lanes.push(i);
   for(let j=0;j<k&&lanes.length;j++){const i=lanes.splice(Math.floor(rng()*lanes.length),1)[0],off=L.c0+i*L.lw+rrnd(-.12,.12)*L.lw,back=L.D+sp2(30)+rng()*sp2(60);
     const sp=v2Speed('meteor')*(.78+.08*hard)*rrnd(.95,1.08),x=W/2+L.nx*off-L.ux*back,y=H/2+L.ny*off-L.uy*back;
-    const o=v2Obj('meteor',x,y,L.ux*sp,L.uy*sp,{wait:0,scale:rrnd(.8,1.15)});o.slow=0;o.ramp=V2K.met.ramp;o.belt=1;o.seen=false;o.side=0;if(fc){o.bux=L.ux;o.buy=L.uy;o.gap=e.open;o.bev=e;}}} /* fleet belt: every wall leaves one lane open, the only way through */
+    const o=v2Obj('meteor',x,y,L.ux*sp,L.uy*sp,{wait:0,scale:rrnd(.8,1.15)});o.slow=0;o.ramp=V2K.met.ramp;o.belt=1;o.seen=false;o.side=0;}}
+// 17 Oct: the fleet's belt is a loose field of meteors with a winding safe route through it, sometimes two for a few seconds.
+// Every meteor flies at the same speed, so the route keeps its shape on the way down: it is c(te) across the belt, where te is
+// when the meteor would have left the start line; whoever keeps the hole on it with a finger is never hit.
+function v2BeltC(e,te){const f=e.cf,c=f.c0+f.a1*Math.sin(f.w1*te+f.p1)+f.a2*Math.sin(f.w2*te+f.p2);let d=0;
+  if(te>f.fs&&te<f.fs+f.fl){const q=Math.sin(Math.PI*(te-f.fs)/f.fl);d=f.fd*q*q;}return [c,d?c+d:null];} /* d: the second route splits off and joins again */
+function v2BeltFlow(e,dt,L){const u=L.lw,lim=(L.n/2-1.2)*u;
+  if(!e.cf){const f=e.cf={a1:1.6*u,a2:.6*u,w1:2*Math.PI/rrnd(6,8),w2:2*Math.PI/rrnd(2.8,3.6),p1:rng()*6.28,p2:rng()*6.28,v:v2Speed('meteor')*.78,b0:L.D+sp2(30),acc:0,fs:e.t+rrnd(3,5),fl:rrnd(3.5,4.5),fd:0};
+    const p=(hX-W/2)*L.nx+(hY-H/2)*L.ny,m=lim-f.a1-f.a2;f.c0=clamp(p-f.a1*Math.sin(f.w1*e.t+f.p1)-f.a2*Math.sin(f.w2*e.t+f.p2),-m,m);} /* the route starts where you are */
+  const f=e.cf,hw=G2.R*2.1+OBJ2.meteor.r*SZ2.meteor*G2.S*.9+sp2(6); /* a meteor hits at R + 3/4 of its size: this leaves about a hole's width of room to follow the route */
+  if(e.t>f.fs+f.fl+.5){f.fs=e.t+rrnd(5,8);f.fl=rrnd(3.5,4.5);f.fd=0;} /* the next fork */
+  if(!f.fd&&e.t>f.fs-.1){const [c]=v2BeltC(e,f.fs+f.fl/2);f.fd=(c>0?-1:1)*2.6*u;}
+  f.acc+=dt*BELTR;
+  while(f.acc>=1){f.acc--;for(let k=0;k<6;k++){const p=rrnd(-L.n/2,L.n/2)*u,back=rng()*sp2(70),te=e.t+back/f.v,[c,c2]=v2BeltC(e,te);
+    if(Math.abs(p-c)<hw||(c2!==null&&Math.abs(p-c2)<hw))continue;
+    const x=W/2+L.nx*p-L.ux*(f.b0+back),y=H/2+L.ny*p-L.uy*(f.b0+back);
+    const o=v2Obj('meteor',x,y,L.ux*f.v,L.uy*f.v,{wait:0,scale:rrnd(.8,1.15)});o.slow=0;o.ramp=V2K.met.ramp;o.belt=1;o.seen=false;o.side=0;o.bux=L.ux;o.buy=L.uy;break;}}}
 function v2BeltEnd(e){if(G2.ending)return;const ok=G2.dmg===e.dmg0;
   if(ok&&e.sh){const p=500;totalScore+=p;levelScore+=p;v2Call('🛡 KALKANLA GEÇİLDİ','+500 puan','#ffd84d',1.8,true);} /* the stars are for skill: a shield or Supernova pass earns only the points */
   else if(ok){const p=500;totalScore+=p;levelScore+=p;const sw=25*(G2.hm?2:1);if(G2.mode==='level'&&!REPLAY){stars+=sw;saveG();updateUI();}v2Call('✓ KUŞAK HASARSIZ GEÇİLDİ',G2.mode==='level'&&!REPLAY?'+500 puan · +'+sw+' ⭐':'+500 puan','#57c78a',2,true);sfx('achieve',{vol:.6});dmEvent('belt',1);}

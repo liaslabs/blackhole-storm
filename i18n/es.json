@@ -2227,7 +2227,7 @@
 "SÜRELİ SEVİYE": "NIVEL CON TIEMPO",
 "Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Después de comprarlo puedes escribir el nombre que quieras (hasta {n} letras)",
 "Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.": "Traga para llenar la barra; cada vez que se llena llega un Arco Dorado. Atrápalo en 2 segundos.",
-"Kuşaklar ara vermeden, başka yönlerden gelir. Her duvarda tek bir boş şerit var. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.": "Los cinturones llegan sin pausa y desde distintos lados. Cada muro tiene un solo carril libre. Cada meteoro que dejas atrás suma +1. Sin escudo, sin Vórtice.",
+"Kuşaklar ara vermeden, başka yönlerden gelir. Meteorların arasında kıvrılan bir güvenli rota var, bazen iki. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.": "Los cinturones llegan sin pausa y desde distintos lados. Entre los meteoros serpentea una ruta segura, a veces dos. Cada meteoro que dejas atrás suma +1. Sin escudo, sin Vórtice.",
 "{n} meteor": "{n} meteoros",
 "meteor": "meteoros",
 "{n} METEOR": "{n} METEOROS",
