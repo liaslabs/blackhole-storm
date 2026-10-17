@@ -1285,7 +1285,13 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .fx .fldays .y{background:rgba(87,199,138,.16);color:#8dffcb;}.fx .fldays .p{background:rgba(255,215,106,.12);color:#ffd76a;}.fx .fldays .n{background:rgba(229,72,77,.12);color:#ff9a95;}.fx .fldays .t{outline:1px dashed rgba(255,215,106,.55);}
 .fx .flearn{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;padding:8px 11px;border-radius:12px;background:rgba(127,214,176,.1);border:1px solid rgba(127,214,176,.3);font-size:11.5px;}
 .fx .flearn small{display:block;font-size:10px;color:#9fb3d8;}.fx .flearn>b{font:800 14px var(--fd);color:#8ff0c4;text-align:end;white-space:nowrap;}.fx .flearn>b small{font:600 10px var(--fd);}
-.fx .chip.g{background:rgba(255,215,106,.14);color:#ffe7a8;}.fx .fm-m>small b.mp{color:#ffd76a;font-weight:800;}
+.fx .chip.g{background:rgba(255,215,106,.14);color:#ffe7a8;}
+/* 18 Oct: the fleet's first page with less to read */
+.fx .fm-c.s .fm-t b{flex:0 1 auto;}.fx .fm-c.s .fm-t .fm-i{width:18px;height:18px;font-size:10px;border-width:1px;opacity:.7;}.fx .fm-c.s .fm-r{margin:6px 0 0;margin-inline-start:38px;}.fx .fm-c.s .fm-tg{margin:0;gap:4px;}.fx .fm-c.s .fm-tg span{padding:5px 2px;min-width:0;}.fx .fm-c.s .play{padding:7px 11px;font-size:11px;line-height:1.1;}.fx .fm-c.s .fm-tg span b{font-size:12px;white-space:nowrap;}
+.fx .fm-c.s .fm-x{display:flex;align-items:center;gap:7px;flex:0 0 auto;position:relative;padding-bottom:8px;}.fx .fm-c.s .fm-p{font:900 17px var(--fd);color:#ffd76a;text-shadow:0 0 10px rgba(255,200,90,.35);}.fx .fm-c.s .fm-h{position:absolute;bottom:-3px;inset-inline-end:0;font-style:normal;font-size:7px;letter-spacing:2px;color:#ffd76a;opacity:.75;}
+.fx .fm-ch.s,.fx .flmis.s{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;}.fx .fm-ch.s .fm-f{flex:1;}.fx .flmis.s b{margin:0;}
+.fx .flstar.s{margin:7px 0 0;padding:5px 8px;}.fx .flstar.s span small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.fx .flmis .mh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}.fx .flmis .mh small{color:#9fb3d8;white-space:nowrap;}.fx .flmis>small.d{display:block;color:#cfd6ee;font-size:12px;margin-top:2px;}.fx .flmis .mr .flpay{margin:0;}.fx .flstar.s .lbav{width:26px;height:26px;}.fx .flstar.s em{white-space:nowrap;}.fx .fm-ch{cursor:pointer;}.fx .fldb{margin-bottom:8px;}.fx .fldb .row2{padding:4px 8px;margin-top:4px;}.fx .fldb .nm small{color:#8ff0c4;font-size:10px;}.fx .flstar.s .r{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}.fx .flstar.s .r b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fx .fm-m>small b.mp{color:#ffd76a;font-weight:800;}
 .fm-mp{margin:8px 0 2px;padding:7px 10px;border-radius:10px;background:rgba(255,215,106,.07);border:1px solid rgba(255,215,106,.25);}.fm-mp p{margin:0;font:600 12.5px var(--fd);color:#e9ecf5;}.fm-mp p b{font:900 17px var(--fd);color:#ffd76a;}.fm-mp>small{display:block;font-size:10px;color:#9fb3d8;}
 .fm-mp .fr{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:#cfd6ee;margin-top:5px;text-align:start;}.fm-mp .fr small{color:#9fb3d8;}.fm-mp .fr b{font:800 13px var(--fd);color:#fff;}.fm-mp .fr.st{color:#ffe7a8;display:block;}
 .fx .fm-f .play.again{background:rgba(255,255,255,.08);color:#ffd76a;border:1px solid rgba(255,215,106,.5);}.fx .fm-f .end{margin-inline-start:auto;font-size:11px;color:#8fa1c6;}.fx .fm-f .go,.fx .fm-f .ok{margin-inline-start:auto;}
@@ -3978,8 +3984,9 @@ const FLT_ALL=[['tasks','GÖREVLER','📋'],['week','HAFTA','📅'],['crew','ÜY
 function flNavH(){return `<div class="flnav">${FLT_ALL.map(([k,t,i])=>`<button data-flt="${k}" class="${k===FLT?'on':''}">${ICO.svg(i)}<span>${T(t)}</span></button>`).join('')}</div>`;}
 // the daily fleet mission card: three levels for the fleet today, 30 stars
 function flMisH(){const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
-  return `<div class="hero flmis"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})}${flPay(BHS_FMIS.PAY.mis)}
-  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')}</button>`}</div></div>`;}
+  if(m.cl)return `<div class="hero flmis s"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b><span class="ok">✅</span></div>`; /* 18 Oct: collected: one line */
+  return `<div class="hero flmis"><div class="mh"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b><small>${T('{n} / 3 seviye',{n:m.p})}</small></div><small class="d">${T('Bugün filon için {n} seviye geç',{n:3})}</small>
+  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr">${flPay(BHS_FMIS.PAY.mis)}<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')}</button></div></div>`;}
 function flHeadH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap);
   return `${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}
   <div class="fc sm">${flImg(f.emb)}<span class="t"><b class="notr">${flE(f.name)}</b><small>${f.n}/${f.max} ${T('üye')} · ${T('Kaptan')}: <span class="notr">${flE(cap?cap.name:'')}</span></small></span></div>`;}
@@ -3997,8 +4004,7 @@ function flTasksH(j){const f=j.fleet,left=Date.parse(utcDay()+'T00:00:00Z')+864e
 function flDayH(j){const M=j.fleet.mis,P=BHS_FMIS.PAY,st=(j.members||[]).find(m=>m.star),done=M.days[(new Date().getUTCDay()+6)%7]==='y';
   return `<div class="flday"><div class="dh"><span>${T('BUGÜNKÜ FİLO PUANI')}</span><b>${flN(M.day)}</b></div>
   <small>${M.drank?T('{r}. sıra · {n} filo',{r:M.drank,n:M.dof}):T('Henüz puan yok')} · ${done?`<span class="ok">✓ ${T('3 görevin tamam')}</span>`:T('Ödül için 3 görevi de oyna')}</small>
-  <div class="dtop" id="flDayTop"></div></div>
-  ${st?`<div class="flstar">${avHtml(st.av)}<i>🌟</i><span><small>${T('FİLONUN YILDIZI · BUGÜN')}</small><b class="notr">${flE(st.name)}</b> · ${T('{n} puan',{n:flN(st.mp)})}</span><em>+${P.star[0]} ⭐<br>+${P.star[1]} 💎</em></div>`:''}`;}
+  ${st?`<div class="flstar s">${avHtml(st.av)}<span><small>🌟 ${T('FİLONUN YILDIZI · BUGÜN')}</small><span class="r"><b class="notr">${flE(st.name)}</b><em>+${P.star[0]} ⭐ +${P.star[1]} 💎</em></span></span></div>`:''}</div>`;} /* 18 Oct: one card; the day's ranking is in the HAFTA tab (flWeekH) */
 // the day's ranking and the week's champions, from the server once a minute at most
 async function flBoards(force){if(!force&&FLV&&FLV.boards&&Date.now()-FLV.boards.at<60e3)return FLV.boards;try{const r=await lbFetch('/fleets/fm?pid='+PID);if(r&&r.ok){r.at=Date.now();if(FLV)FLV.boards=r;return r;}}catch(e){}return null;}
 function flBoardRows(b,pay,n){const md=['🥇','🥈','🥉'],P=BHS_FMIS.PAY,L=b.list.slice(0,n),me=b.me&&!L.some(x=>x.me)?b.me:null;
@@ -4014,7 +4020,8 @@ async function flWeekH(j){const M=j.fleet.mis,P=BHS_FMIS.PAY,b=await flBoards(),
   const mon=Date.UTC(2026,0,5),dl=i=>{let d='';try{d=new Date(mon+i*864e5).toLocaleDateString(LOC,{weekday:'short',timeZone:'UTC'});}catch(e){}return flE(d.replace('.','').toUpperCase());};
   const need=Math.max(0,P.champDays-y),msg=need===0?T('Şampiyonluk ödülü için günlerin tamam.'):need>open?T('Bu hafta şampiyonluk ödülü için gün kalmadı; sandıklar için {n} gün yeter.',{n:P.chestDays}):T('Şampiyonluk ödülü için {n} gün daha görevlerini tamamla.',{n:need});
   const champ=r=>P.champ[r-1]?`+${flN(P.champ[r-1][0])} ⭐ +${P.champ[r-1][1]} 💎${P.champ[r-1][2]?` +${P.champ[r-1][2]} 🛡️`:''}`:'';
-  return `<div class="flbox flwk"><div class="h"><span>🎁 ${T('HAFTALIK GÖREV PUANI')}</span><b dir="ltr">${flN(M.week)} / ${flN(top)}</b></div>
+  const dayb=b&&b.day&&b.day.list.length?`<div class="flbox fldb"><div class="h"><span>🏆 ${T('GÜNÜN FİLO SIRALAMASI')}</span></div>${flBoardRows(b.day,r=>P.day[r-1]?`+${P.day[r-1][0]} ⭐${P.day[r-1][1]?' +'+P.day[r-1][1]+' 💎':''}`:'',3)}</div>`:''; /* 18 Oct: the day's ranking moved here from the first page */
+  return `${dayb}<div class="flbox flwk"><div class="h"><span>🎁 ${T('HAFTALIK GÖREV PUANI')}</span><b dir="ltr">${flN(M.week)} / ${flN(top)}</b></div>
     <div class="bar"><i style="width:${Math.min(100,M.week/top*100)}%"></i>${P.chestAt.map((x,i)=>`<span class="ck${M.week>=x?' got':''}" style="left:${Math.min(97,x/top*100)}%">${i===2?'👑':'🎁'}</span>`).join('')}</div>
     <div class="barl">${P.chestAt.map((x,i)=>`<span style="${i===2?'right:0':`left:${x/top*100}%;transform:translateX(-50%)`}">${flN(x)}${M.week>=x?' ✓':''}</span>`).join('')}</div>
     <small>${T('Sandıklar, haftada en az {n} gün görevlerini tamamlayan üyelere açılır.',{n:P.chestDays})} · ${T('bitişe {t}',{t:flLeft(wkEnd-now)})}</small></div>
@@ -4091,6 +4098,7 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
   all('[data-flt]').forEach(b=>b.onclick=()=>{if(b.dataset.flt==='inv'){flInvOpen(j);return;}FLT=b.dataset.flt;FLS='main';fleetRender();$('sLB').scrollTop=0;});
   if(q('#flMisGo2'))q('#flMisGo2').onclick=()=>flMisClaim(q('#flMisGo2'),fleetRender);
   all('[data-fm]').forEach(b=>b.onclick=()=>fmPlay(b.dataset.fm));all('[data-fmi]').forEach(b=>b.onclick=()=>fmAsk(b.dataset.fmi));
+  {const ch=q('.fm-ch'),c=j.fm&&j.fm.chain;if(ch&&c)ch.onclick=e=>{if(e.target.closest('button'))return;toast('🤝',T('FİLO ZİNCİRİ'),T('Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır',{n:c.need}));};} // the rule, on a tap
   if(q('#fmChain'))q('#fmChain').onclick=()=>{const b=q('#fmChain');if(b.disabled)return;b.disabled=true;go('/fleet/fmchain',{pid:PID},r=>{const g={stars:r.stars||0,gems:r.gems||0};
     if(g.stars||g.gems){stars+=g.stars;diamonds+=g.gems;saveG();flClaimFx(b,g);}FL.fmc=0;fleetMenu();setTimeout(()=>{updateUI();FLV=null;fleetRender();},1150);}).then(r=>{if(!r||!r.ok)b.disabled=false;});};
   if(q('#flIntro'))q('#flIntro').onclick=()=>{FLS='intro';FLI=0;fleetRender();};
@@ -4136,16 +4144,16 @@ function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNov
 function fmChainReady(fm){if(!fm||!fm.chain)return false;const c=fm.chain;return !c.got&&c.n>=c.need&&Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);}
 function flFmH(fm,left,mis){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','★★★']; /* easy, medium, hard: stars say it in every language */
   const card=id=>{const m=F.byId(id);if(!m)return '';const me=fm.me[id]||{best:0,tier:0,tries:0},rest=Math.max(0,F.TRIES-me.tries);
-    const tg=m.tg.map((x,i)=>`<span class="${me.tier>i?'got':''}"><b>${m.m==='score'||m.m==='caught'?flN(x):fmFmt(m,x)}</b><i>${mis?flN(F.mp(m,x)):'+'+F.pts(m,i+1)}</i></span>`).join(''),q=mis&&mis.per[id]; /* points and bodies: the number alone fits in every language */
-    const btn=rest>0?`<button class="play${me.tries?' again':''}" data-fm="${id}">▶ ${me.tries?T('TEKRAR'):T('OYNA')}</button>`:`<span class="end">${T('Haklar bitti')}</span>`;
-    return `<div class="fm-c${me.tier===3?' done':''}"><div class="fm-t"><span class="ic">${fmIc(m)}</span><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></div>
-      <div class="fm-m"><small>${fmDur(m)} · ${me.tries?T('En iyin: {v}',{v:fmFmt(m,me.best)})+(mis?` = <b class="mp">${flN(me.mp||0)}</b>`:''):T('Henüz oynamadın')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}${q?` · ${T('filo ort. {n}',{n:flN(q.avg)})}`:''}</small>
-      <div class="fm-r"><div class="fm-tg">${tg}</div><button class="fm-i" data-fmi="${id}" aria-label="${T('Görev kartı')}">i</button>${btn}</div></div></div>`;};
+    const md=['🥉','🥈','🥇'],tg=m.tg.map((x,i)=>`<span class="${me.tier>i?'got':''}"><b>${md[i]} ${flN(x)}</b></span>`).join(''); /* 18 Oct: the target alone; the points and the rules are behind ⓘ */
+    const btn=rest>0?`<button class="play${me.tries?' again':''}" data-fm="${id}">▶ ${me.tries?T('TEKRAR'):T('OYNA')}</button>`:'';
+    const res=me.tries?`<b class="fm-p">${mis?flN(me.mp||0):fmFmt(m,me.best)}</b>`:'',dots=`<i class="fm-h" title="${T('hak {n}/{m}',{n:rest,m:F.TRIES})}">${'●'.repeat(rest)}${'○'.repeat(F.TRIES-rest)}</i>`;
+    return `<div class="fm-c s${me.tier===3?' done':''}"><div class="fm-t"><span class="ic">${fmIc(m)}</span><b>${T(m.n)}</b><button class="fm-i" data-fmi="${id}" aria-label="${T('Görev kartı')}">i</button><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></div>
+      <div class="fm-r"><div class="fm-tg">${tg}</div><div class="fm-x">${res}${btn}${dots}</div></div></div>`;};
   const c=fm.chain,mine=Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);
   return `<div class="sec"><span>${T('BUGÜNÜN FİLO GÖREVLERİ')}</span><b>${T('yenilenmesine {t}',{t:flLeft(left)})}</b></div>
   ${fm.ids.map(card).join('')}
-  <div class="fm-ch"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
-    <div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div><small>${T('Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır',{n:c.need})}</small>${flPay(F.PAY.chain)}</div>`;}
+  <div class="fm-ch${c.got?' s':''}"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
+    ${c.got?'':`<div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div>${flPay(F.PAY.chain)}`}</div>`;} /* 18 Oct: no sentence (a tap on the card says the rule), one line once collected */
 // 1.5.0 (16 Oct): the missions' own pictures, drawn like the fleet's space symbols (neon line, gold, the bodies as the game draws them)
 const FMIC={
  combo:'<path d="M3.5 5Q5 13 13.5 14.5" fill="none" stroke="#ffcf5a" stroke-width="1.1" stroke-dasharray="1.4 1.3"/><circle cx="3.6" cy="5.2" r="2.2" fill="#9fe3ff"/><circle cx="5.8" cy="10.8" r="2.5" fill="#c9a8ff"/><circle cx="10.2" cy="14" r="2.4" fill="url(#nGold)"/><ellipse cx="16.2" cy="15.3" rx="6" ry="2.2" fill="none" stroke="#f2a93b" stroke-width="1.1" transform="rotate(-15 16.2 15.3)"/><circle cx="16.2" cy="15.3" r="3.6" fill="#05070a" stroke="#5ff2ff" stroke-width="1.1"/><path d="M17.4 2.6l3.8 3.8M21.2 2.6l-3.8 3.8" stroke="#ffd76a" stroke-width="1.9" stroke-linecap="round"/>',
