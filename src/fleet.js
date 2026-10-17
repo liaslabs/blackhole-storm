@@ -192,7 +192,7 @@ function flPlayH(j,left){const F=BHS_FMIS,fm=j.fm,M=j.fleet.mis,f=j.fleet,lvC=['
     hero=`<div class="flhero"><div class="fm-t"><span class="ic">${fmIc(m,'big')}</span><span class="nm"><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></span><button class="fm-i" data-fmi="${next}" aria-label="${T('Görev kartı')}">i</button></div>
       <div class="fm-tg">${m.tg.map((x,i)=>`<span class="${me.tier>i?'got':''}"><b>${md[i]} ${flN(x)}</b></span>`).join('')}</div>
       <button class="play big" data-fm="${next}">▶ ${me.tries?T('TEKRAR'):T('OYNA')}${me.tries?`<small>${flN(me.mp||0)}</small>`:''}</button>${dots(rest)}</div>`;}
-  else hero=`<div class="flhero done"><b>✓ ${T('3 görevin tamam')}</b></div>`; /* the time to the next missions is on top already */
+  else hero=`<div class="flhero done"><b>✓ ${T('Bugünkü görevler tamam')}</b></div>`; /* the time to the next missions is on top already */
   const rows=ids.filter(id=>id!==next).map(id=>{const m=F.byId(id),{me,rest}=st(id);
     return `<div class="flrow"><span class="nmw" data-fmi="${id}"><span class="ic">${fmIc(m)}</span><b>${T(m.n)}</b></span><span class="md">${me.tier?md[me.tier-1]:''}</span>${me.tries?`<span class="pt">${flN(me.mp||0)}</span>`:''}${rest>0?`<button class="play" data-fm="${id}">▶</button>`:'<span class="ok">✓</span>'}</div>`;}).join('');
   const c=fm.chain,mine=Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);

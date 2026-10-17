@@ -2279,5 +2279,6 @@
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Награды флота идут сверх обычных: рекорды, звёзды и рейтинг остаются как есть. Каждый пройденный уровень приносит флоту очки для гонки выходных",
 "HAFTA": "НЕДЕЛЯ",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Соберите сегодня флотом {n} медалей: награду получит каждый, кто взял медаль",
-"bir görevde en fazla {n} puan": "не больше {n} очков за задание"
+"bir görevde en fazla {n} puan": "не больше {n} очков за задание",
+"Bugünkü görevler tamam": "Задания на сегодня выполнены"
 }
