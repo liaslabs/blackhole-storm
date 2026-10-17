@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Tippe in Zeitlevels unten auf die ⏱-Taste oder nutze ihn auf dem Bildschirm, der sich bei Zeitablauf öffnet: +{n} Sekunden, in Boss-Leveln +{n} Sekunden",
 "ZAMAN PARÇASI GELİYOR": "ZEITSPLITTER KOMMT",
 "YUT: +{n} SN": "SCHLUCKEN: +{n} S",
-"SÜRELİ SEVİYE": "ZEITLEVEL"
+"SÜRELİ SEVİYE": "ZEITLEVEL",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Nach dem Kauf kannst du jeden Namen eingeben, den du magst (bis zu {n} Zeichen)"
 }

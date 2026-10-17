@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "On timed levels tap the ⏱ button at the bottom, or use it on the screen that opens when time runs out: +{n} seconds, +{n} seconds on boss levels",
 "ZAMAN PARÇASI GELİYOR": "TIME PIECE INCOMING",
 "YUT: +{n} SN": "SWALLOW: +{n} S",
-"SÜRELİ SEVİYE": "TIMED LEVEL"
+"SÜRELİ SEVİYE": "TIMED LEVEL",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "After buying, you can write any name you like (up to {n} letters)"
 }

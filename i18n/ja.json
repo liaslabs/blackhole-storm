@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "制限時間のあるレベルでは下の⏱ボタンをタップ、または時間切れの画面で使う：+{n}秒、ボスレベルでは+{n}秒",
 "ZAMAN PARÇASI GELİYOR": "タイムピース出現",
 "YUT: +{n} SN": "飲み込め：+{n}秒",
-"SÜRELİ SEVİYE": "制限時間レベル"
+"SÜRELİ SEVİYE": "制限時間レベル",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "購入後は好きな名前を入力できます（最大{n}文字）"
 }

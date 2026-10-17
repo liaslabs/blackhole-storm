@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Dans les niveaux chronométrés, touche le bouton ⏱ en bas, ou utilise-le sur l’écran qui s’ouvre quand le temps est écoulé : +{n} secondes, +{n} secondes dans les niveaux de boss",
 "ZAMAN PARÇASI GELİYOR": "UN ÉCLAT DE TEMPS ARRIVE",
 "YUT: +{n} SN": "AVALE : +{n} S",
-"SÜRELİ SEVİYE": "NIVEAU CHRONOMÉTRÉ"
+"SÜRELİ SEVİYE": "NIVEAU CHRONOMÉTRÉ",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Après l’achat, tu peux écrire le nom de ton choix (jusqu’à {n} lettres)"
 }

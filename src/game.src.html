@@ -453,7 +453,7 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 @property --ca{syntax:'<angle>';initial-value:0deg;inherits:false;}
 .offer.cidA{flex-direction:column;align-items:stretch;gap:8px;padding:12px;border:1.5px solid transparent;background:linear-gradient(135deg,#191026,#0c1222) padding-box,conic-gradient(from var(--ca),#ff7ad9,#8a7dff,#5ff2ff,#c9ff6a,#ffb35c,#ff7ad9) border-box;box-shadow:0 0 22px rgba(255,122,217,.22);animation:cidRot 5s linear infinite;}@keyframes cidRot{to{--ca:360deg;}}
 .offer.cidA .cidrow{display:flex;gap:12px;align-items:center;}.offer.cidA canvas{width:112px;height:112px;flex:0 0 112px;border-radius:50%;box-shadow:0 0 18px rgba(255,122,217,.35);}
-.offer.cidA .tx b{font-size:15px;color:#ffd7f0;}.offer.cidA .cidn{display:block;margin-top:6px;font:800 14px var(--fd);letter-spacing:.1em;color:#fff;}.offer.cidA .cidsk{display:block;margin-top:2px;font-size:11px;letter-spacing:.06em;color:#c9c2ff;}.offer.cidA .pr{align-self:flex-end;}
+.offer.cidA .tx b{font-size:15px;color:#ffd7f0;}.offer.cidA .cidn{display:block;margin-top:6px;font:800 14px var(--fd);letter-spacing:.1em;color:#fff;}.offer.cidA .cidsk{display:block;margin-top:2px;font-size:11px;letter-spacing:.06em;color:#c9c2ff;}.offer.cidA .pr{align-self:flex-end;}.offer.cidA .cidhint{display:block;margin-top:4px;font-size:11px;opacity:.75;}
 @media (prefers-reduced-motion:reduce){.offer.cidA{animation:none;}}
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .sitem{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.035);color:#fff;cursor:pointer;}
@@ -2657,7 +2657,9 @@ const atlasMastered=()=>ATLAS_DEF.filter(x=>atlasTier(x[0])>=3).length;
 const skinOn=i=>SKINS[i]&&(SKINS[i].u!=='star'||rel(10));
 function skinOwned(i){const k=SKINS[i];return !!k&&skinOn(i)&&(k.u==='free'||(k.u==='stage'&&stageOf(mass)>=k.v)||(k.u==='pack'&&SHOP.cid)||(k.u==='qh'&&SHOP.qh)||(k.u==='atlas'&&atlasMastered()>=k.v)||SKIN.own.includes(i));}
 const monoClean=v=>[...String(v).toLocaleUpperCase('tr')].filter(ch=>/[\p{L}\p{N}]/u.test(ch)).slice(0,NAME_MAX).join('');
-function monoText(){return monoClean(SKIN.mono||playerName||'');}
+// the name in the hole leaves out the number we add so names do not clash (PİLOT-4821, Sinan 483727): the player sees their own name
+const monoBase=n=>{const s=String(n||'').trim(),m=s.match(/^(.*\p{L}.*?)(?:[\s\-_#.]+\d{3,}|\d{5,})$/u);return m?m[1].trim():s;};
+function monoText(){return monoClean(SKIN.mono||monoBase(playerName)||'');}
 function stageOf(m){let s=0;for(let i=1;i<STAGES.length;i++)if(m>=STAGES[i].m)s=i;return s;}
 function addMass(k){const s0=stageOf(mass);mass+=k;swallowed++;const s1=stageOf(mass);if(s1>s0){diamonds+=10;const k2=SKINS.findIndex(x=>x.u==='stage'&&x.v===s1);toast('🕳️','KARA DELİK EVRİMLEŞTİ',k2>0?`Yeni görünüm: ${SKINS[k2].n} · +10 💎`:'+10 💎');}saveSoon();}
 const SKINUI={view:0,run:false,gl:null};
@@ -3314,7 +3316,7 @@ async function restorePurchases(silent){
 }
 function openShop(src){SHOPSRC=typeof src==='string'?src:'mn';if(!monOn())return;if(rel(11))ev('shop');renderShop();$('sShop').classList.add('on');if(rel(11))cidAnimStart();sfx('click',{vol:.4});if(MON.mode==='play'&&!Object.keys(MON.prices).length)monDetails().then(()=>{if($('sShop').classList.contains('on'))renderShop();});} // prices could not be read at launch (offline): try again
 // 1.5.2: the Cosmic ID card shows what it sells: your own name inside the hole, letter by letter, in its two looks
-function cidCard(p){return `<button class="offer cidA" data-buy="${p.id}"><div class="cidrow"><canvas class="cidv" width="240" height="240"></canvas><div class="tx"><b>${p.ic} ${T('KOZMİK KİMLİK')}</b><small>${T('İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır')}</small><span class="cidn notr"></span><span class="cidsk notr"></span></div></div><div class="pr">${priceOf(p)}</div></button>`;}
+function cidCard(p){return `<button class="offer cidA" data-buy="${p.id}"><div class="cidrow"><canvas class="cidv" width="240" height="240"></canvas><div class="tx"><b>${p.ic} ${T('KOZMİK KİMLİK')}</b><small>${T('İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır')}</small><small class="cidhint">${T('Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla 11 harf)')}</small><span class="cidn notr"></span><span class="cidsk notr"></span></div></div><div class="pr">${priceOf(p)}</div></button>`;}
 const CIDA={on:false};
 function cidAnimStart(){if(CIDA.on)return;CIDA.on=true;const A=['PEMBE FIRTINA','PİKSEL NEBULA'].map(n=>SKINS.findIndex(k=>k.n===n)),t0=performance.now(),still=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const f=now=>{const cv=$('sShop').classList.contains('on')&&$('shopOffers').querySelector('canvas.cidv');if(!cv){CIDA.on=false;return;}

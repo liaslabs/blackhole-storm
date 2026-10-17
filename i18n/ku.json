@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Di astên bi dem de li jêr bişkoka ⏱ bitikîne, an jî li ekrana ku dema dem diqede vedibe bi kar bîne: +{n} çirke, di astên boss de +{n} çirke",
 "ZAMAN PARÇASI GELİYOR": "PARÇEYA DEMÊ TÊ",
 "YUT: +{n} SN": "DAQURTÎNE: +{n} Ç",
-"SÜRELİ SEVİYE": "ASTA BI DEM"
+"SÜRELİ SEVİYE": "ASTA BI DEM",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Piştî kirînê tu dikarî her navê ku dixwazî binivîsî (heta {n} tîpan)"
 }

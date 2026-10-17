@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "في المستويات المحدودة بالوقت اضغط زر ⏱ في الأسفل، أو استخدمها في الشاشة التي تظهر عند انتهاء الوقت: +{n} ثانية، و+{n} ثانية في مستويات الزعيم",
 "ZAMAN PARÇASI GELİYOR": "قطعة زمن قادمة",
 "YUT: +{n} SN": "ابتلعها: +{n} ث",
-"SÜRELİ SEVİYE": "مستوى محدود بالوقت"
+"SÜRELİ SEVİYE": "مستوى محدود بالوقت",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "بعد الشراء يمكنك كتابة أي اسم تحبه (حتى {n} حرفًا)"
 }

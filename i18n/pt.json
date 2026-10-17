@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Nos níveis com tempo toque no botão ⏱ embaixo, ou use na tela que abre quando o tempo acaba: +{n} segundos, +{n} segundos em níveis de chefe",
 "ZAMAN PARÇASI GELİYOR": "FRAGMENTO DE TEMPO CHEGANDO",
 "YUT: +{n} SN": "ENGULA: +{n} S",
-"SÜRELİ SEVİYE": "NÍVEL COM TEMPO"
+"SÜRELİ SEVİYE": "NÍVEL COM TEMPO",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Depois de comprar, você pode escrever o nome que quiser (até {n} letras)"
 }

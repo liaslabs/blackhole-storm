@@ -2224,5 +2224,6 @@
 "Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "На уровнях со временем нажми кнопку ⏱ внизу или используй на экране, который открывается, когда время вышло: +{n} секунд, на уровнях с боссом +{n} секунд",
 "ZAMAN PARÇASI GELİYOR": "ЛЕТИТ ОСКОЛОК ВРЕМЕНИ",
 "YUT: +{n} SN": "ГЛОТАЙ: +{n} С",
-"SÜRELİ SEVİYE": "УРОВЕНЬ НА ВРЕМЯ"
+"SÜRELİ SEVİYE": "УРОВЕНЬ НА ВРЕМЯ",
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "После покупки можно написать любое имя (до {n} букв)"
 }
