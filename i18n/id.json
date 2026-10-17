@@ -2278,5 +2278,6 @@
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "{n} armada dengan poin misi terbanyak dalam seminggu mendapat hadiah. Pemenangnya anggota yang menyelesaikan misinya minimal {n3} dari {n2} hari",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Hadiah armada adalah tambahan dari hadiah biasamu: rekor, bintang, dan peringkatmu tetap. Setiap level yang kamu lewati memberi armadamu poin untuk balapan akhir pekan",
 "HAFTA": "MINGGU",
-"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Kumpulkan {n} medali sebagai armada hari ini: semua yang meraih medali mendapat hadiah"
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Kumpulkan {n} medali sebagai armada hari ini: semua yang meraih medali mendapat hadiah",
+"bir görevde en fazla {n} puan": "paling banyak {n} poin per misi"
 }

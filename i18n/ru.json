@@ -2278,5 +2278,6 @@
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "{n} флота с наибольшими очками заданий за неделю получают награды. Выигрывают участники, выполнившие задания не менее {n3} из {n2} дней",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Награды флота идут сверх обычных: рекорды, звёзды и рейтинг остаются как есть. Каждый пройденный уровень приносит флоту очки для гонки выходных",
 "HAFTA": "НЕДЕЛЯ",
-"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Соберите сегодня флотом {n} медалей: награду получит каждый, кто взял медаль"
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Соберите сегодня флотом {n} медалей: награду получит каждый, кто взял медаль",
+"bir görevde en fazla {n} puan": "не больше {n} очков за задание"
 }

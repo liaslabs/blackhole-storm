@@ -379,7 +379,7 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
   o.innerHTML=`<div class="fm-card"><div class="big">${run?md[run]:fmIc(m,"lg")}</div><h3>${run?T(['','BRONZ MADALYA','GÜMÜŞ MADALYA','ALTIN MADALYA'][run]):T('MADALYA ÇIKMADI')}</h3><p>${T(m.n)}</p>
     <div class="res"><div class="w"><small>${T('BU KOŞU')}</small><b>${fmFmt(m,v)}</b></div><div><small>${T('BUGÜN EN İYİN')}</small><b>${fmFmt(m,best)}</b></div></div>
     <div class="fm-tg">${m.tg.map((x,i)=>`<span class="${tier>i?'got':''}"><b>${fmFmt(m,x)}</b><i>${flN(F.mp(m,x))} ${T('puan')}</i></span>`).join('')}</div>
-    <div class="fm-mp"><p dir="ltr">${flN(best)} ÷ ${flN(m.tg[2])} × ${flN(1000)} = <b>${flN(F.mp(m,best))}</b></p><small>${T('görev puanı · bugünün en iyisi sayılır')}</small><div id="fmGain"></div></div>
+    <div class="fm-mp"><p dir="ltr">${flN(best)} ÷ ${flN(m.tg[2])} × ${flN(1000)} = ${(()=>{const raw=Math.round(best/m.tg[2]*1000),mp=F.mp(m,best);return raw>mp?`${flN(raw)} → <b>${flN(mp)}</b>`:`<b>${flN(mp)}</b>`;})()}</p>${Math.round(best/m.tg[2]*1000)>F.mp(m,best)?`<small>${T('bir görevde en fazla {n} puan',{n:flN(1500)})}</small>`:''}<small>${T('görev puanı · bugünün en iyisi sayılır')}</small><div id="fmGain"></div></div>
     <div class="fm-top" id="fmTopBox" hidden></div>
     <div class="row">${rest>0?`<button class="b1" id="fmAgain">🔁 ${T('TEKRAR')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}</button>`:''}<button class="b2" id="fmBack">🛸 ${T('FİLOYA DÖN')}</button></div>
     <div class="fm-note">${T('Normal puanına, rekorlarına ve seviye ilerlemene eklenmez.')}</div></div>`;

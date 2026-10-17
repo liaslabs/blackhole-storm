@@ -2278,5 +2278,6 @@
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "Die {n} Flotten mit den meisten Missionspunkten der Woche gewinnen Preise. Es gewinnen die Mitglieder, die an mindestens {n3} von {n2} Tagen ihre Missionen erfüllen",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Flottenpreise kommen zu deinen normalen Belohnungen hinzu: Rekorde, Sterne und Rang bleiben, wie sie sind. Jedes geschaffte Level bringt deiner Flotte Punkte für das Wochenendrennen",
 "HAFTA": "WOCHE",
-"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Holt heute als Flotte {n} Medaillen: Wer eine Medaille gewonnen hat, bekommt den Preis"
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Holt heute als Flotte {n} Medaillen: Wer eine Medaille gewonnen hat, bekommt den Preis",
+"bir görevde en fazla {n} puan": "höchstens {n} Punkte pro Mission"
 }
