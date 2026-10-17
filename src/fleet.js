@@ -103,7 +103,15 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);
   else if(!j.fleet)h+=fleetNoneH(j);
   else{if(FLT!=='tasks')h='';h+=FLT==='crew'?flCrewH(j):FLT==='race'?await fleetRaceH(1):FLT==='week'&&j.fleet.mis?await flWeekH(j):flTasksH(j);h+=flNavH();}
-  w.innerHTML=h;fleetWire(j);}
+  w.innerHTML=h;fleetWire(j);if(rel(11)&&j.champ&&FLT==='tasks'&&FLS==='main')flChampShow(j.champ.wk);}
+// 18 Oct: last week's first fleet: the first time one of its players (one who played a mission for it that week) opens the Fleet,
+// a 4-second salute plays once in a rounded card over the blurred screen; a tap ends it, and it is never shown again for that week
+function flChampShow(wk){if(!wk||TIPS.chV===wk||!window.BHS_CHAMP_VID||$('flChamp'))return;TIPS.chV=wk;saveSoon();
+  const ov=document.createElement('div');ov.id='flChamp';ov.setAttribute('role','dialog');ov.innerHTML='<div class="cv"><video playsinline preload="auto"></video></div>';document.body.appendChild(ov);
+  const v=ov.querySelector('video');let done=false;const end=()=>{if(done)return;done=true;ov.classList.remove('on');ov.classList.add('out');try{v.pause();}catch(e){}setTimeout(()=>ov.remove(),380);};
+  v.muted=!SET.sfx;v.volume=SET.sfx?Math.min(1,SET.sfxVol*1.1):0;v.src=BHS_CHAMP_VID;v.onended=()=>setTimeout(end,350);v.onerror=end;ov.onclick=end;setTimeout(end,9000);
+  requestAnimationFrame(()=>ov.classList.add('on'));SND.duck(.15,4.6);
+  v.play().catch(()=>{v.muted=true;v.play().catch(end);});}
 
 function fleetPrizes(j){const D=j.dprizes||[],dt=z=>{try{return new Date(z.day+'T12:00:00Z').toLocaleDateString(LOC,{day:'numeric',month:'short',weekday:'short',timeZone:'UTC'});}catch(e){return z.day;}};
   const dz=D.length?`<div class="hero przc"><b>🏆 ${T('GÜNLÜK FİLO ÖDÜLLERİ')}</b>${D.map(z=>`<div class="rw"><span>${flE(dt(z))} · ${[z.rank?T('{r}. sıra',{r:z.rank}):'',z.star?'🌟 '+T('filonun yıldızı'):''].filter(Boolean).join(' · ')} · +${flN(z.stars)} ⭐${z.gems?` +${z.gems} 💎`:''}</span></div>`).join('')}

@@ -39,7 +39,7 @@ def main():
     # the Android build passes its version name and code (e.g. "1.5.0 (31)"), shown in Settings next to the install number
     assert src.count("'@@APPVER@@'") == 1
     src = src.replace("'@@APPVER@@'", json.dumps(os.environ.get('BHS_APPVER', '')))
-    for ph in ('FONT_DATA', 'SPRITE_DATA', 'SFX_DATA', 'ASSET_DATA', 'I18N_DATA'):
+    for ph in ('FONT_DATA', 'SPRITE_DATA', 'SFX_DATA', 'ASSET_DATA', 'CHAMP_DATA', 'I18N_DATA'):
         assert src.count(f'<!--{ph}-->') == 1, ph
     langs = {}
     for f in sorted(glob.glob(f'{ROOT}/i18n/*.json')):
@@ -57,6 +57,7 @@ def main():
               .replace('<!--SPRITE_DATA-->', read(f'{SRC}/blocks/sprites.html'))
               .replace('<!--SFX_DATA-->', read(f'{SRC}/blocks/sfx.html').rstrip('\n'))
               .replace('<!--ASSET_DATA-->', read(f'{SRC}/blocks/assets.html').rstrip('\n'))
+              .replace('<!--CHAMP_DATA-->', read(f'{SRC}/blocks/champ.html').rstrip('\n'))
               .replace('<!--I18N_DATA-->', i18n))
     dest = sys.argv[1] if len(sys.argv) > 1 else f'{ROOT}/index.html'  # another file for a side build (the default is the game itself)
     with open(dest, 'w', encoding='utf-8') as f:
