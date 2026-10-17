@@ -2278,5 +2278,6 @@
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "{n} filoyên ku di hefteyê de herî zêde xalên erkan berhev dikin xelatan digirin. Endamên ku ji {n2} rojan herî kêm {n3} rojan erkên xwe temam dikin qezenc dikin",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Xelatên filoyê li ser xelatên te yên asayî tên: rekor, stêrk û rêza te wek xwe dimînin. Her asta ku tu derbas dikî ji bo pêşbirka dawiya hefteyê xalan dide filoya te",
 "HAFTA": "HEFTE",
-"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Îro wek filo {n} madalyayan berhev bikin: her kesê ku madalyayek girtiye xelatê digire"
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Îro wek filo {n} madalyayan berhev bikin: her kesê ku madalyayek girtiye xelatê digire",
+"bir görevde en fazla {n} puan": "di erkekê de herî zêde {n} xal"
 }
