@@ -2227,7 +2227,7 @@
 "SÜRELİ SEVİYE": "УРОВЕНЬ НА ВРЕМЯ",
 "Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "После покупки можно написать любое имя (до {n} букв)",
 "Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.": "Глотай, чтобы заполнить шкалу; каждый раз, когда она заполнится, прилетает Золотая дуга. Поймай её за 2 секунды.",
-"Kuşaklar ara vermeden, her seferinde başka yönden gelir. Ekrandan çıkan her meteor +1. Kalkan yok, Vortex yok.": "Пояса идут без перерыва, каждый раз с другой стороны. Каждый метеор, улетевший с экрана, — +1. Без щита, без Вихря.",
+"Kuşaklar ara vermeden, başka yönlerden gelir. Her duvarda tek bir boş şerit var. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.": "Пояса идут без перерыва и с разных сторон. В каждой стене только один свободный коридор. Каждый метеор, оставленный позади, — +1. Без щита, без Вихря.",
 "{n} meteor": "{n} метеоров",
 "meteor": "метеоров",
 "{n} METEOR": "{n} МЕТЕОРОВ",

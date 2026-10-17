@@ -2227,7 +2227,7 @@
 "SÜRELİ SEVİYE": "制限時間レベル",
 "Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "購入後は好きな名前を入力できます（最大{n}文字）",
 "Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.": "飲み込んでバーを満たそう。満タンになるたびにゴールデンアークが現れる。2秒以内に捕まえよう。",
-"Kuşaklar ara vermeden, her seferinde başka yönden gelir. Ekrandan çıkan her meteor +1. Kalkan yok, Vortex yok.": "流星帯は休みなく、毎回別の方向からやって来る。画面の外へ抜けた流星1つにつき+1。シールドなし、ボルテックスなし。",
+"Kuşaklar ara vermeden, başka yönlerden gelir. Her duvarda tek bir boş şerit var. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.": "流星帯は休みなく、方向を変えてやって来る。どの壁にも空いたレーンは1本だけ。後ろに抜けた流星1つにつき+1。シールドなし、ボルテックスなし。",
 "{n} meteor": "流星{n}個",
 "meteor": "流星",
 "{n} METEOR": "流星{n}個",

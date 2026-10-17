@@ -2227,7 +2227,7 @@
 "SÜRELİ SEVİYE": "TIMED LEVEL",
 "Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "After buying, you can write any name you like (up to {n} letters)",
 "Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.": "Swallow to fill the bar; every time it fills, a Golden Arc comes. Catch it within 2 seconds.",
-"Kuşaklar ara vermeden, her seferinde başka yönden gelir. Ekrandan çıkan her meteor +1. Kalkan yok, Vortex yok.": "Belts come without a break, each time from another side. Every meteor that leaves the screen is +1. No shield, no Vortex.",
+"Kuşaklar ara vermeden, başka yönlerden gelir. Her duvarda tek bir boş şerit var. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.": "Belts come without a break, from changing sides. Every wall has a single open lane. Every meteor you leave behind is +1. No shield, no Vortex.",
 "{n} meteor": "{n} meteors",
 "meteor": "meteors",
 "{n} METEOR": "{n} METEORS",
