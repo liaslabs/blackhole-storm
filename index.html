@@ -7547,8 +7547,9 @@ function checkProf(){const n=$('nameInp').value.trim(),ok=n.length>=2&&!!selAv,b
 $('nameInp').addEventListener('input',checkProf);
 $('nameInp').addEventListener('keydown',e=>{if(e.key==='Enter')$('profOk').click();});
 let profBack=null; // where the profile returns to: the level card, the leaderboard, or the menu
-function openProfile(back){profBack=back||null;$('nameHint').hidden=!rel(10);$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
-function profClose(){$('sProfile').classList.remove('on');const b=profBack;profBack=null;if(b)b();else{showMenu();offerChallenge();}}
+let profMenu=false; // 18 Oct: the menu was open under the picker (the shop's avatars): it comes back with the picker's close, or the shop closes onto the bare game
+function openProfile(back){profBack=back||null;profMenu=$('sMenu').classList.contains('on');$('nameHint').hidden=!rel(10);$('sMenu').classList.remove('on');$('sProfile').classList.add('on');buildProfile();}
+function profClose(){$('sProfile').classList.remove('on');const b=profBack,m=profMenu;profBack=null;profMenu=false;if(b){if(m)showMenu();b();}else{showMenu();offerChallenge();}}
 // Names others can see: the shared filter in src/names.js (11 languages, look-alike letters, links, phone numbers; the server runs the same file)
 // Names others can see (player names, fleet names): one filter for the game and the leaderboard server.
 // The game inlines this file (src/build.py, //@@NAMES@@); the server imports it (server/worker.js). Same rules on both sides,
