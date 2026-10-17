@@ -104,7 +104,15 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);
   else if(!j.fleet)h+=fleetNoneH(j);
   else{if(FLT!=='tasks')h='';h+=FLT==='crew'?flCrewH(j):FLT==='race'?await fleetRaceH(1):FLT==='week'&&j.fleet.mis?await flWeekH(j):flTasksH(j);h+=flNavH();}
-  w.innerHTML=h;fleetWire(j);if(rel(11)&&j.champ&&FLT==='tasks'&&FLS==='main')flChampShow(j.champ.wk);}
+  w.innerHTML=h;fleetWire(j);if(rel(11)&&j.champ&&FLT==='tasks'&&FLS==='main')flChampShow(j.champ.wk,j);}
+// 18 Oct: after the salute the week's prize collects itself: it shows big in the middle and flies to the wallet; with no answer
+// from the server it stays as the TOPLA card on the Fleet page
+async function flPrizeAuto(pz){{const c=document.querySelector(`[data-claim="${pz.wk}"]`),k=c&&c.closest('.przc');if(k)k.remove();}let r=null;try{r=await lbFetch('/fleet/claim',{pid:PID,wk:pz.wk});}catch(e){}
+  if(!r||!r.ok){FLV=null;fleetRender();return;}const g={stars:r.stars|0,gems:r.gems|0,shield:r.sh|0};if(!(g.stars||g.gems||g.shield)){FLV=null;fleetRender();return;}
+  stars+=g.stars;diamonds+=g.gems;SHOP.shield+=g.shield;saveG();
+  const e=document.createElement('div');e.id='flAuto';e.innerHTML=[g.stars?`<b>+${flN(g.stars)} ⭐</b>`:'',g.gems?`<b>+${g.gems} 💎</b>`:'',g.shield?`<b>+${g.shield} 🛡</b>`:''].join('');document.body.appendChild(e);
+  sfx('achieve',{vol:.7});vib([20,40,30]);later(()=>{flyReward(e,g);sfx('powerup',{vol:.45,rate:1.2});e.classList.add('go');},1100);
+  later(()=>{e.remove();updateUI();FLV=null;fleetRender();},2000);}
 // 18 Oct: the first time the game opens after its fleet was named last week's champion, the menu says so in the tournament prize
 // card's light (rays, confetti, the blurred screen); FİLOYA GİT opens the Fleet, where the salute plays
 function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.wk)return;
@@ -120,9 +128,9 @@ function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.
   m.classList.remove('on');void m.offsetWidth;showModal('mPrize');sfx('achieve',{vol:.6});later(()=>{sfx('powerup',{vol:.5,rate:1.2});vib([20,40,60]);},550);}
 // 18 Oct: last week's first fleet: the first time one of its players (one who played a mission for it that week) opens the Fleet,
 // a 4-second salute plays once in a rounded card over the blurred screen; a tap ends it, and it is never shown again for that week
-function flChampShow(wk){if(!wk||TIPS.chV===wk||!window.BHS_CHAMP_VID||$('flChamp'))return;TIPS.chV=wk;saveSoon();
+function flChampShow(wk,j){if(!wk||TIPS.chV===wk||!window.BHS_CHAMP_VID||$('flChamp'))return;TIPS.chV=wk;saveSoon();const pz=j&&(j.prizes||[]).find(z=>z.wk===wk&&z.champ===1);
   const ov=document.createElement('div');ov.id='flChamp';ov.setAttribute('role','dialog');ov.innerHTML='<div class="cv"><video playsinline preload="auto"></video></div>';document.body.appendChild(ov);
-  const v=ov.querySelector('video');let done=false;const end=()=>{if(done)return;done=true;ov.classList.remove('play');ov.classList.add('out');setTimeout(()=>ov.remove(),820);};let grown=false;const grow=()=>{if(grown||done)return;grown=true;ov.classList.add('play');};
+  const v=ov.querySelector('video');let done=false;const end=()=>{if(done)return;done=true;ov.classList.remove('play');ov.classList.add('out');setTimeout(()=>ov.remove(),820);if(pz)flPrizeAuto(pz);};let grown=false;const grow=()=>{if(grown||done)return;grown=true;ov.classList.add('play');};
   v.muted=!SET.sfx;v.volume=SET.sfx?Math.min(1,SET.sfxVol*1.1):0;v.src=BHS_CHAMP_VID;v.onplaying=grow;setTimeout(grow,1200);v.onended=()=>setTimeout(end,250);v.onerror=end;ov.onclick=end;setTimeout(end,9000);
   requestAnimationFrame(()=>ov.classList.add('on'));SND.duck(.15,4.6);
   v.play().catch(()=>{v.muted=true;v.play().catch(end);});}
