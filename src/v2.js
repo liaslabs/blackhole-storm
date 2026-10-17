@@ -1236,7 +1236,7 @@ function v2Hit(o,whole){
     if(G2.arcs===1){G2.lastArcT=1.6;v2Sfx('tickHi',{vol:.55,rate:.7});v2Pop(T('SON YAY'),'#ff5a5f',16);if(!G2.shHint&&G2.shT<=0&&gameMode!=='sprint'&&(v2ShLeft()>0||G2.tSh==null&&monOn()&&diamonds>=V2K.shield.cost)){G2.shHint=1;later(()=>{if(G2.on&&G2.arcs===1)v2Pop(T('KALKAN YAYLARI TAMİR EDER'),'#ffd84d',15);},900);}} /* the moment a shield is worth most: say so once */
     if(!TIPS.arcs)later(()=>v2Tip('arcs',null),500); /* the first broken arc explains itself */return;}
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
-  v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
+  if(rel(11)&&SND.buf&&SND.buf.lifeLost)v2Sfx('lifeLost',{vol:.95});else{v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});} /* 18 Oct: a lost life has its own sound (power going out) */
   G2.arcPow=0;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=am;}G2.arcFill=.5;G2.immT=Math.max(G2.immT,1.5); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
   if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);v2HitNote();}
   if(rel(11)&&G2.mode==='level'&&gameMode==='classic'&&!REPLAY){const t=G2.t;evOnce('d1_'+(t<10?'a':t<30?'b':t<60?'c':'d'),'d1');} // the first life ever lost: how many seconds into the level
