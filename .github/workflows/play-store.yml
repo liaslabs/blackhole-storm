@@ -1,16 +1,17 @@
 # Google Play store listing through the Publishing API: Actions -> "Play mağaza girişi" -> Run workflow.
 # Uses the service account in secret PLAY_SERVICE_ACCOUNT_JSON (store presence, testing tracks, reviews; no production, no finance).
-# "status" only reads. "listings" (texts, phone frames) and "release" (an uploaded version code to internal/alpha/beta,
-# notes from store/release-notes.md) only show what would change unless "apply" is set. Production is never touched.
+# "status" only reads. "listings" (texts, phone frames) and "release" (a version code to internal/alpha/beta, notes from
+# store/release-notes.md; with artifact_run the .aab of that Android build is uploaded first) only show what would change
+# unless "apply" is set. Production is never touched.
 name: Play mağaza girişi
 
 on:
   workflow_dispatch:
     inputs:
       task:
-        description: 'status = sadece oku, listings = metinler + telefon kareleri, release = test kanalına sürüm'
+        description: 'status = sadece oku, listings = metinler + telefon kareleri, release = test kanalına sürüm, video = yalnızca tanıtım videosu bağlantıları'
         type: choice
-        options: [status, listings, release]
+        options: [status, listings, release, video]
         default: status
       apply:
         description: 'Değişiklikleri Play Console''a kaydet (kapalıysa yalnızca önizleme)'
@@ -28,18 +29,31 @@ on:
         description: 'tr-TR için YouTube bağlantısı (boş = dokunma)'
         required: false
         default: ''
+      video_en:
+        description: 'video: tr-TR dışındaki tüm diller için YouTube bağlantısı (boş = dokunma)'
+        required: false
+        default: ''
       track:
         description: 'release: test kanalı'
         type: choice
         options: [alpha, internal, beta]
         default: alpha
       version_code:
-        description: 'release: Play''e yüklenmiş sürüm kodu (ör. 21)'
+        description: 'release: sürüm kodu (ör. 22)'
+        required: false
+        default: ''
+      artifact_run:
+        description: 'release: yeni paket yüklenecekse Android derlemesinin çalışma numarası (boş = Play''de olan kod)'
+        required: false
+        default: ''
+      version_name:
+        description: 'release: yüklenen paketin sürüm adı (ör. 1.4.9)'
         required: false
         default: ''
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: play-store
@@ -55,6 +69,15 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Android paketi
+        if: inputs.task == 'release' && inputs.artifact_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: blackhole-storm-android-${{ inputs.version_name }}
+          run-id: ${{ inputs.artifact_run }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ runner.temp }}/aab
+
       - name: Kütüphaneler
         run: pip install --quiet 'google-api-python-client>=2.150,<3' 'google-auth>=2.35,<3'
 
@@ -64,11 +87,15 @@ jobs:
           TASK: ${{ inputs.task }}
           ONLY: ${{ inputs.only }}
           VIDEO_TR: ${{ inputs.video_tr }}
+          VIDEO_EN: ${{ inputs.video_en }}
           TRACK: ${{ inputs.track }}
           VERSION_CODE: ${{ inputs.version_code }}
+          VERSION_NAME: ${{ inputs.version_name }}
+          AAB_DIR: ${{ inputs.artifact_run != '' && format('{0}/aab', runner.temp) || '' }}
         run: |
           if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret'ı yok."; exit 1; fi
-          args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --track "$TRACK" --version-code "$VERSION_CODE")
+          args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --video-en "$VIDEO_EN" --track "$TRACK" --version-code "$VERSION_CODE")
+          if [ -n "$AAB_DIR" ]; then aab=$(ls "$AAB_DIR"/*.aab | head -1); args+=(--aab "$aab" --version-name "$VERSION_NAME"); fi
           if [ "${{ inputs.apply }}" = "true" ]; then args+=(--apply); fi
           if [ "${{ inputs.send_for_review }}" = "true" ]; then args+=(--send-for-review); fi
           python scripts/play_store.py "${args[@]}"

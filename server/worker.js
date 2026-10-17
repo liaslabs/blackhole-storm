@@ -2,15 +2,27 @@
 // Daily Storm (the survival mode's daily scenario): one best score per install per UTC day.
 // The top 3 of each finished day win stars (1000 / 500 / 250), claimed once from the app.
 // Endpoints (JSON):
-//   POST /score   {pid,name,score,secs,day}      -> {ok,best,rank,total}
-//   GET  /top?day=YYYY-MM-DD&pid=...             -> {day,list:[{r,k,name,score,me}],me:{rank,score}|null,total}   k: opaque row handle
-//   POST /report  {day,k,by}                       -> {ok}   reports a name; two reporters hide it for that day
+//   POST /score   {pid,name,score,secs,day,av}   -> {ok,best,rank,total}   av: the player's avatar key (optional, 1.5.0+)
+//   GET  /top?day=YYYY-MM-DD&pid=...             -> {day,list:[{r,k,name,score,me,av}],me:{rank,score}|null,total}   k: opaque row handle
+//   POST /report  {day,k,by}                       -> {ok}   reports a name; three reporters hide it for that day (a reporter must have played that day, 3 reports a day)
 //   GET  /prizes?pid=...                         -> {list:[{day,rank,stars}]}   (unclaimed, last 7 days)
 //   POST /claim   {pid,day}                      -> {ok,stars}
 //   POST /ack     {sku,token,sub}                -> {ok}   checks a Google Play purchase and acknowledges it (web/TWA version)
 //   POST /err     {m,s,v,p,l}                    -> {ok}   a script error from the game (message, top of stack, build, app/web,
 //                                                   language); counted per day, no personal data, kept 30 days
+//   /fleet..., /fleets/top                         -> fleets (1.5.1), see server/fleet.js
 //   GET  /errs?days=3                            -> {list:[{day,m,s,v,p,n}]}   the most frequent recent errors
+//   POST /ping    {v,p,l}                        -> {ok}   the game was opened today (once a day per install; no id)
+//   GET  /pings?days=14                          -> {list:[{day,v,p,l,n}]}   how many installs opened which version each day
+//                                                   (1.5.1: the ping may carry a: the install's age band, counted as the event age_<a>)
+//   POST /ev      {v,p,d,e:{key:n}}             -> {ok}   play counts since the last send (1.5.1): only these keys, summed per day,
+//                                                   version and app/web; no install id. Kept 120 days
+//   GET  /evs?days=14                            -> {list:[{day,v,p,e,n}]}
+//   POST /live    {}                             -> {ok}   the game is open: each install says so once per 5-minute slot, so a slot's
+//                                                   count is how many play at the same time (no id). Kept 3 days
+//   GET  /live?days=3                            -> {list:[{slot,n}]}   slot: minutes since 1970 / 5
+//   POST /itv     {pid,day,it}                   -> {ok,vf}   the app's daily device check (Play Integrity), used for fleet points
+//   GET  /sus?day=YYYY-MM-DD                     -> {scores:[...],fm:[...]}   results close to the ceilings, for a look by hand
 //   POST /verify  {pid,sku,token}                -> {ok,pending?}   the app's purchase check: asks Google whether the purchase is real
 //                                                   and paid, records the token (a consumable token counts once, for the install
 //                                                   that bought it), then acknowledges or consumes it. The app grants nothing without ok.
@@ -23,29 +35,37 @@
 const PRIZE = [1000, 500, 250];
 const ALLOWED = ['https://liaslabs.github.io', 'https://localhost', 'http://localhost:8766', 'http://127.0.0.1:8766']; // https://localhost: the Android app (Capacitor)
 const MAX_SUBS = 40;          // submissions per install per day
-const MAX_SECS = 200;         // the Daily Storm lasts 180 s: a longer run is not a real one
+const MAX_SECS = 3600;        // Survival is endless since 1.4.9 (it lasted 180 s before): an hour is beyond any real run
 const MAX_RATE = 4000;        // points per second no real run reaches (Rage ×2 and ×5 combos top out well below this)
 
 const day = (t = Date.now()) => new Date(t).toISOString().slice(0, 10);
 const okPid = p => typeof p === 'string' && /^[a-z0-9]{12,40}$/.test(p);
 const okDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
-// Names others can see: a small word filter (keep the same list as badName() in src/game.src.html)
-const BAD_SUB = ['orospu','orspu','siktir','sikerim','sikeyim','sikik','sikis','yarrak','yarak','amcik','aminakoy','aminako','gotveren','pezevenk','kahpe','kaltak','ibne','gavat','yavsak','serefsiz','fuck','shit','bitch','cunt','nigger','nigga','faggot','whore','slut','dick','pussy','asshole','bastard','hitler','porno','porn'];
-const BAD_WORD = ['sik','pic','amk','aq','oc','mk','got','ass','nazi','sex','fag','cum','rape','anan','ananı','ananin'];
-function badName(n) {
-  const s = String(n || '').toLocaleLowerCase('tr').replace(/[ıİ]/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c')
-    .replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5/g, 's').replace(/7/g, 't').replace(/@/g, 'a').replace(/\$/g, 's');
-  const flat = s.replace(/[^a-z]/g, '');
-  if (BAD_SUB.some(w => flat.includes(w))) return true;
-  return s.split(/[^a-z]+/).some(w => BAD_WORD.includes(w)) || BAD_WORD.includes(flat);
-}
+// Names others can see: the shared filter (src/names.js, also inlined into the game): 11 languages, look-alike letters, links, phone numbers
+import '../src/names.js';
+import '../src/fmis.js';
+import { fleetRoute, fleetHousekeeping } from './fleet.js';
+const NAMES = globalThis.BHS_NAMES;
+const badName = n => NAMES.bad(n);
 function cleanName(n) {
   n = typeof n === 'string' ? n : '';
   n = n.replace(/[\u0000-\u001f\u007f<>&"'`\\]/g, '').trim();
   n = [...n].slice(0, 11).join('');
-  return n && !badName(n) ? n : 'PİLOT';
+  return n && NAMES.check(n, 'player').ok ? n : 'PİLOT';
 }
-// Players can report a name on the ranking; two different reporters hide it for everyone that day.
+// Avatars shown next to names (1.5.0): only the game's own avatar keys are kept (keep in step with AVX in src/game.src.html)
+const AV_KEYS = new Set(['🚀','🔭','☄️','🌌','🪐','👾','🎧','✨','💠','🔥','🧭','🪖','🗺️','💫','⚓','🌠','🪶','🌑','🎯','🌗','🌀','👻','🌅','🦾','🛰️','🛸','📜','🌟','🧿','🧝','🤖','📺','🕷️','🔋','🕊️','🎛️','🔮','🧠','🏍️','⚙️','👽','🔺','🗡️','🧙','🐉','⚡','🐋','🐲','🔷','👹']);
+const cleanAv = a => typeof a === 'string' && AV_KEYS.has(a) ? a : null;
+globalThis.BHS_AV_KEYS = AV_KEYS; // fleets use the same keys for emblems and member avatars
+let avReady = false;
+async function ensureAv(DB) { // adds the column once to a database made before 1.5.0
+  if (avReady) return;
+  try { await DB.prepare('ALTER TABLE scores ADD COLUMN av TEXT').run(); } catch (e) { /* already there */ }
+  // 1.5.1: vs = the day's best verified score (0: none yet); rows from before have none, and their score counts as verified
+  try { await DB.prepare('ALTER TABLE scores ADD COLUMN vs INTEGER').run(); } catch (e) { /* already there */ }
+  avReady = true;
+}
+// Players can report a name on the ranking; three different reporters hide it for everyone that day.
 let repReady = false;
 async function ensureReports(DB) {
   if (repReady) return;
@@ -56,7 +76,7 @@ async function rowKey(d, pid) { // an opaque per-day handle, so other players' i
   const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(d + ':' + pid)));
   return [...h.slice(0, 6)].map(b => b.toString(16).padStart(2, '0')).join('');
 }
-const HIDE_AT = 2;
+const HIDE_AT = 3, REPORTS_A_DAY = 3; // three different players hide a name for the day; each may report three names a day
 function cors(req) {
   const o = req.headers.get('Origin') || '';
   return { 'Access-Control-Allow-Origin': ALLOWED.includes(o) ? o : ALLOWED[0], 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
@@ -109,7 +129,8 @@ async function gpVerify(env, DB, pid, sku, token) {
   const kind = SKUS[sku];
   const t = await gpToken(env), h = { Authorization: 'Bearer ' + t };
   const base = GP + encodeURIComponent(env.GP_PKG) + (kind === 's' ? '/purchases/subscriptions/' : '/purchases/products/') + encodeURIComponent(sku) + '/tokens/' + encodeURIComponent(token);
-  const r = await fetch(base, { headers: h }); if (!r.ok) return { ok: false };
+  const r = await fetch(base, { headers: h });
+  if (!r.ok) return [400, 404, 410].includes(r.status) ? { ok: false } : { ok: false, err: 'gp' + r.status }; // a bad token is refused; our access or Google failing is "ask again later" (err), so a real purchase is never turned away
   const p = await r.json();
   if (kind === 's') { if (!((p.paymentState === 1 || p.paymentState === 2) && +p.expiryTimeMillis > Date.now())) return { ok: false }; }
   else if (p.purchaseState === 2) return { ok: false, pending: true };   // paid later (cash, bank transfer): the app asks again
@@ -139,23 +160,73 @@ async function gpVerify(env, DB, pid, sku, token) {
 }
 // Play Integrity: the request hash ties a token to one request, so a token cannot be reused for another score
 const sha = async s => [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)))].map(b => b.toString(16).padStart(2, '0')).join('');
-async function integrityOk(env, it, hash) {
-  if (typeof it !== 'string' || it.length < 20 || it.length > 8000 || !env.GP_SA || !env.GP_PKG) return false;
+async function integrityOk(env, it, hash) { return (await integrityWhy(env, it, hash)) === 'ok'; }
+// 'ok', or why not, in a few letters (kept as the daily total it_bad_<why>, so a failing check can be told apart without logs)
+async function integrityWhy(env, it, hash) {
+  if (typeof it !== 'string' || it.length < 20 || it.length > 8000) return 'tok';
+  if (!env.GP_SA || !env.GP_PKG) return 'cfg';
   const t = await gpToken(env, 'https://www.googleapis.com/auth/playintegrity');
   const r = await fetch('https://playintegrity.googleapis.com/v1/' + encodeURIComponent(env.GP_PKG) + ':decodeIntegrityToken', { method: 'POST',
     headers: { Authorization: 'Bearer ' + t, 'Content-Type': 'application/json' }, body: JSON.stringify({ integrity_token: it }) });
-  if (!r.ok) return false;
+  if (!r.ok) return 'http' + r.status;
   const v = (await r.json()).tokenPayloadExternal || {}, rd = v.requestDetails || {}, app = v.appIntegrity || {}, dev = (v.deviceIntegrity || {}).deviceRecognitionVerdict || [];
-  return rd.requestHash === hash && rd.requestPackageName === env.GP_PKG && Math.abs(Date.now() - +rd.timestampMillis) < 10 * 6e4
-    && app.appRecognitionVerdict === 'PLAY_RECOGNIZED' && dev.includes('MEETS_DEVICE_INTEGRITY');
+  if (rd.requestHash !== hash) return 'hash';
+  if (rd.requestPackageName !== env.GP_PKG) return 'pkg';
+  if (!(Math.abs(Date.now() - +rd.timestampMillis) < 10 * 6e4)) return 'time';
+  // the app, device and licence verdicts in short (app_unevaluated.dev_none.lic_unevaluated), so a refusal says which part failed
+  const sh = x => String(x || 'none').toLowerCase().replace(/^(play_|meets_)/, '').replace(/_integrity$/, '').replace(/[^a-z]/g, '').slice(0, 12);
+  const all = `app_${sh(app.appRecognitionVerdict)}.dev_${dev.length ? dev.map(sh).join('+') : 'none'}.lic_${sh((v.accountDetails || {}).appLicensingVerdict)}`;
+  if (app.appRecognitionVerdict !== 'PLAY_RECOGNIZED' || !dev.includes('MEETS_DEVICE_INTEGRITY')) return all;
+  return 'ok';
 }
-async function integrityGate(env, it, what) {
-  const mode = env.INTEGRITY || 'off'; if (mode === 'off') return true;
-  let ok = false; try { ok = await integrityOk(env, it, await sha(what)); } catch (e) {}
-  if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', what.split('|')[0].slice(0, 4)); return true; }
-  return ok;
+// 1.5.1 trust model: 'ok' (Play vouches for the app and the device, or one of the owner's test phones), 'unv' (nobody can
+// vouch: no token, the web, an unlocked or rooted phone) or 'mod' (Play does not know this build: a modified copy). Only in
+// enforce mode does it change anything: 'mod' is refused, 'unv' is kept out of the main ranking, the prizes and the fleets.
+async function integrityClass(env, it, what) {
+  const mode = env.INTEGRITY || 'off'; if (mode === 'off') return 'ok';
+  const pid = what.split('|')[0], trusted = String(env.TRUST_PIDS || '').split(',').map(x => x.trim()).filter(Boolean).includes(pid);
+  let why = 'err'; try { why = await integrityWhy(env, it, await sha(what)); } catch (e) { why = 'err'; }
+  if (why !== 'ok' && trusted) why = 'trust'; // the owner's own test phones (secret TRUST_PIDS), e.g. with an unlocked bootloader
+  const ok = why === 'ok' || why === 'trust';
+  // a daily total of the verdicts (it_ok; it_none: no token, as from the web; it_bad_<why>: a token that failed), read by tools/rapor.mjs
+  try { await ensureEvs(env.DB); await evAdd(env.DB, day(), '-', '-', why === 'trust' ? 'it_trust' : ok ? 'it_ok' : it ? 'it_bad_' + why : 'it_none', 1).run(); } catch (e) {}
+  if (mode === 'log') { console.log('integrity', ok ? 'pass' : 'fail', pid.slice(0, 4)); return 'ok'; }
+  return ok ? 'ok' : why.startsWith('app_unrecognized') ? 'mod' : 'unv';
+}
+const vfOn = env => env.INTEGRITY === 'enforce'; // the main ranking shows only verified scores
+// the install's device verdict for the day (POST /itv), used where a request carries no token of its own (fleet points)
+let itvReady = false;
+async function ensureItv(DB) {
+  if (itvReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS itv (day TEXT NOT NULL, pid TEXT NOT NULL, cls TEXT NOT NULL, PRIMARY KEY (day, pid))').run();
+  itvReady = true;
+}
+async function deviceOk(env, DB, pid) {
+  if (!vfOn(env)) return true;
+  if (String(env.TRUST_PIDS || '').split(',').map(x => x.trim()).includes(pid)) return true;
+  await ensureItv(DB);
+  const r = await DB.prepare("SELECT 1 AS x FROM itv WHERE pid = ? AND day IN (?, ?) AND cls = 'ok'").bind(pid, day(), day(Date.now() - 36e5 * 2)).first();
+  return !!r;
 }
 let errReady = false;
+// Daily opens: one count per install per UTC day (the game sends it at most once a day), by version, app/web and language. No install number.
+let pingReady = false;
+async function ensurePings(DB) {
+  if (pingReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS pings (day TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, v, p, l))').run();
+  pingReady = true;
+}
+// 1.5.1 play counts: the keys the game may send (anything else is dropped)
+const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|l[wf]_\d{1,2}|u_[a-z]{2}_\d{1,2}|p_[a-z0-9_]{2,16}|ps_[a-z]{2}|pl_\d{1,2}|pa_(\d{1,2}|x)|g_[a-z]{2,6})$/;
+const AGE = /^(0|1|2|4|8|15|31|x)$/;
+let evReady = false;
+async function ensureEvs(DB) {
+  if (evReady) return;
+  await DB.prepare('CREATE TABLE IF NOT EXISTS evs (day TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, e TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, v, p, e))').run();
+  await DB.prepare('CREATE TABLE IF NOT EXISTS live (slot INTEGER PRIMARY KEY, n INTEGER NOT NULL DEFAULT 0)').run();
+  evReady = true;
+}
+const evAdd = (DB, d, v, p, e, n) => DB.prepare('INSERT INTO evs (day, v, p, e, n) VALUES (?, ?, ?, ?, ?) ON CONFLICT (day, v, p, e) DO UPDATE SET n = n + excluded.n').bind(d, v, p, e, n);
 async function ensureErrs(DB) {
   if (errReady) return;
   await DB.prepare('CREATE TABLE IF NOT EXISTS errs (day TEXT NOT NULL, h TEXT NOT NULL, m TEXT NOT NULL, s TEXT NOT NULL, v TEXT NOT NULL, p TEXT NOT NULL, l TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 1, PRIMARY KEY (day, h))').run();
@@ -168,9 +239,14 @@ async function housekeeping(DB) {
   await DB.prepare('DELETE FROM scores WHERE day < ?').bind(old).run(); await DB.prepare('DELETE FROM prizes WHERE day < ?').bind(old).run();
   await ensureReports(DB); await DB.prepare('DELETE FROM reports WHERE day < ?').bind(old).run();
   await ensureErrs(DB); await DB.prepare('DELETE FROM errs WHERE day < ?').bind(day(Date.now() - 30 * 864e5)).run();
+  await ensurePings(DB); await DB.prepare('DELETE FROM pings WHERE day < ?').bind(old).run();
+  await ensureEvs(DB); await DB.prepare('DELETE FROM evs WHERE day < ?').bind(day(Date.now() - 120 * 864e5)).run();
+  await DB.prepare('DELETE FROM live WHERE slot < ?').bind(Math.floor(Date.now() / 3e5) - 3 * 288).run();
+  await ensureItv(DB); await DB.prepare('DELETE FROM itv WHERE day < ?').bind(day(Date.now() - 3 * 864e5)).run();
   await ensurePurchases(DB); // purchase records: two years (a consumed purchase cannot be claimed again anyway, see gpVerify)
   await DB.prepare('DELETE FROM purchases WHERE ts < ?').bind(Date.now() - 730 * 864e5).run();
   await DB.prepare('DELETE FROM purchase_installs WHERE token NOT IN (SELECT token FROM purchases)').run();
+  await fleetHousekeeping(DB); // settles the finished week, hands over from away captains, removes empty fleets
 }
 
 // Settle a finished day once: its top 3 get prize rows.
@@ -178,7 +254,8 @@ async function settle(DB, d) {
   if (d >= day()) return;
   const done = await DB.prepare('SELECT COUNT(*) AS n FROM prizes WHERE day = ?').bind(d).first();
   if (done && done.n) return;
-  const top = await DB.prepare('SELECT pid FROM scores WHERE day = ? ORDER BY score DESC, ts ASC LIMIT 3').bind(d).all();
+  await ensureAv(DB); // verified scores only (vs; rows from before 1.5.1 count with their score)
+  const top = await DB.prepare('SELECT pid FROM scores WHERE day = ? AND COALESCE(vs, score) > 0 ORDER BY COALESCE(vs, score) DESC, ts ASC LIMIT 3').bind(d).all();
   const rows = top.results || [];
   for (let i = 0; i < rows.length; i++)
     await DB.prepare('INSERT OR IGNORE INTO prizes (day, pid, rank, stars) VALUES (?, ?, ?, ?)').bind(d, rows[i].pid, i + 1, PRIZE[i]).run();
@@ -190,6 +267,7 @@ export default {
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(req) });
     const url = new URL(req.url), DB = env.DB;
     try {
+      const fr = await fleetRoute(url, req, DB, json, cleanName, pid => deviceOk(env, DB, pid)); if (fr) return fr; // /fleet... and /fleets/top (server/fleet.js)
       if (url.pathname === '/score' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
         const today = day(), d = okDay(b.day) ? b.day : today;
@@ -197,29 +275,42 @@ export default {
         if (!okPid(b.pid)) return json(req, { ok: false, err: 'pid' }, 400);
         const score = Math.floor(+b.score), secs = Math.floor(+b.secs);
         if (!(score > 0 && score < 5e7) || !(secs >= 5 && secs <= MAX_SECS) || score / secs > MAX_RATE) return json(req, { ok: false, err: 'score' }, 400);
-        if (!(await integrityGate(env, b.it, `${b.pid}|${d}|${score}|${secs}`))) return json(req, { ok: false, err: 'integrity' }, 403);
-        const name = cleanName(b.name), now = Date.now();
+        const cls = await integrityClass(env, b.it, `${b.pid}|${d}|${score}|${secs}`);
+        if (cls === 'mod') return json(req, { ok: false, err: 'integrity' }, 403);
+        const name = cleanName(b.name), av = cleanAv(b.av), now = Date.now(), vsc = cls === 'ok' ? score : 0;
+        await ensureAv(DB);
         const cur = await DB.prepare('SELECT score, subs FROM scores WHERE day = ? AND pid = ?').bind(d, b.pid).first();
         if (cur && cur.subs >= MAX_SUBS) return json(req, { ok: false, err: 'rate' }, 429);
-        if (!cur) await DB.prepare('INSERT INTO scores (day, pid, name, score, secs, ts) VALUES (?, ?, ?, ?, ?, ?)').bind(d, b.pid, name, score, secs, now).run();
-        else if (score > cur.score) await DB.prepare('UPDATE scores SET score = ?, secs = ?, ts = ?, name = ?, subs = subs + 1 WHERE day = ? AND pid = ?').bind(score, secs, now, name, d, b.pid).run();
-        else await DB.prepare('UPDATE scores SET subs = subs + 1, name = ? WHERE day = ? AND pid = ?').bind(name, d, b.pid).run();
+        if (cur) await DB.prepare('UPDATE scores SET vs = MAX(COALESCE(vs, score), ?) WHERE day = ? AND pid = ?').bind(vsc, d, b.pid).run();
+        if (!cur) await DB.prepare('INSERT INTO scores (day, pid, name, score, secs, ts, av, vs) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(d, b.pid, name, score, secs, now, av, vsc).run();
+        else if (score > cur.score) await DB.prepare('UPDATE scores SET score = ?, secs = ?, ts = ?, name = ?, av = COALESCE(?, av), subs = subs + 1 WHERE day = ? AND pid = ?').bind(score, secs, now, name, av, d, b.pid).run();
+        else await DB.prepare('UPDATE scores SET subs = subs + 1, name = ?, av = COALESCE(?, av) WHERE day = ? AND pid = ?').bind(name, av, d, b.pid).run();
         const best = Math.max(score, cur ? cur.score : 0);
+        if (vfOn(env)) { // the main ranking counts verified scores only; an unverified best gets its place among everyone (rall)
+          const v = await DB.prepare('SELECT COALESCE(vs, score) AS v FROM scores WHERE day = ? AND pid = ?').bind(d, b.pid).first(), vb = v ? v.v : 0;
+          const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND COALESCE(vs, score) > 0').bind(d).first();
+          if (vb > 0) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND COALESCE(vs, score) > ?').bind(d, vb).first(); return json(req, { ok: true, best: vb, rank: r.n + 1, total: t ? t.n : 1, vf: 1 }); }
+          const ra = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, best).first();
+          return json(req, { ok: true, best, rank: null, rall: ra.n + 1, total: t ? t.n : 0, vf: 0 });
+        }
         const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, best).first();
         const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ?').bind(d).first();
         return json(req, { ok: true, best, rank: (r ? r.n : 0) + 1, total: t ? t.n : 1 });
       }
       if (url.pathname === '/top' && req.method === 'GET') {
         const d = okDay(url.searchParams.get('day')) ? url.searchParams.get('day') : day(), pid = url.searchParams.get('pid');
-        const top = await DB.prepare('SELECT pid, name, score FROM scores WHERE day = ? ORDER BY score DESC, ts ASC LIMIT 50').bind(d).all();
+        await ensureAv(DB);
+        const vfo = vfOn(env), SC = vfo ? 'COALESCE(vs, score)' : 'score'; // with the trust model on, only verified scores are listed
+        const top = await DB.prepare(`SELECT pid, name, ${SC} AS score, av FROM scores WHERE day = ? AND ${SC} > 0 ORDER BY ${SC} DESC, ts ASC LIMIT 50`).bind(d).all();
         await ensureReports(DB);
         const rep = await DB.prepare('SELECT pid, COUNT(*) AS n FROM reports WHERE day = ? GROUP BY pid').bind(d).all(), hidden = new Set((rep.results || []).filter(x => x.n >= HIDE_AT).map(x => x.pid));
-        const list = await Promise.all((top.results || []).map(async (x, i) => ({ r: i + 1, k: await rowKey(d, x.pid), name: hidden.has(x.pid) && x.pid !== pid ? 'PİLOT' : x.name, score: x.score, me: x.pid === pid })));
+        const list = await Promise.all((top.results || []).map(async (x, i) => ({ r: i + 1, k: await rowKey(d, x.pid), name: hidden.has(x.pid) && x.pid !== pid ? 'PİLOT' : x.name, score: x.score, me: x.pid === pid, av: hidden.has(x.pid) && x.pid !== pid ? null : cleanAv(x.av) })));
         let me = null;
-        if (okPid(pid)) { const m = await DB.prepare('SELECT score FROM scores WHERE day = ? AND pid = ?').bind(d, pid).first();
-          if (m) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, m.score).first(); me = { rank: r.n + 1, score: m.score }; } }
-        const t = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ?').bind(d).first();
-        return json(req, { day: d, list, me, total: t ? t.n : 0 });
+        if (okPid(pid)) { const m = await DB.prepare(`SELECT score, ${SC} AS v FROM scores WHERE day = ? AND pid = ?`).bind(d, pid).first();
+          if (m && m.v > 0) { const r = await DB.prepare(`SELECT COUNT(*) AS n FROM scores WHERE day = ? AND ${SC} > ?`).bind(d, m.v).first(); me = { rank: r.n + 1, score: m.v }; }
+          else if (m) { const r = await DB.prepare('SELECT COUNT(*) AS n FROM scores WHERE day = ? AND score > ?').bind(d, m.score).first(); me = { rank: null, rall: r.n + 1, score: m.score, vf: 0 }; } }
+        const t = await DB.prepare(`SELECT COUNT(*) AS n FROM scores WHERE day = ? AND ${SC} > 0`).bind(d).first();
+        return json(req, { day: d, list, me, total: t ? t.n : 0, vfo: vfo ? 1 : 0 });
       }
       if (url.pathname === '/report' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
@@ -228,7 +319,12 @@ export default {
         let target = null;
         for (const x of top.results || []) if (await rowKey(b.day, x.pid) === b.k) { target = x.pid; break; }
         if (!target || target === b.by) return json(req, { ok: false });
+        // only someone who played the day's storm may report, and only a few names, so reports cannot be thrown around to annoy
+        if (!(await DB.prepare('SELECT 1 AS x FROM scores WHERE day = ? AND pid = ?').bind(b.day, b.by).first())) return json(req, { ok: false, err: 'noplay' });
         await ensureReports(DB);
+        const done = await DB.prepare('SELECT COUNT(*) AS n, SUM(pid = ?) AS same FROM reports WHERE day = ? AND by = ?').bind(target, b.day, b.by).first();
+        if (done && done.same) return json(req, { ok: true });
+        if (done && done.n >= REPORTS_A_DAY) return json(req, { ok: false, err: 'limit' });
         await DB.prepare('INSERT OR IGNORE INTO reports (day, pid, by, ts) VALUES (?, ?, ?, ?)').bind(b.day, target, b.by, Date.now()).run();
         return json(req, { ok: true });
       }
@@ -241,7 +337,7 @@ export default {
       if (url.pathname === '/claim' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
         if (!okPid(b.pid) || !okDay(b.day)) return json(req, { ok: false }, 400);
-        if (!(await integrityGate(env, b.it, `${b.pid}|${b.day}|claim`))) return json(req, { ok: false, err: 'integrity' }, 403);
+        if ((await integrityClass(env, b.it, `${b.pid}|${b.day}|claim`)) === 'mod') return json(req, { ok: false, err: 'integrity' }, 403); // prizes go to verified scores only (settle)
         const p = await DB.prepare('SELECT stars, claimed FROM prizes WHERE day = ? AND pid = ?').bind(b.day, b.pid).first();
         if (!p || p.claimed) return json(req, { ok: false, stars: 0 });
         const u = await DB.prepare('UPDATE prizes SET claimed = 1 WHERE day = ? AND pid = ? AND claimed = 0').bind(b.day, b.pid).run();
@@ -265,6 +361,66 @@ export default {
           if (!c || c.n < 300) await DB.prepare('INSERT OR IGNORE INTO errs (day, h, m, s, v, p, l) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(d, h, m, s2, v, p, l).run();
         }
         return json(req, { ok: true });
+      }
+      if (url.pathname === '/ping' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({}));
+        const v = typeof b.v === 'string' && /^bhs-v\d{1,4}$/.test(b.v) ? b.v : null, p = b.p === 'app' ? 'app' : 'web', l = typeof b.l === 'string' && /^[a-z]{2}$/.test(b.l) ? b.l : '--';
+        if (!v) return json(req, { ok: false }, 400);
+        await ensurePings(DB);
+        await DB.prepare('INSERT INTO pings (day, v, p, l, n) VALUES (?, ?, ?, ?, 1) ON CONFLICT (day, v, p, l) DO UPDATE SET n = n + 1').bind(day(), v, p, l).run();
+        if (typeof b.a === 'string' && AGE.test(b.a)) { await ensureEvs(DB); await evAdd(DB, day(), v, p, 'age_' + b.a, 1).run(); }
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/itv' && req.method === 'POST') { // the app's device check, once a day (fleet points have no token of their own)
+        const b = await req.json().catch(() => ({})), today = day();
+        if (!okPid(b.pid) || !okDay(b.day) || (b.day !== today && b.day !== day(Date.now() - 36e5 * 2))) return json(req, { ok: false }, 400);
+        const cls = await integrityClass(env, b.it, `${b.pid}|${b.day}|itv`);
+        await ensureItv(DB);
+        await DB.prepare('INSERT OR REPLACE INTO itv (day, pid, cls) VALUES (?, ?, ?)').bind(b.day, b.pid, cls).run();
+        return json(req, { ok: true, vf: cls === 'ok' ? 1 : 0 });
+      }
+      if (url.pathname === '/ev' && req.method === 'POST') {
+        const b = await req.json().catch(() => ({}));
+        const v = typeof b.v === 'string' && /^bhs-v\d{1,4}$/.test(b.v) ? b.v : null, p = b.p === 'app' ? 'app' : 'web', today = day();
+        const d = okDay(b.d) && b.d <= today && b.d >= day(Date.now() - 3 * 864e5) ? b.d : today; // counts kept on the phone a few days still land on their day
+        const e = b.e && typeof b.e === 'object' && !Array.isArray(b.e) ? Object.entries(b.e).filter(([k, n]) => EV_KEY.test(k) && Number.isFinite(+n) && +n >= 1).slice(0, 120) : [];
+        if (!v || !e.length) return json(req, { ok: false }, 400);
+        await ensureEvs(DB);
+        await DB.batch(e.map(([k, n]) => evAdd(DB, d, v, p, k, Math.min(k[0] === 's' && k[2] === '_' ? 1e6 : 50, Math.floor(+n)))));
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/evs' && req.method === 'GET') {
+        const days = Math.min(120, Math.max(1, +url.searchParams.get('days') || 14));
+        await ensureEvs(DB);
+        const r = await DB.prepare('SELECT day, v, p, e, n FROM evs WHERE day >= ? ORDER BY day DESC, e').bind(day(Date.now() - (days - 1) * 864e5)).all();
+        return json(req, { list: r.results || [] });
+      }
+      if (url.pathname === '/live' && req.method === 'POST') {
+        await ensureEvs(DB);
+        await DB.prepare('INSERT INTO live (slot, n) VALUES (?, 1) ON CONFLICT (slot) DO UPDATE SET n = n + 1').bind(Math.floor(Date.now() / 3e5)).run();
+        return json(req, { ok: true });
+      }
+      if (url.pathname === '/live' && req.method === 'GET') {
+        const days = Math.min(3, Math.max(1, +url.searchParams.get('days') || 1));
+        await ensureEvs(DB);
+        const r = await DB.prepare('SELECT slot, n FROM live WHERE slot >= ? ORDER BY slot').bind(Math.floor(Date.now() / 3e5) - days * 288).all();
+        return json(req, { list: r.results || [] });
+      }
+      if (url.pathname === '/sus' && req.method === 'GET') { // results near the ceilings: a list to look at by hand, nothing is removed
+        const d = okDay(url.searchParams.get('day')) ? url.searchParams.get('day') : day(Date.now() - 864e5);
+        const sc = await DB.prepare('SELECT substr(pid, 1, 6) AS k, name, score, secs, subs FROM scores WHERE day = ? AND score > secs * ? ORDER BY score * 1.0 / secs DESC LIMIT 20').bind(d, MAX_RATE * 0.6).all();
+        const F = globalThis.BHS_FMIS, ms = F ? F.day(d) : [], fm = [];
+        for (const m of ms) {
+          let r = { results: [] }; try { r = await DB.prepare('SELECT substr(pid, 1, 6) AS k, id, best, tries FROM fleet_fm WHERE day = ? AND id = ? AND best >= ? ORDER BY best DESC LIMIT 10').bind(d, m.id, Math.max(m.tg[2] * 2, Math.floor(m.max * 0.6))).all(); } catch (e) {}
+          fm.push(...(r.results || []));
+        }
+        return json(req, { day: d, rate: MAX_RATE, scores: sc.results || [], fm });
+      }
+      if (url.pathname === '/pings' && req.method === 'GET') {
+        const days = Math.min(90, Math.max(1, +url.searchParams.get('days') || 14));
+        await ensurePings(DB);
+        const r = await DB.prepare('SELECT day, v, p, l, n FROM pings WHERE day >= ? ORDER BY day DESC, n DESC').bind(day(Date.now() - (days - 1) * 864e5)).all();
+        return json(req, { list: r.results || [] });
       }
       if (url.pathname === '/errs' && req.method === 'GET') {
         const days = Math.min(30, Math.max(1, +url.searchParams.get('days') || 3));

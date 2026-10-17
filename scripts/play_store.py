@@ -3,7 +3,7 @@
 The service account (secret PLAY_SERVICE_ACCOUNT_JSON) has only these Play Console permissions:
 view app info, release to testing tracks, manage store presence, reply to reviews.
 This script touches store listings (texts, phone screenshots, video link) and testing-track releases
-(internal, alpha, beta) and nothing else: no in-app products, prices, policy declarations or production.
+(internal, alpha, beta; a new .aab can be uploaded for them) and nothing else: no in-app products, prices, policy declarations or production.
 
 Every run works inside one Play "edit". Without --apply the edit is thrown away, so nothing changes;
 the run only prints what it would do.
@@ -20,7 +20,7 @@ PKG = 'com.liaslabs.blackholestorm'
 ROOT = Path(__file__).resolve().parent.parent / 'store' / 'listings'
 FRAMES_FROM = {'es-419': 'es-ES', 'pt-PT': 'pt-BR'}  # these listings share another language's frames
 # the order the phone screenshots show in on Play (the en-US listing was arranged this way by hand: action first)
-ORDER = ['1-gameplay', '7-quasar-jet', '2-boss', '8-radiation', '6-survival', '3-laboratory', '4-map', '5-menu']
+ORDER = ['1-gameplay', '7-quasar-jet', '2-boss', '8-radiation', '8-fleet', '6-survival', '3-laboratory', '4-map']
 KEEP_IMAGES = {'en-US'}  # arranged by hand in Play Console; never replaced from here
 SUMMARY = os.environ.get('GITHUB_STEP_SUMMARY')
 out = []
@@ -87,7 +87,8 @@ def listings(ed, eid, only, video_tr, apply):
         patch = {k: L[k] for k in ('title', 'shortDescription', 'fullDescription') if L[k] is not None and L[k] != R.get(k, '')}
         if lang == 'tr-TR' and video_tr and video_tr != R.get('video', ''):
             patch['video'] = video_tr
-        imgs = ed.images().list(packageName=PKG, editId=eid, language=lang, imageType='phoneScreenshots').execute().get('images', [])
+        # a language not yet in Play has no listing to ask for images (404); it is created with the texts first, then the frames go up
+        imgs = ed.images().list(packageName=PKG, editId=eid, language=lang, imageType='phoneScreenshots').execute().get('images', []) if R else []
         same = [i.get('sha256') for i in imgs] == [sha256(p) for p in L['shots']]
         notes = []
         if not R:
@@ -115,6 +116,29 @@ def listings(ed, eid, only, video_tr, apply):
     return changed
 
 
+def videos(ed, eid, only, video_tr, video_en, apply):
+    """Only the promo video link of each listing: tr-TR gets the Turkish video, every other language the English one.
+    Texts and images are left exactly as they are in Play."""
+    say('## Tanıtım videosu · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
+    remote = {l['language']: l for l in ed.listings().list(packageName=PKG, editId=eid).execute().get('listings', [])}
+    changed = 0
+    for lang in sorted(remote):
+        if only and lang not in only:
+            continue
+        R, want = remote[lang], (video_tr if lang == 'tr-TR' else video_en)
+        if not want or want == R.get('video', ''):
+            say(f"- **{lang}**: aynı, dokunulmaz" if want else f"- **{lang}**: bağlantı verilmedi, dokunulmaz")
+            continue
+        say(f"- **{lang}**: video {R.get('video') or '(yok)'} → {want}")
+        changed += 1
+        if apply:
+            body = {'language': lang, **{k: R.get(k, '') for k in ('title', 'shortDescription', 'fullDescription') if k in R}, 'video': want}
+            ed.listings().update(packageName=PKG, editId=eid, language=lang, body=body).execute()
+    say('')
+    say(f'{changed} dilde video ' + ('değişti.' if apply else 'değişecek.'))
+    return changed
+
+
 TEST_TRACKS = ('internal', 'alpha', 'beta')  # production is never touched from here
 
 
@@ -127,15 +151,34 @@ def notes_for(name):
     return [{'language': lang, 'text': txt.strip()} for lang, txt in re.findall(r'<([a-z]{2,3}(?:-[A-Za-z0-9]+)?)>\n(.*?)\n</\1>', m.group(0), re.S)]
 
 
-def release(ed, eid, track, code, apply):
+def release(ed, eid, track, code, apply, aab='', vname=''):
     say(f'## Sürüm · {track} · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
     if track not in TEST_TRACKS:
         sys.exit(f'{track}: yalnızca test kanalları ({", ".join(TEST_TRACKS)})')
     codes = {str(b['versionCode']) for b in ed.bundles().list(packageName=PKG, editId=eid).execute().get('bundles', [])}
-    if code not in codes:
-        sys.exit(f'Kod {code} Play\'e yüklenmemiş (yüklü kodlar: {", ".join(sorted(codes, key=int))})')
     tracks = {t['track']: t.get('releases', []) for t in ed.tracks().list(packageName=PKG, editId=eid).execute().get('tracks', [])}
-    name = next((r['name'] for rs in tracks.values() for r in rs if code in r.get('versionCodes', []) and r.get('name')), code)
+    if aab:
+        # a new bundle from the Android build: uploaded inside this edit, so a refused run leaves nothing behind
+        p = Path(aab)
+        if not p.is_file():
+            sys.exit(f'Paket bulunamadı: {aab}')
+        if code in codes:
+            sys.exit(f'Kod {code} zaten Play\'de; paketi tekrar yüklemeye gerek yok (paketsiz çalıştır)')
+        if not re.fullmatch(r'\d+\.\d+\.\d+', vname or ''):
+            sys.exit('Paketle birlikte sürüm adı gerekli (ör. 1.4.9)')
+        say(f'Paket: {p.name} ({p.stat().st_size / 1e6:.1f} MB), kod {code} olarak yüklenecek')
+        if apply:
+            up = ed.bundles().upload(packageName=PKG, editId=eid,
+                                     media_body=MediaFileUpload(str(p), mimetype='application/octet-stream', resumable=True)).execute()
+            got = str(up.get('versionCode'))
+            if got != code:
+                sys.exit(f'Paketteki kod {got}, beklenen {code}: hiçbir şey kaydedilmedi')
+            say(f'Yüklendi: kod {got}')
+        name = f'{code} ({vname})'
+    else:
+        if code not in codes:
+            sys.exit(f'Kod {code} Play\'e yüklenmemiş (yüklü kodlar: {", ".join(sorted(codes, key=int))})')
+        name = next((r['name'] for rs in tracks.values() for r in rs if code in r.get('versionCodes', []) and r.get('name')), code)
     ver = re.search(r'\(([\d.]+)\)', name)
     notes = notes_for(ver.group(1)) if ver else []
     cur = tracks.get(track, [])
@@ -161,16 +204,20 @@ def release(ed, eid, track, code, apply):
 
 def main():
     a = argparse.ArgumentParser()
-    a.add_argument('task', choices=['status', 'listings', 'release'])
+    a.add_argument('task', choices=['status', 'listings', 'release', 'video'])
     a.add_argument('--apply', action='store_true', help='keep the edit (otherwise it is discarded)')
     a.add_argument('--send-for-review', action='store_true', help='send the committed changes for review right away')
     a.add_argument('--only', default='', help='comma-separated languages, e.g. tr-TR,de-DE')
     a.add_argument('--video-tr', default='', help='YouTube link for the tr-TR listing')
+    a.add_argument('--video-en', default='', help='video: YouTube link for every listing other than tr-TR')
     a.add_argument('--track', default='alpha', help='release: internal, alpha or beta')
-    a.add_argument('--version-code', default='', help='release: version code already uploaded to Play')
+    a.add_argument('--version-code', default='', help='release: version code already uploaded to Play (or in --aab)')
+    a.add_argument('--aab', default='', help='release: an .aab from the Android build to upload first')
+    a.add_argument('--version-name', default='', help='release: version name for an uploaded .aab, e.g. 1.4.9')
     o = a.parse_args()
-    if o.video_tr and not o.video_tr.startswith(('https://www.youtube.com/', 'https://youtu.be/', 'https://youtube.com/')):
-        sys.exit('video-tr bir YouTube bağlantısı olmalı')
+    for v in (o.video_tr, o.video_en):
+        if v and not v.startswith(('https://www.youtube.com/', 'https://youtu.be/', 'https://youtube.com/')):
+            sys.exit('video bağlantısı bir YouTube bağlantısı olmalı')
     ed = api().edits()
     eid = ed.insert(packageName=PKG, body={}).execute()['id']
     keep = False
@@ -181,7 +228,9 @@ def main():
             if o.task == 'release':
                 if not o.version_code.isdigit():
                     sys.exit('release için --version-code gerekli')
-                n = release(ed, eid, o.track, o.version_code, o.apply)
+                n = release(ed, eid, o.track, o.version_code, o.apply, o.aab, o.version_name)
+            elif o.task == 'video':
+                n = videos(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.video_en.strip(), o.apply)
             else:
                 n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
             if o.apply and n:
@@ -190,6 +239,14 @@ def main():
                 try:
                     ed.commit(packageName=PKG, editId=eid, changesNotSentForReview=not sent).execute()
                 except HttpError as e:
+                    if not sent and 'sent for review automatically' in str(e):
+                        # nothing else waits in the Console: Play sends every change itself and refuses the flag,
+                        # so the same edit is committed without it (the edit holds only what this run made)
+                        say('Play\'de bekleyen başka değişiklik yok, değişiklikler kendiliğinden gönderiliyor; ayarsız kaydediliyor.')
+                        ed.commit(packageName=PKG, editId=eid).execute()
+                        keep = True
+                        say('Kaydedildi ve gönderildi.')
+                        return
                     # Play refuses to send for review from the API while changes made in the Console UI are waiting;
                     # then the edit is saved unsent and the review is started from Publishing overview.
                     if not sent or 'changesNotSentForReview' not in str(e):

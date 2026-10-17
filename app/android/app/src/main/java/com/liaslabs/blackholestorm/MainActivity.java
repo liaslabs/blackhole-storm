@@ -15,6 +15,7 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(BhsPlugin.class);
+        com.google.android.gms.games.PlayGamesSdk.initialize(this); // Play Games signs the player in by itself when it can (cloud backup)
         super.onCreate(savedInstanceState);
         getWindow().getDecorView().setBackgroundColor(0xFF03040A);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);

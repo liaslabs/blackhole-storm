@@ -48,6 +48,8 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-36" "build-tools;35.0.0" > /dev/null
 
       - name: Oyunu derle ve uygulamaya koy
+        env:
+          BHS_APPVER: ${{ inputs.version_name }} (${{ inputs.version_code }})
         run: |
           python3 src/build.py
           cd app

@@ -46,9 +46,12 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           GP_SA: ${{ secrets.GP_SA }}
           GP_PKG: ${{ secrets.GP_PKG }}
+          TRUST_PIDS: ${{ secrets.TRUST_PIDS }}
         run: |
           if [ -n "$GP_SA" ]; then printf '%s' "$GP_SA" | npx --yes wrangler@4 secret put GP_SA; echo "GP_SA aktarıldı"; else echo "GP_SA yok (satın alma doğrulaması kapalı)"; fi
           if [ -n "$GP_PKG" ]; then printf '%s' "$GP_PKG" | npx --yes wrangler@4 secret put GP_PKG; echo "GP_PKG aktarıldı"; fi
+          # install ids (comma separated) whose scores count as verified on a device Play Integrity cannot vouch for (the owner's test phones)
+          if [ -n "$TRUST_PIDS" ]; then printf '%s' "$TRUST_PIDS" | npx --yes wrangler@4 secret put TRUST_PIDS; echo "TRUST_PIDS aktarıldı"; fi
 
       - name: Kontrol
         run: |

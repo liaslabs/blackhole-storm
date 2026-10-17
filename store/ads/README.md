@@ -32,7 +32,7 @@ Uygulama yüklemeleri › Android › Blackhole Storm** seçilir; reklamları Go
 | Drag your black hole, swallow planets and grow. Real Hubble and Webb images! | Kara deliğini sürükle, gezegenleri yut ve büyü. Gerçek Hubble ve Webb görüntüleri! |
 | Hundreds of levels, epic bosses and powers: shield, supernova, quasar jet. | Yüzlerce seviye, dev bosslar ve güçler: kalkan, süpernova, kuasar jeti. |
 | Survive the Daily Storm and climb the world ranking. | Günün Fırtınasında hayatta kal, dünya sıralamasında yüksel. |
-| Free to play, 10 languages, plays offline. | Ücretsiz, 10 dil, internetsiz oynanır. |
+| Free to play, 10+ languages, plays offline. | Ücretsiz, 10+ dil, internetsiz oynanır. |
 | Upgrade your black hole in the Laboratory and evolve it into a quasar. | Laboratuvarda kara deliğini geliştir ve kuasara dönüştür. |
 
 ## Oynanabilir reklam teknik notları
@@ -43,7 +43,7 @@ Uygulama yüklemeleri › Android › Blackhole Storm** seçilir; reklamları Go
 
 ## Video notları
 
-- **Oynanış derlemesi (önerilen, 30,7 sn):** `video/blackhole-storm-gameplay-30s-{en,tr}.mp4`. Gerçek bir Hayatta Kalma kaydından seçilmiş anlar (kuasar jeti, Vortex, kalkanla meteor kuşağı, Hawking patlaması, Spectrum ve kombolar), oyundan çekilen boss radyasyonu, laboratuvar seviye atlama gösterisi ve ana menü, sonunda kapanış kartı. Müzik: oyunun boss teması (`music/boss.mp3`, 18. saniyeden).
+- **Oynanış derlemesi (önerilen, 30,6 sn, 15 Eki yenilendi):** `video/blackhole-storm-gameplay-30s-{en,tr}.mp4`. 1.5.0 derlemesinden kare kare çekildi (otomatik oyuncu, yeni kara delik kabukları), her dil kendi arayüzüyle: kara delik gezegen yutup büyüyor, meteor yağmuru, Altın Yay (meteorlar dahil her şeyi yutar), Vortex (kara deliğin içinde ejderha avatarının gücü parlar), Kırmızı Dev bossu, Süpernova bossunun radyasyonu, kara delik hareket ederken kuasar jeti, 9 efsane ve nadir avatar, kapanış kartı "Ücretsiz · 10+ dil · İnternetsiz". Müzik: oyunun boss teması (`music/boss.mp3`, 18. saniyeden). Play'deki tanıtım videosu alanı YouTube bağlantısı ister; şimdilik boş bırakıldı.
 
 - Görüntüler oyunun kendisinden kare kare çekildi (otomatik oyuncu oynuyor, montaj efekti yok): seviye 29, seviye 30 bossu, seviye 181 kuasar jeti, Hayatta Kalma (jetli) ve kapanış kartı.
 - 15 sn kesit: yut (3 sn), boss (4 sn), kuasar jeti (3 sn), Hayatta Kalma (2 sn), kapanış (3 sn).

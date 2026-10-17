@@ -7,7 +7,7 @@ placeholder comments; the translations come from i18n/*.json.
 
 Usage:  python3 src/build.py            -> writes index.html in the repo root
 """
-import glob, json, os
+import glob, json, os, sys
 
 SRC = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SRC)
@@ -23,11 +23,22 @@ def main():
     # the V2 drag engine lives in its own file and is inlined into the game script
     assert src.count('//@@V2_ENGINE@@') == 1
     src = src.replace('//@@V2_ENGINE@@', read(f'{SRC}/v2.js').rstrip('\n'))
+    # the name filter is shared with the leaderboard server (server/worker.js imports the same file)
+    assert src.count('//@@FLEET@@') == 1
+    src = src.replace('//@@FLEET@@', read(f'{SRC}/fleet.js').rstrip('\n'))
+    assert src.count('//@@NAMES@@') == 1
+    src = src.replace('//@@NAMES@@', read(f'{SRC}/names.js').rstrip('\n'))
+    # the fleet missions' catalogue is shared with the leaderboard server too
+    assert src.count('//@@FMIS@@') == 1
+    src = src.replace('//@@FMIS@@', read(f'{SRC}/fmis.js').rstrip('\n'))
     # build stamp for error reports: the service worker cache name (bumped with every web release)
     import re
     m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))
     assert src.count("'@@BUILD@@'") == 1
     src = src.replace("'@@BUILD@@'", json.dumps(m.group(1) if m else 'dev'))
+    # the Android build passes its version name and code (e.g. "1.5.0 (31)"), shown in Settings next to the install number
+    assert src.count("'@@APPVER@@'") == 1
+    src = src.replace("'@@APPVER@@'", json.dumps(os.environ.get('BHS_APPVER', '')))
     for ph in ('FONT_DATA', 'SPRITE_DATA', 'SFX_DATA', 'ASSET_DATA', 'I18N_DATA'):
         assert src.count(f'<!--{ph}-->') == 1, ph
     langs = {}
@@ -47,9 +58,10 @@ def main():
               .replace('<!--SFX_DATA-->', read(f'{SRC}/blocks/sfx.html').rstrip('\n'))
               .replace('<!--ASSET_DATA-->', read(f'{SRC}/blocks/assets.html').rstrip('\n'))
               .replace('<!--I18N_DATA-->', i18n))
-    with open(f'{ROOT}/index.html', 'w', encoding='utf-8') as f:
+    dest = sys.argv[1] if len(sys.argv) > 1 else f'{ROOT}/index.html'  # another file for a side build (the default is the game itself)
+    with open(dest, 'w', encoding='utf-8') as f:
         f.write(out)
-    print('built index.html', len(out), 'bytes;', {k: len(v) for k, v in langs.items()})
+    print('built', os.path.basename(dest), len(out), 'bytes;', {k: len(v) for k, v in langs.items()})
 
 
 if __name__ == '__main__':

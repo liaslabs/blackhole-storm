@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS scores (
   secs  INTEGER NOT NULL,          -- how long the run lasted
   ts    INTEGER NOT NULL,          -- unix ms of the best submission
   subs  INTEGER NOT NULL DEFAULT 1,-- submissions that day (rate limit)
+  av    TEXT,                      -- avatar key shown next to the name (1.5.0; added by the Worker on older databases)
   PRIMARY KEY (day, pid)
 );
 CREATE INDEX IF NOT EXISTS scores_day_score ON scores (day, score DESC);

@@ -37,6 +37,7 @@
         </provider>
 
         <!-- AdMob app id (not a secret: it is in every copy of the app) -->
+        <meta-data android:name="com.google.android.gms.games.APP_ID" android:value="@string/game_services_project_id" />
         <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-2380408512555993~2105829637" />
 
         <!-- game reminders scheduled by the game itself (no server, no push) -->

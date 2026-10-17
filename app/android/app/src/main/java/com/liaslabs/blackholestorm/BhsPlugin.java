@@ -1,10 +1,13 @@
 package com.liaslabs.blackholestorm;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
+import android.app.ApplicationExitInfo;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.os.Build;
 import android.os.Handler;
@@ -51,7 +54,25 @@ import com.getcapacitor.annotation.PermissionCallback;
 import androidx.core.app.NotificationManagerCompat;
 import org.json.JSONObject;
 import com.google.android.play.core.integrity.IntegrityManagerFactory;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.games.GamesClientStatusCodes;
+import com.google.android.gms.games.PlayGames;
+import com.google.android.gms.games.SnapshotsClient;
+import com.google.android.gms.games.snapshot.Snapshot;
+import com.google.android.gms.games.snapshot.SnapshotMetadata;
+import com.google.android.gms.games.snapshot.SnapshotMetadataChange;
+import com.google.android.gms.tasks.Task;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
 import com.google.android.play.core.integrity.StandardIntegrityManager;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,6 +156,9 @@ public class BhsPlugin extends Plugin {
                             stalls.add(t0 + "|" + d + "|" + top + " " + c + "/" + n);
                             while (stalls.size() > 6) stalls.poll();
                         }
+                        // a hold this long may end with Android closing the app ("not responding"): it is written down
+                        // at once, so the next start can still tell where the UI thread was stuck
+                        if (d >= 2500) diag().edit().putString("freeze", System.currentTimeMillis() + "|" + d + " ms · " + phase + " · " + device() + "|" + whereDeep(mt.getStackTrace()) + " " + c + "/" + n).apply();
                     }
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
@@ -161,6 +185,107 @@ public class BhsPlugin extends Plugin {
             break;
         }
         return mine == null || mine.equals(top) ? top : mine + " < " + top;
+    }
+
+    // the top frames of the UI thread, for a long hold
+    private static String whereDeep(StackTraceElement[] st) {
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < st.length && i < 12; i++) { if (i > 0) b.append(" < "); b.append(brief(st[i])); }
+        return b.length() > 700 ? b.substring(0, 700) : b.toString();
+    }
+
+    // what the game was doing (menu, fleet, level start...), set by the game at each change of screen, for the notes above
+    private volatile String phase = "app start, game not loaded yet";
+
+    @PluginMethod
+    public void mark(PluginCall call) {
+        String v = call.getString("s", "");
+        phase = v == null ? "" : v.length() > 40 ? v.substring(0, 40) : v;
+        call.resolve();
+    }
+
+    private static String device() {
+        return Build.MANUFACTURER + " " + Build.MODEL + " a" + Build.VERSION.SDK_INT;
+    }
+
+    private SharedPreferences diag() {
+        return getContext().getSharedPreferences("bhs_diag", Context.MODE_PRIVATE);
+    }
+
+    // -> {list: [{kind, ts, desc, at}]}: how the app ended since the last call, if it did not end well (Android 11+:
+    // "not responding" or a crash, from Android's own record; any Android: a UI-thread hold of 2.5 s or more noted by the
+    // watch above). Only code locations, nothing personal. Each one is told once.
+    @PluginMethod
+    public void lastExit(PluginCall call) {
+        JSArray a = new JSArray();
+        SharedPreferences p = diag();
+        try {
+            String fz = p.getString("freeze", null);
+            if (fz != null) {
+                String[] x = fz.split("\\|", 3);
+                JSObject o = new JSObject();
+                o.put("kind", "freeze");
+                o.put("ts", Long.parseLong(x[0]));
+                o.put("desc", x.length > 1 ? x[1] : "");
+                o.put("at", x.length > 2 ? x[2] : "");
+                a.put(o);
+            }
+        } catch (Throwable e) {}
+        long seen = p.getLong("exitSeen", 0), max = seen;
+        if (Build.VERSION.SDK_INT >= 30) {
+            try {
+                ActivityManager am = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+                List<ApplicationExitInfo> list = am.getHistoricalProcessExitReasons(getContext().getPackageName(), 0, 8);
+                for (ApplicationExitInfo i : list) {
+                    if (i.getTimestamp() <= seen) continue;
+                    max = Math.max(max, i.getTimestamp());
+                    int r = i.getReason();
+                    // the ordinary ends are left out: the game closing itself, the player swiping it away, Android freeing memory for
+                    // another app, an update; anything else is told, with Android's code (a phone maker's own "not responding"
+                    // close may not be filed as an ANR)
+                    if (r == ApplicationExitInfo.REASON_EXIT_SELF || r == ApplicationExitInfo.REASON_LOW_MEMORY || r == ApplicationExitInfo.REASON_USER_REQUESTED
+                        || r == ApplicationExitInfo.REASON_USER_STOPPED || r == ApplicationExitInfo.REASON_DEPENDENCY_DIED || r == 15 || r == 16) continue;
+                    // a phone maker's "clear from recents" (HyperOS: SwipeUpClean) is the player closing the game, not a fault
+                    if (r == ApplicationExitInfo.REASON_OTHER && i.getDescription() != null && i.getDescription().contains("SwipeUpClean")) continue;
+                    JSObject o = new JSObject();
+                    o.put("kind", r == ApplicationExitInfo.REASON_ANR ? "anr" : r == ApplicationExitInfo.REASON_CRASH ? "crash" : r == ApplicationExitInfo.REASON_CRASH_NATIVE ? "native" : "r" + r);
+                    o.put("ts", i.getTimestamp());
+                    String d = i.getDescription();
+                    d = device() + " · " + (d == null ? "" : d);
+                    o.put("desc", d.length() > 200 ? d.substring(0, 200) : d);
+                    o.put("at", r == ApplicationExitInfo.REASON_ANR ? mainOf(i) : "");
+                    a.put(o);
+                }
+            } catch (Throwable e) {}
+        }
+        p.edit().remove("freeze").putLong("exitSeen", max).apply();
+        JSObject o = new JSObject();
+        o.put("list", a);
+        call.resolve(o);
+    }
+
+    // the UI thread's frames from Android's "not responding" trace (the "main" thread's block), shortened
+    private static String mainOf(ApplicationExitInfo i) {
+        try (InputStream in = i.getTraceInputStream()) {
+            if (in == null) return "";
+            BufferedReader r = new BufferedReader(new InputStreamReader(in));
+            StringBuilder b = new StringBuilder();
+            String line;
+            boolean on = false;
+            int n = 0, read = 0;
+            while ((line = r.readLine()) != null && read++ < 20000) {
+                if (!on) { if (line.startsWith("\"main\"")) on = true; continue; }
+                if (line.trim().isEmpty()) break;
+                String t = line.trim();
+                if (!t.startsWith("at ") && !t.startsWith("- waiting") && !t.startsWith("- locked") && !t.startsWith("- sleeping")) continue;
+                if (b.length() > 0) b.append(" < ");
+                b.append(t.replace("com.google.android.gms.", "gms.").replace("com.getcapacitor.", "cap.").replace("com.liaslabs.blackholestorm.", "bhs.").replaceAll("\\(.*?\\)", ""));
+                if (++n >= 14 || b.length() > 800) break;
+            }
+            return b.toString();
+        } catch (Throwable e) {
+            return "";
+        }
     }
 
     private static String brief(StackTraceElement e) {
@@ -438,6 +563,24 @@ public class BhsPlugin extends Plugin {
         JSObject o = new JSObject();
         o.put("ok", v);
         return o;
+    }
+
+    // ---- Play in-app review ----
+    // Google decides whether the card shows (it limits how often); the result says nothing about whether a rating was given.
+    @PluginMethod
+    public void review(PluginCall call) {
+        if (getActivity() == null) {
+            call.reject("review: no activity");
+            return;
+        }
+        ReviewManager m = ReviewManagerFactory.create(getContext());
+        m.requestReviewFlow().addOnCompleteListener(t -> {
+            if (!t.isSuccessful() || getActivity() == null) {
+                call.reject("review: " + (t.getException() != null ? t.getException().getMessage() : "no flow"));
+                return;
+            }
+            m.launchReviewFlow(getActivity(), t.getResult()).addOnCompleteListener(x -> call.resolve());
+        });
     }
 
     // ---- Play Integrity (standard requests) ----
@@ -779,5 +922,133 @@ public class BhsPlugin extends Plugin {
             });
             ad.show(getActivity());
         });
+    }
+
+    // ---- Cloud backup (1.5.1): Google Play Games saved games, in the player's own Google account ----
+    // Only a backup: the game writes the "main" slot now and then, and reads it back only into an empty save (a new phone,
+    // a new install). "old" keeps the backup a player passed over by starting fresh. The text is gzipped JSON.
+
+    // -> {signed, name, err}: Play Games signs the player in by itself at start when it can; this only asks. name is the
+    // player's Play Games name, so the settings row can show which profile the backup goes to
+    @PluginMethod
+    public void pgsState(PluginCall call) {
+        if (getActivity() == null) { call.reject("pgs: no activity"); return; }
+        pgsAnswer(call, PlayGames.getGamesSignInClient(getActivity()).isAuthenticated());
+    }
+
+    // the player's own tap on CONNECT: Play Games shows its sign-in
+    @PluginMethod
+    public void pgsSignIn(PluginCall call) {
+        if (getActivity() == null) { call.reject("pgs: no activity"); return; }
+        pgsAnswer(call, PlayGames.getGamesSignInClient(getActivity()).signIn());
+    }
+
+    private void pgsAnswer(PluginCall call, Task<com.google.android.gms.games.AuthenticationResult> task) {
+        task.addOnCompleteListener(t -> {
+            JSObject r = new JSObject();
+            boolean ok = t.isSuccessful() && t.getResult() != null && t.getResult().isAuthenticated();
+            r.put("signed", ok);
+            if (!ok) {
+                Exception e = t.getException();
+                r.put("err", e instanceof ApiException ? "api" + ((ApiException) e).getStatusCode() : e != null ? String.valueOf(e.getMessage()) : "notauth");
+                call.resolve(r);
+                return;
+            }
+            if (getActivity() == null) { call.resolve(r); return; }
+            PlayGames.getPlayersClient(getActivity()).getCurrentPlayer().addOnCompleteListener(p -> {
+                if (p.isSuccessful() && p.getResult() != null) r.put("name", p.getResult().getDisplayName());
+                call.resolve(r);
+            });
+        });
+    }
+
+    private static String slotName(PluginCall call) {
+        String s = call.getString("slot", "main");
+        return "old".equals(s) ? "bhs-old" : "bhs-main";
+    }
+
+    // {slot} -> {found, data, ts, device, level}
+    @PluginMethod
+    public void cloudRead(PluginCall call) {
+        if (getActivity() == null) { call.reject("cloud: no activity"); return; }
+        SnapshotsClient sc = PlayGames.getSnapshotsClient(getActivity());
+        sc.open(slotName(call), false, SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED).addOnCompleteListener(t -> {
+            JSObject r = new JSObject();
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                // no such slot yet: not an error, there is just nothing to restore
+                if (e instanceof ApiException && ((ApiException) e).getStatusCode() == GamesClientStatusCodes.SNAPSHOT_NOT_FOUND) { r.put("found", false); call.resolve(r); }
+                else call.reject("cloud: " + (e instanceof ApiException ? ((ApiException) e).getStatusCode() : String.valueOf(e)));
+                return;
+            }
+            SnapshotsClient.DataOrConflict<Snapshot> d = t.getResult();
+            Snapshot snap = d.isConflict() ? d.getConflict().getSnapshot() : d.getData();
+            try {
+                SnapshotMetadata m = snap.getMetadata();
+                r.put("found", true);
+                r.put("data", unzip(snap.getSnapshotContents().readFully()));
+                r.put("ts", m.getLastModifiedTimestamp());
+                r.put("device", m.getDeviceName());
+                r.put("level", m.getProgressValue());
+                call.resolve(r);
+            } catch (Exception e) {
+                call.reject("cloud: read " + e.getMessage());
+            } finally {
+                if (!d.isConflict()) sc.discardAndClose(snap);
+            }
+        });
+    }
+
+    // {slot, data, desc, level} -> {ok, ts}
+    @PluginMethod
+    public void cloudWrite(PluginCall call) {
+        if (getActivity() == null) { call.reject("cloud: no activity"); return; }
+        String data = call.getString("data", "");
+        if (data == null || data.isEmpty()) { call.reject("cloud: nothing to write"); return; }
+        SnapshotsClient sc = PlayGames.getSnapshotsClient(getActivity());
+        sc.open(slotName(call), true, SnapshotsClient.RESOLUTION_POLICY_MOST_RECENTLY_MODIFIED).addOnCompleteListener(t -> {
+            if (!t.isSuccessful()) {
+                Exception e = t.getException();
+                call.reject("cloud: " + (e instanceof ApiException ? ((ApiException) e).getStatusCode() : String.valueOf(e)));
+                return;
+            }
+            SnapshotsClient.DataOrConflict<Snapshot> d = t.getResult();
+            if (d.isConflict()) { call.reject("cloud: conflict"); return; }
+            Snapshot snap = d.getData();
+            try {
+                snap.getSnapshotContents().writeBytes(zip(data));
+            } catch (Exception e) {
+                sc.discardAndClose(snap);
+                call.reject("cloud: write " + e.getMessage());
+                return;
+            }
+            String desc = call.getString("desc", "");
+            SnapshotMetadataChange ch = new SnapshotMetadataChange.Builder()
+                .setDescription(desc == null ? "" : desc.length() > 90 ? desc.substring(0, 90) : desc)
+                .setProgressValue(call.getInt("level", 0))
+                .build();
+            sc.commitAndClose(snap, ch).addOnCompleteListener(c -> {
+                if (!c.isSuccessful()) { call.reject("cloud: commit"); return; }
+                JSObject r = new JSObject();
+                r.put("ok", true);
+                r.put("ts", c.getResult() != null ? c.getResult().getLastModifiedTimestamp() : System.currentTimeMillis());
+                call.resolve(r);
+            });
+        });
+    }
+
+    private static byte[] zip(String s) throws java.io.IOException {
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        try (GZIPOutputStream z = new GZIPOutputStream(b)) { z.write(s.getBytes(StandardCharsets.UTF_8)); }
+        return b.toByteArray();
+    }
+
+    private static String unzip(byte[] a) throws java.io.IOException {
+        try (GZIPInputStream z = new GZIPInputStream(new ByteArrayInputStream(a)); ByteArrayOutputStream b = new ByteArrayOutputStream()) {
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = z.read(buf)) > 0) b.write(buf, 0, n);
+            return new String(b.toByteArray(), StandardCharsets.UTF_8);
+        }
     }
 }
