@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Couldn't connect to Google Play Games. Try again a little later.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "To switch to another Google account: Google Account › Third-party connections › Blackhole Storm › Delete all; then tap CONNECT here.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Your progress is backed up, and the backup was read back and checked.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "The backup was written but couldn't be read back. Try again a little later."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "The backup was written but couldn't be read back. Try again a little later.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Your name inside your black hole: the letters appear one by one as it grows",
+"Süre dolunca +{n} sn (boss'ta +{n})": "When time runs out: +{n} s (+{n} on a boss)",
+"ZAMAN PARÇASI": "TIME PIECE",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "A green clock that shows up twice on timed levels (hard levels and bosses). Swallow it: +{n} seconds on the clock. It vanishes when its ring runs out",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "On timed levels tap the ⏱ button at the bottom, or use it on the screen that opens when time runs out: +{n} seconds, +{n} seconds on boss levels",
+"ZAMAN PARÇASI GELİYOR": "TIME PIECE INCOMING",
+"YUT: +{n} SN": "SWALLOW: +{n} S",
+"SÜRELİ SEVİYE": "TIMED LEVEL"
 }

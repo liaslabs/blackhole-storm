@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Google Play ゲームに接続できませんでした。少し時間をおいてもう一度お試しください。",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "別の Google アカウントに切り替えるには: Google アカウント › サードパーティとの接続 › Blackhole Storm › すべて削除 のあと、ここで「接続」をタップ。",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "進行状況をバックアップし、読み戻して確認しました。",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "バックアップは書き込まれましたが、読み戻せませんでした。少し時間をおいてもう一度お試しください。"
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "バックアップは書き込まれましたが、読み戻せませんでした。少し時間をおいてもう一度お試しください。",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "ブラックホールの中にあなたの名前：大きくなるほど一文字ずつ現れる",
+"Süre dolunca +{n} sn (boss'ta +{n})": "時間切れのとき：+{n}秒（ボス戦は+{n}秒）",
+"ZAMAN PARÇASI": "タイムピース",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "制限時間のあるレベル（ハードレベルとボス）で2回現れる緑の時計。飲み込むと：残り時間+{n}秒。リングが尽きると消える",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "制限時間のあるレベルでは下の⏱ボタンをタップ、または時間切れの画面で使う：+{n}秒、ボスレベルでは+{n}秒",
+"ZAMAN PARÇASI GELİYOR": "タイムピース出現",
+"YUT: +{n} SN": "飲み込め：+{n}秒",
+"SÜRELİ SEVİYE": "制限時間レベル"
 }

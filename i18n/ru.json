@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Не удалось подключиться к Google Play Играм. Попробуй чуть позже.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Чтобы сменить аккаунт Google: Аккаунт Google › Сторонние подключения › Blackhole Storm › Удалить все; затем нажми здесь ПОДКЛЮЧИТЬ.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Прогресс сохранён: копия прочитана обратно и проверена.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Копия записана, но прочитать её не удалось. Попробуй чуть позже."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Копия записана, но прочитать её не удалось. Попробуй чуть позже.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Твоё имя внутри чёрной дыры: буквы появляются одна за другой по мере её роста",
+"Süre dolunca +{n} sn (boss'ta +{n})": "Когда время вышло: +{n} с (+{n} против босса)",
+"ZAMAN PARÇASI": "ОСКОЛОК ВРЕМЕНИ",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "Зелёные часы, которые дважды появляются на уровнях со временем (сложные уровни и боссы). Проглоти: +{n} секунд к таймеру. Исчезают, когда кольцо опустеет",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "На уровнях со временем нажми кнопку ⏱ внизу или используй на экране, который открывается, когда время вышло: +{n} секунд, на уровнях с боссом +{n} секунд",
+"ZAMAN PARÇASI GELİYOR": "ЛЕТИТ ОСКОЛОК ВРЕМЕНИ",
+"YUT: +{n} SN": "ГЛОТАЙ: +{n} С",
+"SÜRELİ SEVİYE": "УРОВЕНЬ НА ВРЕМЯ"
 }

@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Girêdana bi Google Play Games re pêk nehat. Piçekî din dîsa biceribîne.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Ji bo derbasî hesabekî din ê Google bibî: Hesabê Google › Sepanên girêdayî › Blackhole Storm › Hemûyan jê bibe; paşê li vir GIRÊDE bitikîne.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Pêşketina te hat paşkopîkirin; paşkopî dîsa hat xwendin û kontrolkirin.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Paşkopî hat nivîsandin lê dîsa nehat xwendin. Piçekî din dîsa biceribîne."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Paşkopî hat nivîsandin lê dîsa nehat xwendin. Piçekî din dîsa biceribîne.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Navê te di nav qula te ya reş de: her ku mezin dibe, tîp yek bi yek xuya dibin",
+"Süre dolunca +{n} sn (boss'ta +{n})": "Dema dem diqede: +{n} ç (li hember boss +{n})",
+"ZAMAN PARÇASI": "PARÇEYA DEMÊ",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "Demjimêreke kesk ku di astên bi dem de (astên dijwar û boss) du caran xuya dibe. Daqurtîne: +{n} çirke li demê zêde dibe. Dema xeleka wê diqede winda dibe",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Di astên bi dem de li jêr bişkoka ⏱ bitikîne, an jî li ekrana ku dema dem diqede vedibe bi kar bîne: +{n} çirke, di astên boss de +{n} çirke",
+"ZAMAN PARÇASI GELİYOR": "PARÇEYA DEMÊ TÊ",
+"YUT: +{n} SN": "DAQURTÎNE: +{n} Ç",
+"SÜRELİ SEVİYE": "ASTA BI DEM"
 }

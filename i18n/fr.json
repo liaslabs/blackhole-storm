@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Impossible de se connecter à Google Play Jeux. Réessaie un peu plus tard.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Pour passer à un autre compte Google : Compte Google › Connexions tierces › Blackhole Storm › Tout supprimer ; puis touche CONNECTER ici.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Ta progression est sauvegardée ; la sauvegarde a été relue et vérifiée.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "La sauvegarde a été écrite mais n'a pas pu être relue. Réessaie un peu plus tard."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "La sauvegarde a été écrite mais n'a pas pu être relue. Réessaie un peu plus tard.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Ton nom dans ton trou noir : les lettres apparaissent une à une à mesure qu’il grandit",
+"Süre dolunca +{n} sn (boss'ta +{n})": "Quand le temps est écoulé : +{n} s (+{n} contre un boss)",
+"ZAMAN PARÇASI": "ÉCLAT DE TEMPS",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "Une horloge verte qui apparaît deux fois dans les niveaux chronométrés (niveaux difficiles et boss). Avale-la : +{n} secondes au chrono. Elle disparaît quand son anneau se vide",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Dans les niveaux chronométrés, touche le bouton ⏱ en bas, ou utilise-le sur l’écran qui s’ouvre quand le temps est écoulé : +{n} secondes, +{n} secondes dans les niveaux de boss",
+"ZAMAN PARÇASI GELİYOR": "UN ÉCLAT DE TEMPS ARRIVE",
+"YUT: +{n} SN": "AVALE : +{n} S",
+"SÜRELİ SEVİYE": "NIVEAU CHRONOMÉTRÉ"
 }

@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Tidak bisa terhubung ke Google Play Game. Coba lagi sebentar lagi.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Untuk pindah ke akun Google lain: Akun Google › Koneksi pihak ketiga › Blackhole Storm › Hapus semua; lalu ketuk HUBUNGKAN di sini.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Progresmu sudah dicadangkan; cadangan dibaca ulang dan diperiksa.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Cadangan sudah ditulis tapi tidak bisa dibaca ulang. Coba lagi sebentar lagi."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Cadangan sudah ditulis tapi tidak bisa dibaca ulang. Coba lagi sebentar lagi.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Namamu di dalam lubang hitammu: hurufnya muncul satu per satu saat lubangnya membesar",
+"Süre dolunca +{n} sn (boss'ta +{n})": "Saat waktu habis: +{n} dtk (+{n} melawan bos)",
+"ZAMAN PARÇASI": "KEPING WAKTU",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "Jam hijau yang muncul dua kali di level berwaktu (level sulit dan bos). Telan: +{n} detik di jam. Hilang saat cincinnya habis",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Di level berwaktu ketuk tombol ⏱ di bawah, atau pakai di layar yang muncul saat waktu habis: +{n} detik, +{n} detik di level bos",
+"ZAMAN PARÇASI GELİYOR": "KEPING WAKTU DATANG",
+"YUT: +{n} SN": "TELAN: +{n} DTK",
+"SÜRELİ SEVİYE": "LEVEL BERWAKTU"
 }

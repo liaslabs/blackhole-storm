@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Não foi possível conectar ao Google Play Games. Tente de novo daqui a pouco.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Para trocar de conta Google: Conta do Google › Conexões de terceiros › Blackhole Storm › Excluir tudo; depois toque em CONECTAR aqui.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Seu progresso está salvo; o backup foi lido de volta e conferido.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "O backup foi gravado, mas não pôde ser lido de volta. Tente de novo daqui a pouco."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "O backup foi gravado, mas não pôde ser lido de volta. Tente de novo daqui a pouco.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Seu nome dentro do seu buraco negro: as letras aparecem uma a uma conforme ele cresce",
+"Süre dolunca +{n} sn (boss'ta +{n})": "Quando o tempo acaba: +{n} s (+{n} contra um chefe)",
+"ZAMAN PARÇASI": "FRAGMENTO DE TEMPO",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "Um relógio verde que aparece duas vezes nos níveis com tempo (níveis difíceis e chefes). Engula: +{n} segundos no relógio. Ele some quando o anel se esvazia",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Nos níveis com tempo toque no botão ⏱ embaixo, ou use na tela que abre quando o tempo acaba: +{n} segundos, +{n} segundos em níveis de chefe",
+"ZAMAN PARÇASI GELİYOR": "FRAGMENTO DE TEMPO CHEGANDO",
+"YUT: +{n} SN": "ENGULA: +{n} S",
+"SÜRELİ SEVİYE": "NÍVEL COM TEMPO"
 }

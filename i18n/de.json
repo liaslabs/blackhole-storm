@@ -2216,5 +2216,13 @@
 "Google Play Games bağlantısı kurulamadı. Biraz sonra tekrar dene.": "Verbindung zu Google Play Games fehlgeschlagen. Versuche es etwas später erneut.",
 "Başka bir Google hesabına geçmek için: Google Hesabı › Bağlı uygulamalar › Blackhole Storm › Tümünü sil; sonra burada BAĞLAN.": "Zu einem anderen Google-Konto wechseln: Google-Konto › Verknüpfte Apps › Blackhole Storm › Alle löschen; dann hier VERBINDEN.",
 "İlerlemen yedeklendi ve yedek geri okunarak doğrulandı.": "Dein Fortschritt ist gesichert; die Sicherung wurde zurückgelesen und geprüft.",
-"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Die Sicherung wurde geschrieben, konnte aber nicht zurückgelesen werden. Versuche es etwas später erneut."
+"Yedek yazıldı ama geri okunamadı. Biraz sonra tekrar dene.": "Die Sicherung wurde geschrieben, konnte aber nicht zurückgelesen werden. Versuche es etwas später erneut.",
+"İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır": "Dein Name in deinem Schwarzen Loch: Je größer es wird, desto mehr Buchstaben erscheinen",
+"Süre dolunca +{n} sn (boss'ta +{n})": "Wenn die Zeit abläuft: +{n} s (beim Boss +{n})",
+"ZAMAN PARÇASI": "ZEITSPLITTER",
+"Süreli seviyelerde (zor seviyeler ve boss) iki kez görünen yeşil saat. Yut: süreye +{n} saniye. Etrafındaki halka bitince kaybolur": "Eine grüne Uhr, die in Zeitlevels (schwere Level und Bosse) zweimal erscheint. Schluck sie: +{n} Sekunden auf der Uhr. Sie verschwindet, wenn ihr Ring leer ist",
+"Süreli seviyelerde alttaki ⏱ düğmesine dokun ya da süre dolunca açılan ekranda kullan: +{n} saniye, boss seviyelerinde +{n} saniye": "Tippe in Zeitlevels unten auf die ⏱-Taste oder nutze ihn auf dem Bildschirm, der sich bei Zeitablauf öffnet: +{n} Sekunden, in Boss-Leveln +{n} Sekunden",
+"ZAMAN PARÇASI GELİYOR": "ZEITSPLITTER KOMMT",
+"YUT: +{n} SN": "SCHLUCKEN: +{n} S",
+"SÜRELİ SEVİYE": "ZEITLEVEL"
 }

@@ -101,8 +101,8 @@ const v2BtOn=()=>!G2.hm&&!G2.dstorm&&(G2.mode==='level'?level>20:G2.lv>20); /* s
 const FEAT=[['arcs',2],['shield',7],['arcpow',19],['bend',19],['nova',21],['arcs2',61],['hawking',140],['jet',180],['worm',250],['hor',350]];
 const v2FeatReady=id=>id==='arcs2'?rel(9)&&!HMODE:id==='bend'?rel(9)&&!HMODE&&v2Peak(level):id==='arcpow'?rel(9)&&G2.arcMax===0:id==='hawking'?labLv('hawk')>=1:id==='jet'?labLv('jet')>=1:id==='worm'?labLv('worm')>=1:id==='hor'?labLv('hor')>=1:true; // Hawking and the jet are introduced once their Laboratory module is built
 const HARD={t:[0,50,55],t7:75,first:60,met:[1,.7,.6],stars:[0,10,20]};
-function v2Hard(l){if(l<9||l%10===0||v2LevelType(l)!=='score')return 0;if(l%10===9)return l>=39?2:1;if(rel(12)&&l>60&&l%10===7&&!HMODE)return 1; /* 1.5.2: a calm clock on the 7s too, so the levels between storms are not a free walk */return l>20&&l%10===5?1:0;}
-function v2HardT(l){const h=v2Hard(l);return h?(l===9?HARD.first:rel(12)&&l%10===7?HARD.t7:HARD.t[h]):0;}
+function v2Hard(l){if(l<9||l%10===0||v2LevelType(l)!=='score')return 0;if(l%10===9)return l>=39?2:1;if(rel(11)&&l>60&&l%10===7&&!HMODE)return 1; /* 1.5.2: a calm clock on the 7s too, so the levels between storms are not a free walk */return l>20&&l%10===5?1:0;}
+function v2HardT(l){const h=v2Hard(l);return h?(l===9?HARD.first:rel(11)&&l%10===7?HARD.t7:HARD.t[h]):0;}
 function v2RuleFor(l){const t=v2LevelType(l);
   if(t==='restrict'){const s=RSETS[Math.floor(l/7)%2];/* the no-bright-bodies set was slow and unclear: only asteroids or moons/planets are ever banned */return {t,tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(t==='window'){const late=l>30;return {t,tip:'window',win:1,lo:late?1.6:1.4,hi:late?2.3:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:late?.4:.5};}
@@ -132,7 +132,7 @@ function v2Lv(){return gameMode==='survival'?(rel(9)&&STORM.on?effLevel():Math.m
 // score needed to finish level l (boss levels end with the boss instead)
 function v2Goal(l){if(l%10===0)return 0;const g=V2K.goal;let x=g.a+g.b*Math.pow(Math.min(l-1,19),g.p)+g.mid*clamp(l-20,0,15)+g.late*clamp(l-35,0,25); // flat from level 60 on: any level number stays playable // steep while you learn, gentler once speeds top out
   if(l%10===9)x*=g.storm;else if(l>=12&&l<=18)x*=g.intro;else if(l>20&&l%10===5&&v2Hard(l))x*=l<60||l>=150?1.05:.87; // the mid-universe hard level asks for most of its clock; between 60 and 150 the Lab is still filling up, so it asks less // storm levels are dense and fast; 12–18 each bring a new body to learn
-  if(rel(12)&&l>60&&!v2Hard(l)&&l%10!==9)x*=1+Math.min(.2,(l-60)*.0015); /* 1.5.2: the plain levels kept their level-60 goal while the Lab kept growing; now +0.15 % a level, +20 % at most (level 194) */
+  if(rel(11)&&l>60&&!v2Hard(l)&&l%10!==9)x*=1+Math.min(.2,(l-60)*.0015); /* 1.5.2: the plain levels kept their level-60 goal while the Lab kept growing; now +0.15 % a level, +20 % at most (level 194) */
   return Math.round(x*(rel(9)?l<=6?2:1.5:1)/100)*100;} /* 1.4.9: more to eat, so a higher goal keeps a level at 30–45 s */
 function v2Rules(l){
   const tb=(arr,d)=>arr[l]!==undefined?arr[l]:d;
@@ -143,10 +143,10 @@ function v2Rules(l){
   const w={crystal,meteor:l%10===9?meteor*.5:meteor,gold,moon:l===1?18:15,planet:l>=2?Math.min(10,5+l*.5):0,energy:l>=2?4:0,time:l>=4?3:0,bomb:l>=5?3:0,mini:l>=8?1.5:0,
     comet:l>=12?4:0,split:l>=13?3:0,anti:l>=14?Math.min(6,3+(l-14)*.2):0,magnet:l>=15?1.5:0,pulsar:l>=16?3:0,mpair:l>=17?2:0,dark:l>=18?3:0,mirror:l>=25?1.2:0,icec:l>=25?1.4:0};
   let rest=100;for(const k in w)rest-=w[k];w.ast=Math.max(20,rest);
-  const t5=rel(12)&&l>=2&&l<=5; /* 1.5.2: the first levels felt empty and slow: bodies come a third more often and a tenth faster */
+  const t5=rel(11)&&l>=2&&l<=5; /* 1.5.2: the first levels felt empty and slow: bodies come a third more often and a tenth faster */
   return {w,cap:t5?22:rel(9)?(l===1?14:l===2?16:18):l===1?8:l===2?10:12,capMul:Math.min(V2K.rMax/V2K.r0,1.2+.15*l),comboT:tb(V2K.comboT,2),
     speedK:(l>=6?1.15:1)*(rel(9)&&l>=2&&l<=10?1.2:1)*(t5?1.1:1),dirs:l>=11?4:l>=7?2:1,iv:Math.max(.5,1.05-.025*(l-1))*(l%10===9?.6:1)*(rel(9)?.58:1)*(t5?.75:1), /* 1.4.9: about twice as many bodies, so the screen is never empty */dense:l%10===9,boss:l%10===0,
-    dur:l%10===0?105:tb(V2K.dur,90),overload:l>=6,metIv:l<3?0:Math.max(1.7,4.4-l*.05)*(breather?1.35:1)*(l%10===9?1.4:1)/(1+Math.min(.3,Math.max(0,l-30)*.006)+(rel(12)&&!v2Hard(l)?Math.min(.2,Math.max(0,l-80)*.0017):0))}; /* 1.5.2: +0.2 more by level ~200, on the plain levels only: the storms and hard levels are hard enough */
+    dur:l%10===0?105:tb(V2K.dur,90),overload:l>=6,metIv:l<3?0:Math.max(1.7,4.4-l*.05)*(breather?1.35:1)*(l%10===9?1.4:1)/(1+Math.min(.3,Math.max(0,l-30)*.006)+(rel(11)&&!v2Hard(l)?Math.min(.2,Math.max(0,l-80)*.0017):0))}; /* 1.5.2: +0.2 more by level ~200, on the plain levels only: the storms and hard levels are hard enough */
 }
 
 // ── start / reset ─────────────────────────────────────
@@ -180,8 +180,8 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   G2.sigBack=null;G2.fxBusy=false;G2.featCard=mode==='level'&&!REPLAY&&!G2.script&&!(rule&&!TIPS[rule.tip])?(v2BossCard(l)||(FEAT.find(([id,lv])=>lv<=l&&!TIPS[id]&&v2FeatReady(id))||[])[0]||null):null; /* one card per level: a boss level shows its boss (or, from level 40, radiation) and the power card waits */
   G2.tck=null; /* 1.5.2: the time pieces of this level */
   G2.hard=mode==='level'&&!mod?v2Hard(l)||(G2.hm&&rel(9)&&v2HmT(l)?1:0):0;G2.novaHint=0;G2.shHint=0;G2.hkHint=0;
-  if(G2.hard){G2.dur=v2HardT(l)||HARD.t[1];if(v2Hard(l)&&!(rel(12)&&l%10===7))G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1); /* Hard Mode's own timer brings no extra meteors: it has its own */if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
-    later(()=>{if(G2.on&&G2.hard)v2Call(G2.hard>1?'ÇOK ZOR SEVİYE':rel(12)&&l%10===7?'SÜRELİ SEVİYE':'ZOR SEVİYE',Math.round(G2.dur)+' sn','#ff5a5f',1.8,true);},600);if(!TIPS.hard)later(()=>{if(G2.on&&G2.hard)v2Tip('hard',null);},2600);}
+  if(G2.hard){G2.dur=v2HardT(l)||HARD.t[1];if(v2Hard(l)&&!(rel(11)&&l%10===7))G2.L.metIv*=HARD.met[G2.hard]/(l%10===9?1.4:1); /* Hard Mode's own timer brings no extra meteors: it has its own */if(l%10===9)G2.L.w.meteor*=1.6; /* the storm level keeps its crowd and gets its meteors back */
+    later(()=>{if(G2.on&&G2.hard)v2Call(G2.hard>1?'ÇOK ZOR SEVİYE':rel(11)&&l%10===7?'SÜRELİ SEVİYE':'ZOR SEVİYE',Math.round(G2.dur)+' sn','#ff5a5f',1.8,true);},600);if(!TIPS.hard)later(()=>{if(G2.on&&G2.hard)v2Tip('hard',null);},2600);}
   if(G2.hm){const hk=rel(9)?1.8:1.6;G2.L.w.meteor*=hk;if(G2.L.metIv)G2.L.metIv/=hk;else if(l>=2)G2.L.metIv=4.4/hk;} /* Hard Mode: storm meteors from level 2, 1.6 times as many (1.8 from 1.4.9) */
   G2.decK=G2.hm?2:1;G2.chal=mode==='level'&&!mod&&!G2.hard?v2Chal(l):null;
   if(G2.chal==='shrink'){if(!TIPS.shrinkc)later(()=>{if(G2.on&&G2.chal)v2Tip('shrinkc',null);},3200);G2.L.cap=Math.round(G2.L.cap*1.5);G2.L.iv/=1.5;G2.decK=G2.hm?4:3; /* a crowd to eat, and a hole that starves fast */
@@ -320,8 +320,8 @@ function v2TutFill(dt){const s=G2.st;if(s<5||s>44||s>22&&s<29)return; /* 1.5.2: 
   G2.fillT=(G2.fillT||0)-dt;if(G2.fillT>0)return;let n=0;for(const o of G2.objs)if(o.st==='in'&&o.k!=='meteor')n++;if(n>=5)return;G2.fillT=.4;v2Edge('ast',0,rrnd(W*.15,W*.85));}
 function v2RunScript(dt){
   if(!G2.touched)return; // the tutorial waits for the first touch
-  if(!(G2.ready&&G2.rageT<=0&&G2.st>=44.5))G2.st+=dt*(rel(12)?1.6:rel(9)?1.35:1);
-  if(rel(12))v2TutFill(dt); // 1.4.9: the tutorial runs a third faster // hold the clock while Rage waits for its tap
+  if(!(G2.ready&&G2.rageT<=0&&G2.st>=44.5))G2.st+=dt*(rel(11)?1.6:rel(9)?1.35:1);
+  if(rel(11))v2TutFill(dt); // 1.4.9: the tutorial runs a third faster // hold the clock while Rage waits for its tap
   const E=G2.script;
   while(G2.si<E.length&&E[G2.si][0]<=G2.st){const [t,k,x]=E[G2.si++];
     if(k==='meteor'){const side=hX<W/2?1:-1,mx=clamp(hX+side*(G2.R+sp2(60)),sp2(24),W-sp2(24));v2Obj('meteor',mx,-sp2(30),0,v2Speed('meteor')*.8,{wait:1});v2Call('☄️ METEOR!','ONDAN KAÇ','#ff7a5c',1.2,true);continue;}
@@ -498,7 +498,7 @@ function v2Update(dt){
   G2.t+=dt;if(G2.afx&&G2.afx.length)v2ArcFxStep(dt);if(G2.immT>0)G2.immT-=dt;if(G2.wormCD>0)G2.wormCD-=dt;if(G2.wormFx)G2.wormFx.t+=dt;if(G2.horT>0)G2.horT-=dt;if(G2.horSlow>0)G2.horSlow-=dt/.3;if(G2.horFx)G2.horFx.t+=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.iceT>0){G2.iceT-=dt;if(G2.iceT<=0){G2.iceT=0;v2Pop(T('BUZ ÇÖZÜLDÜ'),'#8dffcb',16);}}if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
   if(G2.mode==='surv'){if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);} /* in levels the powers are introduced by the level-start cards */
   if(G2.featCard&&G2.t>.6&&gState==='playing'&&!G2.tip){const f=G2.featCard;if(f==='shield'&&!TIPS.gift){TIPS.gift=1;SHOP.shield++;saveG();updateUI();}if(f==='arcs')TIPS.meteor=1;if(TIPS[f]||v2Tip(f,null)){G2.featCard=null;G2.featShown=1;}}if(G2.sigBack&&!G2.tip&&!G2.featCard&&gState==='playing'&&G2.t>1.2){const b=G2.sigBack;G2.sigBack=null;sigShow(...b);} /* a held radio note, once the cards are read */if(G2.btCD>0)G2.btCD-=dt;if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
-  if(rel(12))v2TclkStep();
+  if(rel(11))v2TclkStep();
   if(G2.timeT>0){G2.timeT-=dt;if(G2.timeT<=0)v2Call('ZAMAN NORMALE DÖNDÜ','','#8fd0ff',.8);}
   if(G2.novaT>0){G2.novaT-=dt;if(G2.novaT<=0){G2.novaT=0;v2Call('NOVA BİTTİ','','#8fe9ff',.7);}}
   if(G2.overT>0){G2.overT-=dt;if(G2.overT<=0){G2.rr=V2K.r0+(G2.cap-V2K.r0)*.6;v2Call('ÇÖKÜŞ','KARA DELİK KÜÇÜLÜYOR','#b9a8ff',1.3);sfx('slow',{vol:.6,rate:.6});v2Burst(hX,hY,26,'#b9a8ff',2,6,.7);}}
@@ -1241,7 +1241,7 @@ function v2ClockPlus(sec,sub){G2.dur+=sec;v2Call('+'+sec+' '+T('sn'),sub,'#6dffd
 function v2TimeCry(){if(gState!=='playing'||!v2Timed()||G2.ending)return;if(SHOP.time<=0){sfx('buzz',{vol:.3});return;}SHOP.time--;useEv('tm');v2ClockPlus(v2CrySec(),T('ZAMAN KRİSTALİ'));vib(20);later(saveG,300);}
 function v2TclkStep(){if(!v2Timed()||G2.ending||gState!=='playing')return;const q=G2.tck||(G2.tck={n:0,d0:G2.dur,o:null});
   if(q.o&&q.o.st==='in'&&q.o.age>TCLK.life)q.o.st='dead';if(q.o&&q.o.st!=='in')q.o=null;
-  if(!q.o&&q.n<TCLK.at.length&&G2.t>=q.d0*TCLK.at[q.n]&&G2.dur-G2.t>6){q.n++;q.o=v2Edge('tclk',rpick([0,1,2]));}} /* never from below, where it would hide under the buttons */
+  if(!q.o&&q.n<TCLK.at.length&&G2.t>=q.d0*TCLK.at[q.n]&&G2.dur-G2.t>6){q.n++;q.o=v2Edge('tclk',rpick([0,1,2]));if(!TIPS.tclk){TIPS.tclk=1;later(saveG,500);v2Pop(T('ZAMAN PARÇASI GELİYOR · YUT: +5 SN'),'#6dffd0',16);}}} /* said once per install */ /* never from below, where it would hide under the buttons */
 function v2DrawTclk(o,r){const fade=Math.min(1,Math.max(0,(TCLK.life-o.age)/1.5));if(fade<=0)return;ctx.save();ctx.globalAlpha*=fade;ctx.translate(o.x,o.y);
   ctx.globalCompositeOperation='lighter';const g=ctx.createRadialGradient(0,0,r*.4,0,0,r*2.1);g.addColorStop(0,'rgba(109,255,208,.5)');g.addColorStop(1,'rgba(109,255,208,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r*2.1,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';
   ctx.fillStyle='#0c2a26';ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();ctx.lineWidth=Math.max(1.5,r*.16);ctx.strokeStyle='#6dffd0';ctx.stroke();
@@ -2127,7 +2127,7 @@ function v2Hud(){
   const tray=document.createElement('div');tray.id='boost2';$('hdr').appendChild(tray); /* the power tray: big buttons under the right thumb, not icons lost in the top bar */
   const hb=(id,ic,fn,lb)=>{const b=document.createElement('button');b.id=id;b.className='hb2';b.innerHTML=`<span class="ic">${ic}</span><i>${lb}</i><b></b>`;tray.appendChild(b);
     b.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();fn();});b.addEventListener('click',e=>e.stopPropagation());return b;};
-  if(rel(12))hb('tmTop','⏱',v2TimeCry,'+15 SN').classList.add('tm');
+  if(rel(11))hb('tmTop','⏱',v2TimeCry,'+15 SN').classList.add('tm');
   hb('hkTop',rel(10)?'\ue104':'💨',v2Hawking,'HAWKING');hb('shTop','🛡',v2Shield,'KALKAN');hb('diaTop','💎',()=>{if(G2.on&&gState==='playing')v2Nova();},'SÜPERNOVA');
   rb.addEventListener('pointerdown',e=>{e.preventDefault();if(G2.on&&gState==='playing')v2Tap();});
 }
