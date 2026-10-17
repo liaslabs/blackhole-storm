@@ -31,5 +31,16 @@ globalThis.BHS_FMIS = (() => {
   const tier = (m, v) => m.tg.filter(x => v >= x).length;
   const pts = (m, t) => t ? PTS[m.lv][t - 1] : 0;
   const chainNeed = n => Math.max(6, Math.min(30, 2 * n)); // the Fleet Chain: medals the fleet earns together today
-  return { L, byId, day, seed, kit, tier, pts, chainNeed, TRIES, CHAIN_STARS: 20 };
+  // 18 Oct: mission points. A run is measured against the gold target (gold = 1000, at most 1500); a fleet's points for one mission
+  // are the average of the members who played it, divided by at least 3, so a fleet needs three players to count in full; the day's
+  // fleet points are the three missions added up. The prizes are paid by the server and shown by the game.
+  const mp = (m, v) => Math.max(0, Math.min(1500, Math.round(v / m.tg[2] * 1000)));
+  const avg = (sum, n) => n ? Math.round(sum / Math.max(3, n)) : 0;
+  const PAY = {
+    day: [[200, 10], [150, 8], [100, 5], [60, 0], [60, 0], [60, 0], [60, 0], [60, 0], [60, 0], [60, 0]], // the day's fleet ranking, to members who played all three
+    star: [100, 5],                                     // the fleet's star: the member who brought the most that day
+    chestAt: [6000, 12000, 19000], chest: [[150, 0], [300, 5], [600, 15]], chestDays: 3,   // the week's chests, to members with 3 full days
+    champ: [[1500, 40, 2], [1000, 25, 0], [600, 15, 0]], champDays: 6                      // the week's champions (stars, gems, shields), to members with 6 full days
+  };
+  return { L, byId, day, seed, kit, tier, pts, chainNeed, TRIES, CHAIN_STARS: 20, mp, avg, PAY };
 })();
