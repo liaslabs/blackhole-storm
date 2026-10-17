@@ -245,6 +245,17 @@ Her güncellemede:
   okunarak doğrulandı"; `CLOUD` hata raporu yok. Silip yeniden kurma testi 20 Eki sonrasına (kapalı test süresi dolana kadar
   test kullanıcısı uygulamayı silmesin). Not (sonraki derleme): `r13 ISOLATED NOT NEEDED` ve bağlantı kaldırılırken gelen `r2`
   sistem kapanışları olağan sayılıp raporlanmasın.
+- **Kod 55 (17 Eki, sahibinin isteğiyle 1.5.2 işleri 1.5.1'e alındı)**: süreli seviyelerde (zor ve boss) alt çubukta
+  ⏱ zaman kristali düğmesi (+15 sn, boss'ta +30; son 10 sn'de yanıp söner); Zaman Parçası (yeşil saat, süreli seviyede 2 kez,
+  %35 ve %65'te, yutunca +5 sn, 9 sn sonra kaybolur; Rehber maddesi ve ilk görüşte bir kez uyarı); 1. seviye eğitimde dolgu taşları
+  ve %20 hız, 2–5. seviyelerde cisimler üçte bir daha sık ve %10 hızlı (ekranda ortalama yenebilir cisim 0,8→3,5 ve 2,9→5,5);
+  61+ normal seviyelerde hedef seviye başına %0,15 artar (en çok %20, 194'ten sonra), 80+ normal seviyelerde meteor biraz sıklaşır
+  (9'lu fırtına ve zor seviyeler değişmedi); 61+ puan seviyelerinde 7'liler 75 sn süreli ("SÜRELİ SEVİYE", ekstra meteor yok);
+  sayaçlar: 10'luk gruplarda kazanma/kaybetme, güç ve devam kullanımı, gerçek satın almada paket / başladığı ekran / seviye grubu /
+  kurulum yaşı, elmasla mağaza alımları (`tools/rapor.mjs` yeni bölümler); mağazada Kozmik Kimlik kartı oyuncunun adını
+  delikte harf harf gösteren hareketli kart; mağaza kaptanına ayrı portre (avatar listesinde yok) ve konuşma balonu; zaman
+  kristali metni düzeltildi ("Dev gezegene +30 sn" yanlıştı). 8 yeni metin 11 dilde, gizlilik sayfasına yeni sayaçlar
+  (17 Eki). `bhs-v88`, `blackhole` ea98eb3. Sunucu: yeni sayaç anahtarları ve gönderi başına 120 anahtar.
 - Sunucu (yayında): filo görevinde süre kontrolü, satın alma doğrulaması kuruldu (`GP_SA`, ayrı `purchase-verify` hesabı),
   Google'ın yetki/kesinti hataları "sonra tekrar" döner; haftalık şifreli D1 yedeği.
 
