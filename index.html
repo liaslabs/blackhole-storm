@@ -5402,7 +5402,7 @@ function v2Off(){return sp2(FD2[SET.fd]??90)+G2.R*.5;}
 // Normal (the default) adds only a touch; an ordinary dodge stays 1:1 in all three, the boost starts above SENS_V[0].
 const SENS2=[1.25,1.6,2.2],SENS_V=[.4,1.6];
 function v2Aim(x,y){const now=performance.now(),dx=x-DRAG.px,dy=y-DRAG.py,dt=Math.max(4,now-DRAG.pt);DRAG.px=x;DRAG.py=y;DRAG.pt=now;
-  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;const G=rel(7)?(rel(9)&&!SET.sens?1.45:SENS2[SET.sens]??1.25):1, /* 1.4.9: the default reaches a little further on a quick swipe */q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
+  const v=Math.hypot(dx,dy)/dt/G2.S;DRAG.vs=DRAG.vs*.5+v*.5;if(G2.freeze>0)return; /* 18 Oct: while the action is stopped the finger does not move the hole; it picks up from there */const G=rel(7)?(rel(9)&&!SET.sens?1.45:SENS2[SET.sens]??1.25):1, /* 1.4.9: the default reaches a little further on a quick swipe */q=clamp((DRAG.vs-SENS_V[0])/(SENS_V[1]-SENS_V[0]),0,1),k=1+(G-1)*q*q*(3-2*q);
   const m=(G2.R||0)+4;DRAG.ax=clamp(DRAG.ax+dx*k,m,W-m);DRAG.ay=clamp(DRAG.ay+dy*k,m+2,H-m-70); /* the same walls the hole has; held at an edge, pulling back moves it straight away */
   G2.tx=DRAG.ax;G2.ty=DRAG.ay;}
 function v2Down(x,y,id){
@@ -5689,7 +5689,7 @@ function v2Update(dt){
   if(G2.mode==='surv'&&!G2.dstorm&&G2.arcs<3&&gState==='playing'){G2.regT+=dt;if(G2.regT>=25){G2.regT=0;G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2ArcForm(G2.arcs-1,'arc');v2Pop(T('YAY ONARILDI'),'#ff8a8a',15);}}else G2.regT=0; /* survival: a broken arc mends every 25 s */
   const S=G2.S,tk=(G2.horSlow>0?.3:1)*(G2.timeT>0?v2TimeK():1)*(G2.btT>0?v2BtK():1)*(G2.killFx&&G2.killFx.boom===undefined?.35:1),lv=G2.lv;
   // timers
-  G2.t+=dt;if(G2.afx&&G2.afx.length)v2ArcFxStep(dt);if(G2.immT>0)G2.immT-=dt;if(G2.revT>0){const a=Math.floor(G2.revT/.42);G2.revT-=dt;if(Math.floor(G2.revT/.42)!==a&&G2.revT>0)G2.pulse=1;}if(G2.wormCD>0)G2.wormCD-=dt;if(G2.wormFx)G2.wormFx.t+=dt;if(G2.horT>0)G2.horT-=dt;if(G2.horSlow>0)G2.horSlow-=dt/.3;if(G2.horFx)G2.horFx.t+=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.iceT>0){G2.iceT-=dt;if(G2.iceT<=0){G2.iceT=0;v2Pop(T('BUZ ÇÖZÜLDÜ'),'#8dffcb',16);}}if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
+  G2.t+=dt;if(G2.afx&&G2.afx.length)v2ArcFxStep(dt);if(G2.immT>0)G2.immT-=dt;if(G2.revT>0)G2.revT-=dt;if(G2.wormCD>0)G2.wormCD-=dt;if(G2.wormFx)G2.wormFx.t+=dt;if(G2.horT>0)G2.horT-=dt;if(G2.horSlow>0)G2.horSlow-=dt/.3;if(G2.horFx)G2.horFx.t+=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.iceT>0){G2.iceT-=dt;if(G2.iceT<=0){G2.iceT=0;v2Pop(T('BUZ ÇÖZÜLDÜ'),'#8dffcb',16);}}if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
   if(G2.mode==='surv'){if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);} /* in levels the powers are introduced by the level-start cards */
   if(G2.featCard&&G2.t>.6&&gState==='playing'&&!G2.tip){const f=G2.featCard;if(f==='shield'&&!TIPS.gift){TIPS.gift=1;SHOP.shield++;saveG();updateUI();}if(f==='arcs')TIPS.meteor=1;if(TIPS[f]||v2Tip(f,null)){G2.featCard=null;G2.featShown=1;}}if(G2.sigBack&&!G2.tip&&!G2.featCard&&gState==='playing'&&G2.t>1.2){const b=G2.sigBack;G2.sigBack=null;sigShow(...b);} /* a held radio note, once the cards are read */if(G2.btCD>0)G2.btCD-=dt;if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
   if(rel(11))v2TclkStep();if(G2.midR)G2.rr=Math.max(G2.rr,G2.midR);
@@ -6431,7 +6431,7 @@ function v2Hit(o,whole){
     if(!TIPS.arcs)later(()=>v2Tip('arcs',null),500); /* the first broken arc explains itself */return;}
   shake=Math.max(shake,11);flash=Math.max(flash,.35);shock=Math.max(shock,.7);flashPenal(120);vib([80,40,80]);
   v2Sfx('miss',{vol:.8,x:hX});v2Sfx('buzz',{vol:.35});
-  G2.arcPow=0;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=am;}G2.arcFill=.5;G2.immT=Math.max(G2.immT,REV_T+.2); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
+  G2.arcPow=0;{const am=v2AM();for(let i=0;i<am;i++)v2ArcForm(i,'arc',.35+i*.08);G2.arcs=am;}G2.arcFill=.5;G2.immT=Math.max(G2.immT,1.5); /* the last arc shatters first, then dust gathers into a fresh set */ /* a fresh set of arcs and a moment of safety, so two hearts never go in a row */
   if(!(tutorial&&lives<=1)){lives=Math.max(0,lives-1);v2HitNote();}
   if(rel(11)&&G2.mode==='level'&&gameMode==='classic'&&!REPLAY){const t=G2.t;evOnce('d1_'+(t<10?'a':t<30?'b':t<60?'c':'d'),'d1');} // the first life ever lost: how many seconds into the level
   if(rel(10))v2Burst(hX,hY-G2.R-sp2(16),14,'#ff5a5f',1.5,5,.5,1.8); /* 1.5.0: red shards instead of a "-1" */else v2Pop('-1 ♥','#ff7a5c',20);updateUI();
@@ -6940,8 +6940,8 @@ function v2DrawBits(dt){const B=G2.mbits;if(!B||!B.length)return;const mv=gState
 
 // ── drawing ───────────────────────────────────────────
 // 18 Oct: a lost life: the action stops for a beat while the arcs shatter and form again around the hole (the pieces keep moving),
-// then the hole comes back with a trembling pulse while it is safe
-const REV_T=1.3;
+// then the hole shakes fast for a moment and settles; while it is stopped the finger cannot move it
+const REV_T=.55;
 function v2FreezeFx(dt){const f=dt*60;for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
   if(G2.afx&&G2.afx.length)v2ArcFxStep(dt);if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*2);}
 function v2Frame(dt){
@@ -6952,7 +6952,7 @@ function v2Frame(dt){
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
   v2Dims();const Rl=G2.R,Gl=G2.G;if(rel(10)&&G2.Rv){G2.R=G2.Rv;G2.G=G2.Gv;} /* drawing uses the size on its way; the true size comes back below */
-  let jx=0,jy=0;if(G2.revT>0){const q=G2.revT/REV_T;G2.R*=1+.09*Math.sin(clock*26)*q;jx=Math.sin(clock*71)*sp2(2.4)*q;jy=Math.cos(clock*63)*sp2(2.4)*q;hX+=jx;hY+=jy;} /* the trembling pulse after a lost life */
+  let jx=0,jy=0;if(G2.revT>0){const q=Math.pow(G2.revT/REV_T,1.4);jx=Math.sin(clock*137)*sp2(3.4)*q;jy=Math.sin(clock*113+1.7)*sp2(3.4)*q;hX+=jx;hY+=jy;} /* the fast shake after a lost life, fading out */
   curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;
   G2.gl.length=0;for(const o of G2.objs)if(o.cell!==undefined&&o.wait<=0)G2.gl.push(o);if(G2.boss&&G2.boss.cell!==undefined)G2.gl.push(G2.boss);
   let sx=0,sy=0;if(shake>0){sx=(Math.random()-.5)*shake;sy=(Math.random()-.5)*shake;shake*=Math.pow(.8,f);if(shake<.3)shake=0;}
