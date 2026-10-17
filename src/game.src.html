@@ -1061,7 +1061,14 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 #menuSub.fl .fb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:linear-gradient(90deg,#4fb6ff,#9fe3ff);}#menuSub.fl .fc{font-size:11px;position:relative;}#menuSub.fl .fc.dot::after{content:'';position:absolute;top:-2px;right:-4px;width:6px;height:6px;border-radius:50%;background:#e5484d;}
 #menuSub.fljoin{color:#9fe3ff;font-weight:700;}
 #lvlFlRow{display:inline-flex;align-items:center;gap:7px;margin:8px auto 0;padding:5px 11px;border-radius:999px;border:1px solid rgba(159,227,255,.45);background:rgba(80,160,255,.1);font:700 12px var(--fd);color:#9fe3ff;cursor:pointer;width:auto;}#lvlFlRow[hidden]{display:none;}#lvlFlRow .fem{width:18px;height:18px;border-radius:5px;}#lvlFlRow b{color:#fff;}
-.dmr.flm{border:1px solid rgba(159,227,255,.45);background:rgba(80,160,255,.08);}
+.dmr.flm{border:1px solid rgba(159,227,255,.45);background:rgba(80,160,255,.08);padding:10px 12px 11px 14px;border-radius:10px;margin:6px 0 4px;} /* 18 Oct: room inside the frame */
+.ltabs{display:flex;gap:4px;margin:4px 0 10px;padding:3px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(159,227,255,.2);} /* 18 Oct: the Atlas lives in the Lab as its second tab */
+.ltabs button{flex:1;position:relative;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px 6px;border:0;border-radius:9px;background:none;color:#9aa3bb;font:700 11px var(--fd);letter-spacing:1px;cursor:pointer;}
+.ltabs button i{font-style:normal;font-size:15px;}.ltabs button.on{background:rgba(95,242,255,.13);color:var(--cyan);box-shadow:inset 0 0 0 1px rgba(95,242,255,.38);cursor:default;}
+.ltabs em:empty{display:none;}.ltabs em{position:absolute;top:-7px;right:6px;min-width:16px;padding:1px 5px;border-radius:9px;background:#ff4d5e;color:#fff;font:800 9px/14px var(--fd);font-style:normal;letter-spacing:0;}
+#sAtlas{align-items:flex-start;background:radial-gradient(120% 60% at 50% 0%,#150f2a,#04050b 70%);}#sAtlas>.card{max-width:440px;margin:0 auto;padding:0;background:none;border:0;box-shadow:none;}#sAtlas .labtop{margin-bottom:10px;text-align:start;} /* the Atlas tab looks like the Lab tab */
+#sDM .daily{margin:0 0 12px;} /* 18 Oct: the Daily Race is the first card of the Missions screen */
+
 #shopAvH small{font-weight:600;color:#9fb3d8;letter-spacing:.02em;text-transform:none;}
 #editProf{position:relative;}#editProf .avn{position:absolute;left:50%;bottom:1px;transform:translateX(-50%);font:700 7px/1.3 var(--fd);font-style:normal;background:#e5484d;color:#fff;padding:0 4px;border-radius:5px;letter-spacing:.04em;z-index:2;white-space:nowrap;pointer-events:none;}
 #lvlAvI{width:34px;height:34px;border-radius:8px;overflow:hidden;display:block;flex:none;}.chipbtn.avnew{border-color:rgba(242,169,59,.55);background:rgba(242,169,59,.1);}.chipbtn.avnew .avt{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2;text-align:left;}.chipbtn.avnew small{font:600 10px var(--fd);color:#9fe3ff;letter-spacing:.06em;}.chipbtn.avnew b{color:var(--gold);font-size:13px;letter-spacing:.04em;}
@@ -1424,7 +1431,6 @@ body.v2 #gw{cursor:grab;touch-action:none;}
     <button class="sb" id="snBtn"><i>🌀</i><span>SEZON</span><em id="snBadge"></em></button>
     <button class="sb" id="dmBtn"><i>📋</i><span>GÖREVLER</span><em id="dmBadge"></em></button>
     <button class="sb" id="expBtn"><i>🧭</i><span>SEFER</span><small id="expTxt"></small></button>
-    <button class="sb race" id="raceBtn"><i><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4.5c3-1.6 5.5-1.6 8 0s5 1.6 7 0v9c-2 1.6-4.5 1.6-7 0s-5-1.6-8 0"/></g></svg></i><span>GÜNLÜK YARIŞ</span><em id="raceBadge"></em></button>
    </div>
    <div class="mcen">
     <div class="logo mlogo">BLACKHOLE STORM</div>
@@ -1433,7 +1439,6 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    </div>
    <div class="mside">
     <button class="sb" id="labBtn"><i class="lring" id="labRing">🔬</i><span>KOZMİK LAB</span><em id="labBadge"></em></button>
-    <button class="sb" id="atBtn"><i>📖</i><span>ATLAS</span><em id="atBadge"></em></button>
     <button class="sb" id="lbBtn"><i>🏆</i><span>SIRALAMA</span></button>
     <button class="sb" id="guideBtn"><i>❓</i><span>REHBER</span></button>
     <button class="sb" id="flBtn" hidden><i></i><span>FİLO</span><em id="flBadge"></em><small id="flTxt"></small></button>
@@ -1450,15 +1455,6 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   </div>
   <div class="mtick"><div id="menuTick"></div></div>
   <button class="btn sec" id="installBtn" style="display:none;width:100%;margin-top:10px;">📲 Ana ekrana ekle</button>
- </div>
- <div class="msheet" id="raceSheet" hidden>
-  <div class="daily" id="dailyCard">
-   <div class="t"><span id="dcTitle">🏁 GÜNLÜK YARIŞ</span><b id="dcZone"></b></div>
-   <div class="s" id="dcTxt">Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!</div>
-   <div class="g" id="dcGrid"></div>
-   <div class="row"><button class="btn cy" id="dcPlay">OYNA · 60 SN</button><button class="btn sec" id="dcShare" style="display:none">📤 PAYLAŞ</button></div>
-  </div>
-  <div class="row"><button class="btn sec" id="raceClose" style="width:100%;">KAPAT</button></div>
  </div>
 </div>
 
@@ -1490,6 +1486,12 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <!-- DAILY MISSIONS -->
 <div class="screen" id="sDM" style="z-index:130;">
  <div class="card" style="text-align:start;">
+  <div class="daily" id="dailyCard">
+   <div class="t"><span id="dcTitle">🏁 GÜNLÜK YARIŞ</span><b id="dcZone"></b></div>
+   <div class="s" id="dcTxt">Bugün herkes aynı evrende 60 saniye oynuyor. Tek resmi deneme!</div>
+   <div class="g" id="dcGrid"></div>
+   <div class="row"><button class="btn cy" id="dcPlay">OYNA · 60 SN</button><button class="btn sec" id="dcShare" style="display:none">📤 PAYLAŞ</button></div>
+  </div>
   <div class="dm" id="dmBox" style="margin:0;"></div>
   <div class="row"><button class="btn" id="dmClose">KAPAT</button></div>
  </div>
@@ -1498,7 +1500,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <!-- ATLAS -->
 <div class="screen" id="sAtlas" style="z-index:130;">
  <div class="card">
-  <div class="h" style="font-size:15px;">📖 KOZMİK ATLAS</div>
+  <div class="labtop"><div><b>📖 KOZMİK ATLAS</b></div><button class="icb" id="atX" aria-label="Kapat">✕</button></div>
+  <div class="ltabs" role="tablist"><button id="atTabL" role="tab"><i>🔬</i> <span>KOZMİK LAB</span></button><button id="atTabA" role="tab" class="on" aria-selected="true"><i>📖</i> <span>ATLAS</span></button></div>
   <div class="atsum" id="atSum"></div>
   <div class="wallet wal2 atwal"></div>
   <button class="btn atcol" id="atCollect" hidden></button>
@@ -1565,6 +1568,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 <div class="screen" id="sLab" style="z-index:131;">
  <div class="labw">
   <div class="labtop"><div><b>🔬 KOZMİK LAB</b><small>Geliştirmeler kütle ve yıldız harcar, süre dolunca biter.</small></div><button class="icb" id="labX" aria-label="Kapat">✕</button></div>
+  <div class="ltabs" role="tablist"><button id="labTabL" role="tab" class="on" aria-selected="true"><i>🔬</i> <span>KOZMİK LAB</span></button><button id="labTabA" role="tab"><i>📖</i> <span>ATLAS</span><em id="atBadge"></em></button></div>
   <div class="wallet wal2 labwal"></div>
   <div class="labcvw"><canvas id="labCv"></canvas><div class="labpow" id="labPow"></div></div>
   <div class="labstrip" id="labStrip"></div>
@@ -2798,7 +2802,7 @@ function atlasAdd(k){k=ATLAS_ALIAS[k]||k;const d=ATLAS_DEF.find(x=>x[0]===k);if(
   if(all&&!COSMO.seenAll){COSMO.seenAll=1;COSMO.pend.push('*seen');achQueue.push({i:'📖',t:T('ATLAS TAMAM'),d:T('Her cismi gördün')+' · '+T('ödülün Atlas\'ta seni bekliyor'),at:performance.now()});}
   if(mast&&!COSMO.masterAll){COSMO.masterAll=1;COSMO.pend.push('*master');achQueue.push({i:'🏛',t:T('KOZMİK ARŞİVCİ'),d:T('Her cisimde ustalaştın')+' · '+T('ödülün Atlas\'ta seni bekliyor'),at:performance.now()});}
   if(!achShowing)nextAch();saveLater();atlasBadge();}
-function atlasBadge(){const e=$('atBadge');if(!e)return;const n=COSMO.pend.length;e.textContent=n?String(n):'';e.className=n?(n<10?'hot sm':'hot'):'';} // only rewards waiting to be collected
+function atlasBadge(){const e=$('atBadge');if(!e)return;const n=COSMO.pend.length;e.textContent=n?String(n):'';e.className=n?(n<10?'hot sm':'hot'):'';labBadge();} // only rewards waiting to be collected
 let atSel=null;
 // one button collects everything waiting; each reward flies from its tile to the wallet
 function atlasCollect(){const L=COSMO.pend.splice(0);if(!L.length)return;sfx('achieve',{vol:.5});
@@ -2846,8 +2850,11 @@ function dmEvent(id,v,abs){if(typeof FMRUN!=='undefined'&&FMRUN)return; /* a fle
   if(!DM.list)return;for(const m of DM.list){if(m.id!==id||m.done)continue;const d=MPOOL.find(x=>x.id===id);m.p=(abs||(d&&d.abs))?Math.max(m.p,v):m.p+v;
     if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m),at:performance.now()});if(!achShowing)nextAch();}saveSoon();}
 }
+// the Missions button: a reward to take says AL!, else an unplayed Daily Race says ! (one badge, never two)
+function dmMenuBadge(){const bd=$('dmBadge');if(!bd||!DM.list)return;const hot=DM.list.some(m=>m.done&&!m.cl),race=DAILY.n!==dailyNo();
+  bd.textContent=hot?(rel(10)?T('AL')+'!':'AL!'):race?'!':'';bd.className=hot?'hot':race?'hot sm':'';}
 function renderDM(){
-  dmRoll();const box=$('dmBox');{const hot=DM.list.some(m=>m.done&&!m.cl),bd=$('dmBadge');if(bd){bd.textContent=hot?(rel(10)?T('AL')+'!':'AL!'):'';bd.className=hot?'hot':''; /* 1.5.0: the badge speaks the player's language */ /* nothing to take: no badge */}}let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`+(rel(10)?fleetMission():'');
+  dmRoll();const box=$('dmBox');dmMenuBadge();let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`+(rel(10)?fleetMission():'');
   DM.list.forEach((m,i)=>{const d=MPOOL.find(x=>x.id===m.id),rw=d?d.r:['⭐',0];
     h+=`<div class="dmr"><div class="x">${dmText(m)}<small>${Math.floor(m.p).toLocaleString(LOC)} / ${m.n.toLocaleString(LOC)} · ödül ${rw[1]} ${rw[0]}</small><div class="bar"><i style="width:${Math.min(100,m.p/m.n*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button data-i="${i}" ${m.done?'':'disabled'}>AL</button>`}</div>`;});
   h+=`<div class="muted" style="margin-top:6px;font-size:12px;">${DM.list.every(m=>m.cl)?'Hepsi tamam, bonus alındı. Yarın yeni görevler!':'Üçünü de bitir: +5 💎 · +15 dk ⏩'}</div>`;
@@ -3630,7 +3637,8 @@ function labFinish(id,how){const b=labBusy(id);if(!b)return false;const left=b.e
   else if(how==='boost'){const use=Math.min(LAB.boost|0,Math.ceil(left/6e4));if(use<=0)return false;LAB.boost-=use;b.end-=use*6e4;}
   saveG();walletsRefresh();labTick();labBadge();return true;}
 function labBadge(){const e=$('labBadge');if(!e)return;labTickQuiet();const done=LAB.done.length,nw=LABT.some(m=>m.from&&labOpen(m)&&!labRaw(m.id)&&!labBusy(m.id)&&!LAB.seen[m.id]);
-  e.textContent=done?T('HAZIR'):nw?T('YENİ'):'';e.className=done||nw?'hot':'';labMenuRing();}
+  const ap=COSMO.pend.length; /* 18 Oct: the Atlas's waiting rewards show on the Lab button */
+  e.textContent=done?T('HAZIR'):nw?T('YENİ'):ap?String(ap):'';e.className=done||nw?'hot':ap?(ap<10?'hot sm':'hot'):'';labMenuRing();}
 function labTickQuiet(){const now=Date.now();if(LAB.q.some(b=>b.end<=now))labTick();}
 // on a lost level: short of the recommended power, or a build still running, the Laboratory is the way forward
 function labContHint(){labTickQuiet();const gap=labGap(level),b=LAB.q.slice().sort((x,y)=>x.end-y.end)[0];if(!gap&&!b)return '';const m=b&&LABT.find(x=>x.id===b.id),g=b&&labGem(b.end-Date.now(),b.to);
@@ -4687,7 +4695,7 @@ function menuTick(){const th=seasonTheme(),cur=Math.max(1,savedLevel);let nb=0;f
   const L=[`${th.ic} <b>${T(th.n)}</b> · ${T(th.d)}`,`🔴 ${T('Sıradaki boss')}: ${T('SEVİYE')} ${nb}`,b?`🔬 ${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})} · ${labDur((b.end-Date.now())/1000)}`:`🔬 ${T('Kozmik Lab’da yeni bir geliştirme başlat')}`,
     dn?`🏁 ${T('Günlük Yarış')}: ${DAILY.score.toLocaleString(LOC)}`:`🏁 ${T('Günlük Yarış açık · bugün herkes aynı evrende')}`];
   $('menuTick').innerHTML=L.join('<span style="opacity:.4">  ·  </span>');}
-function menuHub(){labBadge();menuTick();$('snBtn').classList.toggle('gold',seasonIs('gold'));const rb=$('raceBadge');if(rb){const d=DAILY.n!==dailyNo();rb.textContent=d?'!':'';rb.className=d?'hot sm':'';}menuBgStart();}
+function menuHub(){labBadge();menuTick();$('snBtn').classList.toggle('gold',seasonIs('gold'));dmMenuBadge();menuBgStart();}
 setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTickQuiet();labMenuRing();}},1000);
 function showMenu(){natMark('menu');if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
   if(G2.on)v2Stop();if(HMODE)hmSwap(); // the menu always shows the classic run
@@ -4733,14 +4741,19 @@ $('gardenBtn').onclick=()=>{$('sGarden').classList.add('on');renderGarden();};$(
 $('snBtn').onclick=()=>{sfx('click',{vol:.4});seasonRoll();SEASON.seen=SEASON.tier;saveG();seasonBadge();renderSeason();$('sSeason').classList.add('on');};$('snGrid').onclick=e=>{const b=e.target.closest('.snc.rdy');if(b)seasonClaim([+b.dataset.i],b);};$('snClose').onclick=()=>$('sSeason').classList.remove('on');
 {const mo=new MutationObserver(ms=>{for(const m of ms){const sc=m.target;if(sc.id==='sMap'||!sc.classList.contains('on')||/\bon\b/.test(m.oldValue||''))continue;sc.scrollTop=0;for(const e of sc.querySelectorAll('*'))if(e.scrollTop)e.scrollTop=0;}}); // every screen and pop-up opens from the top; the map centres itself
   document.querySelectorAll('.screen,.modal').forEach(sc=>mo.observe(sc,{attributes:true,attributeFilter:['class'],attributeOldValue:true}));}
-$('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();fillWallets();renderAtlas();$('sAtlas').classList.add('on');};$('atClose').onclick=()=>$('sAtlas').classList.remove('on');$('atCollect').onclick=atlasCollect;
-$('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
+function atlasOpen(){COSMO.newT=0;saveG();atlasBadge();fillWallets();renderAtlas();$('sAtlas').classList.add('on');}
+// 18 Oct: the Atlas is the Lab's second tab; a tab closes one screen and opens the other
+$('labTabA').onclick=()=>{sfx('click',{vol:.3});labClose();atlasOpen();ev('m_atlas');};$('atTabL').onclick=()=>{sfx('click',{vol:.3});$('sAtlas').classList.remove('on');labOpenScr();};
+$('atClose').onclick=$('atX').onclick=()=>$('sAtlas').classList.remove('on');$('atCollect').onclick=atlasCollect;
+$('dmBtn').onclick=()=>{renderDM();renderDaily();$('sDM').classList.add('on');};
+// 18 Oct: how often each menu button is used (counts only, like the other play counts), to decide what the menu keeps
+for(const [id,k] of [['snBtn','sn'],['dmBtn','dm'],['expBtn','exp'],['labBtn','lab'],['lbBtn','lb'],['flBtn','fl'],['shopBtn','shop'],['mapBtn','map'],['setBtn','set'],['editProf','prof'],['evoBox','evo']]){const b=$(id);if(b)b.addEventListener('click',()=>ev('m_'+k));}$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};if($('sGuideB'))$('sGuideB').onclick=()=>$('guideBtn').onclick(); /* 1.5.0: the guide moved to Settings, FLEET took its place in the menu */
 if($('flBtn'))$('flBtn').onclick=()=>{if(!flOn()){toast('🛸',T('FİLO'),T('Filolar internet bağlantısı ister.'));return;}if(bestLevel<FL_LV){toast('🛸',T('FİLO'),T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV}));return;}fleetOpen();};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
-$('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('raceBtn').onclick=()=>{sfx('click',{vol:.4});renderDaily();$('raceSheet').hidden=false;};$('raceClose').onclick=()=>{$('raceSheet').hidden=true;};$('shopBtn').onclick=openShop;$('starterRib').onclick=()=>openShop('sr');$('pShop').onclick=()=>openShop('pr');
+$('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('shopBtn').onclick=openShop;$('starterRib').onclick=()=>openShop('sr');$('pShop').onclick=()=>openShop('pr');
 $('shopX').onclick=()=>$('shopClose').click();
 $('shopClose').onclick=()=>{$('sShop').classList.remove('on');if($('sMenu').classList.contains('on'))showMenu();};$('shopRestore').onclick=()=>MON.mode==='test'?toast('🔄','GERİ YÜKLEME','Test modunda geri yüklenecek bir şey yok'):restorePurchases(false);$('mapBack').onclick=closeMap;$('shClose').onclick=()=>$('mSheet').classList.remove('on');
-$('dcPlay').onclick=()=>{const n=dailyNo();startSprint(dailySeed(n),{daily:n});};
+$('dcPlay').onclick=()=>{const n=dailyNo();$('sDM').classList.remove('on');ev('m_race');startSprint(dailySeed(n),{daily:n});};
 $('dcShare').onclick=async()=>{const n=dailyNo();if(DAILY.n!==n)return;const r={score:DAILY.score,combo:DAILY.combo,perf:DAILY.perf,grid:DAILY.grid,zone:sprintSetup(dailySeed(n)).zone,daily:n};
   const out=await shareOut(resultText(r,false),canLink()?baseURL():'');if(out==='copied')flashBtn($('dcShare'),'KOPYALANDI ✓');};
 $('spShare').onclick=async()=>{const r=SPR_RUN.res;if(!r)return;const out=await shareOut(resultText(r,false),canLink()?baseURL():'');if(out==='copied')flashBtn($('spShare'),'KOPYALANDI ✓');};

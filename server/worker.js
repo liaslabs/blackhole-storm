@@ -217,7 +217,7 @@ async function ensurePings(DB) {
   pingReady = true;
 }
 // 1.5.1 play counts: the keys the game may send (anything else is dropped)
-const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|l[wf]_\d{1,2}|u_[a-z]{2}_\d{1,2}|p_[a-z0-9_]{2,16}|ps_[a-z]{2}|pl_\d{1,2}|pa_(\d{1,2}|x)|g_[a-z]{2,6})$/;
+const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|l[wf]_\d{1,2}|u_[a-z]{2}_\d{1,2}|p_[a-z0-9_]{2,16}|ps_[a-z]{2}|pl_\d{1,2}|pa_(\d{1,2}|x)|g_[a-z]{2,6}|m_[a-z]{2,6})$/; // m_: menu buttons (18 Oct)
 const AGE = /^(0|1|2|4|8|15|31|x)$/;
 let evReady = false;
 async function ensureEvs(DB) {
