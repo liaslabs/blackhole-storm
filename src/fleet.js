@@ -108,8 +108,8 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
 // a 4-second salute plays once in a rounded card over the blurred screen; a tap ends it, and it is never shown again for that week
 function flChampShow(wk){if(!wk||TIPS.chV===wk||!window.BHS_CHAMP_VID||$('flChamp'))return;TIPS.chV=wk;saveSoon();
   const ov=document.createElement('div');ov.id='flChamp';ov.setAttribute('role','dialog');ov.innerHTML='<div class="cv"><video playsinline preload="auto"></video></div>';document.body.appendChild(ov);
-  const v=ov.querySelector('video');let done=false;const end=()=>{if(done)return;done=true;ov.classList.remove('on');ov.classList.add('out');try{v.pause();}catch(e){}setTimeout(()=>ov.remove(),380);};
-  v.muted=!SET.sfx;v.volume=SET.sfx?Math.min(1,SET.sfxVol*1.1):0;v.src=BHS_CHAMP_VID;v.onended=()=>setTimeout(end,350);v.onerror=end;ov.onclick=end;setTimeout(end,9000);
+  const v=ov.querySelector('video');let done=false;const end=()=>{if(done)return;done=true;ov.classList.remove('play');ov.classList.add('out');setTimeout(()=>ov.remove(),820);};let grown=false;const grow=()=>{if(grown||done)return;grown=true;ov.classList.add('play');};
+  v.muted=!SET.sfx;v.volume=SET.sfx?Math.min(1,SET.sfxVol*1.1):0;v.src=BHS_CHAMP_VID;v.onplaying=grow;setTimeout(grow,1200);v.onended=()=>setTimeout(end,250);v.onerror=end;ov.onclick=end;setTimeout(end,9000);
   requestAnimationFrame(()=>ov.classList.add('on'));SND.duck(.15,4.6);
   v.play().catch(()=>{v.muted=true;v.play().catch(end);});}
 
