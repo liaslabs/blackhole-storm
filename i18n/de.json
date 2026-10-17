@@ -2280,5 +2280,7 @@
 "HAFTA": "WOCHE",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Holt heute als Flotte {n} Medaillen: Wer eine Medaille gewonnen hat, bekommt den Preis",
 "bir görevde en fazla {n} puan": "höchstens {n} Punkte pro Mission",
-"Bugünkü görevler tamam": "Heutige Missionen erledigt"
+"Bugünkü görevler tamam": "Heutige Missionen erledigt",
+"{f} geçen haftanın şampiyon filosu": "{f} ist die Meisterflotte der letzten Woche",
+"FİLOYA GİT": "ZUR FLOTTE"
 }

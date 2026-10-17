@@ -31,6 +31,7 @@ async function fleetFetch(force){
   try{if(rel(10)&&(FL.fmq||[]).length)await fmFlush();const j=await lbFetch('/fleet?pid='+PID);FLV=j;FLE='';
     if(j.fleet){const f=j.fleet;Object.assign(FL,{fid:f.fid,name:f.name,emb:f.emb,pts:f.pts,tg:f.targets||[],race:f.race?1:0});if(f.mis)Object.assign(FL,{pts:f.mis.week,tg:f.mis.chestAt});}else FL.fid=''; /* 18 Oct: the chests are filled by mission points */
     FL.fmc=rel(10)&&fmChainReady(j.fm)?1:0;
+    if(rel(11)&&j.champ&&TIPS.chM!==j.champ.wk)later(()=>flChampCard(j),700); /* 18 Oct: last week's champions hear it on the menu first */
     FL.prz=(j.prizes||[]).length+(j.dprizes||[]).length;FL.at=Date.now();saveSoon();fleetMenu();fleetTabs();return j;}
   catch(e){FLE='off';return null;}}
 
@@ -104,6 +105,18 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   else if(!j.fleet)h+=fleetNoneH(j);
   else{if(FLT!=='tasks')h='';h+=FLT==='crew'?flCrewH(j):FLT==='race'?await fleetRaceH(1):FLT==='week'&&j.fleet.mis?await flWeekH(j):flTasksH(j);h+=flNavH();}
   w.innerHTML=h;fleetWire(j);if(rel(11)&&j.champ&&FLT==='tasks'&&FLS==='main')flChampShow(j.champ.wk);}
+// 18 Oct: the first time the game opens after its fleet was named last week's champion, the menu says so in the tournament prize
+// card's light (rays, confetti, the blurred screen); FİLOYA GİT opens the Fleet, where the salute plays
+function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.wk)return;
+  if(!$('sMenu').classList.contains('on')||$('sDaily').classList.contains('on')||document.querySelector('.modal.on')||$('flChamp')){later(()=>flChampCard(j),3000);return;}
+  TIPS.chM=c.wk;saveSoon();const m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);m.className='modal rk1 chf';
+  $('przIc').innerHTML=f.emb?flImg(f.emb,'big'):'👑';$('przT').textContent=T('TEBRİKLER ŞAMPİYON!');
+  $('przD').innerHTML=T('{f} geçen haftanın şampiyon filosu',{f:`<b class="notr">${flE(f.name)}</b>`});$('przMsg').textContent='';
+  {const cf=$('przConf'),col=['#ffd76a','#fff3c4','#f2a93b','#9fd8ff','#c9a8ff'];cf.innerHTML=Array.from({length:34},(_,i)=>`<i style="--x:${(Math.random()*100).toFixed(1)}%;--d:${(Math.random()*1.4).toFixed(2)}s;--t:${(2.2+Math.random()*1.6).toFixed(2)}s;--r:${Math.round(Math.random()*720-360)}deg;--s:${(.6+Math.random()*.8).toFixed(2)};background:${col[i%col.length]}"></i>`).join('');}
+  const b=$('przGo'),lt=$('przLater');b.textContent=T('FİLOYA GİT');b.disabled=false;lt.hidden=false;
+  const close=go=>{m.classList.add('out');later(()=>{hideModals();m.classList.remove('out');if(go)fleetOpen();},go?650:900);};
+  b.onclick=()=>{b.disabled=true;close(true);};lt.onclick=()=>close(false);
+  m.classList.remove('on');void m.offsetWidth;showModal('mPrize');sfx('achieve',{vol:.6});later(()=>{sfx('powerup',{vol:.5,rate:1.2});vib([20,40,60]);},550);}
 // 18 Oct: last week's first fleet: the first time one of its players (one who played a mission for it that week) opens the Fleet,
 // a 4-second salute plays once in a rounded card over the blurred screen; a tap ends it, and it is never shown again for that week
 function flChampShow(wk){if(!wk||TIPS.chV===wk||!window.BHS_CHAMP_VID||$('flChamp'))return;TIPS.chV=wk;saveSoon();

@@ -2280,5 +2280,7 @@
 "HAFTA": "週",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "今日は艦隊で{n}個のメダルを集めよう：メダルを取った全員が報酬をもらえる",
 "bir görevde en fazla {n} puan": "1ミッションの上限は{n}ポイント",
-"Bugünkü görevler tamam": "今日のミッション完了"
+"Bugünkü görevler tamam": "今日のミッション完了",
+"{f} geçen haftanın şampiyon filosu": "{f}は先週のチャンピオン艦隊",
+"FİLOYA GİT": "艦隊へ"
 }

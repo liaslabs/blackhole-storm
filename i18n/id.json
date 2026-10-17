@@ -2280,5 +2280,7 @@
 "HAFTA": "MINGGU",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Kumpulkan {n} medali sebagai armada hari ini: semua yang meraih medali mendapat hadiah",
 "bir görevde en fazla {n} puan": "paling banyak {n} poin per misi",
-"Bugünkü görevler tamam": "Misi hari ini selesai"
+"Bugünkü görevler tamam": "Misi hari ini selesai",
+"{f} geçen haftanın şampiyon filosu": "{f} adalah armada juara minggu lalu",
+"FİLOYA GİT": "KE ARMADA"
 }

@@ -2280,5 +2280,7 @@
 "HAFTA": "НЕДЕЛЯ",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Соберите сегодня флотом {n} медалей: награду получит каждый, кто взял медаль",
 "bir görevde en fazla {n} puan": "не больше {n} очков за задание",
-"Bugünkü görevler tamam": "Задания на сегодня выполнены"
+"Bugünkü görevler tamam": "Задания на сегодня выполнены",
+"{f} geçen haftanın şampiyon filosu": "{f} — флот-чемпион прошлой недели",
+"FİLOYA GİT": "К ФЛОТУ"
 }
