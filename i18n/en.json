@@ -2277,5 +2277,6 @@
 "Haftanın görev puanı biriktikçe {n} sandık açılır. Haftada en az {n} gün görevlerini tamamlayan her üye hepsini alır": "As the week's mission points grow, {n} chests open. Every member who completes their missions on at least {n} days of the week gets them all",
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "The {n} fleets with the most mission points in the week win prizes. Members who complete their missions on at least {n3} of the {n2} days win",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Fleet prizes come on top of your normal rewards: your records, stars and ranking stay as they are. Every level you clear earns your fleet points for the weekend race",
-"HAFTA": "WEEK"
+"HAFTA": "WEEK",
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Win {n} medals as a fleet today: everyone who won a medal gets the prize"
 }

@@ -78,13 +78,18 @@ function fleetMenu(){fleetBtn();const s=$('menuSub');if(!s||!rel(10))return;s.on
 
 // the daily fleet mission, shown above the three daily missions
 function fleetMission(){if(!rel(10)||!FL.fid)return '';const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
-  return `<div class="dmr flm"><div class="x">🛸 ${T('Filon için {n} seviye geç',{n:3})}<small>${m.p} / 3 · ${T('ödül')} 30 ⭐ · ${T('filoya puan')}</small><div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button id="flMisGo" ${done?'':'disabled'}>${T('AL')} · +30 ⭐</button>`}</div>`;}
+  return `<div class="dmr flm"><div class="x">🛸 ${T('Filon için {n} seviye geç',{n:3})}<small>${m.p} / 3 · ${T('filoya puan')}</small>${flPay(BHS_FMIS.PAY.mis)}<div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button id="flMisGo" ${done?'':'disabled'}>${T('AL')}</button>`}</div>`;}
 function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>flMisClaim(b,renderDM);}
+// 18 Oct: a fleet reward shown big: a gold tag with the stars and the diamonds
+function flPay(p){return `<span class="flpay">🎁 <b>+${flN(p[0])}</b> ⭐${p[1]?` <b>+${p[1]}</b> 💎`:''}</span>`;}
+// a claim: "+100 ⭐ +5 💎" rises from the button, the stars and diamonds fly from it into the wallet
+function flClaimFx(btn,g){const t=[g.stars?`+${flN(g.stars)} ⭐`:'',g.gems?`+${g.gems} 💎`:''].filter(Boolean).join('  ');
+  if(btn){btn.disabled=true;btn.classList.add('got');btn.textContent=t;const R=btn.getBoundingClientRect(),e=document.createElement('div');e.className='flmpop';e.textContent=t;
+    e.style.left=Math.max(70,Math.min(innerWidth-70,R.left+R.width/2))+'px';e.style.top=(R.top-4)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}
+  flyReward(btn,{stars:g.stars,gems:g.gems});sfx('achieve',{vol:.55});vib([20,40,30]);}
 // 18 Oct: the 30 stars of the daily fleet mission: the button says what it gives, a "+30 ⭐" rises from it and the stars fly into the wallet
-function flMisClaim(btn,after){if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();
-  if(btn){btn.disabled=true;btn.classList.add('got');btn.textContent='+30 ⭐';const R=btn.getBoundingClientRect(),e=document.createElement('div');e.className='flmpop';e.textContent='+30 ⭐';
-    e.style.left=(R.left+R.width/2)+'px';e.style.top=(R.top-4)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}
-  flyReward(btn,{stars:30});sfx('achieve',{vol:.5});vib(20);fleetMenu();setTimeout(()=>{updateUI();after&&after();},1150);}
+function flMisClaim(btn,after){if(FL.mis.p<3||FL.mis.cl)return;const [st,gm]=BHS_FMIS.PAY.mis;FL.mis.cl=1;stars+=st;diamonds+=gm;saveG();
+  flClaimFx(btn,{stars:st,gems:gm});fleetMenu();setTimeout(()=>{updateUI();after&&after();},1150);}
 
 // the Fleet tab
 async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
@@ -116,7 +121,7 @@ function flCards(){const s=n=>flN(n)+' ⭐',g=n=>' + '+n+' 💎',P=BHS_FMIS.PAY;
   {i:'🎁',t:'HAFTALIK SANDIKLAR',x:'Haftanın görev puanı biriktikçe 3 sandık açılır. Haftada en az 3 gün görevlerini tamamlayan her üye hepsini alır.',c:P.chest.map((c,i)=>'🎁 '+s(c[0])+(c[1]?g(c[1]):''))},
   {i:'🏆',t:'HAFTANIN ŞAMPİYONLARI',x:'Haftada en çok görev puanı toplayan 3 filo ödül alır. 7 günün en az 6’sında görevlerini tamamlayan üyeler kazanır.',c:['🥇 '+s(P.champ[0][0])+g(P.champ[0][1])+' + '+P.champ[0][2]+' 🛡️','🥈 '+s(P.champ[1][0])+g(P.champ[1][1]),'🥉 '+s(P.champ[2][0])+g(P.champ[2][1])]},
   {i:'🏁',t:'HAFTA SONU YARIŞI',x:'Cuma–Pazar filon 20 filoluk bir grupta yarışır. İlk 10 filo ödül alır; filonun en iyi 3 oyuncusuna ek ödül var.',c:['🥇 '+s(1500)+g(30),'🥈 '+s(1000)+g(20),'🥉 '+s(600)+g(10),'🏅 +'+s(200)]},
-  {i:'📈',t:'EKSTRA ÖDÜL, KAYIP YOK',x:'Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır.',c:['+10–30 '+T('puan')+' / '+T('seviye'),'🌪️ +20–80 '+T('puan'),'📋 +'+s(30)+' / '+T('gün')]},
+  {i:'📈',t:'EKSTRA ÖDÜL, KAYIP YOK',x:'Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır.',c:['+10–30 '+T('puan')+' / '+T('seviye'),'🌪️ +20–80 '+T('puan'),'📋 +'+s(P.mis[0])+g(P.mis[1])+' / '+T('gün')]},
   {i:'🤝',t:'BİRLİKTE DAHA GÜÇLÜ',x:'Filo duvarında arkadaşlarını gör, hazır mesajlarla destek ol, kimin ne kattığını izle. Katılmak ücretsiz, istediğin zaman ayrılabilirsin.',c:['👥 20 '+T('üye'),'🆓 '+T('ücretsiz')]}];}
 function fleetIntroH(){const cs=flCards(),c=cs[FLI],last=FLI===cs.length-1;
   return `<div class="hero flin" id="flCard"><small>${T('FİLO AVANTAJLARI')} · ${FLI+1}/${cs.length}</small><i class="bdg">${ICO.badge(c.i)}</i><b>${T(c.t)}</b>${T(c.x)}
@@ -156,8 +161,8 @@ const FLT_ALL=[['tasks','GÖREVLER','📋'],['week','HAFTA','📅'],['crew','ÜY
 function flNavH(){return `<div class="flnav">${FLT_ALL.map(([k,t,i])=>`<button data-flt="${k}" class="${k===FLT?'on':''}">${ICO.svg(i)}<span>${T(t)}</span></button>`).join('')}</div>`;}
 // the daily fleet mission card: three levels for the fleet today, 30 stars
 function flMisH(){const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
-  return `<div class="hero flmis"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})} · ${T('ödül')} 30 ⭐
-  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')} · +30 ⭐</button>`}</div></div>`;}
+  return `<div class="hero flmis"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})}${flPay(BHS_FMIS.PAY.mis)}
+  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')}</button>`}</div></div>`;}
 function flHeadH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap);
   return `${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}
   <div class="fc sm">${flImg(f.emb)}<span class="t"><b class="notr">${flE(f.name)}</b><small>${f.n}/${f.max} ${T('üye')} · ${T('Kaptan')}: <span class="notr">${flE(cap?cap.name:'')}</span></small></span></div>`;}
@@ -269,7 +274,8 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
   all('[data-flt]').forEach(b=>b.onclick=()=>{if(b.dataset.flt==='inv'){flInvOpen(j);return;}FLT=b.dataset.flt;FLS='main';fleetRender();$('sLB').scrollTop=0;});
   if(q('#flMisGo2'))q('#flMisGo2').onclick=()=>flMisClaim(q('#flMisGo2'),fleetRender);
   all('[data-fm]').forEach(b=>b.onclick=()=>fmPlay(b.dataset.fm));all('[data-fmi]').forEach(b=>b.onclick=()=>fmAsk(b.dataset.fmi));
-  if(q('#fmChain'))q('#fmChain').onclick=()=>go('/fleet/fmchain',{pid:PID},r=>{if(r.stars)grant({stars:r.stars},'🤝 '+T('FİLO ZİNCİRİ'));FL.fmc=0;FLV=null;fleetMenu();fleetRender();});
+  if(q('#fmChain'))q('#fmChain').onclick=()=>{const b=q('#fmChain');if(b.disabled)return;b.disabled=true;go('/fleet/fmchain',{pid:PID},r=>{const g={stars:r.stars||0,gems:r.gems||0};
+    if(g.stars||g.gems){stars+=g.stars;diamonds+=g.gems;saveG();flClaimFx(b,g);}FL.fmc=0;fleetMenu();setTimeout(()=>{updateUI();FLV=null;fleetRender();},1150);}).then(r=>{if(!r||!r.ok)b.disabled=false;});};
   if(q('#flIntro'))q('#flIntro').onclick=()=>{FLS='intro';FLI=0;fleetRender();};
   if(q('#flMake'))q('#flMake').onclick=()=>{FLS='make';fleetRender();};
   if(q('#flCode'))q('#flCode').onclick=()=>{FLS='code';fleetRender();};
@@ -321,7 +327,7 @@ function flFmH(fm,left,mis){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★�
   return `<div class="sec"><span>${T('BUGÜNÜN FİLO GÖREVLERİ')}</span><b>${T('yenilenmesine {t}',{t:flLeft(left)})}</b></div>
   ${fm.ids.map(card).join('')}
   <div class="fm-ch"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
-    <div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div><small>${T('Bugün filo olarak {n} madalya toplayın: madalya alan herkese +{s} ⭐',{n:c.need,s:F.CHAIN_STARS})}</small></div>`;}
+    <div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div><small>${T('Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır',{n:c.need})}</small>${flPay(F.PAY.chain)}</div>`;}
 // 1.5.0 (16 Oct): the missions' own pictures, drawn like the fleet's space symbols (neon line, gold, the bodies as the game draws them)
 const FMIC={
  combo:'<path d="M3.5 5Q5 13 13.5 14.5" fill="none" stroke="#ffcf5a" stroke-width="1.1" stroke-dasharray="1.4 1.3"/><circle cx="3.6" cy="5.2" r="2.2" fill="#9fe3ff"/><circle cx="5.8" cy="10.8" r="2.5" fill="#c9a8ff"/><circle cx="10.2" cy="14" r="2.4" fill="url(#nGold)"/><ellipse cx="16.2" cy="15.3" rx="6" ry="2.2" fill="none" stroke="#f2a93b" stroke-width="1.1" transform="rotate(-15 16.2 15.3)"/><circle cx="16.2" cy="15.3" r="3.6" fill="#05070a" stroke="#5ff2ff" stroke-width="1.1"/><path d="M17.4 2.6l3.8 3.8M21.2 2.6l-3.8 3.8" stroke="#ffd76a" stroke-width="1.9" stroke-linecap="round"/>',

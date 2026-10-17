@@ -40,7 +40,8 @@ globalThis.BHS_FMIS = (() => {
     day: [[200, 10], [150, 8], [100, 5], [60, 0], [60, 0], [60, 0], [60, 0], [60, 0], [60, 0], [60, 0]], // the day's fleet ranking, to members who played all three
     star: [100, 5],                                     // the fleet's star: the member who brought the most that day
     chestAt: [6000, 12000, 19000], chest: [[150, 0], [300, 5], [600, 15]], chestDays: 3,   // the week's chests, to members with 3 full days
-    champ: [[1500, 40, 2], [1000, 25, 0], [600, 15, 0]], champDays: 6                      // the week's champions (stars, gems, shields), to members with 6 full days
+    champ: [[1500, 40, 2], [1000, 25, 0], [600, 15, 0]], champDays: 6,                     // the week's champions (stars, gems, shields), to members with 6 full days
+    mis: [100, 5], chain: [100, 5]                      // 18 Oct: the daily fleet mission (3 levels, paid by the game) and the Fleet Chain (paid by the server)
   };
-  return { L, byId, day, seed, kit, tier, pts, chainNeed, TRIES, CHAIN_STARS: 20, mp, avg, PAY };
+  return { L, byId, day, seed, kit, tier, pts, chainNeed, TRIES, CHAIN_STARS: PAY.chain[0], CHAIN_GEMS: PAY.chain[1], mp, avg, PAY };
 })();

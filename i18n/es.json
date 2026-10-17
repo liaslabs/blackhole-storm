@@ -2277,5 +2277,6 @@
 "Haftanın görev puanı biriktikçe {n} sandık açılır. Haftada en az {n} gün görevlerini tamamlayan her üye hepsini alır": "Al crecer los puntos de misión de la semana se abren {n} cofres. Cada miembro que completa sus misiones al menos {n} días de la semana se los lleva todos",
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "Las {n} flotas con más puntos de misión de la semana ganan premios. Ganan los miembros que completan sus misiones al menos {n3} de los {n2} días",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "Los premios de flota se suman a tus recompensas normales: tus récords, estrellas y ranking siguen igual. Cada nivel que superas da puntos a tu flota para la carrera de fin de semana",
-"HAFTA": "SEMANA"
+"HAFTA": "SEMANA",
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Ganad hoy {n} medallas como flota: todos los que ganaron una medalla reciben el premio"
 }

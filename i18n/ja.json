@@ -2277,5 +2277,6 @@
 "Haftanın görev puanı biriktikçe {n} sandık açılır. Haftada en az {n} gün görevlerini tamamlayan her üye hepsini alır": "今週のミッションポイントがたまると{n}つの宝箱が開く。週に{n}日以上ミッションを完了したメンバーは全部もらえる",
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "今週ミッションポイントが多い上位{n}艦隊が報酬を獲得。{n2}日のうち{n3}日以上ミッションを完了したメンバーが受け取る",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "艦隊報酬は通常の報酬に上乗せ：記録、スター、ランキングはそのまま。クリアしたレベルごとに週末レース用の艦隊ポイントが入る",
-"HAFTA": "週"
+"HAFTA": "週",
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "今日は艦隊で{n}個のメダルを集めよう：メダルを取った全員が報酬をもらえる"
 }

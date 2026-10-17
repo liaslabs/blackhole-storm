@@ -2277,5 +2277,6 @@
 "Haftanın görev puanı biriktikçe {n} sandık açılır. Haftada en az {n} gün görevlerini tamamlayan her üye hepsini alır": "كلما زادت نقاط مهام الأسبوع تُفتح {n} صناديق. ينالها كلها كل عضو أنجز مهامه {n} أيام على الأقل في الأسبوع",
 "Haftada en çok görev puanı toplayan {n} filo ödül alır. {n} günün en az {n}’sında görevlerini tamamlayan üyeler kazanır": "تفوز أكثر {n} أساطيل جمعًا لنقاط المهام في الأسبوع بالجوائز. يفوز الأعضاء الذين أنجزوا مهامهم {n3} أيام على الأقل من {n2}",
 "Filo ödülleri normal ödüllerine ek gelir: rekorların, yıldızların ve sıralaman aynen kalır. Geçtiğin her seviye hafta sonu yarışı için filona puan kazandırır": "جوائز الأسطول تضاف إلى مكافآتك العادية: أرقامك القياسية ونجومك وترتيبك تبقى كما هي. كل مستوى تجتازه يمنح أسطولك نقاطًا لسباق نهاية الأسبوع",
-"HAFTA": "الأسبوع"
+"HAFTA": "الأسبوع",
+"Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "اجمعوا اليوم {n} ميدالية كأسطول: كل من نال ميدالية يحصل على الجائزة"
 }

@@ -21,7 +21,7 @@
 //   POST /fleet/claim  {pid,wk}                       -> {ok,stars,gems}
 //   POST /fleet/fm/start {pid,id}                    -> {ok,tries}    one of today's fleet missions begins (a try is used)
 //   POST /fleet/fm     {pid,id,v,t}                   -> {ok,best,tier,add}  its result: the best one counts, a new medal pays fleet points
-//   POST /fleet/fmchain {pid}                         -> {ok,stars}     the Fleet Chain's stars, once a day, for a member who won a medal
+//   POST /fleet/fmchain {pid}                         -> {ok,stars,gems} the Fleet Chain's prize, once a day, for a member who won a medal
 //   GET  /fleets/fm?pid=                         -> {day:{list,n,me},week:{list,n,me}}  today's fleet ranking and the week's champions (mission points)
 //   POST /fleet/dclaim {pid,day}                     -> {ok,stars,gems}  a day's prize: the fleet's place in the day's ranking, the fleet's star
 // 18 Oct: the fleet missions are scored in mission points (src/fmis.js mp/avg/PAY): they fill the week's chests and decide the day's
@@ -486,10 +486,10 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     const F = FM(), d = day(), n = await count(DB, m.fid);
     const mine = await DB.prepare("SELECT COALESCE(SUM(tier),0) AS n FROM fleet_fm WHERE day = ? AND pid = ? AND id != 'chain'").bind(d, m.pid).first();
     const all = await DB.prepare("SELECT COALESCE(SUM(tier),0) AS n FROM fleet_fm WHERE day = ? AND fid = ? AND id != 'chain'").bind(d, m.fid).first();
-    if (!F || !mine || !mine.n || !all || all.n < F.chainNeed(n)) return json(req, { ok: false, stars: 0 });
+    if (!F || !mine || !mine.n || !all || all.n < F.chainNeed(n)) return json(req, { ok: false, stars: 0, gems: 0 });
     const r = await DB.prepare("INSERT OR IGNORE INTO fleet_fm (day, pid, fid, id, tries) VALUES (?, ?, ?, 'chain', 1)").bind(d, m.pid, m.fid).run();
     const ok = !!(r.meta && r.meta.changes);
-    return json(req, { ok, stars: ok ? F.CHAIN_STARS : 0 });
+    return json(req, { ok, stars: ok ? F.CHAIN_STARS : 0, gems: ok ? F.CHAIN_GEMS || 0 : 0 });
   }
   if (p === '/fleet/msg' && req.method === 'POST') {
     if (!MSGS.includes(body.m)) return json(req, { ok: false }, 400);
