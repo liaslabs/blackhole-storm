@@ -22,6 +22,7 @@
 //   POST /fleet/fm/start {pid,id}                    -> {ok,tries}    one of today's fleet missions begins (a try is used)
 //   POST /fleet/fm     {pid,id,v,t}                   -> {ok,best,tier,add}  its result: the best one counts, a new medal pays fleet points
 //   POST /fleet/fmchain {pid}                         -> {ok,stars,gems} the Fleet Chain's prize, once a day, for a member who won a medal
+//   GET  /fleet/fm/top?id=&pid=&day=             -> {list,n,me,all}  a mission's ranking for one of the last 7 days (all: every best, values only)
 //   GET  /fleets/fm?pid=                         -> {day:{list,n,me},week:{list,n,me}}  today's fleet ranking and the week's champions (mission points)
 //   POST /fleet/dclaim {pid,day}                     -> {ok,stars,gems}  a day's prize: the fleet's place in the day's ranking, the fleet's star
 // 18 Oct: the fleet missions are scored in mission points (src/fmis.js mp/avg/PAY): they fill the week's chests and decide the day's
@@ -334,14 +335,15 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     return json(req, { none: true, open: await openList(DB), prizes: pz, dprizes: dz, wait: mk && mk.gone + LEAVE_WAIT > now ? mk.gone + LEAVE_WAIT : 0 });
   }
   if (p === '/fleet/fm/top' && req.method === 'GET') { // 17 Oct: a mission's ranking for the day, every player's best run (all fleets)
-    const F = FM(), d = day(), id = url.searchParams.get('id'), pid = url.searchParams.get('pid'), mm = F && F.day(d).find(x => x.id === id);
+    const F = FM(), qd = url.searchParams.get('day'), d = okDay(qd) && qd <= day() && qd >= day(Date.now() - 7 * 864e5) ? qd : day(), id = url.searchParams.get('id'), pid = url.searchParams.get('pid'), mm = F && F.day(d).find(x => x.id === id); // 18 Oct: any of the last 7 days
     if (!mm) return json(req, { ok: false, err: 'id' });
     const rows = (await DB.prepare('SELECT x.pid, x.best, m.name, f.fid, f.emb, f.name AS fn, f.hidden FROM fleet_fm x JOIN fleet_members m ON m.pid = x.pid JOIN fleets f ON f.fid = m.fid WHERE x.day = ? AND x.id = ? AND x.best > 0 ORDER BY x.best DESC, x.rowid ASC LIMIT 10').bind(d, mm.id).all()).results || [];
     const n = ((await DB.prepare('SELECT COUNT(*) AS n FROM fleet_fm WHERE day = ? AND id = ? AND best > 0').bind(d, mm.id).first()) || {}).n || 0;
     let me = null;
     if (okPid(pid)) { const r = await DB.prepare('SELECT best FROM fleet_fm WHERE day = ? AND id = ? AND pid = ?').bind(d, mm.id, pid).first();
       if (r && r.best > 0) { const c = await DB.prepare('SELECT COUNT(*) AS n FROM fleet_fm WHERE day = ? AND id = ? AND best > ?').bind(d, mm.id, r.best).first(); me = { rank: (c ? c.n : 0) + 1, v: r.best }; } }
-    return json(req, { ok: true, n, me, list: rows.map(r => ({ name: r.name, emb: r.emb, fleet: shownName({ fid: r.fid, name: r.fn, hidden: r.hidden }), v: r.best, me: r.pid === pid })) });
+    const all = ((await DB.prepare('SELECT best FROM fleet_fm WHERE day = ? AND id = ? AND best > 0 ORDER BY best DESC LIMIT 500').bind(d, mm.id).all()).results || []).map(r => r.best); // every best of the day, values only (for tuning the targets)
+    return json(req, { ok: true, day: d, n, me, all, list: rows.map(r => ({ name: r.name, emb: r.emb, fleet: shownName({ fid: r.fid, name: r.fn, hidden: r.hidden }), v: r.best, me: r.pid === pid })) });
   }
   if (p === '/fleets/fm' && req.method === 'GET') { // 18 Oct: today's fleet ranking and the week's champions, in mission points (all fleets)
     const pid = url.searchParams.get('pid'), m = await memberOf(DB, pid), wk = weekOf(), days = weekDays(wk), d = day(), R = await fmRows(DB, days[0], days[6]);
