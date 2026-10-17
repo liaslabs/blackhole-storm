@@ -175,8 +175,30 @@ function flChestBarH(f){const t=f.targets||[1,1,1],top=t[2]||1;
 </div>`;}
 // GÖREVLER (the first page): today's missions and the Fleet Chain, then FİLOM: the week's standing, the chests and the daily fleet mission
 function flTasksH(j){const f=j.fleet,left=Date.parse(utcDay()+'T00:00:00Z')+864e5-Date.now();
+  if(rel(11)&&j.fm&&f.mis)return `<div class="flfit">${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}${flPlayH(j,left)}<div class="flnote" id="flMsg"></div></div>`;
   return `<div class="flfit">${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}${rel(10)&&j.fm?flFmH(j.fm,left,f.mis):''}
   <div class="flsep">${flImg(f.emb)}<span class="notr">${flE(f.name)}</span></div>${f.mis?flDayH(j):flStatH(f)+flChestBarH(f)}${flMisH()}<div class="flnote" id="flMsg"></div></div>`;} /* 16 Oct: the first page fits one screen */
+// 18 Oct: the first page is one thing to do. On top the fleet and where it stands today; then the next mission, big, with one big
+// PLAY; the other two as short rows; the Fleet Chain as the shared goal. The day's points, today's star and the ranking are in
+// HAFTA; the daily fleet mission is with the daily missions on the menu's Missions screen.
+function flPlayH(j,left){const F=BHS_FMIS,fm=j.fm,M=j.fleet.mis,f=j.fleet,lvC=['k','o','z'],lvT=['★','★★','★★★'],md=['🥉','🥈','🥇'];
+  const st=id=>{const me=fm.me[id]||{best:0,tier:0,tries:0};return {me,rest:Math.max(0,F.TRIES-me.tries)};};
+  const ids=fm.ids.filter(id=>F.byId(id)),open=ids.filter(id=>st(id).rest>0);
+  const next=open.slice().sort((a,b)=>st(a).me.tier-st(b).me.tier||ids.indexOf(a)-ids.indexOf(b))[0]; /* the next one: tries left, fewest medals, in the day's order */
+  const dots=r=>`<i class="fm-h">${'●'.repeat(r)}${'○'.repeat(F.TRIES-r)}</i>`;
+  const head=`<div class="flph">${flImg(f.emb)}<span class="t"><b class="notr">${flE(f.name)}</b><small>${M.drank?T('{r}. sıra · {n} filo',{r:M.drank,n:M.dof}):T('Henüz puan yok')}</small></span><span class="p"><b>${flN(M.day)}</b><small>${T('yenilenmesine {t}',{t:flLeft(left)})}</small></span></div>`;
+  let hero='';
+  if(next){const m=F.byId(next),{me,rest}=st(next);
+    hero=`<div class="flhero"><div class="fm-t"><span class="ic">${fmIc(m,'big')}</span><span class="nm"><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></span><button class="fm-i" data-fmi="${next}" aria-label="${T('Görev kartı')}">i</button></div>
+      <div class="fm-tg">${m.tg.map((x,i)=>`<span class="${me.tier>i?'got':''}"><b>${md[i]} ${flN(x)}</b></span>`).join('')}</div>
+      <button class="play big" data-fm="${next}">▶ ${me.tries?T('TEKRAR'):T('OYNA')}${me.tries?`<small>${flN(me.mp||0)}</small>`:''}</button>${dots(rest)}</div>`;}
+  else hero=`<div class="flhero done"><b>✓ ${T('3 görevin tamam')}</b></div>`; /* the time to the next missions is on top already */
+  const rows=ids.filter(id=>id!==next).map(id=>{const m=F.byId(id),{me,rest}=st(id);
+    return `<div class="flrow"><span class="nmw" data-fmi="${id}"><span class="ic">${fmIc(m)}</span><b>${T(m.n)}</b></span><span class="md">${me.tier?md[me.tier-1]:''}</span>${me.tries?`<span class="pt">${flN(me.mp||0)}</span>`:''}${rest>0?`<button class="play" data-fm="${id}">▶</button>`:'<span class="ok">✓</span>'}</div>`;}).join('');
+  const c=fm.chain,mine=Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);
+  const chain=`<div class="fm-ch${c.got?' s':''}"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
+    ${c.got?'':`<div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div>${flPay(F.PAY.chain)}`}</div>`;
+  return head+hero+rows+chain;}
 // 18 Oct: the day in mission points: the fleet's points and place today, today's star, the top of the day's ranking (filled when it comes)
 function flDayH(j){const M=j.fleet.mis,P=BHS_FMIS.PAY,st=(j.members||[]).find(m=>m.star),done=M.days[(new Date().getUTCDay()+6)%7]==='y';
   return `<div class="flday"><div class="dh"><span>${T('BUGÜNKÜ FİLO PUANI')}</span><b>${flN(M.day)}</b></div>
@@ -198,7 +220,7 @@ async function flWeekH(j){const M=j.fleet.mis,P=BHS_FMIS.PAY,b=await flBoards(),
   const need=Math.max(0,P.champDays-y),msg=need===0?T('Şampiyonluk ödülü için günlerin tamam.'):need>open?T('Bu hafta şampiyonluk ödülü için gün kalmadı; sandıklar için {n} gün yeter.',{n:P.chestDays}):T('Şampiyonluk ödülü için {n} gün daha görevlerini tamamla.',{n:need});
   const champ=r=>P.champ[r-1]?`+${flN(P.champ[r-1][0])} ⭐ +${P.champ[r-1][1]} 💎${P.champ[r-1][2]?` +${P.champ[r-1][2]} 🛡️`:''}`:'';
   const dayb=b&&b.day&&b.day.list.length?`<div class="flbox fldb"><div class="h"><span>🏆 ${T('GÜNÜN FİLO SIRALAMASI')}</span></div>${flBoardRows(b.day,r=>P.day[r-1]?`+${P.day[r-1][0]} ⭐${P.day[r-1][1]?' +'+P.day[r-1][1]+' 💎':''}`:'',3)}</div>`:''; /* 18 Oct: the day's ranking moved here from the first page */
-  return `${dayb}<div class="flbox flwk"><div class="h"><span>🎁 ${T('HAFTALIK GÖREV PUANI')}</span><b dir="ltr">${flN(M.week)} / ${flN(top)}</b></div>
+  return `${rel(11)?flDayH(j).replace('<div class="dtop" id="flDayTop"></div>',''):''}${dayb}<div class="flbox flwk"><div class="h"><span>🎁 ${T('HAFTALIK GÖREV PUANI')}</span><b dir="ltr">${flN(M.week)} / ${flN(top)}</b></div>
     <div class="bar"><i style="width:${Math.min(100,M.week/top*100)}%"></i>${P.chestAt.map((x,i)=>`<span class="ck${M.week>=x?' got':''}" style="left:${Math.min(97,x/top*100)}%">${i===2?'👑':'🎁'}</span>`).join('')}</div>
     <div class="barl">${P.chestAt.map((x,i)=>`<span style="${i===2?'right:0':`left:${x/top*100}%;transform:translateX(-50%)`}">${flN(x)}${M.week>=x?' ✓':''}</span>`).join('')}</div>
     <small>${T('Sandıklar, haftada en az {n} gün görevlerini tamamlayan üyelere açılır.',{n:P.chestDays})} · ${T('bitişe {t}',{t:flLeft(wkEnd-now)})}</small></div>
