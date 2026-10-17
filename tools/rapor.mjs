@@ -1,8 +1,11 @@
 // Daily report from the leaderboard server's anonymous counts (1.5.1): opens, install age bands, the first-ten-minutes funnel,
 // stars by screen, players at the same time, frequent errors and results near the ceilings. Only totals: no install ids.
+// 1.5.2 adds: wins and losses, items and continues per ten levels, what is bought, from which screen, at which level, how long after install.
 // usage: node tools/rapor.mjs [days=7] [server=https://blackhole-storm-lb.liaslabs-games.workers.dev]
-const days = +process.argv[2] || 7, B = process.argv[3] || 'https://blackhole-storm-lb.liaslabs-games.workers.dev';
-const get = async p => { try { const r = await fetch(B + p); return r.ok ? await r.json() : { list: [] }; } catch (e) { return { list: [] }; } };
+//        node tools/rapor.mjs --demo file.json   (a saved {evs:[...]} list instead of the server, for trying the layout)
+const DEMO = process.argv[2] === '--demo' ? JSON.parse((await import('fs')).readFileSync(process.argv[3], 'utf8')) : null;
+const days = DEMO ? 7 : +process.argv[2] || 7, B = process.argv[3] || 'https://blackhole-storm-lb.liaslabs-games.workers.dev';
+const get = async p => { if (DEMO) return { list: p.startsWith('/evs') ? DEMO.evs : [] }; try { const r = await fetch(B + p); return r.ok ? await r.json() : { list: [] }; } catch (e) { return { list: [] }; } };
 const [pings, evs, live, errs, sus] = await Promise.all([get(`/pings?days=${days}`), get(`/evs?days=${days}`), get('/live?days=3'), get(`/errs?days=${Math.min(days, 30)}`), get('/sus')]);
 const sum = (l, f) => l.filter(f).reduce((a, x) => a + x.n, 0);
 const E = evs.list || [], P = pings.list || [], ev = k => sum(E, x => x.e === k), pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '–';
@@ -41,6 +44,43 @@ line('Ekran', 'Kazanılan', 'Harcanan');
 let ti = 0, to = 0;
 for (const s of src) { const i = ev('si_' + s), o = ev('so_' + s); ti += i; to += o; line(s, i, o); }
 line('TOPLAM', ti, to); console.log(`  harcanan / kazanılan: ${pct(to, ti)} (çok düşükse yıldız birikiyor: enflasyon)`);
+
+// ── 1.5.2: levels, items, purchases ──
+const grp = g => `${g * 10 || 1}–${g * 10 + 9}`, groups = pre => [...new Set(E.filter(x => x.e.startsWith(pre)).map(x => +x.e.split('_').pop()))].sort((a, b) => a - b);
+const wl = [...new Set([...groups('lw_'), ...groups('lf_')])].sort((a, b) => a - b);
+if (wl.length) {
+  console.log('\n== Seviyeler: kazanma / kaybetme (10\'luk gruplar, 1.5.2+) ==');
+  line('Seviye grubu', 'Kazanma', 'Kaybetme', 'Kayıp %');
+  for (const g of wl) { const w = ev('lw_' + g), f = ev('lf_' + g); line(grp(g), w, f, pct(f, w + f)); }
+  console.log('  (kayıp oranı yüksek grup: zorluk orada; çok düşükse seviyeler kolay)');
+}
+const IT = [['Kalkan', ['sh', 'sb']], ['Süpernova', ['nv']], ['Hawking', ['hk']], ['Kristal', ['tm', 'te']], ['Parça', ['tc']], ['Süre', ['td', 'ts', 'ta']], ['Devam', ['lf', 'cd', 'cs', 'ca']], ['Kolay', ['ez', 'ea']]];
+const ug = groups('u_');
+if (ug.length) {
+  console.log('\n== Eşya ve devam kullanımı (10\'luk gruplar, 1.5.2+) ==');
+  const cols = IT.filter(([, ks]) => ks.some(k => ug.some(g => ev(`u_${k}_${g}`)))), cell = (ks, g) => { const v = ks.map(k => ev(`u_${k}_${g}`)); return v.every(n => !n) ? '·' : v.join('/'); };
+  console.log('Seviye'.padEnd(10) + cols.map(([t]) => t.padStart(14)).join(''));
+  for (const g of ug) console.log(grp(g).padEnd(10) + cols.map(([, ks]) => cell(ks, g).padStart(14)).join(''));
+  console.log('TOPLAM'.padEnd(10) + cols.map(([, ks]) => ks.map(k => ug.reduce((a, g) => a + ev(`u_${k}_${g}`), 0)).join('/').padStart(14)).join(''));
+  console.log('  Kalkan: stoktan/💎 ile anında · Kristal: oyunda/süre bitince · Süre: 💎/⭐/reklam · Devam: yedek can/💎/⭐/reklam · Kolay: 💎/reklam');
+}
+const prod = [...new Set(E.filter(x => /^p_/.test(x.e)).map(x => x.e.slice(2)))];
+if (prod.length || groups('g_').length || E.some(x => x.e.startsWith('g_'))) {
+  console.log('\n== Satın almalar (gerçek ödeme, 1.5.2+) ==');
+  const pn = prod.reduce((a, k) => a + ev('p_' + k), 0);
+  const PN = { starter: 'Başlangıç Paketi', quasar_hoard: 'Kuasar Hazinesi', vip_monthly: 'VIP Kulüp (aylık)', captain: 'Kaptan Seti', cosmic_id: 'Kozmik Kimlik', no_ads: 'Reklamsız', time_pack: '5 Zaman kristali', gems_s: '80 💎', gems_m: '250 💎', gems_l: '700 💎' };
+  line('Ürün', 'Adet', 'Pay');
+  for (const k of prod.sort((a, b) => ev('p_' + b) - ev('p_' + a))) line(PN[k] || k, ev('p_' + k), pct(ev('p_' + k), pn));
+  const SRC = { mn: 'Menüdeki MAĞAZA', sr: 'Başlangıç şeridi', pr: 'Profil', av: 'Güçlü avatarlar', cd: 'Devam: 💎 yetmedi', td: 'Süre: 💎 yetmedi', ez: 'Kolaylaştır: 💎 yetmedi', hr: 'Yakıt: 💎 yetmedi', xx: 'Mağaza dışı (görünüm ekranı)' };
+  console.log('\n  Satın alma nereden başladı:');
+  for (const k of [...new Set(E.filter(x => /^ps_/.test(x.e)).map(x => x.e.slice(3)))].sort((a, b) => ev('ps_' + b) - ev('ps_' + a))) line('  ' + (SRC[k] || k), ev('ps_' + k), pct(ev('ps_' + k), pn));
+  console.log('\n  Hangi seviyedeyken:');
+  for (const g of groups('pl_')) line('  ' + grp(g), ev('pl_' + g), pct(ev('pl_' + g), pn));
+  console.log('\n  Kurulumdan ne kadar sonra:');
+  for (const [k, t] of AG) if (ev('pa_' + k)) line('  ' + t, ev('pa_' + k), pct(ev('pa_' + k), pn));
+  const GI = [['shield', 'Kalkan'], ['lives', 'Yedek can'], ['time', 'Zaman kristali'], ['stars', '500 yıldız']];
+  if (GI.some(([k]) => ev('g_' + k))) { console.log('\n  Elmasla alınanlar (mağaza):'); for (const [k, t] of GI) line('  ' + t, ev('g_' + k)); }
+}
 
 console.log('\n== Aynı anda oynayan (5 dk dilimleri, son 3 gün) ==');
 const L = live.list || [], byDay = {};

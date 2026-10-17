@@ -450,6 +450,11 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 .subnote{margin:-2px 4px 10px;font-size:11px;line-height:1.35;color:#9aa0b6;}
 .vipline{margin-top:6px;padding:6px 8px;border-radius:6px;background:linear-gradient(90deg,rgba(242,169,59,.18),rgba(185,120,255,.14));font-family:var(--fd);font-size:12px;color:#f4dcae;}
 .offer.owned{opacity:.55;pointer-events:none;}
+@property --ca{syntax:'<angle>';initial-value:0deg;inherits:false;}
+.offer.cidA{flex-direction:column;align-items:stretch;gap:8px;padding:12px;border:1.5px solid transparent;background:linear-gradient(135deg,#191026,#0c1222) padding-box,conic-gradient(from var(--ca),#ff7ad9,#8a7dff,#5ff2ff,#c9ff6a,#ffb35c,#ff7ad9) border-box;box-shadow:0 0 22px rgba(255,122,217,.22);animation:cidRot 5s linear infinite;}@keyframes cidRot{to{--ca:360deg;}}
+.offer.cidA .cidrow{display:flex;gap:12px;align-items:center;}.offer.cidA canvas{width:112px;height:112px;flex:0 0 112px;border-radius:50%;box-shadow:0 0 18px rgba(255,122,217,.35);}
+.offer.cidA .tx b{font-size:15px;color:#ffd7f0;}.offer.cidA .cidn{display:block;margin-top:6px;font:800 14px var(--fd);letter-spacing:.1em;color:#fff;}.offer.cidA .cidsk{display:block;margin-top:2px;font-size:11px;letter-spacing:.06em;color:#c9c2ff;}.offer.cidA .pr{align-self:flex-end;}
+@media (prefers-reduced-motion:reduce){.offer.cidA{animation:none;}}
 .sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .sitem{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.035);color:#fff;cursor:pointer;}
 .sitem .ic{font-size:24px;}
@@ -1799,6 +1804,12 @@ function evSend(force){if(!evOn())return;evLoad();const now=Date.now();if(!Objec
 // the install's age band for the daily ping: a new install's first day is kept; a game that was already played before 1.5.1 says x
 function evAge(d){let d0=null;try{d0=localStorage.getItem('bhs_d0');if(!d0){d0=totalGames>0||bestLevel>1?'x':d;localStorage.setItem('bhs_d0',d0);}}catch(e){return 'x';}
   if(d0==='x')return 'x';const n=Math.round((Date.parse(d)-Date.parse(d0))/864e5);return n<=0?'0':n<2?'1':n<4?'2':n<8?'4':n<15?'8':n<31?'15':'31';}
+// 1.5.2 what is used where, and what is bought from where: counts per ten levels, no ids
+const evLv=()=>Math.min(50,Math.floor(level/10));
+function useEv(c){if(rel(12)&&gameMode==='classic'&&!REPLAY)ev('u_'+c+'_'+evLv());}
+let SHOPSRC='mn';const BUYSRC={};
+function buyEv(p){const b=BUYSRC[p.id];if(!rel(12)||!b)return;delete BUYSRC[p.id];if(MON.mode!=='play')return;const id=p.id.replace(/[^a-z0-9_]/g,'').slice(0,16);
+  ev('p_'+id);ev('ps_'+b.src);ev('pl_'+b.lv);ev('pa_'+evAge(utcDay()));}
 // where stars come from and go: each change of the balance is put on the screen that was open (the level, the Lab, the shop...)
 function evCtx(){if(gState==='playing'||gState==='paused'||gState==='tip')return 'oyun';if(gState==='lvlup_anim'||gState==='over')return 'seviye';const on=id=>{const e=$(id);return !!(e&&e.classList.contains('on'));};
   for(const [id,k] of [['mGift','hediye'],['mPrize','odul'],['sLab','lab'],['sShop','magaza'],['mShBuy','magaza'],['payOv','magaza'],['sAtlas','atlas'],['sSeason','sezon'],['sDaily','gunluk'],['sDM','gunluk'],
@@ -3223,6 +3234,7 @@ function toast(i,t,d){$('tI').textContent=i;$('tT').textContent=t;$('tD').textCo
 function owned(p){return (p.id==='no_ads'&&SHOP.noAds)||(p.id==='quasar_hoard'&&SHOP.qh)||(p.id==='cosmic_id'&&SHOP.cid)||(p.id==='starter'&&SHOP.starter)||(p.sub&&vipOn());}
 function applyPurchase(p,tok){
   if(tok){if(SHOP.tok.includes(tok))return false;SHOP.tok.push(tok);if(SHOP.tok.length>60)SHOP.tok.shift();}
+  buyEv(p); /* a restore on a new phone has no pending buy here, so it is not counted again */
   if(p.id==='no_ads'){SHOP.noAds=true;saveG();toast('🚫','REKLAMSIZ','Teşekkürler! Artık reklam yok.');}
   else if(p.id==='cosmic_id'){SHOP.cid=true;saveG();toast(rel(10)?'\ue10a':'🌌','KOZMİK KİMLİK','İsmin artık kara deliğinin içinde.');if($('sSkin').classList.contains('on'))renderSkins();}
   else if(p.id==='quasar_hoard'){SHOP.qh=true;const had=!!LAB.slot2;LAB.slot2=1;const sk=SKINS.findIndex(x=>x.u==='qh');if(sk>=0)SKIN.sel=sk; // already had the 2nd lab slot: +300 💎 instead
@@ -3258,8 +3270,9 @@ async function natTake(list,quiet){let n=0,later=0;
 // a purchase that did not go through: say plainly when the cause is the connection (no signal on the metro is not a game error)
 function buyFail(code){const net=!navigator.onLine||code===-1||code===2||code===12; /* Play: SERVICE_DISCONNECTED, SERVICE_UNAVAILABLE, NETWORK_ERROR */
   if(net)toast('📡',T('İnternet bağlantısı yok'),T('Ücret alınmadı. Bağlanınca tekrar dene.'));else toast('⚠️',T('SATIN ALMA'),T('Tamamlanamadı, ücret alınmadı'));}
-async function buy(id){
+async function buy(id,src){
   const p=IAP.find(x=>x.id===id);if(!p||owned(p))return;
+  BUYSRC[id]={src:src||($('sShop').classList.contains('on')?SHOPSRC:'xx'),lv:evLv()}; /* 1.5.2: kept until the purchase lands */
   if(MON.busy&&Date.now()-(MON.busyAt||0)>90e3)MON.busy=false; /* a purchase sheet that never answered must not lock the shop for good */
   if(MON.busy)return;
   if(!iapShow(p)){toast('🛒',T('SATIN ALMA'),T('Bu ürün şu an satın alınamıyor. Biraz sonra tekrar dene.'));if(MON.mode==='play'&&MON.nat)monDetails();return;} /* the product's price could not be read from Google Play: say so instead of doing nothing */
@@ -3295,7 +3308,17 @@ async function restorePurchases(silent){
     if(!vip&&SHOP.vipUntil){SHOP.vipUntil=0;saveG();monApply();}
     if(!silent)toast('🔄','GERİ YÜKLEME',n?`${n} satın alma geri yüklendi`:'Geri yüklenecek satın alma yok');}catch(e){if(!silent)toast('⚠️','GERİ YÜKLEME','Google Play\'e ulaşılamadı');}
 }
-function openShop(){if(!monOn())return;if(rel(11))ev('shop');renderShop();$('sShop').classList.add('on');sfx('click',{vol:.4});if(MON.mode==='play'&&!Object.keys(MON.prices).length)monDetails().then(()=>{if($('sShop').classList.contains('on'))renderShop();});} // prices could not be read at launch (offline): try again
+function openShop(src){SHOPSRC=typeof src==='string'?src:'mn';if(!monOn())return;if(rel(11))ev('shop');renderShop();$('sShop').classList.add('on');if(rel(12))cidAnimStart();sfx('click',{vol:.4});if(MON.mode==='play'&&!Object.keys(MON.prices).length)monDetails().then(()=>{if($('sShop').classList.contains('on'))renderShop();});} // prices could not be read at launch (offline): try again
+// 1.5.2: the Cosmic ID card shows what it sells: your own name inside the hole, letter by letter, in its two looks
+function cidCard(p){return `<button class="offer cidA" data-buy="${p.id}"><div class="cidrow"><canvas class="cidv" width="240" height="240"></canvas><div class="tx"><b>${p.ic} ${T('KOZMİK KİMLİK')}</b><small>${T('İsmin kara deliğinin içinde: delik büyüdükçe harf harf açılır')}</small><span class="cidn notr"></span><span class="cidsk notr"></span></div></div><div class="pr">${priceOf(p)}</div></button>`;}
+const CIDA={on:false};
+function cidAnimStart(){if(CIDA.on)return;CIDA.on=true;const A=['PEMBE FIRTINA','PİKSEL NEBULA'].map(n=>SKINS.findIndex(k=>k.n===n)),t0=performance.now(),still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const f=now=>{const cv=$('sShop').classList.contains('on')&&$('shopOffers').querySelector('canvas.cidv');if(!cv){CIDA.on=false;return;}
+    const t=(now-t0)/1000,ph=t%8,i=A[ph<4?0:1],L=[...(monoText()||'NOVA')],n=still?L.length:Math.min(L.length,1+Math.floor((ph%4)/.3)); /* each look gets 4 s; the name grows one letter at a time, as it does in play */
+    skinPaint(cv,i,t,105);monoDraw(cv.getContext('2d'),120,120,105*240/440,L.slice(0,n).join(''),SKIN_TINT[i],t);
+    const card=cv.closest('.offer'),nm=card.querySelector('.cidn'),sk=card.querySelector('.cidsk'),tx=L.join('');if(nm._t!==tx){nm._t=tx;nm.textContent='“'+tx+'”';}if(sk._i!==i){sk._i=i;sk.textContent='✦ '+T(SKINS[i].n);}
+    if(still)CIDA.on=false;else requestAnimationFrame(f);};
+  requestAnimationFrame(f);}
 function renderShop(){
   if(!$('sShop'))return;$('shopTest').hidden=MON.mode!=='test';
   const fmt=n=>n.toLocaleString(LOC),left=adLeft(),adOk=adReady();
@@ -3313,9 +3336,9 @@ function renderShop(){
   {const ok=rel(10),h=$('shopAvH'),r=$('shopAv');h.hidden=r.hidden=!ok;if(ok){ /* 1.5.0: the avatars with a boost, right in the shop; a card opens the picker on it */
     const ks=AVATARS.filter(k=>AVX[k][2]>=2).sort((a,b)=>AVX[b][2]-AVX[a][2]);h.innerHTML=`⚡ ${T('GÜÇLÜ AVATARLAR')} <small>· ${T('Normal ve Zor modda güç verir')}</small>`;
     r.innerHTML=ks.map(k=>{const a=AVX[k],own=avOk(k);return `<button class="ac ${a[2]===3?'leg':''} ${own?'own':''}" data-av="${k}"><span class="rk">${T(a[2]===3?'EFSANE':'NADİR')}</span><img src="${BHS_SPR.av[a[0]]}" alt=""><b class="notr">${T(a[1])}</b><small>⚡ ${T(AVPK_TXT[k])}</small><div class="pr">${own?'✓ '+T('SENİN'):`${a[3]} 💎 · ${a[4].toLocaleString(LOC)} ⭐`}</div></button>`;}).join('');
-    r.querySelectorAll('[data-av]').forEach(b=>b.onclick=()=>{const k=b.dataset.av;$('sShop').classList.remove('on');openProfile(()=>openShop());avPick(k);const t=document.querySelector(`#avGrid .av[data-k="${k}"]`),g=$('avGrid');if(t&&g)g.scrollTop=t.offsetTop-g.clientHeight/2;});}}
+    r.querySelectorAll('[data-av]').forEach(b=>b.onclick=()=>{const k=b.dataset.av;$('sShop').classList.remove('on');openProfile(()=>openShop('av'));avPick(k);const t=document.querySelector(`#avGrid .av[data-k="${k}"]`),g=$('avGrid');if(t&&g)g.scrollTop=t.offsetTop-g.clientHeight/2;});}}
   const rest=offers.filter(p=>p!==hero);$('shopOffersH').hidden=!rest.length;
-  $('shopOffers').innerHTML=rest.map(p=>`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
+  $('shopOffers').innerHTML=rest.map(p=>rel(12)&&p.id==='cosmic_id'&&!owned(p)?cidCard(p):`<button class="offer ${p.cls||''} ${owned(p)?'owned':''}" data-buy="${p.id}">${p.tag&&!owned(p)?`<span class="tag">${p.tag}</span>`:''}<div class="ic">${p.ic}</div><div class="tx"><b>${p.t}</b><small>${p.d}</small></div><div class="pr">${owned(p)?(p.sub?'AKTİF ✓':'SAHİPSİN ✓'):`${p.was?`<s>${p.was}</s>`:''}${priceOf(p)}${p.val?`<small class="val">${p.val}</small>`:''}`}</div></button>${p.sub?`<div class="subnote">${vipOn()?(MON.mode==='test'?`<span>Üyelik ${Math.ceil((SHOP.vipUntil-Date.now())/864e5)} gün daha geçerli (test). </span>`:'<span>Üyeliğin aktif. </span>'):''}Aylık abonelik, her ay otomatik yenilenir. İstediğin an Google Play › Abonelikler'den iptal edebilirsin; ödediğin ayın sonuna kadar VIP kalırsın.</div>`:''}`).join('');
   const gems=IAP.filter(p=>p.sec==='gems'&&iapShow(p)),PILE={gems_s:1,gems_m:3,gems_l:6};
   $('shopGemsH').hidden=!gems.length;
   $('shopGems').innerHTML=gems.map(p=>{const n=PILE[p.id]||1,[lab,bon]=p.d.split(' · ');return `<button class="sitem ${p.tag==='POPÜLER'?'pop':''}" data-buy="${p.id}">${p.tag?`<span class="tag">${p.tag}</span>`:''}<div class="pile p${n}">${'<i>💎</i>'.repeat(n)}</div><div class="amt">${p.t}</div>${bon?`<span class="bon">${bon}</span>`:''}<small>${lab}</small><div class="pr">${priceOf(p)}</div></button>`;}).join('');
@@ -3335,7 +3358,7 @@ function renderShop(){
   if($('shopRetry'))$('shopRetry').onclick=async()=>{$('shopRetry').disabled=true;await monDetails();renderShop();};
   $('sShop').querySelectorAll('[data-gem]').forEach(b=>b.onclick=()=>{const g=GEM_ITEMS[+b.dataset.gem];if(g.max&&(SHOP[g.k]|0)>=g.max)return;
     if(diamonds<g.cost){sfx('buzz',{vol:.25});if(!toGems())toast('💎',T('ELMAS'),T('Seviye geçerek, günlük ödüllerle ve görevlerle elmas kazanırsın'));return;}
-    diamonds-=g.cost;if(g.k==='stars')stars+=g.n;else SHOP[g.k]=(SHOP[g.k]|0)+1;saveG();updateUI();$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;sfx('coin',{vol:.6});renderShop();});
+    diamonds-=g.cost;if(g.k==='stars')stars+=g.n;else SHOP[g.k]=(SHOP[g.k]|0)+1;if(rel(12))ev('g_'+g.k);saveG();updateUI();$('menuStars').textContent=stars;$('menuDia').textContent=diamonds;sfx('coin',{vol:.6});renderShop();});
   const fg=$('freeGems');if(fg)fg.onclick=async()=>{if(adLeft()<=0)return;if(await showRewarded()){SHOP.adN++;grant({gems:5},'ÜCRETSİZ ELMAS');}renderShop();};
 }
 // shield: absorbs one life loss (not in Daily Cosmos / challenges)
@@ -4114,10 +4137,10 @@ function showCont(){
     ct.innerHTML=`<div class="ctmsg">${ctm}</div><div class="ctbar${b?'':' go'}"><i style="width:${pct}%"></i></div>`+(SHOP.time>0?`<button class="btn big ctc" id="ctCry">⏱ ${T('ZAMAN KRİSTALİ KULLAN')} · +${sec} ${T('sn')}<small>${T('Sende {n} tane var',{n:SHOP.time})}</small></button>`:'')+
       `<button class="btn big ctd${diamonds<dc?' dim':''}" id="ctDia">💎 ${dc} · +${sec} ${T('sn')}</button>`+(monOn()&&adReady()&&!G2.timeAd?`<button class="btn big adbtn" id="ctAd">${adLabel('+15 '+T('sn'))}</button>`:'')+
       (G2.starTime<STAR_TIME.length?(([sc,ss])=>`<button class="btn big cts${stars<sc?' dim':''}" id="ctStar">⭐ ${sc} · +${ss} ${T('sn')}<small>${stars>=sc?T('Yıldızın: {n}',{n:stars.toLocaleString(LOC)})+' · '+T(G2.starTime?'seviye başına son hak':'seviye başına 2 hak'):T('⭐ yetersiz · {a} gerekli (sende {b})',{a:sc,b:stars.toLocaleString(LOC)})}</small></button>`)(STAR_TIME[G2.starTime]):'');
-    if($('ctStar'))$('ctStar').onclick=()=>{const o=STAR_TIME[G2.starTime];if(!o||stars<o[0]){sfx('buzz',{vol:.3});return;}stars-=o[0];G2.starTime++;saveG();v2AddTime(o[1]);};
-    if($('ctCry'))$('ctCry').onclick=()=>{if(SHOP.time<=0)return;SHOP.time--;if(rel(12))ev('tm_end');v2AddTime(sec);};
-    $('ctDia').onclick=()=>{const c=TIME_DIA*2**G2.timeBuy;if(diamonds<c){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:c}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}diamonds-=c;G2.timeBuy++;dmEvent('diamond',1);v2AddTime(sec);};
-    if($('ctAd'))$('ctAd').onclick=async()=>{if(G2.timeAd)return;if(await showRewarded()){G2.timeAd=1;v2AddTime(15);}};}
+    if($('ctStar'))$('ctStar').onclick=()=>{const o=STAR_TIME[G2.starTime];if(!o||stars<o[0]){sfx('buzz',{vol:.3});return;}stars-=o[0];G2.starTime++;useEv('ts');saveG();v2AddTime(o[1]);};
+    if($('ctCry'))$('ctCry').onclick=()=>{if(SHOP.time<=0)return;SHOP.time--;useEv('te');v2AddTime(sec);};
+    $('ctDia').onclick=()=>{const c=TIME_DIA*2**G2.timeBuy;if(diamonds<c){toast('💎',T('ELMASIN YETMİYOR'),T('{n} 💎 gerekli.',{n:c}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop('td');return;}diamonds-=c;G2.timeBuy++;useEv('td');dmEvent('diamond',1);v2AddTime(sec);};
+    if($('ctAd'))$('ctAd').onclick=async()=>{if(G2.timeAd)return;if(await showRewarded()){G2.timeAd=1;useEv('ta');v2AddTime(15);}};}
     else if(rel(9)&&cl&&(G2.goal||G2.boss)){const b=G2.boss,pct=b?Math.max(1,Math.round(b.hp/b.max*100)):Math.min(99,Math.floor(levelScore/Math.max(1,G2.goal)*100)); /* 1.4.9: out of hearts, how close it was */
       if(b||pct>=40){ct.hidden=false;ct.innerHTML=`<div class="ctmsg">${b?T("Boss'un kalan canı: %{n}.",{n:pct})+(pct<=35?' '+T('Az kaldı!'):''):T('Hedefin %{n} tamam.',{n:pct})+(pct>=70?' '+T('Az kaldı!'):'')}</div><div class="ctbar${b?'':' go'}"><i style="width:${pct}%"></i></div>`;}}}
     {const ok=rel(9)&&cl&&!REPLAY&&G2.mode==='level'&&v2Peak(level)&&(G2.arc0??3)<3&&monOn()&&adReady();$('contArc').parentNode.hidden=!ok;if(ok)$('contArc').textContent=adLabel(T('+1 YAYLA YENİDEN OYNA'));} /* a failed peak: one ad, one extra arc for the next try */
@@ -4688,7 +4711,7 @@ $('atBtn').onclick=()=>{sfx('click',{vol:.4});COSMO.newT=0;saveG();atlasBadge();
 $('dmBtn').onclick=()=>{renderDM();$('sDM').classList.add('on');};$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};if($('sGuideB'))$('sGuideB').onclick=()=>$('guideBtn').onclick(); /* 1.5.0: the guide moved to Settings, FLEET took its place in the menu */
 if($('flBtn'))$('flBtn').onclick=()=>{if(!flOn()){toast('🛸',T('FİLO'),T('Filolar internet bağlantısı ister.'));return;}if(bestLevel<FL_LV){toast('🛸',T('FİLO'),T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV}));return;}fleetOpen();};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
-$('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('raceBtn').onclick=()=>{sfx('click',{vol:.4});renderDaily();$('raceSheet').hidden=false;};$('raceClose').onclick=()=>{$('raceSheet').hidden=true;};$('shopBtn').onclick=openShop;$('starterRib').onclick=openShop;$('pShop').onclick=openShop;
+$('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('raceBtn').onclick=()=>{sfx('click',{vol:.4});renderDaily();$('raceSheet').hidden=false;};$('raceClose').onclick=()=>{$('raceSheet').hidden=true;};$('shopBtn').onclick=openShop;$('starterRib').onclick=()=>openShop('sr');$('pShop').onclick=()=>openShop('pr');
 $('shopX').onclick=()=>$('shopClose').click();
 $('shopClose').onclick=()=>{$('sShop').classList.remove('on');if($('sMenu').classList.contains('on'))showMenu();};$('shopRestore').onclick=()=>MON.mode==='test'?toast('🔄','GERİ YÜKLEME','Test modunda geri yüklenecek bir şey yok'):restorePurchases(false);$('mapBack').onclick=closeMap;$('shClose').onclick=()=>$('mSheet').classList.remove('on');
 $('dcPlay').onclick=()=>{const n=dailyNo();startSprint(dailySeed(n),{daily:n});};
@@ -4723,26 +4746,26 @@ $('lvlRetry').onclick=e=>{e.stopPropagation();if(!REPLAY){startReplay(level);ret
 $('againBtn').onclick=()=>{if(gameMode==='classic'){savedLevel=1;savedScore=0;}saveG();SND.music('game');resetRun(true,false);};
 $('overMenu').onclick=()=>{hideModals();showMenu();};
 $('contDia').onclick=()=>{const dc=V2K.cont.dia*2**G2.diaCont;
-  if(diamonds<dc){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:dc}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}
-  diamonds-=dc;G2.diaCont++;G2.starCont=1;dmEvent('diamond',1);v2Revive();lives=2;updateUI();saveG();};
+  if(diamonds<dc){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:dc}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop('cd');return;}
+  diamonds-=dc;G2.diaCont++;useEv('cd');G2.starCont=1;dmEvent('diamond',1);v2Revive();lives=2;updateUI();saveG();};
 const TIME_DIA=20,STAR_CONT={cost:300,hard:450,day:3},STAR_TIME=[[150,10],[300,15]]; // stars buy a little time too: 150 ⭐ for +10 s, then 300 ⭐ for +15 s, twice a level // time costs what a time crystal costs; the star continue is dearer and three a day
 function contStarCost(){return G2.on&&G2.hard?STAR_CONT.hard:STAR_CONT.cost;}
 function starContLeft(){const d=new Date().toDateString();if(SHOP.scDay!==d){SHOP.scDay=d;SHOP.scN=0;}return STAR_CONT.day-SHOP.scN;}
-$('contYes').onclick=()=>{if(G2.contUsed||starContLeft()<=0)return;const c=contStarCost();if(stars>=c){stars-=c;SHOP.scN++;G2.starCont=1;v2Revive();}else{$('noStarP').textContent=T('Devam etmek için {n} ⭐ gerekiyor.',{n:c});showModal('mNoStar');}};
+$('contYes').onclick=()=>{if(G2.contUsed||starContLeft()<=0)return;const c=contStarCost();if(stars>=c){stars-=c;SHOP.scN++;G2.starCont=1;useEv('cs');v2Revive();}else{$('noStarP').textContent=T('Devam etmek için {n} ⭐ gerekiyor.',{n:c});showModal('mNoStar');}};
 $('contRetry').onclick=()=>{heartLose();if(heartGate(level,retryLevel))retryLevel();};
 $('hrtAd').onclick=async()=>{if(await showRewarded()){heartGain(1);toast('⛽','+1 YAKIT','');heartGo();}};
-$('hrtDia').onclick=()=>{if(diamonds<HRT.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:HRT.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}
+$('hrtDia').onclick=()=>{if(diamonds<HRT.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:HRT.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop('hr');return;}
   diamonds-=HRT.dia;heartGain(HRT.max);updateUI();toast('⛽','FÜZYON YAKITI DOLDU','');heartGo();};
 $('hrtWait').onclick=()=>{heartTick();if(HEARTS.n>0){heartGo();return;}HRT_CB=null;hideModals();if(!$('sMenu').classList.contains('on')){if(gameMode==='classic'&&G2.on){savedLevel=Math.max(savedLevel,level);saveG();}$('sPause').classList.remove('on');SND.duck(1,0);$('pauseBtn').textContent='⏸';showMenu();}};
 setInterval(()=>{if(document.hidden)return;if(rel(7)&&gState==='playing'){heartTick();return;} /* 1.4.7: no menu DOM work during a level */const had=HEARTS.n;heartUI();if(had<=0&&HEARTS.n>0&&$('mHeart').classList.contains('on'))sfx('confirm',{vol:.4});},1000);
 // Ease offer: after three failed tries of the same level, make it 20% easier for 15 💎 or an ad.
 const EASE={after:3,dia:15,k:.8};
 function easeGo(){SHOP.easyLv=level;SHOP.failN=0;saveG();hideModals();retryLevel();toast('🪶','SEVİYE KOLAYLAŞTI',T('Hedef %20 düştü'));}
-$('contEase').onclick=()=>{if(diamonds<EASE.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:EASE.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop();return;}diamonds-=EASE.dia;updateUI();easeGo();};
-$('contEaseAd').onclick=async()=>{if(await showRewarded())easeGo();};
+$('contEase').onclick=()=>{if(diamonds<EASE.dia){toast('💎','ELMASIN YETMİYOR',T('Devam için {n} 💎 gerekli.',{n:EASE.dia}));sfx('buzz',{vol:.3});if(monOn()&&typeof openShop==='function')openShop('ez');return;}diamonds-=EASE.dia;useEv('ez');updateUI();easeGo();};
+$('contEaseAd').onclick=async()=>{if(await showRewarded()){useEv('ea');easeGo();}};
 $('contArc').onclick=async()=>{if(await showRewarded()){SHOP.arcLv=level;saveG();heartLose();if(heartGate(level,retryLevel))retryLevel();}};
-$('contAd').onclick=async()=>{if(adReviveUsed)return;if(await showRewarded()){adReviveUsed=true;revive(1);}};
-$('contLife').onclick=()=>{if(SHOP.lives<=0)return;SHOP.lives--;revive(1);};
+$('contAd').onclick=async()=>{if(adReviveUsed)return;if(await showRewarded()){adReviveUsed=true;useEv('ca');revive(1);}};
+$('contLife').onclick=()=>{if(SHOP.lives<=0)return;SHOP.lives--;useEv('lf');revive(1);};
 $('contNo').onclick=()=>{hideModals();if(gameMode==='classic'){heartLose();addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;savedLevel=level;savedScore=levelStartScore;saveG();showMenu();}else gameOver();};
 $('noStarOk').onclick=()=>{hideModals();if(gameMode==='classic')showCont();else gameOver();};
 $('shareBtn').onclick=async()=>{const txt=`${playerAvatar} `+T("{p}: Blackhole Storm'da {s} puan, seviye {l}! Geçebilir misin?",{p:playerName,s:nf(totalScore),l:level});

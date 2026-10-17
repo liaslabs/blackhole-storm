@@ -217,7 +217,7 @@ async function ensurePings(DB) {
   pingReady = true;
 }
 // 1.5.1 play counts: the keys the game may send (anything else is dropped)
-const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|tm_(cry|end|clk)|l[wf]_\d{1,2})$/;
+const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|l[wf]_\d{1,2}|u_[a-z]{2}_\d{1,2}|p_[a-z0-9_]{2,16}|ps_[a-z]{2}|pl_\d{1,2}|pa_(\d{1,2}|x)|g_[a-z]{2,6})$/;
 const AGE = /^(0|1|2|4|8|15|31|x)$/;
 let evReady = false;
 async function ensureEvs(DB) {
@@ -383,7 +383,7 @@ export default {
         const b = await req.json().catch(() => ({}));
         const v = typeof b.v === 'string' && /^bhs-v\d{1,4}$/.test(b.v) ? b.v : null, p = b.p === 'app' ? 'app' : 'web', today = day();
         const d = okDay(b.d) && b.d <= today && b.d >= day(Date.now() - 3 * 864e5) ? b.d : today; // counts kept on the phone a few days still land on their day
-        const e = b.e && typeof b.e === 'object' && !Array.isArray(b.e) ? Object.entries(b.e).filter(([k, n]) => EV_KEY.test(k) && Number.isFinite(+n) && +n >= 1).slice(0, 40) : [];
+        const e = b.e && typeof b.e === 'object' && !Array.isArray(b.e) ? Object.entries(b.e).filter(([k, n]) => EV_KEY.test(k) && Number.isFinite(+n) && +n >= 1).slice(0, 120) : [];
         if (!v || !e.length) return json(req, { ok: false }, 400);
         await ensureEvs(DB);
         await DB.batch(e.map(([k, n]) => evAdd(DB, d, v, p, k, Math.min(k[0] === 's' && k[2] === '_' ? 1e6 : 50, Math.floor(+n)))));

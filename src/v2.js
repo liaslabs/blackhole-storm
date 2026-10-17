@@ -1087,7 +1087,7 @@ function v2HawkOn(){return G2.mode!=='sprint'&&(G2.mode==='surv'||G2.mode==='lev
 const v2ShDur=()=>V2K.shield.dur+Math.min(8,.5*labEffLv('shield'))+avPk('shield'),v2HawkCD=()=>Math.max(avPk('hawk')?10:12,V2K.hawk.cd-Math.max(0,labEffLv('hawk')-1)+avPk('hawk')),v2JetDur=()=>V2K.jet.dur+.2*Math.max(0,labEffLv('jet')-1)+avPk('jet'); /* 1.5.0: a rare or legendary avatar adds its boost */
 function v2HawkOk(){if(!v2HawkOn()||G2.hkCD>0||G2.rageT>0||G2.ending||G2.script)return false;const ex=G2.rr-V2K.r0;return ex>6&&G2.rr>=V2K.r0+(G2.cap-V2K.r0)*V2K.hawk.min;}
 function v2Hawking(){if(G2.on&&gState==='playing'&&G2.mode==='level'&&level>=V2K.hawk.from&&labLv('hawk')<1){v2Pop(T('HAWKING REAKTÖRÜ')+' · '+T('KOZMİK LAB’DA İNŞA ET'),'#ffffff',15);return;}
-  if(!G2.on||gState!=='playing'||!v2HawkOk())return;const loss=(G2.rr-V2K.r0)*V2K.hawk.loss;G2.rr-=loss;G2.hkCD=v2HawkCD();avPkFx('hawk',2.5);G2.magT=Math.max(G2.magT,2.5);let n=0;
+  if(!G2.on||gState!=='playing'||!v2HawkOk())return;const loss=(G2.rr-V2K.r0)*V2K.hawk.loss;G2.rr-=loss;G2.hkCD=v2HawkCD();if(G2.mode==='level')useEv('hk');avPkFx('hawk',2.5);G2.magT=Math.max(G2.magT,2.5);let n=0;
   for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'&&o.x>-o.r&&o.x<W+o.r&&o.y>-o.r&&o.y<H+o.r){o.st='dead';n++;v2Burst(o.x,o.y,14,'#ffffff',2,6,.5);v2MetBreak(o);}
   if(n>=3)v2GoldEarn('HAWKING'); /* a big Hawking burst earns a gold shell */
   const pts=Math.round((loss*120+n*50)*(G2.rageT>0?2:1));totalScore+=pts;levelScore+=pts;G2.hkFx={t:0,x:hX,y:hY};flash=Math.max(flash,.7);shake=Math.max(shake,12);shock=1;
@@ -1168,7 +1168,7 @@ function v2Eaten(o){ // the body has crossed the event horizon
   if(o.noScore)return;
   {const cap=G2.cap;G2.rr=Math.min(cap,G2.rr+K.grow*(G2.growK||1));if(o.mini)G2.beams.push({x:cx,y:cy,t:0});else G2.pulse=1;} // helper catches flow into your hole
   addMass(1);
-  if(o.k==='tclk'){ev('tm_clk');v2ClockPlus(TCLK.s,T('ZAMAN PARÇASI'));}
+  if(o.k==='tclk'){useEv('tc');v2ClockPlus(TCLK.s,T('ZAMAN PARÇASI'));}
   else if(o.k==='time'){G2.timeT=v2TimeDur();avPkFx('time',G2.timeT);v2Call('ZAMAN YAVAŞ',T('{n} sn',{n:G2.timeT}),'#8fd0ff',1.2);}
   else if(o.k==='bomb')v2Blast(hX,hY,!!o.mega);
   else if(o.k==='comet'){G2.comboT+=2;v2Call('COMBO SÜRESİ','+2 sn','#bff6ff',.9);}
@@ -1238,7 +1238,7 @@ function v2Fail(msg){
 const TCLK={s:5,at:[.35,.65],life:9};
 const v2Timed=()=>G2.on&&G2.mode==='level'&&!v2Pure()&&!REPLAY&&(!!G2.hard||!!G2.L.boss)&&G2.dur<1e8,v2CrySec=()=>G2.boss?30:15;
 function v2ClockPlus(sec,sub){G2.dur+=sec;v2Call('+'+sec+' '+T('sn'),sub,'#6dffd0',1.1,true);sfx('powerup',{vol:.5,rate:1.25});const tp=$('tmr2');if(tp){tp.classList.remove('plus');void tp.offsetWidth;tp.classList.add('plus');}updateUI();}
-function v2TimeCry(){if(gState!=='playing'||!v2Timed()||G2.ending)return;if(SHOP.time<=0){sfx('buzz',{vol:.3});return;}SHOP.time--;ev('tm_cry');v2ClockPlus(v2CrySec(),T('ZAMAN KRİSTALİ'));vib(20);later(saveG,300);}
+function v2TimeCry(){if(gState!=='playing'||!v2Timed()||G2.ending)return;if(SHOP.time<=0){sfx('buzz',{vol:.3});return;}SHOP.time--;useEv('tm');v2ClockPlus(v2CrySec(),T('ZAMAN KRİSTALİ'));vib(20);later(saveG,300);}
 function v2TclkStep(){if(!v2Timed()||G2.ending||gState!=='playing')return;const q=G2.tck||(G2.tck={n:0,d0:G2.dur,o:null});
   if(q.o&&q.o.st==='in'&&q.o.age>TCLK.life)q.o.st='dead';if(q.o&&q.o.st!=='in')q.o=null;
   if(!q.o&&q.n<TCLK.at.length&&G2.t>=q.d0*TCLK.at[q.n]&&G2.dur-G2.t>6){q.n++;q.o=v2Edge('tclk',rpick([0,1,2]));}} /* never from below, where it would hide under the buttons */
@@ -1317,7 +1317,7 @@ function v2Nova(){ // 💎 Supernova: everything on screen pops into the hole, t
   if(G2.tNova!=null){if(G2.tNova<=0){toast('💥',T(FMRUN?'GÖREV SÜPERNOVALARIN BİTTİ':'TURNUVA SÜPERNOVALARIN BİTTİ'),T('Herkes eşit şartlarda yarışır'));v2Sfx('buzz',{vol:.25});return;}G2.tNova--;G2.novaN++;G2.novaT=N.imm+avPk('nova');avPkFx('nova',G2.novaT);} /* 1.4.9: the tournament's own Supernovas, the same for everyone, no diamonds */
   else{if(G2.novaN>=N.max){v2Pop('SEVİYE BAŞINA EN ÇOK '+N.max,'#8fe9ff',15);v2Sfx('buzz',{vol:.25});return;}
   if(diamonds<N.cost){toast('💎','ELMASIN YETMİYOR',T('Süpernova için {n} 💎 gerekli.',{n:N.cost}));v2Sfx('buzz',{vol:.25});return;}
-  diamonds-=N.cost;G2.novaN++;dmEvent('diamond',1);saveG();updateUI();G2.novaT=N.imm+avPk('nova');avPkFx('nova',G2.novaT);}
+  diamonds-=N.cost;G2.novaN++;if(!FMRUN)useEv('nv');dmEvent('diamond',1);saveG();updateUI();G2.novaT=N.imm+avPk('nova');avPkFx('nova',G2.novaT);}
   const nb=Math.max(500,Math.round((G2.goal||v2Goal(Math.max(1,G2.lv%10?G2.lv:G2.lv-1)))*N.bonus/100)*100);totalScore+=nb;levelScore+=nb; /* worth a real slice of the goal: 15% on top of everything it swallows */
   sfx('powerup',{vol:.8,rate:.7});sfx('magnet',{vol:.5,rate:1.4});vib([30,20,60]);v2Blast(hX,hY,true,true);if(G2.mega)G2.mega.nb=nb;v2Call('SÜPERNOVA','+'+nb.toLocaleString(LOC),'#8fe9ff',1.6,true);v2Ui(true);
 }
@@ -1372,7 +1372,7 @@ const v2Pure=()=>gameMode==='sprint'&&!FMRUN; // the Daily Race and a challenge 
 function v2Shield(){
   if(!G2.on||gState!=='playing'||v2Pure()||G2.shT>0||G2.rageT>0)return;
   if(v2ShLeft()<=0){if(FMRUN){toast('🛡',T('GÖREV KALKANLARIN BİTTİ'),T('Filo görevinde herkes aynı kalkanlarla oynar.'));v2Sfx('buzz',{vol:.25});}else if(G2.tSh!=null){toast('🛡',T('TURNUVA KALKANLARIN BİTTİ'),T('Turnuvada herkes aynı kalkanlarla oynar.'));v2Sfx('buzz',{vol:.25});}else if(monOn())v2ShieldBuy();else{toast('🛡','KALKANIN YOK','3 kalkan parçası topla: seviye 4’ten itibaren gelir.');v2Sfx('buzz',{vol:.25});}return;}
-  if(G2.tSh!=null)G2.tSh--;else{SHOP.shield--;saveG();updateUI();}G2.shT=v2ShDur();G2.shTick=0;avPkFx('shield',G2.shT);const am=v2AM(),fix=G2.mode!=='sprint'&&G2.arcs<am;if(fix){for(let i=G2.arcs;i<am;i++)v2ArcForm(i,'arc');G2.arcs=am;G2.arcFix={i:am-1,t:G2.t};} /* the shield also mends every broken arc */
+  if(G2.tSh!=null)G2.tSh--;else{SHOP.shield--;if(!FMRUN)useEv('sh');saveG();updateUI();}G2.shT=v2ShDur();G2.shTick=0;avPkFx('shield',G2.shT);const am=v2AM(),fix=G2.mode!=='sprint'&&G2.arcs<am;if(fix){for(let i=G2.arcs;i<am;i++)v2ArcForm(i,'arc');G2.arcs=am;G2.arcFix={i:am-1,t:G2.t};} /* the shield also mends every broken arc */
   v2Call('KALKAN',fix?'10 sn · YAYLAR TAMİR':'10 sn','#ffd84d',1.1);sfx('armor',{vol:.8,rate:.9});sfx('powerup',{vol:.45,rate:1.3});vib(25);v2Burst(hX,hY,24,'#ffd84d',2,6,.6);v2Ui(true);
 }
 function v2ShieldBuy(){ // empty: offer one for diamonds, the game waits
@@ -1380,7 +1380,7 @@ function v2ShieldBuy(){ // empty: offer one for diamonds, the game waits
   $('shbD').textContent=T('Kalkanın kalmadı. Elmasla bir kalkan al ve hemen kullan.')+' · '+T('Elmasın')+': '+diamonds+' 💎';
   const b=$('shbYes');b.disabled=!ok;b.textContent=ok?T('AL VE KULLAN')+' · '+c+' 💎':T('Yetersiz elmas');showModal('mShBuy');SND.duck(.4,1e5);
 }
-function v2ShieldBuyOk(){const c=V2K.shield.cost;if(diamonds<c)return;diamonds-=c;SHOP.shield++;saveG();v2TipOk();v2Shield();}
+function v2ShieldBuyOk(){const c=V2K.shield.cost;if(diamonds<c)return;diamonds-=c;SHOP.shield++;useEv('sb');saveG();v2TipOk();v2Shield();}
 
 // ── first-encounter tips: one card per thing, once per player, the game waits for ANLADIM ──
 const TIP2={
