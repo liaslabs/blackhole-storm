@@ -553,7 +553,7 @@ function v2Update(dt){
     if(G2.guard&&G2.guard.t<=0&&G2.guard.hp>0||G2.hunt&&!G2.hunt.multi&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
     if(G2.boss&&G2.t>=G2.dur){
       v2Fail('DEV GEZEGEN KAÇTI');return;} // the time window offers a crystal, diamonds or an ad
-    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
+    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage||HMODE)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});} /* 18 Oct: level 1 waits for the first Vortex (the tutorial's lesson), but not in Hard Mode, where nothing would end it */
     else if(G2.hard&&G2.goal&&G2.t>=G2.dur&&!G2.mega&&!G2.ending){ /* hard levels: the clock ran out short of the goal */
       G2.lastHit='time';v2Fail('SÜRE DOLDU');return;}
   }

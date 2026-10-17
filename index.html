@@ -1542,7 +1542,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <div class="row mon"><button class="btn big adbtn" id="contAd">▶ REKLAM İZLE · 1 CANLA DEVAM</button></div>
    <div class="row mon"><button class="btn big cy" id="contLife">❤️ YEDEK CAN KULLAN</button></div>
    <div class="row"><button class="btn big cy" id="contDia">💎 25 · 2 CANLA DEVAM</button></div>
-   <div class="row"><button class="btn big" id="contYes">DEVAM ET · 100 ⭐</button></div>
+   <div class="row"><button class="btn big" id="contYes">DEVAM ET · 300 ⭐</button></div>
    <div class="row mon" hidden><button class="btn adbtn" id="contArc" style="width:100%;">▶ REKLAM İZLE · +1 YAYLA YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contRetry" style="width:100%;">🔄 SEVİYEYİ ÜCRETSİZ YENİDEN OYNA</button></div>
    <div class="row"><button class="btn sec" id="contNo" style="width:100%;">BİTİR</button></div>
@@ -2415,7 +2415,7 @@ const LSAVE={t:0,d:0};function saveG0(){if(typeof CLOUD!=='undefined'){if(CLOUD.
 const svN=(v,def,lo=0,hi=9e15)=>typeof v==='number'&&isFinite(v)?Math.min(hi,Math.max(lo,v)):def;
 const svI=(v,def,lo=0,hi=9e15)=>Math.floor(svN(v,def,lo,hi));
 const svO=v=>v&&typeof v==='object'&&!Array.isArray(v)?v:null;
-function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{};}catch(e){d={};}
+function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{};}catch(e){d={};try{const raw=localStorage.getItem(SK);if(raw&&!localStorage.getItem(SK+'_bad'))localStorage.setItem(SK+'_bad',raw);}catch(e2){}} /* 18 Oct: a save that cannot be read is kept aside before the fresh one is written over it */
   try{stars=svI(d.stars,250,0,1e9);diamonds=svI(d.diamonds,50,0,1e9);bestScore=svI(d.bestScore,0);totalGames=svI(d.totalGames,0);totalCombos=svI(d.totalCombos,0);
   unlockedAch=new Set(Array.isArray(d.ach)?d.ach.filter(x=>typeof x==='string'):[]);
   localLB=Array.isArray(d.lb)?d.lb.filter(x=>svO(x)&&typeof x.score==='number'&&isFinite(x.score)).slice(0,40):[];
@@ -5138,6 +5138,8 @@ function backStep(){ // false: nothing left to close, the app may go
   else if(on('sLB')){$('sLB').classList.remove('on');}
   else if(on('sSeason')){$('sSeason').classList.remove('on');}
   else if(on('sLab')){labClose();}
+  else if(on('sAtlas')){$('sAtlas').classList.remove('on');} /* 18 Oct audit: the Atlas tab, the daily reward and a card over the menu closed the app */
+  else if(on('sDaily')){} /* the day's reward waits to be taken */
   else if(on('sGarden')){$('sGarden').classList.remove('on');gdRun=false;}
   else if(on('sExp')){$('sExp').classList.remove('on');}
   else if(on('sChal')){$('sChal').classList.remove('on');}
@@ -5145,6 +5147,7 @@ function backStep(){ // false: nothing left to close, the app may go
   else if(gState==='paused'){resumeGame();}
   else if(gState==='tip'){v2TipOk();}
   else if(on('sProfile')&&playerName){$('profLater').click();}
+  else if(on('sMenu')&&MODALS.some(on)){hideModals();}
   else if(on('sMenu')||on('sProfile'))return false;
   return true;}
 addEventListener('popstate',()=>{
@@ -5801,7 +5804,7 @@ function v2Update(dt){
     if(G2.guard&&G2.guard.t<=0&&G2.guard.hp>0||G2.hunt&&!G2.hunt.multi&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
     if(G2.boss&&G2.t>=G2.dur){
       v2Fail('DEV GEZEGEN KAÇTI');return;} // the time window offers a crystal, diamonds or an ad
-    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
+    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage||HMODE)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});} /* 18 Oct: level 1 waits for the first Vortex (the tutorial's lesson), but not in Hard Mode, where nothing would end it */
     else if(G2.hard&&G2.goal&&G2.t>=G2.dur&&!G2.mega&&!G2.ending){ /* hard levels: the clock ran out short of the goal */
       G2.lastHit='time';v2Fail('SÜRE DOLDU');return;}
   }
