@@ -78,8 +78,13 @@ function fleetMenu(){fleetBtn();const s=$('menuSub');if(!s||!rel(10))return;s.on
 
 // the daily fleet mission, shown above the three daily missions
 function fleetMission(){if(!rel(10)||!FL.fid)return '';const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
-  return `<div class="dmr flm"><div class="x">🛸 ${T('Filon için {n} seviye geç',{n:3})}<small>${m.p} / 3 · ${T('ödül')} 30 ⭐ · ${T('filoya puan')}</small><div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button id="flMisGo" ${done?'':'disabled'}>${T('AL')}</button>`}</div>`;}
-function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>{if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();updateUI();sfx('achieve',{vol:.5});renderDM();fleetMenu();};}
+  return `<div class="dmr flm"><div class="x">🛸 ${T('Filon için {n} seviye geç',{n:3})}<small>${m.p} / 3 · ${T('ödül')} 30 ⭐ · ${T('filoya puan')}</small><div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button id="flMisGo" ${done?'':'disabled'}>${T('AL')} · +30 ⭐</button>`}</div>`;}
+function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>flMisClaim(b,renderDM);}
+// 18 Oct: the 30 stars of the daily fleet mission: the button says what it gives, a "+30 ⭐" rises from it and the stars fly into the wallet
+function flMisClaim(btn,after){if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();
+  if(btn){btn.disabled=true;btn.classList.add('got');btn.textContent='+30 ⭐';const R=btn.getBoundingClientRect(),e=document.createElement('div');e.className='flmpop';e.textContent='+30 ⭐';
+    e.style.left=(R.left+R.width/2)+'px';e.style.top=(R.top-4)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}
+  flyReward(btn,{stars:30});sfx('achieve',{vol:.5});vib(20);fleetMenu();setTimeout(()=>{updateUI();after&&after();},1150);}
 
 // the Fleet tab
 async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
@@ -152,7 +157,7 @@ function flNavH(){return `<div class="flnav">${FLT_ALL.map(([k,t,i])=>`<button d
 // the daily fleet mission card: three levels for the fleet today, 30 stars
 function flMisH(){const d=utcDay();if(FL.mis.d!==d)FL.mis={d,p:0,cl:0};const m=FL.mis,done=m.p>=3;
   return `<div class="hero flmis"><b>📋 ${T('GÜNLÜK FİLO GÖREVİ')}</b>${T('Bugün filon için {n} seviye geç',{n:3})} · ${T('ödül')} 30 ⭐
-  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')}</button>`}</div></div>`;}
+  <div class="bar"><i style="width:${Math.min(100,m.p/3*100)}%"></i></div><div class="mr"><small>${T('{n} / 3 seviye',{n:m.p})}</small>${m.cl?'<span class="ok">✅</span>':`<button class="go" id="flMisGo2" ${done?'':'disabled'}>${T('TOPLA')} · +30 ⭐</button>`}</div></div>`;}
 function flHeadH(j){const f=j.fleet,cap=(j.members||[]).find(m=>m.cap);
   return `${f.hidden&&f.cap?`<div class="flnote warn">⚠️ ${T('Filonun adı bildirildi ve gizlendi. Yeni bir ad seç.')} <button class="go" id="flRen">${T('AD DEĞİŞTİR')}</button></div>`:''}
   <div class="fc sm">${flImg(f.emb)}<span class="t"><b class="notr">${flE(f.name)}</b><small>${f.n}/${f.max} ${T('üye')} · ${T('Kaptan')}: <span class="notr">${flE(cap?cap.name:'')}</span></small></span></div>`;}
@@ -262,7 +267,7 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
   if(q('#flDayTop'))flDayFill();
   if(q('#flBack'))q('#flBack').onclick=()=>{FLS='main';fleetRender();};
   all('[data-flt]').forEach(b=>b.onclick=()=>{if(b.dataset.flt==='inv'){flInvOpen(j);return;}FLT=b.dataset.flt;FLS='main';fleetRender();$('sLB').scrollTop=0;});
-  if(q('#flMisGo2'))q('#flMisGo2').onclick=()=>{if(FL.mis.p<3||FL.mis.cl)return;FL.mis.cl=1;stars+=30;saveG();updateUI();sfx('achieve',{vol:.5});fleetMenu();fleetRender();};
+  if(q('#flMisGo2'))q('#flMisGo2').onclick=()=>flMisClaim(q('#flMisGo2'),fleetRender);
   all('[data-fm]').forEach(b=>b.onclick=()=>fmPlay(b.dataset.fm));all('[data-fmi]').forEach(b=>b.onclick=()=>fmAsk(b.dataset.fmi));
   if(q('#fmChain'))q('#fmChain').onclick=()=>go('/fleet/fmchain',{pid:PID},r=>{if(r.stars)grant({stars:r.stars},'🤝 '+T('FİLO ZİNCİRİ'));FL.fmc=0;FLV=null;fleetMenu();fleetRender();});
   if(q('#flIntro'))q('#flIntro').onclick=()=>{FLS='intro';FLI=0;fleetRender();};
