@@ -253,6 +253,16 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     const mk = await DB.prepare('SELECT gone FROM fleet_marks WHERE pid = ?').bind(pid).first();
     return json(req, { none: true, open: await openList(DB), prizes: pz, wait: mk && mk.gone + LEAVE_WAIT > now ? mk.gone + LEAVE_WAIT : 0 });
   }
+  if (p === '/fleet/fm/top' && req.method === 'GET') { // 17 Oct: a mission's ranking for the day, every player's best run (all fleets)
+    const F = FM(), d = day(), id = url.searchParams.get('id'), pid = url.searchParams.get('pid'), mm = F && F.day(d).find(x => x.id === id);
+    if (!mm) return json(req, { ok: false, err: 'id' });
+    const rows = (await DB.prepare('SELECT x.pid, x.best, m.name, f.fid, f.emb, f.name AS fn, f.hidden FROM fleet_fm x JOIN fleet_members m ON m.pid = x.pid JOIN fleets f ON f.fid = m.fid WHERE x.day = ? AND x.id = ? AND x.best > 0 ORDER BY x.best DESC, x.rowid ASC LIMIT 10').bind(d, mm.id).all()).results || [];
+    const n = ((await DB.prepare('SELECT COUNT(*) AS n FROM fleet_fm WHERE day = ? AND id = ? AND best > 0').bind(d, mm.id).first()) || {}).n || 0;
+    let me = null;
+    if (okPid(pid)) { const r = await DB.prepare('SELECT best FROM fleet_fm WHERE day = ? AND id = ? AND pid = ?').bind(d, mm.id, pid).first();
+      if (r && r.best > 0) { const c = await DB.prepare('SELECT COUNT(*) AS n FROM fleet_fm WHERE day = ? AND id = ? AND best > ?').bind(d, mm.id, r.best).first(); me = { rank: (c ? c.n : 0) + 1, v: r.best }; } }
+    return json(req, { ok: true, n, me, list: rows.map(r => ({ name: r.name, emb: r.emb, fleet: shownName({ fid: r.fid, name: r.fn, hidden: r.hidden }), v: r.best, me: r.pid === pid })) });
+  }
   if (p === '/fleets/top' && req.method === 'GET') {
     const pid = url.searchParams.get('pid'), wk = weekOf(), rf = raceFrom(wk), race = now >= Date.parse(rf + 'T00:00:00Z');
     const m = await memberOf(DB, pid);
@@ -359,7 +369,7 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     const cur = await DB.prepare('SELECT best, tier, tries, st, st0 FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
     if (!cur || !cur.tries) return json(req, { ok: false, err: 'nostart' });
     const t = Math.max(0, +body.t || 0), v = Math.max(0, Math.floor(+body.v || 0));
-    if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
+    if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1) || (mm.m === 'dodge' && v > t * 9 + 10)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
     const since = Math.max(cur.st ? now - cur.st : Infinity, cur.st0 ? now - cur.st0 : -1);
     if (since < (t - 10) * 1000) return json(req, { ok: false, err: 'bad' }); // claims more play than has passed since the try began
     const vok = await deviceOk(m.pid); // an unverified device keeps its result but wins no medal for the fleet

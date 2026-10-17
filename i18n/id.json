@@ -2225,5 +2225,13 @@
 "ZAMAN PARÇASI GELİYOR": "KEPING WAKTU DATANG",
 "YUT: +{n} SN": "TELAN: +{n} DTK",
 "SÜRELİ SEVİYE": "LEVEL BERWAKTU",
-"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Setelah membeli, kamu bisa menulis nama apa saja (maksimal {n} huruf)"
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Setelah membeli, kamu bisa menulis nama apa saja (maksimal {n} huruf)",
+"Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.": "Telan untuk mengisi bar; setiap kali penuh, datang Busur Emas. Tangkap dalam 2 detik.",
+"Kuşaklar ara vermeden, her seferinde başka yönden gelir. Ekrandan çıkan her meteor +1. Kalkan yok, Vortex yok.": "Sabuk datang tanpa jeda, setiap kali dari arah lain. Setiap meteor yang keluar dari layar bernilai +1. Tanpa perisai, tanpa Vortex.",
+"{n} meteor": "{n} meteor",
+"meteor": "meteor",
+"{n} METEOR": "{n} METEOR",
+"KAÇILDI": "DIHINDARI",
+"BUGÜNÜN SIRALAMASI": "PERINGKAT HARI INI",
+"{n} oyuncu": "{n} pemain"
 }

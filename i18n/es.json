@@ -2225,5 +2225,13 @@
 "ZAMAN PARÇASI GELİYOR": "LLEGA UN FRAGMENTO DE TIEMPO",
 "YUT: +{n} SN": "TRÁGALO: +{n} S",
 "SÜRELİ SEVİYE": "NIVEL CON TIEMPO",
-"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Después de comprarlo puedes escribir el nombre que quieras (hasta {n} letras)"
+"Satın aldıktan sonra istediğin ismi yazabilirsin (en fazla {n} harf)": "Después de comprarlo puedes escribir el nombre que quieras (hasta {n} letras)",
+"Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.": "Traga para llenar la barra; cada vez que se llena llega un Arco Dorado. Atrápalo en 2 segundos.",
+"Kuşaklar ara vermeden, her seferinde başka yönden gelir. Ekrandan çıkan her meteor +1. Kalkan yok, Vortex yok.": "Los cinturones llegan sin pausa, cada vez desde otro lado. Cada meteoro que sale de la pantalla suma +1. Sin escudo, sin Vórtice.",
+"{n} meteor": "{n} meteoros",
+"meteor": "meteoros",
+"{n} METEOR": "{n} METEOROS",
+"KAÇILDI": "ESQUIVADOS",
+"BUGÜNÜN SIRALAMASI": "RANKING DE HOY",
+"{n} oyuncu": "{n} jugadores"
 }

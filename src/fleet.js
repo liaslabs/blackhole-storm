@@ -249,14 +249,15 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
 // ── FLEET MISSIONS (1.5.0, added to the internal test on 15 Oct): three a day, one easy, one medium, one hard (src/fmis.js), each played on its own seeded cosmos
 // on the Daily Race's engine with the mission's kit; three tries a day, the best counts, a medal pays fleet points only ──
 var FMRUN=null; // the mission being played: {m, v (what it counts), d (its day)}; var, so the engine may look before this line runs
-const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} vuruş',caught:'{n} cisim',time:'{n} sn',score:'{n} puan'};
+const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} vuruş',caught:'{n} cisim',time:'{n} sn',score:'{n} puan',dodge:'{n} meteor'};
 const fmFmt=(m,v)=>T(FMU[m.m],{n:m.m==='score'?flN(v):v});
 function fmAdd(k,n){if(FMRUN&&FMRUN.m.m===k)FMRUN.v+=n;}
 function fmVal(){const R=FMRUN,k=R.m.m;return k==='combo'?maxCombo:k==='caught'?SPR_RUN.caught:k==='time'?Math.min(R.m.dur,Math.floor(SPR_RUN.t)):k==='score'?totalScore:R.v;}
 function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNova=G2.tNova0=k.nova;G2.noRage=!k.rage; // the mission's kit, the same for everyone
   if(m.anti){const w=G2.L.w;w.anti=(w.anti||0)+18;w.ast=Math.max(12,(w.ast||0)-18);
     if(m.anti>1){let t=0;for(const x in w)t+=w[x];const a=w.anti,p=Math.min(.6,a/t*m.anti);w.anti=p*(t-a)/(1-p);}} /* m.anti times the share of antimatter the storm had */
-  if(m.bar)G2.gb={B:m.bar,v:0,ts:totalScore,arc:null,n:0};else if(m.ev)G2.garcAt=5;
+  if(m.bar)G2.gb={B:m.bar,v:0,ts:totalScore,arc:null,arcs:[],n:0,life:m.life||0};else if(m.ev)G2.garcAt=5;
+  if(m.mid){G2.midR=V2K.r0+(G2.cap-V2K.r0)*m.mid;G2.rr=G2.midR;} /* a medium hole that does not shrink: the belt is harder to slip through */
   {const rb=$('rage2');if(rb)rb.style.visibility=G2.noRage?'hidden':'';} /* no Vortex in this mission: no Vortex bar either */
   if($('pb'))$('pb').style.display='none';} /* the time is on the HUD already: no progress line under it in a mission */
 function fmChainReady(fm){if(!fm||!fm.chain)return false;const c=fm.chain;return !c.got&&c.n>=c.need&&Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);}
@@ -308,6 +309,12 @@ async function fmStart(id){const F=BHS_FMIS,m=F.byId(id),b=$('fmGo');if(!m||b&&b
 // the result goes to the server; with no connection it waits in the save and goes with the next look at the fleet
 async function fmPost(x){try{const r=await lbFetch('/fleet/fm',{pid:PID,...x});if(r&&(r.ok||r.err))return r;}catch(e){}FL.fmq=(FL.fmq||[]).concat([x]).slice(-9);saveSoon();return null;}
 async function fmFlush(){const q=FL.fmq||[];FL.fmq=[];for(const x of q){try{await lbFetch('/fleet/fm',{pid:PID,...x});}catch(e){FL.fmq.push(x);}}saveSoon();}
+// 17 Oct: today's ranking for the mission, every fleet's players together: the top five and your place
+async function fmTop(m){const box=$('fmTopBox');if(!box)return;let r=null;try{r=await lbFetch('/fleet/fm/top?id='+encodeURIComponent(m.id)+'&pid='+PID);}catch(e){}
+  if(!r||!r.ok||!r.list||!r.list.length||!$('fmTopBox'))return;const md=['🥇','🥈','🥉'];
+  const row=(x,i)=>`<div class="ft${x.me?' me':''}"><span class="rk">${md[i]||i+1}</span><span class="nm"><b class="notr">${escH(x.name)}</b><small class="notr">${escH(x.emb+' '+x.fleet)}</small></span><b class="v">${fmFmt(m,x.v)}</b></div>`;
+  const mine=r.me&&!r.list.slice(0,5).some(x=>x.me)?`<div class="ft me"><span class="rk">${r.me.rank}</span><span class="nm"><b>${T('SEN')}</b></span><b class="v">${fmFmt(m,r.me.v)}</b></div>`:'';
+  box.innerHTML=`<div class="fth">🏆 ${T('BUGÜNÜN SIRALAMASI')} <small>· ${T('{n} oyuncu',{n:r.n})}</small></div>${r.list.slice(0,5).map(row).join('')}${mine}`;box.hidden=false;}
 function fmQuit(){const R=FMRUN;if(!R)return;const v=fmVal()||0;SPR_RUN.ended=true;FMRUN=null;fmPost({day:R.d,id:R.m.id,v,t:Math.min(R.m.dur,SPR_RUN.t)});} // leaving a run keeps what it reached (its try is already used)
 function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=Math.min(m.dur,SPR_RUN.t),fm=FLV&&FLV.fm,me=fm&&fm.me[m.id]||{best:0,tier:0,tries:1};FMRUN=null;
   const best=Math.max(me.best||0,v),tier=F.tier(m,best),was=me.tier||0,run=F.tier(m,v),rest=Math.max(0,F.TRIES-(me.tries||1));
@@ -316,10 +323,11 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
   o.innerHTML=`<div class="fm-card"><div class="big">${run?md[run]:fmIc(m,"lg")}</div><h3>${run?T(['','BRONZ MADALYA','GÜMÜŞ MADALYA','ALTIN MADALYA'][run]):T('MADALYA ÇIKMADI')}</h3><p>${T(m.n)}</p>
     <div class="res"><div class="w"><small>${T('BU KOŞU')}</small><b>${fmFmt(m,v)}</b></div><div><small>${T('BUGÜN EN İYİN')}</small><b>${fmFmt(m,best)}</b></div></div>
     <div class="fm-tg">${m.tg.map((x,i)=>`<span class="${tier>i?'got':''}"><b>${fmFmt(m,x)}</b><i>+${F.pts(m,i+1)} ${T('puan')}</i></span>`).join('')}</div>
+    <div class="fm-top" id="fmTopBox" hidden></div>
     <p class="gain" id="fmGain">${tier>was?'🛸 +'+(F.pts(m,tier)-F.pts(m,was))+' '+T('filo puanı'):T('Filo puanı için daha iyi bir sonuç gerek')}</p>
     <div class="row">${rest>0?`<button class="b1" id="fmAgain">🔁 ${T('TEKRAR')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}</button>`:''}<button class="b2" id="fmBack">🛸 ${T('FİLOYA DÖN')}</button></div>
     <div class="fm-note">${T('Normal puanına, rekorlarına ve seviye ilerlemene eklenmez.')}</div></div>`;
   document.body.appendChild(o);
-  fmPost({day:R.d,id:m.id,v,t}).then(r=>{if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');});
+  fmPost({day:R.d,id:m.id,v,t}).then(r=>{if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');if(r&&r.ok)fmTop(m);});
   const back=()=>{fmClose();hideModals();showMenu();fleetOpen('tasks');if(rel(10))notifAsk('fleet');};
   o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>fmPlay(m.id),500);};}
