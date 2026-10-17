@@ -4462,7 +4462,7 @@ function loop(ts){
   lagWatch(ts);
   if(fcap(LOOPF,ts)){requestAnimationFrame(loop);return;}
   if((sMapEl||(sMapEl=$('sMap'))).classList.contains('on')||(!G2.on&&!cols.length&&(sMenuEl||(sMenuEl=$('sMenu'))).classList.contains('on'))){lastT=ts;requestAnimationFrame(loop);return;} // the level map is opaque and full screen: skip drawing the hidden scene
-  let dt=(ts-lastT)/1000;lastT=ts;const raw=dt;if(!(dt>0)||dt>.1)dt=1/60;
+  let dt=(ts-lastT)/1000;lastT=ts;const raw=dt;if(!(dt>0)||dt>.25)dt=1/60;else if(dt>.05)dt=.05; /* 18 Oct: a heavy frame (0.1–0.25 s) used to count as 1/60 s, so a busy moment ran in slow motion; now it moves 50 ms */
   adaptQuality(dt,raw); /* raw: a 150 ms frame used to reach the quality guard as 16 ms */
   if(G2.on){v2Frame(dt);requestAnimationFrame(loop);return;}
   // outside play (menus, cards): the hole idles behind the panels

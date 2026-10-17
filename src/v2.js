@@ -930,15 +930,19 @@ function v2BeltC(e,te){const f=e.cf,c=f.c0+f.a1*Math.sin(f.w1*te+f.p1)+f.a2*Math
   if(te>f.fs&&te<f.fs+f.fl){const q=Math.sin(Math.PI*(te-f.fs)/f.fl);d=f.fd*q*q;}return [c,d?c+d:null];} /* d: the second route splits off and joins again */
 function v2BeltFlow(e,dt,L){const u=L.lw,lim=(L.n/2-1.2)*u,hard=G2.fbN>2; /* 18 Oct: from the third belt on the field is denser and faster and the route winds more */
   if(!e.cf){const f=e.cf={a1:(hard?1.9:1.6)*u,a2:(hard?1:.6)*u,w1:2*Math.PI/(hard?rrnd(4,5.5):rrnd(6,8)),w2:2*Math.PI/(hard?rrnd(2,2.6):rrnd(2.8,3.6)),p1:rng()*6.28,p2:rng()*6.28,
-      v:v2Speed('meteor')*(hard?1.12:.98),b0:L.D+sp2(30),acc:0,fs:e.t+(hard?rrnd(2,3.5):rrnd(3,5)),fl:hard?rrnd(2.6,3.4):rrnd(3.5,4.5),fd:0,hard,rate:hard?BELTR*1.7:BELTR*1.25};
+      v:v2Speed('meteor')*(hard?1.12:.98),b0:L.D+sp2(30),acc:0,fs:e.t+(hard?rrnd(2,3.5):rrnd(3,5)),fl:hard?rrnd(2.6,3.4):rrnd(3.5,4.5),fd:0,hard,rate:(hard?BELTR*1.7:BELTR*1.25)*(FMRUN.m.dens||1)};
     const p=(hX-W/2)*L.nx+(hY-H/2)*L.ny,m=lim-f.a1-f.a2;f.c0=clamp(p-f.a1*Math.sin(f.w1*e.t+f.p1)-f.a2*Math.sin(f.w2*e.t+f.p2),-m,m);} /* the route starts where you are */
-  const f=e.cf,hw=G2.R*1.6+OBJ2.meteor.r*SZ2.meteor*G2.S*.9+sp2(4); /* a meteor hits at R + 3/4 of its size: about half a hole of room to follow the route */
+  const f=e.cf,mr=OBJ2.meteor.r*SZ2.meteor*G2.S,hw=G2.R*1.6+mr*.9+sp2(4), /* a meteor hits at R + 3/4 of its size: about half a hole of room to follow the route */
+    hp=G2.R+mr*(.75+(FMRUN.m.pinch||.5)); /* 18 Oct: at a narrow pass the room left is pinch × the meteor's size (both sides together) */
+  if(f.ps===undefined){f.ps=e.t+(hard?rrnd(3,5):rrnd(5,8));f.pl=hard?1.1:1.3;}
+  if(e.t>f.ps+f.pl+.3)f.ps=e.t+(hard?rrnd(3.5,6):rrnd(6,9)); /* the next narrow pass */
+  const hwAt=te=>{if(te<f.ps||te>f.ps+f.pl)return hw;const q=Math.sin(Math.PI*(te-f.ps)/f.pl);return hw-(hw-hp)*Math.min(1,q*q*1.6);};
   if(e.t>f.fs+f.fl+.5){f.fs=e.t+(f.hard?rrnd(2.5,4.5):rrnd(5,8));f.fl=f.hard?rrnd(2.6,3.4):rrnd(3.5,4.5);f.fd=0;} /* the next fork */
   if(!f.fd&&e.t>f.fs-.1){const [c]=v2BeltC(e,f.fs+f.fl/2);f.fd=(c>0?-1:1)*2.6*u;}
   f.acc+=dt*f.rate;
   while(f.acc>=1){f.acc--;for(let k=0;k<6;k++){const p=rrnd(-L.n/2,L.n/2)*u,back=rng()*sp2(70),te=e.t+back/f.v,[c,c2]=v2BeltC(e,te);
     const [ca,ca2]=v2BeltC(e,te-.05),[cb,cb2]=v2BeltC(e,te+.05),sl=x=>G2.R*Math.min(1.4,Math.abs(x)*10/f.v); /* where the route bends the hole crosses it on a slant: the gap is widened by the slope */
-    if(Math.abs(p-c)<hw+sl(cb-ca)||(c2!==null&&Math.abs(p-c2)<hw+sl((cb2??cb)-(ca2??ca))))continue;
+    const hx=hwAt(te);if(Math.abs(p-c)<hx+sl(cb-ca)||(c2!==null&&Math.abs(p-c2)<hx+sl((cb2??cb)-(ca2??ca))))continue;
     const x=W/2+L.nx*p-L.ux*(f.b0+back),y=H/2+L.ny*p-L.uy*(f.b0+back);
     const o=v2Obj('meteor',x,y,L.ux*f.v,L.uy*f.v,{wait:0,scale:rrnd(.8,1.15)});o.slow=0;o.ramp=V2K.met.ramp;o.belt=1;o.seen=false;o.side=0;o.bux=L.ux;o.buy=L.uy;break;}}}
 function v2BeltEnd(e){if(G2.ending)return;const ok=G2.dmg===e.dmg0;
@@ -1311,7 +1315,7 @@ function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth
   v2Burst(hX,hY,30,'#ff4fd8',2,7,.6,2);v2Call('ANTİMADDE!','3 SN HİÇBİR ŞEY YUTAMAZSIN','#ff4fd8',1.4);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
 }
 function v2Worms(dt){ // wormholes from level 19: an orange mouth low on the screen, a blue one above the hole
-  if(G2.lv>=19&&!G2.ending&&!G2.boss&&!G2.script){G2.wormT-=dt;if(G2.wormT<=0&&!G2.worms.length){G2.wormT=24;const pr=sp2(44);
+  if(G2.lv>=19&&!G2.ending&&!G2.boss&&!G2.script&&!(FMRUN&&FMRUN.m.m!=='score')){G2.wormT-=dt; /* 18 Oct: no wormholes in a fleet mission that is not about points */if(G2.wormT<=0&&!G2.worms.length){G2.wormT=24;const pr=sp2(44);
     let ax=W*.5,ay=H*.3;for(let t=0;t<12;t++){ax=rrnd(W*.18,W*.82);ay=rrnd(H*.2,H*.55);if(Math.hypot(ax-hX,ay-hY)>G2.G+pr*2.5)break;}
     const w={ax,ay,bx:hX,by:hY,r:pr,t:0,life:12,n:0};G2.worms.push(w);v2Call('SOLUCAN DELİĞİ','','#8fd0ff',1);if(!TIPS.worm)v2Tip('worm',{x:w.ax,y:w.ay,r:pr});}}
   for(let i=G2.worms.length-1;i>=0;i--){const w=G2.worms[i];w.t+=dt;if(w.t>=w.life){if(w.n)v2Pop('PORTAL ×'+w.n,'#8fd0ff',15);G2.worms.splice(i,1);continue;}

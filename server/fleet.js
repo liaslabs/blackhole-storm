@@ -467,7 +467,7 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     const cur = await DB.prepare('SELECT best, tier, tries, st, st0, mp, fid FROM fleet_fm WHERE day = ? AND pid = ? AND id = ?').bind(d, m.pid, mm.id).first();
     if (!cur || !cur.tries) return json(req, { ok: false, err: 'nostart' });
     const t = Math.max(0, +body.t || 0), v = Math.max(0, Math.floor(+body.v || 0));
-    if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1) || (mm.m === 'dodge' && v > t * 18 + 20)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
+    if (!(t <= mm.dur + 5) || v > mm.max || (mm.m === 'time' && v > t + 1) || (mm.m === 'dodge' && v > t * 24 + 30)) return json(req, { ok: false, err: 'bad' }); // more than the mission allows
     const since = Math.max(cur.st ? now - cur.st : Infinity, cur.st0 ? now - cur.st0 : -1);
     if (since < (t - 10) * 1000) return json(req, { ok: false, err: 'bad' }); // claims more play than has passed since the try began
     const vok = await deviceOk(m.pid); // an unverified device keeps its result but wins no medal and no mission points for the fleet
