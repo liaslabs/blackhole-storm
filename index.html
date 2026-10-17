@@ -2992,13 +2992,14 @@ function skinGL(){ // a small separate renderer for the menu thumbnails and the 
 function skinPaint(target,i,t,R){const G=skinGL(),c=target.getContext('2d');if(!G){c.fillStyle='#000';c.fillRect(0,0,target.width,target.height);return;}
   const {gl,cv,u}=G;gl.viewport(0,0,440,440);gl.uniform2f(u('uRes'),440,440);gl.uniform1f(u('uT'),t);gl.uniform1f(u('uR'),R);gl.uniform1f(u('uS'),i);gl.uniform1f(u('uHK'),SKIN_HK[i]||1);gl.uniform1f(u('uArm'),CLASSIC_ARM);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   c.drawImage(cv,0,0,target.width,target.height);}
+const MONO_SPIN=.35; // 17 Oct: the ring also turns without a stop, under the chase
 function monoDraw(c,cx,cy,Rp,txt,tint,t=0){ // the name on a ring inside the core, tops outward; the lead letter sets off and the rest chase it, each swelling as it moves
   const L=[...txt],n=L.length;if(!n)return;const rr=Rp*(n===1?.46:n===2?.52:.62);let fs=Rp*(n===1?.7:n===2?.6:.44);
   const F=f=>`800 ${f}px "IBM Plex Sans Condensed",sans-serif`;c.save();c.font=F(fs);let w=L.map(ch=>c.measureText(ch).width),gap=fs*.22,arc=w.reduce((a,b)=>a+b,0)+gap*(n-1);
   const max=rr*Math.min(2*Math.PI*.9,2*Math.PI-1.3)/* room for the lead letter's .95 rad hop */;if(arc>max){const k=max/arc;fs*=k;w=w.map(x=>x*k);gap*=k;arc=max;c.font=F(fs);}
   const CY=2.6,ST=.95,MV=.55,LAG=.13,cyc=Math.floor(t/CY),ph=t-cyc*CY,ease=q=>q<.5?4*q*q*q:1-Math.pow(-2*q+2,3)/2;
   c.translate(cx,cy);c.textAlign='center';c.textBaseline='middle';let a=-Math.PI/2-arc/rr/2;
-  for(let i=0;i<n;i++){a+=w[i]/2/rr;const q=Math.min(1,Math.max(0,(ph-(n-1-i)*LAG)/MV)),mv=Math.sin(q*Math.PI),ang=a+(cyc+ease(q))*ST;
+  for(let i=0;i<n;i++){a+=w[i]/2/rr;const q=Math.min(1,Math.max(0,(ph-(n-1-i)*LAG)/MV)),mv=Math.sin(q*Math.PI),ang=a+(cyc+ease(q))*ST+t*MONO_SPIN;
     c.save();c.rotate(ang+Math.PI/2);c.translate(0,-rr-mv*Rp*.06);const sc=1+mv*.14;c.scale(sc,sc);
     c.shadowColor=tint;c.shadowBlur=fs*(.35+mv*.9);c.fillStyle=tint;c.globalAlpha=.6;c.fillText(L[i],0,0);c.shadowBlur=0;c.globalAlpha=.95;c.lineWidth=Math.max(1,fs*.035);c.strokeStyle=mv>.3?'#fff':tint;c.strokeText(L[i],0,0);
     if(mv>.05){c.globalAlpha=mv*.55;c.fillStyle='#fff';c.fillText(L[i],0,0);}c.restore();
@@ -3632,8 +3633,8 @@ function cidCard(p){return `<button class="offer cidA" data-buy="${p.id}"><div c
 const CIDA={on:false};
 function cidAnimStart(){if(CIDA.on)return;CIDA.on=true;const A=['PEMBE FIRTINA','PİKSEL NEBULA'].map(n=>SKINS.findIndex(k=>k.n===n)),t0=performance.now(),still=matchMedia('(prefers-reduced-motion: reduce)').matches;
   const f=now=>{const cv=$('sShop').classList.contains('on')&&$('shopOffers').querySelector('canvas.cidv');if(!cv){CIDA.on=false;return;}
-    const t=(now-t0)/1000,ph=t%8,i=A[ph<4?0:1],L=[...(monoText()||'NOVA')],n=still?L.length:Math.min(L.length,1+Math.floor((ph%4)/.3)); /* each look gets 4 s; the name grows one letter at a time, as it does in play */
-    skinPaint(cv,i,t,105);monoDraw(cv.getContext('2d'),120,120,105*240/440,L.slice(0,n).join(''),SKIN_TINT[i],t);
+    const C=7,t=(now-t0)/1000,ph=t%(2*C),i=A[ph<C?0:1],L=[...(monoText()||'NOVA')],q=ph%C,g=still?1:Math.min(1,q/5),e=g*g*(3-2*g),R=64+41*e,n=Math.min(L.length,1+Math.floor(e*(L.length-1)+1e-6)); /* each look gets 7 s: the hole grows for 5 s and its letters open one by one as it does, as in play; then 2 s full */
+    skinPaint(cv,i,t,R);monoDraw(cv.getContext('2d'),120,120,R*240/440,L.slice(0,n).join(''),SKIN_TINT[i],t);
     const card=cv.closest('.offer'),nm=card.querySelector('.cidn'),sk=card.querySelector('.cidsk'),tx=L.join('');if(nm._t!==tx){nm._t=tx;nm.textContent='“'+tx+'”';}if(sk._i!==i){sk._i=i;sk.textContent='✦ '+T(SKINS[i].n);}
     if(still)CIDA.on=false;else requestAnimationFrame(f);};
   requestAnimationFrame(f);}
