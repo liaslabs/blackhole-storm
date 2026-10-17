@@ -3349,7 +3349,7 @@ function renderShop(){
   $('shopFreeH').hidden=$('shopFree').hidden=!adOk;
   $('shopFree').innerHTML=`<button class="shFree" id="freeGems" ${left<=0?'disabled':''}><div class="fic">🎁</div><div><b>GÜNLÜK ÜCRETSİZ ELMAS</b><small>${left>0?`+5 💎 · bugün ${left} hak`:'Bugünkü ücretsiz elmaslar alındı'}</small></div>${left>0?`<span class="go">${SHOP.noAds?'🎁 AL':'▶ İZLE'}</span>`:''}</button>`;
   // the shopkeeper: one honest line that fits the moment
-  const av=$('shopCapAv');if(av&&!av.firstChild){const src=window.BHS_SPR&&BHS_SPR.av&&BHS_SPR.av.astro;if(src){const im=new Image();im.alt='';im.src=src;av.appendChild(im);}else av.textContent='🧑‍🚀';}
+  const av=$('shopCapAv');if(av&&!av.firstChild){const src=window.BHS_SPR&&(rel(12)&&BHS_SPR.cap||BHS_SPR.av&&BHS_SPR.av.astro); /* 1.5.2: the shop's own captain, a face that is never sold as an avatar */if(src){const im=new Image();im.alt='';im.src=src;av.appendChild(im);}else av.textContent='🧑‍🚀';}
   $('shopTalk').textContent=T(hero&&hero.id==='starter'?'Yeni kaptanlara bir kerelik Başlangıç Paketi ayırdım!':diamonds<30&&gems.length?'Elmasın azalmış. Bir kese, kalkan ve devam için yeter!':adOk&&left>0?'Bugünün ücretsiz elmasları aşağıda seni bekliyor.':'Zorlu boss\'lara karşı kalkan ve yedek can stokla!');
   const toGems=()=>{const t=gems.length?$('shopGems'):!$('shopFree').hidden?$('shopFree'):null;if(!t)return false;t.scrollIntoView({behavior:'smooth',block:'center'});
     for(const c of t.children){c.classList.remove('flash');void c.offsetWidth;c.classList.add('flash');}return true;};
