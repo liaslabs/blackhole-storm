@@ -1,0 +1,7 @@
+Can sesi adaylari (hepsi CC0, OpenGameArt.org)
+F, G: heartbeat-single-sound (qubodup) / heartbeat-sounds (bart)
+H: energy-drain (qubodup)
+I: damage-taken (zander-games)
+J: machine-shutting-down (cough-e)
+K: game-over-soundold-school (denyes)
+L: I + G birlikte (darbe, ardindan hizli kalp atisi)

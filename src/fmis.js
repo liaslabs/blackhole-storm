@@ -11,14 +11,14 @@ globalThis.BHS_FMIS = (() => {
   // four-prey hunt (15–59 hits) and the antimatter storm at 2.5 times the antimatter (7–27 thousand). To be tuned with real play.
   const L = [
     { id: 'combo', lv: 0, ic: '🔗', n: 'KOMBO USTASI', d: 'Zinciri koparmadan yut, en yüksek komboya ulaş.', dur: 60, m: 'combo', tg: [12, 25, 45], max: 400 },
-    { id: 'garc', lv: 0, ic: '✨', n: 'ALTIN YAY AVCISI', d: 'Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.', dur: 180, m: 'garc', tg: [15, 35, 60], max: 300, bar: 4000, life: 2 }, // 17 Oct: a bar of 4000 — the bot with no damage caught 111–114 in 3 min, the one that gets hit 18–35 before its lives ran out
+    { id: 'garc', lv: 0, ic: '✨', n: 'ALTIN YAY AVCISI', d: 'Yuttukça çubuk dolar, her dolduğunda bir Altın Yay gelir. 2 saniyede yakala.', dur: 180, m: 'garc', tg: [15, 35, 60], max: 300, bar: 4000, life: 2, bodies: 1 }, // 17 Oct: a bar of 4000 — the bot with no damage caught 111–114 in 3 min, the one that gets hit 18–35 before its lives ran out
     { id: 'hunt', lv: 1, ic: '🎯', n: 'AV ZİNCİRİ', d: 'Aynı anda 4 av. Parçaladığın avın vuruşları puanın olur.', dur: 180, m: 'hunt', tg: [15, 30, 50], max: 600, hunt: 1,
       kit: { sh: 2, nova: 0, rage: 0 } },
     { id: 'eclipse', lv: 1, ic: '🌑', n: 'KARANLIKTA YUT', d: 'Tutulmalar arka arkaya. Karanlıkta cisim yut.', dur: 60, m: 'caught', tg: [45, 85, 125], max: 600,
       plan: [[3, 'eclipse'], [14, 'eclipse'], [25, 'eclipse'], [36, 'eclipse'], [47, 'eclipse']] },
     { id: 'belt', lv: 2, ic: '☄️', n: 'METEOR KUŞAĞINDAN KAÇ', d: 'Kuşaklar ara vermeden, başka yönlerden gelir. Meteorların arasında kıvrılan bir güvenli rota var, bazen iki. Arkanda bıraktığın her meteor +1. Kalkan yok, Vortex yok.', dur: 90, m: 'dodge', tg: [500, 800, 1100], max: 1700,
       plan: [[2, 'belt']], chain: 18, mid: .3, dens: 1.3, pinch: .35, kit: { sh: 0, nova: 0, rage: 0 } }, // 18 Oct: one endless belt in turns of 18 s, a small hole, a dense field with a narrow winding route (two for a while now and then) and short narrow passes (room 35 % of a meteor), faster and denser from the third belt; every meteor that gets past counts. Bots that follow the route last the 90 s with 1,112–1,262 (0–6 hits), standing still 234–273 (dead in 25–30 s)
-    { id: 'anti', lv: 2, ic: '⚛️', n: 'ANTİMADDE FIRTINASI', d: 'Antimadde her yerde. Dokunmadan puan topla.', dur: 60, m: 'score', tg: [4000, 9000, 18000], max: 2e6, anti: 2.5 }
+    { id: 'anti', lv: 2, ic: '⚛️', n: 'ANTİMADDE FIRTINASI', d: 'Antimadde her yerde. Dokunmadan puan topla.', dur: 60, m: 'score', tg: [4000, 9000, 18000], max: 2e6, anti: 2.5, bodies: 1 }
   ];
   const PTS = [[10, 15, 20], [20, 30, 40], [30, 45, 60]]; // filo puanı for bronze, silver, gold (a gold medal pays the gold amount, not the sum)
   const KIT = { lives: 3, sh: 2, nova: 1, rage: 1 }, TRIES = 3;
