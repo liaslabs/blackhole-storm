@@ -274,10 +274,10 @@ async function view(DB, pid, m) {
     const all = await DB.prepare('SELECT COUNT(*) AS n FROM fleets').first();
     rank = (a ? a.n : 0) + 1; of = all ? all.n : 1;
   }
-  // 18 Oct: last week's first fleet, told to the players who played a mission for it that week (the game shows a salute once)
+  // 18 Oct: last week's first three fleets, told to the players who played a mission for it that week (the menu says so once; the first fleet's players see a salute)
   const lw = weekOf(Date.now() - 7 * 864e5), lr = await DB.prepare('SELECT champ FROM fleet_results WHERE wk = ? AND fid = ?').bind(lw, f.fid).first();
   let champ = null;
-  if (lr && lr.champ === 1) { const ld = weekDays(lw); if (await DB.prepare('SELECT 1 AS y FROM fleet_fm WHERE pid = ? AND fid = ? AND day >= ? AND day <= ? LIMIT 1').bind(pid, f.fid, ld[0], ld[6]).first()) champ = { wk: lw, r: 1 }; }
+  if (lr && lr.champ >= 1 && lr.champ <= 3) { const ld = weekDays(lw); if (await DB.prepare('SELECT 1 AS y FROM fleet_fm WHERE pid = ? AND fid = ? AND day >= ? AND day <= ? LIMIT 1').bind(pid, f.fid, ld[0], ld[6]).first()) champ = { wk: lw, r: lr.champ }; }
   const mw = await fmWeek(DB, pid, f.fid, wk);
   let mi = 0; for (const x of ms.results || []) { const e = mw.today.get(x.pid); members[mi].mp = e ? e.mp : 0; members[mi].g = e ? e.g : 0; members[mi].star = mw.star === x.pid; mi++; }
   return {
