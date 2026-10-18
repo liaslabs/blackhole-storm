@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "Les météores arrivent plus souvent",
 "Her şey daha hızlı": "Tout va plus vite",
 "Seviyede iki tutulma olur": "Deux éclipses dans ce niveau",
-"Bir meteor kuşağı geçecek": "Une ceinture de météores va passer"
+"Bir meteor kuşağı geçecek": "Une ceinture de météores va passer",
+"ETKİNLİK": "ÉVÉNEMENT",
+"ETKİNLİK GÖREVLERİ": "TÂCHES DE L'ÉVÉNEMENT",
+"ETKİNLİK GÖREVİ TAMAM": "TÂCHE D'ÉVÉNEMENT RÉUSSIE",
+"Seviye yıldızları ×{n}": "Étoiles de niveau ×{n}",
+"Sezon puanı ×{n}": "Points de saison ×{n}",
+"{n} etkinlik görevi": "{n} tâches d'événement",
+"ÖDÜL VAR": "RÉCOMPENSE PRÊTE",
+"{d} gün {h} sa": "{d} j {h} h",
+"kaldı": "restants"
 }

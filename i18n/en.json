@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "Meteors come more often",
 "Her şey daha hızlı": "Everything is faster",
 "Seviyede iki tutulma olur": "Two eclipses happen this level",
-"Bir meteor kuşağı geçecek": "A meteor belt will pass"
+"Bir meteor kuşağı geçecek": "A meteor belt will pass",
+"ETKİNLİK": "EVENT",
+"ETKİNLİK GÖREVLERİ": "EVENT TASKS",
+"ETKİNLİK GÖREVİ TAMAM": "EVENT TASK DONE",
+"Seviye yıldızları ×{n}": "Level stars ×{n}",
+"Sezon puanı ×{n}": "Season points ×{n}",
+"{n} etkinlik görevi": "{n} event tasks",
+"ÖDÜL VAR": "REWARD READY",
+"{d} gün {h} sa": "{d} d {h} h",
+"kaldı": "left"
 }

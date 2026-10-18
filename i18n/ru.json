@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "Метеоры летят чаще",
 "Her şey daha hızlı": "Всё быстрее",
 "Seviyede iki tutulma olur": "На этом уровне два затмения",
-"Bir meteor kuşağı geçecek": "Пройдёт метеорный пояс"
+"Bir meteor kuşağı geçecek": "Пройдёт метеорный пояс",
+"ETKİNLİK": "СОБЫТИЕ",
+"ETKİNLİK GÖREVLERİ": "ЗАДАНИЯ СОБЫТИЯ",
+"ETKİNLİK GÖREVİ TAMAM": "ЗАДАНИЕ СОБЫТИЯ ВЫПОЛНЕНО",
+"Seviye yıldızları ×{n}": "Звёзды за уровень ×{n}",
+"Sezon puanı ×{n}": "Очки сезона ×{n}",
+"{n} etkinlik görevi": "Заданий события: {n}",
+"ÖDÜL VAR": "НАГРАДА ГОТОВА",
+"{d} gün {h} sa": "{d} д {h} ч",
+"kaldı": "осталось"
 }

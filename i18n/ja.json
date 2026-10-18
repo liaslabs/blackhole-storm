@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "隕石がより頻繁に来る",
 "Her şey daha hızlı": "すべてが速くなる",
 "Seviyede iki tutulma olur": "このレベルでは日食が2回起こる",
-"Bir meteor kuşağı geçecek": "隕石帯が通過する"
+"Bir meteor kuşağı geçecek": "隕石帯が通過する",
+"ETKİNLİK": "イベント",
+"ETKİNLİK GÖREVLERİ": "イベントタスク",
+"ETKİNLİK GÖREVİ TAMAM": "イベントタスク完了",
+"Seviye yıldızları ×{n}": "レベルの星 ×{n}",
+"Sezon puanı ×{n}": "シーズンポイント ×{n}",
+"{n} etkinlik görevi": "イベントタスク{n}個",
+"ÖDÜL VAR": "報酬あり",
+"{d} gün {h} sa": "{d}日{h}時間",
+"kaldı": "残り"
 }

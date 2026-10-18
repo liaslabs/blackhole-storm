@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "تأتي النيازك أكثر",
 "Her şey daha hızlı": "كل شيء أسرع",
 "Seviyede iki tutulma olur": "يحدث كسوفان في هذا المستوى",
-"Bir meteor kuşağı geçecek": "سيمر حزام نيازك"
+"Bir meteor kuşağı geçecek": "سيمر حزام نيازك",
+"ETKİNLİK": "فعالية",
+"ETKİNLİK GÖREVLERİ": "مهام الفعالية",
+"ETKİNLİK GÖREVİ TAMAM": "اكتملت مهمة الفعالية",
+"Seviye yıldızları ×{n}": "نجوم المستوى ×{n}",
+"Sezon puanı ×{n}": "نقاط الموسم ×{n}",
+"{n} etkinlik görevi": "{n} مهام للفعالية",
+"ÖDÜL VAR": "المكافأة جاهزة",
+"{d} gün {h} sa": "{d} يوم {h} س",
+"kaldı": "متبقية"
 }

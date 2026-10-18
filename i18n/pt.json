@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "Meteoros vêm com mais frequência",
 "Her şey daha hızlı": "Tudo fica mais rápido",
 "Seviyede iki tutulma olur": "Dois eclipses acontecem nesta fase",
-"Bir meteor kuşağı geçecek": "Um cinturão de meteoros vai passar"
+"Bir meteor kuşağı geçecek": "Um cinturão de meteoros vai passar",
+"ETKİNLİK": "EVENTO",
+"ETKİNLİK GÖREVLERİ": "TAREFAS DO EVENTO",
+"ETKİNLİK GÖREVİ TAMAM": "TAREFA DO EVENTO CONCLUÍDA",
+"Seviye yıldızları ×{n}": "Estrelas de fase ×{n}",
+"Sezon puanı ×{n}": "Pontos da temporada ×{n}",
+"{n} etkinlik görevi": "{n} tarefas do evento",
+"ÖDÜL VAR": "PRÊMIO PRONTO",
+"{d} gün {h} sa": "{d} d {h} h",
+"kaldı": "restantes"
 }

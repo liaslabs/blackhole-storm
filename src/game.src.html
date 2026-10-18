@@ -908,6 +908,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .mhub .wallet{margin:0;justify-content:space-between;flex-wrap:wrap;gap:6px;}
 .mhub .wallet>span{background:rgba(8,10,22,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
 .mhub #starterRib{display:none;}
+.ribbon.live{--lv:#f2a93b;border-color:color-mix(in srgb,var(--lv) 70%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--lv) 30%,transparent),rgba(13,16,23,.92) 75%);box-shadow:0 0 18px color-mix(in srgb,var(--lv) 25%,transparent);}.ribbon.live .lvI{font-size:22px;line-height:1;}.ribbon.live span b{color:#fff;}.ribbon.live em{background:rgba(0,0,0,.45);border:1px solid color-mix(in srgb,var(--lv) 60%,transparent);color:#ffe7c4;white-space:nowrap;}.ribbon.live.rdy em{background:var(--lv);color:#1a0d00;animation:fcPulse2 1.2s ease-in-out infinite alternate;}@keyframes fcPulse2{to{filter:brightness(1.25)}}
+#mLive{--lv:#f2a93b;width:min(92%,380px);position:fixed;z-index:160;max-height:94vh;overflow-y:auto;padding-top:0;background:#0d1017;border-color:color-mix(in srgb,var(--lv) 60%,transparent);box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}#mLive .lvH{position:relative;margin:0 -16px 10px;padding:22px 16px 14px;text-align:center;background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--lv) 45%,transparent),transparent 70%);border-bottom:1px solid color-mix(in srgb,var(--lv) 35%,transparent);}#mLive .lvB{display:block;font-style:normal;font-size:46px;line-height:1.1;filter:drop-shadow(0 0 14px var(--lv));}#mLive .lvH small{display:block;margin-top:6px;font:800 10px var(--fd);letter-spacing:.24em;color:color-mix(in srgb,var(--lv) 75%,#fff);}#mLive .lvH b{display:block;font:800 20px var(--fd);letter-spacing:.08em;color:#fff;margin:2px 0 8px;}#mLive .lvC{display:inline-block;padding:3px 10px;border-radius:12px;background:rgba(0,0,0,.45);font:700 11px var(--fd);color:#ffe7c4;}#mLive .lvD{font-size:14px;color:#dfe3ee;line-height:1.45;margin:4px 2px 10px;text-align:center;}#mLive .lvFx{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px;}#mLive .dmr .x{text-align:start;}#mLive .lvFx>span{padding:4px 10px;border-radius:12px;background:color-mix(in srgb,var(--lv) 18%,transparent);border:1px solid color-mix(in srgb,var(--lv) 45%,transparent);font:700 12px var(--fd);color:#fff;}#mLive .lvS{font:800 10px var(--fd);letter-spacing:.18em;color:#9fb3d8;margin:4px 0 2px;}#mLive .dmr .bar i,.lvBox .dmr .bar i{background:linear-gradient(90deg,color-mix(in srgb,var(--lv) 70%,#000),var(--lv));}.lvBox{padding:8px 10px;margin-bottom:10px;border-radius:10px;border:1px solid color-mix(in srgb,var(--lv) 55%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--lv) 14%,transparent),transparent);}.lvBox .hd span:first-child{color:#fff;}
 .mmid{flex:1;display:grid;grid-template-columns:64px 1fr 64px;gap:6px;align-items:start;min-height:300px;}
 .mside{display:flex;flex-direction:column;gap:12px;padding-top:6px;}
 .sb{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;border:0;background:none;color:#fff;cursor:pointer;font:inherit;}
@@ -1510,6 +1512,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <button class="icb" id="setBtn" aria-label="Ayarlar">⚙️</button>
   </div>
   <div class="wallet"><span data-w="stars">⭐ <b id="menuStars">0</b></span><span data-w="gems">💎 <b id="menuDia">0</b></span><span data-w="shield">🛡 <b id="menuSh">0</b></span><span id="menuLf" data-w="lives" hidden>&#xe10b; <b id="menuLfN">+0</b></span><span id="menuHrt" hidden>⛽ <b id="menuHrtN">5</b><small id="menuHrtT"></small></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
+  <button class="ribbon live" id="liveRib" hidden></button>
   <button class="ribbon mon" id="starterRib"><b>🎁</b><span><b>BAŞLANGIÇ PAKETİ</b><br>300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 ⏱</span><em>TEK SEFER</em></button>
   <div class="mmid">
    <div class="mside">
@@ -2160,7 +2163,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={rvAt:0,rvN:0,noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,cs:0,easyLv:0,arcLv:0,boostLv:0,boostK:''},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={rvAt:0,rvN:0,noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,cs:0,lv:{},easyLv:0,arcLv:0,boostLv:0,boostK:''},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -2940,6 +2943,7 @@ function dmRoll(){
 }
 function dmText(m){const d=MPOOL.find(x=>x.id===m.id);return d?d.t(m.n):m.id;}
 function dmEvent(id,v,abs){if(typeof FMRUN!=='undefined'&&FMRUN)return; /* a fleet mission counts for the fleet only */
+  if(rel(11))liveCount(id,v,abs); /* the live campaign's tasks use the same counters */
   if(!DM.list)return;for(const m of DM.list){if(m.id!==id||m.done)continue;const d=MPOOL.find(x=>x.id===id);m.p=(abs||(d&&d.abs))?Math.max(m.p,v):m.p+v;
     if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m),at:performance.now()});if(!achShowing)nextAch();}saveSoon();}
 }
@@ -2948,10 +2952,11 @@ function dmMenuBadge(){const bd=$('dmBadge');if(!bd||!DM.list)return;const hot=D
   bd.textContent=hot?(rel(10)?T('AL')+'!':'AL!'):race?'!':'';bd.className=hot?'hot':race?'hot sm':'';}
 function renderDM(){
   dmRoll();const box=$('dmBox');dmMenuBadge();let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`+(rel(10)?fleetMission():'');
+  {const c=liveNow();if(c&&c.tasks.length)h=`<div class="lvBox" style="--lv:${c.col}"><div class="hd"><span>${c.ic} ${flEsc(liveTx(c.t))}</span><span>⏳ ${liveLeft(c.to-Date.now())}</span></div>${liveRows(c)}</div>`+h;}
   DM.list.forEach((m,i)=>{const d=MPOOL.find(x=>x.id===m.id),rw=d?d.r:['⭐',0];
     h+=`<div class="dmr"><div class="x">${dmText(m)}<small>${Math.floor(m.p).toLocaleString(LOC)} / ${m.n.toLocaleString(LOC)} · ödül ${rw[1]} ${rw[0]}</small><div class="bar"><i style="width:${Math.min(100,m.p/m.n*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button data-i="${i}" ${m.done?'':'disabled'}>AL</button>`}</div>`;});
   h+=`<div class="muted" style="margin-top:6px;font-size:12px;">${DM.list.every(m=>m.cl)?'Hepsi tamam, bonus alındı. Yarın yeni görevler!':'Üçünü de bitir: +5 💎 · +15 dk ⏩'}</div>`;
-  box.innerHTML=h;box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>dmClaim(+b.dataset.i));if(rel(10))fleetMissionWire();
+  box.innerHTML=h;box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>dmClaim(+b.dataset.i));if(rel(11))liveWire(box);if(rel(10))fleetMissionWire();
 }
 function dmClaim(i){
   const m=DM.list[i];if(!m||!m.done||m.cl)return;const d=MPOOL.find(x=>x.id===m.id),src=document.activeElement;m.cl=true;spAdd(15);let g;
@@ -3596,6 +3601,48 @@ function lbTab(t){if(rel(9)){const c=$('lbClose'),sr=$('lbShareRow'),one=t==='m'
   {const f=$('lbTF'),d=$('lbFleet');if(f)f.classList.toggle('on',t==='f');if(d)d.hidden=t!=='f';if(f)fleetTabs();} /* 1.5.1: the Fleet tab */if(t==='w')renderLBWorld();if(t==='f')fleetRender();}
 //@@FLEET@@
 
+// LIVE CONTENT (18 Oct): campaigns the server hands out without an app update (GET /camp, see server/live.js). They are data, never code:
+// a title and a text in each language, dates, a few effects with fixed ceilings, up to 4 event tasks built on the daily-mission counters
+// and where the button goes. The game keeps the last list, so a campaign also runs offline until its end.
+const LIVE_FX={lvStars:3,sp:2},LIVE_RW={stars:2000,gems:50,lives:5,shield:5,time:5},LIVE_GO=['play','shop','fleet','lab','season','daily'];
+let LIVE=[];
+const liveTx=o=>o&&typeof o==='object'?String(o[LANG]||o.en||o.tr||'').slice(0,160):'';
+function liveClean(c){if(!c||typeof c!=='object'||typeof c.id!=='string'||!/^[a-z0-9-]{3,40}$/.test(c.id))return null;const from=Date.parse(c.from),to=Date.parse(c.to);if(!(to>from))return null;
+  const fx={};for(const k in LIVE_FX){const v=+((c.fx||{})[k]);if(v>1)fx[k]=Math.min(LIVE_FX[k],v);}
+  const tasks=(Array.isArray(c.tasks)?c.tasks:[]).slice(0,4).map(t=>{const n=Math.floor(+(t&&t.n));if(!t||!MPOOL.some(x=>x.id===t.id)||!(n>=1&&n<=1e5))return null;const r={};for(const k in LIVE_RW){const v=Math.floor(+((t.r||{})[k]));if(v>0)r[k]=Math.min(LIVE_RW[k],v);}return {id:t.id,n,r};}).filter(Boolean);
+  return {id:c.id,from,to,ic:typeof c.ic==='string'&&c.ic.length<=4?c.ic:'✨',col:/^#[0-9a-f]{6}$/i.test(c.col||'')?c.col:'#f2a93b',t:c.t,d:c.d,fx,tasks,go:LIVE_GO.includes(c.go)?c.go:'play'};}
+const liveNow=()=>{const n=Date.now();return rel(11)&&LIVE.find(c=>n>=c.from&&n<c.to)||null;};
+const liveFx=k=>{const c=gameMode==='classic'&&!REPLAY&&!EXPRUN?liveNow():null;return c&&c.fx[k]||1;};
+function liveSet(list){LIVE=(Array.isArray(list)?list:[]).slice(0,6).map(liveClean).filter(Boolean);liveUi();}
+function liveLoad(){try{liveSet(JSON.parse(localStorage.getItem('bhs_live')||'[]'));}catch(e){}}
+async function liveFetch(){if(!rel(11)||!LB_URL)return;try{const j=await lbFetch('/camp?v='+BUILD);if(j&&Array.isArray(j.list)){try{localStorage.setItem('bhs_live',JSON.stringify(j.list));}catch(e){}liveSet(j.list);}}catch(e){}}
+function liveSt(c){if(!SHOP.lv||SHOP.lv.id!==c.id||!Array.isArray(SHOP.lv.p))SHOP.lv={id:c.id,p:c.tasks.map(()=>0),cl:c.tasks.map(()=>0)};return SHOP.lv;}
+const liveTask=t=>{const d=MPOOL.find(x=>x.id===t.id);return d?T(d.t(t.n)):t.id;};
+function liveCount(id,v,abs){const c=liveNow();if(!c||!c.tasks.length||gameMode==='sprint'||REPLAY)return;const s=liveSt(c);
+  c.tasks.forEach((t,i)=>{if(t.id!==id||s.cl[i])return;const d=MPOOL.find(x=>x.id===id),was=s.p[i]||0;s.p[i]=Math.min(t.n,abs||(d&&d.abs)?Math.max(was,v):was+v);
+    if(was<t.n&&s.p[i]>=t.n){achQueue.push({i:c.ic,t:T('ETKİNLİK GÖREVİ TAMAM'),d:liveTask(t),at:performance.now()});if(!achShowing)nextAch();}});saveSoon();}
+function liveLeft(ms){const s=Math.max(0,Math.floor(ms/1000)),d=Math.floor(s/86400);return d?T('{d} gün {h} sa',{d,h:Math.floor(s%86400/3600)}):labDur(s);}
+function liveFxTxt(c){const p=[],f=v=>v.toLocaleString(LOC);if(c.fx.lvStars)p.push('⭐ '+T('Seviye yıldızları ×{n}',{n:f(c.fx.lvStars)}));if(c.fx.sp)p.push('🌀 '+T('Sezon puanı ×{n}',{n:f(c.fx.sp)}));return p;}
+function liveRwTxt(r){const p=[];if(r.stars)p.push(r.stars.toLocaleString(LOC)+' ⭐');if(r.gems)p.push(r.gems+' 💎');if(r.lives)p.push(r.lives+' ');if(r.shield)p.push(r.shield+' 🛡');if(r.time)p.push(r.time+' ⏱');return p.join(' + ');}
+function liveRows(c){const s=liveSt(c);return c.tasks.map((t,i)=>{const p=Math.floor(s.p[i]||0),ok=p>=t.n;return `<div class="dmr lvr"><div class="x">${liveTask(t)}<small>${p.toLocaleString(LOC)} / ${t.n.toLocaleString(LOC)} · ${T('ödül')} ${liveRwTxt(t.r)}</small><div class="bar"><i style="width:${Math.min(100,p/t.n*100)}%"></i></div></div>${s.cl[i]?'<span class="ok">✅</span>':`<button data-lv="${i}" ${ok?'':'disabled'}>${T('AL')}</button>`}</div>`;}).join('');}
+function liveClaim(i,src){const c=liveNow();if(!c)return;const s=liveSt(c),t=c.tasks[i];if(!t||s.cl[i]||(s.p[i]||0)<t.n)return;s.cl[i]=1;grant(t.r,c.ic+' '+liveTx(c.t));if(rel(11))ev('lv_cl');saveG();liveUi();if($('mLive')&&$('mLive').classList.contains('on'))liveCard(true);if($('sDM').classList.contains('on'))renderDM();}
+function liveWire(root){root.querySelectorAll('[data-lv]').forEach(b=>b.onclick=e=>{e.stopPropagation();liveClaim(+b.dataset.lv,b);});}
+function liveUi(){const r=$('liveRib');if(!r)return;const c=liveNow();r.hidden=!c;if(!c)return;r.style.setProperty('--lv',c.col);
+  const s=liveSt(c),ready=c.tasks.some((t,i)=>!s.cl[i]&&(s.p[i]||0)>=t.n),fx=liveFxTxt(c);
+  r.innerHTML=`<b class="lvI">${c.ic}</b><span><b>${flEsc(liveTx(c.t))}</b><br>${[...fx,c.tasks.length?T('{n} etkinlik görevi',{n:c.tasks.length}):''].filter(Boolean).join(' · ')}</span><em>${ready?T('ÖDÜL VAR'):'⏳ '+liveLeft(c.to-Date.now())}</em>`;r.classList.toggle('rdy',ready);}
+const flEsc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+function liveGo(c){hideModals();const g=c.go;if(g==='shop')openShop();else if(g==='fleet'&&typeof fleetOpen==='function'&&FL.fid)fleetOpen('tasks');else if(g==='lab')labOpenScr();else if(g==='season')$('snBtn').click();else if(g==='daily')$('dmBtn').click();else $('startBtn').click();}
+function liveCard(re){const c=liveNow();if(!c)return;let el=$('mLive');if(!el){el=document.createElement('div');el.className='modal card';el.id='mLive';$('mGift').after(el);if(!MODALS.includes('mLive'))MODALS.push('mLive');}
+  el.style.setProperty('--lv',c.col);const fx=liveFxTxt(c);
+  el.innerHTML=`<div class="lvH"><i class="lvB">${c.ic}</i><small>${T('ETKİNLİK')}</small><b>${flEsc(liveTx(c.t))}</b><span class="lvC">⏳ ${liveLeft(c.to-Date.now())} ${T('kaldı')}</span></div>
+  <p class="lvD">${flEsc(liveTx(c.d))}</p>${fx.length?`<div class="lvFx">${fx.map(x=>`<span>${x}</span>`).join('')}</div>`:''}
+  ${c.tasks.length?`<div class="lvS">${T('ETKİNLİK GÖREVLERİ')}</div>${liveRows(c)}`:''}
+  <div class="row"><button class="btn big" id="lvGo">▶ ${T(c.go==='shop'?'MAĞAZA':c.go==='fleet'?'FİLO':c.go==='lab'?'KOZMİK LAB':c.go==='season'?'SEZON':c.go==='daily'?'GÖREVLER':'OYNA')}</button></div>
+  <div class="row"><button class="btn sec" id="lvX" style="width:100%;">${T('KAPAT')}</button></div>`;
+  if(!re)showModal('mLive');liveWire(el);const seen=()=>{if(TIPS.lvSeen!==c.id){TIPS.lvSeen=c.id;saveSoon();}};$('lvGo').onclick=()=>{seen();liveGo(c);};$('lvX').onclick=()=>{seen();hideModals();};}
+function liveDue(){const c=liveNow();if(!c||TIPS.lvSeen===c.id||$('mLive')&&$('mLive').classList.contains('on'))return;if(!$('sMenu').classList.contains('on')||document.querySelector('.screen.on:not(#sMenu)')||document.querySelector('.modal.on')||gState==='playing'){later(liveDue,3000);return;}
+  liveCard();sfx('achieve',{vol:.4});} /* a new campaign opens its card on the menu until OYNA or KAPAT is tapped */
+
 // SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
 const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha sık gelir; atlatılan her tutulma 2 kat SP verir.'},{id:'wind',ic:'🌬',n:'RÜZGÂR SEZONU',d:'Yıldız rüzgârı daha sık eser; her rüzgâr 2 kat SP verir.'},
   {id:'cons',ic:'✨',n:'TAKIMYILDIZ SEZONU',d:'Takımyıldızlar daha sık belirir; tamamlanan her biri 2 kat SP verir.'},{id:'gold',ic:'🌕',n:'ALTIN SEZON',d:'Altın gezegenler ×2 daha fazla gelir ve ×2 puan verir.'},
@@ -4215,7 +4262,7 @@ function levelSuccess(){
   const st=levelStars(),rec=recordStars(level,st);
   if(REPLAY){replayWin(st,rec);return;}
   if(level<=3&&!rec.old&&!HMODE){stars+=10;saveG();later(()=>toast('🏅','İLK GEÇİŞ ÖDÜLÜ','+10 ⭐'),1400);} // first clear of an early level
-  for(let i=0;i<(HMODE?10:5);i++)cols.push(new Collectible(hX,hY,$('scoreBox'),false)); // Hard Mode pays double
+  for(let i=0;i<Math.round((HMODE?10:5)*liveFx('lvStars'));i++)cols.push(new Collectible(hX,hY,$('scoreBox'),false)); // Hard Mode pays double; a live campaign may too
   if(level%5===0)for(let i=0;i<3;i++)cols.push(new Collectible(hX,hY,$('diaTop')||$('scoreBox'),true));
   if(totalScore>bestScore){bestScore=totalScore;saveG();}
   sfx('levelup',{vol:.85,rev:.35});SND.duck(.3,2.4);vib([30,50,30,50,60]);
@@ -4826,7 +4873,7 @@ function menuTick(){const th=seasonTheme(),cur=Math.max(1,savedLevel);let nb=0;f
   const L=[`${th.ic} <b>${T(th.n)}</b> · ${T(th.d)}`,`🔴 ${T('Sıradaki boss')}: ${T('SEVİYE')} ${nb}`,b?`🔬 ${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})} · ${labDur((b.end-Date.now())/1000)}`:`🔬 ${T('Kozmik Lab’da yeni bir geliştirme başlat')}`,
     dn?`🏁 ${T('Günlük Yarış')}: ${DAILY.score.toLocaleString(LOC)}`:`🏁 ${T('Günlük Yarış açık · bugün herkes aynı evrende')}`];
   $('menuTick').innerHTML=L.join('<span style="opacity:.4">  ·  </span>');}
-function menuHub(){labBadge();menuTick();$('snBtn').classList.toggle('gold',seasonIs('gold'));dmMenuBadge();menuBgStart();}
+function menuHub(){labBadge();menuTick();if(rel(11)){liveUi();if(!menuHub.lv||Date.now()-menuHub.lv>6e5){menuHub.lv=Date.now();liveFetch().then(()=>later(liveDue,1200));}else later(liveDue,1200);}$('snBtn').classList.toggle('gold',seasonIs('gold'));dmMenuBadge();menuBgStart();}
 setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTickQuiet();labMenuRing();}},1000);
 function showMenu(){natMark('menu');if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
   if(G2.on)v2Stop();if(HMODE)hmSwap(); // the menu always shows the classic run
@@ -4881,6 +4928,7 @@ $('dmBtn').onclick=()=>{renderDM();renderDaily();$('sDM').classList.add('on');};
 for(const [id,k] of [['snBtn','sn'],['dmBtn','dm'],['expBtn','exp'],['labBtn','lab'],['lbBtn','lb'],['flBtn','fl'],['shopBtn','shop'],['mapBtn','map'],['setBtn','set'],['editProf','prof'],['evoBox','evo']]){const b=$(id);if(b)b.addEventListener('click',()=>ev('m_'+k));}$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};if($('sGuideB'))$('sGuideB').onclick=()=>$('guideBtn').onclick(); /* 1.5.0: the guide moved to Settings, FLEET took its place in the menu */
 if($('flBtn'))$('flBtn').onclick=()=>{if(!flOn()){toast('🛸',T('FİLO'),T('Filolar internet bağlantısı ister.'));return;}if(bestLevel<FL_LV){toast('🛸',T('FİLO'),T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV}));return;}fleetOpen();};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
+$('liveRib').onclick=()=>{sfx('click',{vol:.4});liveCard();};
 $('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('shopBtn').onclick=openShop;$('starterRib').onclick=()=>openShop('sr');$('pShop').onclick=()=>openShop('pr');
 $('shopX').onclick=()=>$('shopClose').click();
 $('shopClose').onclick=()=>{$('sShop').classList.remove('on');if($('sMenu').classList.contains('on'))showMenu();};$('shopRestore').onclick=()=>MON.mode==='test'?toast('🔄','GERİ YÜKLEME','Test modunda geri yüklenecek bir şey yok'):restorePurchases(false);$('mapBack').onclick=closeMap;$('shClose').onclick=()=>$('mSheet').classList.remove('on');
@@ -4944,7 +4992,7 @@ $('shareBtn').onclick=async()=>{const txt=`${playerAvatar} `+T("{p}: Blackhole S
 // ══════════════════════════════════════════════════════
 // BOOT
 // ══════════════════════════════════════════════════════
-loadG();avInit();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
+loadG();if(rel(11))liveLoad();avInit();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
   const d=document.createElement('div');d.id='devBar';d.innerHTML=`<span>🛠 ${T('SEVİYEYE GİT')}</span><input id="devLv" type="number" min="1" max="${DEV_LV}" value="${savedLevel}" inputmode="numeric" aria-label="Seviye"><button id="devGo" class="btn">▶ ${T('OYNA')}</button><small id="devKit"></small>`;
   $('starterRib').before(d);devKit(savedLevel);$('devGo').onclick=()=>{const n=clamp(parseInt($('devLv').value,10)||1,1,DEV_LV);savedLevel=n;savedScore=0;saveG();selMode('classic');$('startBtn').click();};} /* jump straight to any of the first 1000 levels */
 // developer link: every level is played as a real player would meet it there: the Laboratory at that level's recommended power

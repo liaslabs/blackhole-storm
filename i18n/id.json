@@ -2309,5 +2309,14 @@
 "Meteorlar daha sık gelir": "Meteor datang lebih sering",
 "Her şey daha hızlı": "Semuanya lebih cepat",
 "Seviyede iki tutulma olur": "Ada dua gerhana di level ini",
-"Bir meteor kuşağı geçecek": "Sabuk meteor akan lewat"
+"Bir meteor kuşağı geçecek": "Sabuk meteor akan lewat",
+"ETKİNLİK": "EVENT",
+"ETKİNLİK GÖREVLERİ": "TUGAS EVENT",
+"ETKİNLİK GÖREVİ TAMAM": "TUGAS EVENT SELESAI",
+"Seviye yıldızları ×{n}": "Bintang level ×{n}",
+"Sezon puanı ×{n}": "Poin musim ×{n}",
+"{n} etkinlik görevi": "{n} tugas event",
+"ÖDÜL VAR": "HADIAH SIAP",
+"{d} gün {h} sa": "{d} hr {h} j",
+"kaldı": "lagi"
 }
