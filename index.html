@@ -3955,7 +3955,8 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   if(!FLV)w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`;
   const j=await fleetFetch(FLS==='main');if(!$('sLB').classList.contains('on'))return;
   if(!j){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${flErr('off')}</div><div class="two"><button class="btn sec" id="flRetry">${T('TEKRAR DENE')}</button></div>`;$('flRetry').onclick=()=>fleetRender();return;}
-  let h=fleetPrizes(j);
+  const auto=rel(11)&&j.champ&&TIPS.chV!==j.champ.wk&&FLT==='tasks'&&FLS==='main'; /* 18 Oct: a prize that collects itself is not drawn as a TOPLA card first */
+  let h=fleetPrizes(auto?{...j,prizes:(j.prizes||[]).filter(z=>z.wk!==j.champ.wk)}:j);
   if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);
   else if(!j.fleet)h+=fleetNoneH(j);
   else{if(FLT!=='tasks')h='';h+=FLT==='crew'?flCrewH(j):FLT==='race'?await fleetRaceH(1):FLT==='week'&&j.fleet.mis?await flWeekH(j):flTasksH(j);h+=flNavH();}
