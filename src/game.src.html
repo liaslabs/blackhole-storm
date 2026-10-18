@@ -359,6 +359,7 @@ body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:ba
 /* 18 Oct (1.5.1): the continue card in the game's own look (the level-end band: gold rules, spaced capitals; the shop's gold button): your heart falls into a black hole, each way back is a tile, the first free one is the gold button; the field behind is veiled and the in-game buttons step away */
 #contVeil{display:none;position:fixed;inset:0;z-index:39;background:radial-gradient(circle at 50% 45%,rgba(10,12,24,.35),rgba(2,3,8,.72) 75%);-webkit-backdrop-filter:blur(12px) saturate(.7);backdrop-filter:blur(12px) saturate(.7);}
 body:has(#mCont.c11.on) #contVeil{display:block;}body:has(#mCont.c11.on) #boost2{visibility:hidden;}
+body.mcov #sMenu,body.mcov #sMenu *{animation-play-state:paused!important;}
 #mCont.c11{background:linear-gradient(180deg,rgba(15,18,30,.96),rgba(7,9,15,.97));border:1px solid rgba(242,169,59,.3);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(242,169,59,.07);padding:10px 14px 8px;row-gap:0;}
 #mCont.c11 .c11hero{width:150px;height:84px;margin:0 auto -4px;}
 #mCont.c11 .c11hero svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 12px rgba(150,120,255,.35));}
@@ -2215,7 +2216,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
   init(){
     if(this.ctx)return;
     const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
-    try{this.ctx=rel(11)&&/Android/i.test(navigator.userAgent)?new AC({latencyHint:'playback'}):new AC();}catch(e){try{this.ctx=new AC();}catch(e2){return;}} /* 18 Oct: on Android the smallest buffer ran dry under load and the music ticked; a playback-size buffer holds (sounds start a few tens of ms later) */
+    try{this.ctx=rel(11)&&/Android/i.test(navigator.userAgent)?new AC({latencyHint:'balanced'}):new AC();}catch(e){try{this.ctx=new AC();}catch(e2){return;}} /* 18 Oct: on Android the smallest buffer ran dry under load and the music ticked; 'playback' cured it but the sounds came late enough to feel, so the middle size */
     const c=this.ctx;
     const comp=c.createDynamicsCompressor();
     comp.threshold.value=-16;comp.knee.value=10;comp.ratio.value=4;comp.attack.value=.003;comp.release.value=.18;
@@ -4664,7 +4665,7 @@ function notifAsk(kind){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission)
 // a neutral line that is always there (asking the happy ones for a rating and the others for feedback is not allowed on Google Play)
 function feedbackMail(){const sub=T('Blackhole Storm geri bildirim'),body='\n\n\n— '+T('Sürüm')+': '+(APPVER||'web')+' · '+BUILD.replace('bhs-','')+'\n— '+T('Dil')+': '+LANG+'\n— '+T('Kurulum no')+': '+PID;
   const a=document.createElement('a');a.href='mailto:liaslabs.games@gmail.com?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);a.rel='noopener';document.body.appendChild(a);a.click();a.remove();if(rel(11))ev('fb');}
-function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-',''); /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
+function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-','')+(SND.ctx?' · ♪ '+Math.round(((SND.ctx.baseLatency||0)+(SND.ctx.outputLatency||0))*1000)+' ms':''); /* 18 Oct: the phone's sound delay, to tune the audio buffer on real devices */ /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
   $('sSensRow').hidden=!rel(7);[...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??0)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
@@ -4791,6 +4792,7 @@ function menuBgSize(){const c=$('menuBg');MB.d=Math.min(2,devicePixelRatio||1);M
 function menuBgStart(){if(MB.on)return;MB.on=true;MB.last=performance.now();menuBgSize();requestAnimationFrame(menuBgFrame);}
 function menuBgFrame(now){if(!$('sMenu').classList.contains('on')||gState!=='menu'){MB.on=false;return;}
   if(fcap(MENUF,now)){requestAnimationFrame(menuBgFrame);return;}
+  if(rel(11)){const cov=!!document.querySelector('.screen.on:not(#sMenu)');if(cov!==MB.cov){MB.cov=cov;document.body.classList.toggle('mcov',cov);}if(cov){MB.last=now;requestAnimationFrame(menuBgFrame);return;}} /* 18 Oct: a window over the menu (fleet, shop, lab...) hides it: the last frame stays, nothing is drawn and its animations rest, so the phone has more room for sound */
   const dt=Math.min(.05,(now-MB.last)/1000);MB.last=now;MB.t+=dt;const c=$('menuBg').getContext('2d'),W=MB.W,H=MB.H,t=MB.t,still=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(W!==innerWidth||H!==innerHeight)menuBgSize();c.setTransform(MB.d,0,0,MB.d,0,0);
   const mh=$('mHole'),hr=mh&&mh.getBoundingClientRect(),cx=W/2,mmT=rel(9)&&hr&&hr.height>0?document.querySelector('.mm').getBoundingClientRect().top-34:0,cy=mmT>hr.top?(hr.top+mmT)/2:hr&&hr.height>0?hr.top+hr.height/2:H*.42,HK=window.MHK||(rel(9)?.3:0),R0=HK&&hr&&hr.height>0?Math.max(Math.min(W*.13,H*.075),Math.min(hr.width*HK,hr.height*.34,W*.24)):Math.min(W*.13,H*.075),R=rel(9)?Math.min(R0,(W/2-8)/3.5):R0; /* 1.4.9: the hole grows with the room it has, but its disk always stays on screen */if(!LV.tex)LV.tex=labTex(); // the hole sits in the gap between the title and the mode cards
