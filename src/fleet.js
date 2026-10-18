@@ -264,16 +264,30 @@ async function flWeekH(j){const M=j.fleet.mis,P=BHS_FMIS.PAY,b=await flBoards(),
   <div class="flearn"><span>${T('Bu hafta filodan kazandıkların')}<small>${T('şu anki durumla hafta sonunda')}</small></span><b>${flN(M.earned.stars)} ⭐ · ${M.earned.gems} 💎<small>+${flN(ps)} ⭐ · +${pg} 💎${psh?` · +${psh} 🛡️`:''}</small></b></div>
   <div class="flnote tip">🏁 ${T('Hafta sonu yarışı (Cuma–Pazar) oyun puanlarıyla devam ediyor.')}</div><div class="flnote" id="flMsg"></div>`;}
 
+// 18 Oct: ÇAĞIR. A mate who has not played the fleet missions today can be called to them, once a day by each member; the call is
+// written on the wall and the called member sees a card when they next open the game (they can turn calls off in AYARLAR)
+const flCallB=m=>!rel(11)||m.me||m.g||m.today||!m.k?'':m.called?`<i class="call done" title="${T('Bugün çağırdın')}">✓ 📣</i>`:`<button class="call" data-call="${m.k}" aria-label="${T('Göreve çağır')}">📣 ${T('ÇAĞIR')}</button>`;
+function flCallCard(c){let el=$('mFlCall');if(!el){el=document.createElement('div');el.className='modal card';el.id='mFlCall';$('mGift').after(el);if(!MODALS.includes('mFlCall'))MODALS.push('mFlCall');}
+  const F=c.from||[],a=F[0]||{},more=F.length-1;
+  el.innerHTML=`<div class="fcR"></div><div class="h">📣 ${T('FİLO ÇAĞRISI')}</div>
+  <div class="fcAv">${F.slice(0,3).map(x=>avHtml(x.av)).join('')}</div>
+  <p class="fcT">${more>0?T('{a} ve {n} filo arkadaşın seni göreve çağırıyor',{a:`<b class="notr">${flE(a.name)}</b>`,n:more}):T('{a} seni göreve çağırıyor',{a:`<b class="notr">${flE(a.name)}</b>`})}</p>
+  <div class="fcF">${flImg(c.emb||'☄️')}<span class="notr">${flE(c.fleet||'')}</span></div>
+  <small class="fcS">${T('Bugünkü 3 filo görevi seni bekliyor. Her madalya filona puan getirir.')}</small>
+  <div class="row"><button class="btn big" id="fcGo">▶ ${T('OYNA')}</button></div>
+  <div class="row"><button class="btn sec" id="fcLater" style="width:100%;">${T('SONRA')}</button></div>`;
+  showModal('mFlCall');$('fcGo').onclick=()=>{hideModals();fleetOpen('tasks');};$('fcLater').onclick=()=>hideModals();}
 // ÜYELER: the week's contribution, who played today, the captain; the top three are on course for the race's +200; the wall and the ready messages
 function flCrewH(j){const f=j.fleet,day=!!f.mis,M=day?(j.members||[]).slice().sort((a,b)=>(b.mp||0)-(a.mp||0)||(b.pts||0)-(a.pts||0)):j.members||[],v=m=>day?m.mp||0:m.pts||0,top=Math.max(1,...M.map(v)),today=M.filter(m=>m.today||m.g).length,md=['🥇','🥈','🥉'];
   return `${flHeadH(j)}<div class="sec"><span>${day?T('ÜYELER · BUGÜNKÜ GÖREV PUANI'):T('ÜYELER · BU HAFTA')}</span><b>${T('bugün oynayan {n}/{m}',{n:today,m:M.length})}</b></div>
-  ${M.map((m,i)=>`<div class="row2 mem${m.me?' mine':''}"><span class="rk">${i<3&&v(m)>0?md[i]:i+1}</span>${avHtml(m.av)}<span class="nm"><b><span class="notr">${flE(m.name)}</span>${m.cap?' 👑':''}${m.star?' 🌟':''}${m.me?` <i class="chip p">${T('SEN')}</i>`:''}${m.g?` <i class="chip ${m.g>=3?'t':'g'}" dir="ltr">${m.g>=3?'✓ ':''}${m.g}/3</i>`:m.today?` <i class="chip t">✓ ${T('bugün')}</i>`:''}${m.away?` <i class="chip z">💤</i>`:''}</b><span class="mb"><i style="width:${Math.round(v(m)/top*100)}%"></i></span></span><span class="pt">${flN(v(m))}</span>${f.cap&&!m.me?`<button class="kick" data-kick="${m.k}" aria-label="${T('Filodan çıkar')}">✕</button>`:''}</div>`).join('')}
+  ${M.map((m,i)=>`<div class="row2 mem${m.me?' mine':''}"><span class="rk">${i<3&&v(m)>0?md[i]:i+1}</span>${avHtml(m.av)}<span class="nm"><b><span class="notr">${flE(m.name)}</span>${m.cap?' 👑':''}${m.star?' 🌟':''}${m.me?` <i class="chip p">${T('SEN')}</i>`:''}${m.g?` <i class="chip ${m.g>=3?'t':'g'}" dir="ltr">${m.g>=3?'✓ ':''}${m.g}/3</i>`:m.today?` <i class="chip t">✓ ${T('bugün')}</i>`:''}${m.away?` <i class="chip z">💤</i>`:''}</b><span class="mb"><i style="width:${Math.round(v(m)/top*100)}%"></i></span></span><span class="pt">${flN(v(m))}</span>${flCallB(m)}${f.cap&&!m.me?`<button class="kick" data-kick="${m.k}" aria-label="${T('Filodan çıkar')}">✕</button>`:''}</div>`).join('')}
   <div class="flnote tip">🏅 ${T('Hafta sonu en çok puan getiren 3 üyeye ek +{n} ⭐',{n:200})}<br>${T('Normal seviye +10 · Zor +20 · boss +10 · Günün Fırtınası +20–80 · günde en fazla 300')}${rel(11)?'<br>🌟 '+T('Bugün filosuna en çok görev puanı getiren üye filonun yıldızıdır'):rel(10)?'<br>'+T('Filo görevlerinin madalyaları bu sınırın dışında sayılır'):''}</div>
   <div class="sec"><span>${T('FİLO DUVARI')}</span><b>${T('hazır mesajlar')}</b></div>
   <div class="wall">${(j.wall||[]).slice(-6).map(flWall).join('')||`<div class="ev">${T('Henüz mesaj yok.')}</div>`}</div>
   <div class="emo">${FL_CHIPS.map(k=>`<button data-msg="${k}">${T(FL_MSG[k])}</button>`).join('')}</div>
   <div class="two">${f.cap?`<button class="btn sec" id="flSet">⚙️ ${T('AYARLAR')}</button>`:''}<button class="btn sec" id="flLeave">${T('AYRIL')}</button></div><div class="flnote" id="flMsg"></div>`;}
 function flWall(w){const m=String(w.m||''),n=+m.split(':')[1]||0;
+  if(m.startsWith('call:'))return `<div class="ev nw">📣 <b class="notr">${flE(w.name)}</b> → <b class="notr">${flE(m.slice(5))}</b>: ${T('Göreve gel, filo seni bekliyor!')}</div>`;
   if(FL_MSG[m])return `<div><b class="notr">${flE(w.name)}:</b> ${T(FL_MSG[m])}</div>`;
   if(m.startsWith('chest:'))return `<div class="ev nw">🎁 ${T('{n}. sandık açıldı!',{n})}</div>`;
   if(m.startsWith('rank:'))return `<div class="ev nw">🏁 ${T('Filo yarışta {n}. sıraya yükseldi',{n})}</div>`;
