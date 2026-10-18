@@ -15,6 +15,8 @@
 //   POST /fleet/rename {pid,name}                     -> {ok,free}     captain only; the first rename is free, later ones once in 30 days
 //   POST /fleet/set    {pid,open,emb}                 -> {ok}          captain only
 //   POST /fleet/msg    {pid,m}                        -> {ok}          m: one of the ready-made messages
+//   POST /fleet/call   {pid,k}                        -> {ok} | {ok:false,err}  call a mate who has not played today to the missions (once a day each)
+//   POST /fleet/callset {pid,off}                     -> {ok}          turn the calls to you off (or back on)
 //   POST /fleet/pts    {pid,day,n,src,pname,av}       -> {ok,added,today}
 //   POST /fleet/report {by,fid}                       -> {ok}          two reporters hide the fleet's name
 //   GET  /fleets/top?pid=                        -> {wk,race,ends,list:[{r,name,emb,n,pts,me}],me}
@@ -71,6 +73,8 @@ async function ensure(DB) {
     'CREATE TABLE IF NOT EXISTS fleet_fm (day TEXT NOT NULL, pid TEXT NOT NULL, fid TEXT NOT NULL, id TEXT NOT NULL, best INTEGER NOT NULL DEFAULT 0, tier INTEGER NOT NULL DEFAULT 0, tries INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, pid, id))',
     'CREATE INDEX IF NOT EXISTS fleet_fm_fid ON fleet_fm (day, fid)',
     'CREATE TABLE IF NOT EXISTS fleet_dset (day TEXT PRIMARY KEY, ts INTEGER NOT NULL)',
+    'CREATE TABLE IF NOT EXISTS fleet_calls (day TEXT NOT NULL, fid TEXT NOT NULL, by TEXT NOT NULL, "to" TEXT NOT NULL, ts INTEGER NOT NULL, PRIMARY KEY (day, by, "to"))',
+    'CREATE INDEX IF NOT EXISTS fleet_calls_to ON fleet_calls ("to", day)',
     'CREATE TABLE IF NOT EXISTS fleet_dprizes (day TEXT NOT NULL, pid TEXT NOT NULL, fid TEXT NOT NULL, rank INTEGER NOT NULL DEFAULT 0, star INTEGER NOT NULL DEFAULT 0, stars INTEGER NOT NULL, gems INTEGER NOT NULL, claimed INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (day, pid))'
   ]) await DB.prepare(q).run();
   // 1.5.1: fleet mission medals are fleet points of their own (mpts), outside the 300 a day that play brings
@@ -81,6 +85,8 @@ async function ensure(DB) {
   // 18 Oct: mission points (the best run's, from a verified device), the week's mission results and the prizes that come of them
   for (const [t, c] of [['fleet_fm', 'mp'], ['fleet_results', 'mscore'], ['fleet_results', 'champ'], ['fleet_prizes', 'champ'], ['fleet_prizes', 'days'], ['fleet_prizes', 'sh']])
     try { await DB.prepare(`ALTER TABLE ${t} ADD COLUMN ${c} INTEGER NOT NULL DEFAULT 0`).run(); } catch (e) { /* already there */ }
+  // 18 Oct: a member who turned the fleet calls off
+  try { await DB.prepare('ALTER TABLE fleet_members ADD COLUMN nocall INTEGER NOT NULL DEFAULT 0').run(); } catch (e) { /* already there */ }
   ready = true;
 }
 
@@ -250,6 +256,7 @@ export async function fleetHousekeeping(DB) {
   await DB.prepare('DELETE FROM fleet_dprizes WHERE day < ?').bind(old).run();
   await DB.prepare('DELETE FROM fleet_dset WHERE day < ?').bind(old).run();
   await DB.prepare('DELETE FROM fleet_msgs WHERE ts < ?').bind(now - 14 * 864e5).run();
+  await DB.prepare('DELETE FROM fleet_calls WHERE ts < ?').bind(now - 3 * 864e5).run();
   await DB.prepare('DELETE FROM fleet_reports WHERE ts < ?').bind(now - 30 * 864e5).run();
   await DB.prepare('DELETE FROM fleet_marks WHERE gone < ? AND made < ?').bind(now - MAKE_WAIT, now - MAKE_WAIT).run(); // the join and found waits are over: nothing left to keep
 }
@@ -259,10 +266,16 @@ async function view(DB, pid, m) {
   if (!f) return null;
   const t = await weekTotal(DB, wk, f.fid), race = Date.now() >= Date.parse(raceFrom(wk) + 'T00:00:00Z');
   const r = await weekTotal(DB, wk, f.fid, raceFrom(wk));
-  const ms = await DB.prepare(`SELECT m.pid, m.name, m.av, m.seen, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.pid = m.pid AND p.fid = m.fid),0) AS s,
+  const ms = await DB.prepare(`SELECT m.pid, m.name, m.av, m.seen, m.nocall, COALESCE((SELECT SUM(pts + mpts) FROM fleet_pts p WHERE p.wk = ? AND p.pid = m.pid AND p.fid = m.fid),0) AS s,
     EXISTS (SELECT 1 FROM fleet_pts p WHERE p.day = ? AND p.pid = m.pid) AS today FROM fleet_members m WHERE m.fid = ? ORDER BY s DESC, m.joined ASC`).bind(wk, day(), f.fid).all();
   const members = [];
-  for (const x of ms.results || []) members.push({ k: await key(f.fid, x.pid), name: x.name, av: x.av, pts: x.s, today: !!x.today, cap: x.pid === f.cap, me: x.pid === pid, away: x.seen < Date.now() - 21 * 864e5 });
+  for (const x of ms.results || []) members.push({ k: await key(f.fid, x.pid), name: x.name, av: x.av, pts: x.s, today: !!x.today, cap: x.pid === f.cap, me: x.pid === pid, away: x.seen < Date.now() - 21 * 864e5, ...(x.nocall ? { nc: 1 } : {}) });
+  // 18 Oct: the calls of today: the mates this member has called, and who called this member (the menu shows them a card)
+  const cl = await DB.prepare('SELECT by, "to" FROM fleet_calls WHERE day = ? AND fid = ? AND (by = ? OR "to" = ?)').bind(day(), f.fid, pid, pid).all();
+  const sent = new Set(), from = new Set();
+  for (const c of cl.results || []) { if (c.by === pid) sent.add(c.to); if (c.to === pid) from.add(c.by); }
+  { let i = 0; for (const x of ms.results || []) { if (sent.has(x.pid)) members[i].called = 1; i++; } }
+  const calls = (ms.results || []).filter(x => from.has(x.pid)).map(x => ({ name: x.name, av: x.av }));
   const wall = await DB.prepare('SELECT name, m, ts FROM fleet_msgs WHERE fid = ? ORDER BY id DESC LIMIT 12').bind(f.fid).all();
   let rank = 0, of = 0;
   if (race) {
@@ -284,7 +297,7 @@ async function view(DB, pid, m) {
     fleet: { fid: f.fid, code: f.code, name: shownName(f), hidden: !!f.hidden, emb: f.emb, open: !!f.open, cap: f.cap === pid, n: members.length, max: MAX_MEMBERS,
       pts: t.pts, race, racePts: r.pts, rank, of, targets: targets(t.players), ends: weekEnd(wk), raceFrom: Date.parse(raceFrom(wk) + 'T00:00:00Z'), freeRename: !f.renames || !!f.hidden,
       renameAt: f.renames ? f.renamed + RENAME_WAIT : 0, mis: mw.out },
-    members, wall: (wall.results || []).reverse(), fm: await fmView(DB, pid, f.fid, members.length), champ
+    members, wall: (wall.results || []).reverse(), fm: await fmView(DB, pid, f.fid, members.length), champ, calls
   };
 }
 // 18 Oct: the fleet's mission week as the Fleet page shows it: today's points and place among all fleets, the week's points, chests and
@@ -502,6 +515,23 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     const last = await DB.prepare(`SELECT ts FROM fleet_msgs WHERE fid = ? AND name = ? AND m IN (${MSGS.map(() => '?').join(',')}) ORDER BY id DESC LIMIT 1`).bind(m.fid, m.name, ...MSGS).first();
     if (last && last.ts > now - 20e3) return json(req, { ok: false, err: 'slow' });
     await event(DB, m.fid, m.name, body.m);
+    return json(req, { ok: true });
+  }
+  if (p === '/fleet/call' && req.method === 'POST') { // 18 Oct: call a mate to today's missions
+    if (typeof body.k !== 'string' || body.k.length > 20) return json(req, { ok: false }, 400);
+    const d = day(), ms = await DB.prepare('SELECT pid, name, nocall FROM fleet_members WHERE fid = ?').bind(m.fid).all();
+    let t = null; for (const x of ms.results || []) if (x.pid !== m.pid && await key(m.fid, x.pid) === body.k) { t = x; break; }
+    if (!t) return json(req, { ok: false, err: 'gone' });
+    if (t.nocall) return json(req, { ok: false, err: 'nocall' });
+    const played = await DB.prepare("SELECT 1 AS y FROM fleet_pts WHERE day = ? AND pid = ? UNION ALL SELECT 1 FROM fleet_fm WHERE day = ? AND pid = ? AND id != 'chain' AND tries > 0 LIMIT 1").bind(d, t.pid, d, t.pid).first();
+    if (played) return json(req, { ok: false, err: 'played' });
+    const r = await DB.prepare('INSERT OR IGNORE INTO fleet_calls (day, fid, by, "to", ts) VALUES (?, ?, ?, ?, ?)').bind(d, m.fid, m.pid, t.pid, now).run();
+    if (!(r.meta && r.meta.changes)) return json(req, { ok: false, err: 'called' });
+    await event(DB, m.fid, m.name, 'call:' + t.name);
+    return json(req, { ok: true });
+  }
+  if (p === '/fleet/callset' && req.method === 'POST') {
+    await DB.prepare('UPDATE fleet_members SET nocall = ? WHERE pid = ?').bind(body.off ? 1 : 0, m.pid).run();
     return json(req, { ok: true });
   }
   if (p === '/fleet/leave' && req.method === 'POST') {
