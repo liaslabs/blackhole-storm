@@ -2318,5 +2318,14 @@
 "{n} etkinlik görevi": "{n} peywirên bûyerê",
 "ÖDÜL VAR": "XELAT AMADE YE",
 "{d} gün {h} sa": "{d} roj {h} st",
-"kaldı": "maye"
+"kaldı": "maye",
+"Günlük Yarış ödülü ×{n}": "Xelata Pêşbirka Rojane ×{n}",
+"ŞİMDİ OYNA": "NIHA BILÎZE",
+"DAHA SONRA": "PAŞÊ",
+"MAĞAZAYA GİT": "HERE DIKANÊ",
+"{n} filo görevi oyna": "{n} peywirên fîloyê bilîze",
+"Filo görevlerinde {n} madalya kazan": "Di peywirên fîloyê de {n} madalya qezenc bike",
+"Günlük Yarış'ı {n} gün koş": "Di {n} rojan de beşdarî Pêşbirka Rojane bibe",
+"Günlük Yarış'ta {n} puana ulaş": "Di Pêşbirka Rojane de bigihîje {n} xalan",
+"{n} kez Hayatta Kal oyna": "{n} caran Mayînê bilîze"
 }

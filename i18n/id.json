@@ -2318,5 +2318,14 @@
 "{n} etkinlik görevi": "{n} tugas event",
 "ÖDÜL VAR": "HADIAH SIAP",
 "{d} gün {h} sa": "{d} hr {h} j",
-"kaldı": "lagi"
+"kaldı": "lagi",
+"Günlük Yarış ödülü ×{n}": "Hadiah Balapan Harian ×{n}",
+"ŞİMDİ OYNA": "MAIN SEKARANG",
+"DAHA SONRA": "NANTI",
+"MAĞAZAYA GİT": "KE TOKO",
+"{n} filo görevi oyna": "Mainkan {n} misi armada",
+"Filo görevlerinde {n} madalya kazan": "Raih {n} medali di misi armada",
+"Günlük Yarış'ı {n} gün koş": "Ikuti Balapan Harian {n} hari",
+"Günlük Yarış'ta {n} puana ulaş": "Capai {n} poin di Balapan Harian",
+"{n} kez Hayatta Kal oyna": "Main Bertahan Hidup {n} kali"
 }

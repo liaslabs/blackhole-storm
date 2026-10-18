@@ -2318,5 +2318,14 @@
 "{n} etkinlik görevi": "{n} Event-Aufgaben",
 "ÖDÜL VAR": "BELOHNUNG BEREIT",
 "{d} gün {h} sa": "{d} T {h} Std",
-"kaldı": "übrig"
+"kaldı": "übrig",
+"Günlük Yarış ödülü ×{n}": "Tagesrennen-Preis ×{n}",
+"ŞİMDİ OYNA": "JETZT SPIELEN",
+"DAHA SONRA": "SPÄTER",
+"MAĞAZAYA GİT": "ZUM SHOP",
+"{n} filo görevi oyna": "Spiele {n} Flottenmissionen",
+"Filo görevlerinde {n} madalya kazan": "Gewinne {n} Medaillen in Flottenmissionen",
+"Günlük Yarış'ı {n} gün koş": "Fahre das Tagesrennen an {n} Tagen",
+"Günlük Yarış'ta {n} puana ulaş": "Erreiche {n} Punkte im Tagesrennen",
+"{n} kez Hayatta Kal oyna": "Spiele {n}-mal Überleben"
 }

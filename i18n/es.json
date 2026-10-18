@@ -2318,5 +2318,14 @@
 "{n} etkinlik görevi": "{n} tareas del evento",
 "ÖDÜL VAR": "PREMIO LISTO",
 "{d} gün {h} sa": "{d} d {h} h",
-"kaldı": "restantes"
+"kaldı": "restantes",
+"Günlük Yarış ödülü ×{n}": "Premio de la Carrera diaria ×{n}",
+"ŞİMDİ OYNA": "JUGAR AHORA",
+"DAHA SONRA": "MÁS TARDE",
+"MAĞAZAYA GİT": "IR A LA TIENDA",
+"{n} filo görevi oyna": "Juega {n} misiones de flota",
+"Filo görevlerinde {n} madalya kazan": "Gana {n} medallas en misiones de flota",
+"Günlük Yarış'ı {n} gün koş": "Corre la Carrera diaria {n} días",
+"Günlük Yarış'ta {n} puana ulaş": "Llega a {n} puntos en la Carrera diaria",
+"{n} kez Hayatta Kal oyna": "Juega Supervivencia {n} veces"
 }

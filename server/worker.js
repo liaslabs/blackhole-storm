@@ -46,7 +46,7 @@ const okDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
 import '../src/names.js';
 import '../src/fmis.js';
 import { fleetRoute, fleetHousekeeping } from './fleet.js';
-import LIVE from './live.js';
+import { campaigns } from './live.js';
 const NAMES = globalThis.BHS_NAMES;
 const badName = n => NAMES.bad(n);
 function cleanName(n) {
@@ -436,9 +436,8 @@ export default {
         if (!env.GP_SA || !env.GP_PKG) return json(req, { ok: false, err: 'not configured' }, 503);
         return json(req, await gpVerify(env, DB, b.pid, b.sku, b.token));
       }
-      if (url.pathname === '/camp' && req.method === 'GET') { // 18 Oct: live campaigns (server/live.js), from two days before their start to their end
-        const now = Date.now(), list = (Array.isArray(LIVE) ? LIVE : []).filter(c => c && Date.parse(c.to) > now && Date.parse(c.from) - 2 * 864e5 <= now).slice(0, 6);
-        return json(req, { list });
+      if (url.pathname === '/camp' && req.method === 'GET') { // 18 Oct: live campaigns (server/live.js): the weekend's own and any written by hand
+        return json(req, { list: campaigns() });
       }
       if (url.pathname === '/' ) return json(req, { ok: true, service: 'blackhole-storm-leaderboard', day: day() });
       return json(req, { ok: false, err: 'not found' }, 404);

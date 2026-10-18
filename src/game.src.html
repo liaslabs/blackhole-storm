@@ -3604,25 +3604,29 @@ function lbTab(t){if(rel(9)){const c=$('lbClose'),sr=$('lbShareRow'),one=t==='m'
 // LIVE CONTENT (18 Oct): campaigns the server hands out without an app update (GET /camp, see server/live.js). They are data, never code:
 // a title and a text in each language, dates, a few effects with fixed ceilings, up to 4 event tasks built on the daily-mission counters
 // and where the button goes. The game keeps the last list, so a campaign also runs offline until its end.
-const LIVE_FX={lvStars:3,sp:2},LIVE_RW={stars:2000,gems:50,lives:5,shield:5,time:5},LIVE_GO=['play','shop','fleet','lab','season','daily'];
+const LIVE_FX={lvStars:3,sp:2,race:2},LIVE_RW={stars:2000,gems:50,lives:5,shield:5,time:5},LIVE_GO=['play','surv','race','fleet','shop','lab','season','daily'];
+// the campaign's own counters, beside the daily missions' (fleet missions count for the fleet only there)
+const LIVE_T=[{id:'fm',t:n=>`${n} filo görevi oyna`},{id:'fmg',t:n=>`Filo görevlerinde ${n} madalya kazan`},{id:'race',t:n=>`Günlük Yarış'ı ${n} gün koş`},
+  {id:'racesc',t:n=>`Günlük Yarış'ta ${n.toLocaleString(LOC)} puana ulaş`,abs:1},{id:'survplay',t:n=>`${n} kez Hayatta Kal oyna`}];
+const liveDef=id=>MPOOL.find(x=>x.id===id)||LIVE_T.find(x=>x.id===id);
 let LIVE=[];
 const liveTx=o=>o&&typeof o==='object'?String(o[LANG]||o.en||o.tr||'').slice(0,160):'';
 function liveClean(c){if(!c||typeof c!=='object'||typeof c.id!=='string'||!/^[a-z0-9-]{3,40}$/.test(c.id))return null;const from=Date.parse(c.from),to=Date.parse(c.to);if(!(to>from))return null;
   const fx={};for(const k in LIVE_FX){const v=+((c.fx||{})[k]);if(v>1)fx[k]=Math.min(LIVE_FX[k],v);}
-  const tasks=(Array.isArray(c.tasks)?c.tasks:[]).slice(0,4).map(t=>{const n=Math.floor(+(t&&t.n));if(!t||!MPOOL.some(x=>x.id===t.id)||!(n>=1&&n<=1e5))return null;const r={};for(const k in LIVE_RW){const v=Math.floor(+((t.r||{})[k]));if(v>0)r[k]=Math.min(LIVE_RW[k],v);}return {id:t.id,n,r};}).filter(Boolean);
+  const tasks=(Array.isArray(c.tasks)?c.tasks:[]).slice(0,4).map(t=>{const n=Math.floor(+(t&&t.n));if(!t||!liveDef(t.id)||!(n>=1&&n<=1e5))return null;const r={};for(const k in LIVE_RW){const v=Math.floor(+((t.r||{})[k]));if(v>0)r[k]=Math.min(LIVE_RW[k],v);}return {id:t.id,n,r};}).filter(Boolean);
   return {id:c.id,from,to,ic:typeof c.ic==='string'&&c.ic.length<=4?c.ic:'✨',col:/^#[0-9a-f]{6}$/i.test(c.col||'')?c.col:'#f2a93b',t:c.t,d:c.d,fx,tasks,go:LIVE_GO.includes(c.go)?c.go:'play'};}
 const liveNow=()=>{const n=Date.now();return rel(11)&&LIVE.find(c=>n>=c.from&&n<c.to)||null;};
-const liveFx=k=>{const c=gameMode==='classic'&&!REPLAY&&!EXPRUN?liveNow():null;return c&&c.fx[k]||1;};
+const liveFx=k=>{const c=!REPLAY&&!EXPRUN?liveNow():null;return c&&c.fx[k]||1;}; /* lvStars is asked for on classic levels only, race by the Daily Race, sp by spAdd */
 function liveSet(list){LIVE=(Array.isArray(list)?list:[]).slice(0,6).map(liveClean).filter(Boolean);liveUi();}
 function liveLoad(){try{liveSet(JSON.parse(localStorage.getItem('bhs_live')||'[]'));}catch(e){}}
 async function liveFetch(){if(!rel(11)||!LB_URL)return;try{const j=await lbFetch('/camp?v='+BUILD);if(j&&Array.isArray(j.list)){try{localStorage.setItem('bhs_live',JSON.stringify(j.list));}catch(e){}liveSet(j.list);}}catch(e){}}
 function liveSt(c){if(!SHOP.lv||SHOP.lv.id!==c.id||!Array.isArray(SHOP.lv.p))SHOP.lv={id:c.id,p:c.tasks.map(()=>0),cl:c.tasks.map(()=>0)};return SHOP.lv;}
-const liveTask=t=>{const d=MPOOL.find(x=>x.id===t.id);return d?T(d.t(t.n)):t.id;};
-function liveCount(id,v,abs){const c=liveNow();if(!c||!c.tasks.length||gameMode==='sprint'||REPLAY)return;const s=liveSt(c);
-  c.tasks.forEach((t,i)=>{if(t.id!==id||s.cl[i])return;const d=MPOOL.find(x=>x.id===id),was=s.p[i]||0;s.p[i]=Math.min(t.n,abs||(d&&d.abs)?Math.max(was,v):was+v);
+const liveTask=t=>{const d=liveDef(t.id);return d?T(d.t(t.n)):t.id;};
+function liveCount(id,v,abs){const c=liveNow();if(!c||!c.tasks.length||REPLAY)return;const s=liveSt(c);
+  c.tasks.forEach((t,i)=>{if(t.id!==id||s.cl[i])return;const d=liveDef(id),was=s.p[i]||0;s.p[i]=Math.min(t.n,abs||(d&&d.abs)?Math.max(was,v):was+v);
     if(was<t.n&&s.p[i]>=t.n){achQueue.push({i:c.ic,t:T('ETKİNLİK GÖREVİ TAMAM'),d:liveTask(t),at:performance.now()});if(!achShowing)nextAch();}});saveSoon();}
 function liveLeft(ms){const s=Math.max(0,Math.floor(ms/1000)),d=Math.floor(s/86400);return d?T('{d} gün {h} sa',{d,h:Math.floor(s%86400/3600)}):labDur(s);}
-function liveFxTxt(c){const p=[],f=v=>v.toLocaleString(LOC);if(c.fx.lvStars)p.push('⭐ '+T('Seviye yıldızları ×{n}',{n:f(c.fx.lvStars)}));if(c.fx.sp)p.push('🌀 '+T('Sezon puanı ×{n}',{n:f(c.fx.sp)}));return p;}
+function liveFxTxt(c){const p=[],f=v=>v.toLocaleString(LOC);if(c.fx.lvStars)p.push('⭐ '+T('Seviye yıldızları ×{n}',{n:f(c.fx.lvStars)}));if(c.fx.race)p.push('🏁 '+T('Günlük Yarış ödülü ×{n}',{n:f(c.fx.race)}));if(c.fx.sp)p.push('🌀 '+T('Sezon puanı ×{n}',{n:f(c.fx.sp)}));return p;}
 function liveRwTxt(r){const p=[];if(r.stars)p.push(r.stars.toLocaleString(LOC)+' ⭐');if(r.gems)p.push(r.gems+' 💎');if(r.lives)p.push(r.lives+' ');if(r.shield)p.push(r.shield+' 🛡');if(r.time)p.push(r.time+' ⏱');return p.join(' + ');}
 function liveRows(c){const s=liveSt(c);return c.tasks.map((t,i)=>{const p=Math.floor(s.p[i]||0),ok=p>=t.n;return `<div class="dmr lvr"><div class="x">${liveTask(t)}<small>${p.toLocaleString(LOC)} / ${t.n.toLocaleString(LOC)} · ${T('ödül')} ${liveRwTxt(t.r)}</small><div class="bar"><i style="width:${Math.min(100,p/t.n*100)}%"></i></div></div>${s.cl[i]?'<span class="ok">✅</span>':`<button data-lv="${i}" ${ok?'':'disabled'}>${T('AL')}</button>`}</div>`;}).join('');}
 function liveClaim(i,src){const c=liveNow();if(!c)return;const s=liveSt(c),t=c.tasks[i];if(!t||s.cl[i]||(s.p[i]||0)<t.n)return;s.cl[i]=1;grant(t.r,c.ic+' '+liveTx(c.t));if(rel(11))ev('lv_cl');saveG();liveUi();if($('mLive')&&$('mLive').classList.contains('on'))liveCard(true);if($('sDM').classList.contains('on'))renderDM();}
@@ -3631,17 +3635,18 @@ function liveUi(){const r=$('liveRib');if(!r)return;const c=liveNow();r.hidden=!
   const s=liveSt(c),ready=c.tasks.some((t,i)=>!s.cl[i]&&(s.p[i]||0)>=t.n),fx=liveFxTxt(c);
   r.innerHTML=`<b class="lvI">${c.ic}</b><span><b>${flEsc(liveTx(c.t))}</b><br>${[...fx,c.tasks.length?T('{n} etkinlik görevi',{n:c.tasks.length}):''].filter(Boolean).join(' · ')}</span><em>${ready?T('ÖDÜL VAR'):'⏳ '+liveLeft(c.to-Date.now())}</em>`;r.classList.toggle('rdy',ready);}
 const flEsc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
-function liveGo(c){hideModals();const g=c.go;if(g==='shop')openShop();else if(g==='fleet'&&typeof fleetOpen==='function'&&FL.fid)fleetOpen('tasks');else if(g==='lab')labOpenScr();else if(g==='season')$('snBtn').click();else if(g==='daily')$('dmBtn').click();else $('startBtn').click();}
+function liveGo(c){hideModals();const g=c.go;if(g==='shop')openShop();else if(g==='fleet'&&typeof fleetOpen==='function')fleetOpen('tasks');else if(g==='lab')labOpenScr();else if(g==='season')$('snBtn').click();else if(g==='daily')$('dmBtn').click();
+  else if(g==='race')$('dcPlay').click();else if(g==='surv'){selMode('survival');$('startBtn').click();}else{selMode('classic');$('startBtn').click();}}
 function liveCard(re){const c=liveNow();if(!c)return;let el=$('mLive');if(!el){el=document.createElement('div');el.className='modal card';el.id='mLive';$('mGift').after(el);if(!MODALS.includes('mLive'))MODALS.push('mLive');}
   el.style.setProperty('--lv',c.col);const fx=liveFxTxt(c);
   el.innerHTML=`<div class="lvH"><i class="lvB">${c.ic}</i><small>${T('ETKİNLİK')}</small><b>${flEsc(liveTx(c.t))}</b><span class="lvC">⏳ ${liveLeft(c.to-Date.now())} ${T('kaldı')}</span></div>
   <p class="lvD">${flEsc(liveTx(c.d))}</p>${fx.length?`<div class="lvFx">${fx.map(x=>`<span>${x}</span>`).join('')}</div>`:''}
   ${c.tasks.length?`<div class="lvS">${T('ETKİNLİK GÖREVLERİ')}</div>${liveRows(c)}`:''}
-  <div class="row"><button class="btn big" id="lvGo">▶ ${T(c.go==='shop'?'MAĞAZA':c.go==='fleet'?'FİLO':c.go==='lab'?'KOZMİK LAB':c.go==='season'?'SEZON':c.go==='daily'?'GÖREVLER':'OYNA')}</button></div>
-  <div class="row"><button class="btn sec" id="lvX" style="width:100%;">${T('KAPAT')}</button></div>`;
-  if(!re)showModal('mLive');liveWire(el);const seen=()=>{if(TIPS.lvSeen!==c.id){TIPS.lvSeen=c.id;saveSoon();}};$('lvGo').onclick=()=>{seen();liveGo(c);};$('lvX').onclick=()=>{seen();hideModals();};}
-function liveDue(){const c=liveNow();if(!c||TIPS.lvSeen===c.id||$('mLive')&&$('mLive').classList.contains('on'))return;if(!$('sMenu').classList.contains('on')||document.querySelector('.screen.on:not(#sMenu)')||document.querySelector('.modal.on')||gState==='playing'){later(liveDue,3000);return;}
-  liveCard();sfx('achieve',{vol:.4});} /* a new campaign opens its card on the menu until OYNA or KAPAT is tapped */
+  <div class="row"><button class="btn big" id="lvGo">▶ ${T(c.go==='shop'?'MAĞAZAYA GİT':c.go==='lab'?'KOZMİK LAB':c.go==='season'?'SEZON':c.go==='daily'?'GÖREVLER':'ŞİMDİ OYNA')}</button></div>
+  <div class="row"><button class="btn sec" id="lvX" style="width:100%;">${T('DAHA SONRA')}</button></div>`;
+  if(!re)showModal('mLive');liveWire(el);const seen=()=>{const k=c.id+':'+new Date().toDateString();if(TIPS.lvSeen!==k){TIPS.lvSeen=k;saveSoon();}};$('lvGo').onclick=()=>{seen();liveGo(c);};$('lvX').onclick=()=>{seen();hideModals();};}
+function liveDue(){const c=liveNow();if(!c||TIPS.lvSeen===c.id+':'+new Date().toDateString()||$('mLive')&&$('mLive').classList.contains('on'))return;if(!$('sMenu').classList.contains('on')||document.querySelector('.screen.on:not(#sMenu)')||document.querySelector('.modal.on')||gState==='playing'){later(liveDue,3000);return;}
+  liveCard();sfx('achieve',{vol:.4});} /* the running campaign opens as a pop-up once a day when the game opens, until ŞİMDİ OYNA or DAHA SONRA is tapped */
 
 // SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
 const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha sık gelir; atlatılan her tutulma 2 kat SP verir.'},{id:'wind',ic:'🌬',n:'RÜZGÂR SEZONU',d:'Yıldız rüzgârı daha sık eser; her rüzgâr 2 kat SP verir.'},
@@ -3669,7 +3674,7 @@ function seasonClaim(list,src){list=list.filter(i=>seasonReady().includes(i));if
   saveG();sfx('achieve',{vol:.5});vib(20);if(src){src.classList.add('pop');}
   if(key)toast('🗝',T('HAZİNE ANAHTARI'),T('Sezon ödülü'));if(badge)toast('🏅',T('SEZON ROZETİ'),SEASON.id);
   flyReward(src,g,()=>{renderSeason();seasonBadge();});seasonBadge();}
-function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;seasonRoll();SEASON.sp+=Math.round(n);let up=0;
+function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;if(rel(11))n*=liveFx('sp');seasonRoll();SEASON.sp+=Math.round(n);let up=0;
   while(SEASON.tier<SEA.tiers&&SEASON.sp>=(SEASON.tier+1)*SEA.per){SEASON.tier++;up++;const k=SEASON.tier;achQueue.push({i:'🌀',t:T('SEZON')+' · '+T('KADEME {k}',{k}),d:seasonRwTxt(seasonReward(k))+' · '+T('Sezon ekranından al'),at:performance.now()});if(!achShowing)nextAch();}
   if(up){saveG();updateUI();}else saveSoon();seasonBadge();}
 function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();const n=seasonReady().length;e.textContent=n?String(n):'';e.className=n?(n<10?'rdy sm':'rdy'):'';$('snBtn').classList.toggle('rdy',n>0);} // rewards waiting to be taken
@@ -4352,7 +4357,7 @@ function showCont(){
   $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');
 }
 function retryLevel(){hideModals();SND.duck(1,0);SND.setDrone(.14,650);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();resetRun(false);}
-function gameOver(){natMark('game over');
+function gameOver(){natMark('game over');if(rel(11)&&gameMode==='survival'&&!gameOver.c){gameOver.c=1;later(()=>{gameOver.c=0;},2000);liveCount('survplay',1);}
   rngS=null; // the daily storm's seeded spawns end with the run
   dmEvent('score',totalScore,true);
   $('finNear').textContent=totalScore>runStartBest&&totalScore>0?'🏆 YENİ REKOR!':runStartBest>0?`Rekoruna ${(runStartBest-totalScore).toLocaleString(LOC)} puan kaldı`:'';
@@ -4425,7 +4430,7 @@ function sprintEnd(){
   if(SPR_RUN.ended)return;SPR_RUN.ended=true;runId++;rngS=null;gState='over';SND.music('menu');
   if(SPR_RUN.opt.fm){fmEnd();return;} /* a fleet mission: its own result card; nothing goes to the score, records, ranking or daily tasks */
   const opt=SPR_RUN.opt,res={score:totalScore,combo:maxCombo,perf:perfectCount,caught:SPR_RUN.caught,grid:sprintGrid(),zone:SPR_RUN.zone,daily:opt.daily||0,chal:opt.chal||null};
-  let official=false,rw=null;if(opt.daily&&DAILY.n!==opt.daily){official=true;const sk=DAILY.n===opt.daily-1?(DAILY.sk|0)+1:1;DAILY={n:opt.daily,score:res.score,grid:res.grid,combo:res.combo,perf:res.perf,sk};rw=raceReward(res.score,opt.daily,sk);if(rw.stars||rw.gems)grant({stars:rw.stars,gems:rw.gems},'🏁 '+T('GÜNLÜK YARIŞ'));}
+  let official=false,rw=null;if(opt.daily&&DAILY.n!==opt.daily){official=true;const sk=DAILY.n===opt.daily-1?(DAILY.sk|0)+1:1;DAILY={n:opt.daily,score:res.score,grid:res.grid,combo:res.combo,perf:res.perf,sk};rw=raceReward(res.score,opt.daily,sk);if(rel(11)){const k=liveFx('race');if(k>1)rw={...rw,stars:Math.round((rw.stars||0)*k),gems:Math.round((rw.gems||0)*k)};liveCount('race',1);liveCount('racesc',res.score,true);}if(rw.stars||rw.gems)grant({stars:rw.stars,gems:rw.gems},'🏁 '+T('GÜNLÜK YARIŞ'));}
   res.official=official;const newBest=res.score>sprintBest;if(newBest)sprintBest=res.score;SPR_RUN.res=res;
   dmEvent('score',totalScore,true);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();
   $('spHead').textContent=res.chal?'⚔️ MEYDAN OKUMA':res.daily?`🏁 GÜNLÜK YARIŞ #${res.daily}`:'⏱ 60 SANİYE';

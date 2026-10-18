@@ -2318,5 +2318,14 @@
 "{n} etkinlik görevi": "イベントタスク{n}個",
 "ÖDÜL VAR": "報酬あり",
 "{d} gün {h} sa": "{d}日{h}時間",
-"kaldı": "残り"
+"kaldı": "残り",
+"Günlük Yarış ödülü ×{n}": "デイリーレース報酬 ×{n}",
+"ŞİMDİ OYNA": "今すぐプレイ",
+"DAHA SONRA": "あとで",
+"MAĞAZAYA GİT": "ショップへ",
+"{n} filo görevi oyna": "艦隊任務を{n}回プレイ",
+"Filo görevlerinde {n} madalya kazan": "艦隊任務でメダルを{n}個獲得",
+"Günlük Yarış'ı {n} gün koş": "デイリーレースに{n}日参加",
+"Günlük Yarış'ta {n} puana ulaş": "デイリーレースで{n}点に到達",
+"{n} kez Hayatta Kal oyna": "サバイバルを{n}回プレイ"
 }
