@@ -195,7 +195,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
   if(mode==='sprint'&&FMRUN)fmSetup();else{if($('rage2'))$('rage2').style.visibility='';if($('pb'))$('pb').style.display='';} /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
-  gState='playing';lastT=performance.now();v2Ui(true);
+  gState='playing';lastT=performance.now();updateUI(); /* 18 Oct: the hearts are drawn again here, after the level set its lives; until now they kept the last level's count (one heart) until the first hit */
 }
 function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
 
@@ -553,7 +553,7 @@ function v2Update(dt){
     if(G2.guard&&G2.guard.t<=0&&G2.guard.hp>0||G2.hunt&&!G2.hunt.multi&&G2.hunt.n>=G2.hunt.need){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
     if(G2.boss&&G2.t>=G2.dur){
       v2Fail('DEV GEZEGEN KAÇTI');return;} // the time window offers a crystal, diamonds or an ad
-    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});}
+    if(G2.goal&&levelScore>=G2.goal&&(level!==1||G2.firstRage||HMODE)&&!G2.mega){G2.ending=1;G2.endT=.6;v2Call('HEDEF TAMAM!','','#ffd76a',1.2,true);sfx('achieve',{vol:.6});} /* 18 Oct: level 1 waits for the first Vortex (the tutorial's lesson), but not in Hard Mode, where nothing would end it */
     else if(G2.hard&&G2.goal&&G2.t>=G2.dur&&!G2.mega&&!G2.ending){ /* hard levels: the clock ran out short of the goal */
       G2.lastHit='time';v2Fail('SÜRE DOLDU');return;}
   }
@@ -1997,7 +1997,8 @@ function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at t
   if(!SHOP.cid||!SKIN.monoOn||G2.shT>0)return;const txt=monoText();if(!txt)return;const L=[...txt],sz=v2Size();let n=G2.monoN||1;
   const stp=(V2K.rMax/V2K.r0-1.1)/(Math.max(7,L.length)-1);while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // every letter by the largest size; a little slack against flicker
   if(n!==G2.monoN){G2.monoN=n;G2.monoT=0;}G2.monoT=Math.min(1,(G2.monoT||0)+1/30);
-  ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock);ctx.restore();}
+  const [alw,arr]=v2ArcLR(G2.R),Rm=Math.min(G2.R,(arr-alw/2-Math.max(2,G2.R*.04))/1.05); /* 18 Oct: the letters (accents and their hop included) reach about 1.05 of the ring they are given, so they get one that ends inside the arcs */
+  ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,Rm,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock);ctx.restore();}
 function v2DrawShard(o,sc){ // a golden third of the crest, glinting
   const s=o.r*sc;if(s<.6)return;ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const gl=ctx.createRadialGradient(0,0,s*.3,0,0,s*2.2);gl.addColorStop(0,'rgba(255,210,90,.4)');gl.addColorStop(1,'rgba(255,200,60,0)');
   ctx.fillStyle=gl;ctx.beginPath();ctx.arc(0,0,s*2.2,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';ctx.rotate(o.rot*.4);ctx.translate(s*.5,0);

@@ -31,6 +31,7 @@ async function fleetFetch(force){
   try{if(rel(10)&&(FL.fmq||[]).length)await fmFlush();const j=await lbFetch('/fleet?pid='+PID);FLV=j;FLE='';
     if(j.fleet){const f=j.fleet;Object.assign(FL,{fid:f.fid,name:f.name,emb:f.emb,pts:f.pts,tg:f.targets||[],race:f.race?1:0});if(f.mis)Object.assign(FL,{pts:f.mis.week,tg:f.mis.chestAt});}else FL.fid=''; /* 18 Oct: the chests are filled by mission points */
     FL.fmc=rel(10)&&fmChainReady(j.fm)?1:0;
+    if(rel(11)&&j.champ&&TIPS.chM!==j.champ.wk)later(()=>flChampCard(j),700); /* 18 Oct: last week's champions hear it on the menu first */
     FL.prz=(j.prizes||[]).length+(j.dprizes||[]).length;FL.at=Date.now();saveSoon();fleetMenu();fleetTabs();return j;}
   catch(e){FLE='off';return null;}}
 
@@ -83,10 +84,10 @@ function fleetMissionWire(){const b=$('flMisGo');if(b)b.onclick=()=>flMisClaim(b
 // 18 Oct: a fleet reward shown big: a gold tag with the stars and the diamonds
 function flPay(p){return `<span class="flpay">🎁 <b>+${flN(p[0])}</b> ⭐${p[1]?` <b>+${p[1]}</b> 💎`:''}</span>`;}
 // a claim: "+100 ⭐ +5 💎" rises from the button, the stars and diamonds fly from it into the wallet
-function flClaimFx(btn,g){const t=[g.stars?`+${flN(g.stars)} ⭐`:'',g.gems?`+${g.gems} 💎`:''].filter(Boolean).join('  ');
+function flClaimFx(btn,g){const t=[g.stars?`+${flN(g.stars)} ⭐`:'',g.gems?`+${g.gems} 💎`:'',g.shield?`+${g.shield} 🛡`:''].filter(Boolean).join('  ');
   if(btn){btn.disabled=true;btn.classList.add('got');btn.textContent=t;const R=btn.getBoundingClientRect(),e=document.createElement('div');e.className='flmpop';e.textContent=t;
     e.style.left=Math.max(70,Math.min(innerWidth-70,R.left+R.width/2))+'px';e.style.top=(R.top-4)+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}
-  flyReward(btn,{stars:g.stars,gems:g.gems});sfx('achieve',{vol:.55});vib([20,40,30]);}
+  flyReward(btn,{stars:g.stars,gems:g.gems,shield:g.shield});sfx('achieve',{vol:.55});vib([20,40,30]);}
 // 18 Oct: the 30 stars of the daily fleet mission: the button says what it gives, a "+30 ⭐" rises from it and the stars fly into the wallet
 function flMisClaim(btn,after){if(FL.mis.p<3||FL.mis.cl)return;const [st,gm]=BHS_FMIS.PAY.mis;FL.mis.cl=1;stars+=st;diamonds+=gm;saveG();
   flClaimFx(btn,{stars:st,gems:gm});fleetMenu();setTimeout(()=>{updateUI();after&&after();},1150);}
@@ -99,11 +100,43 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   if(!FLV)w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`;
   const j=await fleetFetch(FLS==='main');if(!$('sLB').classList.contains('on'))return;
   if(!j){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${flErr('off')}</div><div class="two"><button class="btn sec" id="flRetry">${T('TEKRAR DENE')}</button></div>`;$('flRetry').onclick=()=>fleetRender();return;}
-  let h=fleetPrizes(j);
+  const auto=rel(11)&&j.champ&&TIPS.chV!==j.champ.wk&&FLT==='tasks'&&FLS==='main'; /* 18 Oct: a prize that collects itself is not drawn as a TOPLA card first */
+  let h=fleetPrizes(auto?{...j,prizes:(j.prizes||[]).filter(z=>z.wk!==j.champ.wk)}:j);
   if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);
   else if(!j.fleet)h+=fleetNoneH(j);
   else{if(FLT!=='tasks')h='';h+=FLT==='crew'?flCrewH(j):FLT==='race'?await fleetRaceH(1):FLT==='week'&&j.fleet.mis?await flWeekH(j):flTasksH(j);h+=flNavH();}
-  w.innerHTML=h;fleetWire(j);}
+  w.innerHTML=h;fleetWire(j);if(rel(11)&&j.champ&&FLT==='tasks'&&FLS==='main')flChampShow(j.champ.wk,j);}
+// 18 Oct: after the salute the week's prize collects itself: it shows big in the middle and flies to the wallet; with no answer
+// from the server it stays as the TOPLA card on the Fleet page
+async function flPrizeAuto(pz){{const c=document.querySelector(`[data-claim="${pz.wk}"]`),k=c&&c.closest('.przc');if(k)k.remove();}let r=null;try{r=await lbFetch('/fleet/claim',{pid:PID,wk:pz.wk});}catch(e){}
+  if(!r||!r.ok){FLV=null;fleetRender();return;}const g={stars:r.stars|0,gems:r.gems|0,shield:r.sh|0};if(!(g.stars||g.gems||g.shield)){FLV=null;fleetRender();return;}
+  stars+=g.stars;diamonds+=g.gems;SHOP.shield+=g.shield;saveG();
+  const e=document.createElement('div');e.id='flAuto';e.innerHTML=[g.stars?`<b>+${flN(g.stars)} ⭐</b>`:'',g.gems?`<b>+${g.gems} 💎</b>`:'',g.shield?`<b>+${g.shield} 🛡</b>`:''].join('');document.body.appendChild(e);
+  sfx('achieve',{vol:.7});vib([20,40,30]);later(()=>{flyReward(e,g);sfx('powerup',{vol:.45,rate:1.2});e.classList.add('go');},1100);
+  later(()=>{e.remove();updateUI();FLV=null;fleetRender();},2000);}
+// 18 Oct: the first time the game opens after its fleet finished last week in the first three, the menu says so in the tournament prize
+// card's light (rays, confetti, the blurred screen); FİLOYA GİT opens the Fleet, where the salute plays
+function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.wk)return;const r=Math.min(3,Math.max(1,c.r|0||1));
+  if(!$('sMenu').classList.contains('on')||$('sDaily').classList.contains('on')||document.querySelector('.modal.on')||$('flChamp')){later(()=>flChampCard(j),3000);return;}
+  TIPS.chM=c.wk;saveSoon();const m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);m.className='modal rk'+r+' chf';
+  $('przIc').innerHTML=f.emb?flImg(f.emb,'big'):'👑';$('przT').textContent=r===1?T('TEBRİKLER ŞAMPİYON!'):T('TEBRİKLER!');
+  {const nm=`<b class="notr">${flE(f.name)}</b>`;$('przD').innerHTML=r===1?T('{f} geçen haftanın şampiyon filosu',{f:nm}):T('{f} geçen haftanın {n}. filosu',{f:nm,n:r});}
+  {const cf=$('przConf'),col=r===1?['#ffd76a','#fff3c4','#f2a93b','#9fd8ff','#c9a8ff']:r===2?['#e8eef8','#b8c4d8','#9fd8ff','#fff']:['#e0a070','#f2c4a0','#ffd76a','#fff'];cf.innerHTML=Array.from({length:34},(_,i)=>`<i style="--x:${(Math.random()*100).toFixed(1)}%;--d:${(Math.random()*1.4).toFixed(2)}s;--t:${(2.2+Math.random()*1.6).toFixed(2)}s;--r:${Math.round(Math.random()*720-360)}deg;--s:${(.6+Math.random()*.8).toFixed(2)};background:${col[i%col.length]}"></i>`).join('');}
+  const pz=(j.prizes||[]).find(z=>z.wk===c.wk&&z.champ===r);$('przMsg').innerHTML=pz?`<span class="chw">${T('Ödülünü almak için')}</span>${flPay([pz.stars,pz.gems])}${pz.sh?` <b class="chsh">+${pz.sh} 🛡</b>`:''}`:''; /* only a player the prize waits for (6 full days) hears of it */
+  const b=$('przGo'),lt=$('przLater');b.textContent=T('FİLOYA GİT');b.disabled=false;lt.hidden=false;
+  const close=go=>{m.classList.add('out');later(()=>{hideModals();m.classList.remove('out');if(go)fleetOpen();},go?650:900);};
+  b.onclick=()=>{b.disabled=true;close(true);};lt.onclick=()=>close(false);
+  m.classList.remove('on');void m.offsetWidth;showModal('mPrize');sfx('achieve',{vol:.6});later(()=>{sfx('powerup',{vol:.5,rate:1.2});vib([20,40,60]);},550);}
+// 18 Oct: last week's first fleet: the first time one of its players (one who played a mission for it that week) opens the Fleet,
+// a 4-second salute plays once in a rounded card over the blurred screen; a tap ends it, and it is never shown again for that week
+function flChampShow(wk,j){const r=j&&j.champ&&j.champ.r||1;if(!wk||TIPS.chV===wk||$('flChamp')||$('flAuto'))return;const pz=j&&(j.prizes||[]).find(z=>z.wk===wk&&z.champ===r);
+  if(r>1||!window.BHS_CHAMP_VID){TIPS.chV=wk;saveSoon();if(pz)later(()=>flPrizeAuto(pz),450);return;} /* the 2nd and 3rd fleets: no salute, the prize on the page goes to the wallet */
+  TIPS.chV=wk;saveSoon();
+  const ov=document.createElement('div');ov.id='flChamp';ov.setAttribute('role','dialog');ov.innerHTML='<div class="cv"><video playsinline preload="auto"></video></div>';document.body.appendChild(ov);
+  const v=ov.querySelector('video');let done=false;const end=()=>{if(done)return;done=true;ov.classList.remove('play');ov.classList.add('out');setTimeout(()=>ov.remove(),820);if(pz)flPrizeAuto(pz);};let grown=false;const grow=()=>{if(grown||done)return;grown=true;ov.classList.add('play');};
+  v.muted=!SET.sfx;v.volume=SET.sfx?Math.min(1,SET.sfxVol*1.1):0;v.src=BHS_CHAMP_VID;v.onplaying=grow;setTimeout(grow,1200);v.onended=()=>setTimeout(end,250);v.onerror=end;ov.onclick=end;setTimeout(end,9000);
+  requestAnimationFrame(()=>ov.classList.add('on'));SND.duck(.15,4.6);
+  v.play().catch(()=>{v.muted=true;v.play().catch(end);});}
 
 function fleetPrizes(j){const D=j.dprizes||[],dt=z=>{try{return new Date(z.day+'T12:00:00Z').toLocaleDateString(LOC,{day:'numeric',month:'short',weekday:'short',timeZone:'UTC'});}catch(e){return z.day;}};
   const dz=D.length?`<div class="hero przc"><b>🏆 ${T('GÜNLÜK FİLO ÖDÜLLERİ')}</b>${D.map(z=>`<div class="rw"><span>${flE(dt(z))} · ${[z.rank?T('{r}. sıra',{r:z.rank}):'',z.star?'🌟 '+T('filonun yıldızı'):''].filter(Boolean).join(' · ')} · +${flN(z.stars)} ⭐${z.gems?` +${z.gems} 💎`:''}</span></div>`).join('')}
@@ -288,10 +321,12 @@ function fleetNameCheck(){const i=$('flName'),e=$('flNameE');if(!i||!e)return nu
   if(c)c.textContent=wv+'/16';e.textContent=i.value.trim()?(r.ok?'✓':'✕ '+flErr(r.err)):'';e.classList.toggle('good',r.ok);return r;}
 function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.querySelectorAll(s);
   const go=async(path,body,after)=>{flMsg('…');try{const r=await lbFetch(path,body);if(r&&r.ok){after&&after(r);}else flMsg(flErr(r&&r.err));return r;}catch(e){flMsg(flErr('off'));return null;}};
-  all('[data-claim]').forEach(b=>b.onclick=()=>go('/fleet/claim',{pid:PID,wk:b.dataset.claim},r=>{if(r.stars||r.gems||r.sh)grant({stars:r.stars,gems:r.gems,shield:r.sh||0},'🛸 '+T('FİLO ÖDÜLÜ'));FLV=null;fleetRender();}));
+  all('[data-claim]').forEach(b=>b.onclick=()=>{if(b.disabled)return;b.disabled=true;go('/fleet/claim',{pid:PID,wk:b.dataset.claim},r=>{const g={stars:r.stars|0,gems:r.gems|0,shield:r.sh|0};if(!(g.stars||g.gems||g.shield)){FLV=null;fleetRender();return;}
+    if(!rel(11)){grant(g,'🛸 '+T('FİLO ÖDÜLÜ'));FLV=null;fleetRender();return;}stars+=g.stars;diamonds+=g.gems;SHOP.shield+=g.shield;saveG();flClaimFx(b,g);later(()=>{updateUI();FLV=null;fleetRender();},1150);});}); /* 18 Oct: the week's prize rises from its button and flies to the wallet */
   if(q('#flDClaim'))q('#flDClaim').onclick=async()=>{const b=q('#flDClaim');if(b.disabled)return;b.disabled=true;let st=0,gm=0; // every waiting day at once
     for(const z of j.dprizes||[]){try{const r=await lbFetch('/fleet/dclaim',{pid:PID,day:z.day});if(r&&r.ok){st+=r.stars;gm+=r.gems;}}catch(e){}}
-    if(st||gm)grant({stars:st,gems:gm},'🏆 '+T('GÜNLÜK FİLO ÖDÜLLERİ'));FLV=null;fleetRender();};
+    if(!(st||gm)){FLV=null;fleetRender();return;}if(!rel(11)){grant({stars:st,gems:gm},'🏆 '+T('GÜNLÜK FİLO ÖDÜLLERİ'));FLV=null;fleetRender();return;}
+    stars+=st;diamonds+=gm;saveG();flClaimFx(b,{stars:st,gems:gm});later(()=>{updateUI();FLV=null;fleetRender();},1150);};
   if(q('#flDayTop'))flDayFill();
   if(q('#flBack'))q('#flBack').onclick=()=>{FLS='main';fleetRender();};
   all('[data-flt]').forEach(b=>b.onclick=()=>{if(b.dataset.flt==='inv'){flInvOpen(j);return;}FLT=b.dataset.flt;FLS='main';fleetRender();$('sLB').scrollTop=0;});

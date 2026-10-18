@@ -2280,5 +2280,13 @@
 "HAFTA": "SEMANA",
 "Bugün filo olarak {n} madalya toplayın: madalya alan herkes ödülü alır": "Ganhem hoje {n} medalhas como frota: todos que ganharam uma medalha recebem o prêmio",
 "bir görevde en fazla {n} puan": "no máximo {n} pontos por missão",
-"Bugünkü görevler tamam": "Missões de hoje feitas"
+"Bugünkü görevler tamam": "Missões de hoje feitas",
+"{f} geçen haftanın şampiyon filosu": "{f} é a frota campeã da semana passada",
+"FİLOYA GİT": "IR PARA A FROTA",
+"Ödülünü almak için": "Para pegar seu prêmio",
+"TEBRİKLER!": "PARABÉNS!",
+"{f} geçen haftanın {n}. filosu": "{f} terminou a semana passada em {n}º lugar",
+"Geri bildirim gönder": "Enviar feedback",
+"YAZ": "ESCREVER",
+"Blackhole Storm geri bildirim": "Feedback do Blackhole Storm"
 }
