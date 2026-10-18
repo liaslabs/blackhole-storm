@@ -21,13 +21,13 @@ beyanları (veri güvenliği, içerik derecelendirmesi, reklam beyanı) **senin*
 
 | # | İş | Nerede | Beklenen |
 |---|---|---|---|
-| A1 | Üretim erişimi kartı | Kontrol paneli | "12 test kullanıcısı · 14 gün" ölçütü yeşil (19 Eki'de dolar; 20 Eki sabahı tekrar bak) |
-| A2 | Testçi listesi | Test edin ve yayınlayın › Kapalı test › Alpha › Test kullanıcıları | En az 12 kişi kayıtlı, hiçbiri çıkmamış |
-| A3 | Alpha sürümü | Aynı yer › Sürümler | Kod 68 "Yayında" |
-| A4 | Uygulama içeriği | Politika › Uygulama içeriği | Bütün maddeler "Tamamlandı" (eksik varsa başvuru düğmesi açılmaz) |
-| A5 | Çökme ve ANR | Kalite › Android vitals | Kötü davranış eşiklerinin altında (çökme < %1,09, ANR < %0,47). Değerleri bana yaz |
-| A6 | Lansman öncesi raporu | Test edin ve yayınlayın › Lansman öncesi raporu (kod 68) | Hata/uyarı listesi. Ekran görüntüsünü bana gönder, birlikte bakarız |
-| A7 | Test geri bildirimleri | Puanlar ve yorumlar › Test geri bildirimleri | Gelen bir şey varsa not al |
+| A1 ☐ | Üretim erişimi kartı | Kontrol paneli | "12 test kullanıcısı · 14 gün" ölçütü yeşil (19 Eki'de dolar; 20 Eki sabahı tekrar bak). 18 Eki: 13. gün |
+| A2 ☑ | Testçi listesi | Test edin ve yayınlayın › Kapalı test › Alpha › Test kullanıcıları | En az 12 kişi kayıtlı, hiçbiri çıkmamış |
+| A3 ☑ | Alpha sürümü | Aynı yer › Sürümler | Kod 68 "Yayında" |
+| A4 ☑ | Uygulama içeriği | Politika › Uygulama içeriği | Bütün maddeler "Tamamlandı" (eksik varsa başvuru düğmesi açılmaz). 18 Eki: 10 beyan tamam, bekleyen yok; Politika durumu: sorun yok |
+| A5 ☑ | Çökme ve ANR | Kalite › Android vitals | Kötü davranış eşiklerinin altında (çökme < %1,09, ANR < %0,47). Değerleri bana yaz. 18 Eki: 28 günde ikisi de sıfır |
+| A6 ☑ | Lansman öncesi raporu | Test edin ve yayınlayın › Lansman öncesi raporu (kod 68) | Hata/uyarı listesi. Ekran görüntüsünü bana gönder, birlikte bakarız. 18 Eki: kod 68 için rapor yok (şart değil); ayarlar doğru, kod 69'da bakılacak |
+| A7 ☑ | Test geri bildirimleri | Puanlar ve yorumlar › Test geri bildirimleri | Gelen bir şey varsa not al. 18 Eki: 2 geri bildirim, ikisi 5 yıldız, ikisi yanıtlanmış |
 
 ---
 
@@ -55,19 +55,21 @@ Cevapları önce bir yere kopyala, sonra yapıştır. İngilizce yazmanı öneri
 
 **Geri bildirimleri özetleyin ve nasıl topladığınızı açıklayın.**
 
-> We collected feedback through a WhatsApp group with the testers and family members, the in-game "Send feedback" button
-> (Settings, opens an e-mail with the version and language), Play's private test feedback, and by watching family members play
-> on their own phones. The main points were:
+> We collected feedback through a WhatsApp group with the testers, family members and friends, the in-game "Send feedback"
+> button (Settings, opens an e-mail with the version and language), Play's private test feedback, and by watching family
+> members and friends play on their own phones. The main points were:
 > 1. Short stutters during play on some phones.
 > 2. Crackling in the music on Android.
 > 3. The continue screen after losing a life was hard to understand (it was not clear what a button would cost).
 > 4. The first levels felt slow, with too few objects on screen; later, the middle levels felt too easy.
 > 5. A tester using a child account could not join the test track.
+>
+> Ratings in Play's private test feedback were all 5 stars, and we replied to each one.
 
-> *(Türkçesi: Geri bildirimi testçiler ve aile ile WhatsApp grubundan, oyun içi "Geri bildirim gönder" düğmesinden, Play'in gizli test
-> geri bildiriminden ve aile üyelerini kendi telefonlarında oynarken izleyerek topladık. Başlıcaları: bazı telefonlarda takılma,
+> *(Türkçesi: Geri bildirimi testçiler, aile ve arkadaşlarla WhatsApp grubundan, oyun içi "Geri bildirim gönder" düğmesinden, Play'in
+> gizli test geri bildiriminden ve aile ile arkadaşları kendi telefonlarında oynarken izleyerek topladık. Başlıcaları: bazı telefonlarda takılma,
 > Android'de müzikte cızırtı, can gidince çıkan devam ekranının anlaşılmaması, ilk seviyelerin yavaş ve boş, ara seviyelerin kolay
-> gelmesi, çocuk hesabıyla teste katılamama.)*
+> gelmesi, çocuk hesabıyla teste katılamama. Play test geri bildirimlerindeki puanların hepsi 5 yıldız; her birine yanıt verdik.)*
 
 ### Bölüm 2 · Oyununuz hakkında
 
@@ -107,14 +109,14 @@ cevap mağazada görünmez ve görünürlüğü etkilemez; yüksek seçmek bir �
 
 **Üretime hazır olduğunuzu nasıl belirlediniz?**
 
-> - We played every update on our own phones and with family members before releasing it to testers.
+> - We played every update on our own phones and with family members and friends before releasing it to testers.
 > - We ran automated play tests (bots) across the level range for difficulty and stability.
 > - We reviewed the interface flows, the in-game economy, the server and the game engine before the final closed test builds.
-> - We watch Android vitals and the pre-launch report for crashes and ANRs.
+> - Android vitals shows no crashes and no ANRs in the last 28 days of the closed test.
 > - Purchases are verified on our server, and the leaderboards and fleet scores use Play Integrity.
 > - Player names go through a multi-language filter, and players can report names.
 
-> ⚠️ A5 ve A6'da kötü bir değer çıkarsa "Android vitals" cümlesini birlikte değiştiririz.
+> *(A5 kontrolü, 18 Eki: son 28 günde kilitlenme ve ANR sıfır. Lansman öncesi raporu kod 68 için oluşmadığından cümleden çıkarıldı.)*
 
 ---
 
