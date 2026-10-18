@@ -3639,14 +3639,15 @@ function liveGo(c){hideModals();const g=c.go;if(g==='shop')openShop();else if(g=
   else if(g==='race')$('dcPlay').click();else if(g==='surv'){selMode('survival');$('startBtn').click();}else{selMode('classic');$('startBtn').click();}}
 function liveCard(re){const c=liveNow();if(!c)return;let el=$('mLive');if(!el){el=document.createElement('div');el.className='modal card';el.id='mLive';$('mGift').after(el);if(!MODALS.includes('mLive'))MODALS.push('mLive');}
   el.style.setProperty('--lv',c.col);const fx=liveFxTxt(c);
-  el.innerHTML=`<div class="lvH"><i class="lvB">${c.ic}</i><small>${T('ETKİNLİK')}</small><b>${flEsc(liveTx(c.t))}</b><span class="lvC">⏳ ${liveLeft(c.to-Date.now())} ${T('kaldı')}</span></div>
+  el.innerHTML=`<div class="lvH"><i class="lvB">${c.ic}</i><small>${T('ETKİNLİK')}</small><b>${flEsc(liveTx(c.t))}</b><span class="lvC">${c.to-Date.now()<864e5?T('SON GÜN')+' · ':''}⏳ ${liveLeft(c.to-Date.now())} ${T('kaldı')}</span></div>
   <p class="lvD">${flEsc(liveTx(c.d))}</p>${fx.length?`<div class="lvFx">${fx.map(x=>`<span>${x}</span>`).join('')}</div>`:''}
   ${c.tasks.length?`<div class="lvS">${T('ETKİNLİK GÖREVLERİ')}</div>${liveRows(c)}`:''}
   <div class="row"><button class="btn big" id="lvGo">▶ ${T(c.go==='shop'?'MAĞAZAYA GİT':c.go==='lab'?'KOZMİK LAB':c.go==='season'?'SEZON':c.go==='daily'?'GÖREVLER':'ŞİMDİ OYNA')}</button></div>
   <div class="row"><button class="btn sec" id="lvX" style="width:100%;">${T('DAHA SONRA')}</button></div>`;
-  if(!re)showModal('mLive');liveWire(el);const seen=()=>{const k=c.id+':'+new Date().toDateString();if(TIPS.lvSeen!==k){TIPS.lvSeen=k;saveSoon();}};$('lvGo').onclick=()=>{seen();liveGo(c);};$('lvX').onclick=()=>{seen();hideModals();};}
-function liveDue(){const c=liveNow();if(!c||TIPS.lvSeen===c.id+':'+new Date().toDateString()||$('mLive')&&$('mLive').classList.contains('on'))return;if(!$('sMenu').classList.contains('on')||document.querySelector('.screen.on:not(#sMenu)')||document.querySelector('.modal.on')||gState==='playing'){later(liveDue,3000);return;}
-  liveCard();sfx('achieve',{vol:.4});} /* the running campaign opens as a pop-up once a day when the game opens, until ŞİMDİ OYNA or DAHA SONRA is tapped */
+  if(!re)showModal('mLive');liveWire(el);const seen=()=>{const k=livePh(c);if(TIPS.lvSeen!==k){TIPS.lvSeen=k;saveSoon();}};$('lvGo').onclick=()=>{seen();liveGo(c);};$('lvX').onclick=()=>{seen();hideModals();};}
+const livePh=c=>c.id+(c.to-Date.now()<864e5?':last':':start'); /* the pop-up comes when a campaign begins and once more on its last day */
+function liveDue(){const c=liveNow();if(!c||TIPS.lvSeen===livePh(c)||$('mLive')&&$('mLive').classList.contains('on'))return;if(!$('sMenu').classList.contains('on')||document.querySelector('.screen.on:not(#sMenu)')||document.querySelector('.modal.on')||gState==='playing'){later(liveDue,3000);return;}
+  liveCard();sfx('achieve',{vol:.4});} /* opens as a pop-up when the game opens: once when the campaign begins and once on its last day (until ŞİMDİ OYNA or DAHA SONRA) */
 
 // SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
 const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha sık gelir; atlatılan her tutulma 2 kat SP verir.'},{id:'wind',ic:'🌬',n:'RÜZGÂR SEZONU',d:'Yıldız rüzgârı daha sık eser; her rüzgâr 2 kat SP verir.'},

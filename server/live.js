@@ -6,8 +6,8 @@
 // (≤2000), gems (≤50), lives (spare lives, ≤5), shield (≤5), time (≤5); go: play | surv | race | fleet | shop | lab | season | daily.
 // Texts: one entry per language, the game falls back to en, then tr.
 //
-// Every weekend (Friday 00:00 to Monday 00:00 UTC) a campaign comes by itself, the four themes in turn. A campaign written in LIST
-// below comes as well (and is shown first while both run). Each is sent from two days before it starts until it ends, so a phone
+// One weekend in three (Friday 00:00 to Monday 00:00 UTC) a campaign comes by itself, the four themes in turn, so a theme returns about
+// every twelve weeks and the weeks between are the game's own. A campaign written in LIST below comes as well (and is shown first). Each is sent from two days before it starts until it ends, so a phone
 // that goes offline still has it.
 
 const T = (tr, en, de, es, fr, pt, id, ru, ja, ar, ku) => ({ tr, en, de, es, fr, pt, id, ru, ja, ar, ku });
@@ -72,12 +72,14 @@ export const THEMES = {
 };
 export const ORDER = ['storm', 'fleet', 'race', 'surv'];
 
-// the weekend campaigns of this week and the next (week 0 began on Monday 5 January 2026)
-const W0 = Date.UTC(2026, 0, 5), WEEK = 7 * 864e5;
+// the campaign weekends of this week and the next (week 0 began on Monday 5 January 2026): every EVERY-th week; the first one after
+// the start (week 42, 30 Oct 2026) is the Weekend Storm
+const W0 = Date.UTC(2026, 0, 5), WEEK = 7 * 864e5, EVERY = 3, SHIFT = 2;
 export function auto(now = Date.now()) {
   const wk = Math.floor((now - W0) / WEEK), out = [];
   for (const w of [wk, wk + 1]) {
-    const k = ORDER[((w % ORDER.length) + ORDER.length) % ORDER.length], from = W0 + w * WEEK + 4 * 864e5, to = from + 3 * 864e5;
+    if (w % EVERY) continue;
+    const k = ORDER[(Math.floor(w / EVERY) + SHIFT) % ORDER.length], from = W0 + w * WEEK + 4 * 864e5, to = from + 3 * 864e5;
     out.push({ id: `auto-${k}-${new Date(from).toISOString().slice(0, 10)}`, from: new Date(from).toISOString(), to: new Date(to).toISOString(), ...THEMES[k] });
   }
   return out;
