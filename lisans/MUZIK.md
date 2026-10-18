@@ -40,3 +40,6 @@ oyunun ses zincirinde tıkırtı yok, ölçüldü). Yedi parça yukarıdaki Open
 yeniden çıkarıldı: oyunun kullandığı bölümler ses karşılaştırmasıyla bulundu (menü 130. sn'den 64 sn, 1. bölge 8. sn'den 96 sn,
 2. bölge 8. sn'den, 3. bölge 30. sn'den, 4. bölge baştan 60 sn, 5. bölge 120. sn'den 96 sn, boss baştan 108 sn), ses yüksekliği
 eskisine eşitlendi, 44,1 kHz stereo 128 kbps MP3. Lisans aynı (CC0).
+
+Aynı gün geri alındı (kod 66): tıkırtının asıl nedeni Android'deki küçük ses tamponuydu (kesinti), dosya kalitesi değil.
+Tampon büyütüldü, müzikler yeniden eski (22 kHz mono, küçük) dosyalar; temiz kayıtlar `3d8c08d` commit'inde duruyor.
