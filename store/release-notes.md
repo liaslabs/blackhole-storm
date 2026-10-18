@@ -266,7 +266,7 @@ Her güncellemede:
 • New: 50 illustrated avatars next to your name on the ranking; rare ones give a power
 • A deeper sky, blazing meteors and a fresh set of icons
 • Anonymous play counts help us tune the first minutes of the game
-• A clearer continue screen; your spare lives now show on the menu
+• Weekend events, fleet calls and a clearer continue screen
 </en-US>
 ```
 
