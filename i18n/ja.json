@@ -2288,5 +2288,8 @@
 "{f} geçen haftanın {n}. filosu": "{f}は先週{n}位の艦隊",
 "Geri bildirim gönder": "フィードバックを送る",
 "YAZ": "書く",
-"Blackhole Storm geri bildirim": "Blackhole Storm フィードバック"
+"Blackhole Storm geri bildirim": "Blackhole Storm フィードバック",
+"{n} hakkın var": "挑戦 {n} 回",
+"{n} hakkın kaldı": "残り {n} 回",
+"1 hakkın kaldı": "残り 1 回"
 }

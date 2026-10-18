@@ -32,3 +32,11 @@ benzer davul kalıbından yanlış eşleşmesi; aynı kayıt değil.
 **Bir talep gelirse:** YouTube Content ID talebine itiraz (gerekçe: kamu malı / CC0, kaynak sayfası ve tarihi), Google Play'e
 telif şikâyeti gelirse karşı bildirim; bu kayıt ve `lisans/muzik/` kopyaları kanıt. Hukuki görüş değildir; gerçek bir
 şikâyette bir uzmana danışılmalı.
+
+## 18 Ekim 2026: temiz kayıtlar
+
+Oyundaki dosyalar 22 kHz, mono, ~40–50 kbps'e sıkıştırılmıştı; ana menüde ve oyunda cızırtı duyuluyordu (kaynak kayıtlarda ve
+oyunun ses zincirinde tıkırtı yok, ölçüldü). Yedi parça yukarıdaki OpenGameArt sayfalarındaki orijinal dosyalardan (çoğu WAV/FLAC)
+yeniden çıkarıldı: oyunun kullandığı bölümler ses karşılaştırmasıyla bulundu (menü 130. sn'den 64 sn, 1. bölge 8. sn'den 96 sn,
+2. bölge 8. sn'den, 3. bölge 30. sn'den, 4. bölge baştan 60 sn, 5. bölge 120. sn'den 96 sn, boss baştan 108 sn), ses yüksekliği
+eskisine eşitlendi, 44,1 kHz stereo 128 kbps MP3. Lisans aynı (CC0).
