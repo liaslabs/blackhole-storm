@@ -612,6 +612,7 @@ body{text-wrap:pretty;}button,.btn,.h,.muted,small,#contMsg,.cmNote{text-wrap:ba
 /* 18 Oct (1.5.1): the continue card in the game's own look (the level-end band: gold rules, spaced capitals; the shop's gold button): your heart falls into a black hole, each way back is a tile, the first free one is the gold button; the field behind is veiled and the in-game buttons step away */
 #contVeil{display:none;position:fixed;inset:0;z-index:39;background:radial-gradient(circle at 50% 45%,rgba(10,12,24,.35),rgba(2,3,8,.72) 75%);-webkit-backdrop-filter:blur(12px) saturate(.7);backdrop-filter:blur(12px) saturate(.7);}
 body:has(#mCont.c11.on) #contVeil{display:block;}body:has(#mCont.c11.on) #boost2{visibility:hidden;}
+body.mcov #sMenu,body.mcov #sMenu *{animation-play-state:paused!important;}
 #mCont.c11{background:linear-gradient(180deg,rgba(15,18,30,.96),rgba(7,9,15,.97));border:1px solid rgba(242,169,59,.3);border-radius:18px;box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 60px rgba(242,169,59,.07);padding:10px 14px 8px;row-gap:0;}
 #mCont.c11 .c11hero{width:150px;height:84px;margin:0 auto -4px;}
 #mCont.c11 .c11hero svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 12px rgba(150,120,255,.35));}
@@ -7927,6 +7928,7 @@ function menuBgSize(){const c=$('menuBg');MB.d=Math.min(2,devicePixelRatio||1);M
 function menuBgStart(){if(MB.on)return;MB.on=true;MB.last=performance.now();menuBgSize();requestAnimationFrame(menuBgFrame);}
 function menuBgFrame(now){if(!$('sMenu').classList.contains('on')||gState!=='menu'){MB.on=false;return;}
   if(fcap(MENUF,now)){requestAnimationFrame(menuBgFrame);return;}
+  if(rel(11)){const cov=!!document.querySelector('.screen.on:not(#sMenu)');if(cov!==MB.cov){MB.cov=cov;document.body.classList.toggle('mcov',cov);}if(cov){MB.last=now;requestAnimationFrame(menuBgFrame);return;}} /* 18 Oct: a window over the menu (fleet, shop, lab...) hides it: the last frame stays, nothing is drawn and its animations rest, so the phone has more room for sound */
   const dt=Math.min(.05,(now-MB.last)/1000);MB.last=now;MB.t+=dt;const c=$('menuBg').getContext('2d'),W=MB.W,H=MB.H,t=MB.t,still=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(W!==innerWidth||H!==innerHeight)menuBgSize();c.setTransform(MB.d,0,0,MB.d,0,0);
   const mh=$('mHole'),hr=mh&&mh.getBoundingClientRect(),cx=W/2,mmT=rel(9)&&hr&&hr.height>0?document.querySelector('.mm').getBoundingClientRect().top-34:0,cy=mmT>hr.top?(hr.top+mmT)/2:hr&&hr.height>0?hr.top+hr.height/2:H*.42,HK=window.MHK||(rel(9)?.3:0),R0=HK&&hr&&hr.height>0?Math.max(Math.min(W*.13,H*.075),Math.min(hr.width*HK,hr.height*.34,W*.24)):Math.min(W*.13,H*.075),R=rel(9)?Math.min(R0,(W/2-8)/3.5):R0; /* 1.4.9: the hole grows with the room it has, but its disk always stays on screen */if(!LV.tex)LV.tex=labTex(); // the hole sits in the gap between the title and the mode cards
