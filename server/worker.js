@@ -8,6 +8,7 @@
 //   GET  /prizes?pid=...                         -> {list:[{day,rank,stars}]}   (unclaimed, last 7 days)
 //   POST /claim   {pid,day}                      -> {ok,stars}
 //   POST /ack     {sku,token,sub}                -> {ok}   checks a Google Play purchase and acknowledges it (web/TWA version)
+//   GET  /camp                                   -> {list}  live campaigns (server/live.js)
 //   POST /err     {m,s,v,p,l}                    -> {ok}   a script error from the game (message, top of stack, build, app/web,
 //                                                   language); counted per day, no personal data, kept 30 days
 //   /fleet..., /fleets/top                         -> fleets (1.5.1), see server/fleet.js
@@ -45,6 +46,7 @@ const okDay = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d);
 import '../src/names.js';
 import '../src/fmis.js';
 import { fleetRoute, fleetHousekeeping } from './fleet.js';
+import { campaigns } from './live.js';
 const NAMES = globalThis.BHS_NAMES;
 const badName = n => NAMES.bad(n);
 function cleanName(n) {
@@ -217,7 +219,7 @@ async function ensurePings(DB) {
   pingReady = true;
 }
 // 1.5.1 play counts: the keys the game may send (anything else is dropped)
-const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_join|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|l[wf]_\d{1,2}|u_[a-z]{2}_\d{1,2}|p_[a-z0-9_]{2,16}|ps_[a-z]{2}|pl_\d{1,2}|pa_(\d{1,2}|x)|g_[a-z]{2,6}|m_[a-z]{2,6}|fb)$/; // m_: menu buttons (18 Oct)
+const EV_KEY = /^(tut[123]|lv(1|3|5|10)|d1_[abcd]|fl_(join|call)|lv_cl|fm_play|shop|ad|ntf_[yn]|s[io]_[a-z]{2,8}|cl_(found|rest|new)|l[wf]_\d{1,2}|u_[a-z]{2}_\d{1,2}|p_[a-z0-9_]{2,16}|ps_[a-z]{2}|pl_\d{1,2}|pa_(\d{1,2}|x)|g_[a-z]{2,6}|m_[a-z]{2,6}|fb)$/; // m_: menu buttons (18 Oct)
 const AGE = /^(0|1|2|4|8|15|31|x)$/;
 let evReady = false;
 async function ensureEvs(DB) {
@@ -433,6 +435,9 @@ export default {
         if (!okPid(b.pid) || !SKUS[b.sku] || typeof b.token !== 'string' || b.token.length < 10 || b.token.length > 600) return json(req, { ok: false }, 400);
         if (!env.GP_SA || !env.GP_PKG) return json(req, { ok: false, err: 'not configured' }, 503);
         return json(req, await gpVerify(env, DB, b.pid, b.sku, b.token));
+      }
+      if (url.pathname === '/camp' && req.method === 'GET') { // 18 Oct: live campaigns (server/live.js): the weekend's own and any written by hand
+        return json(req, { list: campaigns() });
       }
       if (url.pathname === '/' ) return json(req, { ok: true, service: 'blackhole-storm-leaderboard', day: day() });
       return json(req, { ok: false, err: 'not found' }, 404);

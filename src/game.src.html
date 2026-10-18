@@ -908,6 +908,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .mhub .wallet{margin:0;justify-content:space-between;flex-wrap:wrap;gap:6px;}
 .mhub .wallet>span{background:rgba(8,10,22,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
 .mhub #starterRib{display:none;}
+.ribbon.live{--lv:#f2a93b;border-color:color-mix(in srgb,var(--lv) 70%,transparent);background:linear-gradient(90deg,color-mix(in srgb,var(--lv) 30%,transparent),rgba(13,16,23,.92) 75%);box-shadow:0 0 18px color-mix(in srgb,var(--lv) 25%,transparent);}.ribbon.live .lvI{font-size:22px;line-height:1;}.ribbon.live span b{color:#fff;}.ribbon.live em{background:rgba(0,0,0,.45);border:1px solid color-mix(in srgb,var(--lv) 60%,transparent);color:#ffe7c4;white-space:nowrap;}.ribbon.live.rdy em{background:var(--lv);color:#1a0d00;animation:fcPulse2 1.2s ease-in-out infinite alternate;}@keyframes fcPulse2{to{filter:brightness(1.25)}}
+#mLive{--lv:#f2a93b;width:min(92%,380px);position:fixed;z-index:160;max-height:94vh;overflow-y:auto;padding-top:0;background:#0d1017;border-color:color-mix(in srgb,var(--lv) 60%,transparent);box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);}#mLive .lvH{position:relative;margin:0 -16px 10px;padding:22px 16px 14px;text-align:center;background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--lv) 45%,transparent),transparent 70%);border-bottom:1px solid color-mix(in srgb,var(--lv) 35%,transparent);}#mLive .lvB{display:block;font-style:normal;font-size:46px;line-height:1.1;filter:drop-shadow(0 0 14px var(--lv));}#mLive .lvH small{display:block;margin-top:6px;font:800 10px var(--fd);letter-spacing:.24em;color:color-mix(in srgb,var(--lv) 75%,#fff);}#mLive .lvH b{display:block;font:800 20px var(--fd);letter-spacing:.08em;color:#fff;margin:2px 0 8px;}#mLive .lvC{display:inline-block;padding:3px 10px;border-radius:12px;background:rgba(0,0,0,.45);font:700 11px var(--fd);color:#ffe7c4;}#mLive .lvD{font-size:14px;color:#dfe3ee;line-height:1.45;margin:4px 2px 10px;text-align:center;}#mLive .lvFx{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:12px;}#mLive .dmr .x{text-align:start;}#mLive .lvFx>span{padding:4px 10px;border-radius:12px;background:color-mix(in srgb,var(--lv) 18%,transparent);border:1px solid color-mix(in srgb,var(--lv) 45%,transparent);font:700 12px var(--fd);color:#fff;}#mLive .lvS{font:800 10px var(--fd);letter-spacing:.18em;color:#9fb3d8;margin:4px 0 2px;}#mLive .dmr .bar i,.lvBox .dmr .bar i{background:linear-gradient(90deg,color-mix(in srgb,var(--lv) 70%,#000),var(--lv));}.lvBox{padding:8px 10px;margin-bottom:10px;border-radius:10px;border:1px solid color-mix(in srgb,var(--lv) 55%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--lv) 14%,transparent),transparent);}.lvBox .hd span:first-child{color:#fff;}
 .mmid{flex:1;display:grid;grid-template-columns:64px 1fr 64px;gap:6px;align-items:start;min-height:300px;}
 .mside{display:flex;flex-direction:column;gap:12px;padding-top:6px;}
 .sb{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;padding:0;border:0;background:none;color:#fff;cursor:pointer;font:inherit;}
@@ -1003,6 +1005,8 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .fx .nm{flex:1;min-width:0;}.fx .nm b{display:block;font:700 12.5px var(--fd);color:#fff;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.fx .nm small{color:#9fb3d8;font-size:10.5px;}.fx .nm .ok{color:#8dffcb;font-style:normal;}
 .fx .pt{font:700 12px var(--fd);color:var(--cyan);font-variant-numeric:tabular-nums;}.fx .go{padding:6px 11px;border-radius:999px;border:1px solid rgba(242,169,59,.6);background:rgba(242,169,59,.14);color:#ffe1a6;font:700 10.5px var(--fd);}
 .fx .rk{width:24px;font:700 12px var(--fd);color:var(--gold);text-align:center;}.fx .row2 .lbav{width:28px;height:28px;}.fx .kick{width:26px;height:26px;border-radius:7px;border:1px solid rgba(255,107,98,.5);background:none;color:#ff8a80;font:700 11px var(--fd);padding:0;}.fx .kick.ask{width:auto;padding:0 7px;}
+.fx .call{flex:0 0 auto;height:26px;padding:0 8px;border-radius:13px;border:0;background:linear-gradient(#ffd76a,#f2a93b);color:#2a1a00;font:800 10px var(--fd);letter-spacing:.04em;box-shadow:0 2px 8px rgba(242,169,59,.35);}.fx .call.done{display:inline-flex;align-items:center;background:rgba(255,255,255,.06);color:#9fb3d8;box-shadow:none;font-style:normal;}
+#mFlCall{width:min(92%,360px);position:fixed;z-index:160;text-align:center;background:radial-gradient(120% 70% at 50% 0%,rgba(242,169,59,.18),transparent 60%),#0d1017;border-color:rgba(242,169,59,.45);box-shadow:0 0 0 100vmax rgba(2,3,8,.72),0 24px 60px rgba(0,0,0,.6);overflow:hidden;}#mFlCall .h{color:var(--gold);letter-spacing:.12em;}#mFlCall .fcR{position:absolute;left:50%;top:-60px;width:220px;height:220px;margin-left:-110px;border-radius:50%;border:1px solid rgba(255,215,106,.18);box-shadow:0 0 0 22px rgba(255,215,106,.05),0 0 0 48px rgba(255,215,106,.03);pointer-events:none;animation:fcPulse 2.4s ease-out infinite;}@keyframes fcPulse{0%{transform:scale(.7);opacity:1}100%{transform:scale(1.15);opacity:0}}#mFlCall .fcAv{display:flex;justify-content:center;margin:10px 0 6px;}#mFlCall .fcAv .lbav{width:58px;height:58px;font-size:30px;border:2px solid var(--gold);margin:0 -7px;box-shadow:0 0 18px rgba(242,169,59,.4);}#mFlCall .fcT{font-size:17px;color:#fff;margin:8px 0 4px;line-height:1.35;}#mFlCall .fcT b{color:var(--gold);}#mFlCall .fcF{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:12px;background:rgba(255,255,255,.06);font:700 12px var(--fd);color:#dfe3ee;}#mFlCall .fcF .fem{width:20px;height:20px;border:0;border-radius:5px;}#mFlCall .fcS{display:block;color:#9fb3d8;margin:10px 4px 14px;font-size:13px;line-height:1.4;}
 .fx .fc{display:flex;gap:12px;align-items:center;padding:10px;border-radius:12px;border:1px solid rgba(159,227,255,.4);background:linear-gradient(135deg,rgba(80,160,255,.14),rgba(140,90,255,.08));}.fx .fc .t{min-width:0;}
 .fx .fc .t>b{display:block;font:700 16px var(--fd);color:#fff;letter-spacing:.06em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.fx .fc .t small{display:block;color:#9fb3d8;font-size:11px;margin-top:2px;}
 .fx .finv{margin-top:10px;padding:12px;border-radius:12px;border:1px solid rgba(255,207,90,.45);background:linear-gradient(135deg,rgba(255,180,60,.12),rgba(140,90,255,.08));text-align:center;}.fx .finv>b{display:block;font:700 12px var(--fd);letter-spacing:.12em;color:#ffcf5a;}
@@ -1508,6 +1512,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
    <button class="icb" id="setBtn" aria-label="Ayarlar">⚙️</button>
   </div>
   <div class="wallet"><span data-w="stars">⭐ <b id="menuStars">0</b></span><span data-w="gems">💎 <b id="menuDia">0</b></span><span data-w="shield">🛡 <b id="menuSh">0</b></span><span id="menuLf" data-w="lives" hidden>&#xe10b; <b id="menuLfN">+0</b></span><span id="menuHrt" hidden>⛽ <b id="menuHrtN">5</b><small id="menuHrtT"></small></span><span id="menuVip" hidden style="color:#ffe6a8;border-color:rgba(255,214,120,.5);">👑 VIP</span></div>
+  <button class="ribbon live" id="liveRib" hidden></button>
   <button class="ribbon mon" id="starterRib"><b>🎁</b><span><b>BAŞLANGIÇ PAKETİ</b><br>300 💎 · 3.000 ⭐ · 10 yedek can · 5 kalkan · 3 ⏱</span><em>TEK SEFER</em></button>
   <div class="mmid">
    <div class="mside">
@@ -1753,6 +1758,7 @@ body.v2 #gw{cursor:grab;touch-action:none;}
   <div class="srow" id="sCloudRow" hidden><span class="cst"><span id="sCloudT"></span><small id="sCloudS"></small></span><span class="crt"><span class="cok" id="sCloudOk"></span><button class="btn sec" id="sCloudB" style="padding:6px 12px;font-size:12px;"></button></span></div>
   <div class="srow" id="sCloudOldRow" hidden><span class="cst"><span id="sCloudOT"></span><small id="sCloudOS"></small></span><button class="btn sec" id="sCloudOB" style="padding:6px 12px;font-size:12px;"></button></div>
   <div class="srow" id="sAdPrivRow" hidden><span>🛡 Reklam gizlilik seçenekleri</span><button class="btn sec" id="sAdPriv" style="padding:6px 12px;font-size:12px;">AÇ</button></div>
+  <div class="srow" id="sCallRow" hidden><span>📣 Filo çağrıları</span><button class="tg" id="sCall"></button></div>
   <div class="srow" id="sNotifRow" hidden><span>🔔 Hatırlatmalar</span><button class="tg" id="sNotif"></button></div>
   <div class="srow nsub" id="sNotifSub" hidden><div class="seg" id="sNSeg"><button id="sNLab">🧪 LAB</button><button id="sNFuel">⛽ FÜZYON</button><button id="sNDay">🎁 GÜNLÜK</button><button id="sNFleet" hidden>🛸 FİLO</button></div></div>
   <div class="srow"><span>💡 İpuçlarını yeniden göster</span><button class="btn sec" id="sTips" style="padding:6px 12px;font-size:12px;">SIFIRLA</button></div>
@@ -1945,7 +1951,7 @@ let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],BCOMBO={c:0,d:''},unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,PAUTO=false,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
 try{localStorage.removeItem('bhs_ghost');}catch(e){} // the record ghost was removed: drop its saved runs
-const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,sens:0,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true,nFleet:true}; // notif: game reminders in the Android app
+const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,sens:0,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true,nFleet:true,fcall:true}; // notif: game reminders in the Android app
 // ══════════════════════════════════════════════════════
 // ICONS. Emoji in any on-screen text are drawn as these SVG icons (the strings, translations and share texts
 // keep their emoji). Colored icons use the gradients in #icoDefs; line icons follow the text color.
@@ -2038,6 +2044,8 @@ const ICO=(()=>{
   Object.defineProperty(I,'\ue10a',{enumerable:true,get:()=>'<circle cx="12" cy="12" r="11" fill="url(#kNb)"/><ellipse cx="12" cy="12.6" rx="10" ry="3.4" fill="none" stroke="#f2a93b" stroke-width="1.2" transform="rotate(-14 12 12.6)"/><circle cx="12" cy="12" r="6.4" fill="#05070a" stroke="#ffe9a8" stroke-width="1.1"/><text x="12" y="15.2" text-anchor="middle" font-family="IBM Plex Sans Condensed,sans-serif" font-weight="800" font-size="8.6" fill="#ffe9a8">'+escH((Array.from(String(typeof playerName==='string'&&playerName.trim()||'✦'))[0]||'✦').toLocaleUpperCase(LOC||'tr'))+'</text><path d="M19.6 2.6l.7 1.6 1.6.7-1.6.7-.7 1.6-.7-1.6-1.6-.7 1.6-.7z" fill="#fff3c4"/>'});
   /* 18 Oct: the spare life (bought, kept for a continue): the heart with a gold rim and a plus, unlike the level's own hearts */
   I['\ue10b']='<path d="M12 21.2s-9.2-5.6-9.2-12A5.1 5.1 0 0 1 12 6.2a5.1 5.1 0 0 1 9.2 3c0 6.4-9.2 12-9.2 12z" fill="url(#gHeart)" stroke="#ffd84d" stroke-width="1.5"/><path d="M12 9.6v6.6M8.7 12.9h6.6" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/><path d="M6.4 8.6a2.6 2.6 0 0 1 2.8-1.1" fill="none" stroke="#ffe3e6" stroke-width="1.1" stroke-linecap="round"/>';
+  /* 18 Oct: the fleet call: a gold megaphone with a black hole for a mouth */
+  I['📣']='<path d="M8.6 15.6l1 3.9h2.2l-.6-3.1" fill="#c07a22" stroke="#7a4f12" stroke-width=".9" stroke-linejoin="round"/><rect x="2.6" y="8.6" width="4.4" height="6.8" rx="1.4" fill="#e0892a" stroke="#7a4f12" stroke-width=".9"/><path d="M6.4 9.2L16.2 4.6V19.4L6.4 14.8Z" fill="url(#gStar)" stroke="#7a4f12" stroke-width=".9" stroke-linejoin="round"/><path d="M7.6 9.9l7.4-3.5" stroke="#fff4cf" stroke-width=".9" stroke-linecap="round" opacity=".8"/><ellipse cx="16.2" cy="12" rx="2.1" ry="7.4" fill="#120c02" stroke="#ffe27a" stroke-width=".9"/><ellipse cx="16.2" cy="12" rx=".9" ry="3.6" fill="none" stroke="#f2a93b" stroke-width=".7"/><path d="M19.7 8.9q1.6 3.1 0 6.2M21.8 6.8q2.7 5.2 0 10.4" fill="none" stroke="#8fd0ff" stroke-width="1.6" stroke-linecap="round"/>';
   I['🛸']=I['🤝']; /* 16 Oct: the fleet's symbol everywhere in the game (the stock UFO emoji is gone from the screens; notifications keep it as text) */
   I['✉️']=I['✉']='<path d="M15.6 9.6L19.2 5.6" stroke="url(#bTrail)" stroke-width="2.6" stroke-linecap="round" opacity=".9"/><rect x="2.4" y="8.6" width="16.2" height="11.8" rx="1.8" fill="url(#nBlock)" stroke="#9ff4ff" stroke-width="1.3"/><path d="M3.2 9.6l7.3 5.5 7.3-5.5" fill="none" stroke="#9ff4ff" stroke-width="1.2" stroke-linejoin="round"/><path d="M3.4 19.4l5.4-4.2M17.6 19.4l-5.4-4.2" stroke="#9ff4ff" stroke-width=".8" opacity=".55"/><path d="M10.50 12.50L11.21 14.22L13.07 14.37L11.66 15.58L12.09 17.38L10.50 16.41L8.91 17.38L9.34 15.58L7.93 14.37L9.79 14.22z" fill="url(#nGold)" stroke="#7a4f12" stroke-width=".7" stroke-linejoin="round"/><g transform="translate(19.6 4.4) rotate(42) scale(.62) translate(-12 -6)"><path d="M12 1.6L15.1 10.1L12 8.4L8.9 10.1z" fill="url(#bShip)" stroke="#e8fdff" stroke-width="1.1" stroke-linejoin="round"/></g><path d="M4.6 2.4v4.2M2.5 4.5h4.2" stroke="#ffcf5a" stroke-width="1.8" stroke-linecap="round"/>'; /* 1.5.0 (16 Oct): the fleet's invite: an envelope with a gold seal and a ship flying out */
   Object.assign(B,{
@@ -2155,7 +2163,7 @@ new MutationObserver(ms=>{for(const m of ms){
 // clock guard: the latest device time ever seen is saved; if the clock is set back, date-based rewards wait until real time catches up
 let clockMax=0;
 function clockOk(){const n=Date.now();if(n>clockMax)clockMax=n;return n>=clockMax-6e5;} // 10 min slack for network time corrections
-let SHOP={rvAt:0,rvN:0,noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,easyLv:0,arcLv:0,boostLv:0,boostK:''},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
+let SHOP={rvAt:0,rvN:0,noAds:false,cid:false,qh:false,ackd:[],pend:[],shareDay:'',tkey:0,lives:0,shield:0,shards:0,time:0,gold:0,scDay:'',scN:0,starter:false,captainN:0,giftLv:0,adDay:'',adN:0,tok:[],vipUntil:0,vipStart:0,vipPer:-1,failLv:0,failN:0,cs:0,lv:{},easyLv:0,arcLv:0,boostLv:0,boostK:''},LSTARS={},REPLAY=null,lvCombo=0,mass=0,swallowed=0,bestLevel=1,seen={},DM={date:'',list:[],bonus:false},DAILY={n:0,score:0,grid:'',combo:0,perf:0},sprintBest=0,TIPS={},STREAK3=0,WSTREAK=0;
 const NAME_MAX=11; // pilot name and the letters inside the black hole
 /* HARD MODE: its own run from level 1 with harsher rules, opened once level 30 is cleared. While it is played its progress sits in the
    classic variables (so every level, map and continue path just works) and the classic run waits in HM; saving always writes each in its own slot. */
@@ -2195,7 +2203,7 @@ function loadG(){let d;try{d=svO(JSON.parse(localStorage.getItem(SK)||'{}'))||{}
   {const h=svO(d.hrt)||{};HEARTS.n=svI(h.n,HRT.max,0,HRT.max);HEARTS.t=svN(h.t,0,0,Date.now());}
   LSTARS={};if(svO(d.ls))for(const k in d.ls)if(typeof d.ls[k]==='number')LSTARS[k]=svI(d.ls[k],0,-1,3);
   const sh=svO(d.shop)||{};for(const k in SHOP){const v=sh[k];if(v!==undefined&&typeof v===typeof SHOP[k]&&Array.isArray(v)===Array.isArray(SHOP[k]))SHOP[k]=v;}
-  for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);SHOP.tkey=svI(SHOP.tkey,0,0,1);
+  for(const k of ['lives','shield','shards','time','captainN','adN'])SHOP[k]=svI(SHOP[k],0,0,1e6);SHOP.tkey=svI(SHOP.tkey,0,0,1);SHOP.cs=svI(SHOP.cs,0,0,99);
   if(V2&&!TIPS.gift&&bestLevel>7){TIPS.gift=1;SHOP.shield++;}
   if(!skinOwned(SKIN.sel))SKIN.sel=0; // e.g. a pack look on a save without the pack // players past level 2 before the first-shield gift existed
   SHOP.vipUntil=svN(SHOP.vipUntil,0);SHOP.vipStart=svN(SHOP.vipStart,0);SHOP.vipPer=svI(SHOP.vipPer,-1,-1,1e4);
@@ -2935,6 +2943,7 @@ function dmRoll(){
 }
 function dmText(m){const d=MPOOL.find(x=>x.id===m.id);return d?d.t(m.n):m.id;}
 function dmEvent(id,v,abs){if(typeof FMRUN!=='undefined'&&FMRUN)return; /* a fleet mission counts for the fleet only */
+  if(rel(11))liveCount(id,v,abs); /* the live campaign's tasks use the same counters */
   if(!DM.list)return;for(const m of DM.list){if(m.id!==id||m.done)continue;const d=MPOOL.find(x=>x.id===id);m.p=(abs||(d&&d.abs))?Math.max(m.p,v):m.p+v;
     if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m),at:performance.now()});if(!achShowing)nextAch();}saveSoon();}
 }
@@ -2943,10 +2952,11 @@ function dmMenuBadge(){const bd=$('dmBadge');if(!bd||!DM.list)return;const hot=D
   bd.textContent=hot?(rel(10)?T('AL')+'!':'AL!'):race?'!':'';bd.className=hot?'hot':race?'hot sm':'';}
 function renderDM(){
   dmRoll();const box=$('dmBox');dmMenuBadge();let h=`<div class="hd"><span>📋 GÜNLÜK GÖREVLER</span><span>${DM.list.filter(m=>m.cl).length}/3</span></div>`+(rel(10)?fleetMission():'');
+  {const c=liveNow();if(c&&c.tasks.length)h=`<div class="lvBox" style="--lv:${c.col}"><div class="hd"><span>${c.ic} ${flEsc(liveTx(c.t))}</span><span>⏳ ${liveLeft(c.to-Date.now())}</span></div>${liveRows(c)}</div>`+h;}
   DM.list.forEach((m,i)=>{const d=MPOOL.find(x=>x.id===m.id),rw=d?d.r:['⭐',0];
     h+=`<div class="dmr"><div class="x">${dmText(m)}<small>${Math.floor(m.p).toLocaleString(LOC)} / ${m.n.toLocaleString(LOC)} · ödül ${rw[1]} ${rw[0]}</small><div class="bar"><i style="width:${Math.min(100,m.p/m.n*100)}%"></i></div></div>${m.cl?'<span class="ok">✅</span>':`<button data-i="${i}" ${m.done?'':'disabled'}>AL</button>`}</div>`;});
   h+=`<div class="muted" style="margin-top:6px;font-size:12px;">${DM.list.every(m=>m.cl)?'Hepsi tamam, bonus alındı. Yarın yeni görevler!':'Üçünü de bitir: +5 💎 · +15 dk ⏩'}</div>`;
-  box.innerHTML=h;box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>dmClaim(+b.dataset.i));if(rel(10))fleetMissionWire();
+  box.innerHTML=h;box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>dmClaim(+b.dataset.i));if(rel(11))liveWire(box);if(rel(10))fleetMissionWire();
 }
 function dmClaim(i){
   const m=DM.list[i];if(!m||!m.done||m.cl)return;const d=MPOOL.find(x=>x.id===m.id),src=document.activeElement;m.cl=true;spAdd(15);let g;
@@ -3591,6 +3601,54 @@ function lbTab(t){if(rel(9)){const c=$('lbClose'),sr=$('lbShareRow'),one=t==='m'
   {const f=$('lbTF'),d=$('lbFleet');if(f)f.classList.toggle('on',t==='f');if(d)d.hidden=t!=='f';if(f)fleetTabs();} /* 1.5.1: the Fleet tab */if(t==='w')renderLBWorld();if(t==='f')fleetRender();}
 //@@FLEET@@
 
+// LIVE CONTENT (18 Oct): campaigns the server hands out without an app update (GET /camp, see server/live.js). They are data, never code:
+// a title and a text in each language, dates, a few effects with fixed ceilings, up to 4 event tasks built on the daily-mission counters
+// and where the button goes. The game keeps the last list, so a campaign also runs offline until its end.
+const LIVE_FX={lvStars:3,sp:2,race:2},LIVE_RW={stars:2000,gems:50,lives:5,shield:5,time:5},LIVE_GO=['play','surv','race','fleet','shop','lab','season','daily'];
+// the campaign's own counters, beside the daily missions' (fleet missions count for the fleet only there)
+const LIVE_T=[{id:'fm',t:n=>`${n} filo görevi oyna`},{id:'fmg',t:n=>`Filo görevlerinde ${n} madalya kazan`},{id:'race',t:n=>`Günlük Yarış'ı ${n} gün koş`},
+  {id:'racesc',t:n=>`Günlük Yarış'ta ${n.toLocaleString(LOC)} puana ulaş`,abs:1},{id:'survplay',t:n=>`${n} kez Hayatta Kal oyna`}];
+const liveDef=id=>MPOOL.find(x=>x.id===id)||LIVE_T.find(x=>x.id===id);
+let LIVE=[];
+const liveTx=o=>o&&typeof o==='object'?String(o[LANG]||o.en||o.tr||'').slice(0,160):'';
+function liveClean(c){if(!c||typeof c!=='object'||typeof c.id!=='string'||!/^[a-z0-9-]{3,40}$/.test(c.id))return null;const from=Date.parse(c.from),to=Date.parse(c.to);if(!(to>from))return null;
+  const fx={};for(const k in LIVE_FX){const v=+((c.fx||{})[k]);if(v>1)fx[k]=Math.min(LIVE_FX[k],v);}
+  const tasks=(Array.isArray(c.tasks)?c.tasks:[]).slice(0,4).map(t=>{const n=Math.floor(+(t&&t.n));if(!t||!liveDef(t.id)||!(n>=1&&n<=1e5))return null;const r={};for(const k in LIVE_RW){const v=Math.floor(+((t.r||{})[k]));if(v>0)r[k]=Math.min(LIVE_RW[k],v);}return {id:t.id,n,r};}).filter(Boolean);
+  return {id:c.id,from,to,ic:typeof c.ic==='string'&&c.ic.length<=4?c.ic:'✨',col:/^#[0-9a-f]{6}$/i.test(c.col||'')?c.col:'#f2a93b',t:c.t,d:c.d,fx,tasks,go:LIVE_GO.includes(c.go)?c.go:'play'};}
+const liveNow=()=>{const n=Date.now();return rel(11)&&LIVE.find(c=>n>=c.from&&n<c.to)||null;};
+const liveFx=k=>{const c=!REPLAY&&!EXPRUN?liveNow():null;return c&&c.fx[k]||1;}; /* lvStars is asked for on classic levels only, race by the Daily Race, sp by spAdd */
+function liveSet(list){LIVE=(Array.isArray(list)?list:[]).slice(0,6).map(liveClean).filter(Boolean);liveUi();}
+function liveLoad(){try{liveSet(JSON.parse(localStorage.getItem('bhs_live')||'[]'));}catch(e){}}
+async function liveFetch(){if(!rel(11)||!LB_URL)return;try{const j=await lbFetch('/camp?v='+BUILD);if(j&&Array.isArray(j.list)){try{localStorage.setItem('bhs_live',JSON.stringify(j.list));}catch(e){}liveSet(j.list);}}catch(e){}}
+function liveSt(c){if(!SHOP.lv||SHOP.lv.id!==c.id||!Array.isArray(SHOP.lv.p))SHOP.lv={id:c.id,p:c.tasks.map(()=>0),cl:c.tasks.map(()=>0)};return SHOP.lv;}
+const liveTask=t=>{const d=liveDef(t.id);return d?T(d.t(t.n)):t.id;};
+function liveCount(id,v,abs){const c=liveNow();if(!c||!c.tasks.length||REPLAY)return;const s=liveSt(c);
+  c.tasks.forEach((t,i)=>{if(t.id!==id||s.cl[i])return;const d=liveDef(id),was=s.p[i]||0;s.p[i]=Math.min(t.n,abs||(d&&d.abs)?Math.max(was,v):was+v);
+    if(was<t.n&&s.p[i]>=t.n){achQueue.push({i:c.ic,t:T('ETKİNLİK GÖREVİ TAMAM'),d:liveTask(t),at:performance.now()});if(!achShowing)nextAch();}});saveSoon();}
+function liveLeft(ms){const s=Math.max(0,Math.floor(ms/1000)),d=Math.floor(s/86400);return d?T('{d} gün {h} sa',{d,h:Math.floor(s%86400/3600)}):labDur(s);}
+function liveFxTxt(c){const p=[],f=v=>v.toLocaleString(LOC);if(c.fx.lvStars)p.push('⭐ '+T('Seviye yıldızları ×{n}',{n:f(c.fx.lvStars)}));if(c.fx.race)p.push('🏁 '+T('Günlük Yarış ödülü ×{n}',{n:f(c.fx.race)}));if(c.fx.sp)p.push('🌀 '+T('Sezon puanı ×{n}',{n:f(c.fx.sp)}));return p;}
+function liveRwTxt(r){const p=[];if(r.stars)p.push(r.stars.toLocaleString(LOC)+' ⭐');if(r.gems)p.push(r.gems+' 💎');if(r.lives)p.push(r.lives+' ');if(r.shield)p.push(r.shield+' 🛡');if(r.time)p.push(r.time+' ⏱');return p.join(' + ');}
+function liveRows(c){const s=liveSt(c);return c.tasks.map((t,i)=>{const p=Math.floor(s.p[i]||0),ok=p>=t.n;return `<div class="dmr lvr"><div class="x">${liveTask(t)}<small>${p.toLocaleString(LOC)} / ${t.n.toLocaleString(LOC)} · ${T('ödül')} ${liveRwTxt(t.r)}</small><div class="bar"><i style="width:${Math.min(100,p/t.n*100)}%"></i></div></div>${s.cl[i]?'<span class="ok">✅</span>':`<button data-lv="${i}" ${ok?'':'disabled'}>${T('AL')}</button>`}</div>`;}).join('');}
+function liveClaim(i,src){const c=liveNow();if(!c)return;const s=liveSt(c),t=c.tasks[i];if(!t||s.cl[i]||(s.p[i]||0)<t.n)return;s.cl[i]=1;grant(t.r,c.ic+' '+liveTx(c.t));if(rel(11))ev('lv_cl');saveG();liveUi();if($('mLive')&&$('mLive').classList.contains('on'))liveCard(true);if($('sDM').classList.contains('on'))renderDM();}
+function liveWire(root){root.querySelectorAll('[data-lv]').forEach(b=>b.onclick=e=>{e.stopPropagation();liveClaim(+b.dataset.lv,b);});}
+function liveUi(){const r=$('liveRib');if(!r)return;const c=liveNow();r.hidden=!c;if(!c)return;r.style.setProperty('--lv',c.col);
+  const s=liveSt(c),ready=c.tasks.some((t,i)=>!s.cl[i]&&(s.p[i]||0)>=t.n),fx=liveFxTxt(c);
+  r.innerHTML=`<b class="lvI">${c.ic}</b><span><b>${flEsc(liveTx(c.t))}</b><br>${[...fx,c.tasks.length?T('{n} etkinlik görevi',{n:c.tasks.length}):''].filter(Boolean).join(' · ')}</span><em>${ready?T('ÖDÜL VAR'):'⏳ '+liveLeft(c.to-Date.now())}</em>`;r.classList.toggle('rdy',ready);}
+const flEsc=s=>String(s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+function liveGo(c){hideModals();const g=c.go;if(g==='shop')openShop();else if(g==='fleet'&&typeof fleetOpen==='function')fleetOpen('tasks');else if(g==='lab')labOpenScr();else if(g==='season')$('snBtn').click();else if(g==='daily')$('dmBtn').click();
+  else if(g==='race')$('dcPlay').click();else if(g==='surv'){selMode('survival');$('startBtn').click();}else{selMode('classic');$('startBtn').click();}}
+function liveCard(re){const c=liveNow();if(!c)return;let el=$('mLive');if(!el){el=document.createElement('div');el.className='modal card';el.id='mLive';$('mGift').after(el);if(!MODALS.includes('mLive'))MODALS.push('mLive');}
+  el.style.setProperty('--lv',c.col);const fx=liveFxTxt(c);
+  el.innerHTML=`<div class="lvH"><i class="lvB">${c.ic}</i><small>${T('ETKİNLİK')}</small><b>${flEsc(liveTx(c.t))}</b><span class="lvC">${c.to-Date.now()<864e5?T('SON GÜN')+' · ':''}⏳ ${liveLeft(c.to-Date.now())} ${T('kaldı')}</span></div>
+  <p class="lvD">${flEsc(liveTx(c.d))}</p>${fx.length?`<div class="lvFx">${fx.map(x=>`<span>${x}</span>`).join('')}</div>`:''}
+  ${c.tasks.length?`<div class="lvS">${T('ETKİNLİK GÖREVLERİ')}</div>${liveRows(c)}`:''}
+  <div class="row"><button class="btn big" id="lvGo">▶ ${T(c.go==='shop'?'MAĞAZAYA GİT':c.go==='lab'?'KOZMİK LAB':c.go==='season'?'SEZON':c.go==='daily'?'GÖREVLER':'ŞİMDİ OYNA')}</button></div>
+  <div class="row"><button class="btn sec" id="lvX" style="width:100%;">${T('DAHA SONRA')}</button></div>`;
+  if(!re)showModal('mLive');liveWire(el);const seen=()=>{const k=livePh(c);if(TIPS.lvSeen!==k){TIPS.lvSeen=k;saveSoon();}};$('lvGo').onclick=()=>{seen();liveGo(c);};$('lvX').onclick=()=>{seen();hideModals();};}
+const livePh=c=>c.id+(c.to-Date.now()<864e5?':last':':start'); /* the pop-up comes when a campaign begins and once more on its last day */
+function liveDue(){const c=liveNow();if(!c||TIPS.lvSeen===livePh(c)||$('mLive')&&$('mLive').classList.contains('on'))return;if(!$('sMenu').classList.contains('on')||document.querySelector('.screen.on:not(#sMenu)')||document.querySelector('.modal.on')||gState==='playing'){later(liveDue,3000);return;}
+  liveCard();sfx('achieve',{vol:.4});} /* opens as a pop-up when the game opens: once when the campaign begins and once on its last day (until ŞİMDİ OYNA or DAHA SONRA) */
+
 // SEASONS: every calendar month (UTC) is a season with a theme. Season points (SP) from play climb a free 30-tier road.
 const SEASON_T=[{id:'eclipse',ic:'🌑',n:'TUTULMA SEZONU',d:'Tutulmalar daha sık gelir; atlatılan her tutulma 2 kat SP verir.'},{id:'wind',ic:'🌬',n:'RÜZGÂR SEZONU',d:'Yıldız rüzgârı daha sık eser; her rüzgâr 2 kat SP verir.'},
   {id:'cons',ic:'✨',n:'TAKIMYILDIZ SEZONU',d:'Takımyıldızlar daha sık belirir; tamamlanan her biri 2 kat SP verir.'},{id:'gold',ic:'🌕',n:'ALTIN SEZON',d:'Altın gezegenler ×2 daha fazla gelir ve ×2 puan verir.'},
@@ -3617,7 +3675,7 @@ function seasonClaim(list,src){list=list.filter(i=>seasonReady().includes(i));if
   saveG();sfx('achieve',{vol:.5});vib(20);if(src){src.classList.add('pop');}
   if(key)toast('🗝',T('HAZİNE ANAHTARI'),T('Sezon ödülü'));if(badge)toast('🏅',T('SEZON ROZETİ'),SEASON.id);
   flyReward(src,g,()=>{renderSeason();seasonBadge();});seasonBadge();}
-function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;seasonRoll();SEASON.sp+=Math.round(n);let up=0;
+function spAdd(n){if(!(n>0)||gameMode==='sprint'||REPLAY)return;if(rel(11))n*=liveFx('sp');seasonRoll();SEASON.sp+=Math.round(n);let up=0;
   while(SEASON.tier<SEA.tiers&&SEASON.sp>=(SEASON.tier+1)*SEA.per){SEASON.tier++;up++;const k=SEASON.tier;achQueue.push({i:'🌀',t:T('SEZON')+' · '+T('KADEME {k}',{k}),d:seasonRwTxt(seasonReward(k))+' · '+T('Sezon ekranından al'),at:performance.now()});if(!achShowing)nextAch();}
   if(up){saveG();updateUI();}else saveSoon();seasonBadge();}
 function seasonBadge(){const e=$('snBadge');if(!e)return;seasonRoll();const n=seasonReady().length;e.textContent=n?String(n):'';e.className=n?(n<10?'rdy sm':'rdy'):'';$('snBtn').classList.toggle('rdy',n>0);} // rewards waiting to be taken
@@ -4210,7 +4268,7 @@ function levelSuccess(){
   const st=levelStars(),rec=recordStars(level,st);
   if(REPLAY){replayWin(st,rec);return;}
   if(level<=3&&!rec.old&&!HMODE){stars+=10;saveG();later(()=>toast('🏅','İLK GEÇİŞ ÖDÜLÜ','+10 ⭐'),1400);} // first clear of an early level
-  for(let i=0;i<(HMODE?10:5);i++)cols.push(new Collectible(hX,hY,$('scoreBox'),false)); // Hard Mode pays double
+  for(let i=0;i<Math.round((HMODE?10:5)*liveFx('lvStars'));i++)cols.push(new Collectible(hX,hY,$('scoreBox'),false)); // Hard Mode pays double; a live campaign may too
   if(level%5===0)for(let i=0;i<3;i++)cols.push(new Collectible(hX,hY,$('diaTop')||$('scoreBox'),true));
   if(totalScore>bestScore){bestScore=totalScore;saveG();}
   sfx('levelup',{vol:.85,rev:.35});SND.duck(.3,2.4);vib([30,50,30,50,60]);
@@ -4273,7 +4331,7 @@ function showCont(){
   $('contTime').hidden=true;
   const cl=gameMode==='classic';$('contStars').textContent=stars;
   heartTick();$('contRes').innerHTML=(cl&&heartsOn(level)?`<span>⛽ ${T('YAKIT')}<b>${HEARTS.n}/${HRT.max}</b></span>`:'')+(SHOP.lives>0||!rel(9)&&monOn()?`<span>\ue10b ${T('YEDEK CAN')}<b>${SHOP.lives}</b></span>`:'')+(cl&&G2.on&&!REPLAY&&WSTREAK>0?`<div class="wsRisk">⚡ ${T('Galibiyet serin: {n}',{n:WSTREAK})} · ${T('Devam edersen korunur, vazgeçersen sıfırlanır')}</div>`:'')+(cl&&!REPLAY&&!rel(9)?labContHint():''); /* what a give-up would cost */ /* totals: fuel (play attempts) and spare lives, so the costs on the buttons make sense */
-  if(cl&&G2.on&&!G2.failCounted){G2.failCounted=1;if(rel(11)&&!REPLAY)ev('lf_'+Math.min(50,Math.floor(level/10)));if(SHOP.failLv===level)SHOP.failN++;else{SHOP.failLv=level;SHOP.failN=1;}saveG();}
+  if(cl&&G2.on&&!G2.failCounted){G2.failCounted=1;if(rel(11)&&!REPLAY)ev('lf_'+Math.min(50,Math.floor(level/10)));if(SHOP.failLv===level)SHOP.failN++;else{SHOP.failLv=level;SHOP.failN=1;}SHOP.cs=0;saveG();}
   const ez=cl&&G2.on&&SHOP.failLv===level&&SHOP.failN>=EASE.after&&SHOP.easyLv!==level&&level>1;$('easeBox').hidden=!ez;
   if(ez){$('contEase').textContent=`💎 ${EASE.dia} · ${T('KOLAYLAŞTIR')}`;$('contEase').classList.toggle('dim',diamonds<EASE.dia);$('contEaseAd').hidden=!monOn()||!adReady();$('contEaseAd').textContent=adLabel('KOLAYLAŞTIR');}
   $('contDia').parentNode.hidden=!(G2.on&&cl);if(G2.on&&cl){const dc=V2K.cont.dia*2**G2.diaCont;$('contDia').textContent=tOut?`💎 ${dc} · +30 sn`:`💎 ${dc} · 2 CANLA DEVAM`;$('contDia').classList.toggle('dim',diamonds<dc);}
@@ -4300,7 +4358,7 @@ function showCont(){
   $('contRetry').style.display=cl?'':'none';$('contNo').textContent=cl?'ANA MENÜ':'BİTİR';showModal('mCont');
 }
 function retryLevel(){hideModals();SND.duck(1,0);SND.setDrone(.14,650);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();resetRun(false);}
-function gameOver(){natMark('game over');
+function gameOver(){natMark('game over');if(rel(11)&&gameMode==='survival'&&!gameOver.c){gameOver.c=1;later(()=>{gameOver.c=0;},2000);liveCount('survplay',1);}
   rngS=null; // the daily storm's seeded spawns end with the run
   dmEvent('score',totalScore,true);
   $('finNear').textContent=totalScore>runStartBest&&totalScore>0?'🏆 YENİ REKOR!':runStartBest>0?`Rekoruna ${(runStartBest-totalScore).toLocaleString(LOC)} puan kaldı`:'';
@@ -4373,7 +4431,7 @@ function sprintEnd(){
   if(SPR_RUN.ended)return;SPR_RUN.ended=true;runId++;rngS=null;gState='over';SND.music('menu');
   if(SPR_RUN.opt.fm){fmEnd();return;} /* a fleet mission: its own result card; nothing goes to the score, records, ranking or daily tasks */
   const opt=SPR_RUN.opt,res={score:totalScore,combo:maxCombo,perf:perfectCount,caught:SPR_RUN.caught,grid:sprintGrid(),zone:SPR_RUN.zone,daily:opt.daily||0,chal:opt.chal||null};
-  let official=false,rw=null;if(opt.daily&&DAILY.n!==opt.daily){official=true;const sk=DAILY.n===opt.daily-1?(DAILY.sk|0)+1:1;DAILY={n:opt.daily,score:res.score,grid:res.grid,combo:res.combo,perf:res.perf,sk};rw=raceReward(res.score,opt.daily,sk);if(rw.stars||rw.gems)grant({stars:rw.stars,gems:rw.gems},'🏁 '+T('GÜNLÜK YARIŞ'));}
+  let official=false,rw=null;if(opt.daily&&DAILY.n!==opt.daily){official=true;const sk=DAILY.n===opt.daily-1?(DAILY.sk|0)+1:1;DAILY={n:opt.daily,score:res.score,grid:res.grid,combo:res.combo,perf:res.perf,sk};rw=raceReward(res.score,opt.daily,sk);if(rel(11)){const k=liveFx('race');if(k>1)rw={...rw,stars:Math.round((rw.stars||0)*k),gems:Math.round((rw.gems||0)*k)};liveCount('race',1);liveCount('racesc',res.score,true);}if(rw.stars||rw.gems)grant({stars:rw.stars,gems:rw.gems},'🏁 '+T('GÜNLÜK YARIŞ'));}
   res.official=official;const newBest=res.score>sprintBest;if(newBest)sprintBest=res.score;SPR_RUN.res=res;
   dmEvent('score',totalScore,true);addLB(totalScore);if(totalScore>bestScore)bestScore=totalScore;saveG();
   $('spHead').textContent=res.chal?'⚔️ MEYDAN OKUMA':res.daily?`🏁 GÜNLÜK YARIŞ #${res.daily}`:'⏱ 60 SANİYE';
@@ -4671,6 +4729,7 @@ function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;i
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
   $('sMusV').disabled=!SET.music;$('sSfxV').disabled=!SET.sfx;
   $('sAdPrivRow').hidden=!ADS.privacy;
+  $('sCallRow').hidden=!(rel(11)&&FL.fid);tg('sCall',SET.fcall!==false); /* 18 Oct: fleet calls can be turned off */
   {const nOk=!!(CAP('Bhs')&&CAP('Bhs').notifSchedule);$('sNotifRow').hidden=!nOk;$('sNotifSub').hidden=!nOk||!SET.notif;tg('sNotif',SET.notif);
    $('sNLab').classList.toggle('on',SET.nLab);$('sNFuel').classList.toggle('on',SET.nFuel);$('sNDay').classList.toggle('on',SET.nDay);$('sNFleet').classList.toggle('on',SET.nFleet);$('sNFleet').hidden=!rel(10);}
   const pl=(id,on)=>{const e=$(id);e.textContent=on?'AÇIK':'KAPALI';e.className=on?'':'off';};pl('pMusicL',SET.music);pl('pSfxL',SET.sfx);
@@ -4680,6 +4739,7 @@ $('sMus').onclick=()=>{SET.music=!SET.music;setChanged();};
 $('sSfx').onclick=()=>{SET.sfx=!SET.sfx;setChanged();sfx('click',{vol:.4});};
 {const ls=$('sLang');ls.innerHTML=LANGS.map(([k,n])=>`<option value="${k}">${n}</option>`).join('');ls.onchange=()=>{setLang(ls.value,true);syncSettingsUI();if($('sMenu').classList.contains('on'))selMode(gameMode);};}
 $('sVib').onclick=()=>{SET.vib=!SET.vib;setChanged();vib(30);};
+$('sCall').onclick=()=>{SET.fcall=SET.fcall===false;setChanged();if(FL.fid)lbFetch('/fleet/callset',{pid:PID,off:SET.fcall===false}).catch(()=>{});};
 $('sRec').onclick=()=>{SET.rec=!SET.rec;setChanged();};
 $('sNotif').onclick=async()=>{if(SET.notif){SET.notif=false;setChanged();notifSync();return;}SET.nAsked=true;await notifEnable(true);};
 for(const [id,k] of [['sNLab','nLab'],['sNFuel','nFuel'],['sNDay','nDay'],['sNFleet','nFleet']])$(id).onclick=()=>{SET[k]=!SET[k];setChanged();notifSync();};
@@ -4819,7 +4879,7 @@ function menuTick(){const th=seasonTheme(),cur=Math.max(1,savedLevel);let nb=0;f
   const L=[`${th.ic} <b>${T(th.n)}</b> · ${T(th.d)}`,`🔴 ${T('Sıradaki boss')}: ${T('SEVİYE')} ${nb}`,b?`🔬 ${T(m.n)} · ${T('SEVİYE {k}',{k:b.to})} · ${labDur((b.end-Date.now())/1000)}`:`🔬 ${T('Kozmik Lab’da yeni bir geliştirme başlat')}`,
     dn?`🏁 ${T('Günlük Yarış')}: ${DAILY.score.toLocaleString(LOC)}`:`🏁 ${T('Günlük Yarış açık · bugün herkes aynı evrende')}`];
   $('menuTick').innerHTML=L.join('<span style="opacity:.4">  ·  </span>');}
-function menuHub(){labBadge();menuTick();$('snBtn').classList.toggle('gold',seasonIs('gold'));dmMenuBadge();menuBgStart();}
+function menuHub(){labBadge();menuTick();if(rel(11)){liveUi();if(!menuHub.lv||Date.now()-menuHub.lv>6e5){menuHub.lv=Date.now();liveFetch().then(()=>later(liveDue,1200));}else later(liveDue,1200);}$('snBtn').classList.toggle('gold',seasonIs('gold'));dmMenuBadge();menuBgStart();}
 setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTickQuiet();labMenuRing();}},1000);
 function showMenu(){natMark('menu');if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
   if(G2.on)v2Stop();if(HMODE)hmSwap(); // the menu always shows the classic run
@@ -4874,6 +4934,7 @@ $('dmBtn').onclick=()=>{renderDM();renderDaily();$('sDM').classList.add('on');};
 for(const [id,k] of [['snBtn','sn'],['dmBtn','dm'],['expBtn','exp'],['labBtn','lab'],['lbBtn','lb'],['flBtn','fl'],['shopBtn','shop'],['mapBtn','map'],['setBtn','set'],['editProf','prof'],['evoBox','evo']]){const b=$(id);if(b)b.addEventListener('click',()=>ev('m_'+k));}$('dmClose').onclick=()=>{$('sDM').classList.remove('on');renderDM();};
 $('guideBtn').onclick=()=>{renderGuide('TEMEL');$('sGuide').classList.add('on');};if($('sGuideB'))$('sGuideB').onclick=()=>$('guideBtn').onclick(); /* 1.5.0: the guide moved to Settings, FLEET took its place in the menu */
 if($('flBtn'))$('flBtn').onclick=()=>{if(!flOn()){toast('🛸',T('FİLO'),T('Filolar internet bağlantısı ister.'));return;}if(bestLevel<FL_LV){toast('🛸',T('FİLO'),T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV}));return;}fleetOpen();};$('guideClose').onclick=()=>$('sGuide').classList.remove('on');
+$('liveRib').onclick=()=>{sfx('click',{vol:.4});liveCard();};
 $('lnGo').onclick=()=>{labNoteHide();sfx('click',{vol:.4});labOpenScr();};$('lnC').onclick=labNoteHide;$('mapBtn').onclick=openMap;$('labBtn').onclick=()=>{sfx('click',{vol:.4});labOpenScr();};$('shopBtn').onclick=openShop;$('starterRib').onclick=()=>openShop('sr');$('pShop').onclick=()=>openShop('pr');
 $('shopX').onclick=()=>$('shopClose').click();
 $('shopClose').onclick=()=>{$('sShop').classList.remove('on');if($('sMenu').classList.contains('on'))showMenu();};$('shopRestore').onclick=()=>MON.mode==='test'?toast('🔄','GERİ YÜKLEME','Test modunda geri yüklenecek bir şey yok'):restorePurchases(false);$('mapBack').onclick=closeMap;$('shClose').onclick=()=>$('mSheet').classList.remove('on');
@@ -4937,7 +4998,7 @@ $('shareBtn').onclick=async()=>{const txt=`${playerAvatar} `+T("{p}: Blackhole S
 // ══════════════════════════════════════════════════════
 // BOOT
 // ══════════════════════════════════════════════════════
-loadG();avInit();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
+loadG();if(rel(11))liveLoad();avInit();if(DEV){if(bestLevel<DEV_LV){bestLevel=DEV_LV;stars=Math.max(stars,50000);diamonds=Math.max(diamonds,5000);if(!playerName)playerName='DEV';saveG();}document.title='DEV · '+document.title;
   const d=document.createElement('div');d.id='devBar';d.innerHTML=`<span>🛠 ${T('SEVİYEYE GİT')}</span><input id="devLv" type="number" min="1" max="${DEV_LV}" value="${savedLevel}" inputmode="numeric" aria-label="Seviye"><button id="devGo" class="btn">▶ ${T('OYNA')}</button><small id="devKit"></small>`;
   $('starterRib').before(d);devKit(savedLevel);$('devGo').onclick=()=>{const n=clamp(parseInt($('devLv').value,10)||1,1,DEV_LV);savedLevel=n;savedScore=0;saveG();selMode('classic');$('startBtn').click();};} /* jump straight to any of the first 1000 levels */
 // developer link: every level is played as a real player would meet it there: the Laboratory at that level's recommended power
