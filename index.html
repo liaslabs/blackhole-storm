@@ -2120,7 +2120,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v99",APPVER="";
+const BUILD="bhs-v100",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -2532,7 +2532,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
   init(){
     if(this.ctx)return;
     const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
-    try{this.ctx=rel(11)&&/Android/i.test(navigator.userAgent)?new AC({latencyHint:'playback'}):new AC();}catch(e){try{this.ctx=new AC();}catch(e2){return;}} /* 18 Oct: on Android the smallest buffer ran dry under load and the music ticked; a playback-size buffer holds (sounds start a few tens of ms later) */
+    try{this.ctx=rel(11)&&/Android/i.test(navigator.userAgent)?new AC({latencyHint:'balanced'}):new AC();}catch(e){try{this.ctx=new AC();}catch(e2){return;}} /* 18 Oct: on Android the smallest buffer ran dry under load and the music ticked; 'playback' cured it but the sounds came late enough to feel, so the middle size */
     const c=this.ctx;
     const comp=c.createDynamicsCompressor();
     comp.threshold.value=-16;comp.knee.value=10;comp.ratio.value=4;comp.attack.value=.003;comp.release.value=.18;
@@ -7629,7 +7629,7 @@ function notifAsk(kind){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission)
 // a neutral line that is always there (asking the happy ones for a rating and the others for feedback is not allowed on Google Play)
 function feedbackMail(){const sub=T('Blackhole Storm geri bildirim'),body='\n\n\n— '+T('Sürüm')+': '+(APPVER||'web')+' · '+BUILD.replace('bhs-','')+'\n— '+T('Dil')+': '+LANG+'\n— '+T('Kurulum no')+': '+PID;
   const a=document.createElement('a');a.href='mailto:liaslabs.games@gmail.com?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);a.rel='noopener';document.body.appendChild(a);a.click();a.remove();if(rel(11))ev('fb');}
-function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-',''); /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
+function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-','')+(SND.ctx?' · ♪ '+Math.round(((SND.ctx.baseLatency||0)+(SND.ctx.outputLatency||0))*1000)+' ms':''); /* 18 Oct: the phone's sound delay, to tune the audio buffer on real devices */ /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
   $('sSensRow').hidden=!rel(7);[...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??0)));if($('sTips'))$('sTips').textContent='SIFIRLA';
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
