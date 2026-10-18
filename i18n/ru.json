@@ -2288,5 +2288,8 @@
 "{f} geçen haftanın {n}. filosu": "{f} — {n}-е место прошлой недели",
 "Geri bildirim gönder": "Отправить отзыв",
 "YAZ": "НАПИСАТЬ",
-"Blackhole Storm geri bildirim": "Отзыв о Blackhole Storm"
+"Blackhole Storm geri bildirim": "Отзыв о Blackhole Storm",
+"{n} hakkın var": "Попыток: {n}",
+"{n} hakkın kaldı": "Осталось попыток: {n}",
+"1 hakkın kaldı": "Осталась 1 попытка"
 }

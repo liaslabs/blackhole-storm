@@ -2288,5 +2288,8 @@
 "{f} geçen haftanın {n}. filosu": "{f} terminou a semana passada em {n}º lugar",
 "Geri bildirim gönder": "Enviar feedback",
 "YAZ": "ESCREVER",
-"Blackhole Storm geri bildirim": "Feedback do Blackhole Storm"
+"Blackhole Storm geri bildirim": "Feedback do Blackhole Storm",
+"{n} hakkın var": "{n} tentativas",
+"{n} hakkın kaldı": "Restam {n} tentativas",
+"1 hakkın kaldı": "Resta 1 tentativa"
 }

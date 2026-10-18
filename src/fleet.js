@@ -217,21 +217,20 @@ function flTasksH(j){const f=j.fleet,left=Date.parse(utcDay()+'T00:00:00Z')+864e
 function flPlayH(j,left){const F=BHS_FMIS,fm=j.fm,M=j.fleet.mis,f=j.fleet,lvC=['k','o','z'],lvT=['★','★★','★★★'],md=['🥉','🥈','🥇'];
   const st=id=>{const me=fm.me[id]||{best:0,tier:0,tries:0};return {me,rest:Math.max(0,F.TRIES-me.tries)};};
   const ids=fm.ids.filter(id=>F.byId(id)),open=ids.filter(id=>st(id).rest>0);
-  const next=open.slice().sort((a,b)=>st(a).me.tier-st(b).me.tier||ids.indexOf(a)-ids.indexOf(b))[0]; /* the next one: tries left, fewest medals, in the day's order */
-  const dots=r=>`<i class="fm-h">${'●'.repeat(r)}${'○'.repeat(F.TRIES-r)}</i>`;
   const head=`<div class="flph">${flImg(f.emb)}<span class="t"><b class="notr">${flE(f.name)}</b><small>${M.drank?T('{r}. sıra · {n} filo',{r:M.drank,n:M.dof}):T('Henüz puan yok')}</small></span><span class="p"><b>${flN(M.day)}</b><small>${T('yenilenmesine {t}',{t:flLeft(left)})}</small></span></div>`;
-  let hero='';
-  if(next){const m=F.byId(next),{me,rest}=st(next);
-    hero=`<div class="flhero"><div class="fm-t"><span class="ic">${fmIc(m,'big')}</span><span class="nm"><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></span><button class="fm-i" data-fmi="${next}" aria-label="${T('Görev kartı')}">i</button></div>
+  /* 18 Oct: the three missions alike: each a card with the same gold OYNA, the tries left said above it, and three boxes for the day's tries
+     (a used one crossed out); with no tries left the card dims, the button goes and the boxes say so */
+  const box=(me,rest)=>`<span class="trb" aria-label="${T('hak {n}/{m}',{n:rest,m:F.TRIES})}">${Array.from({length:F.TRIES},(_,i)=>i<F.TRIES-rest?'<i class="u">✕</i>':'<i></i>').join('')}</span>`;
+  const cards=ids.map(id=>{const m=F.byId(id),{me,rest}=st(id);
+    return `<div class="flm2${rest?'':' off'}"><div class="fm-t"><span class="ic">${fmIc(m,'big')}</span><span class="nm"><b>${T(m.n)}</b><span class="lv ${lvC[m.lv]}">${lvT[m.lv]}</span></span><button class="fm-i" data-fmi="${id}" aria-label="${T('Görev kartı')}">i</button></div>
       <div class="fm-tg">${m.tg.map((x,i)=>`<span class="${me.tier>i?'got':''}"><b>${md[i]} ${flN(x)}</b></span>`).join('')}</div>
-      <button class="play big" data-fm="${next}">▶ ${me.tries?T('TEKRAR'):T('OYNA')}${me.tries?`<small>${flN(me.mp||0)}</small>`:''}</button>${dots(rest)}</div>`;}
-  else hero=`<div class="flhero done"><b>✓ ${T('Bugünkü görevler tamam')}</b></div>`; /* the time to the next missions is on top already */
-  const rows=ids.filter(id=>id!==next).map(id=>{const m=F.byId(id),{me,rest}=st(id);
-    return `<div class="flrow"><span class="nmw" data-fmi="${id}"><span class="ic">${fmIc(m)}</span><b>${T(m.n)}</b></span><span class="md">${me.tier?md[me.tier-1]:''}</span>${me.tries?`<span class="pt">${flN(me.mp||0)}</span>`:''}${rest>0?`<button class="play" data-fm="${id}">▶</button>`:'<span class="ok">✓</span>'}</div>`;}).join('');
+      <div class="fm-b"><span class="lf">${box(me,rest)}${me.tries?`<small>${T('En iyi: {n}',{n:flN(me.mp||0)})}</small>`:''}</span>
+        ${rest?`<span class="pl"><small>${rest===F.TRIES?T('{n} hakkın var',{n:rest}):rest===1?T('1 hakkın kaldı'):T('{n} hakkın kaldı',{n:rest})}</small><button class="play" data-fm="${id}">▶ ${T('OYNA')}</button></span>`:`<span class="pl end"><small>${T('Haklar bitti')}</small></span>`}</div></div>`;}).join('');
+  const done=open.length?'':`<div class="flhero done"><b>✓ ${T('Bugünkü görevler tamam')}</b></div>`;
   const c=fm.chain,mine=Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);
   const chain=`<div class="fm-ch${c.got?' s':''}"><div class="fm-f"><b>🤝 ${T('FİLO ZİNCİRİ')}</b><small dir="ltr">${c.n} / ${c.need}</small>${c.got?'<span class="ok">✅</span>':c.n>=c.need&&mine?`<button class="go" id="fmChain">${T('TOPLA')}</button>`:''}</div>
     ${c.got?'':`<div class="bar"><i style="width:${Math.min(100,c.n/c.need*100)}%"></i></div>${flPay(F.PAY.chain)}`}</div>`;
-  return head+hero+rows+chain;}
+  return head+done+cards+chain;}
 // 18 Oct: the day in mission points: the fleet's points and place today, today's star, the top of the day's ranking (filled when it comes)
 function flDayH(j){const M=j.fleet.mis,P=BHS_FMIS.PAY,st=(j.members||[]).find(m=>m.star),done=M.days[(new Date().getUTCDay()+6)%7]==='y';
   return `<div class="flday"><div class="dh"><span>${T('BUGÜNKÜ FİLO PUANI')}</span><b>${flN(M.day)}</b></div>
