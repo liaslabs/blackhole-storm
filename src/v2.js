@@ -1997,7 +1997,8 @@ function v2DrawMono(){ // Cosmic ID: the name inside the core; first letter at t
   if(!SHOP.cid||!SKIN.monoOn||G2.shT>0)return;const txt=monoText();if(!txt)return;const L=[...txt],sz=v2Size();let n=G2.monoN||1;
   const stp=(V2K.rMax/V2K.r0-1.1)/(Math.max(7,L.length)-1);while(n<L.length&&sz>=1+n*stp)n++;while(n>1&&sz<1+(n-1)*stp-.06)n--; // every letter by the largest size; a little slack against flicker
   if(n!==G2.monoN){G2.monoN=n;G2.monoT=0;}G2.monoT=Math.min(1,(G2.monoT||0)+1/30);
-  ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,G2.R,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock);ctx.restore();}
+  const [alw,arr]=v2ArcLR(G2.R),Rm=Math.min(G2.R,(arr-alw/2-Math.max(2,G2.R*.04))/1.05); /* 18 Oct: the letters (accents and their hop included) reach about 1.05 of the ring they are given, so they get one that ends inside the arcs */
+  ctx.save();ctx.globalAlpha=.55+.45*G2.monoT;monoDraw(ctx,hX,hY,Rm,L.slice(0,n).join(''),SKIN_TINT[SKIN.sel],clock);ctx.restore();}
 function v2DrawShard(o,sc){ // a golden third of the crest, glinting
   const s=o.r*sc;if(s<.6)return;ctx.save();ctx.translate(o.x,o.y);ctx.globalCompositeOperation='lighter';const gl=ctx.createRadialGradient(0,0,s*.3,0,0,s*2.2);gl.addColorStop(0,'rgba(255,210,90,.4)');gl.addColorStop(1,'rgba(255,200,60,0)');
   ctx.fillStyle=gl;ctx.beginPath();ctx.arc(0,0,s*2.2,0,TAU);ctx.fill();ctx.globalCompositeOperation='source-over';ctx.rotate(o.rot*.4);ctx.translate(s*.5,0);
