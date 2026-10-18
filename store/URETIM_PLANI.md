@@ -55,8 +55,8 @@ Cevapları önce bir yere kopyala, sonra yapıştır. İngilizce yazmanı öneri
 
 **Geri bildirimleri özetleyin ve nasıl topladığınızı açıklayın.**
 
-> We collected feedback through a WhatsApp group with the testers, family members and friends, the in-game "Send feedback"
-> button (Settings, opens an e-mail with the version and language), Play's private test feedback, and by watching family
+> We collected feedback through a WhatsApp group with family members, friends and other testers we invited, the in-game
+> "Send feedback" button (Settings, opens an e-mail with the version and language), Play's private test feedback, and by watching family
 > members and friends play on their own phones. The main points were:
 > 1. Short stutters during play on some phones.
 > 2. Crackling in the music on Android.
@@ -66,7 +66,7 @@ Cevapları önce bir yere kopyala, sonra yapıştır. İngilizce yazmanı öneri
 >
 > Ratings in Play's private test feedback were all 5 stars, and we replied to each one.
 
-> *(Türkçesi: Geri bildirimi testçiler, aile ve arkadaşlarla WhatsApp grubundan, oyun içi "Geri bildirim gönder" düğmesinden, Play'in
+> *(Türkçesi: Geri bildirimi aile, arkadaşlar ve davet ettiğimiz diğer testçilerle kurduğumuz WhatsApp grubundan, oyun içi "Geri bildirim gönder" düğmesinden, Play'in
 > gizli test geri bildiriminden ve aile ile arkadaşları kendi telefonlarında oynarken izleyerek topladık. Başlıcaları: bazı telefonlarda takılma,
 > Android'de müzikte cızırtı, can gidince çıkan devam ekranının anlaşılmaması, ilk seviyelerin yavaş ve boş, ara seviyelerin kolay
 > gelmesi, çocuk hesabıyla teste katılamama. Play test geri bildirimlerindeki puanların hepsi 5 yıldız; her birine yanıt verdik.)*
