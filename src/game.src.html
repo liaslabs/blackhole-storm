@@ -2282,6 +2282,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
     if(this.mus.src){const o=this.mus;o.g.gain.cancelScheduledValues(t);o.g.gain.setValueAtTime(o.g.gain.value,t);o.g.gain.linearRampToValueAtTime(0,t+1.2);try{o.src.stop(t+1.3);}catch(e){}}
     this.mus={cur:null,want:name,src:null,g:null};
     const b=name&&(this.buf[key]||(key!=='mMenu'&&this.buf.mGame));if(!b)return;
+    if(rel(11)&&/^(z\d|boss)$/.test(key))for(const z of ['z1','z2','z3','z4','boss'])if(z!==key&&this.buf[z]){delete this.buf[z];if(this.musLoad)this.musLoad[z]=0;} /* 18 Oct: the stereo tracks are ~37 MB each once decoded; a new zone or boss track lets the others go (they load again when needed) */
     const s=c.createBufferSource();s.buffer=b;s.loop=true;s.loopStart=.06;s.loopEnd=b.duration-.06;
     const g=c.createGain();g.gain.value=0;s.connect(g);g.connect(this.musBus);
     try{s.start(t,.06);}catch(e){return;}
