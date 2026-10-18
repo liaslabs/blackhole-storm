@@ -195,7 +195,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
   if(mode==='sprint'&&FMRUN)fmSetup();else{if($('rage2'))$('rage2').style.visibility='';if($('pb'))$('pb').style.display='';} /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
-  gState='playing';lastT=performance.now();v2Ui(true);
+  gState='playing';lastT=performance.now();updateUI(); /* 18 Oct: the hearts are drawn again here, after the level set its lives; until now they kept the last level's count (one heart) until the first hit */
 }
 function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
 
