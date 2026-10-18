@@ -2215,7 +2215,7 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
   init(){
     if(this.ctx)return;
     const AC=window.AudioContext||window.webkitAudioContext; if(!AC)return;
-    try{this.ctx=new AC();}catch(e){return;}
+    try{this.ctx=rel(11)&&/Android/i.test(navigator.userAgent)?new AC({latencyHint:'playback'}):new AC();}catch(e){try{this.ctx=new AC();}catch(e2){return;}} /* 18 Oct: on Android the smallest buffer ran dry under load and the music ticked; a playback-size buffer holds (sounds start a few tens of ms later) */
     const c=this.ctx;
     const comp=c.createDynamicsCompressor();
     comp.threshold.value=-16;comp.knee.value=10;comp.ratio.value=4;comp.attack.value=.003;comp.release.value=.18;
