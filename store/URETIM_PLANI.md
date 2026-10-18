@@ -27,7 +27,7 @@ beyanları (veri güvenliği, içerik derecelendirmesi, reklam beyanı) **senin*
 | A4 ☑ | Uygulama içeriği | Politika › Uygulama içeriği | Bütün maddeler "Tamamlandı" (eksik varsa başvuru düğmesi açılmaz). 18 Eki: 10 beyan tamam, bekleyen yok; Politika durumu: sorun yok |
 | A5 ☑ | Çökme ve ANR | Kalite › Android vitals | Kötü davranış eşiklerinin altında (çökme < %1,09, ANR < %0,47). Değerleri bana yaz. 18 Eki: 28 günde ikisi de sıfır |
 | A6 ☑ | Lansman öncesi raporu | Test edin ve yayınlayın › Lansman öncesi raporu (kod 68) | Hata/uyarı listesi. Ekran görüntüsünü bana gönder, birlikte bakarız. 18 Eki: kod 68 için rapor yok (şart değil); ayarlar doğru, kod 69'da bakılacak |
-| A7 ☑ | Test geri bildirimleri | Puanlar ve yorumlar › Test geri bildirimleri | Gelen bir şey varsa not al. 18 Eki: 2 geri bildirim, ikisi 5 yıldız, ikisi yanıtlanmış |
+| A7 ☑ | Test geri bildirimleri | Puanlar ve yorumlar › Test geri bildirimleri | Gelen bir şey varsa not al. 18 Eki: 4 geri bildirim, hepsi 5 yıldız, hepsi yanıtlandı |
 
 ---
 
