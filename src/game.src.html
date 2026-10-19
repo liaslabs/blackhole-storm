@@ -4882,6 +4882,13 @@ function menuTick(){const th=seasonTheme(),cur=Math.max(1,savedLevel);let nb=0;f
   $('menuTick').innerHTML=L.join('<span style="opacity:.4">  ·  </span>');}
 function menuHub(){labBadge();menuTick();if(rel(11)){liveUi();if(!menuHub.lv||Date.now()-menuHub.lv>6e5){menuHub.lv=Date.now();liveFetch().then(()=>later(liveDue,1200));}else later(liveDue,1200);}$('snBtn').classList.toggle('gold',seasonIs('gold'));dmMenuBadge();menuBgStart();}
 setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTickQuiet();labMenuRing();}},1000);
+/* 20 Oct: a stuck screen guard. Between screens the game sits in 'menu' with a card over it (risk card, gift, level card...). If that card is
+   closed by something else and nothing is left on screen (no menu, no window, no card, no overlay), the player saw a still game screen with
+   no way on. After two seconds of that, the menu comes back and the case is reported with the level, so it can be found. */
+const STUCK={t:0};setInterval(()=>{if(!rel(11)||document.hidden||gState!=='menu'){STUCK.t=0;return;}
+  if(document.querySelector('.screen.on,.modal.on,.zwarpfx,#fmOv,#flChamp,#flAuto,#adOv.on,#payOv.on,#mPrize.on')){STUCK.t=0;return;}
+  if(!STUCK.t){STUCK.t=Date.now();return;}if(Date.now()-STUCK.t<2000)return;STUCK.t=0;
+  natMark('stuck → menu');errReport('STUCK menu L'+level+' '+gameMode+(RISK.lv===level?' risk':''),'');try{if(G2.on)v2Stop();}catch(e){}showMenu();},500);
 function showMenu(){natMark('menu');if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
   if(G2.on)v2Stop();if(HMODE)hmSwap(); // the menu always shows the classic run
   runId++;pendingWin=false;EXPRUN=null;renderExpBtn();
