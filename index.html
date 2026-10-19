@@ -2473,6 +2473,7 @@ function setLang(l,save){
   trTree(document.body);document.querySelectorAll('.icx').forEach(icoFill);if(save)saveG();
   if(typeof fitMenu==='function')requestAnimationFrame(fitMenu);
   if(typeof selMode==='function'&&$('sMenu').classList.contains('on'))selMode(gameMode); // the start button holds a pre-translated zone name
+  if(rel(11)&&$('sMenu').classList.contains('on')){tourTick();if(typeof fleetMenu==='function')fleetMenu();if(typeof liveUi==='function')liveUi();} /* 20 Oct: the counters on the menu are written in the language they were drawn in; drawn again at once, not on their next tick */
 }
 new MutationObserver(ms=>{for(const m of ms){
   if(m.type==='characterData')trText(m.target);else if(m.type==='attributes')trAttr(m.target,m.attributeName);else m.addedNodes.forEach(trTree);}})
