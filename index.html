@@ -5723,7 +5723,7 @@ function v2WormHint(){if(!rel(11)||G2.wormHint||TIPS.wormU||(TIPS.wormH|0)>=3||G
   for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'){const dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy);if(d<G2.R+sp2(110)&&o.vx*dx+o.vy*dy>0){G2.wormHint=1;TIPS.wormH=(TIPS.wormH|0)+1;saveSoon();v2Pop('👆👆 '+T('ÇİFT DOKUN · IŞINLAN'),'#c9b4ff',16);return;}}}
 function v2DrawWorm(){if(!v2WormOn())return;const R=G2.R||20;ctx.save();
   if(G2.wormCD>0){const f=1-G2.wormCD/v2WormCD();ctx.strokeStyle='rgba(159,123,255,.75)';ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(hX,hY,R+sp2(16),-Math.PI/2,-Math.PI/2+TAU*f);ctx.stroke();}
-  else if(rel(11)){ctx.strokeStyle='rgba(159,123,255,.3)';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(hX,hY,R+sp2(16),0,TAU);ctx.stroke();} /* 20 Oct: a full ring stays on, faint: the wormhole is ready */
+  else if(rel(11)){const pu=.5+.5*Math.sin(G2.t*3);ctx.strokeStyle=`rgba(180,140,255,${.55+.3*pu})`;ctx.lineWidth=2.4;ctx.shadowColor='#b48cff';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(hX,hY,R+sp2(16),0,TAU);ctx.stroke();ctx.shadowBlur=0;} /* 20 Oct: the full ring stays on and breathes softly: the wormhole is ready */
   const w=G2.wormFx;if(w&&w.t<.6){const q=w.t/.6;ctx.globalCompositeOperation='lighter';ctx.translate(w.fx,w.fy);ctx.rotate(w.t*14);for(let i=0;i<4;i++){ctx.strokeStyle=`rgba(170,130,255,${.8*(1-q)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,(1-q)*R*1.6+i*4,i,i+2.4);ctx.stroke();}
     ctx.setTransform(1,0,0,1,0,0);ctx.restore();ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(200,170,255,${1-q})`;ctx.lineWidth=3*(1-q)+1;ctx.beginPath();ctx.arc(w.tx,w.ty,R+q*sp2(90),0,TAU);ctx.stroke();}
   else if(w)G2.wormFx=null;ctx.restore();}
