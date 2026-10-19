@@ -21,7 +21,7 @@ beyanları (veri güvenliği, içerik derecelendirmesi, reklam beyanı) **senin*
 
 | # | İş | Nerede | Beklenen |
 |---|---|---|---|
-| A1 ☐ | Üretim erişimi kartı | Kontrol paneli | "12 test kullanıcısı · 14 gün" ölçütü yeşil (19 Eki'de dolar; 20 Eki sabahı tekrar bak). 18 Eki: 13. gün |
+| A1 ☑ | Üretim erişimi kartı | Kontrol paneli | "12 test kullanıcısı · 14 gün" ölçütü yeşil (19 Eki'de dolar; 20 Eki sabahı tekrar bak). 18 Eki: 13. gün |
 | A2 ☑ | Testçi listesi | Test edin ve yayınlayın › Kapalı test › Alpha › Test kullanıcıları | En az 12 kişi kayıtlı, hiçbiri çıkmamış |
 | A3 ☑ | Alpha sürümü | Aynı yer › Sürümler | Kod 68 "Yayında" |
 | A4 ☑ | Uygulama içeriği | Politika › Uygulama içeriği | Bütün maddeler "Tamamlandı" (eksik varsa başvuru düğmesi açılmaz). 18 Eki: 10 beyan tamam, bekleyen yok; Politika durumu: sorun yok |
@@ -32,6 +32,19 @@ beyanları (veri güvenliği, içerik derecelendirmesi, reklam beyanı) **senin*
 ---
 
 ## B. Üretim erişimi başvurusu (20 Eki) · Sen
+
+> ✅ **19 Eki 20:00 TSİ gönderildi** ("Üretim erişimi başvurunuzu aldık", inceleme genelde 7 gün ya da daha kısa). Formda her kutu en fazla
+> 300 karakter; gönderilen metinler aşağıda. Altındaki uzun metinler hazırlık taslağıdır.
+>
+> 1 · Testçileri nereden buldunuz: *First from family and friends, who played on their own phones. To reach more devices, countries and languages, we also used a testing service that provided additional testers. Family and friends gave most of the detailed feedback, through a WhatsApp group.*
+> 1 · Test kullanıcısı bulmak: **Ne zor ne de kolay**
+> 1 · Etkileşim: *Testers used all main features: levels, tutorial, Cosmic Lab, shop, Daily Race and fleet missions. Sessions were short, as expected for an arcade game; DAU/MAU was about 59%. Fleet races need many players, so they were used less. We expect lower daily return after launch.*
+> 1 · Geri bildirim: *Via a WhatsApp group, the in-game feedback button, Play test feedback (all 5 stars, each answered) and watching players. Main points: stutters on some phones, crackling music on Android, an unclear continue screen, slow first levels and too-easy middle levels.*
+> 2 · Hedef kitle: *Players aged 13 and over who enjoy short, casual arcade sessions on Android phones, especially fans of "eat and grow" games. The game is fully translated into 10 languages, including Turkish, English, Spanish, Portuguese, Arabic and Japanese, so the audience is global.*
+> 2 · Ayıran özellikler: *A physics-based black hole that grows by swallowing asteroids, moons and planets. Long-term upgrades in the Cosmic Lab. Fleets of up to 20 players with daily missions on equal gear and a weekend race. A Daily Race where everyone plays the same universe. No account needed.*
+> 2 · İlk yıl yükleme: **0 – 10 bin**
+> 3 · Değişiklikler: *Fixed stutters on some phones and crackling music on Android. Redesigned the continue screen so each option shows its cost. Made early levels livelier and middle levels harder, scaled to upgrades. Added cloud backup, an in-game feedback button and a web test page. Over 60 builds tested.*
+> 3 · Hazır olduğuna karar: *We played every update ourselves and with family and friends before release, ran automated bot tests across all levels, and reviewed the UI, economy, server and engine. Android vitals shows no crashes or ANRs in 28 days. Purchases are verified on our server; scores use Play Integrity.*
 
 **Kontrol paneli › Üretime başvur.** Üç bölüm var; **İleri**'ye basmadan sayfadan çıkma, yazılanlar kaybolur.
 Cevapları önce bir yere kopyala, sonra yapıştır. İngilizce yazmanı öneririm (inceleme ekibi için en güvenlisi); altında Türkçesi var.
