@@ -46,12 +46,16 @@ Cevapları önce bir yere kopyala, sonra yapıştır. İngilizce yazmanı öneri
 
 > Mostly yes. Testers played short sessions of a few levels at a time, which is how we expect most players to use an arcade
 > game. They used the classic levels, the tutorial, the Cosmic Lab upgrades, the shop, the Daily Race and the fleet missions.
+> On most days, more than half of our monthly active testers opened the game (DAU/MAU about 59% in Play Console).
 > The main difference: fleets and the weekend fleet race are designed for many players, so with a small test group they were
-> used less than we expect in production; we tested them further with our own accounts and automated tests.
+> used less than we expect in production; we tested them further with our own accounts and automated tests. Testers also
+> came back more often than we expect from typical players, so we plan for a lower daily return rate after launch.
 
 > *(Türkçesi: Büyük ölçüde evet. Testçiler birkaç seviyelik kısa oturumlar oynadı; bir arcade oyunda beklediğimiz kullanım bu. Klasik
-> seviyeler, eğitim, Kozmik Lab, mağaza, Günlük Yarış ve filo görevleri kullanıldı. Fark: filolar ve hafta sonu yarışı çok oyuncu için
-> tasarlandı, küçük grupta beklenenden az kullanıldı; kendi hesaplarımızla ve otomatik testlerle ayrıca denedik.)*
+> seviyeler, eğitim, Kozmik Lab, mağaza, Günlük Yarış ve filo görevleri kullanıldı. Çoğu gün aylık aktif testçilerin yarısından fazlası
+> oyunu açtı (Play Console'da GEKS/AEKS yaklaşık %59). Fark: filolar ve hafta sonu yarışı çok oyuncu için
+> tasarlandı, küçük grupta beklenenden az kullanıldı; kendi hesaplarımızla ve otomatik testlerle ayrıca denedik. Testçiler sıradan
+> oyunculardan daha sık geri geldi; yayından sonra günlük dönüş oranının daha düşük olacağını hesaba katıyoruz.)*
 
 **Geri bildirimleri özetleyin ve nasıl topladığınızı açıklayın.**
 
