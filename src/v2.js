@@ -173,7 +173,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   const rule=mode==='level'?v2RuleFor(l):mode==='sprint'?v2SprRule():null;if(rule&&rule.win)G2.L.overload=false;if(rule&&rule.duel)G2.L.boss=false; /* the duel replaces this boss */
   const mod=mode==='level'&&typeof RISK!=='undefined'&&RISK.lv===level&&!REPLAY?RISK.mod:null;if(mod==='storm')G2.L.w.meteor*=2;else if(mod==='rush'){G2.L.speedK*=1.25;G2.L.iv*=.85;}
   const goal=mode==='level'&&!(rule&&(rule.hunt||rule.rival||rule.guard))?Math.round(v2Goal(l)*(rule?rule.k:1)*(SHOP.easyLv===l&&!REPLAY?EASE.k:1)*(mod==='greed'?1.25:1)*(HMODE?(v2Hard(l)||rel(9)&&v2HmT(l)?1.15:1.5):1)*(mode==='level'&&!REPLAY&&v2Hard(l)?labGoalK(l):1)/100)*100:0; // the ease offer takes 20% off; rule levels ask less
-  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:rule.multi?.6:2.5,prey:null,multi:rule.multi?1:0,list:[],bag:rule.multi?rshuf([3,5,7,10]):null,mt:2}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,wormCD:0,wormFx:null,lastTap:null,horUsed:0,horT:0,horSlow:0,horFx:null,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,iceT:0,nebIn:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,starTime:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
+  Object.assign(G2,{goal,rule,hunt:rule&&rule.hunt?{n:0,need:rule.need,next:rule.multi?.6:2.5,prey:null,multi:rule.multi?1:0,list:[],bag:rule.multi?rshuf([3,5,7,10]):null,mt:2}:null,rv:null,lastHit:null,t:0,dur:mode==='surv'||goal||(rule&&(rule.hunt||rule.rival||rule.guard))?1e9:mode==='sprint'?SPR_RUN.dur:G2.L.dur,objs:[],gl:[],calls:[],minis:[],waves:[],beams:[],tip:null,tipCD:0,hold:null,hungry:0,shrinkN:0,shT:0,shTick:0,gift:0,freeze:0,shrinkFx:0,magT:0,pairT:0,worms:[],mega:null,megaFx:[],novaN:0,novaT:0,diaCont:0,wormT:14,spec:[],hkCD:0,hkFx:null,jet:null,jetCD:0,jetRdy:1,wormCD:0,wormHint:0,wormFx:null,lastTap:null,horUsed:0,horT:0,horSlow:0,horFx:null,ev:null,evPlan:null,twin:null,guard:null,btT:0,btCD:0,btN:0,iceT:0,nebIn:0,btM:null,pdTot:0,antiT:0,jetGoT:-9,timeBuy:0,timeAd:0,jetHint:0,tipN:0,tipGap:0,tipF:null,starTime:0,killFx:null,killPts:0,mod,modSc:mod==='storm'?1.5:mod==='rush'?1.4:mod==='dark'?1.3:1,
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
@@ -249,9 +249,13 @@ const v2WormCD=()=>Math.max(8,20-Math.max(0,labEffLv('worm')-1));
 function v2Worm(x,y){if(G2.wormCD>0){v2Pop(T('SOLUCAN DELİĞİ')+' · '+Math.ceil(G2.wormCD)+' '+T('sn'),'#c9b4ff',13);return;}
   const m=(G2.R||0)+4,tx=clamp(x,m,W-m),ty=clamp(y,m+2,H-m-70),e=labEffLv('worm');G2.wormFx={t:0,fx:hX,fy:hY,tx,ty};
   v2Burst(hX,hY,18,'#b48cff',1,5,.5);hX=tx;hY=ty;G2.tx=tx;G2.ty=ty;G2.immT=Math.max(G2.immT,1+.1*Math.max(0,e-1));G2.wormCD=v2WormCD();if(e>=10)G2.magT=Math.max(G2.magT,1.2);
-  v2Burst(tx,ty,26,'#c9b4ff',2,7,.6);shake=Math.max(shake,4);vib([20,20,40]);v2Sfx('thrust',{vol:.6,rate:1.6});sfx('powerup',{vol:.35,rate:1.8});dmEvent('worm',1);}
+  v2Burst(tx,ty,26,'#c9b4ff',2,7,.6);shake=Math.max(shake,4);vib([20,20,40]);v2Sfx('thrust',{vol:.6,rate:1.6});sfx('powerup',{vol:.35,rate:1.8});dmEvent('worm',1);if(!TIPS.wormU){TIPS.wormU=1;saveSoon();}}
+/* 20 Oct: a player who has the wormhole but never uses it hears of it when a meteor comes close: once a level, three times in all, never again after a first jump */
+function v2WormHint(){if(!rel(11)||G2.wormHint||TIPS.wormU||(TIPS.wormH|0)>=3||G2.wormCD>0||!v2WormOn()||gState!=='playing')return;
+  for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'){const dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy);if(d<G2.R+sp2(110)&&o.vx*dx+o.vy*dy>0){G2.wormHint=1;TIPS.wormH=(TIPS.wormH|0)+1;saveSoon();v2Pop('👆👆 '+T('ÇİFT DOKUN · IŞINLAN'),'#c9b4ff',16);return;}}}
 function v2DrawWorm(){if(!v2WormOn())return;const R=G2.R||20;ctx.save();
   if(G2.wormCD>0){const f=1-G2.wormCD/v2WormCD();ctx.strokeStyle='rgba(159,123,255,.75)';ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(hX,hY,R+sp2(16),-Math.PI/2,-Math.PI/2+TAU*f);ctx.stroke();}
+  else if(rel(11)){ctx.strokeStyle='rgba(159,123,255,.3)';ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(hX,hY,R+sp2(16),0,TAU);ctx.stroke();} /* 20 Oct: a full ring stays on, faint: the wormhole is ready */
   const w=G2.wormFx;if(w&&w.t<.6){const q=w.t/.6;ctx.globalCompositeOperation='lighter';ctx.translate(w.fx,w.fy);ctx.rotate(w.t*14);for(let i=0;i<4;i++){ctx.strokeStyle=`rgba(170,130,255,${.8*(1-q)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,0,(1-q)*R*1.6+i*4,i,i+2.4);ctx.stroke();}
     ctx.setTransform(1,0,0,1,0,0);ctx.restore();ctx.save();ctx.globalCompositeOperation='lighter';ctx.strokeStyle=`rgba(200,170,255,${1-q})`;ctx.lineWidth=3*(1-q)+1;ctx.beginPath();ctx.arc(w.tx,w.ty,R+q*sp2(90),0,TAU);ctx.stroke();}
   else if(w)G2.wormFx=null;ctx.restore();}
@@ -513,7 +517,7 @@ function v2Update(dt){
   if(G2.mode==='surv'&&!G2.dstorm&&G2.arcs<3&&gState==='playing'){G2.regT+=dt;if(G2.regT>=25){G2.regT=0;G2.arcs++;G2.arcFix={i:G2.arcs-1,t:G2.t};v2ArcForm(G2.arcs-1,'arc');v2Pop(T('YAY ONARILDI'),'#ff8a8a',15);}}else G2.regT=0; /* survival: a broken arc mends every 25 s */
   const S=G2.S,tk=(G2.horSlow>0?.3:1)*(G2.timeT>0?v2TimeK():1)*(G2.btT>0?v2BtK():1)*(G2.killFx&&G2.killFx.boom===undefined?.35:1),lv=G2.lv;
   // timers
-  G2.t+=dt;if(G2.afx&&G2.afx.length)v2ArcFxStep(dt);if(G2.immT>0)G2.immT-=dt;if(G2.revT>0)G2.revT-=dt;if(G2.wormCD>0)G2.wormCD-=dt;if(G2.wormFx)G2.wormFx.t+=dt;if(G2.horT>0)G2.horT-=dt;if(G2.horSlow>0)G2.horSlow-=dt/.3;if(G2.horFx)G2.horFx.t+=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.iceT>0){G2.iceT-=dt;if(G2.iceT<=0){G2.iceT=0;v2Pop(T('BUZ ÇÖZÜLDÜ'),'#8dffcb',16);}}if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
+  G2.t+=dt;if(G2.afx&&G2.afx.length)v2ArcFxStep(dt);if(G2.immT>0)G2.immT-=dt;if(G2.revT>0)G2.revT-=dt;if(G2.wormCD>0)G2.wormCD-=dt;else if(rel(11)&&!G2.wormHint)v2WormHint();if(G2.wormFx)G2.wormFx.t+=dt;if(G2.horT>0)G2.horT-=dt;if(G2.horSlow>0)G2.horSlow-=dt/.3;if(G2.horFx)G2.horFx.t+=dt;if(G2.antiT>0)G2.antiT-=dt;if(G2.hkCD>0)G2.hkCD-=dt;if(G2.jetCD>0){G2.jetCD-=dt;if(G2.jetCD<=0&&!G2.jetRdy){G2.jetRdy=1;G2.jetGoT=G2.t;v2Pop('JET HAZIR','#9fe8ff',14);v2Sfx('bell',{vol:.35,rate:1.5});}}if(G2.jet)v2JetStep(dt);if(G2.hkFx)G2.hkFx.t+=dt;if(G2.btT>0)G2.btT-=dt;if(G2.iceT>0){G2.iceT-=dt;if(G2.iceT<=0){G2.iceT=0;v2Pop(T('BUZ ÇÖZÜLDÜ'),'#8dffcb',16);}}if(G2.tipGap>0)G2.tipGap-=dt;if(G2.tipF&&(G2.tipF.t-=dt)<=0)v2TipFlowEnd();if(G2.killFx){const k=G2.killFx;k.t+=dt;if(k.t>(k.boom??9)+1.4)G2.killFx=null;}
   if(G2.mode==='surv'){if(v2HawkOk()&&!TIPS.hawking&&G2.t>2)v2Tip('hawking',null);if(v2JetOn()&&!TIPS.jet&&G2.t>5)v2Tip('jet',null);} /* in levels the powers are introduced by the level-start cards */
   if(G2.featCard&&G2.t>.6&&gState==='playing'&&!G2.tip){const f=G2.featCard;if(f==='shield'&&!TIPS.gift){TIPS.gift=1;SHOP.shield++;saveG();updateUI();}if(f==='arcs')TIPS.meteor=1;if(TIPS[f]||v2Tip(f,null)){G2.featCard=null;G2.featShown=1;}}if(G2.sigBack&&!G2.tip&&!G2.featCard&&gState==='playing'&&G2.t>1.2){const b=G2.sigBack;G2.sigBack=null;sigShow(...b);} /* a held radio note, once the cards are read */if(G2.btCD>0)G2.btCD-=dt;if(G2.dodgeCD>0)G2.dodgeCD-=dt;if(G2.pulse>0)G2.pulse=Math.max(0,G2.pulse-dt*4);
   if(rel(11))v2TclkStep();if(G2.midR)G2.rr=Math.max(G2.rr,G2.midR);
@@ -834,7 +838,7 @@ const CONS=[{id:'cas',n:'KRALİÇE',p:[[0,.2],[.25,.75],[.5,.35],[.75,.85],[1,.3
   {id:'leo',n:'ASLAN',p:[[.1,.85],[.3,.6],[.2,.3],[.42,.08],[.68,.2],[.95,.55]]}];
 function v2ApplyMods(L){const w=L.w; // season theme and the Daily Storm's two rules
   if(seasonIs('gold')){w.gold=(w.gold||0)*2;w.crystal*=1.5;}if(seasonIs('meteor'))w.meteor*=1.2;
-  if(gameMode==='sprint'){w.meteor*=1.4;if(L.metIv)L.metIv/=1.3;} /* the race is a sprint through a storm */
+  if(gameMode==='sprint'){w.meteor*=1.4;if(L.metIv)L.metIv/=1.3;if(rel(11)&&!FMRUN){w.meteor*=RACE_K.met;if(L.metIv)L.metIv/=RACE_K.iv;}} /* the race is a sprint through a storm; 20 Oct: the Daily Race a little stormier */
   if(gameMode==='survival'&&STORM.on){w.meteor*=1.5;if(L.metIv)L.metIv/=1.35;else L.metIv=3.2;} /* the daily storm is the hard race: more meteors and no arc mending */
   if(gameMode==='survival'&&STORM.on)for(const m of STORM.mods){if(m.id==='gold'){w.gold=(w.gold||0)*2+2;w.crystal*=2;w.meteor*=1.3;}else if(m.id==='giant')w.planet=(w.planet||0)*2+4;
     else if(m.id==='twin')w.mirror=4;else if(m.id==='fast')L.speedK*=1.15;else if(m.id==='dense'){L.cap+=4;L.iv*=.8;w.meteor*=1.15;}}
@@ -879,7 +883,16 @@ const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'�
 const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
 function v2SprRule(){if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
-function v2SprPlan(){if(FMRUN)return {list:(FMRUN.m.plan||[]).map(x=>x.slice())};const r=sprRuleOf(SPR_RUN.seed),L=[];if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);if(rel(9))L.push([18,'belt'],[32,'neb'],[48,'belt']);else L.push([20,'belt'],[40,'neb']);return {list:L};}
+/* 20 Oct: the Daily Race's events come from the day's seed: two or three of the six, at times that shift from day to day, never the same
+   one twice, always one meteor belt, each over before the 60 seconds are; every try of one day is still the same universe, so the ranking stays fair */
+const RACE_K={met:1.3,iv:1.3},RACE_EV={belt:2.8+8+1.4,neb:15,kilo:13,cons:6,wind:10,eclipse:9};
+function v2RaceEvents(seed,rule){const r=mulberry(seed^0x2f6b8d31),pool=Object.keys(RACE_EV).filter(k=>k!==rule),L=[];
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+  const n=r()<.7?3:2,b=pool.indexOf('belt'),q=Math.floor(r()*Math.min(n,2));if(b>=n||b===2)[pool[q],pool[b]]=[pool[b],pool[q]]; /* every day brings one meteor belt, first or second, so it always fits in the minute */let t=(rule==='wind'||rule==='eclipse'?16:9)+Math.floor(r()*5);
+  for(const k of pool){if(L.length>=n)break;const d=RACE_EV[k];if(t+d>58.5)continue;L.push([Math.round(t*10)/10,k]);t+=d+2+Math.floor(r()*4);}
+  return L;}
+function v2SprPlan(){if(FMRUN)return {list:(FMRUN.m.plan||[]).map(x=>x.slice())};const r=sprRuleOf(SPR_RUN.seed),L=[];
+  if(rel(11)){if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);return {list:L.concat(v2RaceEvents(SPR_RUN.seed,r.id))};}if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);if(rel(9))L.push([18,'belt'],[32,'neb'],[48,'belt']);else L.push([20,'belt'],[40,'neb']);return {list:L};}
 const DSTORM={dur:180,belts:[60,120],sec:20,done:3000,life:1500};
 // 1.4.8: the storm has no end. Arcs go out at 2:00; from 4:00 (the Black Storm) every 30 s brings 35 % more storm meteors, in pairs, and 8 % faster bodies, compounding, until no one can last
 const STORM2={arcsOut:120,black:240,step:30,met:1.35,spd:1.08};
@@ -1483,7 +1496,7 @@ const TIP2={
   shrinkc:[rel(10)?'\ue108':'💨','HIZLI KÜÇÜLME','Bu seviyede ekranda daha çok cisim var ama yemeyi bırakınca kara delik üç kat hızlı küçülür. Durmadan ye.'],
   ev_kilo:['💫','KİLONOVA','İki nötron yıldızı birbirinin etrafında dönüp çarpışacak. Çarpışınca çekim dalgası her şeyi iter ve altın saçılır: altınları topla! Evrendeki altının çoğu böyle çarpışmalarda oluşur.'],
   hawking:[rel(10)?'\ue104':'💨','HAWKING SALINIMI','Büyükken Hawking düğmesine dokun: biraz kütle verirsin, ekrandaki bütün meteorlar silinir.'],
-  worm:[rel(10)?'\ue106':'🌌','SOLUCAN DELİĞİ','Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.'],
+  worm:[rel(10)?'\ue106':'🌌','SOLUCAN DELİĞİ',rel(11)?'Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.':'Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Etrafındaki mor halka dolunca yeniden hazırdır.'],
   hor:['♾️','İKİNCİ UFUK','Seviye başına bir kez, son yayın da koparken darbe karşılanır: zaman yavaşlar, altın dalga meteorları siler, yaylar yenilenir.'],
   jet:['🔥','KUASAR JETİ','Kara deliği tutarken ikinci parmakla bas ve gezdir: 5 saniye boyunca ışın taradığı her şeyi vurur. Üst bardaki 🔥 halkası dolunca jet yeniden hazırdır.'],
   rad:['☢','RADYASYON','Boss dalga saçar. Dalgaların arasındaki boşlukta dur; kalkan seni korur.'],

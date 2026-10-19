@@ -2328,5 +2328,10 @@
 "Günlük Yarış'ı {n} gün koş": "Участвуй в ежедневной гонке дней: {n}",
 "Günlük Yarış'ta {n} puana ulaş": "Набери {n} очков в ежедневной гонке",
 "{n} kez Hayatta Kal oyna": "Сыграй в выживание раз: {n}",
-"SON GÜN": "ПОСЛЕДНИЙ ДЕНЬ"
+"SON GÜN": "ПОСЛЕДНИЙ ДЕНЬ",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "Когда фиолетовое кольцо заполнится, дважды коснись любого места: чёрная дыра телепортируется туда и ненадолго становится неуязвимой. Используй, чтобы уйти от метеоров. Каждый уровень: ожидание на 1 с меньше, защита дольше.",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "Когда фиолетовое кольцо заполнится, дважды коснись любого места: чёрная дыра телепортируется туда и ненадолго становится неуязвимой. Самый быстрый способ уйти с пути метеора.",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "Построй в Космической лаборатории; в игре дважды коснись, чтобы телепортироваться и ненадолго стать неуязвимым.",
+"Bekleme {s} sn · dokunulmaz {d} sn": "Ожидание {s} с · неуязвимость {d} с",
+"ÇİFT DOKUN · IŞINLAN": "ДВОЙНОЕ КАСАНИЕ · ТЕЛЕПОРТ"
 }

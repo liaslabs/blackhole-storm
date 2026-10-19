@@ -3726,7 +3726,7 @@ const LAB_DESC={grav:'Kara deliğinin çekim alanı genişler: cisimler sana dah
   time:'Ağır çekim ve Zaman Topu zamanı daha çok yavaşlatır: meteorlara tepki vermek için daha çok vaktin olur. Yavaşlamanın süresi kara deliğin evrimleştikçe uzar.',
   hawk:'Büyükken kütlenin bir kısmını radyasyona çevirip ekrandaki meteorları siler. Seviye arttıkça bekleme süresi kısalır.',
   jet:'İkinci parmakla ateşlenen plazma ışını: taradığı her şeyi vurur, boss\'a da hasar verir. Seviye arttıkça süresi ve boss hasarı artar.',
-  worm:'Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Seviye arttıkça bekleme kısalır.',
+  worm:rel(11)?'Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.':'Ekranda boş bir yere iki kez hızlıca dokun: kara delik oraya ışınlanır ve bir an dokunulmaz olur. Seviye arttıkça bekleme kısalır.',
   hor:'Seviye başına bir kez, son yay da kopacakken darbe karşılanır: zaman yavaşlar, ufuk dalgası meteorları siler, yaylar yenilenir ve kalkan açılır.'};
 const LAB_MAX=10,LAB_T=[5,20,90,270,600,1080,1800,2880,4320,5760],LAB_M=[90,180,300,480,720,1020,1380,1800,2280,2850], /* mass x3: it piles up at ~100 a level, so building should make you choose */LAB_S=[0,40,80,150,250,400,600,850,1150,1500],LAB_SLOT2=250,LAB_AD=30;
 let LAB={lv:{},q:[],slot2:0,boost:0,seen:{},done:[],tier:1};
@@ -3765,7 +3765,7 @@ function labEff(id,lv){const f=x=>x.toLocaleString(LOC,{maximumFractionDigits:2}
     case 'time':return T('Ağır çekim %{a} hız · Zaman Topu %{b} hız',{a:Math.round(100*Math.max(.25,.5-.025*lv)),b:Math.round(100*Math.max(.3,.65-.03*lv))});
     case 'hawk':return lv?T('Hawking açık · bekleme {s} sn',{s:f(r1(Math.max(12,25-(lv-1))))}):T('Hawking kapalı');
     case 'jet':return lv?T('Jet açık · süre {s} sn',{s:f(r1(5+.2*(lv-1)))}):T('Jet kapalı');
-    case 'worm':return lv?T('Işınlanma · bekleme {s} sn',{s:f(r1(Math.max(8,20-(lv-1))))}):T('Solucan Deliği kapalı');
+    case 'worm':return lv?(rel(11)?T('Bekleme {s} sn · dokunulmaz {d} sn',{s:f(r1(Math.max(8,20-(lv-1)))),d:f(r1(1+.1*Math.max(0,lv-1)))}):T('Işınlanma · bekleme {s} sn',{s:f(r1(Math.max(8,20-(lv-1))))})):T('Solucan Deliği kapalı');
     case 'hor':return lv?T('Seviye başına 1 kez · kalkan {s} sn',{s:f(r1(Math.min(6,2+.3*lv)))}):T('İkinci Ufuk kapalı');}return '';}
 // recommended power for boss and very hard levels from 30 on; below it they push back harder
 function labRec(l){return l>=30&&(l%10===0||v2Hard(l)===2)?Math.min(60,labRecAll(l)):0;}
@@ -3794,7 +3794,7 @@ function labContHint(){labTickQuiet();const gap=labGap(level),b=LAB.q.slice().so
 // Laboratory notes: now and then, on the menu (never during play), a card points the way to getting stronger
 const LN_GAP=12*6e4,LN_LV=3;
 function labNoteNext(){const lv=Math.max(savedLevel,bestLevel|0);if(lv<7)return null;
-  for(const m of LABT)if(m.from&&labOpen(m)&&!labRaw(m.id)&&!labBusy(m.id)&&!(LAB.nf&&LAB.nf[m.id]))return {once:m.id,ic:m.ic,t:T('YENİ ÖZELLİK')+' · '+T(m.n),d:T(m.id==='jet'?'Kozmik Lab’da inşa et; oyunda ikinci parmakla dokunup ateşle.':m.id==='hawk'?'Kozmik Lab’da inşa et; meteorları tek dokunuşla sil.':m.id==='worm'?'Kozmik Lab’da inşa et; oyunda iki kez dokunarak ışınlan.':m.id==='hor'?'Kozmik Lab’da inşa et; seviye başına bir kez kalbini korur.':LAB_DESC[m.id])};
+  for(const m of LABT)if(m.from&&labOpen(m)&&!labRaw(m.id)&&!labBusy(m.id)&&!(LAB.nf&&LAB.nf[m.id]))return {once:m.id,ic:m.ic,t:T('YENİ ÖZELLİK')+' · '+T(m.n),d:T(m.id==='jet'?'Kozmik Lab’da inşa et; oyunda ikinci parmakla dokunup ateşle.':m.id==='hawk'?'Kozmik Lab’da inşa et; meteorları tek dokunuşla sil.':m.id==='worm'?(rel(11)?'Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.':'Kozmik Lab’da inşa et; oyunda iki kez dokunarak ışınlan.'):m.id==='hor'?'Kozmik Lab’da inşa et; seviye başına bir kez kalbini korur.':LAB_DESC[m.id])};
   {const m=LABT.find(m=>m.st&&labLvOk(m)&&!labStOk(m));if(m)return {ic:m.ic,t:T('YENİ ÖZELLİK YAKLAŞIYOR')+' · '+T(m.n),d:T('Kara deliğin {s} evresine ulaşınca açılır · {n} M daha',{s:T(STAGES[m.st].n),n:Math.max(0,STAGES[m.st].m-Math.floor(mass)).toLocaleString(LOC)})};}
   const p=labPower();for(let l=lv;l<=lv+4;l++){const r=labRec(l);if(r>p)return {ic:'⚡',t:T('SEVİYE {k} GÜÇ İSTİYOR',{k:l}),d:T('Önerilen güç {r}, seninki {p}. Kozmik Lab’da güçlen.',{r,p})};}
   if(LAB.q.length<labSlots()){const m=LABT.find(m=>labOpen(m)&&!labBusy(m.id)&&labRaw(m.id)<LAB_MAX&&massFree()>=labCM(labRaw(m.id))&&stars>=labCS(labRaw(m.id)));

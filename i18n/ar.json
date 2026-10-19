@@ -2328,5 +2328,10 @@
 "Günlük Yarış'ı {n} gün koş": "شارك في السباق اليومي {n} أيام",
 "Günlük Yarış'ta {n} puana ulaş": "اجمع {n} نقطة في السباق اليومي",
 "{n} kez Hayatta Kal oyna": "العب وضع البقاء {n} مرات",
-"SON GÜN": "اليوم الأخير"
+"SON GÜN": "اليوم الأخير",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "عندما تمتلئ الحلقة البنفسجية، انقر مرتين في أي مكان: ينتقل الثقب الأسود إلى هناك ولا يمكن إصابته لفترة قصيرة. استخدمه للهروب من النيازك. كل مستوى: انتظار أقصر بثانية وحماية أطول.",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "عندما تمتلئ الحلقة البنفسجية، انقر مرتين في أي مكان: ينتقل الثقب الأسود إلى هناك ولا يمكن إصابته لفترة قصيرة. أسرع طريقة للابتعاد عن مسار نيزك.",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "ابنِه في المختبر الكوني؛ في اللعب انقر مرتين لتنتقل وتصبح محصنًا لفترة قصيرة.",
+"Bekleme {s} sn · dokunulmaz {d} sn": "انتظار {s} ث · حصانة {d} ث",
+"ÇİFT DOKUN · IŞINLAN": "انقر مرتين · انتقال"
 }

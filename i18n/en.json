@@ -2328,5 +2328,10 @@
 "Günlük Yarış'ı {n} gün koş": "Race the Daily Race on {n} days",
 "Günlük Yarış'ta {n} puana ulaş": "Reach {n} points in the Daily Race",
 "{n} kez Hayatta Kal oyna": "Play Survival {n} times",
-"SON GÜN": "LAST DAY"
+"SON GÜN": "LAST DAY",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "When the purple ring is full, double-tap anywhere: the black hole teleports there and can't be hit for a moment. Use it to escape meteors. Each level: 1 s shorter wait, longer protection.",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "When the purple ring is full, double-tap anywhere: the black hole teleports there and can't be hit for a moment. The fastest way out of a meteor's path.",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "Build it in the Cosmic Lab; in play, double-tap to teleport and become untouchable for a moment.",
+"Bekleme {s} sn · dokunulmaz {d} sn": "Wait {s} s · untouchable {d} s",
+"ÇİFT DOKUN · IŞINLAN": "DOUBLE-TAP · TELEPORT"
 }

@@ -2328,5 +2328,10 @@
 "Günlük Yarış'ı {n} gün koş": "Ikuti Balapan Harian {n} hari",
 "Günlük Yarış'ta {n} puana ulaş": "Capai {n} poin di Balapan Harian",
 "{n} kez Hayatta Kal oyna": "Main Bertahan Hidup {n} kali",
-"SON GÜN": "HARI TERAKHIR"
+"SON GÜN": "HARI TERAKHIR",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "Saat cincin ungu penuh, ketuk dua kali di mana saja: lubang hitam berteleportasi ke sana dan tak bisa terkena untuk sesaat. Pakai untuk lolos dari meteor. Tiap level: tunggu 1 dtk lebih singkat, perlindungan lebih lama.",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "Saat cincin ungu penuh, ketuk dua kali di mana saja: lubang hitam berteleportasi ke sana dan tak bisa terkena untuk sesaat. Cara tercepat keluar dari jalur meteor.",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "Bangun di Lab Kosmik; saat bermain, ketuk dua kali untuk berteleportasi dan kebal sesaat.",
+"Bekleme {s} sn · dokunulmaz {d} sn": "Tunggu {s} dtk · kebal {d} dtk",
+"ÇİFT DOKUN · IŞINLAN": "KETUK DUA KALI · TELEPORTASI"
 }

@@ -2328,5 +2328,10 @@
 "Günlük Yarış'ı {n} gün koş": "デイリーレースに{n}日参加",
 "Günlük Yarış'ta {n} puana ulaş": "デイリーレースで{n}点に到達",
 "{n} kez Hayatta Kal oyna": "サバイバルを{n}回プレイ",
-"SON GÜN": "最終日"
+"SON GÜN": "最終日",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "紫のリングが満タンになったら、好きな場所をダブルタップ：ブラックホールがそこへワープし、しばらく無敵になる。隕石から逃げるときに使おう。レベルごとに待ち時間が1秒短く、無敵が長くなる。",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "紫のリングが満タンになったら、好きな場所をダブルタップ：ブラックホールがそこへワープし、しばらく無敵になる。隕石の進路から逃げる一番速い方法。",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "宇宙ラボで建設。プレイ中にダブルタップでワープし、しばらく無敵になる。",
+"Bekleme {s} sn · dokunulmaz {d} sn": "待ち時間{s}秒 · 無敵{d}秒",
+"ÇİFT DOKUN · IŞINLAN": "ダブルタップ · ワープ"
 }
