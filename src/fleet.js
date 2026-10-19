@@ -52,12 +52,12 @@ function fleetLevel(){if(!rel(10)||!FL.fid||gameMode!=='classic'||REPLAY)return;
 // the Daily Storm: 20 points for taking part, 10 more for each 5,000 points up to 60
 function fleetStorm(score,rec){if(score>0)fleetAdd(20+Math.min(60,10*Math.floor(score/5000)),rec?'rec':'');}
 
-const flHot=()=>!!FL.fid&&(FL.prz>0||FL.mis.d===utcDay()&&FL.mis.p>=3&&!FL.mis.cl||!!FL.fmc);
+const flHot=()=>!!FL.fid&&(FL.prz>0||!rel(11)&&FL.mis.d===utcDay()&&FL.mis.p>=3&&!FL.mis.cl||!!FL.fmc); /* 20 Oct: the daily fleet mission is taken on the Missions screen: its AL! is on that button, not here */
 // the FLEET button in the menu (in REHBER's place, which moved to Settings): one pulsing badge when a fleet reward waits
 function fleetBtn(){const b=$('flBtn');if(!b||!rel(10))return;b.hidden=false;const g=$('guideBtn');if(g)g.hidden=true;const sr=$('sGuideRow');if(sr)sr.hidden=false;
   const i=b.querySelector('i');if(i&&!i.dataset.nb){i.dataset.nb=1;i.innerHTML=ICO.badge('🤝').replace('class="ico"','class="nb"');b.classList.add('neon');}
   const lock=!flOn()||bestLevel<FL_LV,hot=!lock&&flHot(),e=$('flBadge'),t=$('flTxt');b.classList.toggle('lock',lock);
-  if(e){e.textContent=hot?T('AL')+'!':'';e.className=hot?'hot':'';}if(t)t.textContent=lock&&flOn()?T('{n}. seviye',{n:FL_LV}):'';flRaceTick();}
+  if(e){e.textContent=hot?T('AL')+'!':'';e.className=hot?'hot':'';}if(rel(11)&&typeof dmMenuBadge==='function')dmMenuBadge();if(t)t.textContent=lock&&flOn()?T('{n}. seviye',{n:FL_LV}):'';flRaceTick();}
 // FLEET REMINDERS (Android app, local like the other reminders; nothing goes through a server): today's missions this evening
 // if none was played, tomorrow's new missions, and the weekend race (Friday evening when it starts, Sunday evening before it ends)
 function flNotifPlan(now){const L=[],at=(dd,h,m=0)=>{const d=new Date(now);d.setDate(d.getDate()+dd);d.setHours(h,m,0,0);return d.getTime();},fl=flE(FL.name||'');
