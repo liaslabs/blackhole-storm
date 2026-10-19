@@ -98,9 +98,12 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   if(!flOn()){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${T('Filolar internet bağlantısı ister.')}</div>`;return;}
   if(bestLevel<FL_LV){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV})}</div>`;return;}
   if(FLS==='intro'&&!FL.fid){w.innerHTML=fleetIntroH();fleetIntroWire();return;} // the benefit cards need no connection
-  if(!FLV)w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`;
-  const j=await fleetFetch(FLS==='main');if(!$('sLB').classList.contains('on'))return;
-  if(!j){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${flErr('off')}</div><div class="two"><button class="btn sec" id="flRetry">${T('TEKRAR DENE')}</button></div>`;$('flRetry').onclick=()=>fleetRender();return;}
+  const seq=fleetRender.n=(fleetRender.n||0)+1,now=rel(11)&&FLV&&FLV.fleet&&FLS==='main'&&(FLT==='tasks'||FLT==='crew'); /* 19 Oct: what is known is drawn at once (a finished mission's tries and medal, a sent message); the fresh look redraws it */
+  if(now)flDraw(w,FLV);else if(!FLV)w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`;
+  const j=await fleetFetch(FLS==='main');if(!$('sLB').classList.contains('on')||seq!==fleetRender.n)return; // a newer draw has started: this older answer is dropped
+  if(!j){if(now)return;w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${flErr('off')}</div><div class="two"><button class="btn sec" id="flRetry">${T('TEKRAR DENE')}</button></div>`;$('flRetry').onclick=()=>fleetRender();return;}
+  await flDraw(w,j);}
+async function flDraw(w,j){
   const auto=rel(11)&&j.champ&&TIPS.chV!==j.champ.wk&&FLT==='tasks'&&FLS==='main'; /* 18 Oct: a prize that collects itself is not drawn as a TOPLA card first */
   let h=fleetPrizes(auto?{...j,prizes:(j.prizes||[]).filter(z=>z.wk!==j.champ.wk)}:j);
   if(FLS==='make')h+=fleetMakeH();else if(FLS==='code')h+=fleetCodeH();else if(FLS==='race')h+=await fleetRaceH();else if(FLS==='set')h+=fleetSetH(j);
@@ -368,8 +371,11 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
     go('/fleet/create',{pid:PID,name:r.name,emb,open,pname:playerName||'PİLOT',av:playerAvatar},()=>{if(rel(11))evOnce('fl_join');diamonds-=FL_COST;saveG();updateUI();sfx('achieve',{vol:.6});FLS='main';FLV=null;fleetRender();});};
   if(q('#flRenGo'))q('#flRenGo').onclick=()=>{const r=fleetNameCheck(),free=j.fleet&&j.fleet.freeRename;if(!r||!r.ok){flMsg(flErr(r?r.err:'short'));return;}if(!free&&diamonds<FL_RENAME){flMsg(T('Yetersiz elmas'));return;}
     go('/fleet/rename',{pid:PID,name:r.name},x=>{if(!x.free){diamonds-=FL_RENAME;saveG();updateUI();}FL.name=r.name;FLS='main';FLV=null;fleetRender();fleetMenu();});};
-  all('[data-msg]').forEach(b=>b.onclick=()=>go('/fleet/msg',{pid:PID,m:b.dataset.msg},()=>{FLV=null;fleetRender();}));
-  all('[data-call]').forEach(b=>b.onclick=()=>{if(b.disabled)return;b.disabled=true;go('/fleet/call',{pid:PID,k:b.dataset.call},()=>{sfx('powerup',{vol:.4});if(rel(11))evOnce('fl_call');FLV=null;fleetRender();}).then(r=>{if(!r||!r.ok)b.disabled=false;});});
+  all('[data-msg]').forEach(b=>b.onclick=()=>{const k=b.dataset.msg,wl=q('.wall'),x={m:k,name:playerName||'PİLOT'};let el=null; /* 19 Oct: the message shows on the wall at once */
+    if(rel(11)&&Date.now()-(fleetWire.msgT||0)<20e3){flMsg(flErr('slow'));return;}fleetWire.msgT=Date.now(); // the server takes one message in 20 seconds
+    if(wl&&rel(11)){const d=document.createElement('div');d.innerHTML=flWall(x);el=d.firstElementChild;if(el){if(!(j.wall||[]).length)wl.innerHTML='';wl.appendChild(el);}}
+    go('/fleet/msg',{pid:PID,m:k},()=>{if(rel(11)){if(FLV&&FLV===j)(FLV.wall=FLV.wall||[]).push(x);FL.at=0;fleetRender();return;}FLV=null;fleetRender();}).then(r=>{if(!(r&&r.ok)&&el)el.remove();});});
+  all('[data-call]').forEach(b=>b.onclick=()=>{if(b.disabled)return;b.disabled=true;go('/fleet/call',{pid:PID,k:b.dataset.call},()=>{sfx('powerup',{vol:.4});if(rel(11))evOnce('fl_call');const t=FLV===j&&(j.members||[]).find(z=>z.k===b.dataset.call);if(t){t.called=1;(j.wall=j.wall||[]).push({m:'call:'+t.name,name:playerName||'PİLOT'});}FL.at=0;fleetRender();}).then(r=>{if(!r||!r.ok)b.disabled=false;});});
   all('[data-kick]').forEach(b=>b.onclick=()=>{if(!b.classList.contains('ask')){b.classList.add('ask');b.textContent=T('ÇIKAR?');return;}go('/fleet/kick',{pid:PID,k:b.dataset.kick},()=>{FLV=null;fleetRender();});});
   // a pasted message is searched for the code (three letters or digits, a dash, three more)
   const cIn=q('#flCodeIn'),pick=v=>{const u=String(v).toUpperCase(),d=u.match(/\b([A-Z0-9]{3})-([A-Z0-9]{3})\b/);if(d)return d[1]+'-'+d[2];const c=u.replace(/[^A-Z0-9]/g,'');return c.length===6?c.slice(0,3)+'-'+c.slice(3):'';};
@@ -464,5 +470,6 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
   fmPost({day:R.d,id:m.id,v,t}).then(r=>{if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier,mp:r.mp||0});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');
     if(g&&r&&r.ok&&r.n){const P=F.PAY;g.innerHTML=`<div class="fr"><span>${T('Filonun bu görevdeki ortalaması')} <small>(${T('{n} kişi',{n:r.n})})</small></span><b>${flN(r.avg)}</b></div><div class="fr"><span>${T('Bugünkü toplamın')} <small>(${r.g}/3)</small></span><b>${flN(r.my)}</b></div>${r.star?`<div class="fr st">🌟 ${T('Şu an filonun yıldızı sensin. Gün sonuna kadar kalırsan +{a} ⭐ +{b} 💎',{a:P.star[0],b:P.star[1]})}</div>`:''}`;}
     if(r&&r.ok)fmTop(m);});
-  const back=()=>{fmClose();hideModals();showMenu();fleetOpen('tasks');if(rel(10))notifAsk('fleet');};
+  if(rel(11)&&fm){const x=fm.me[m.id]=fm.me[m.id]||{best:0,tier:0,tries:1};Object.assign(x,{best,tier,mp:Math.max(x.mp||0,F.mp(m,best))});} /* 19 Oct: the tries crossed out and the medal show at once on the way back */
+  const back=()=>{fmClose();hideModals();if(rel(11)){fleetOpen('tasks');showMenu();}else{showMenu();fleetOpen('tasks');}if(rel(10))notifAsk('fleet');};
   o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>fmPlay(m.id),500);};}
