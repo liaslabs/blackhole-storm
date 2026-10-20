@@ -145,7 +145,8 @@ Sıra önemli: **C1 → C2 → C3 → C4 → C5** (para), **C6–C8** (beyanlar)
 
 | # | Kim | İş | Nasıl |
 |---|---|---|---|
-| C1 | Sen | **Ödeme profili** | Ayarlar › Ödeme profili › Oluştur: hesap türü **Bireysel**, ad ve adres, Türk bankası IBAN (TL). Bilgileri bana yazma, depoya girmesin |
+| C0 | Sen | **20/B hesabı** | ☑ İstisna belgesi geldi (20 Eki). Belgeyle bankada **20/B hasılat hesabı** aç (TL); banka gelen ödemelerden %15 stopajı kendisi keser. Bankaya AdMob reklam gelirinin de kapsamda sayılıp sayılmadığını sor. Bu hesabın IBAN'ı C1 ve C10'a girilir |
+| C1 | Sen | **Ödeme profili** | Ayarlar › Ödeme profili › Oluştur: hesap türü **Bireysel**, ad ve adres, IBAN: **C0'daki 20/B hesabı** (TL); AdMob'daki mevcut ödeme profili önerilirse onu seç. Bilgileri bana yazma, depoya girmesin |
 | C2 | Sen | **%15 hizmet ücreti** | Ayarlar › Hizmet ücreti kademeleri (veya Kontrol paneli kartı) › kayıt ol. Kayıt olmazsan Google %30 keser |
 | C3 | Sen | **Ürünler** | Para kazanma › Ürünler › Uygulama içi ürünler › Ürün oluştur. Kimlikler aşağıdaki tabloyla **harfi harfine** aynı (bir kimlik bir kez kullanılınca geri alınamaz). Her ürünü oluşturduktan sonra **Etkinleştir** |
 | C3b | Sen | **Abonelik** | Para kazanma › Ürünler › Abonelikler › `vip_monthly`, temel plan `monthly`, aylık otomatik yenilenen, ₺39,99 |
@@ -184,7 +185,7 @@ Reklam birimleri zaten var ve kodda yazılı: Ödüllü `…/4584098403`, Geçi�
 | # | Kim | İş | Nasıl |
 |---|---|---|---|
 | C9 | Sen | **GDPR mesajı** | AdMob › Gizlilik ve mesajlaşma › Avrupa düzenlemeleri › Mesaj oluştur: uygulama Blackhole Storm, tüm diller, "Yönet" seçeneği açık › **Yayınla**. Oyundaki izin penceresi bunu kullanır; yayınlanmazsa Avrupa'da reklam az gelir. İsteğe bağlı: ABD eyalet düzenlemeleri mesajı |
-| C10 | Sen | **Ödeme ve vergi** | AdMob › Ödemeler: banka bilgisi; vergi bilgisi (bireysel, ABD vergi formu **W-8BEN**, Türkiye). Bakiye ~10 $ olunca postayla **adres PIN**'i gelir, girilir. Ödeme eşiği ~100 $ |
+| C10 | Sen | **Ödeme ve vergi** | AdMob › Ödemeler: ABD vergi formu **W-8BEN ☑** (11 Eki onaylandı, Hizmetler %0, 2029'a kadar). Kalan: **Türkiye vergi bilgileri** (20/B belgesi geldi, doldurulabilir) ve **banka** (AdMob ancak kazanç eşiğe ulaşınca ekletir; C0'daki 20/B hesabı). Bakiye ~10 $ olunca postayla **adres PIN**'i gelir, girilir. Ödeme eşiği ~100 $ |
 | C11 | Sen | **Güvenlik ayarları** | Engelleme kontrolleri › hassas kategoriler: kumar, flört, alkol engelli; içerik derecelendirmesi en fazla **T (Gençler)**. Ayarlar › Test cihazları: **kendi telefonunu ekle** (kendi reklamına dokunmak hesabı kapattırabilir) |
 
 ### Mağaza ve derleme
