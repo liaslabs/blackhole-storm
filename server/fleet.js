@@ -291,6 +291,7 @@ async function view(DB, pid, m) {
   const lw = weekOf(Date.now() - 7 * 864e5), lr = await DB.prepare('SELECT champ FROM fleet_results WHERE wk = ? AND fid = ?').bind(lw, f.fid).first();
   let champ = null;
   if (lr && lr.champ >= 1 && lr.champ <= 3) { const ld = weekDays(lw); if (await DB.prepare('SELECT 1 AS y FROM fleet_fm WHERE pid = ? AND fid = ? AND day >= ? AND day <= ? LIMIT 1').bind(pid, f.fid, ld[0], ld[6]).first()) champ = { wk: lw, r: lr.champ }; }
+  if (champ) { const g = await DB.prepare('SELECT claimed FROM fleet_prizes WHERE wk = ? AND pid = ?').bind(lw, pid).first(); if (g && g.claimed) champ.got = 1; } // 21 Oct: a prize already taken is not celebrated again (a reinstall or a reset forgets the card was seen)
   const mw = await fmWeek(DB, pid, f.fid, wk);
   let mi = 0; for (const x of ms.results || []) { const e = mw.today.get(x.pid); members[mi].mp = e ? e.mp : 0; members[mi].g = e ? e.g : 0; members[mi].star = mw.star === x.pid; mi++; }
   return {

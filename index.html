@@ -4039,7 +4039,7 @@ async function flPrizeAuto(pz){{const c=document.querySelector(`[data-claim="${p
   later(()=>{e.remove();updateUI();FLV=null;fleetRender();},2000);}
 // 18 Oct: the first time the game opens after its fleet finished last week in the first three, the menu says so in the tournament prize
 // card's light (rays, confetti, the blurred screen); FİLOYA GİT opens the Fleet, where the salute plays
-function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.wk)return;const r=Math.min(3,Math.max(1,c.r|0||1));
+function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.wk)return;if(rel(11)&&c.got){TIPS.chM=TIPS.chV=c.wk;saveSoon();return;} /* 21 Oct: its prize is already in the wallet */const r=Math.min(3,Math.max(1,c.r|0||1));
   if(!$('sMenu').classList.contains('on')||$('sDaily').classList.contains('on')||document.querySelector('.modal.on')||$('flChamp')){later(()=>flChampCard(j),3000);return;}
   TIPS.chM=c.wk;saveSoon();const m=$('mPrize');if(m.parentNode!==document.body)document.body.appendChild(m);m.className='modal rk'+r+' chf';
   $('przIc').innerHTML=f.emb?flImg(f.emb,'big'):'👑';$('przT').textContent=r===1?T('TEBRİKLER ŞAMPİYON!'):T('TEBRİKLER!');
@@ -4052,7 +4052,7 @@ function flChampCard(j){const c=j&&j.champ,f=j&&j.fleet;if(!c||!f||TIPS.chM===c.
   m.classList.remove('on');void m.offsetWidth;showModal('mPrize');sfx('achieve',{vol:.6});later(()=>{sfx('powerup',{vol:.5,rate:1.2});vib([20,40,60]);},550);}
 // 18 Oct: last week's first fleet: the first time one of its players (one who played a mission for it that week) opens the Fleet,
 // a 4-second salute plays once in a rounded card over the blurred screen; a tap ends it, and it is never shown again for that week
-function flChampShow(wk,j){const r=j&&j.champ&&j.champ.r||1;if(!wk||TIPS.chV===wk||$('flChamp')||$('flAuto'))return;const pz=j&&(j.prizes||[]).find(z=>z.wk===wk&&z.champ===r);
+function flChampShow(wk,j){const r=j&&j.champ&&j.champ.r||1;if(!wk||TIPS.chV===wk||$('flChamp')||$('flAuto'))return;if(rel(11)&&j.champ.got){TIPS.chV=wk;saveSoon();return;}const pz=j&&(j.prizes||[]).find(z=>z.wk===wk&&z.champ===r);
   if(r>1||!window.BHS_CHAMP_VID){TIPS.chV=wk;saveSoon();if(pz)later(()=>flPrizeAuto(pz),450);return;} /* the 2nd and 3rd fleets: no salute, the prize on the page goes to the wallet */
   TIPS.chV=wk;saveSoon();
   const ov=document.createElement('div');ov.id='flChamp';ov.setAttribute('role','dialog');ov.innerHTML='<div class="cv"><video playsinline preload="auto"></video></div>';document.body.appendChild(ov);
