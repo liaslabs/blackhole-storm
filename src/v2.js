@@ -1511,6 +1511,7 @@ function v2TipFor(o){let id=null;
   if(!id||TIPS[id]||v2Tip(id,o))o.tipd=1;}
 function v2Tip(id,tg){
   if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched))return false;
+  if(rel(11)&&SET.tips===false&&!G2.script&&!G2.tut)return false; /* 21 Oct: tips turned off in Settings (the tutorial still teaches) */
   if(TIP_SOFT.has(id)&&!G2.tut&&(G2.tipGap>0||G2.tipN>=2||G2.tipF))return false;
   if(TIP_SOFT.has(id)&&v2TipFlowOn())return v2TipFlow(id,tg);
   v2TipFlowEnd();
