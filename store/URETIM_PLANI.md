@@ -195,7 +195,7 @@ Reklam birimleri zaten var ve kodda yazılı: Ödüllü `…/4584098403`, Geçi�
 | C12 | Ben → Sen | **Gizlilik metni** | Filo çağrısı ve kampanyalar için iki cümle, tarih güncellemesi. Önizleme → onay → web'e |
 | C13 | Ben → Sen | **Mağaza görselleri** | Filo ve kampanya ekran görüntüleri (önizleme → onay → Play API ile yükleme). Kategori **Arcade**, iletişim e-postası ve web sitesi aynı kalır |
 | C14 | Ben | **Kod 69 (üretim derlemesi)** | `ADS_LIVE=true` (gerçek reklam), Ayarlar'daki ♪ ms satırı kalkar, güven listesi (TRUST_PIDS) son kontrolü, sürüm notu. Filo düzeltmeleri (19 Eki, `blackhole`'da hazır: görev dönüşü önce filo, ✕ ve madalya hemen; hazır mesaj ve ÇAĞIR anında) bu derlemeyle gider; web de aynı gün. Sunucu da aynı gün yayınlanır (21 Eki: şampiyonluk ödülü alındıysa kart tekrar çıkmaz, `champ.got`). Büyük ekran (21 Eki): tablette/katlanabilirde yön kilidi yok, telefonda dikey (Play önerisi); Dahili testte bir telefonda dikey kaldığına bak. Önce Dahili teste: sen test cihazı ekli telefonunda gerçek reklamın "test" etiketiyle geldiğini görürsün. Alpha'ya **gönderilmez** (testçiler kod 68'de kalır) |
-| C15 | Sen | **Ülkeler** | Üretim › Ülkeler/bölgeler: tümü (önerim). Çıkarmak istediğin ülke varsa söyle |
+| C15 ☑ | Sen | **Ülkeler** — **22 Eki: 177 ülke + Dünyanın geri kalanı eklendi.** **Üretim sürümü 69 (1.5.1) 22 Eki 04:59 TSİ incelemeye gönderildi** (ülkeler ve Veri güvenliğiyle tek inceleme; ilk üretim sürümünde kademeli yayın yok, onayla %100; yönetilen yayınlama kapalı, onaylanınca kendiliğinden yayına girer; sürüm notu en-US; tek uyarı: R8 eşleme dosyası yok, 1.5.2'de). | Üretim › Ülkeler/bölgeler: tümü (önerim). Çıkarmak istediğin ülke varsa söyle |
 
 ---
 
