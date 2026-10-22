@@ -1,5 +1,7 @@
 package com.liaslabs.blackholestorm;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import androidx.core.graphics.Insets;
@@ -28,6 +30,19 @@ public class MainActivity extends BridgeActivity {
             return WindowInsetsCompat.CONSUMED;
         });
         hideBars();
+        lockPhonePortrait(getResources().getConfiguration());
+    }
+
+    // Phones stay in portrait; tablets and unfolded foldables may turn (Google Play: no orientation lock on large screens,
+    // Android 16 ignores it there anyway). The game redraws itself for any size.
+    private void lockPhonePortrait(Configuration c) {
+        setRequestedOrientation(c.smallestScreenWidthDp < 600 ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT : ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration c) {
+        super.onConfigurationChanged(c);
+        lockPhonePortrait(c); // a foldable opened or closed
     }
 
     static volatile boolean onScreen; // reminders are not shown while the game is open

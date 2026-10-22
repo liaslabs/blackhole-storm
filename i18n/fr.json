@@ -2328,5 +2328,12 @@
 "Günlük Yarış'ı {n} gün koş": "Cours la Course du jour {n} jours",
 "Günlük Yarış'ta {n} puana ulaş": "Atteins {n} points dans la Course du jour",
 "{n} kez Hayatta Kal oyna": "Joue {n} fois en Survie",
-"SON GÜN": "DERNIER JOUR"
+"SON GÜN": "DERNIER JOUR",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "Quand l'anneau violet est plein, touche deux fois n'importe où : le trou noir s'y téléporte et devient intouchable un instant. Utilise-le pour fuir les météores. Chaque niveau : 1 s d'attente en moins, protection plus longue.",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "Quand l'anneau violet est plein, touche deux fois n'importe où : le trou noir s'y téléporte et devient intouchable un instant. Le moyen le plus rapide d'échapper à un météore.",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "À construire dans le Labo cosmique ; en jeu, touche deux fois pour te téléporter et devenir intouchable un instant.",
+"Bekleme {s} sn · dokunulmaz {d} sn": "Attente {s} s · intouchable {d} s",
+"ÇİFT DOKUN · IŞINLAN": "TOUCHE DEUX FOIS · TÉLÉPORTATION",
+"İpuçları": "Astuces",
+"Oyunun ipuçları yeniden gösterilecek": "Les astuces du jeu s'afficheront de nouveau"
 }

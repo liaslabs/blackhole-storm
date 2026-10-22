@@ -2328,5 +2328,12 @@
 "Günlük Yarış'ı {n} gün koş": "Di {n} rojan de beşdarî Pêşbirka Rojane bibe",
 "Günlük Yarış'ta {n} puana ulaş": "Di Pêşbirka Rojane de bigihîje {n} xalan",
 "{n} kez Hayatta Kal oyna": "{n} caran Mayînê bilîze",
-"SON GÜN": "ROJA DAWÎ"
+"SON GÜN": "ROJA DAWÎ",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmak için kullan. Her seviye: bekleme 1 sn kısalır, dokunulmazlık uzar.": "Dema ku xeleka mor tije bibe, li cihê ku tu dixwazî du caran bitikîne: qula reş xwe digihîne wir û demekê nayê lêdan. Ji bo revîna ji meteoran bi kar bîne. Her ast: bendewarî 1 ç kurttir, parastin dirêjtir.",
+"Mor halka dolunca istediğin yere çift dokun: kara delik oraya ışınlanır ve bir süre dokunulmaz olur. Meteordan kaçmanın en hızlı yolu.": "Dema ku xeleka mor tije bibe, li cihê ku tu dixwazî du caran bitikîne: qula reş xwe digihîne wir û demekê nayê lêdan. Rêya herî bilez ji rêya meteorekê derketinê.",
+"Kozmik Lab’da inşa et; oyunda çift dokunarak ışınlan ve bir süre dokunulmaz ol.": "Di Laboratuvara Kozmîk de ava bike; di lîstikê de du caran bitikîne da ku xwe bigihînî û demekê nayê lêdan.",
+"Bekleme {s} sn · dokunulmaz {d} sn": "Bendewarî {s} ç · nayê lêdan {d} ç",
+"ÇİFT DOKUN · IŞINLAN": "DU CARAN BITIKÎNE · TELEPORT",
+"İpuçları": "Şîret",
+"Oyunun ipuçları yeniden gösterilecek": "Şîretên lîstikê dê dîsa werin nîşandan"
 }
