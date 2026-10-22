@@ -217,6 +217,7 @@ Reklam birimleri zaten var ve kodda yazılı: Ödüllü `…/4584098403`, Geçi�
 | Her sabah | Ben günlük raporu çekerim: açılışlar (sürüm/dil), eğitimi bitirme, ilk seviyeler, satın almalar, reklam izlenmesi, hatalar |
 | +2 gün | Vitals iyiyse **%50**, ardından +2 gün **%100** (sen, Üretim › Dağıtımı artır) |
 | 30 Eki | İlk kampanya kendiliğinden başlar; ben menüde göründüğünü kontrol ederim |
+| +%100 sonrası | **Hatırlat (22 Eki önerisi):** filo sıralaması (`/fleets/top`) 4 sn sürüyor; `fleet_pts` için `(wk, fid, day)` dizini ve tek sorguda toplam, önce yerelde ölç, sonra sunucu yayını (onayla) |
 | +1 hafta | İlk ayar turu: geri dönüş, zorluk, mağaza dönüşümü (P1) |
 | +2–4 hafta | Viral işler (P2): paylaşım kartı, filo davetiyle gelen oyuncuya hediye, Günlük Yarış meydan okuma bağlantısı |
 
