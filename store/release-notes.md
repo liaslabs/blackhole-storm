@@ -262,11 +262,11 @@ Her güncellemede:
 ```
 <en-US>
 • New: Fleets! From level 20, team up, fill weekly chests and race other fleets every weekend
-• New: three daily fleet missions, the same for everyone with equal gear; medals earn points for your fleet
-• New: 50 illustrated avatars next to your name on the ranking; rare ones give a power
+• New: three daily fleet missions with equal gear for everyone; medals earn points for your fleet
+• New: 50 illustrated avatars next to your name; rare ones give a power
 • A deeper sky, blazing meteors and a fresh set of icons
-• Anonymous play counts help us tune the first minutes of the game
-• Weekend events, fleet calls and a clearer continue screen
+• Weekend events, fleet calls and a Daily Race that changes every day
+• Tablet support and a clearer continue screen
 </en-US>
 ```
 

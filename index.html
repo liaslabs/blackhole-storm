@@ -2127,7 +2127,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v101",APPVER="";
+const BUILD="bhs-v102",APPVER="";
 // Error reports (published site and app only): a script error's message and the top of its stack go to our server so
 // we can fix what players hit. No install id, name or other personal data; at most 5 different errors per session.
 const ERRS=new Set();
@@ -3648,7 +3648,7 @@ function adLeft(){const d=new Date().toDateString();if(SHOP.adDay!==d&&clockOk()
 // rewarded ad → true when the reward is earned
 // AdMob in the Android app. ADS_LIVE stays false during closed testing: Google's own test ads only, so testers'
 // taps never count as invalid traffic. At the public launch: real unit ids below and ADS_LIVE=true.
-const ADS_LIVE=false,ADS_UNITS=ADS_LIVE?{rewarded:'ca-app-pub-2380408512555993/4584098403',interstitial:'ca-app-pub-2380408512555993/3873651965'}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
+const ADS_LIVE=true,ADS_UNITS=ADS_LIVE?{rewarded:'ca-app-pub-2380408512555993/4584098403',interstitial:'ca-app-pub-2380408512555993/3873651965'}:{rewarded:'ca-app-pub-3940256099942544/5224354917',interstitial:'ca-app-pub-3940256099942544/1033173712'};
 const ADS={on:false,privacy:false,t:0};
 function adsKick(ms){if(ADS.on||!NATIVE||Date.now()-ADS.t<60e3)return;ADS.t=Date.now();setTimeout(adsInit,ms);} // not tied to Google Play billing; tried again a minute later if it failed
 function adsPreload(){const nb=CAP('Bhs');if(ADS.on&&!ADS.showing&&gState!=='playing'&&nb&&nb.adsPreload&&(!nb.adsDrop||interDue())){lagNat('adsPreload');LAG.adh=1;nb.adsPreload().catch(()=>{});}}
@@ -7749,7 +7749,7 @@ function notifAsk(kind){if(SET.nAsked||!(CAP('Bhs')&&CAP('Bhs').notifPermission)
 // a neutral line that is always there (asking the happy ones for a rating and the others for feedback is not allowed on Google Play)
 function feedbackMail(){const sub=T('Blackhole Storm geri bildirim'),body='\n\n\n— '+T('Sürüm')+': '+(APPVER||'web')+' · '+BUILD.replace('bhs-','')+'\n— '+T('Dil')+': '+LANG+'\n— '+T('Kurulum no')+': '+PID;
   const a=document.createElement('a');a.href='mailto:liaslabs.games@gmail.com?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);a.rel='noopener';document.body.appendChild(a);a.click();a.remove();if(rel(11))ev('fb');}
-function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-','')+(SND.ctx?' · ♪ '+Math.round(((SND.ctx.baseLatency||0)+(SND.ctx.outputLatency||0))*1000)+' ms':''); /* 18 Oct: the phone's sound delay, to tune the audio buffer on real devices */ /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
+function syncSettingsUI(){cloudUI();if($('pidTxt'))$('pidTxt').textContent=PID;if($('verTxt'))$('verTxt').textContent=(APPVER||'web')+' · '+BUILD.replace('bhs-',''); /* written into the build by the Android workflow: which code a tester has, at a glance */ // quoted when asking for your ranking data to be deleted
   $('sSensRow').hidden=!rel(7);[...$('sSens').children].forEach((b,i)=>b.classList.toggle('on',i===(SET.sens??0)));if($('sTips')){if(rel(11)){const b=$('sTips');b.className='tg';b.removeAttribute('style');b.previousElementSibling.textContent='💡 '+T('İpuçları');const on=SET.tips!==false;b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);}else $('sTips').textContent='SIFIRLA';} /* 21 Oct: tips on or off; turning them on shows the game's tips again */
   const tg=(id,on)=>{const b=$(id);b.textContent=on?'AÇIK':'KAPALI';b.classList.toggle('on',on);};
   $('sLang').value=LANG;tg('sMus',SET.music);tg('sSfx',SET.sfx);tg('sVib',SET.vib);tg('sRec',SET.rec&&recSupported());tg('sLbOn',SET.lb);$('sRec').disabled=!recSupported();$('sMusV').value=SET.musicVol;$('sSfxV').value=SET.sfxVol;
