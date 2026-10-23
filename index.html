@@ -792,6 +792,9 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 #scVal small.gl{font-size:.62em;color:var(--dim);margin-left:2px;}#scVal.stk{text-align:center;line-height:.95;}#scVal.stk small.gl{display:block;font-size:.58em;margin:0;}
 #tmr2[hidden]{display:none!important;}
 #pb{background:var(--gold);box-shadow:none;}
+#hdr.pb2::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:5px;background:rgba(255,255,255,.1);pointer-events:none;z-index:0;} /* 1.5.2: a thicker level bar on a visible track; its colour says how close the goal is */
+#hdr.pb2 #pb{height:5px;bottom:-4px;z-index:1;border-radius:0 3px 3px 0;background:var(--pbc,#5fd0ff);box-shadow:0 0 8px var(--pbc,#5fd0ff);transition:width .25s,background-color .5s,box-shadow .5s;}
+#hdr.pb2 #pb.near{animation:pbNear 1s ease-in-out infinite;}@keyframes pbNear{50%{filter:brightness(1.5);box-shadow:0 0 16px var(--pbc);}}
 .card{border-radius:12px;border-color:var(--line);box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none;}
 .logo{background:none;color:var(--ink);-webkit-text-fill-color:currentColor;font-weight:700;font-size:28px;letter-spacing:.08em;line-height:1.05;}
 .logo::after{content:'';display:block;width:44px;height:3px;background:var(--gold);margin:10px auto 0;}
@@ -7668,7 +7671,7 @@ function v2DrawTut(){ // level 1: a ghost finger drags the hole until the player
 // ── HUD ───────────────────────────────────────────────
 function v2Hud(){
   if(G2.hud.done)return;G2.hud.done=true;
-  const sb=$('scoreBox');const rb=document.createElement('div');rb.id='rage2';rb.innerHTML='<span class="l notr">VORTEX</span><div class="bar"><i></i></div>';sb.appendChild(rb);
+  if(rel(12))$('hdr').classList.add('pb2');const sb=$('scoreBox');const rb=document.createElement('div');rb.id='rage2';rb.innerHTML='<span class="l notr">VORTEX</span><div class="bar"><i></i></div>';sb.appendChild(rb);
   const tm=document.createElement('div');tm.id='tmr2';tm.className='notr';tm.innerHTML='<span>⏱</span><b id="tmr2v">60</b>';$('hdr').insertBefore(tm,$('pauseBtn'));
   const jc=document.createElement('div');jc.id='jet2';jc.className='notr';jc.hidden=true;jc.innerHTML=rel(10)?'<i>'+ICO.svg('\ue105')+'</i>':'<i>🔥</i>';$('hdr').insertBefore(jc,tm); /* the jet's charge: a ring that fills, then glows when it is ready */
   const tray=document.createElement('div');tray.id='boost2';$('hdr').appendChild(tray); /* the power tray: big buttons under the right thumb, not icons lost in the top bar */
@@ -7698,7 +7701,8 @@ function v2Ui(force){
   const left=G2.mode==='surv'?(G2.dstorm&&!rel(9)?Math.max(0,Math.ceil(DSTORM.dur-survTime)):Math.floor(survTime)):Math.max(0,Math.ceil((G2.mode==='sprint'?SPR_RUN.dur-SPR_RUN.t:G2.dur-(G2.script?G2.st:G2.t))));
   {const tp=$('tmr2'),showT=G2.mode==='sprint'||!!G2.dstorm||(!!G2.L.boss||!!G2.hard)&&G2.mode==='level';if(tp&&tp.hidden!==!showT)tp.hidden=!showT;if(tp)tp.classList.toggle('hard',!!G2.hard); // the clock only matters in timed runs and boss fights
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',(G2.mode==='level'||G2.dstorm)&&left<=10);}
-  const pct=G2.mode==='surv'?0:G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt&&!G2.hunt.multi?G2.hunt.n/G2.hunt.need*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);$('pb').style.width=Math.min(100,pct)+'%';}}
+  const pct=G2.mode==='surv'?0:G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt&&!G2.hunt.multi?G2.hunt.n/G2.hunt.need*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);const pb=$('pb'),q=Math.min(100,pct);pb.style.width=q+'%';
+    if(rel(12)){pb.style.setProperty('--pbc',q>=85?'#6dff8e':q>=55?'#ffd76a':'#5fd0ff');pb.classList.toggle('near',q>=85&&q<100);}}}
   {const dg=FMRUN&&FMRUN.m.m==='dodge',sc=dg?-3e6-FMRUN.v:G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?(G2.hunt.multi?-1e6-(FMRUN?FMRUN.v:0):-1-G2.hunt.n):G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>dg?`☄️ ${FMRUN.v}<small class="gl"> ${T('meteor')}</small>`:G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?(G2.hunt.multi?`${FMRUN&&typeof fmIc==='function'?fmIc(FMRUN.m):'🎯'} ${FMRUN?FMRUN.v:0}<small class="gl"> ${T('vuruş')}</small>`:`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`):G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
