@@ -2133,7 +2133,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v106",APPVER="";
+const BUILD="bhs-v107",APPVER="";
 // 22 Oct: canvas roundRect arrived in Chrome 99; on an older Android WebView the first level threw on every frame and froze
 if(window.CanvasRenderingContext2D&&!CanvasRenderingContext2D.prototype.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
   r=Math.max(0,Math.min(+(Array.isArray(r)?r[0]:r)||0,Math.abs(w)/2,Math.abs(h)/2));
@@ -8121,7 +8121,7 @@ setInterval(()=>{if($('sMenu').classList.contains('on')&&gState==='menu'){labTic
    closed by something else and nothing is left on screen (no menu, no window, no card, no overlay), the player saw a still game screen with
    no way on. After two seconds of that, the menu comes back and the case is reported with the level, so it can be found. */
 const STUCK={t:0};setInterval(()=>{if(!rel(11)||document.hidden||gState!=='menu'){STUCK.t=0;return;}
-  if(document.querySelector('.screen.on,.modal.on,.zwarpfx,#fmOv,#flChamp,#flAuto,#adOv.on,#payOv.on,#mPrize.on')){STUCK.t=0;return;}
+  if(document.querySelector('.screen.on,.modal.on,.zwarpfx,#fmOv,#flChamp,#flAuto,#adOv.on,#payOv.on,#mPrize.on,#intro:not([hidden])')){STUCK.t=0;return;} // 23 Oct: the opening video is not a stuck screen (new players' intro was cut to the menu)
   if(!STUCK.t){STUCK.t=Date.now();return;}if(Date.now()-STUCK.t<2000)return;STUCK.t=0;
   natMark('stuck → menu');errReport('STUCK menu L'+level+' '+gameMode+(RISK.lv===level?' risk':''),'');try{if(G2.on)v2Stop();}catch(e){}showMenu();},500);
 function showMenu(){natMark('menu');if(rel(7)&&SND.ctx)later(()=>{try{SND.fetchMus(SND.gameKey());SND.fetchMus('boss');}catch(e){}},600); /* 1.4.7: tracks decode in the menu, not mid-level */
