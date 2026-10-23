@@ -8280,13 +8280,13 @@ function fmxPlay(id){const m=FMX.find(x=>x.id===id);if(!DEV||!m)return;fmClose()
 function fmxSetup(){const m=FMRUN.m;FX={bombs:[],booms:[],next:1.2,warn:0};const w=G2.L.w;
   if(m.bombs){w.meteor=0;w.bomb=0;G2.L.metIv=0;w.planet=(w.planet||0)*.5;}
   if(m.m==='guard'&&G2.guard){const g=G2.guard;g.dur=g.t=m.dur+3;g.dmg=20;w.meteor=0;} /* the clock runs out on the mission, not on the defence; meteors become rocks anyway */
-  if(m.diet){w.planet=(w.planet||0)*1.4;w.mini=0;} /* a few more planets: the trap of the diet */}
+  if(m.diet){w.planet=(w.planet||0)*1.4;w.mini=0;G2.growK=.45;} /* a few more planets (the trap), and every body grows the hole half as much as usual, so 60 s of eating is a real choice */}
 const fmxLim=()=>V2K.r0*FMRUN.m.diet;
 function fmxStep(dt){const m=FMRUN.m,S=G2.S;if(G2.ending||gState!=='playing')return;
   if(m.diet){const lim=fmxLim(),q=(G2.rr-V2K.r0)/(lim-V2K.r0);if(q>.82&&!FX.warn){FX.warn=1;v2Pop(T('SINIRA YAKLAŞTIN'),'#ff8a7a',16);v2Sfx('tickHi',{vol:.5,rate:.7});}else if(q<.6)FX.warn=0;
     if(G2.rr>lim){v2Burst(hX,hY,40,'#ff5a4a',2,8,.8,2.4);v2Fail(T('BOYUT SINIRI AŞILDI'));}}
   if(m.bombs){const p=Math.min(1,SPR_RUN.t/m.dur);FX.next-=dt;
-    if(FX.next<=0){FX.next=(1.35-.6*p)*rrnd(.85,1.15);const r=sp2(17);let x,y,k=0;do{x=rrnd(sp2(40),W-sp2(40));y=rrnd(sp2(120),H-sp2(160));k++;}while(k<12&&Math.hypot(x-hX,y-hY)<sp2(110));
+    if(FX.next<=0){FX.next=(1.35-.6*p)*rrnd(.85,1.15);const r=sp2(21);let x,y,k=0;do{x=rrnd(sp2(40),W-sp2(40));y=rrnd(sp2(120),H-sp2(160));k++;}while(k<12&&Math.hypot(x-hX,y-hY)<sp2(110));
       FX.bombs.push({x,y,r,t:0,fuse:(3.4-1*p)*rrnd(.95,1.08)});v2Sfx('tickHi',{vol:.25,rate:1.6});}
     for(let i=FX.bombs.length-1;i>=0;i--){const b=FX.bombs[i];b.t+=dt;
       if(Math.hypot(b.x-hX,b.y-hY)<G2.R+b.r*.5&&!(G2.antiT>0)){FX.bombs.splice(i,1);fmAdd('bomb',1);v2Burst(b.x,b.y,18,'#7dff8a',1.5,5,.5,1.8);v2Sfx('bell',{vol:.4,rate:1.2+.02*(FMRUN.v%10)});v2Pop('+1','#7dff8a',15);continue;}
