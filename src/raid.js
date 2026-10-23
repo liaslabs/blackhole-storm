@@ -121,6 +121,20 @@ function raidHud(make){let h=$('raidHud');if(make&&!h){h=document.createElement(
 function raidGl(list){for(const b of RAID.bs)if(b.cell!==undefined){b.gs=1-b.in;list.push(b);}}
 // before the frame is drawn: a fallen or eliminated player has no hole on the screen
 function raidPre(){if(RAID&&!RAID.me.alive){holeK=0;curR=.01;tgtR=curR;}}
+// Bölünen's look (23 Oct, option A): a gas cloud with two bright cores circling each other; split, a plasma thread stretches between the halves
+const RAID_WIS=[['70,230,210',.2],['190,255,110',.26],['150,120,255',.18],['70,230,210',.24],['220,255,160',.2],['90,200,255',.22],['190,255,110',.2]].map(([c,al],i)=>({c,al,a:i*.9,w:(i%2?-1:1)*(.2+.06*i),rx:.75+.08*(i%4),ry:.38+.05*(i%5)}));
+function raidGlow(x,y,r,col,a){const g=ctx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${col},${a})`);g.addColorStop(1,`rgba(${col},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.fill();}
+function raidNeb(x,y,r,t,cores,seed,al,warn=0){ctx.save();ctx.globalAlpha=al;{const g=ctx.createRadialGradient(x,y,r*.4,x,y,r*1.35);g.addColorStop(0,'rgba(2,8,14,.7)');g.addColorStop(1,'rgba(2,8,14,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*1.35,0,TAU);ctx.fill();} /* a dark bed, so the cloud reads on a bright nebula sky too */
+  ctx.globalCompositeOperation='lighter';raidGlow(x,y,r*2.1,'70,230,200',.3);
+  for(const w of RAID_WIS){ctx.save();ctx.translate(x,y);ctx.rotate(w.a+t*w.w+seed);const g=ctx.createRadialGradient(0,0,0,0,0,r*w.rx);g.addColorStop(0,`rgba(${w.c},${Math.min(.7,w.al*2.4)})`);g.addColorStop(.55,`rgba(${w.c},${w.al*1.2})`);g.addColorStop(1,`rgba(${w.c},0)`);ctx.fillStyle=g;ctx.scale(1,w.ry/w.rx);ctx.beginPath();ctx.arc(0,0,r*w.rx*1.25,0,TAU);ctx.fill();ctx.restore();}
+  ctx.lineCap='round';for(let k=0;k<2;k++){const a0=t*.9+k*Math.PI+seed;for(let j=0;j<3;j++){ctx.strokeStyle=`rgba(${j?'120,240,220':'220,255,170'},${.38-.1*j})`;ctx.lineWidth=Math.max(1,r*(.14-.035*j));ctx.beginPath();for(let q=0;q<=12;q++){const u=q/12,a=a0+u*2.4+j*.25,d=r*(.25+.85*u);q?ctx.lineTo(x+Math.cos(a)*d,y+Math.sin(a)*d*.82):ctx.moveTo(x+Math.cos(a)*d,y+Math.sin(a)*d*.82);}ctx.stroke();}} /* two gas arms winding out of the cores */
+  ctx.strokeStyle='rgba(140,255,215,.4)';ctx.lineWidth=1.2;ctx.setLineDash([3,5]);ctx.lineDashOffset=-t*8;ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.stroke();ctx.setLineDash([]); /* where it hurts */
+  for(let i=0;i<cores;i++){const a=t*(2.4+3*warn)+i*Math.PI+seed,d=cores>1?r*(.3+.35*warn):0,cx=x+Math.cos(a)*d,cy=y+Math.sin(a)*d*.8;raidGlow(cx,cy,r*.4,'200,255,140',.5);raidGlow(cx,cy,r*.13,'255,255,240',1);
+    if(cores>1){ctx.strokeStyle='rgba(220,255,170,.35)';ctx.lineWidth=Math.max(1,r*.05);ctx.beginPath();ctx.arc(x,y,d,a-.9,a);ctx.stroke();}}
+  ctx.restore();}
+function raidFil(a,b,t,k,pull){ctx.save();ctx.globalCompositeOperation='lighter';const mx=(a.x+b.x)/2,my=(a.y+b.y)/2+Math.sin(t*3)*a.r*.25,S=G2.S;
+  for(const [w,al] of [[16,.12],[6,.35],[2,.9]]){ctx.strokeStyle=`rgba(190,255,150,${al*k*(pull?1.3:1)})`;ctx.lineWidth=w*S+.5;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(mx,my,b.x,b.y);ctx.stroke();}
+  for(let i=0;i<5;i++){const q=(t*(pull?1.6:.7)+i/5)%1,u=1-q,px=u*u*a.x+2*u*q*mx+q*q*b.x,py=u*u*a.y+2*u*q*my+q*q*b.y;raidGlow(px,py,6*S+2,'255,255,220',.9*k);}ctx.restore();}
 function raidDraw(gl){const R=RAID,S=G2.S,t=clock;ctx.save();
   for(const b of R.bs){const al=1-b.in;ctx.globalAlpha=al;
     if(b.id==='cekim'){ctx.save();ctx.globalCompositeOperation='lighter';for(let i=0;i<4;i++){const k=((t*.45+i/4)%1),rr=b.pull*(1-k)+b.r;ctx.strokeStyle=`rgba(${b.k.col},${.3*k*al})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(b.x,b.y,rr,t*1.5+i,t*1.5+i+2.4);ctx.stroke();}
@@ -132,11 +146,8 @@ function raidDraw(gl){const R=RAID,S=G2.S,t=clock;ctx.save();
       else{ctx.strokeStyle=`rgba(${b.k.col},.5)`;ctx.setLineDash([4,6]);ctx.lineWidth=2;ctx.beginPath();ctx.arc(b.x,b.y,b.L,0,TAU);ctx.stroke();ctx.setLineDash([]);}
       const g=ctx.createRadialGradient(b.x,b.y,b.r*.4,b.x,b.y,b.r*2.4);g.addColorStop(0,`rgba(${b.k.col},.7)`);g.addColorStop(1,`rgba(${b.k.col},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(b.x,b.y,b.r*2.4,0,TAU);ctx.fill();
       ctx.fillStyle='#e8fbff';ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,TAU);ctx.fill();ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.a);ctx.fillStyle=`rgb(${b.k.col})`;ctx.beginPath();ctx.arc(0,0,b.r*.6,0,TAU);ctx.fill();ctx.fillStyle='#0b2a33';ctx.fillRect(-b.r*.75,-b.r*.12,b.r*1.5,b.r*.24);ctx.restore();}
-    if(b.id==='bol'){const blob=(x,y,r,cr)=>{const g=ctx.createRadialGradient(x,y,r*.5,x,y,r*2.2);g.addColorStop(0,`rgba(${b.k.col},.4)`);g.addColorStop(1,`rgba(${b.k.col},0)`);ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*2.2,0,TAU);ctx.fill();
-        const gg=ctx.createRadialGradient(x-r*.3,y-r*.35,r*.1,x,y,r*1.1);gg.addColorStop(0,'#f4ffc0');gg.addColorStop(.55,`rgb(${b.k.col})`);gg.addColorStop(1,'#5f8a10');ctx.fillStyle=gg;ctx.beginPath();for(let i=0;i<=28;i++){const a=i*TAU/28,q=r*(1+.07*Math.sin(a*5+t*4)+.04*Math.sin(a*3-t*3));ctx.lineTo(x+Math.cos(a)*q,y+Math.sin(a)*q);}ctx.closePath();ctx.fill();
-        ctx.fillStyle='#1d2a06';ctx.beginPath();ctx.arc(x-r*.28,y-r*.12,r*.13,0,TAU);ctx.arc(x+r*.28,y-r*.12,r*.13,0,TAU);ctx.fill();
-        if(cr){ctx.strokeStyle='#1d2a06';ctx.lineWidth=Math.max(1.5,r*.07);ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x+r*.12,y-r*.3);ctx.lineTo(x-r*.1,y+r*.2);ctx.lineTo(x,y+r);ctx.stroke();}};
-      if(b.tw)for(const h of b.tw)blob(h.x,h.y,h.r,0);else blob(b.x,b.y,b.r,b.sp>5.6);}
+    if(b.id==='bol'){if(b.tw){const [h,q]=b.tw,k=b.sp<4.5?Math.min(1,b.sp*2):1;raidFil(h,q,t,k*al,b.sp>4.5);raidNeb(h.x,h.y,h.r,t,1,0,al);raidNeb(q.x,q.y,q.r,t,1,2,al);}
+      else raidNeb(b.x,b.y,b.r,t,2,0,al,b.sp>5.6?(b.sp-5.6)/1.4:0);} /* a twin-core nebula: the cores spin faster and drift apart just before it splits */
     const tx=b.id==='bol'&&b.tw?b.tw[0]:b;ctx.globalAlpha=al;ctx.font='900 10px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='top';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.7)';ctx.strokeText(T(b.k.n),tx.x,tx.y+(tx.r||b.r)*1.15+4);ctx.fillStyle=`rgb(${b.k.col})`;ctx.fillText(T(b.k.n),tx.x,tx.y+(tx.r||b.r)*1.15+4);}
   ctx.globalAlpha=1;
   for(const m of R.mines){const k=1-m.t/1.7;ctx.strokeStyle=`rgba(255,90,60,${.2+.4*k})`;ctx.lineWidth=1.5;ctx.setLineDash([4,5]);ctx.beginPath();ctx.arc(m.x,m.y,120*S,0,TAU);ctx.stroke();ctx.setLineDash([]);
