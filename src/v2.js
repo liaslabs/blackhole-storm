@@ -251,7 +251,7 @@ function v2Worm(x,y){if(G2.wormCD>0){v2Pop(T('SOLUCAN DELİĞİ')+' · '+Math.ce
   v2Burst(hX,hY,18,'#b48cff',1,5,.5);hX=tx;hY=ty;G2.tx=tx;G2.ty=ty;G2.immT=Math.max(G2.immT,1+.1*Math.max(0,e-1));G2.wormCD=v2WormCD();if(e>=10)G2.magT=Math.max(G2.magT,1.2);
   v2Burst(tx,ty,26,'#c9b4ff',2,7,.6);shake=Math.max(shake,4);vib([20,20,40]);v2Sfx('thrust',{vol:.6,rate:1.6});sfx('powerup',{vol:.35,rate:1.8});dmEvent('worm',1);if(!TIPS.wormU){TIPS.wormU=1;saveSoon();}}
 /* 20 Oct: a player who has the wormhole but never uses it hears of it when a meteor comes close: once a level, three times in all, never again after a first jump */
-function v2WormHint(){if(!rel(11)||G2.wormHint||TIPS.wormU||(TIPS.wormH|0)>=3||G2.wormCD>0||!v2WormOn()||gState!=='playing')return;
+function v2WormHint(){if(!rel(11)||SET.tips===false||G2.wormHint||TIPS.wormU||(TIPS.wormH|0)>=3||G2.wormCD>0||!v2WormOn()||gState!=='playing')return;
   for(const o of G2.objs)if(o.k==='meteor'&&o.st==='in'){const dx=hX-o.x,dy=hY-o.y,d=Math.hypot(dx,dy);if(d<G2.R+sp2(110)&&o.vx*dx+o.vy*dy>0){G2.wormHint=1;TIPS.wormH=(TIPS.wormH|0)+1;saveSoon();v2Pop('👆👆 '+T('ÇİFT DOKUN · IŞINLAN'),'#c9b4ff',16);return;}}}
 function v2DrawWorm(){if(!v2WormOn())return;const R=G2.R||20;ctx.save();
   if(G2.wormCD>0){const f=1-G2.wormCD/v2WormCD();ctx.strokeStyle='rgba(159,123,255,.75)';ctx.lineWidth=2.4;ctx.beginPath();ctx.arc(hX,hY,R+sp2(16),-Math.PI/2,-Math.PI/2+TAU*f);ctx.stroke();}

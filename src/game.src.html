@@ -1961,7 +1961,7 @@ let stars=250,diamonds=50,bestScore=0,totalGames=0,totalCombos=0,bestSize=0;
 let lastLogin='',loginStreak=0,localLB=[],BCOMBO={c:0,d:''},unlockedAch=new Set(),achQueue=[];
 let rescueWins=0,PAUTO=false,playerName='',playerAvatar='🚀',savedLevel=1,savedScore=0;
 try{localStorage.removeItem('bhs_ghost');}catch(e){} // the record ghost was removed: drop its saved runs
-const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,sens:0,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true,nFleet:true,fcall:true}; // notif: game reminders in the Android app
+const SET={music:true,musicVol:.6,sfx:true,sfxVol:.9,vib:true,left:false,rec:true,lang:'',fd:1,sens:0,lb:true,notif:false,nAsked:false,nLab:true,nFuel:true,nDay:true,nFleet:true,fcall:true,tips:true}; // notif: game reminders in the Android app; tips: the game's tip cards (23 Oct: it was missing here, so the save never read it back and tips came back on at the next launch)
 // ══════════════════════════════════════════════════════
 // ICONS. Emoji in any on-screen text are drawn as these SVG icons (the strings, translations and share texts
 // keep their emoji). Colored icons use the gradients in #icoDefs; line icons follow the text color.
