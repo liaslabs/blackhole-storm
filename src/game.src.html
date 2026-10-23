@@ -1130,6 +1130,19 @@ body.v2 #gw{cursor:grab;touch-action:none;}
 .fx .fm-f .play.again{background:rgba(255,255,255,.08);color:#ffd76a;border:1px solid rgba(255,215,106,.5);}.fx .fm-f .end{margin-inline-start:auto;font-size:11px;color:#8fa1c6;}.fx .fm-f .go,.fx .fm-f .ok{margin-inline-start:auto;}
 .fx .fm-ch{border-radius:12px;padding:10px 11px;margin:4px 0 8px;border:1px solid rgba(214,120,255,.5);background:linear-gradient(180deg,rgba(214,120,255,.12),rgba(214,120,255,.03));}.fx .fm-ch b{font:700 12.5px var(--fd);letter-spacing:.06em;color:#f1d4ff;}.fx .fm-ch>small{display:block;color:#d9c3ef;font-size:11.5px;margin-top:3px;}
 .fx .fm-ch .bar{height:7px;border-radius:5px;background:rgba(255,255,255,.08);margin:7px 0 0;overflow:hidden;}.fx .fm-ch .bar i{display:block;height:100%;background:linear-gradient(90deg,#b46bff,#ff5fa8);}
+/* fleet raid (dev preview): the team bar in place of the score, the invite's seats, the result */
+body.raid #hdr>:not(#pauseBtn):not(#raidHud),body.raid #badge{display:none!important;}#raidHud{flex:1;min-width:0;display:flex;align-items:center;gap:4px;}
+#raidHud .rt{display:flex;flex-direction:column;align-items:center;min-width:44px;}#raidHud .rt small{font:700 8px var(--fd);letter-spacing:.08em;color:#8b93a8;}#raidHud .rt b{font:800 17px var(--fd);color:#ffd76a;font-variant-numeric:tabular-nums;}
+#raidHud .rc{flex:1;min-width:0;padding:3px 4px;border-radius:8px;background:rgba(var(--c),.12);border:1px solid rgba(var(--c),.35);display:flex;flex-direction:column;line-height:1.15;}#raidHud .rc.mine{border-color:rgba(var(--c),.8);}
+#raidHud .rc b{font:800 9px var(--fd);color:rgb(var(--c));white-space:nowrap;overflow:hidden;}#raidHud .rc span{font-size:9px;color:#ff5a6a;white-space:nowrap;}#raidHud .rc span em{color:rgba(255,255,255,.2);font-style:normal;}
+#raidHud .rc.dn{background:rgba(255,90,70,.15);border-color:rgba(255,90,70,.5);}#raidHud .rc.dn span{color:#ff8a7a;font-weight:800;}#raidHud .rc.out{opacity:.4;filter:grayscale(1);}#raidHud .rc.out span{color:#9aa2b6;font-size:8px;}
+.rdInv h3{margin:4px 0;}.rdBar{height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin:10px 6px 4px;overflow:hidden;}.rdBar i{display:block;height:100%;background:#ffb35a;}
+.rdSl{display:flex;flex-direction:column;gap:6px;margin:8px 0;}.rdS{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,.04);transition:background .3s,border-color .3s;border:1px solid transparent;}
+.rdS i{width:16px;height:16px;border-radius:50%;background:#000;box-shadow:0 0 0 3px #3a4050;}.rdS b{flex:1;text-align:start;color:#5a6070;font:800 14px var(--fd);}.rdS em{font:700 11px var(--fd);color:#7dff8a;font-style:normal;}
+.rdS.on{background:rgba(var(--c),.12);border-color:rgba(var(--c),.55);}.rdS.on i{box-shadow:0 0 0 3px rgb(var(--c)),0 0 10px rgb(var(--c));}.rdS.on b{color:rgb(var(--c));}
+.rdRes small{display:block;margin-top:8px;font:700 10px var(--fd);letter-spacing:.08em;color:#8b93a8;}.rdRes .big{font:800 44px var(--fd);color:#fff;font-variant-numeric:tabular-nums;}
+.rdL{display:flex;flex-direction:column;gap:6px;margin:10px 0;}.rdL div{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:rgba(var(--c),.1);}.rdL span{color:#8b93a8;font-weight:800;}.rdL b{color:rgb(var(--c));font:800 15px var(--fd);}
+.rdL em{font-style:normal;font-size:11px;color:#7dff8a;}.rdL i{margin-inline-start:auto;font:800 15px var(--fd);font-style:normal;color:#e8ebf4;font-variant-numeric:tabular-nums;}.rdPts{color:#7dff8a;font-size:24px;margin:6px 0;}
 .fm-ov{position:fixed;inset:0;z-index:1000;background:rgba(3,4,12,.84);display:flex;align-items:center;justify-content:center;padding:16px;}
 .fm-card{width:100%;max-width:360px;max-height:94vh;overflow:auto;border-radius:18px;padding:16px 14px;background:linear-gradient(180deg,#141a33,#0b0f22);border:1.5px solid rgba(255,207,90,.55);box-shadow:0 0 40px rgba(255,170,40,.18);text-align:center;color:#e8ecff;}
 .fm-card .big{font-size:38px;line-height:1.1;}.fm-top{margin:8px 0 2px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.05);text-align:start;}.fm-top .fth{font:700 12px var(--fd);letter-spacing:.06em;color:#ffd76a;margin-bottom:4px;}.fm-top .fth small{color:#9aa3b8;font-weight:600;letter-spacing:0;}.fm-top .ft{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:13px;}.fm-top .ft.mine{color:#ffd76a;}.fm-top .rk{flex:0 0 26px;text-align:center;font-weight:800;}.fm-top .nm{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.15;}.fm-top .nm b,.fm-top .nm small{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}.fm-top .nm small{font-size:10.5px;color:#9aa3b8;}.fm-top .v{flex:none;font-variant-numeric:tabular-nums;}.fm-card h3{margin:4px 0 2px;font:700 18px var(--fd);letter-spacing:.08em;color:#ffd76a;}.fm-card p{margin:2px 0 8px;color:#c9d4ee;font-size:13px;line-height:1.35;}.fm-card p.dur{color:#9fe3ff;font-family:var(--fd);font-weight:700;}
@@ -2965,7 +2978,7 @@ function dmRoll(){
   DM={date:today,bonus:false,list:picks.map(m=>({id:m.id,n:m.v[Math.floor(rng()*m.v.length)],p:0,done:false,cl:false}))};saveG();
 }
 function dmText(m){const d=MPOOL.find(x=>x.id===m.id);return d?d.t(m.n):m.id;}
-function dmEvent(id,v,abs){if(typeof FMRUN!=='undefined'&&FMRUN)return; /* a fleet mission counts for the fleet only */
+function dmEvent(id,v,abs){if(typeof FMRUN!=='undefined'&&FMRUN||typeof RAID!=='undefined'&&RAID)return; /* a fleet mission counts for the fleet only */
   if(rel(11))liveCount(id,v,abs); /* the live campaign's tasks use the same counters */
   if(!DM.list)return;for(const m of DM.list){if(m.id!==id||m.done)continue;const d=MPOOL.find(x=>x.id===id);m.p=(abs||(d&&d.abs))?Math.max(m.p,v):m.p+v;
     if(m.p>=m.n){m.p=m.n;m.done=true;achQueue.push({i:'📋',t:'GÜNLÜK GÖREV TAMAM',d:dmText(m),at:performance.now()});if(!achShowing)nextAch();}saveSoon();}
@@ -4431,16 +4444,16 @@ function dailySeed(n){return (Math.imul(n,2654435761)^0x5bd1e995)>>>0;}
 function sprintSetup(seed){const r=mulberry(seed^0x9e3779b9);const zone=Math.floor(r()*ZONES.length),x=r();return {zone,lvl:(rel(9)?24:16)+Math.floor(x*10)};} /* 1.4.9: level 24-33 speed */
 function startSprint(seed,opt={}){natMark('sprint start');
   runId++;hideModals();$('sMenu').classList.remove('on');$('sChal').classList.remove('on');$('sPause').classList.remove('on');SND.duck(1,0);
-  gameMode='sprint';const S=sprintSetup(seed);FMRUN=opt.fm?{m:opt.fm,v:0,d:opt.fmDay}:null; /* 1.5.1: a fleet mission runs on the race's engine with its own clock, kit and goal */
-  Object.assign(SPR_RUN,{seed,opt,t:0,acc:0,dur:opt.fm?opt.fm.dur:60,gp:[],gt:0,blocks:Array.from({length:10},()=>({c:0,p:0})),caught:0,ended:false,res:null,zone:S.zone});
+  gameMode='sprint';const S=sprintSetup(seed);FMRUN=opt.fm?{m:opt.fm,v:0,d:opt.fmDay}:null;RAID=opt.raid&&DEV?raidNew():null;if(RAID)S.lvl=RAIDK.lvl; /* the fleet raid (dev preview) plays on the race's engine too, with no clock */ /* 1.5.1: a fleet mission runs on the race's engine with its own clock, kit and goal */
+  Object.assign(SPR_RUN,{seed,opt,t:0,acc:0,dur:opt.fm?opt.fm.dur:RAID?1e9:60,gp:[],gt:0,blocks:Array.from({length:10},()=>({c:0,p:0})),caught:0,ended:false,res:null,zone:S.zone});
   rngS=mulberry(seed);level=S.lvl;totalScore=0;levelScore=0;levelStartScore=0;lives=3;comboCount=0;maxCombo=0;perfectCount=0;bossSlain=false;
   curR=BASE_R;tgtR=BASE_R;ftexts=[];sparks=[];cols=[];explA=0;shake=0;heat=0;shock=0;flash=0;
   hX=W/2;hY=H/2;hBaseX=hX;hBaseY=hY;hWanderT=0;hWpTimer=0;
   setZone(S.zone);$('pauseBtn').textContent='⏸';$('combo').style.opacity='0';updateCombo();
   $('badge').className='hud-float resc';if(opt.fm&&typeof fmIc==='function')$('badge').innerHTML=fmIc(opt.fm)+' '+escH(T(opt.fm.n));else $('badge').textContent=opt.fm?`${opt.fm.ic} ${T(opt.fm.n)}`:opt.chal?`⚔️ ${opt.chal.n.toUpperCase()} · ${opt.chal.s.toLocaleString(LOC)}`:opt.daily?`🏁 GÜNLÜK YARIŞ #${opt.daily}`:'⏱ 60 SANİYE';
-  SND.resume();SND.startDrone();SND.music('game');if(!opt.fm)recStart();
+  SND.resume();SND.startDrone();SND.music('game');if(!opt.fm&&!RAID)recStart();
   gState='playing';lastT=performance.now();updateUI();
-  G2.sprLv=S.lvl;v2Start('sprint');if(opt.fm){const m=opt.fm;later(()=>{if(G2.on&&FMRUN)v2Call(T(m.n),T(m.d),'#ffd76a',2.2,true);},400);}else{const r=sprRuleOf(seed);later(()=>{if(G2.on&&gameMode==='sprint')v2Call(T('GÜNÜN KURALI'),r.ic+' '+T(r.n),'#ffd76a',1.8,true);},400);}
+  G2.sprLv=S.lvl;v2Start('sprint');if(opt.fm){const m=opt.fm;later(()=>{if(G2.on&&FMRUN)v2Call(T(m.n),T(m.d),'#ffd76a',2.2,true);},400);}else if(!RAID){const r=sprRuleOf(seed);later(()=>{if(G2.on&&gameMode==='sprint')v2Call(T('GÜNÜN KURALI'),r.ic+' '+T(r.n),'#ffd76a',1.8,true);},400);}
 }
 /* Daily Race prize, for the day's one official run only: three score tiers (a size-window day scores far lower, so its bar is lower too), and 10 diamonds for every 7 days in a row */
 const RACE_TIER=rel(9)?[[20000,15,0,'🥉'],[45000,30,1,'🥈'],[90000,60,3,'🥇']]:[[15000,15,0,'🥉'],[35000,30,1,'🥈'],[70000,60,3,'🥇']], /* 1.4.9: a faster race scores about 30% more */RACE_STREAK={days:7,gems:10};
@@ -4856,6 +4869,7 @@ function profClose(){$('sProfile').classList.remove('on');const b=profBack,m=pro
 //@@NAMES@@
 // Fleet missions: the shared catalogue in src/fmis.js (the day's three, targets and fleet points; the server runs the same file)
 //@@FMIS@@
+//@@RAID@@
 function badName(n){return !BHS_NAMES.check(n,'player').ok;}
 $('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(!selAv){const g=$('avGrid');g.classList.remove('nudge');void g.offsetWidth;g.classList.add('nudge');return;}
   if(n.length<2){const i=$('nameInp');i.classList.remove('nudge');void i.offsetWidth;i.classList.add('nudge');i.focus();return;} /* points at what is missing */if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};

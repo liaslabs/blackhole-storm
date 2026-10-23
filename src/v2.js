@@ -140,7 +140,7 @@ const G2={on:false,mode:'level',S:1,t:0,dur:60,lv:1,L:null,objs:[],gl:[],parts:[
 const v2Ach={rage:0,mega:0}; // for achievements
 const DRAG={id:null,x:0,y:0,sx:0,sy:0,t0:0,moved:false,held:false,ax:0,ay:0,px:0,py:0,pt:0,vs:0};
 
-function v2Resize(){G2.S=Math.min(W,H*.5625)/486;}
+function v2Resize(){G2.S=Math.min(W,H*.5625)/486*(RAID&&gameMode==='sprint'?RAIDK.zoom:1);} // the fleet raid (dev) pulls the camera back
 const sp2=v=>v*G2.S;
 function v2Lv(){return gameMode==='survival'?(rel(9)&&STORM.on?effLevel():Math.min(40,effLevel())):gameMode==='sprint'?G2.sprLv:level;}
 // level rules: counts, spawn odds, directions (spec §26, §36–39)
@@ -212,10 +212,10 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
   const nw=mode==='level'?new2(level):null;
   if(mode==='level'&&level>1)v2Call('SEVİYE '+level,nw?newLbl(nw):'',nw?'#ffb35c':'#e7e3da',2.2,true);
   else if(mode==='surv'){v2Call('FIRTINADA HAYATTA KAL','','#e7e3da',2);if(STORM.on)sigShow('⛈ '+T('GÜNÜN FIRTINASI'),STORM.mods.map(m=>`${m.ic} ${T(m.n)}: ${T(m.d)}`).join('  '),7);}
-  if(mode==='sprint'&&FMRUN)fmSetup();else{if($('rage2'))$('rage2').style.visibility='';if($('pb'))$('pb').style.display='';} /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
+  if(mode==='sprint'&&FMRUN)fmSetup();else if(mode==='sprint'&&RAID)raidSetup();else{if($('rage2'))$('rage2').style.visibility='';if($('pb'))$('pb').style.display='';} /* last, so that nothing above resets the mission's kit, mix or Golden Arcs */
   gState='playing';lastT=performance.now();updateUI(); /* 18 Oct: the hearts are drawn again here, after the level set its lives; until now they kept the last level's count (one heart) until the first hit */
 }
-function v2Stop(){G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
+function v2Stop(){if(RAID)raidStop();G2.on=false;v2TipFlowEnd();document.body.classList.remove('v2');DRAG.id=null;curR=BASE_R;tgtR=BASE_R;}
 
 // ── input ─────────────────────────────────────────────
 function v2Pt(e){const r=$('fx').getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top];}
@@ -324,9 +324,9 @@ function v2Spawn(){if(G2.hunt&&G2.hunt.multi)return; /* the mission hunt brings 
   if(k==='ast'&&rng()<(G2.L.dense?.55:.3)){ // a line of small rocks: combo fodder (1.4.8: often a shower of 6–8)
     let n=G2.L.dense?rpick(rel(9)?[5,6,7]:[3,4,5]):rel(9)&&l>=2&&rng()<.45?rpick([6,7,8]):3;if(rel(9))n=Math.max(1,Math.min(n,(G2.L.cap||12)-v2Active())); /* the shower fits under the cap: 8 rocks in one frame on a full screen made the hitches */const x=rrnd(W*.2,W*.8),gap=sp2(32);for(let i=0;i<n;i++){const o=v2Edge('ast',0,clamp(x+(i-(n-1)/2)*gap,sp2(20),W-sp2(20)));o.y-=Math.abs(i-(n-1)/2)*sp2(21);}return;}
   const o=v2Edge(k);
-  if(k==='crystal'&&l>=3&&!G2.guard&&!v2RadAct()&&rng()<.45){ // risk/reward: the crystal rides next to a meteor
+  if(k==='crystal'&&l>=3&&!G2.guard&&!RAID&&!v2RadAct()&&rng()<.45){ // risk/reward: the crystal rides next to a meteor
     const side=o.x<W/2?1:-1,m=v2Obj('meteor',o.x+side*sp2(45),o.y-sp2(14),o.vx*.9,Math.max(o.vy,v2Speed('meteor')*.7),{wait:.9});}
-  if(k==='gold'&&l>=4&&!G2.guard&&!v2RadAct()&&rng()<.5){const m=v2Obj('meteor',clamp(o.x+rrnd(-90,90)*G2.S,20,W-20),o.y-sp2(70),o.vx,v2Speed('meteor'),{wait:.9});}
+  if(k==='gold'&&l>=4&&!G2.guard&&!RAID&&!v2RadAct()&&rng()<.5){const m=v2Obj('meteor',clamp(o.x+rrnd(-90,90)*G2.S,20,W-20),o.y-sp2(70),o.vx,v2Speed('meteor'),{wait:.9});}
 }
 // Level 1 — the 60 second tutorial timeline (spec §27–28): [script time, kind, x (fraction of width or 'hole'), extra]
 function v2Script1(){const E=[];
@@ -555,6 +555,7 @@ function v2Update(dt){
   const ivx=(hX-ox)/Math.max(dt,1e-3),ivy=(hY-oy)/Math.max(dt,1e-3);G2.vx+=(ivx-G2.vx)*.35;G2.vy+=(ivy-G2.vy)*.35;
   if(G2.touched&&G2.tut>=1)G2.tut=.99;if(G2.tut<1&&G2.tut>0)G2.tut=Math.max(0,G2.tut-dt*2);
 
+  if(RAID&&gameMode==='sprint'){raidStep(dt);if(gState!=='playing')return;}
   // spawning
   if(!G2.ending){
     if(G2.script)v2RunScript(dt);
@@ -881,7 +882,7 @@ const BELT={warn:2.8,end:1.4},BELTN=9,BELTR=9;
 // ── the Daily Race: the same 60 s for everyone, at speed 16–25, with the day's rule, a short meteor belt at 20 s and a nebula at 40 s ──
 const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'📏',n:'BOYUT PENCERESİ'},{id:'wind',ic:'🌬',n:'YILDIZ RÜZGÂRI'},{id:'eclipse',ic:'🌑',n:'TUTULMA'}];
 const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
-function v2SprRule(){if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+function v2SprRule(){if(RAID)return null;if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
 /* 20 Oct: the Daily Race's events come from the day's seed: two or three of the six, at times that shift from day to day, never the same
    one twice, always one meteor belt, each over before the 60 seconds are; every try of one day is still the same universe, so the ranking stays fair */
@@ -891,7 +892,7 @@ function v2RaceEvents(seed,rule){const r=mulberry(seed^0x2f6b8d31),pool=Object.k
   const n=r()<.7?3:2,b=pool.indexOf('belt'),q=Math.floor(r()*Math.min(n,2));if(b>=n||b===2)[pool[q],pool[b]]=[pool[b],pool[q]]; /* every day brings one meteor belt, first or second, so it always fits in the minute */let t=(rule==='wind'||rule==='eclipse'?16:9)+Math.floor(r()*5);
   for(const k of pool){if(L.length>=n)break;const d=RACE_EV[k];if(t+d>58.5)continue;L.push([Math.round(t*10)/10,k]);t+=d+2+Math.floor(r()*4);}
   return L;}
-function v2SprPlan(){if(FMRUN)return {list:(FMRUN.m.plan||[]).map(x=>x.slice())};const r=sprRuleOf(SPR_RUN.seed),L=[];
+function v2SprPlan(){if(RAID)return {list:[]};if(FMRUN)return {list:(FMRUN.m.plan||[]).map(x=>x.slice())};const r=sprRuleOf(SPR_RUN.seed),L=[];
   if(rel(11)){if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);return {list:L.concat(v2RaceEvents(SPR_RUN.seed,r.id))};}if(r.id==='wind'||r.id==='eclipse')L.push([4,r.id]);if(rel(9))L.push([18,'belt'],[32,'neb'],[48,'belt']);else L.push([20,'belt'],[40,'neb']);return {list:L};}
 const DSTORM={dur:180,belts:[60,120],sec:20,done:3000,life:1500};
 // 1.4.8: the storm has no end. Arcs go out at 2:00; from 4:00 (the Black Storm) every 30 s brings 35 % more storm meteors, in pairs, and 8 % faster bodies, compounding, until no one can last
@@ -1277,7 +1278,7 @@ function v2Hit(o,whole){
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.75;G2.lifeHit=1;const el=$('hit2');if(!el)return;
   if(rel(10)){ /* 1.5.0 (14 Oct): the reason, then your hearts in a row; the one just lost shakes, bursts into shards and leaves an empty frame */
-    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':'METEOR ÇARPTI'),
+    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':'METEOR ÇARPTI'),
       P='M12 20.4s-8.4-5.1-8.4-10.9A4.7 4.7 0 0 1 12 6.7a4.7 4.7 0 0 1 8.4 2.8c0 5.8-8.4 10.9-8.4 10.9z',
       full=`<svg viewBox="0 0 24 24"><path d="${P}" fill="url(#gHeart)" stroke="#6e0d1a" stroke-width=".8"/><path d="M7.1 8.3a2.5 2.5 0 0 1 2.9-.9" fill="none" stroke="#ffd2d6" stroke-width="1.2" stroke-linecap="round"/></svg>`,
       empty=`<svg viewBox="0 0 24 24"><path d="${P}" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.38)" stroke-width="1.1"/></svg>`,
@@ -1285,10 +1286,11 @@ function v2HitNote(){ // freeze the action for a beat and say what happened
     let h='';for(let i=0;i<n;i++)h+=i<lives?`<span>${full}</span>`:i===lives?`<span class="lost">${empty}<span class="f">${full}</span>${sh}</span>`:`<span>${empty}</span>`;
     el.className='b10';el.innerHTML=`<div class="t notr">${why}</div><div class="hr">${h}</div>`;
     el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);return;}
-  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
+  if(RAID&&!msg&&gameMode==='sprint'&&gState==='playing'){raidDown(RAID.me);return;} // the raid: a fallen hole waits to be brought back
   if(gState==='tip'){hideModals();G2.tip=null;gState='playing';SND.duck(1,0);} // a tip card opened earlier in the same frame must not swallow the loss
   if(gState!=='playing')return;gState='over';G2.failMsg=msg;SND.setDrone(.08,300);SND.duck(.35,2);
   if(msg){if(msg!=='SÜRE DOLDU'&&msg!=='DEV GEZEGEN KAÇTI')lives=0; /* the clock running out is not a death: hearts (and stars) stay */v2Call(msg==='DEV GEZEGEN KAÇTI'?(G2.boss&&G2.boss.bt&&G2.boss.bt!=='planet'?'YILDIZ KAÇTI':'GEZEGEN KAÇTI'):msg,'','#ff7a5c',2,true);}
@@ -1510,7 +1512,7 @@ function v2TipFor(o){let id=null;
   if(G2.featShown&&id&&!TIPS[id])return; /* a level that opened with a power card teaches nothing else: this card waits for a later level */
   if(!id||TIPS[id]||v2Tip(id,o))o.tipd=1;}
 function v2Tip(id,tg){
-  if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched))return false;
+  if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched)||RAID&&gameMode==='sprint')return false; /* no cards during the raid */
   if(rel(11)&&SET.tips===false&&!G2.script&&!G2.tut)return false; /* 21 Oct: tips turned off in Settings (the tutorial still teaches) */
   if(TIP_SOFT.has(id)&&!G2.tut&&(G2.tipGap>0||G2.tipN>=2||G2.tipF))return false;
   if(TIP_SOFT.has(id)&&v2TipFlowOn())return v2TipFlow(id,tg);
@@ -1821,8 +1823,8 @@ function v2Frame(dt){
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
   v2Dims();const Rl=G2.R,Gl=G2.G;if(rel(10)&&G2.Rv){G2.R=G2.Rv;G2.G=G2.Gv;} /* drawing uses the size on its way; the true size comes back below */
   let jx=0,jy=0;if(G2.revT>0){const q=Math.pow(G2.revT/REV_T,1.4);jx=Math.sin(clock*137)*sp2(3.4)*q;jy=Math.sin(clock*113+1.7)*sp2(3.4)*q;hX+=jx;hY+=jy;} /* the fast shake after a lost life, fading out */
-  curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;
-  G2.gl.length=0;for(const o of G2.objs)if(o.cell!==undefined&&o.wait<=0)G2.gl.push(o);if(G2.boss&&G2.boss.cell!==undefined)G2.gl.push(G2.boss);
+  curR=G2.R*RING_K;tgtR=curR;holeK=1;lockK=0;if(RAID)raidPre();
+  G2.gl.length=0;for(const o of G2.objs)if(o.cell!==undefined&&o.wait<=0)G2.gl.push(o);if(G2.boss&&G2.boss.cell!==undefined)G2.gl.push(G2.boss);if(RAID)raidGl(G2.gl);
   let sx=0,sy=0;if(shake>0){sx=(Math.random()-.5)*shake;sy=(Math.random()-.5)*shake;shake*=Math.pow(.8,f);if(shake<.3)shake=0;}
   const gl=glDraw(clock,sx,sy);if(!gl)drawFallbackBG();
   ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);ctx.translate(sx,sy);
@@ -1838,7 +1840,7 @@ function v2Frame(dt){
   v2DrawWorms();if(rel(10))v2DrawAsh();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
-  v2DrawRival();if(rel(10))v2DrawBits(dt);
+  v2DrawRival();if(RAID)raidDraw(gl);if(rel(10))v2DrawBits(dt);
   v2DrawMarks();v2DrawEv();v2DrawSpec();v2DrawJet();v2DrawHawk();v2DrawWorm();v2DrawHor();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const p of G2.parts){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.sz;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2);ctx.stroke();}
@@ -1851,7 +1853,7 @@ function v2Frame(dt){
   recFrame();
   G2.R=Rl;G2.G=Gl;hX-=jx;hY-=jy;
   G2.uiT-=dt;if(G2.uiT<=0){G2.uiT=.1;v2Ui(false);}
-  if(gState==='playing'){G2.achT=(G2.achT||0)-dt;if(G2.achT<=0){G2.achT=.4;checkAchs();}} // achievements show the moment they are earned, not at the end of the level
+  if(gState==='playing'&&!RAID){G2.achT=(G2.achT||0)-dt;if(G2.achT<=0){G2.achT=.4;checkAchs();}} // achievements show the moment they are earned, not at the end of the level
 }
 // Arcs: three red arcs around the hole are the hits the current heart can take. A hit breaks one (shards fly off);
 // the last one pulses; when all three are gone a heart goes and the arcs grow back.

@@ -31,6 +31,9 @@ def main():
     # the fleet missions' catalogue is shared with the leaderboard server too
     assert src.count('//@@FMIS@@') == 1
     src = src.replace('//@@FMIS@@', read(f'{SRC}/fmis.js').rstrip('\n'))
+    # the fleet raid (developer preview)
+    assert src.count('//@@RAID@@') == 1
+    src = src.replace('//@@RAID@@', read(f'{SRC}/raid.js').rstrip('\n'))
     # build stamp for error reports: the service worker cache name (bumped with every web release)
     import re
     m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))
