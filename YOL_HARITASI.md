@@ -133,6 +133,17 @@ puan/süre tavanı, günde 40 gönderim, bildir, tavana yakın sonuç listesi, f
 | – | 21 Ara – 4 Oca | Dondurma | – |
 | 9+ | Ocak | 1.6.0: Play Games tam eşitleme (çakışma kuralları); filo kozmetikleri; sınırlı ödüllü reklam (yeni ürün gerekirse sahibi ekler) | Telefon değişince ilerleme korunur |
 
+### Yeni görev türleri (23 Eki fikri, önizleme `onizleme/filo-gorevleri-8.mp4`)
+
+Sekiz yeni oynanış: **Diyet** (küçük kal, antimadde dost), **Gezegen Koruyucusu**, **Açlık Saati**, **Bomba İmhası**, **Ayna Dünyası**,
+**Renk Eşle**, **Sapan** (3 atış), **Bilardo** (delik iter, kapıya sok). Sahibi sekizini de beğendi; önizleme kurgu, gerçek motora
+seçilenler kurulacak (1.5.2 ve sonrası, kod 70'e girmez). Görev kiti (23 Eki tablosu): Hawking, Jet, Solucan hiçbirinde yok; Süpernova
+ve Vortex görevi bozduğu yerde kapalı (Diyet, Renk, Bomba, Sapan, Bilardo), yardım ettiği yerde açık (Ayna, Açlık, Gezegen).
+
+**Sonra değerlendirilecek (sahibinin fikri):** bazıları normal oyunda ileri bölümlerde **bonus seviye** olarak da gelsin, oyuncu kendi
+stoğuyla (kalkan, Süpernova, Lab güçleri) oynasın. Karar verilecekler: hangi görevler (eşit donanım gerektirenler değil; ör. Diyet,
+Bomba, Gezegen, Sapan uygun), kaç seviyede bir (ör. her 25'te), ödül (yıldız/elmas, kaybedince can gitmez mi), haritada nasıl görünür.
+
 ## Gerçek fotoğraf: şartlar
 
 Yalnızca kabul edilmiş bağlantılara (karşılıklı arkadaş) gösterilse bile:
