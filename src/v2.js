@@ -1619,11 +1619,16 @@ const TIPH={
   burst:(c,x,y,q,rgb)=>{c.strokeStyle=`rgba(${rgb},${1-q})`;c.lineWidth=2;c.beginPath();c.arc(x,y,5+q*14,0,TAU);c.stroke();},
   hand:(c,x,y,o)=>{o=o||{};const a=o.a??1.1,L=o.L||54,w=o.w||15,pr=o.press||0,al=o.al??1;if(al<=0)return; // a fingertip at (x,y) with the finger reaching in from direction a; press 0..1 squashes it and rings the touch
     c.save();c.globalAlpha=al;if(pr>0){c.strokeStyle=`rgba(${o.rgb||'159,232,255'},${.9*(1-pr*.5)})`;c.lineWidth=2;c.beginPath();c.arc(x,y,10+pr*9,0,TAU);c.stroke();}
-    c.translate(x,y);c.rotate(a);const s=1-pr*.08;c.scale(s,s);
-    c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.roundRect(-w/2+2,2,w,L,w/2);c.fill();
-    const g=c.createLinearGradient(-w/2,0,w/2,0);g.addColorStop(0,'#cfd6e6');g.addColorStop(.5,'#f4f6fb');g.addColorStop(1,'#b9c1d4');c.fillStyle=g;c.beginPath();c.roundRect(-w/2,0,w,L,w/2);c.fill();
-    c.strokeStyle='rgba(60,70,95,.55)';c.lineWidth=1;c.stroke();c.fillStyle='rgba(255,255,255,.9)';c.beginPath();c.roundRect(-w*.3,w*.2,w*.6,w*.55,w*.25);c.fill();c.strokeStyle='rgba(120,130,160,.5)';c.stroke();
-    c.strokeStyle='rgba(90,100,130,.35)';for(const k of [.55,.62]){c.beginPath();c.moveTo(-w*.35,L*k);c.lineTo(w*.35,L*k);c.stroke();}
+    c.translate(x,y);c.rotate(a);const s=1-pr*.08;c.scale(s,s);const r=w/2,W=w*1.18; // a skin-toned finger seen from above: rounded tip, a little wider toward the hand, a nail and two creases
+    const shape=()=>{c.beginPath();c.moveTo(-r,r);c.arc(0,r,r,Math.PI,0);c.bezierCurveTo(r,L*.45,W/2,L*.7,W/2,L);c.lineTo(-W/2,L);c.bezierCurveTo(-W/2,L*.7,-r,L*.45,-r,r);c.closePath();};
+    c.save();c.translate(2.5,3);shape();c.fillStyle='rgba(0,0,0,.4)';c.fill();c.restore();
+    const g=c.createLinearGradient(-W/2,0,W/2,0);g.addColorStop(0,'#c98b66');g.addColorStop(.35,'#f3c8a4');g.addColorStop(.6,'#f7d3b2');g.addColorStop(1,'#bf7f5b');shape();c.fillStyle=g;c.fill();
+    const tg=c.createLinearGradient(0,0,0,L);tg.addColorStop(0,'rgba(255,170,150,.35)');tg.addColorStop(.25,'rgba(255,170,150,0)');tg.addColorStop(1,'rgba(90,50,30,.25)');c.fillStyle=tg;c.fill();
+    c.strokeStyle='rgba(120,70,45,.7)';c.lineWidth=1;c.stroke();
+    const nw=w*.62,nt=r*.35,nh=w*.85;c.beginPath();c.moveTo(-nw/2,nt+nh);c.lineTo(-nw/2,nt+nw/2);c.arc(0,nt+nw/2,nw/2,Math.PI,0);c.lineTo(nw/2,nt+nh);c.quadraticCurveTo(0,nt+nh+2.5,-nw/2,nt+nh);c.closePath();
+    const ng=c.createLinearGradient(0,nt,0,nt+nh);ng.addColorStop(0,'#fff4ee');ng.addColorStop(.3,'#f6c9c0');ng.addColorStop(1,'#eab0a4');c.fillStyle=ng;c.fill();c.strokeStyle='rgba(150,90,80,.6)';c.lineWidth=.8;c.stroke();
+    c.fillStyle='rgba(255,255,255,.55)';c.beginPath();c.ellipse(-nw*.18,nt+nh*.45,nw*.1,nh*.28,0,0,TAU);c.fill();
+    c.strokeStyle='rgba(130,75,50,.55)';c.lineWidth=.9;for(const [k,b] of [[.56,2],[.62,1.6],[.88,1.8]]){const yy=L*k,hw=r*(1+(W/w-1)*(k-.2)/.8);c.beginPath();c.moveTo(-hw*.75,yy);c.quadraticCurveTo(0,yy+b,hw*.75,yy);c.stroke();}
     c.restore();if(o.n){c.save();c.globalAlpha=al;const bx=x+15,by=y-15;c.fillStyle=o.ncol||'#ffd76a';c.beginPath();c.arc(bx,by,8,0,TAU);c.fill();c.fillStyle='#10131a';c.font='900 11px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(o.n,bx,by+.5);c.restore();}},
   finger:(c,x,y,rgb)=>{c.fillStyle=`rgba(${rgb},.3)`;c.strokeStyle=`rgb(${rgb})`;c.lineWidth=1.5;c.beginPath();c.arc(x,y,9,0,TAU);c.fill();c.stroke();},
   hearts:(c,n)=>{c.font='12px sans-serif';c.textAlign='left';c.textBaseline='middle';c.fillStyle='#ff5a6a';c.fillText([0,1,2].map(i=>i<n?'♥':'♡').join(' '),10,14);},
