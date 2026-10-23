@@ -1638,7 +1638,7 @@ const TIPH={
   beam:(c,x,y,R,a,t)=>{c.save();c.globalCompositeOperation='lighter';c.translate(x,y);c.rotate(a);const L=260;c.strokeStyle='rgba(255,70,20,.18)';c.lineWidth=16;c.beginPath();c.moveTo(R,0);c.lineTo(L,0);c.stroke();
     for(let i=3;i>=0;i--){const f=i/3;c.strokeStyle=f>.5?'rgba(255,100,30,.7)':'rgba(255,220,150,.85)';c.lineWidth=1+1.5*f;c.beginPath();for(let q=R;q<=L;q+=6){const e=Math.min(1,(q-R)/30),yy=(3+5*f)*e*Math.sin(q*(.06+.01*i)+i*1.4+t*(i%2?-10:10));q===R?c.moveTo(q,yy):c.lineTo(q,yy);}c.stroke();}
     c.strokeStyle='rgba(255,245,215,.95)';c.lineWidth=2.5;c.lineCap='round';c.beginPath();c.moveTo(R,0);c.lineTo(L,0);c.stroke();c.restore();}};
-function v2TipAnim(id){let cv=$('tip2Cv');if(rel(12)&&(id==='jet'||id==='worm'))id+='2';const fn=TIPANIM[id];if(!fn){if(cv)cv.hidden=true;return;}
+function v2TipAnim(id){let cv=$('tip2Cv');if(rel(11)&&(id==='jet'||id==='worm'))id+='2';const fn=TIPANIM[id];if(!fn){if(cv)cv.hidden=true;return;}
   if(!cv){cv=document.createElement('canvas');cv.id='tip2Cv';cv.className='tipcv';$('tip2T').after(cv);}
   cv.hidden=false;const d=Math.min(2,window.devicePixelRatio||1),c=cv.getContext('2d');cv.width=260*d;cv.height=150*d;c.setTransform(d,0,0,d,0,0);const t0=performance.now(),run=cv.run=(cv.run||0)+1;
   const loop=()=>{if(cv.run!==run||cv.hidden||!$('mTip2').classList.contains('on'))return;const t=((performance.now()-t0)/1000)%(TIPLEN[id]||4.6);
