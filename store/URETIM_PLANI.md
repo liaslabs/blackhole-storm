@@ -184,7 +184,7 @@ Reklam birimleri zaten var ve kodda yazılı: Ödüllü `…/4584098403`, Geçi�
 
 | # | Kim | İş | Nasıl |
 |---|---|---|---|
-| C9 | Sen | **GDPR mesajı** | AdMob › Gizlilik ve mesajlaşma › Avrupa düzenlemeleri › Mesaj oluştur: uygulama Blackhole Storm, tüm diller, "Yönet" seçeneği açık › **Yayınla**. Oyundaki izin penceresi bunu kullanır; yayınlanmazsa Avrupa'da reklam az gelir. İsteğe bağlı: ABD eyalet düzenlemeleri mesajı |
+| C9 ☑ | Sen | **GDPR mesajı** — **24 Eki kontrol: 4 Eki'den beri yayında** (İngilizce + 6 dil, Blackhole Storm). **AdMob mağaza bağlantısı (D5) ☑ 24 Eki 00:24 TSİ**: Play'e bağlandı ve doğrulandı, AdMob incelemesi 2–3 gün (o zamana kadar sınırlı reklam). | AdMob › Gizlilik ve mesajlaşma › Avrupa düzenlemeleri › Mesaj oluştur: uygulama Blackhole Storm, tüm diller, "Yönet" seçeneği açık › **Yayınla**. Oyundaki izin penceresi bunu kullanır; yayınlanmazsa Avrupa'da reklam az gelir. İsteğe bağlı: ABD eyalet düzenlemeleri mesajı |
 | C10 | Sen | **Ödeme ve vergi** | AdMob › Ödemeler: ABD vergi formu **W-8BEN ☑** (11 Eki onaylandı, Hizmetler %0, 2029'a kadar). Kalan: **Türkiye vergi bilgileri** (20/B belgesi geldi, doldurulabilir) ve **banka** (AdMob ancak kazanç eşiğe ulaşınca ekletir; C0'daki 20/B hesabı). Bakiye ~10 $ olunca postayla **adres PIN**'i gelir, girilir. Ödeme eşiği ~100 $ |
 | C11 | Sen | **Güvenlik ayarları** | Engelleme kontrolleri › hassas kategoriler: kumar, flört, alkol engelli; içerik derecelendirmesi en fazla **T (Gençler)**. Ayarlar › Test cihazları: **kendi telefonunu ekle** (kendi reklamına dokunmak hesabı kapattırabilir) |
 
