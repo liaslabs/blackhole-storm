@@ -540,8 +540,11 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
 #tmr2[hidden]{display:none!important;}
 #pb{background:var(--gold);box-shadow:none;}
 #hdr.pb2::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:5px;background:rgba(255,255,255,.1);pointer-events:none;z-index:0;} /* 1.5.2: a thicker level bar on a visible track; its colour says how close the goal is */
-#hdr.pb2 #pb{height:5px;bottom:-4px;z-index:1;border-radius:0 3px 3px 0;background:var(--pbc,#5fd0ff);box-shadow:0 0 8px var(--pbc,#5fd0ff);transition:width .25s,background-color .5s,box-shadow .5s;}
-#hdr.pb2 #pb.near{animation:pbNear 1s ease-in-out infinite;}@keyframes pbNear{50%{filter:brightness(1.5);box-shadow:0 0 16px var(--pbc);}}
+#hdr.pb2 #pb{height:5px;bottom:-4px;z-index:1;border-radius:0 3px 3px 0;overflow:hidden;background:linear-gradient(90deg,#9b5cff,#4a7dff 22%,#2fd8ff 44%,#3dffa0 66%,#e8ff5a 84%,#ffd36a);background-size:var(--pbs,100%) 100%;
+  box-shadow:0 0 6px var(--pbc,#9b5cff),0 0 14px var(--pbc,#9b5cff);transition:width .25s,box-shadow .4s;} /* the whole spectrum spans the track, so the tip's colour tells the progress; it glows in that colour */
+#hdr.pb2 #pb::after{content:'';position:absolute;top:0;bottom:0;width:40px;left:-40px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:pbShine 2.2s linear infinite;}
+@keyframes pbShine{to{left:100%;}}
+#hdr.pb2 #pb.near{animation:pbNear .9s ease-in-out infinite;}@keyframes pbNear{50%{filter:brightness(1.45) saturate(1.2);box-shadow:0 0 10px var(--pbc),0 0 24px var(--pbc);}}
 .card{border-radius:12px;border-color:var(--line);box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none;}
 .logo{background:none;color:var(--ink);-webkit-text-fill-color:currentColor;font-weight:700;font-size:28px;letter-spacing:.08em;line-height:1.05;}
 .logo::after{content:'';display:block;width:44px;height:3px;background:var(--gold);margin:10px auto 0;}
