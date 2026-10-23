@@ -4789,7 +4789,7 @@ function playIntro(){const ov=$('intro'),v=$('introV'),snd=$('introSnd');let fin
   tmo=setTimeout(end,16000);
   v.play().catch(()=>{v.muted=true;v.play().then(()=>{if(SET.sfx)snd.hidden=false;}).catch(end);});}
 $('sIntro').onclick=()=>{sfx('click',{vol:.4});playIntro();};
-$('sTips').onclick=()=>{if(rel(11)){const on=SET.tips===false;SET.tips=on;if(on){for(const k in TIP2)delete TIPS[k];toast('💡',T('İpuçları'),T('Oyunun ipuçları yeniden gösterilecek'));}sfx('click',{vol:.4});setChanged();return;}TIPS={};saveG();$('sTips').textContent='✓';sfx('click',{vol:.4});};
+$('sTips').onclick=()=>{if(rel(11)){const on=SET.tips===false;SET.tips=on;if(on)toast('💡',T('İpuçları'),T('AÇIK'));sfx('click',{vol:.4});setChanged();return;}TIPS={};saveG();$('sTips').textContent='✓';sfx('click',{vol:.4});};
 if(!canLink())$('privRow').innerHTML='🔒 Oyun kişisel veri toplamaz; skorlar ve ayarlar yalnızca bu cihazda saklanır.';
 else if(NATIVE)$('privRow').innerHTML=`🔒 Hesap yok. Reklamlar Google AdMob ile gösterilir; dünya sıralamasına katılırsan oyuncu adın, skorun ve rastgele bir kurulum numarası gönderilir. <a href="${baseURL()}privacy.html" target="_blank" rel="noopener">Gizlilik politikası</a>`;
 
