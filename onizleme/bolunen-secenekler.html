@@ -1,0 +1,44 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000;overflow:hidden}canvas{display:block}</style></head><body><canvas id="c"></canvas><script>
+const W=1080,H=760,TAU=Math.PI*2,cv=document.getElementById('c'),c=cv.getContext('2d'),D=1.5;cv.width=W*D;cv.height=H*D;cv.style.width=W+'px';cv.style.height=H+'px';c.setTransform(D,0,0,D,0,0);
+let sd=5;const rnd=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};const R=(a,b)=>a+(b-a)*rnd();
+const stars=[...Array(500)].map(()=>({x:R(0,W),y:R(0,H),r:R(.3,1.4),a:R(.15,.8)}));
+const wis=[...Array(7)].map((_,i)=>({a:R(0,TAU),w:R(-.6,.6),rx:R(.7,1.25),ry:R(.35,.7),c:['70,230,210','190,255,110','150,120,255','70,230,210','220,255,160','90,200,255','190,255,110'][i],al:R(.18,.32)}));
+function glow(x,y,r,col,a){const g=c.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,`rgba(${col},${a})`);g.addColorStop(1,`rgba(${col},0)`);c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,TAU);c.fill();}
+// A: twin-core nebula
+function nebA(x,y,r,t,cores,seed){c.save();c.globalCompositeOperation='lighter';glow(x,y,r*2.1,'70,230,200',.22);
+ for(const w of wis){const a=w.a+t*w.w+seed;c.save();c.translate(x,y);c.rotate(a);const g=c.createRadialGradient(0,0,0,0,0,r*w.rx);g.addColorStop(0,`rgba(${w.c},${w.al})`);g.addColorStop(.6,`rgba(${w.c},${w.al*.45})`);g.addColorStop(1,`rgba(${w.c},0)`);c.fillStyle=g;c.scale(1,w.ry/w.rx);c.beginPath();c.arc(0,0,r*w.rx,0,TAU);c.fill();c.restore();}
+ for(let i=0;i<cores;i++){const a=t*2.4+i*Math.PI+seed,d=cores>1?r*.3:0,cx=x+Math.cos(a)*d,cy=y+Math.sin(a)*d*.8;glow(cx,cy,r*.55,'200,255,140',.55);glow(cx,cy,r*.18,'255,255,240',1);
+  if(cores>1){c.strokeStyle='rgba(220,255,170,.35)';c.lineWidth=r*.05;c.beginPath();c.arc(x,y,d,a-.9,a,false);c.stroke();}}
+ c.restore();}
+function filA(a,b,t,k){c.save();c.globalCompositeOperation='lighter';const mx=(a.x+b.x)/2,my=(a.y+b.y)/2+Math.sin(t*3)*8;for(const [w,al] of [[14,.12],[5,.35],[1.6,.9]]){c.strokeStyle=`rgba(190,255,150,${al*k})`;c.lineWidth=w;c.beginPath();c.moveTo(a.x,a.y);c.quadraticCurveTo(mx,my,b.x,b.y);c.stroke();}
+ for(let i=0;i<5;i++){const q=(t*.7+i/5)%1,u=1-q,px=u*u*a.x+2*u*q*mx+q*q*b.x,py=u*u*a.y+2*u*q*my+q*q*b.y;glow(px,py,5,'255,255,220',.9*k);}c.restore();}
+// B: quasar fragment
+function quaB(x,y,r,t,jets,ang){c.save();c.globalCompositeOperation='lighter';glow(x,y,r*2,'150,255,120',.18);c.translate(x,y);c.rotate(ang);
+ const fl=.75+.25*Math.sin(t*9);for(let j=0;j<jets;j++){c.save();c.rotate(j*Math.PI);const g=c.createLinearGradient(0,0,0,-r*2.4);g.addColorStop(0,`rgba(230,255,200,${.9*fl})`);g.addColorStop(1,'rgba(120,255,200,0)');c.fillStyle=g;c.beginPath();c.moveTo(-r*.08,0);c.lineTo(-r*.22,-r*2.4);c.lineTo(r*.22,-r*2.4);c.lineTo(r*.08,0);c.fill();c.restore();}
+ c.save();c.scale(1,.38);for(let i=0;i<3;i++){c.strokeStyle=`rgba(${i?'120,240,200':'210,255,120'},${.75-i*.2})`;c.lineWidth=r*(.22-.05*i);c.beginPath();c.arc(0,0,r*(.75+.18*i),t*2+i,t*2+i+4.6);c.stroke();}c.restore();
+ glow(0,0,r*.5,'220,255,160',.9);glow(0,0,r*.2,'255,255,255',1);c.restore();}
+// C: cracked crystal star
+const shp=[...Array(9)].map((_,i)=>[i/9*TAU,R(.8,1.05)]);
+function cryC(x,y,r,t,half,ang){c.save();c.translate(x,y);c.rotate(ang+t*.25);c.globalCompositeOperation='lighter';glow(0,0,r*2,'160,255,140',.2);c.globalCompositeOperation='source-over';
+ const pts=half?shp.filter(([a])=>a<=Math.PI+.01).concat([[Math.PI,.15],[0,.15]]):shp;c.beginPath();pts.forEach(([a,k],i)=>{const px=Math.cos(a)*r*k,py=Math.sin(a)*r*k;i?c.lineTo(px,py):c.moveTo(px,py);});c.closePath();
+ const g=c.createRadialGradient(-r*.3,-r*.3,r*.1,0,0,r);g.addColorStop(0,'#e9ffd8');g.addColorStop(.5,'#5fd6a8');g.addColorStop(1,'#123a3a');c.fillStyle=g;c.fill();c.strokeStyle='rgba(220,255,200,.8)';c.lineWidth=1.5;c.stroke();
+ c.save();c.clip();c.globalCompositeOperation='lighter';const p=.6+.4*Math.sin(t*6);c.strokeStyle=`rgba(230,255,170,${p})`;c.lineWidth=r*.06;c.shadowColor='#d8ff8a';c.shadowBlur=10;
+ for(const [a0,a1] of [[.3,2.4],[1.2,4.1],[3.5,5.6],[2.6,.9]]){c.beginPath();c.moveTo(0,0);for(let k=1;k<=4;k++){const q=k/4,a=a0+(a1-a0)*q*.3+Math.sin(k*7+a0)*.25;c.lineTo(Math.cos(a)*r*q,Math.sin(a)*r*q);}c.stroke();}c.restore();
+ for(const [a,k] of pts){c.fillStyle='rgba(255,255,255,.5)';c.fillRect(Math.cos(a)*r*k-1,Math.sin(a)*r*k-1,2,2);}c.restore();}
+function phase(t){const q=t%6;if(q<2)return 0;if(q<3.5)return (q-2)/1.5;if(q<4.5)return 1;if(q<5.5)return 1-(q-4.5);return 0;}
+const OPT=[['A · İKİZ ÇEKİRDEKLİ NEBULA','İki parlak çekirdek bir gaz bulutunun içinde birbirinin\netrafında döner. Ayrılınca aralarında plazma ipliği gerilir.'],
+ ['B · KUASAR PARÇASI','Eğik bir madde diski ve iki ışık jeti.\nAyrılınca her parça kendi jetiyle uçar.'],
+ ['C · KIRIK KRİSTAL YILDIZ','Çatlaklarından ışık sızan kristal bir yıldız.\nAyrılınca iki kristal parçaya kırılır.']];
+function draw(t){c.fillStyle='#04050b';c.fillRect(0,0,W,H);for(const s of stars){c.fillStyle=`rgba(220,230,255,${s.a})`;c.fillRect(s.x,s.y,s.r,s.r);}
+ const e=phase(t),ease=e*e*(3-2*e);
+ for(let i=0;i<3;i++){const cx=180+i*360;c.strokeStyle='rgba(255,255,255,.08)';c.strokeRect(i*360+6,6,348,H-12);
+  c.fillStyle='#ffd76a';c.font='800 15px sans-serif';c.textAlign='center';c.fillText(OPT[i][0],cx,36);c.fillStyle='#aab2c6';c.font='500 12px sans-serif';OPT[i][1].split('\n').forEach((l,k)=>c.fillText(l,cx,58+k*17));
+  for(const [cy,r,lbl] of [[300,62,'YAKINDAN'],[600,26,'OYUN İÇİ BOYUT']]){c.fillStyle='#5a6070';c.font='700 10px sans-serif';c.fillText(lbl,cx,cy-r*3.2+ (r<30?40:0));
+   const d=r*2.1*ease,ang=.5;const A={x:cx-Math.cos(ang)*d,y:cy-Math.sin(ang)*d},B={x:cx+Math.cos(ang)*d,y:cy+Math.sin(ang)*d};
+   if(i===0){if(e<=0)nebA(cx,cy,r,t,2,0);else{filA(A,B,t,Math.min(1,e*2));nebA(A.x,A.y,r*.7,t,1,0);nebA(B.x,B.y,r*.7,t,1,2);}}
+   if(i===1){if(e<=0)quaB(cx,cy,r,t,2,ang+Math.PI/2);else{quaB(A.x,A.y,r*.7,t,1,ang-Math.PI/2);quaB(B.x,B.y,r*.7,t,1,ang+Math.PI/2);}}
+   if(i===2){if(e<=0)cryC(cx,cy,r,t,0,0);else{cryC(A.x,A.y,r*.75,t,1,ang+Math.PI/2);cryC(B.x,B.y,r*.75,t,1,ang-Math.PI/2);}}
+   c.fillStyle='rgb(210,255,90)';c.font=`900 ${r<30?10:13}px sans-serif`;c.fillText('BÖLÜNEN',cx,cy+r*1.6+(e>0?r*1.6:0)+10);}}
+ c.fillStyle='#5a6070';c.font='600 11px sans-serif';c.textAlign='center';c.fillText('ÖNİZLEME · her 6 sn: bütün → ikiye ayrılır → geri birleşir',W/2,H-16);}
+const T0=performance.now();(function f(n){draw((n-T0)/1000);requestAnimationFrame(f);})(T0);
+</script></body></html>
