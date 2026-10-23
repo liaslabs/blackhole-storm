@@ -8280,7 +8280,7 @@ let FX=null; // the running mission's own state
 function fmxPlay(id){const m=FMX.find(x=>x.id===id);if(!DEV||!m)return;fmClose();hideModals();startSprint((Date.now()%1e6)^0x77,{fm:m,fmDay:'dev'});}
 // called at the end of fmSetup, so the mission's kit is in place
 function fmxSetup(){const m=FMRUN.m;FX={bombs:[],booms:[],next:1.2,warn:0};const w=G2.L.w;
-  if(m.bombs){w.meteor=0;w.bomb=0;G2.L.metIv=0;w.planet=(w.planet||0)*.5;}
+  if(m.bombs){w.meteor=0;w.bomb=0;G2.L.metIv=0;w.planet=(w.planet||0)*.5;G2.cap=V2K.r0*1.6;G2.L.overload=false;} /* a hole kept small: the bombs have to be reached, not just swallowed by a giant */
   if(m.m==='guard'&&G2.guard){const g=G2.guard;g.dur=g.t=m.dur+3;g.dmg=20;w.meteor=0;} /* the clock runs out on the mission, not on the defence; meteors become rocks anyway */
   if(m.diet){w.planet=(w.planet||0)*1.4;w.mini=0;G2.growK=.45;} /* a few more planets (the trap), and every body grows the hole half as much as usual, so 60 s of eating is a real choice */}
 const fmxLim=()=>V2K.r0*FMRUN.m.diet;
