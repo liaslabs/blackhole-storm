@@ -544,7 +544,7 @@ body.v2 #combo{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;}
   transition:width .45s cubic-bezier(.25,.8,.3,1),background-color .9s,box-shadow .9s;} /* the whole bar takes one colour that turns from red through orange and yellow to green as the goal nears, with a soft glow */
 #hdr.pb2 #pb::after{content:'';position:absolute;top:0;bottom:0;width:36px;left:-36px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:pbShine 2.6s linear infinite;}
 @keyframes pbShine{to{left:100%;}}
-#hdr.pb2 #pb.near{animation:pbNear 1.1s ease-in-out infinite;}@keyframes pbNear{50%{filter:brightness(1.2);}}
+#hdr.pb2 #pb.near{animation:pbNear .8s ease-in-out infinite;}@keyframes pbNear{50%{transform:scaleY(1.7);filter:brightness(1.35);box-shadow:0 0 9px var(--pbg);}} /* the last stretch beats like a heart: the goal is close */
 .card{border-radius:12px;border-color:var(--line);box-shadow:0 24px 60px rgba(0,0,0,.55);backdrop-filter:none;-webkit-backdrop-filter:none;}
 .logo{background:none;color:var(--ink);-webkit-text-fill-color:currentColor;font-weight:700;font-size:28px;letter-spacing:.08em;line-height:1.05;}
 .logo::after{content:'';display:block;width:44px;height:3px;background:var(--gold);margin:10px auto 0;}
