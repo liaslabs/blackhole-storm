@@ -1649,6 +1649,7 @@ function v2TipOk(){if(gState!=='tip')return;hideModals();G2.tip=null;G2.tipCD=.8
 // ── level end ─────────────────────────────────────────
 function v2Complete(){later(()=>{try{if(rel(7)&&SND.ctx)SND.fetchMus('boss');adsPreload();glPrepZone(level+1);}catch(e){}},1500); /* 1.4.7: the boss track decodes on the result screen, never mid-level */
   if(gState!=='playing')return;
+  if(rel(11)&&G2.script&&level===1&&!REPLAY){evOnce('tut3');natMark('tutorial over');} // 24 Oct: most players reach the goal before the tutorial's script runs out, so the level's end also counts as the tutorial done
   const sz=G2.peak/V2K.r0;G2.rec=sz>bestSize+1e-6;if(G2.rec){bestSize=sz;saveG();if(rel(9)&&G2.mode==='level'&&!REPLAY)later(()=>toast('🏆','YENİ REKOR!',T('KARA DELİK KÜTLESİ')+' '+v2SizeTxt(sz)),500);} /* 1.4.9: the record is a toast as the level ends */
   if(!G2.dmg)dmEvent('clean',1);
   if(v2Classic()&&!REPLAY&&v2Plain(G2.lv))SHOP.cs=lives>=(G2.lives0||0)?Math.min(99,(SHOP.cs|0)+1):0; /* the late game's quiet ±15 % (see LATE) */

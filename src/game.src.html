@@ -2247,18 +2247,22 @@ const SND={ctx:null,buf:{},master:null,sfxBus:null,musBus:null,musDuck:null,musF
     this.musBus=c.createGain();this.musDuck=c.createGain();this.musF=c.createBiquadFilter();this.musF.type='lowpass';this.musF.frequency.value=16000;this.musF.Q.value=.6;
     this.musBus.connect(this.musDuck);this.musDuck.connect(this.musF);this.musF.connect(this.master);
     this.applySettings(true);
-    this.rev=c.createConvolver();try{this.rev.buffer=this.makeIR(2.6);}catch(e){} /* a few browsers report one sample rate and run at another (seen: 48000 vs 44100 Hz, the error stopped the game's start-up): then no reverb, everything else as usual */
+    this.rev=c.createConvolver();if(rel(11))setTimeout(()=>{try{this.rev.buffer=this.makeIR(2.6);}catch(e){}},1500);else try{this.rev.buffer=this.makeIR(2.6);}catch(e){} /* 24 Oct: the reverb's 2.6 s of noise is built a moment after the first touch, not in it */ /* a few browsers report one sample rate and run at another (seen: 48000 vs 44100 Hz, the error stopped the game's start-up): then no reverb, everything else as usual */
     const rg=c.createGain();rg.gain.value=.55;this.rev.connect(rg);rg.connect(this.sfxBus);
     // An entry is either WAV base64, or [mp3 base64, onset s, duration s]: MP3 adds padding
     // at both ends, so re-align on the onset (first sample above 10% of peak) and cut to length.
     const trim=(b,on,dur)=>{const d=b.getChannelData(0),sr=b.sampleRate;let pk=0;for(let i=0;i<d.length;i++){const v=Math.abs(d[i]);if(v>pk)pk=v;}
       let j=0;while(j<d.length&&Math.abs(d[j])<.1*pk)j++;const st=Math.max(0,j-Math.round(on*sr)),n=Math.min(d.length-st,Math.round(dur*sr));
       if(n<=0)return b;const o=c.createBuffer(1,n,sr);o.getChannelData(0).set(d.subarray(st,st+n));return o;};
-    const dec=(k,v)=>{const b64=Array.isArray(v)?v[0]:v;const bin=atob(b64);const u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
+    const dec=(k,v)=>{const b64=Array.isArray(v)?v[0]:v;
       const ok=b=>{if(Array.isArray(v))try{b=trim(b,v[1],v[2]);}catch(e){}this.buf[k]=b;if(k==='drone'&&this.wantDrone)this.startDrone();if((k==='mGame'||k==='mMenu')&&this.mus.want&&!this.mus.src)this.music(this.mus.want);};
+      if(rel(11)&&window.fetch&&!dec.slow){fetch('data:application/octet-stream;base64,'+b64).then(r=>r.arrayBuffer()).then(ab=>{try{const p=c.decodeAudioData(ab,ok,()=>{});if(p&&p.catch)p.catch(()=>{});}catch(e){}}).catch(()=>{dec.slow=1;dec(k,v);});return;} /* 24 Oct: the browser turns the base64 into bytes off the main thread */
+      const bin=atob(b64);const u8=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u8[i]=bin.charCodeAt(i);
       try{const p=c.decodeAudioData(u8.buffer,ok,()=>{});if(p&&p.catch)p.catch(()=>{});}catch(e){}};
-    const data=window.SFX_DATA||{};for(const k of Object.keys(data))dec(k,data[k]);
-    const A=window.ASSETS||{};if(A.mGame)dec('mGame',A.mGame);if(A.mMenu)dec('mMenu',A.mMenu);
+    const data=window.SFX_DATA||{},A=window.ASSETS||{};
+    if(rel(11)){const q=[];if(A.mMenu)q.push(['mMenu',A.mMenu]);if(A.mGame)q.push(['mGame',A.mGame]);for(const k of Object.keys(data))q.push([k,data[k]]); // 24 Oct: one sound every 25 ms, not all 38 in the first touch (their decoding and trimming made a half-second hitch on a slow phone)
+      const next=()=>{const e=q.shift();if(!e)return;dec(e[0],e[1]);setTimeout(next,25);};next();}
+    else{for(const k of Object.keys(data))dec(k,data[k]);if(A.mGame)dec('mGame',A.mGame);if(A.mMenu)dec('mMenu',A.mMenu);}
   },
   makeIR(sec){
     const c=this.ctx,sr=c.sampleRate,len=Math.floor(sr*sec),b=c.createBuffer(2,len,sr);
@@ -2588,7 +2592,15 @@ function glTextures(){
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t;};
   GL.texBg=mk(IMG.bg);GL.texBgB=mk(rel(8)?blurSmall(IMG.bg):blurCopy(IMG.bg));GL.texAtlas=mk(IMG.atlas);GL.ready=true;
+  if(rel(11)&&!GL.warm){GL.warm=1;requestAnimationFrame(glWarm);}
 }
+// 24 Oct: a new player's first frame of the tutorial was also the first frame the background shader and the body shader ever drew,
+// and the phone's driver finished their compiling and texture setup then (a 3 s freeze on the first tutorial, never later).
+// Draw each once while the game loads, two frames apart: the scene redraws over it before anyone sees the menu.
+function glWarm(){if(!GL.ok||!GL.ready)return;const t0=performance.now();try{glDraw(0);}catch(e){}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{if(!GL.ok||!GL.ready)return;try{const gl=GL.gl,cv=$('bg'),k=cv.width/W;gl.useProgram(GL.body.p);gl.bindBuffer(gl.ARRAY_BUFFER,GL.qStrip);gl.enableVertexAttribArray(GL.body.a);gl.vertexAttribPointer(GL.body.a,2,gl.FLOAT,false,0,0);
+    gl.enable(gl.BLEND);gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);gl.bindTexture(gl.TEXTURE_2D,GL.texAtlas);gl.uniform1i(GL.body.u.uTex,0);gl.uniform2f(GL.body.u.uRes,cv.width,cv.height);
+    drawBodyGL({x:-50,y:-50,r:1,cell:0,k:'ast',sX:1,sY:1,spinA:0,tilt:0,pitch:0,wobA:0,wobF:0,age:0,ph:0,hitFlash:0},k,0,0);}catch(e){}GL.warmMs=Math.round(performance.now()-t0);}));}
 const BLUR={s:.09,mix:1}; // in-play background: downscale factor of the blurred copy and how much of it shows
 const BLURS=new WeakMap();function blurSmall(img){let s=BLURS.get(img);if(s)return s;s=document.createElement('canvas');s.width=Math.max(1,Math.round(img.width*BLUR.s));s.height=Math.max(1,Math.round(img.height*BLUR.s));const g=s.getContext('2d');g.imageSmoothingQuality='high';g.drawImage(img,0,0,s.width,s.height);BLURS.set(img,s);return s;} /* 1.4.8: the small copy goes to the GPU as is; its linear filtering does the upscale (a quarter of the work, made once per zone) */
 function blurCopy(img){ // down- then up-scaling gives an even blur on every browser (canvas filters are not everywhere)
