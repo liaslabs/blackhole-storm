@@ -4341,10 +4341,10 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
 // ── FLEET MISSIONS (1.5.0, added to the internal test on 15 Oct): three a day, one easy, one medium, one hard (src/fmis.js), each played on its own seeded cosmos
 // on the Daily Race's engine with the mission's kit; three tries a day, the best counts, a medal pays fleet points only ──
 var FMRUN=null; // the mission being played: {m, v (what it counts), d (its day)}; var, so the engine may look before this line runs
-const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} vuruş',caught:'{n} cisim',time:'{n} sn',score:'{n} puan',dodge:'{n} meteor'};
+const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} vuruş',caught:'{n} cisim',time:'{n} sn',score:'{n} puan',dodge:'{n} meteor',guard:'{n} kaya',bomb:'{n} bomba'};
 const fmFmt=(m,v)=>T(FMU[m.m],{n:m.m==='score'?flN(v):v});
 function fmAdd(k,n){if(FMRUN&&FMRUN.m.m===k)FMRUN.v+=n;}
-function fmVal(){const R=FMRUN,k=R.m.m;return k==='combo'?maxCombo:k==='caught'?SPR_RUN.caught:k==='time'?Math.min(R.m.dur,Math.floor(SPR_RUN.t)):k==='score'?totalScore:R.v;}
+function fmVal(){const R=FMRUN,k=R.m.m;return k==='combo'?maxCombo:k==='caught'?SPR_RUN.caught:k==='time'?Math.min(R.m.dur,Math.floor(SPR_RUN.t)):k==='score'?totalScore:k==='guard'?(G2.guard?G2.guard.n:0):R.v;}
 function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNova=G2.tNova0=k.nova;G2.noRage=!k.rage; // the mission's kit, the same for everyone
   if(m.anti){const w=G2.L.w;w.anti=(w.anti||0)+18;w.ast=Math.max(12,(w.ast||0)-18);
     if(m.anti>1){let t=0;for(const x in w)t+=w[x];const a=w.anti,p=Math.min(.6,a/t*m.anti);w.anti=p*(t-a)/(1-p);}} /* m.anti times the share of antimatter the storm had */
@@ -4352,7 +4352,7 @@ function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNov
   if(m.bar)G2.gb={B:m.bar,v:0,ts:totalScore,arc:null,arcs:[],n:0,life:m.life||0};else if(m.ev)G2.garcAt=5;
   if(m.mid){G2.midR=V2K.r0+(G2.cap-V2K.r0)*m.mid;G2.rr=G2.midR;} /* a medium hole that does not shrink: the belt is harder to slip through */
   {const rb=$('rage2');if(rb)rb.style.visibility=G2.noRage?'hidden':'';} /* no Vortex in this mission: no Vortex bar either */
-  if($('pb'))$('pb').style.display='none';} /* the time is on the HUD already: no progress line under it in a mission */
+  if($('pb'))$('pb').style.display='none';if(m.x)fmxSetup();} /* the time is on the HUD already: no progress line under it in a mission */
 function fmChainReady(fm){if(!fm||!fm.chain)return false;const c=fm.chain;return !c.got&&c.n>=c.need&&Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);}
 function flFmH(fm,left,mis){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','★★★']; /* easy, medium, hard: stars say it in every language */
   const card=id=>{const m=F.byId(id);if(!m)return '';const me=fm.me[id]||{best:0,tier:0,tries:0},rest=Math.max(0,F.TRIES-me.tries);
@@ -4408,10 +4408,10 @@ async function fmTop(m){const box=$('fmTopBox');if(!box)return;let r=null;try{r=
   const row=(x,i)=>`<div class="ft${x.me?' mine':''}"><span class="rk">${md[i]||i+1}</span><span class="nm"><b class="notr">${escH(x.name)}</b><small class="notr">${escH(x.emb+' '+x.fleet)}</small></span><b class="v">${fmFmt(m,x.v)}</b></div>`;
   const mine=r.me&&!r.list.slice(0,5).some(x=>x.me)?`<div class="ft mine"><span class="rk">${r.me.rank}</span><span class="nm"><b>${T('SEN')}</b></span><b class="v">${fmFmt(m,r.me.v)}</b></div>`:'';
   box.innerHTML=`<div class="fth">🏆 ${T('BUGÜNÜN SIRALAMASI')} <small>· ${T('{n} oyuncu',{n:r.n})}</small></div>${r.list.slice(0,5).map(row).join('')}${mine}`;box.hidden=false;}
-function fmQuit(){const R=FMRUN;if(!R)return;const v=fmVal()||0;SPR_RUN.ended=true;FMRUN=null;fmPost({day:R.d,id:R.m.id,v,t:Math.min(R.m.dur,SPR_RUN.t)});} // leaving a run keeps what it reached (its try is already used)
+function fmQuit(){const R=FMRUN;if(!R)return;const v=fmVal()||0;SPR_RUN.ended=true;FMRUN=null;if(R.d!=='dev')fmPost({day:R.d,id:R.m.id,v,t:Math.min(R.m.dur,SPR_RUN.t)});} // leaving a run keeps what it reached (its try is already used)
 function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=Math.min(m.dur,SPR_RUN.t),fm=FLV&&FLV.fm,me=fm&&fm.me[m.id]||{best:0,tier:0,tries:1};FMRUN=null;
   const best=Math.max(me.best||0,v),tier=F.tier(m,best),was=me.tier||0,run=F.tier(m,v),rest=Math.max(0,F.TRIES-(me.tries||1));
-  const md=['','🥉','🥈','🥇'];sfx(run>0?'levelup':'gameover',{vol:.8,rev:.4});if(rel(11)&&typeof liveCount==='function'){liveCount('fm',1);if(run>0)liveCount('fmg',1);} /* the live campaign's fleet tasks */
+  const md=['','🥉','🥈','🥇'],dev=R.d==='dev';sfx(run>0?'levelup':'gameover',{vol:.8,rev:.4});if(rel(11)&&typeof liveCount==='function'&&!dev){liveCount('fm',1);if(run>0)liveCount('fmg',1);} /* the live campaign's fleet tasks */
   const o=document.createElement('div');o.className='fm-ov';o.id='fmOv';
   o.innerHTML=`<div class="fm-card"><div class="big">${run?md[run]:fmIc(m,"lg")}</div><h3>${run?T(['','BRONZ MADALYA','GÜMÜŞ MADALYA','ALTIN MADALYA'][run]):T('MADALYA ÇIKMADI')}</h3><p>${T(m.n)}</p>
     <div class="res"><div class="w"><small>${T('BU KOŞU')}</small><b>${fmFmt(m,v)}</b></div><div><small>${T('BUGÜN EN İYİN')}</small><b>${fmFmt(m,best)}</b></div></div>
@@ -4421,12 +4421,12 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
     <div class="row">${rest>0?`<button class="b1" id="fmAgain">🔁 ${T('TEKRAR')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}</button>`:''}<button class="b2" id="fmBack">🛸 ${T('FİLOYA DÖN')}</button></div>
     <div class="fm-note">${T('Normal puanına, rekorlarına ve seviye ilerlemene eklenmez.')}</div></div>`;
   document.body.appendChild(o);
-  fmPost({day:R.d,id:m.id,v,t}).then(r=>{if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier,mp:r.mp||0});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');
+  (dev?Promise.resolve({dev:1}):fmPost({day:R.d,id:m.id,v,t})).then(r=>{if(r&&r.dev){const g=$('fmGain');if(g)g.textContent='🛠 '+T('Geliştirici denemesi: sonuç gönderilmez.');return;} /* a new mission tried with ?dev: nothing goes to the server */if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier,mp:r.mp||0});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');
     if(g&&r&&r.ok&&r.n){const P=F.PAY;g.innerHTML=`<div class="fr"><span>${T('Filonun bu görevdeki ortalaması')} <small>(${T('{n} kişi',{n:r.n})})</small></span><b>${flN(r.avg)}</b></div><div class="fr"><span>${T('Bugünkü toplamın')} <small>(${r.g}/3)</small></span><b>${flN(r.my)}</b></div>${r.star?`<div class="fr st">🌟 ${T('Şu an filonun yıldızı sensin. Gün sonuna kadar kalırsan +{a} ⭐ +{b} 💎',{a:P.star[0],b:P.star[1]})}</div>`:''}`;}
     if(r&&r.ok)fmTop(m);});
   if(rel(11)&&fm){const x=fm.me[m.id]=fm.me[m.id]||{best:0,tier:0,tries:1};Object.assign(x,{best,tier,mp:Math.max(x.mp||0,F.mp(m,best))});} /* 19 Oct: the tries crossed out and the medal show at once on the way back */
   const back=()=>{fmClose();hideModals();if(rel(11)){fleetOpen('tasks');showMenu();}else{showMenu();fleetOpen('tasks');}if(rel(10))notifAsk('fleet');};
-  o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>fmPlay(m.id),500);};}
+  o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>dev?fmxPlay(m.id):fmPlay(m.id),500);};}
 
 // LIVE CONTENT (18 Oct): campaigns the server hands out without an app update (GET /camp, see server/live.js). They are data, never code:
 // a title and a text in each language, dates, a few effects with fixed ceilings, up to 4 event tasks built on the daily-mission counters
@@ -6059,6 +6059,7 @@ function v2Update(dt){
   if(G2.touched&&G2.tut>=1)G2.tut=.99;if(G2.tut<1&&G2.tut>0)G2.tut=Math.max(0,G2.tut-dt*2);
 
   if(RAID&&gameMode==='sprint'){raidStep(dt);if(gState!=='playing')return;}
+  if(FMRUN&&FMRUN.m.x){fmxStep(dt);if(gState!=='playing')return;} // the new missions (dev): the diet's limit, the bombs
   // spawning
   if(!G2.ending){
     if(G2.script)v2RunScript(dt);
@@ -6385,7 +6386,7 @@ const BELT={warn:2.8,end:1.4},BELTN=9,BELTR=9;
 // ── the Daily Race: the same 60 s for everyone, at speed 16–25, with the day's rule, a short meteor belt at 20 s and a nebula at 40 s ──
 const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'📏',n:'BOYUT PENCERESİ'},{id:'wind',ic:'🌬',n:'YILDIZ RÜZGÂRI'},{id:'eclipse',ic:'🌑',n:'TUTULMA'}];
 const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
-function v2SprRule(){if(RAID)return null;if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+function v2SprRule(){if(RAID)return null;if(FMRUN&&FMRUN.m.m==='guard')return {t:'guard',tip:'guard',guard:1,dur:FMRUN.m.dur+3,dmg:20,ic:'🛡',n:'KORUYUCU',k:0}; /* the new Planet Guardian mission (dev) plays the guardian levels' rule */if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
 /* 20 Oct: the Daily Race's events come from the day's seed: two or three of the six, at times that shift from day to day, never the same
    one twice, always one meteor belt, each over before the 60 seconds are; every try of one day is still the same universe, so the ranking stays fair */
@@ -6781,7 +6782,7 @@ function v2Hit(o,whole){
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.75;G2.lifeHit=1;const el=$('hit2');if(!el)return;
   if(rel(10)){ /* 1.5.0 (14 Oct): the reason, then your hearts in a row; the one just lost shakes, bursts into shards and leaves an empty frame */
-    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':'METEOR ÇARPTI'),
+    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':G2.hitWhy==='bomb'?'BOMBA PATLADI':'METEOR ÇARPTI'),
       P='M12 20.4s-8.4-5.1-8.4-10.9A4.7 4.7 0 0 1 12 6.7a4.7 4.7 0 0 1 8.4 2.8c0 5.8-8.4 10.9-8.4 10.9z',
       full=`<svg viewBox="0 0 24 24"><path d="${P}" fill="url(#gHeart)" stroke="#6e0d1a" stroke-width=".8"/><path d="M7.1 8.3a2.5 2.5 0 0 1 2.9-.9" fill="none" stroke="#ffd2d6" stroke-width="1.2" stroke-linecap="round"/></svg>`,
       empty=`<svg viewBox="0 0 24 24"><path d="${P}" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.38)" stroke-width="1.1"/></svg>`,
@@ -6789,7 +6790,7 @@ function v2HitNote(){ // freeze the action for a beat and say what happened
     let h='';for(let i=0;i<n;i++)h+=i<lives?`<span>${full}</span>`:i===lives?`<span class="lost">${empty}<span class="f">${full}</span>${sh}</span>`:`<span>${empty}</span>`;
     el.className='b10';el.innerHTML=`<div class="t notr">${why}</div><div class="hr">${h}</div>`;
     el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);return;}
-  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':G2.hitWhy==='bomb'?'BOMBA PATLADI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
@@ -6847,6 +6848,7 @@ if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(8)?190:rel(7)
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NÖTRLENDİ +'+p,'#ff4fd8',15);return;}
+  if(fmxAnti())return;
   G2.rr=G2.hunt&&G2.hunt.multi?V2K.r0:Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9); /* the mission hunt: back to the starting size */flash=Math.max(flash,.4);G2.antiT=3;for(const q of G2.objs)if(q.k!=='meteor'&&!q.boss&&q.v0x===undefined){q.v0x=q.vx;q.v0y=q.vy;} // for 3 s the hole pushes everything away and can swallow nothing; each body remembers its cruise speed
   v2Burst(hX,hY,30,'#ff4fd8',2,7,.6,2);v2Call('ANTİMADDE!','3 SN HİÇBİR ŞEY YUTAMAZSIN','#ff4fd8',1.4);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
 }
@@ -7343,7 +7345,7 @@ function v2Frame(dt){
   v2DrawWorms();if(rel(10))v2DrawAsh();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
-  v2DrawRival();if(RAID)raidDraw(gl);if(rel(10))v2DrawBits(dt);
+  v2DrawRival();if(RAID)raidDraw(gl);if(FMRUN&&FMRUN.m.x)fmxDraw();if(rel(10))v2DrawBits(dt);
   v2DrawMarks();v2DrawEv();v2DrawSpec();v2DrawJet();v2DrawHawk();v2DrawWorm();v2DrawHor();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const p of G2.parts){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.sz;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2);ctx.stroke();}
@@ -7598,7 +7600,7 @@ function v2DrawGBar(){const g=G2.gb;if(!g||gState==='menu'||G2.ending)return;con
   const gr=ctx.createLinearGradient(ix,0,ix+iw,0);gr.addColorStop(0,'#f2a93b');gr.addColorStop(1,'#ffe08c');ctx.fillStyle=gr;ctx.shadowColor='#ffd76a';ctx.shadowBlur=g.v>=g.B?12:0;ctx.beginPath();ctx.roundRect(ix,iy,Math.max(bh,iw*clamp(g.v/g.B,0,1)),bh,bh/2);ctx.fill();
   ctx.restore();}
 function v2DrawRule(){const r=G2.rule;if(!r||gState==='menu'||G2.ending||G2.hunt&&G2.hunt.multi)return; /* the mission hunt: its hits are the score on the HUD */const y=sp2(20);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
-  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=G2.hunt.multi?`🎯 ${T('{n} vuruş',{n:FMRUN?FMRUN.v:0})}`:`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.guard&&G2.guard)txt=`🛡 ${T('KORUYUCU')} · ${T(Math.ceil(G2.guard.t)+' sn')}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
+  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=G2.hunt.multi?`🎯 ${T('{n} vuruş',{n:FMRUN?FMRUN.v:0})}`:`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.guard&&G2.guard)txt=FMRUN?`🌍 ${T('GEZEGEN')} %${Math.ceil(G2.guard.hp)}`:`🛡 ${T('KORUYUCU')} · ${T(Math.ceil(G2.guard.t)+' sn')}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
   const w=ctx.measureText(txt).width+22,out=v2WinOut();ctx.fillStyle='rgba(10,12,18,.72)';ctx.strokeStyle=r.ban?'rgba(255,90,74,.8)':r.win?(out?'rgba(255,120,100,.9)':'rgba(141,255,203,.8)'):'rgba(255,215,106,.85)';ctx.lineWidth=1.5;
   const x0=W/2-w/2;ctx.beginPath();ctx.roundRect(x0,y-11,w,22,11);ctx.fill();ctx.stroke();ctx.fillStyle='#e8ebf4';ctx.fillText(txt,W/2,y+1);
   if(r.win){const bw=Math.min(W*.6,sp2(220)),bx=W/2-bw/2,by=y+19,s0=1,s1=Math.max(r.hi+.6,2.6),X=s=>bx+bw*clamp((s-s0)/(s1-s0),0,1),s=G2.rr/V2K.r0; // the size bar: green = scoring range
@@ -7762,7 +7764,7 @@ function v2Ui(force){
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',(G2.mode==='level'||G2.dstorm)&&left<=10);}
   const pct=G2.mode==='surv'?0:G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt&&!G2.hunt.multi?G2.hunt.n/G2.hunt.need*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);const pb=$('pb'),q=Math.min(100,pct);pb.style.width=q+'%';
     if(rel(11)){const hu=Math.round(120*q/100);pb.style.setProperty('--pbc',`hsl(${hu},95%,62%)`);pb.style.setProperty('--pbg',`hsla(${hu},95%,62%,.4)`);pb.classList.toggle('near',q>=90&&q<100);}}}
-  {const dg=FMRUN&&FMRUN.m.m==='dodge',sc=dg?-3e6-FMRUN.v:G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?(G2.hunt.multi?-1e6-(FMRUN?FMRUN.v:0):-1-G2.hunt.n):G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>dg?`☄️ ${FMRUN.v}<small class="gl"> ${T('meteor')}</small>`:G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?(G2.hunt.multi?`${FMRUN&&typeof fmIc==='function'?fmIc(FMRUN.m):'🎯'} ${FMRUN?FMRUN.v:0}<small class="gl"> ${T('vuruş')}</small>`:`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`):G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
+  {const dg=FMRUN&&FMRUN.m.m==='dodge',fx=FMRUN&&FMRUN.m.x,sc=fx?-5e6-fmVal():dg?-3e6-FMRUN.v:G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?(G2.hunt.multi?-1e6-(FMRUN?FMRUN.v:0):-1-G2.hunt.n):G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>fx?`${FMRUN.m.ic} ${fmVal()}<small class="gl"> ${T(FMRUN.m.m==='caught'?'cisim':FMRUN.m.m==='guard'?'kaya':'bomba')}</small>`:dg?`☄️ ${FMRUN.v}<small class="gl"> ${T('meteor')}</small>`:G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?(G2.hunt.multi?`${FMRUN&&typeof fmIc==='function'?fmIc(FMRUN.m):'🎯'} ${FMRUN?FMRUN.v:0}<small class="gl"> ${T('vuruş')}</small>`:`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`):G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));
@@ -8266,6 +8268,49 @@ function raidDraw(gl){const R=RAID,S=G2.S,t=clock;ctx.save();
     if(p.tg&&!p.tg.alive&&!p.tg.out){ctx.strokeStyle='rgba(125,255,138,.5)';ctx.lineWidth=1.5;ctx.setLineDash([5,6]);ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.tg.x,p.tg.y);ctx.stroke();ctx.setLineDash([]);}}
   ctx.restore();RAID.hudT=(RAID.hudT||0)-1;if(RAID.hudT<=0){RAID.hudT=8;raidHud(false);}}
 if(DEV&&/[?&]raid\b/.test(location.search))setTimeout(()=>{if(!G2.on)raidPlay();},2500); // ?dev&raid opens the invite (add &raidfast for a boss every 8 s)
+// New fleet missions (developer preview, ?dev&fm=<id>): Diet, Planet Guardian, Bomb Disposal. They are kept out of BHS_FMIS.L for now:
+// the day's pick and the server read that list, so these join it with the release that brings their rules, targets and translations.
+const FMX=[
+  {id:'diet',lv:0,ic:'🥗',n:'DİYET',d:'Bu kez büyüme! Küçük cisimleri yut, boyut sınırını geçme. Antimadde dost: yutunca küçültür.',dur:60,m:'caught',tg:[60,110,160],max:600,diet:1.55,anti:1,bodies:1,kit:{sh:1,nova:0,rage:0},x:1},
+  {id:'guard',lv:1,ic:'🌍',n:'GEZEGEN KORUYUCUSU',d:'Kızıl kayalar gezegene doğru geliyor. Çarpmadan önce yolunu kes ve yut. Her kaya +1; gezegen yıkılırsa bir can gider.',dur:90,m:'guard',tg:[20,35,50],max:200,kit:{sh:2,nova:1,rage:1},x:1},
+  {id:'bomb',lv:2,ic:'💣',n:'BOMBA İMHASI',d:'Geri sayımlı bombalar beliriyor. Patlamadan önce yut! Her patlama bir yay kırar; kalkan korur.',dur:90,m:'bomb',tg:[35,60,85],max:300,bombs:1,kit:{sh:2,nova:0,rage:0},x:1}];
+let FX=null; // the running mission's own state
+function fmxPlay(id){const m=FMX.find(x=>x.id===id);if(!DEV||!m)return;fmClose();hideModals();startSprint((Date.now()%1e6)^0x77,{fm:m,fmDay:'dev'});}
+// called at the end of fmSetup, so the mission's kit is in place
+function fmxSetup(){const m=FMRUN.m;FX={bombs:[],booms:[],next:1.2,warn:0};const w=G2.L.w;
+  if(m.bombs){w.meteor=0;w.bomb=0;G2.L.metIv=0;w.planet=(w.planet||0)*.5;}
+  if(m.m==='guard'&&G2.guard){const g=G2.guard;g.dur=g.t=m.dur+3;g.dmg=20;w.meteor=0;} /* the clock runs out on the mission, not on the defence; meteors become rocks anyway */
+  if(m.diet){w.planet=(w.planet||0)*1.4;w.mini=0;} /* a few more planets: the trap of the diet */}
+const fmxLim=()=>V2K.r0*FMRUN.m.diet;
+function fmxStep(dt){const m=FMRUN.m,S=G2.S;if(G2.ending||gState!=='playing')return;
+  if(m.diet){const lim=fmxLim(),q=(G2.rr-V2K.r0)/(lim-V2K.r0);if(q>.82&&!FX.warn){FX.warn=1;v2Pop(T('SINIRA YAKLAŞTIN'),'#ff8a7a',16);v2Sfx('tickHi',{vol:.5,rate:.7});}else if(q<.6)FX.warn=0;
+    if(G2.rr>lim){v2Burst(hX,hY,40,'#ff5a4a',2,8,.8,2.4);v2Fail(T('BOYUT SINIRI AŞILDI'));}}
+  if(m.bombs){const p=Math.min(1,SPR_RUN.t/m.dur);FX.next-=dt;
+    if(FX.next<=0){FX.next=(1.35-.6*p)*rrnd(.85,1.15);const r=sp2(17);let x,y,k=0;do{x=rrnd(sp2(40),W-sp2(40));y=rrnd(sp2(120),H-sp2(160));k++;}while(k<12&&Math.hypot(x-hX,y-hY)<sp2(110));
+      FX.bombs.push({x,y,r,t:0,fuse:(3.4-1*p)*rrnd(.95,1.08)});v2Sfx('tickHi',{vol:.25,rate:1.6});}
+    for(let i=FX.bombs.length-1;i>=0;i--){const b=FX.bombs[i];b.t+=dt;
+      if(Math.hypot(b.x-hX,b.y-hY)<G2.R+b.r*.5&&!(G2.antiT>0)){FX.bombs.splice(i,1);fmAdd('bomb',1);v2Burst(b.x,b.y,18,'#7dff8a',1.5,5,.5,1.8);v2Sfx('bell',{vol:.4,rate:1.2+.02*(FMRUN.v%10)});v2Pop('+1','#7dff8a',15);continue;}
+      if(b.t>=b.fuse){FX.bombs.splice(i,1);FX.booms.push({x:b.x,y:b.y,t:0,R:sp2(95)});shake=Math.max(shake,7);v2Sfx('boom',{vol:.5,rate:1.1});
+        if(G2.shT>0){v2Pop(T('KALKAN KORUDU'),'#9fe8ff',15);}else{G2.hitWhy='bomb';v2Hit({x:b.x,y:b.y,k:'bomb'},false);G2.hitWhy=null;}}}
+    for(let i=FX.booms.length-1;i>=0;i--){const e=FX.booms[i];e.t+=dt;if(e.t>.6)FX.booms.splice(i,1);}}}
+function fmxAnti(){if(!(FMRUN&&FMRUN.m.diet))return false; /* the diet's antimatter is a friend: it takes half the growth away and nothing else */
+  G2.rr=Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.5-2);G2.pulse=1;v2Burst(hX,hY,24,'#ff4fd8',1.5,6,.6,2);v2Pop(T('KÜÇÜLDÜN ✓'),'#7dff8a',17);v2Sfx('bell',{vol:.45,rate:1.4});return true;}
+function fmxDraw(){const m=FMRUN&&FMRUN.m;if(!m||!FX)return;const t=clock;ctx.save();
+  if(m.diet){const lim=fmxLim(),q=clamp((G2.rr-V2K.r0)/(lim-V2K.r0),0,1),col=q>.82?'#ff5a4a':q>.55?'#ffd76a':'#6dff8e';
+    ctx.strokeStyle=q>.82?`rgba(255,90,74,${.55+.35*Math.sin(t*10)})`:'rgba(255,120,100,.4)';ctx.lineWidth=1.6;ctx.setLineDash([5,6]);ctx.lineDashOffset=-t*12;ctx.beginPath();ctx.arc(hX,hY,lim*G2.S,0,TAU);ctx.stroke();ctx.setLineDash([]); /* the size you may not pass, round your hole */
+    const x=W-20,y0=sp2(120),h=Math.min(180,H*.25);ctx.fillStyle='rgba(10,12,18,.6)';ctx.beginPath();ctx.roundRect(x-3,y0-3,14,h+6,7);ctx.fill();ctx.fillStyle=col;ctx.beginPath();ctx.roundRect(x,y0+h*(1-q),8,h*q,4);ctx.fill();
+    ctx.strokeStyle='#ff5a4a';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x-6,y0);ctx.lineTo(x+14,y0);ctx.stroke();ctx.font='800 9px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='right';ctx.fillStyle='#ff8a7a';ctx.fillText(T('SINIR'),x-8,y0+3);ctx.textAlign='center';ctx.fillStyle='#aab2c6';ctx.fillText(T('BOYUT'),x+4,y0+h+14);}
+  if(m.bombs){for(const b of FX.bombs){const left=b.fuse-b.t,q=b.t/b.fuse,r=b.r,pop=Math.min(1,b.t/.25);ctx.save();ctx.translate(b.x,b.y);ctx.scale(pop,pop);
+      if(left<1.2){ctx.globalAlpha=.25+.25*Math.sin(t*20);ctx.fillStyle='#ff5a3a';ctx.beginPath();ctx.arc(0,0,sp2(95),0,TAU);ctx.fill();ctx.globalAlpha=1;} /* the blast it is about to make */
+      const g=ctx.createRadialGradient(-r*.35,-r*.4,r*.1,0,0,r);g.addColorStop(0,'#6a7088');g.addColorStop(.6,'#2a2e3c');g.addColorStop(1,'#0c0e14');ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.fill();
+      ctx.strokeStyle='#8a90a6';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.stroke();ctx.fillStyle='#454a5c';ctx.fillRect(-r*.25,-r*1.25,r*.5,r*.35);
+      const sp=.5+.5*Math.sin(t*30);ctx.fillStyle=`rgba(255,${180+60*sp},90,1)`;ctx.shadowColor='#ffb347';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(r*.1,-r*1.35,r*.16+sp*1.5,0,TAU);ctx.fill();ctx.shadowBlur=0; /* the fuse sparks */
+      const bl=Math.floor(t*(3+q*14))%2;ctx.fillStyle=bl?'#ff3a2a':'#5a1410';ctx.beginPath();ctx.arc(0,0,r*.24,0,TAU);ctx.fill();
+      ctx.strokeStyle=q>.65?'#ff5a4a':'#ffd76a';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,r+5,-Math.PI/2,-Math.PI/2+TAU*(1-q));ctx.stroke();
+      ctx.font='900 11px "IBM Plex Sans Condensed",sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(Math.ceil(left),0,r+15);ctx.fillStyle='#fff';ctx.fillText(Math.ceil(left),0,r+15);ctx.restore();}
+    ctx.globalCompositeOperation='lighter';for(const e of FX.booms){const k=e.t/.6,rr=e.R*Math.min(1,e.t/.2),g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,rr+1);g.addColorStop(0,`rgba(255,240,200,${.8*(1-k)})`);g.addColorStop(.6,`rgba(255,150,50,${.45*(1-k)})`);g.addColorStop(1,'rgba(255,80,20,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,rr+1,0,TAU);ctx.fill();ctx.strokeStyle=`rgba(255,220,150,${1-k})`;ctx.lineWidth=4;ctx.stroke();}}
+  ctx.restore();}
+if(DEV){const q=(location.search.match(/[?&]fm=([a-z]+)/)||[])[1];if(q)setTimeout(()=>{if(!G2.on)fmxPlay(q);},2500);} // ?dev&fm=diet|guard|bomb starts one at once
 function badName(n){return !BHS_NAMES.check(n,'player').ok;}
 $('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(!selAv){const g=$('avGrid');g.classList.remove('nudge');void g.offsetWidth;g.classList.add('nudge');return;}
   if(n.length<2){const i=$('nameInp');i.classList.remove('nudge');void i.offsetWidth;i.classList.add('nudge');i.focus();return;} /* points at what is missing */if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};

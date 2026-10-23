@@ -387,10 +387,10 @@ function fleetWire(j){const w=$('lbFleet'),q=s=>w.querySelector(s),all=s=>w.quer
 // ── FLEET MISSIONS (1.5.0, added to the internal test on 15 Oct): three a day, one easy, one medium, one hard (src/fmis.js), each played on its own seeded cosmos
 // on the Daily Race's engine with the mission's kit; three tries a day, the best counts, a medal pays fleet points only ──
 var FMRUN=null; // the mission being played: {m, v (what it counts), d (its day)}; var, so the engine may look before this line runs
-const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} vuruş',caught:'{n} cisim',time:'{n} sn',score:'{n} puan',dodge:'{n} meteor'};
+const FMU={combo:'×{n}',garc:'{n} yay',hunt:'{n} vuruş',caught:'{n} cisim',time:'{n} sn',score:'{n} puan',dodge:'{n} meteor',guard:'{n} kaya',bomb:'{n} bomba'};
 const fmFmt=(m,v)=>T(FMU[m.m],{n:m.m==='score'?flN(v):v});
 function fmAdd(k,n){if(FMRUN&&FMRUN.m.m===k)FMRUN.v+=n;}
-function fmVal(){const R=FMRUN,k=R.m.m;return k==='combo'?maxCombo:k==='caught'?SPR_RUN.caught:k==='time'?Math.min(R.m.dur,Math.floor(SPR_RUN.t)):k==='score'?totalScore:R.v;}
+function fmVal(){const R=FMRUN,k=R.m.m;return k==='combo'?maxCombo:k==='caught'?SPR_RUN.caught:k==='time'?Math.min(R.m.dur,Math.floor(SPR_RUN.t)):k==='score'?totalScore:k==='guard'?(G2.guard?G2.guard.n:0):R.v;}
 function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNova=G2.tNova0=k.nova;G2.noRage=!k.rage; // the mission's kit, the same for everyone
   if(m.anti){const w=G2.L.w;w.anti=(w.anti||0)+18;w.ast=Math.max(12,(w.ast||0)-18);
     if(m.anti>1){let t=0;for(const x in w)t+=w[x];const a=w.anti,p=Math.min(.6,a/t*m.anti);w.anti=p*(t-a)/(1-p);}} /* m.anti times the share of antimatter the storm had */
@@ -398,7 +398,7 @@ function fmSetup(){const m=FMRUN.m,k=BHS_FMIS.kit(m);G2.tSh=G2.tSh0=k.sh;G2.tNov
   if(m.bar)G2.gb={B:m.bar,v:0,ts:totalScore,arc:null,arcs:[],n:0,life:m.life||0};else if(m.ev)G2.garcAt=5;
   if(m.mid){G2.midR=V2K.r0+(G2.cap-V2K.r0)*m.mid;G2.rr=G2.midR;} /* a medium hole that does not shrink: the belt is harder to slip through */
   {const rb=$('rage2');if(rb)rb.style.visibility=G2.noRage?'hidden':'';} /* no Vortex in this mission: no Vortex bar either */
-  if($('pb'))$('pb').style.display='none';} /* the time is on the HUD already: no progress line under it in a mission */
+  if($('pb'))$('pb').style.display='none';if(m.x)fmxSetup();} /* the time is on the HUD already: no progress line under it in a mission */
 function fmChainReady(fm){if(!fm||!fm.chain)return false;const c=fm.chain;return !c.got&&c.n>=c.need&&Object.keys(fm.me).some(k=>k!=='chain'&&fm.me[k].tier>0);}
 function flFmH(fm,left,mis){const F=BHS_FMIS,lvC=['k','o','z'],lvT=['★','★★','★★★']; /* easy, medium, hard: stars say it in every language */
   const card=id=>{const m=F.byId(id);if(!m)return '';const me=fm.me[id]||{best:0,tier:0,tries:0},rest=Math.max(0,F.TRIES-me.tries);
@@ -454,10 +454,10 @@ async function fmTop(m){const box=$('fmTopBox');if(!box)return;let r=null;try{r=
   const row=(x,i)=>`<div class="ft${x.me?' mine':''}"><span class="rk">${md[i]||i+1}</span><span class="nm"><b class="notr">${escH(x.name)}</b><small class="notr">${escH(x.emb+' '+x.fleet)}</small></span><b class="v">${fmFmt(m,x.v)}</b></div>`;
   const mine=r.me&&!r.list.slice(0,5).some(x=>x.me)?`<div class="ft mine"><span class="rk">${r.me.rank}</span><span class="nm"><b>${T('SEN')}</b></span><b class="v">${fmFmt(m,r.me.v)}</b></div>`:'';
   box.innerHTML=`<div class="fth">🏆 ${T('BUGÜNÜN SIRALAMASI')} <small>· ${T('{n} oyuncu',{n:r.n})}</small></div>${r.list.slice(0,5).map(row).join('')}${mine}`;box.hidden=false;}
-function fmQuit(){const R=FMRUN;if(!R)return;const v=fmVal()||0;SPR_RUN.ended=true;FMRUN=null;fmPost({day:R.d,id:R.m.id,v,t:Math.min(R.m.dur,SPR_RUN.t)});} // leaving a run keeps what it reached (its try is already used)
+function fmQuit(){const R=FMRUN;if(!R)return;const v=fmVal()||0;SPR_RUN.ended=true;FMRUN=null;if(R.d!=='dev')fmPost({day:R.d,id:R.m.id,v,t:Math.min(R.m.dur,SPR_RUN.t)});} // leaving a run keeps what it reached (its try is already used)
 function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=Math.min(m.dur,SPR_RUN.t),fm=FLV&&FLV.fm,me=fm&&fm.me[m.id]||{best:0,tier:0,tries:1};FMRUN=null;
   const best=Math.max(me.best||0,v),tier=F.tier(m,best),was=me.tier||0,run=F.tier(m,v),rest=Math.max(0,F.TRIES-(me.tries||1));
-  const md=['','🥉','🥈','🥇'];sfx(run>0?'levelup':'gameover',{vol:.8,rev:.4});if(rel(11)&&typeof liveCount==='function'){liveCount('fm',1);if(run>0)liveCount('fmg',1);} /* the live campaign's fleet tasks */
+  const md=['','🥉','🥈','🥇'],dev=R.d==='dev';sfx(run>0?'levelup':'gameover',{vol:.8,rev:.4});if(rel(11)&&typeof liveCount==='function'&&!dev){liveCount('fm',1);if(run>0)liveCount('fmg',1);} /* the live campaign's fleet tasks */
   const o=document.createElement('div');o.className='fm-ov';o.id='fmOv';
   o.innerHTML=`<div class="fm-card"><div class="big">${run?md[run]:fmIc(m,"lg")}</div><h3>${run?T(['','BRONZ MADALYA','GÜMÜŞ MADALYA','ALTIN MADALYA'][run]):T('MADALYA ÇIKMADI')}</h3><p>${T(m.n)}</p>
     <div class="res"><div class="w"><small>${T('BU KOŞU')}</small><b>${fmFmt(m,v)}</b></div><div><small>${T('BUGÜN EN İYİN')}</small><b>${fmFmt(m,best)}</b></div></div>
@@ -467,9 +467,9 @@ function fmEnd(){const R=FMRUN;if(!R)return;const F=BHS_FMIS,m=R.m,v=fmVal(),t=M
     <div class="row">${rest>0?`<button class="b1" id="fmAgain">🔁 ${T('TEKRAR')} · ${T('hak {n}/{m}',{n:rest,m:F.TRIES})}</button>`:''}<button class="b2" id="fmBack">🛸 ${T('FİLOYA DÖN')}</button></div>
     <div class="fm-note">${T('Normal puanına, rekorlarına ve seviye ilerlemene eklenmez.')}</div></div>`;
   document.body.appendChild(o);
-  fmPost({day:R.d,id:m.id,v,t}).then(r=>{if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier,mp:r.mp||0});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');
+  (dev?Promise.resolve({dev:1}):fmPost({day:R.d,id:m.id,v,t})).then(r=>{if(r&&r.dev){const g=$('fmGain');if(g)g.textContent='🛠 '+T('Geliştirici denemesi: sonuç gönderilmez.');return;} /* a new mission tried with ?dev: nothing goes to the server */if(fm&&r&&r.ok){Object.assign(fm.me[m.id]=fm.me[m.id]||{tries:1},{best:r.best,tier:r.tier,mp:r.mp||0});FL.at=0;}const g=$('fmGain');if(g&&!r)g.textContent='⏳ '+T('Bağlantı yok: sonucun sonra gönderilecek');
     if(g&&r&&r.ok&&r.n){const P=F.PAY;g.innerHTML=`<div class="fr"><span>${T('Filonun bu görevdeki ortalaması')} <small>(${T('{n} kişi',{n:r.n})})</small></span><b>${flN(r.avg)}</b></div><div class="fr"><span>${T('Bugünkü toplamın')} <small>(${r.g}/3)</small></span><b>${flN(r.my)}</b></div>${r.star?`<div class="fr st">🌟 ${T('Şu an filonun yıldızı sensin. Gün sonuna kadar kalırsan +{a} ⭐ +{b} 💎',{a:P.star[0],b:P.star[1]})}</div>`:''}`;}
     if(r&&r.ok)fmTop(m);});
   if(rel(11)&&fm){const x=fm.me[m.id]=fm.me[m.id]||{best:0,tier:0,tries:1};Object.assign(x,{best,tier,mp:Math.max(x.mp||0,F.mp(m,best))});} /* 19 Oct: the tries crossed out and the medal show at once on the way back */
   const back=()=>{fmClose();hideModals();if(rel(11)){fleetOpen('tasks');showMenu();}else{showMenu();fleetOpen('tasks');}if(rel(10))notifAsk('fleet');};
-  o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>fmPlay(m.id),500);};}
+  o.querySelector('#fmBack').onclick=back;if(o.querySelector('#fmAgain'))o.querySelector('#fmAgain').onclick=()=>{back();later0(()=>dev?fmxPlay(m.id):fmPlay(m.id),500);};}

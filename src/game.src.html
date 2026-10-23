@@ -4870,6 +4870,7 @@ function profClose(){$('sProfile').classList.remove('on');const b=profBack,m=pro
 // Fleet missions: the shared catalogue in src/fmis.js (the day's three, targets and fleet points; the server runs the same file)
 //@@FMIS@@
 //@@RAID@@
+//@@FMX@@
 function badName(n){return !BHS_NAMES.check(n,'player').ok;}
 $('profOk').onclick=()=>{const n=$('nameInp').value.trim();if(!selAv){const g=$('avGrid');g.classList.remove('nudge');void g.offsetWidth;g.classList.add('nudge');return;}
   if(n.length<2){const i=$('nameInp');i.classList.remove('nudge');void i.offsetWidth;i.classList.add('nudge');i.focus();return;} /* points at what is missing */if(badName(n)){toast('🚫',T('Bu isim kullanılamaz'),T('Başka bir isim seç'));return;}playerName=n;playerAvatar=selAv;PAUTO=false;saveG();SND.resume();sfx('confirm',{vol:.5});profClose();};

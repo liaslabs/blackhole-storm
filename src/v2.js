@@ -556,6 +556,7 @@ function v2Update(dt){
   if(G2.touched&&G2.tut>=1)G2.tut=.99;if(G2.tut<1&&G2.tut>0)G2.tut=Math.max(0,G2.tut-dt*2);
 
   if(RAID&&gameMode==='sprint'){raidStep(dt);if(gState!=='playing')return;}
+  if(FMRUN&&FMRUN.m.x){fmxStep(dt);if(gState!=='playing')return;} // the new missions (dev): the diet's limit, the bombs
   // spawning
   if(!G2.ending){
     if(G2.script)v2RunScript(dt);
@@ -882,7 +883,7 @@ const BELT={warn:2.8,end:1.4},BELTN=9,BELTR=9;
 // ── the Daily Race: the same 60 s for everyone, at speed 16–25, with the day's rule, a short meteor belt at 20 s and a nebula at 40 s ──
 const SPR_RULES=[{id:'ban',ic:'🚫',n:'YASAKLI CİSİMLER'},{id:'window',ic:'📏',n:'BOYUT PENCERESİ'},{id:'wind',ic:'🌬',n:'YILDIZ RÜZGÂRI'},{id:'eclipse',ic:'🌑',n:'TUTULMA'}];
 const sprRuleOf=seed=>SPR_RULES[(Math.imul(seed^0x45d9f3b,2654435761)>>>9)%SPR_RULES.length];
-function v2SprRule(){if(RAID)return null;if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
+function v2SprRule(){if(RAID)return null;if(FMRUN&&FMRUN.m.m==='guard')return {t:'guard',tip:'guard',guard:1,dur:FMRUN.m.dur+3,dmg:20,ic:'🛡',n:'KORUYUCU',k:0}; /* the new Planet Guardian mission (dev) plays the guardian levels' rule */if(FMRUN)return FMRUN.m.m==='hunt'?{t:'hunt',tip:'hunt',hunt:1,need:FMRUN.m.tg[2],life:20,ic:'🎯',n:'AV',k:0,multi:!!FMRUN.m.hunt}:null;const r=sprRuleOf(SPR_RUN.seed);if(r.id==='ban'){const s=RSETS[(SPR_RUN.seed>>>5)%RSETS.length];return {t:'restrict',tip:'restrict',ban:s.ban,ic:s.ic,n:s.n,k:s.k};}
   if(r.id==='window')return {t:'window',tip:'window',win:1,lo:1.4,hi:2.05,ic:'📏',n:'BOYUT PENCERESİ',k:.5};return null;}
 /* 20 Oct: the Daily Race's events come from the day's seed: two or three of the six, at times that shift from day to day, never the same
    one twice, always one meteor belt, each over before the 60 seconds are; every try of one day is still the same universe, so the ranking stays fair */
@@ -1278,7 +1279,7 @@ function v2Hit(o,whole){
 function v2HitNote(){ // freeze the action for a beat and say what happened
   G2.freeze=.75;G2.lifeHit=1;const el=$('hit2');if(!el)return;
   if(rel(10)){ /* 1.5.0 (14 Oct): the reason, then your hearts in a row; the one just lost shakes, bursts into shards and leaves an empty frame */
-    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':'METEOR ÇARPTI'),
+    const why=T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':G2.hitWhy==='bomb'?'BOMBA PATLADI':'METEOR ÇARPTI'),
       P='M12 20.4s-8.4-5.1-8.4-10.9A4.7 4.7 0 0 1 12 6.7a4.7 4.7 0 0 1 8.4 2.8c0 5.8-8.4 10.9-8.4 10.9z',
       full=`<svg viewBox="0 0 24 24"><path d="${P}" fill="url(#gHeart)" stroke="#6e0d1a" stroke-width=".8"/><path d="M7.1 8.3a2.5 2.5 0 0 1 2.9-.9" fill="none" stroke="#ffd2d6" stroke-width="1.2" stroke-linecap="round"/></svg>`,
       empty=`<svg viewBox="0 0 24 24"><path d="${P}" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.38)" stroke-width="1.1"/></svg>`,
@@ -1286,7 +1287,7 @@ function v2HitNote(){ // freeze the action for a beat and say what happened
     let h='';for(let i=0;i<n;i++)h+=i<lives?`<span>${full}</span>`:i===lives?`<span class="lost">${empty}<span class="f">${full}</span>${sh}</span>`:`<span>${empty}</span>`;
     el.className='b10';el.innerHTML=`<div class="t notr">${why}</div><div class="hr">${h}</div>`;
     el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);return;}
-  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
+  el.innerHTML=`<b>-1 ♥</b><div class="t">${T(G2.hitWhy==='rad'?'RADYASYONA YAKALANDIN':G2.hitWhy==='prey'?'AV KAÇTI':G2.hitWhy==='rival'?'RAKİP SENİ ISIRDI':G2.hitWhy==='guard'?'GEZEGEN VURULDU':G2.hitWhy==='raid'?'BOSS ÇARPTI':G2.hitWhy==='bomb'?'BOMBA PATLADI':'METEOR ÇARPTI')}</div><div class="hs">${'♥'.repeat(Math.max(0,lives))}<em>${'♥'.repeat(Math.max(0,3-lives))}</em></div>`;
   el.classList.remove('on');void el.offsetWidth;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1300);
 }
 function v2Fail(msg){
@@ -1344,6 +1345,7 @@ if(o.burst>0){o.burst-=dt;const v=Math.hypot(o.vx,o.vy),cr=sp2(rel(8)?190:rel(7)
 function v2Anti(){ // antimatter swallowed: the hole loses a third of its growth (Rage burns it off harmlessly)
   if(G2.mode!=='sprint')atlasAdd('anti');
   if(G2.rageT>0){const p=25;totalScore+=p;levelScore+=p;v2Pop('NÖTRLENDİ +'+p,'#ff4fd8',15);return;}
+  if(fmxAnti())return;
   G2.rr=G2.hunt&&G2.hunt.multi?V2K.r0:Math.max(V2K.r0,G2.rr-(G2.rr-V2K.r0)*.35-2);G2.pulse=1;shake=Math.max(shake,9); /* the mission hunt: back to the starting size */flash=Math.max(flash,.4);G2.antiT=3;for(const q of G2.objs)if(q.k!=='meteor'&&!q.boss&&q.v0x===undefined){q.v0x=q.vx;q.v0y=q.vy;} // for 3 s the hole pushes everything away and can swallow nothing; each body remembers its cruise speed
   v2Burst(hX,hY,30,'#ff4fd8',2,7,.6,2);v2Call('ANTİMADDE!','3 SN HİÇBİR ŞEY YUTAMAZSIN','#ff4fd8',1.4);v2Sfx('miss',{vol:.6,rate:1.3});vib([40,30,40]);
 }
@@ -1840,7 +1842,7 @@ function v2Frame(dt){
   v2DrawWorms();if(rel(10))v2DrawAsh();
   for(const o of G2.objs){if(o.cell!==undefined&&gl){if(o.k==='gold'&&o.st==='in')v2DrawGold(o);else if(o.k==='mpair'&&o.st==='in')v2DrawSat(o);else if((o.k==='split'||o.k==='half')&&o.st==='in')v2DrawCracks(o);continue;}v2DrawObj(o,gl);}
   if(G2.boss)v2DrawBoss(G2.boss,gl);
-  v2DrawRival();if(RAID)raidDraw(gl);if(rel(10))v2DrawBits(dt);
+  v2DrawRival();if(RAID)raidDraw(gl);if(FMRUN&&FMRUN.m.x)fmxDraw();if(rel(10))v2DrawBits(dt);
   v2DrawMarks();v2DrawEv();v2DrawSpec();v2DrawJet();v2DrawHawk();v2DrawWorm();v2DrawHor();
   ctx.save();ctx.globalCompositeOperation='lighter';ctx.lineCap='round';
   for(const p of G2.parts){ctx.globalAlpha=Math.max(0,p.life/p.max);ctx.strokeStyle=p.c;ctx.lineWidth=p.sz;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*2,p.y-p.vy*2);ctx.stroke();}
@@ -2095,7 +2097,7 @@ function v2DrawGBar(){const g=G2.gb;if(!g||gState==='menu'||G2.ending)return;con
   const gr=ctx.createLinearGradient(ix,0,ix+iw,0);gr.addColorStop(0,'#f2a93b');gr.addColorStop(1,'#ffe08c');ctx.fillStyle=gr;ctx.shadowColor='#ffd76a';ctx.shadowBlur=g.v>=g.B?12:0;ctx.beginPath();ctx.roundRect(ix,iy,Math.max(bh,iw*clamp(g.v/g.B,0,1)),bh,bh/2);ctx.fill();
   ctx.restore();}
 function v2DrawRule(){const r=G2.rule;if(!r||gState==='menu'||G2.ending||G2.hunt&&G2.hunt.multi)return; /* the mission hunt: its hits are the score on the HUD */const y=sp2(20);ctx.save();ctx.textAlign='center';ctx.textBaseline='middle';
-  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=G2.hunt.multi?`🎯 ${T('{n} vuruş',{n:FMRUN?FMRUN.v:0})}`:`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.guard&&G2.guard)txt=`🛡 ${T('KORUYUCU')} · ${T(Math.ceil(G2.guard.t)+' sn')}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
+  let txt=r.ic+' '+T(r.n);if(r.hunt)txt=G2.hunt.multi?`🎯 ${T('{n} vuruş',{n:FMRUN?FMRUN.v:0})}`:`🎯 ${T('AV')} ${G2.hunt.n}/${G2.hunt.need}`;if(r.guard&&G2.guard)txt=FMRUN?`🌍 ${T('GEZEGEN')} %${Math.ceil(G2.guard.hp)}`:`🛡 ${T('KORUYUCU')} · ${T(Math.ceil(G2.guard.t)+' sn')}`;if(r.rival&&G2.rv&&!G2.rv.dead)v2DrawRivalBar(y);ctx.font='800 12px "IBM Plex Sans Condensed",sans-serif';
   const w=ctx.measureText(txt).width+22,out=v2WinOut();ctx.fillStyle='rgba(10,12,18,.72)';ctx.strokeStyle=r.ban?'rgba(255,90,74,.8)':r.win?(out?'rgba(255,120,100,.9)':'rgba(141,255,203,.8)'):'rgba(255,215,106,.85)';ctx.lineWidth=1.5;
   const x0=W/2-w/2;ctx.beginPath();ctx.roundRect(x0,y-11,w,22,11);ctx.fill();ctx.stroke();ctx.fillStyle='#e8ebf4';ctx.fillText(txt,W/2,y+1);
   if(r.win){const bw=Math.min(W*.6,sp2(220)),bx=W/2-bw/2,by=y+19,s0=1,s1=Math.max(r.hi+.6,2.6),X=s=>bx+bw*clamp((s-s0)/(s1-s0),0,1),s=G2.rr/V2K.r0; // the size bar: green = scoring range
@@ -2259,7 +2261,7 @@ function v2Ui(force){
   if(force||h.left!==left){h.left=left;const v=$('tmr2v');if(v)v.textContent=left;if(G2.mode==='sprint')$('lvVal').textContent=left;if(tp)tp.classList.toggle('low',(G2.mode==='level'||G2.dstorm)&&left<=10);}
   const pct=G2.mode==='surv'?0:G2.guard?(1-G2.guard.t/G2.guard.dur)*100:G2.rv?(G2.rv.dead?100:clamp(G2.R/(G2.rv.R*RIV.eat),0,1)*100):G2.hunt&&!G2.hunt.multi?G2.hunt.n/G2.hunt.need*100:G2.mode==='sprint'?SPR_RUN.t/SPR_RUN.dur*100:G2.goal?levelScore/G2.goal*100:G2.boss?(1-G2.boss.hp/G2.boss.max)*100:0;if(h.pct!==Math.round(pct*4)){h.pct=Math.round(pct*4);const pb=$('pb'),q=Math.min(100,pct);pb.style.width=q+'%';
     if(rel(11)){const hu=Math.round(120*q/100);pb.style.setProperty('--pbc',`hsl(${hu},95%,62%)`);pb.style.setProperty('--pbg',`hsla(${hu},95%,62%,.4)`);pb.classList.toggle('near',q>=90&&q<100);}}}
-  {const dg=FMRUN&&FMRUN.m.m==='dodge',sc=dg?-3e6-FMRUN.v:G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?(G2.hunt.multi?-1e6-(FMRUN?FMRUN.v:0):-1-G2.hunt.n):G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>dg?`☄️ ${FMRUN.v}<small class="gl"> ${T('meteor')}</small>`:G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?(G2.hunt.multi?`${FMRUN&&typeof fmIc==='function'?fmIc(FMRUN.m):'🎯'} ${FMRUN?FMRUN.v:0}<small class="gl"> ${T('vuruş')}</small>`:`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`):G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
+  {const dg=FMRUN&&FMRUN.m.m==='dodge',fx=FMRUN&&FMRUN.m.x,sc=fx?-5e6-fmVal():dg?-3e6-FMRUN.v:G2.guard?-1000-Math.ceil(G2.guard.hp):G2.hunt?(G2.hunt.multi?-1e6-(FMRUN?FMRUN.v:0):-1-G2.hunt.n):G2.mode==='level'?levelScore:totalScore;if(force||h.sc!==sc||h.gl!==G2.goal){h.sc=sc;h.gl=G2.goal;v2ScFit(F=>fx?`${FMRUN.m.ic} ${fmVal()}<small class="gl"> ${T(FMRUN.m.m==='caught'?'cisim':FMRUN.m.m==='guard'?'kaya':'bomba')}</small>`:dg?`☄️ ${FMRUN.v}<small class="gl"> ${T('meteor')}</small>`:G2.guard?`🌍 ${Math.ceil(G2.guard.hp)}<small class="gl">%</small>`:G2.hunt?(G2.hunt.multi?`${FMRUN&&typeof fmIc==='function'?fmIc(FMRUN.m):'🎯'} ${FMRUN?FMRUN.v:0}<small class="gl"> ${T('vuruş')}</small>`:`🎯 ${G2.hunt.n}<small class="gl">/${G2.hunt.need}</small>`):G2.goal?`${F(Math.min(sc,G2.goal))}<small class="gl">/${F(G2.goal)}</small>`:F(sc),force);}}
   const m=MULT2(G2.combo),ck=G2.combo+'|'+m;
   if(force||h.ck!==ck){h.ck=ck;const el=$('combo');if(G2.combo>=2){el.innerHTML=`<b>COMBO ×${m}</b><span>${G2.combo}</span>`;el.style.opacity='1';el.style.color=m>=5?'#ff8a5c':m>=3?'#ffcf8a':'#e7e3da';}else el.style.opacity='0';}
   const ct=$('combo');if(ct&&G2.combo>=2)ct.style.setProperty('--ct',Math.max(0,G2.comboT/G2.L.comboT).toFixed(2));

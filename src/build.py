@@ -34,6 +34,8 @@ def main():
     # the fleet raid (developer preview)
     assert src.count('//@@RAID@@') == 1
     src = src.replace('//@@RAID@@', read(f'{SRC}/raid.js').rstrip('\n'))
+    assert src.count('//@@FMX@@') == 1
+    src = src.replace('//@@FMX@@', read(f'{SRC}/fmx.js').rstrip('\n'))
     # build stamp for error reports: the service worker cache name (bumped with every web release)
     import re
     m = re.search(r"CACHE = '([^']+)'", read(f'{ROOT}/sw.js'))
