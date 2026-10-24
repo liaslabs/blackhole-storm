@@ -3,15 +3,17 @@
 # "status" only reads. "listings" (texts, phone frames) and "release" (a version code to internal/alpha/beta, notes from
 # store/release-notes.md; with artifact_run the .aab of that Android build is uploaded first) only show what would change
 # unless "apply" is set. Production is never touched.
+# "products" (scripts/play_products.py) lists the one-time products; with "apply" it creates the missing ones from
+# store/play-urunleri.md (owner's decision, 24 Oct) and activates them. Subscriptions are not touched.
 name: Play mağaza girişi
 
 on:
   workflow_dispatch:
     inputs:
       task:
-        description: 'status = sadece oku, listings = metinler + telefon kareleri, release = test kanalına sürüm, video = yalnızca tanıtım videosu bağlantıları'
+        description: 'status = sadece oku, listings = metinler + telefon kareleri, release = test kanalına sürüm, video = yalnızca tanıtım videosu bağlantıları, products = tek seferlik ürünler'
         type: choice
-        options: [status, listings, release, video]
+        options: [status, listings, release, video, products]
         default: status
       apply:
         description: 'Değişiklikleri Play Console''a kaydet (kapalıysa yalnızca önizleme)'
@@ -79,7 +81,7 @@ jobs:
           path: ${{ runner.temp }}/aab
 
       - name: Kütüphaneler
-        run: pip install --quiet 'google-api-python-client>=2.150,<3' 'google-auth>=2.35,<3'
+        run: pip install --quiet 'google-api-python-client>=2.150,<3' 'google-auth>=2.35,<3' 'requests>=2.31,<3'
 
       - name: Play
         env:
@@ -94,6 +96,10 @@ jobs:
           AAB_DIR: ${{ inputs.artifact_run != '' && format('{0}/aab', runner.temp) || '' }}
         run: |
           if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret'ı yok."; exit 1; fi
+          if [ "$TASK" = "products" ]; then
+            if [ "${{ inputs.apply }}" = "true" ]; then python scripts/play_products.py --apply; else python scripts/play_products.py; fi
+            exit $?
+          fi
           args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --video-en "$VIDEO_EN" --track "$TRACK" --version-code "$VERSION_CODE")
           if [ -n "$AAB_DIR" ]; then aab=$(ls "$AAB_DIR"/*.aab | head -1); args+=(--aab "$aab" --version-name "$VERSION_NAME"); fi
           if [ "${{ inputs.apply }}" = "true" ]; then args+=(--apply); fi
