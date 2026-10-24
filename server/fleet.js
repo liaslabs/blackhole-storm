@@ -54,8 +54,13 @@ const newCode = () => [...rnd(6)].map(b => CODE_ABC[b % CODE_ABC.length]).join('
 async function key(a, b) { const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(a + ':' + b))); return [...h.slice(0, 6)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 
 let ready = false;
+// 24 Oct: the schema check below is some 25 statements one after another; with few players almost every request reaches a fresh
+// worker, so each paid about 4 s before its own query (the HAFTA and YARIŞ tabs seemed not to open). Now a fresh worker asks one
+// question first: a database already at this schema skips the rest. Raise SCHEMA whenever ensure() learns a table or column.
+const SCHEMA = 2;
 async function ensure(DB) {
   if (ready) return;
+  try { const r = await DB.prepare("SELECT v FROM fleet_meta WHERE k = 'schema'").first(); if (r && r.v >= SCHEMA) { ready = true; return; } } catch (e) { /* no marker table yet */ }
   for (const q of [
     'CREATE TABLE IF NOT EXISTS fleets (fid TEXT PRIMARY KEY, code TEXT NOT NULL UNIQUE, name TEXT NOT NULL, nkey TEXT NOT NULL UNIQUE, emb TEXT NOT NULL, open INTEGER NOT NULL DEFAULT 1, cap TEXT NOT NULL, created INTEGER NOT NULL, renames INTEGER NOT NULL DEFAULT 0, renamed INTEGER NOT NULL DEFAULT 0, hidden INTEGER NOT NULL DEFAULT 0, last INTEGER NOT NULL DEFAULT 0)',
     'CREATE TABLE IF NOT EXISTS fleet_members (pid TEXT PRIMARY KEY, fid TEXT NOT NULL, name TEXT NOT NULL, av TEXT, joined INTEGER NOT NULL, seen INTEGER NOT NULL)',
@@ -87,6 +92,10 @@ async function ensure(DB) {
     try { await DB.prepare(`ALTER TABLE ${t} ADD COLUMN ${c} INTEGER NOT NULL DEFAULT 0`).run(); } catch (e) { /* already there */ }
   // 18 Oct: a member who turned the fleet calls off
   try { await DB.prepare('ALTER TABLE fleet_members ADD COLUMN nocall INTEGER NOT NULL DEFAULT 0').run(); } catch (e) { /* already there */ }
+  // 24 Oct: the week's points per fleet and day (the YARIŞ tab's /fleets/top reads them by week, fleet and day)
+  await DB.prepare('CREATE INDEX IF NOT EXISTS fleet_pts_wfd ON fleet_pts (wk, fid, day)').run();
+  await DB.prepare('CREATE TABLE IF NOT EXISTS fleet_meta (k TEXT PRIMARY KEY, v INTEGER NOT NULL)').run();
+  await DB.prepare("INSERT INTO fleet_meta (k, v) VALUES ('schema', ?) ON CONFLICT(k) DO UPDATE SET v = excluded.v").bind(SCHEMA).run();
   ready = true;
 }
 

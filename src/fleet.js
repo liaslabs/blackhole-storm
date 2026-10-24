@@ -99,7 +99,7 @@ async function fleetRender(){const w=$('lbFleet');if(!w)return;fleetTabs();
   if(bestLevel<FL_LV){w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${T('Filolar {n}. seviyede açılır. Bir filoya katıl: haftalık sandıklar ve hafta sonu yarışı seni bekliyor.',{n:FL_LV})}</div>`;return;}
   if(FLS==='intro'&&!FL.fid){w.innerHTML=fleetIntroH();fleetIntroWire();return;} // the benefit cards need no connection
   const seq=fleetRender.n=(fleetRender.n||0)+1,now=rel(11)&&FLV&&FLV.fleet&&FLS==='main'&&(FLT==='tasks'||FLT==='crew'); /* 19 Oct: what is known is drawn at once (a finished mission's tries and medal, a sent message); the fresh look redraws it */
-  if(now)flDraw(w,FLV);else if(!FLV)w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`;
+  if(now)flDraw(w,FLV);else if(!FLV)w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`;else if(FLS==='main'&&FLV.fleet){w.innerHTML=`<div class="lbwait">${T('Yükleniyor…')}</div>`+flNavH();fleetWire(FLV);} /* 24 Oct: HAFTA and YARIŞ wait for the server; say so at once (the old page stayed and the tab seemed dead), the icons stay tappable */
   const j=await fleetFetch(FLS==='main');if(!$('sLB').classList.contains('on')||seq!==fleetRender.n)return; // a newer draw has started: this older answer is dropped
   if(!j){if(now)return;w.innerHTML=`<div class="hero"><b>🛸 ${T('FİLO')}</b>${flErr('off')}</div><div class="two"><button class="btn sec" id="flRetry">${T('TEKRAR DENE')}</button></div>`;$('flRetry').onclick=()=>fleetRender();return;}
   await flDraw(w,j);}
