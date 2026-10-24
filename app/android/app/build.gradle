@@ -36,7 +36,7 @@ android {
     buildTypes {
         release {
             if (bhsKeystore) signingConfig signingConfigs.release
-            minifyEnabled true // 1.5.2: R8 shrinks and optimises the code; the mapping file goes to Play with the bundle so crash reports stay readable
+            minifyEnabled false // 24 Oct: code 73 with R8 closed itself at start on the owner's phone (no trace yet); off again until Play's crash report names what it removed
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
