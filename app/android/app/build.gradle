@@ -36,8 +36,8 @@ android {
     buildTypes {
         release {
             if (bhsKeystore) signingConfig signingConfigs.release
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true // 1.5.2: R8 shrinks and optimises the code; the mapping file goes to Play with the bundle so crash reports stay readable
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

@@ -4,6 +4,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -19,6 +20,7 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(BhsPlugin.class);
         com.google.android.gms.games.PlayGamesSdk.initialize(this); // Play Games signs the player in by itself when it can (cloud backup)
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this); // 1.5.2: after super.onCreate (in 1.4.5 it ran before and the window came up with a title bar over the game)
         getWindow().getDecorView().setBackgroundColor(0xFF03040A);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         View web = getBridge().getWebView();

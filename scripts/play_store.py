@@ -174,6 +174,11 @@ def release(ed, eid, track, code, apply, aab='', vname=''):
             if got != code:
                 sys.exit(f'Paketteki kod {got}, beklenen {code}: hiçbir şey kaydedilmedi')
             say(f'Yüklendi: kod {got}')
+            mp = p.parent / 'mapping.txt'
+            if mp.is_file():  # 1.5.2: R8's mapping, so Play shows crash reports with the real names
+                ed.deobfuscationfiles().upload(packageName=PKG, editId=eid, apkVersionCode=int(code), deobfuscationFileType='proguard',
+                                               media_body=MediaFileUpload(str(mp), mimetype='application/octet-stream', resumable=True)).execute()
+                say(f'Eşleme dosyası yüklendi ({mp.stat().st_size / 1e6:.1f} MB)')
         name = f'{code} ({vname})'
     else:
         if code not in codes:
