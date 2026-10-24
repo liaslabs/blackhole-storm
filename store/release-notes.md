@@ -278,6 +278,8 @@ Her güncellemede:
 Fiyatın yanındaki "/ay" artık para birimi sayıdan sonra gelen ülkelerde de çevriliyor (3,99 €/Monat). Önizleme: `onizleme/vip-magaza.png`.
 Test: lisans hesabıyla abone ol (test aboneliği 5 dakikada bir yenilenir): VIP rozeti, sınırsız yakıt, günlük ekstra, aylık paket, ikinci Lab yuvası;
 Play › Abonelikler'den iptal → süre sonunda VIP kalkar. 76 üretime gönderilmedi; sorun yoksa üretime 77 gider.
+Üretime gönderme (24 Eki'den beri benden, sahibi isteyince): Actions › Play mağaza girişi › `release`, track `production`, `production_ok`,
+`rollout` (100 = herkes), `version_code` 77, `apply`. Önizleme denendi: şu an 74 (1.5.2), yeni 77 (1.5.4), not 171 karakter.
 
 <en-US>
 • VIP Club: unlimited fusion fuel, daily extras and a monthly pack
