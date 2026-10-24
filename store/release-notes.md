@@ -273,14 +273,16 @@ Her güncellemede:
 ## 1.5.2 (plan) · Android bakım güncellemesi
 **Kod 73 derlendi** (24 Eki 11:40 TSİ, Android derlemesi 40078744250, `blackhole` 71e53d2, `bhs-v109`): `EdgeToEdge.enable` super.onCreate'ten sonra,
 R8 açık (`proguard-android-optimize` + Capacitor/eklenti/uygulama koruma kuralları), AGP 9.0 + Gradle 9.1 (`android.builtInKotlin=false`,
-`android.newDsl=false`), paketle birlikte `mapping.txt` (Play yüklemesi onu da gönderir). Oyun kodu 72'ninkiyle aynı, üstüne yalnız
-geliştirici modunda açılan denemeler (Filo Baskını, yeni filo görevleri). **Dahili test'e yükleme kod 72 üretimde onaylanınca** (inceleme
+`android.newDsl=false`), paketle birlikte `mapping.txt` (Play yüklemesi onu da gönderir). Oyun: 72 + bakmak için açılan 11 pencere (Sıralama/Filo, Ayarlar, Mağaza, Rehber, Atlas, Görevler,
+Sezon, Kabuk, Lab, Bahçe, Sefer) dışarıya kısa dokunuşla kapanır (karar isteyen pencereler kapanmaz, sürükleme sayılmaz); HAFTA ve YARIŞ
+sekmeleri basınca hemen 'Yükleniyor…' gösterir. Üstüne yalnız geliştirici modunda açılan denemeler (Filo Baskını, yeni filo görevleri). **Dahili test'e yükleme kod 72 üretimde onaylanınca** (inceleme
 sırasında Play API ile değişiklik yapılmaz). Telefonda: üst bar görünür mü, satın alma ekranı açılır mı, reklam yüklenir ve sonrakini hazırlar mı,
 bildirim, paylaşım, titreşim.
 
 <en-US>
+• Tap outside a window to close it
+• Fleet screens open faster
 • Under-the-hood update for newer Android versions
-• Stability improvements
 </en-US>
 
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.

@@ -8445,6 +8445,14 @@ $('spAgain').onclick=()=>startSprint(SPR_RUN.seed,SPR_RUN.res&&SPR_RUN.res.chal?
 $('spMenu').onclick=()=>{hideModals();showMenu();};
 $('chNo').onclick=()=>$('sChal').classList.remove('on');
 $('lbClose').onclick=()=>{$('sLB').classList.remove('on');if(typeof fleetMode==='function')fleetMode(false);if(rel(10)&&gState==='menu'&&!document.querySelector('.screen.on,.modal.on'))showMenu();}; // nothing left behind the window: back to the menu
+// 24 Oct: a short tap on the dark space round a window that is only for looking closes it, as its own close button would. Windows that
+// ask for a decision (a purchase, a continue, a level's or a mission's result, the pause, a tip to be read) keep their buttons only.
+// A drag that ends outside is not a tap, so scrolling a long list never closes it.
+const TAPX={sLB:'lbClose',sSet:'setClose',sShop:'shopClose',sGuide:'guideClose',sAtlas:'atClose',sDM:'dmClose',sSeason:'snClose',sSkin:'skClose',sLab:'labX',sGarden:'gdClose',sExp:'exClose'};
+for(const [sid,bid] of Object.entries(TAPX)){const sc=$(sid);if(!sc)continue;let dn=null;
+  sc.addEventListener('pointerdown',e=>{dn=e.target===sc?{x:e.clientX,y:e.clientY,t:performance.now()}:null;});
+  sc.addEventListener('pointerup',e=>{const q=dn;dn=null;if(!q||e.target!==sc||!sc.classList.contains('on'))return;
+    if(Math.hypot(e.clientX-q.x,e.clientY-q.y)>10||performance.now()-q.t>500||document.querySelector('.fm-ov'))return;const b=$(bid);if(b)b.click();});}
 
 $('pauseBtn').onclick=e=>{e.stopPropagation();if(gState==='paused')resumeGame();else pauseGame();};
 $('pResume').onclick=resumeGame;
