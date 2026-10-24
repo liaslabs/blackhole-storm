@@ -142,9 +142,9 @@ ve Vortex görevi bozduğu yerde kapalı (Diyet, Renk, Bomba, Sapan, Bilardo), y
 
 **24 Eki: ilk üçü motorda (geliştirici denemesi, `?dev&fm=diet|guard|bomb`, `src/fmx.js`).** Günlük seçime ve sunucuya henüz girmez,
 sonuç gönderilmez. **Diyet** 60 sn: boyut sınırı (×1,55), her cisim yarı büyütür, antimadde dost (büyümenin yarısını alır), kit 1 kalkan.
-**Gezegen Koruyucusu** 90 sn: seviyelerdeki koruyucu kuralı, her kaya +1, gezegen yıkılırsa bir can; kit 2 kalkan, 1 Süpernova, Vortex.
+**Gezegen Koruyucusu · Yörünge Bekçisi** 90 sn: delik gezegenin yörüngesine kilitli, parmakla çember üzerinde döner; kayalar her yönden, her kaya +1, gezegen yıkılırsa bir can; kit 2 kalkan, 1 Süpernova, Vortex.
 **Bomba İmhası** 90 sn: geri sayımlı bombalar (sık ve kısa sigortalı olur), patlama bir yay kırar, kalkan korur, delik en fazla ×1,6; kit 2 kalkan.
-Hedefler bot ölçümünden: Diyet 20/40/60 cisim, Gezegen 12/24/35 kaya, Bomba 27/55/80 bomba. Yayına almak için: `BHS_FMIS.L`'ye ekle
+Hedefler bot ölçümünden: Diyet 20/40/60 cisim, Gezegen (Yörünge Bekçisi) 25/50/75 kaya, Bomba 27/55/80 bomba. Yayına almak için: `BHS_FMIS.L`'ye ekle
 (sunucu da okur, aynı gün birlikte yayınlanır), 11 dile çeviri, simgeler (FMIC), gerçek oyuncu verisiyle hedef ayarı.
 
 **Sonra değerlendirilecek (sahibinin fikri):** bazıları normal oyunda ileri bölümlerde **bonus seviye** olarak da gelsin, oyuncu kendi

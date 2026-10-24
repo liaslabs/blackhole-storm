@@ -8270,11 +8270,11 @@ function raidDraw(gl){const R=RAID,S=G2.S,t=clock;ctx.save();
 if(DEV&&/[?&]raid\b/.test(location.search))setTimeout(()=>{if(!G2.on)raidPlay();},2500); // ?dev&raid opens the invite (add &raidfast for a boss every 8 s)
 // New fleet missions (developer preview, ?dev&fm=<id>): Diet, Planet Guardian, Bomb Disposal. They are kept out of BHS_FMIS.L for now:
 // the day's pick and the server read that list, so these join it with the release that brings their rules, targets and translations.
-// targets (24 Oct) from the recorder's bot, two runs each: the diet 19 and 60 (both over the limit early), the planet 28 and 42 rocks,
+// targets (24 Oct) from the recorder's bot, two runs each: the diet 19 and 60 (both over the limit early), the planet (Orbit Keeper) 75 and 79 rocks,
 // the bombs 81 and 80 (7 blasts each); gold is about the bot's best, to be tuned with real play as the first missions were
 const FMX=[
   {id:'diet',lv:0,ic:'🥗',n:'DİYET',d:'Bu kez büyüme! Küçük cisimleri yut, boyut sınırını geçme. Antimadde dost: yutunca küçültür.',dur:60,m:'caught',tg:[20,40,60],max:400,diet:1.55,anti:1,bodies:1,kit:{sh:1,nova:0,rage:0},x:1},
-  {id:'guard',lv:1,ic:'🌍',n:'GEZEGEN KORUYUCUSU',d:'Kara delik gezegenin yörüngesine kilitli: parmağını kaydır, çember üzerinde döner. Gezegene gelen kayaların yolunu kes, her kaya +1. Gezegen yıkılırsa bir can gider.',orbit:1,dur:90,m:'guard',tg:[12,24,35],max:150,kit:{sh:2,nova:1,rage:1},x:1},
+  {id:'guard',lv:1,ic:'🌍',n:'GEZEGEN KORUYUCUSU',d:'Kara delik gezegenin yörüngesine kilitli: parmağını kaydır, çember üzerinde döner. Gezegene gelen kayaların yolunu kes, her kaya +1. Gezegen yıkılırsa bir can gider.',orbit:1,dur:90,m:'guard',tg:[25,50,75],max:250,kit:{sh:2,nova:1,rage:1},x:1},
   {id:'bomb',lv:2,ic:'💣',n:'BOMBA İMHASI',d:'Geri sayımlı bombalar beliriyor. Patlamadan önce yut! Her patlama bir yay kırar; kalkan korur.',dur:90,m:'bomb',tg:[27,55,80],max:200,bombs:1,kit:{sh:2,nova:0,rage:0},x:1}];
 let FX=null; // the running mission's own state
 function fmxPlay(id){const m=FMX.find(x=>x.id===id);if(!DEV||!m)return;fmClose();hideModals();startSprint((Date.now()%1e6)^0x77,{fm:m,fmDay:'dev'});}
