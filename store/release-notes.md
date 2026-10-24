@@ -272,7 +272,7 @@ Her güncellemede:
 ```
 
 ## 1.5.3 (24 Ekim) · `REL` 11 · Android 8–9 koruması ve yerel para birimi
-**Kod 76** (`bhs-v110`): kod 75'in Android 8–9 açılış koruması (Play Oyunlar girişi, uçtan uca ekran, pencere ve çubuk ayarı `try` içinde;
+**Kod 76 Dahili test'te** (24 Eki 15:03 TSİ, Play API ile; Android derlemesi 40091799244, `blackhole` 925c93c, `bhs-v110`): kod 75'in Android 8–9 açılış koruması (Play Oyunlar girişi, uçtan uca ekran, pencere ve çubuk ayarı `try` içinde;
 açılış hataları `/err`'e `BOOT ...`) + mağazada Başlangıç Paketi ve Kuasar Hazinesi'nin altındaki "değeri" yazısı: Türkiye'de TL metni
 aynen (₺79,99 · ₺235+), başka ülkelerde aynı oran (×4 · ×1,175) Play'in gösterdiği fiyata uygulanır, .99'a yuvarlanır, oyuncunun para
 biriminde ve sayı biçiminde (ör. worth $7.99 · Wert 7,99 € · ￥1,200相当). Ürünler 24 Eki'de Play'de açıldı (`store/play-urunleri.md`).
