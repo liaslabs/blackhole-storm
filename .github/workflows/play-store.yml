@@ -2,7 +2,8 @@
 # Uses the service account in secret PLAY_SERVICE_ACCOUNT_JSON (store presence, testing tracks, reviews; no production, no finance).
 # "status" only reads. "listings" (texts, phone frames) and "release" (a version code to internal/alpha/beta, notes from
 # store/release-notes.md; with artifact_run the .aab of that Android build is uploaded first) only show what would change
-# unless "apply" is set. Production is never touched.
+# unless "apply" is set. Production (24 Oct, owner's decision): track "production" with "production_ok" ticked, only a
+# version code already on a testing track, "rollout" percent of users; it goes to Google's review right away.
 # "products" (scripts/play_products.py) lists the one-time products; with "apply" it creates the missing ones from
 # store/play-urunleri.md (owner's decision, 24 Oct) and activates them. Subscriptions are not touched.
 name: Play mağaza girişi
@@ -38,8 +39,16 @@ on:
       track:
         description: 'release: test kanalı'
         type: choice
-        options: [alpha, internal, beta]
+        options: [alpha, internal, beta, production]
         default: alpha
+      production_ok:
+        description: 'release: üretim kanalına izin (sahibi bu sürümü üretime istedi)'
+        type: boolean
+        default: false
+      rollout:
+        description: 'release: üretimde kullanıcı yüzdesi (100 = herkes)'
+        required: false
+        default: '100'
       version_code:
         description: 'release: sürüm kodu (ör. 22)'
         required: false
@@ -100,7 +109,8 @@ jobs:
             if [ "${{ inputs.apply }}" = "true" ]; then python scripts/play_products.py --apply; else python scripts/play_products.py; fi
             exit $?
           fi
-          args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --video-en "$VIDEO_EN" --track "$TRACK" --version-code "$VERSION_CODE")
+          args=("$TASK" --only "$ONLY" --video-tr "$VIDEO_TR" --video-en "$VIDEO_EN" --track "$TRACK" --version-code "$VERSION_CODE" --rollout "${{ inputs.rollout || '100' }}")
+          if [ "${{ inputs.production_ok }}" = "true" ]; then args+=(--production); fi
           if [ -n "$AAB_DIR" ]; then aab=$(ls "$AAB_DIR"/*.aab | head -1); args+=(--aab "$aab" --version-name "$VERSION_NAME"); fi
           if [ "${{ inputs.apply }}" = "true" ]; then args+=(--apply); fi
           if [ "${{ inputs.send_for_review }}" = "true" ]; then args+=(--send-for-review); fi

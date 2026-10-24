@@ -1,9 +1,10 @@
 """Google Play store listing through the Publishing API (run by .github/workflows/play-store.yml).
 
-The service account (secret PLAY_SERVICE_ACCOUNT_JSON) has only these Play Console permissions:
-view app info, release to testing tracks, manage store presence, reply to reviews.
-This script touches store listings (texts, phone screenshots, video link) and testing-track releases
-(internal, alpha, beta; a new .aab can be uploaded for them) and nothing else: no in-app products, prices, policy declarations or production.
+The service account (secret PLAY_SERVICE_ACCOUNT_JSON) has these Play Console permissions: view app info, release to testing
+tracks, manage store presence, reply to reviews; and, since 24 Oct 2026 at the owner's request, release to production.
+This script touches store listings (texts, phone screenshots, video link) and releases (internal, alpha, beta; a new .aab can be
+uploaded for them). Production only with --production and a version already on a testing track: the owner asks for each one.
+No policy declarations (one-time products and the subscription are scripts/play_products.py).
 
 Every run works inside one Play "edit". Without --apply the edit is thrown away, so nothing changes;
 the run only prints what it would do.
@@ -139,7 +140,7 @@ def videos(ed, eid, only, video_tr, video_en, apply):
     return changed
 
 
-TEST_TRACKS = ('internal', 'alpha', 'beta')  # production is never touched from here
+TEST_TRACKS = ('internal', 'alpha', 'beta')  # production needs --production: the owner asks for each production release
 
 
 def notes_for(name):
@@ -151,10 +152,17 @@ def notes_for(name):
     return [{'language': lang, 'text': txt.strip()} for lang, txt in re.findall(r'<([a-z]{2,3}(?:-[A-Za-z0-9]+)?)>\n(.*?)\n</\1>', m.group(0), re.S)]
 
 
-def release(ed, eid, track, code, apply, aab='', vname=''):
+def release(ed, eid, track, code, apply, aab='', vname='', prod=False, rollout=100):
     say(f'## Sürüm · {track} · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
-    if track not in TEST_TRACKS:
-        sys.exit(f'{track}: yalnızca test kanalları ({", ".join(TEST_TRACKS)})')
+    if track == 'production':
+        if not prod:
+            sys.exit('production için --production gerekli (sahibi her üretim sürümünü ayrıca ister)')
+        if aab:
+            sys.exit('Üretime yeni paket yüklenmez: önce bir test kanalında denenmiş kod gönderilir')
+        if not 1 <= rollout <= 100:
+            sys.exit('rollout 1-100 arası bir yüzde olmalı')
+    elif track not in TEST_TRACKS:
+        sys.exit(f'{track}: test kanalları ({", ".join(TEST_TRACKS)}) ya da production')
     codes = {str(b['versionCode']) for b in ed.bundles().list(packageName=PKG, editId=eid).execute().get('bundles', [])}
     tracks = {t['track']: t.get('releases', []) for t in ed.tracks().list(packageName=PKG, editId=eid).execute().get('tracks', [])}
     if aab:
@@ -187,8 +195,11 @@ def release(ed, eid, track, code, apply, aab='', vname=''):
     ver = re.search(r'\(([\d.]+)\)', name)
     notes = notes_for(ver.group(1)) if ver else []
     cur = tracks.get(track, [])
-    say('Şu an: ' + (', '.join(f"{r.get('name')} ({r.get('status')})" for r in cur) or '-'))
-    say(f'Yeni: **{name}** (kod {code}, tüm test kullanıcılarına)')
+    if track == 'production' and not any(code in r.get('versionCodes', []) for t in TEST_TRACKS for r in tracks.get(t, [])):
+        sys.exit(f'Kod {code} hiçbir test kanalında yok: üretime önce denenmiş sürüm gider')
+    say('Şu an: ' + (', '.join(f"{r.get('name')} ({r.get('status')}" + (f", %{round(r['userFraction'] * 100)}" if r.get('userFraction') else '') + ')' for r in cur) or '-'))
+    who = f'kullanıcıların %{rollout}\'ine' if track == 'production' and rollout < 100 else ('tüm kullanıcılara' if track == 'production' else 'tüm test kullanıcılarına')
+    say(f'Yeni: **{name}** (kod {code}, {who})')
     for n in notes:
         say(f"Sürüm notu ({n['language']}, {len(n['text'])} kr):")
         say('```')
@@ -202,7 +213,10 @@ def release(ed, eid, track, code, apply, aab='', vname=''):
         say('Bu kod bu kanalda zaten yayında; değişiklik yok.')
         return 0
     if apply:
-        body = {'track': track, 'releases': [{'name': name, 'versionCodes': [code], 'status': 'completed', 'releaseNotes': notes}]}
+        rel = {'name': name, 'versionCodes': [code], 'status': 'completed', 'releaseNotes': notes}
+        if track == 'production' and rollout < 100:
+            rel.update(status='inProgress', userFraction=rollout / 100)  # staged: raised later in Play Console, or halted there
+        body = {'track': track, 'releases': [rel]}
         ed.tracks().update(packageName=PKG, editId=eid, track=track, body=body).execute()
     return 1
 
@@ -215,7 +229,9 @@ def main():
     a.add_argument('--only', default='', help='comma-separated languages, e.g. tr-TR,de-DE')
     a.add_argument('--video-tr', default='', help='YouTube link for the tr-TR listing')
     a.add_argument('--video-en', default='', help='video: YouTube link for every listing other than tr-TR')
-    a.add_argument('--track', default='alpha', help='release: internal, alpha or beta')
+    a.add_argument('--track', default='alpha', help='release: internal, alpha, beta or production (with --production)')
+    a.add_argument('--production', action='store_true', help='release: allow the production track (the owner asked for this release)')
+    a.add_argument('--rollout', type=int, default=100, help='release to production: percent of users (100 = everyone)')
     a.add_argument('--version-code', default='', help='release: version code already uploaded to Play (or in --aab)')
     a.add_argument('--aab', default='', help='release: an .aab from the Android build to upload first')
     a.add_argument('--version-name', default='', help='release: version name for an uploaded .aab, e.g. 1.4.9')
@@ -233,14 +249,14 @@ def main():
             if o.task == 'release':
                 if not o.version_code.isdigit():
                     sys.exit('release için --version-code gerekli')
-                n = release(ed, eid, o.track, o.version_code, o.apply, o.aab, o.version_name)
+                n = release(ed, eid, o.track, o.version_code, o.apply, o.aab, o.version_name, o.production, o.rollout)
             elif o.task == 'video':
                 n = videos(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.video_en.strip(), o.apply)
             else:
                 n = listings(ed, eid, [x.strip() for x in o.only.split(',') if x.strip()], o.video_tr.strip(), o.apply)
             if o.apply and n:
                 ed.validate(packageName=PKG, editId=eid).execute()
-                sent = o.send_for_review
+                sent = o.send_for_review or o.track == 'production'  # a production release is meant to go to review now
                 try:
                     ed.commit(packageName=PKG, editId=eid, changesNotSentForReview=not sent).execute()
                 except HttpError as e:
