@@ -271,6 +271,18 @@ Her güncellemede:
 ```
 
 ## 1.5.2 (plan) · Android bakım güncellemesi
+**Kod 73 derlendi** (24 Eki 11:40 TSİ, Android derlemesi 40078744250, `blackhole` 71e53d2, `bhs-v109`): `EdgeToEdge.enable` super.onCreate'ten sonra,
+R8 açık (`proguard-android-optimize` + Capacitor/eklenti/uygulama koruma kuralları), AGP 9.0 + Gradle 9.1 (`android.builtInKotlin=false`,
+`android.newDsl=false`), paketle birlikte `mapping.txt` (Play yüklemesi onu da gönderir). Oyun kodu 72'ninkiyle aynı, üstüne yalnız
+geliştirici modunda açılan denemeler (Filo Baskını, yeni filo görevleri). **Dahili test'e yükleme kod 72 üretimde onaylanınca** (inceleme
+sırasında Play API ile değişiklik yapılmaz). Telefonda: üst bar görünür mü, satın alma ekranı açılır mı, reklam yüklenir ve sonrakini hazırlar mı,
+bildirim, paylaşım, titreşim.
+
+<en-US>
+• Under-the-hood update for newer Android versions
+• Smaller, faster app
+</en-US>
+
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
   Play Console "Uygulama paketi gezgini": DEX optimizasyonu düşük, kod karartma %2. Önce kendi telefonda satın alma,
   reklam, bildirim, paylaşım ve titreşim tek tek denenecek.
