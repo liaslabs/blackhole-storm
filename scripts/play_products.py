@@ -126,7 +126,7 @@ def main():
                 'listings': [{'languageCode': 'en-US', 'title': p['en'][0], 'description': p['en'][1]},
                              {'languageCode': 'tr-TR', 'title': p['tr'][0], 'description': p['tr'][1]}],
                 'purchaseOptions': [po]}
-        call(s, 'PATCH', f"/oneTimeProducts/{p['id']}", json=body,
+        call(s, 'PATCH', f"/onetimeproducts/{p['id']}", json=body,  # Play spells this one path in lower case
              params={'updateMask': 'listings,purchaseOptions', 'allowMissing': 'true', 'regionsVersion.version': ver})
         call(s, 'POST', f"/oneTimeProducts/{p['id']}/purchaseOptions:batchUpdateStates",
              json={'requests': [{'activatePurchaseOptionRequest': {'packageName': PKG, 'productId': p['id'], 'purchaseOptionId': 'default'}}]})
