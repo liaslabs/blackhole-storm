@@ -120,6 +120,16 @@ else
   log "graphify kurulamadı"
 fi
 
+# Skill kullanım kuralı: her oturumda okunan global CLAUDE.md'ye bir kez eklenir.
+# Graphify da bu dosyaya yazdığı için ondan sonra çalışır.
+if ! grep -qF '# skill-first' "$HOME/.claude/CLAUDE.md" 2>/dev/null; then
+  cat >> "$HOME/.claude/CLAUDE.md" <<'RULE_EOF'
+
+# skill-first
+Before starting any task, quickly scan the installed skills (global and account) and use every one that fits; say in one line which skill(s) you used. If none fits and the task is a recurring kind, suggest a skill that could be installed (find-skills can search), but never install one without the user's approval.
+RULE_EOF
+fi
+
 # ---------------------------------------------------------------------------
 # C) Key/cookie hook'u: her oturum başında ortam değişkenlerinden ayarlar
 # ---------------------------------------------------------------------------
