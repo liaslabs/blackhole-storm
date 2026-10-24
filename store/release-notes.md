@@ -280,7 +280,7 @@ bildirim, paylaşım, titreşim.
 
 <en-US>
 • Under-the-hood update for newer Android versions
-• Smaller, faster app
+• Stability improvements
 </en-US>
 
 - R8 sıkıştırma (`minifyEnabled true`) + Capacitor, Play Billing, AdMob ve bildirim eklentileri için keep kuralları.
