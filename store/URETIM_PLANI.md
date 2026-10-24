@@ -217,7 +217,7 @@ Reklam birimleri zaten var ve kodda yazılı: Ödüllü `…/4584098403`, Geçi�
 | Her sabah | Ben günlük raporu çekerim: açılışlar (sürüm/dil), eğitimi bitirme, ilk seviyeler, satın almalar, reklam izlenmesi, hatalar |
 | +2 gün | Vitals iyiyse **%50**, ardından +2 gün **%100** (sen, Üretim › Dağıtımı artır) |
 | 30 Eki | İlk kampanya kendiliğinden başlar; ben menüde göründüğünü kontrol ederim |
-| +%100 sonrası | **Hatırlat (22 Eki önerisi):** filo sıralaması (`/fleets/top`) 4 sn sürüyor; `fleet_pts` için `(wk, fid, day)` dizini ve tek sorguda toplam, önce yerelde ölç, sonra sunucu yayını (onayla) |
+| ☑ 24 Eki | **Yapıldı, sunucu yayında (24 Eki 11:51 TSİ):** asıl neden her yeni worker'daki ~25 sıralı şema komutuydu (her filo isteği ~4 sn; HAFTA ve YARIŞ açılmıyor gibiydi). Şema sürümü (`fleet_meta`) + `fleet_pts (wk, fid, day)` dizini: /fleets/top 4,1 → 0,3–0,7 sn, /fleets/fm 4,2 → 0,7–1,1 sn, /fleet 3,9 → 0,2–0,3 sn. Önceki not: `fleet_pts` için `(wk, fid, day)` dizini ve tek sorguda toplam, önce yerelde ölç, sonra sunucu yayını (onayla) |
 | +1 hafta | İlk ayar turu: geri dönüş, zorluk, mağaza dönüşümü (P1) |
 | +2–4 hafta | Viral işler (P2): paylaşım kartı, filo davetiyle gelen oyuncuya hediye, Günlük Yarış meydan okuma bağlantısı |
 
