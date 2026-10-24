@@ -2146,7 +2146,7 @@ const REL=11,rel=n=>DEV||REL>=n;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
-const BUILD="bhs-v109",APPVER="";
+const BUILD="bhs-v110",APPVER="";
 // 22 Oct: canvas roundRect arrived in Chrome 99; on an older Android WebView the first level threw on every frame and froze
 if(window.CanvasRenderingContext2D&&!CanvasRenderingContext2D.prototype.roundRect)CanvasRenderingContext2D.prototype.roundRect=function(x,y,w,h,r){
   r=Math.max(0,Math.min(+(Array.isArray(r)?r[0]:r)||0,Math.abs(w)/2,Math.abs(h)/2));
