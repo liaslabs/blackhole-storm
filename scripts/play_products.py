@@ -6,7 +6,8 @@ Without --apply it only reads: what Play already has, and what would be created 
 With --apply it creates the missing products (purchase option "default", buy, backward compatible), prices every
 region from the US price with Play's own conversion, sets Turkey to its TL price, and activates them.
 A product that already has an active purchase option keeps its prices; only its names and descriptions are brought
-in line with the files. Subscriptions are not touched.
+in line with the files. The VIP subscription (store/play-abonelik.json) is created the same way with one monthly
+auto-renewing base plan; once it exists only its texts are updated.
 """
 import argparse, json, os, re, sys
 from decimal import Decimal
@@ -88,7 +89,12 @@ def main():
     a.add_argument('--apply', action='store_true', help='create and activate the missing products')
     o = a.parse_args()
     s, plan = session(), products()
-    say('## Tek seferlik ürünler · ' + ('UYGULANIYOR' if o.apply else 'ÖNİZLEME (değişiklik yok)'))
+    onetime(s, plan, o.apply)
+    subscription(s, o.apply)
+
+
+def onetime(s, plan, apply):
+    say('## Tek seferlik ürünler · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
 
     have, tok = {}, None
     while True:
@@ -123,7 +129,7 @@ def main():
     say('')
     say('Diller: ' + ', '.join(l for l, _, _ in plan[0]['listings']))
     say('')
-    if not o.apply:
+    if not apply:
         say(f'{len(todo)} ürün oluşturulacak, {len(relist)} ürünün metinleri güncellenecek. Hiçbir şey değiştirilmedi.')
         return
 
@@ -167,6 +173,62 @@ def main():
             pr = {x['regionCode']: x.get('price') for x in po.get('regionalPricingAndAvailabilityConfigs', [])}
             say(f"| `{p['productId']}` | {po.get('purchaseOptionId')} | {po.get('state')} | "
                 f"{show(pr['US']) if pr.get('US') else '-'} | {show(pr['TR']) if pr.get('TR') else '-'} | {len(p.get('listings', []))} |")
+
+
+SUB = LIST.with_name('play-abonelik.json')  # the VIP subscription: one auto-renewing monthly base plan
+
+
+def subscription(s, apply):
+    if not SUB.exists():
+        return
+    cfg = json.loads(SUB.read_text(encoding='utf-8'))
+    pid, bp = cfg['id'], cfg['base_plan']
+    ls = cfg['listings']
+    listings = []
+    for lang, v in sorted(ls.items()):
+        v = ls[v] if isinstance(v, str) else v
+        t, d, ben = v
+        if len(t) > 55 or len(d) > 200 or len(ben) > 4 or any(len(x) > 40 for x in ben):
+            sys.exit(f'{pid} ({lang}): ad en çok 55, açıklama 200, en fazla 4 fayda ve her biri 40 karakter')
+        listings.append({'languageCode': lang, 'title': t, 'description': d, 'benefits': ben})
+    say('')
+    say('## Abonelik · ' + ('UYGULANIYOR' if apply else 'ÖNİZLEME (değişiklik yok)'))
+    have = {x['productId']: x for x in call(s, 'GET', '/subscriptions', params={'pageSize': 100}).get('subscriptions', [])}
+    cur = have.get(pid)
+    c = call(s, 'POST', '/pricing:convertRegionPrices', json={'price': money('USD', cfg['usd'])})
+    ver = (c.get('regionVersion') or {}).get('version') or '2022/02'
+    regions = []
+    for rc, rp in sorted(c.get('convertedRegionPrices', {}).items()):
+        regions.append({'regionCode': rc, 'newSubscriberAvailability': True, 'price': money('TRY', cfg['try']) if rc == 'TR' else rp['price']})
+    if not any(x['regionCode'] == 'TR' for x in regions):
+        regions.append({'regionCode': 'TR', 'newSubscriberAvailability': True, 'price': money('TRY', cfg['try'])})
+    plan = {'basePlanId': bp, 'regionalConfigs': regions,
+            'autoRenewingBasePlanType': {'billingPeriodDuration': 'P1M', 'gracePeriodDuration': 'P3D', 'accountHoldDuration': 'P30D',
+                                         'resubscribeState': 'RESUBSCRIBE_STATE_ACTIVE', 'legacyCompatible': True}}
+    other = c.get('convertedOtherRegionsPrice') or {}
+    if other.get('usdPrice') and other.get('eurPrice'):
+        plan['otherRegionsConfig'] = {'usdPrice': other['usdPrice'], 'eurPrice': other['eurPrice'], 'newSubscriberAvailability': True}
+    live = cur and any(b.get('basePlanId') == bp and b.get('state') == 'ACTIVE' for b in cur.get('basePlans', []))
+    say(f"`{pid}` / `{bp}`: {'etkin' if live else ('var, etkin değil' if cur else 'oluşturulacak')} · aylık, otomatik yenilenen · "
+        f"ABD ${cfg['usd']} · Türkiye ₺{cfg['try'].replace('.', ',')} · {len(regions)} ülke · {len(listings)} dil")
+    if not apply:
+        return
+    body = {'packageName': PKG, 'productId': pid, 'listings': listings}
+    if not cur:
+        body['basePlans'] = [plan]
+        call(s, 'POST', '/subscriptions', json=body, params={'productId': pid, 'regionsVersion.version': ver})
+        say(f'- `{pid}` oluşturuldu')
+    else:  # an existing subscription: only its texts are brought in line; prices of a live plan stay as they are
+        call(s, 'PATCH', f'/subscriptions/{pid}', json=body, params={'updateMask': 'listings', 'regionsVersion.version': ver})
+        say(f'- `{pid}` metinleri güncellendi ({len(listings)} dil)')
+    if not live:
+        call(s, 'POST', f'/subscriptions/{pid}/basePlans/{bp}:activate', json={'packageName': PKG, 'productId': pid, 'basePlanId': bp})
+        say(f'- `{pid}` / `{bp}` etkinleştirildi')
+    x = call(s, 'GET', f'/subscriptions/{pid}')
+    for b in x.get('basePlans', []):
+        pr = {r['regionCode']: r.get('price') for r in b.get('regionalConfigs', [])}
+        say(f"Son durum: `{b['basePlanId']}` {b.get('state')} · ABD {show(pr['US']) if pr.get('US') else '-'} · "
+            f"Türkiye {show(pr['TR']) if pr.get('TR') else '-'} · {len(x.get('listings', []))} dil")
 
 
 if __name__ == '__main__':

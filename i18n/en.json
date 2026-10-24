@@ -629,6 +629,7 @@
 "{n} 💎 GEREKLİ": "{n} 💎 NEEDED",
 "{n}, {n}, {n}…: {n} saniyede kargo kapsüllerini yut, filoyu eve gönder. Tek şans": "{n}, {n}, {n}…: swallow the cargo pods in {n} seconds and send the fleet home. One shot",
 "{n}/ay": "{n}/month",
+"/ay": "/month",
 "{n}/{n} KAPSÜL": "{n}/{n} PODS",
 "{n}/{n} kapsül. Filo seni bekliyor, biraz daha süre ister misin": "{n}/{n} pods. The fleet is waiting for you, want a little more time",
 "{n}X": "{n}X",

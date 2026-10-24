@@ -3357,9 +3357,9 @@ async function monInit(){
         restorePurchases(true);}}catch(e){}}
   monApply();vipTick();if(bestLevel>=3)adsKick(1500); // past the tutorial: ads can start right away (a consent form never covers the first levels)
 }
-const IAP_HOLD=new Set(['vip_monthly']); // first release: no subscription yet (the code stays; take the id out of this set to sell it)
+const IAP_HOLD=new Set(); // products kept out of the shop (1.5.4: the VIP subscription is on sale; put an id back here to hold it)
 const iapShow=p=>owned(p)||(!IAP_HOLD.has(p.id)&&(MON.mode!=='play'||!!MON.prices[p.id])); // in the Play app, only products that exist in Play Console
-function priceOf(p){return (MON.prices[p.id]||p.price)+(p.per||'');}
+function priceOf(p){return (MON.prices[p.id]||p.price)+(p.per?T(p.per):'');} // the period on its own: '{n}/ay' misses prices whose currency comes after the number (3,99 €)
 // "worth ..." under a pack: the TL text in Turkey; elsewhere the same ratio (vx) of the price Play shows, in that currency, rounded to a .99 price
 function valOf(p){if(!p.val)return '';const x=MON.mic[p.id];if(!x||x.c==='TRY'||!p.vx)return p.val;try{const f=new Intl.NumberFormat(LOC,{style:'currency',currency:x.c}),dg=f.resolvedOptions().maximumFractionDigits,v=x.m/1e6*p.vx;
   return T('değeri {v}',{v:f.format(dg?Math.max(0,Math.round(v)-1/10**dg):Math.round(v))});}catch(e){return '';}}

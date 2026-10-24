@@ -1,0 +1,32 @@
+{
+  "_": "Play aboneliği vip_monthly (24 Eki kararı): temel plan monthly, aylık otomatik yenilenen, ABD $3.99, Türkiye ₺39,99. Ad ≤55, açıklama ≤200, en fazla 4 fayda (her biri ≤40). Terimler oyunun i18n çevirileriyle aynı. scripts/play_products.py okur.",
+  "id": "vip_monthly",
+  "base_plan": "monthly",
+  "usd": "3.99",
+  "try": "39.99",
+  "listings": {
+    "en-US": ["VIP Club", "Monthly VIP membership in Blackhole Storm. Renews automatically every month; cancel anytime in Google Play.",
+      ["Unlimited fusion fuel", "Extra 15 gems + 1 shield every day", "Monthly pack with 300 gems and more", "Second Lab upgrade slot"]],
+    "tr-TR": ["VIP Kulüp", "Blackhole Storm'da aylık VIP üyelik. Her ay otomatik yenilenir; Google Play'den istediğin zaman iptal edebilirsin.",
+      ["Sınırsız füzyon yakıtı", "Her gün ekstra 15 elmas + 1 kalkan", "Aylık paket: 300 elmas ve fazlası", "İkinci Lab yuvası"]],
+    "de-DE": ["VIP-Club", "Monatliche VIP-Mitgliedschaft in Blackhole Storm. Verlängert sich automatisch jeden Monat; jederzeit in Google Play kündbar.",
+      ["Unbegrenzter Fusionstreibstoff", "Täglich 15 Diamanten + 1 Schild extra", "Monatspaket: 300 Diamanten und mehr", "Zweiter Laborplatz"]],
+    "es-ES": ["Club VIP", "Membresía VIP mensual en Blackhole Storm. Se renueva automáticamente cada mes; cancela cuando quieras en Google Play.",
+      ["Combustible de fusión ilimitado", "15 diamantes + 1 escudo extra al día", "Pack mensual: 300 diamantes y más", "Segundo espacio de laboratorio"]],
+    "es-419": "es-ES",
+    "fr-FR": ["Club VIP", "Abonnement VIP mensuel à Blackhole Storm. Renouvelé automatiquement chaque mois ; résiliable à tout moment sur Google Play.",
+      ["Carburant de fusion illimité", "15 diamants + 1 bouclier en plus/jour", "Pack mensuel : 300 diamants et plus", "Deuxième emplacement de labo"]],
+    "pt-BR": ["Clube VIP", "Assinatura VIP mensal em Blackhole Storm. Renova automaticamente todo mês; cancele quando quiser no Google Play.",
+      ["Combustível de fusão ilimitado", "15 diamantes + 1 escudo extra por dia", "Pacote mensal: 300 diamantes e mais", "Segundo espaço de laboratório"]],
+    "pt-PT": ["Clube VIP", "Subscrição VIP mensal em Blackhole Storm. Renova-se automaticamente todos os meses; cancela quando quiseres no Google Play.",
+      ["Combustível de fusão ilimitado", "15 diamantes + 1 escudo extra por dia", "Pacote mensal: 300 diamantes e mais", "Segundo espaço de laboratório"]],
+    "ru-RU": ["VIP-клуб", "Ежемесячная VIP-подписка в Blackhole Storm. Продлевается автоматически каждый месяц; отменить можно в любой момент в Google Play.",
+      ["Безлимитное термоядерное топливо", "Каждый день +15 алмазов и 1 щит", "Ежемесячный набор: 300 алмазов и др.", "Второй слот лаборатории"]],
+    "ja-JP": ["VIPクラブ", "Blackhole Stormの月額VIPメンバーシップ。毎月自動で更新され、Google Playからいつでも解約できます。",
+      ["核融合燃料無制限", "毎日ダイヤ15個とシールド1個を追加", "毎月ダイヤ300個などのパック", "ラボの2枠目が使える"]],
+    "id": ["Klub VIP", "Keanggotaan VIP bulanan di Blackhole Storm. Diperpanjang otomatis setiap bulan; batalkan kapan saja di Google Play.",
+      ["Bahan bakar fusi tanpa batas", "Ekstra 15 berlian + 1 perisai tiap hari", "Paket bulanan: 300 berlian dan lainnya", "Slot lab kedua"]],
+    "ar": ["نادي VIP", "عضوية VIP شهرية في Blackhole Storm. تتجدد تلقائيًا كل شهر، ويمكنك الإلغاء في أي وقت من Google Play.",
+      ["وقود اندماج غير محدود", "15 ماسة ودرع إضافيان كل يوم", "حزمة شهرية: 300 ماسة والمزيد", "خانة مختبر ثانية"]]
+  }
+}

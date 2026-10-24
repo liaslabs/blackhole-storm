@@ -629,6 +629,7 @@
 "{n} 💎 GEREKLİ": "{n} 💎 REQUIS",
 "{n}, {n}, {n}…: {n} saniyede kargo kapsüllerini yut, filoyu eve gönder. Tek şans": "{n}, {n}, {n}… : avale les capsules de fret en {n} secondes et renvoie la flotte chez elle. Une seule chance",
 "{n}/ay": "{n}/mois",
+"/ay": "/mois",
 "{n}/{n} KAPSÜL": "{n}/{n} CAPSULES",
 "{n}/{n} kapsül. Filo seni bekliyor, biraz daha süre ister misin": "{n}/{n} capsules. La flotte t'attend, veux-tu un peu plus de temps",
 "{n}X": "{n}X",
