@@ -273,7 +273,7 @@ Her güncellemede:
 ```
 
 ## 1.5.4 (25 Ekim) · `REL` 11 · VIP Kulüp
-**Kod 77** (`bhs-v111`): 1.5.3 (76) + VIP aboneliği mağazada (`IAP_HOLD` boş). Abonelik Play'de API ile açıldı (`store/play-abonelik.json`:
+**Kod 77 Dahili test'te** (24 Eki 15:34 TSİ, Play API ile; Android derlemesi 40094144928, `blackhole` 2a7f50b, `bhs-v111`; abonelik 15:30'da açıldı): 1.5.3 (76) + VIP aboneliği mağazada (`IAP_HOLD` boş). Abonelik Play'de API ile açıldı (`store/play-abonelik.json`:
 `vip_monthly`, temel plan `monthly`, aylık otomatik yenilenen, ABD $3.99, Türkiye ₺39,99, 3 gün ödemesiz süre, 30 gün askı, 12 dil).
 Fiyatın yanındaki "/ay" artık para birimi sayıdan sonra gelen ülkelerde de çevriliyor (3,99 €/Monat). Önizleme: `onizleme/vip-magaza.png`.
 Test: lisans hesabıyla abone ol (test aboneliği 5 dakikada bir yenilenir): VIP rozeti, sınırsız yakıt, günlük ekstra, aylık paket, ikinci Lab yuvası;
