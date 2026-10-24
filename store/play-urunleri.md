@@ -3,7 +3,7 @@
 24 Eki kararı. Kimlikler oyunun koduyla (`src/game.src.html` › `IAP`) birebir aynı. Abonelik (`vip_monthly`) oyunda henüz
 kapalı (`IAP_HOLD`), bu listede yok.
 
-Aşağıdaki kod bloğunun tamamı Chrome'daki Claude paneline yapıştırılır.
+**24 Eki:** ürünler bu listeden Play Developer API ile oluşturuldu (Actions › Play mağaza girişi › task `products`, `scripts/play_products.py`). Diğer 10 mağaza dilinin metinleri `play-urunleri-diller.json` içinde. Aşağıdaki blok elle ya da Chrome'daki Claude ile girmek için yedek olarak duruyor.
 
 ```
 Google Play Console'da "Blackhole Storm: Black Hole" uygulaması için aşağıdaki 11 tek seferlik ürünü oluştur

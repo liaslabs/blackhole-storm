@@ -1,10 +1,12 @@
 """One-time (in-app) products through the Play Developer API (run by .github/workflows/play-store.yml, task "products").
 
-Reads the product list in store/play-urunleri.md (id, US price, Turkey price, en-US and tr-TR name and description).
+Reads the product list in store/play-urunleri.md (id, US price, Turkey price, en-US and tr-TR name and description)
+and the other store languages from store/play-urunleri-diller.json.
 Without --apply it only reads: what Play already has, and what would be created with which prices.
 With --apply it creates the missing products (purchase option "default", buy, backward compatible), prices every
 region from the US price with Play's own conversion, sets Turkey to its TL price, and activates them.
-A product that already has an active purchase option is left alone. Subscriptions are not touched.
+A product that already has an active purchase option keeps its prices; only its names and descriptions are brought
+in line with the files. Subscriptions are not touched.
 """
 import argparse, json, os, re, sys
 from decimal import Decimal
@@ -16,6 +18,7 @@ from google.oauth2 import service_account
 PKG = 'com.liaslabs.blackholestorm'
 BASE = f'https://androidpublisher.googleapis.com/androidpublisher/v3/applications/{PKG}'
 LIST = Path(__file__).resolve().parent.parent / 'store' / 'play-urunleri.md'
+LANGS = LIST.with_name('play-urunleri-diller.json')  # the other store languages: {lang: {id: [title, description]} or another lang}
 SUMMARY = os.environ.get('GITHUB_STEP_SUMMARY')
 out = []
 
@@ -49,11 +52,22 @@ def products():
             pid, usd, tl, en_t, en_d, tr_t, tr_d = m.groups()
             ps.append({'id': pid, 'usd': usd, 'try': tl.replace('.', '').replace(',', '.'),
                        'en': (en_t, en_d), 'tr': (tr_t, tr_d)})
+    more = {k: v for k, v in json.loads(LANGS.read_text(encoding='utf-8')).items() if k != '_'} if LANGS.exists() else {}
     for p in ps:
-        for t, d in (p['en'], p['tr']):
+        p['listings'] = [('en-US',) + p['en'], ('tr-TR',) + p['tr']]
+        for lang, v in sorted(more.items()):
+            v = more[v] if isinstance(v, str) else v
+            if p['id'] not in v:
+                sys.exit(f"{lang}: {p['id']} çevirisi yok")
+            p['listings'].append((lang,) + tuple(v[p['id']]))
+        for lang, t, d in p['listings']:
             if len(t) > 55 or not 50 <= len(d) <= 200:
-                sys.exit(f"{p['id']}: ad en çok 55, açıklama 50-200 karakter olmalı")
+                sys.exit(f"{p['id']} ({lang}): ad en çok 55, açıklama 50-200 karakter olmalı")
     return ps
+
+
+def listing_body(p):
+    return [{'languageCode': l, 'title': t, 'description': d} for l, t, d in p['listings']]
 
 
 def call(s, method, path, **kw):
@@ -90,22 +104,34 @@ def main():
     conv = {}
     say('| Kimlik | Durum | ABD | Türkiye | Fiyatlanan ülke | EN ad | TR ad |')
     say('|---|---|---|---|---|---|---|')
-    todo = []
+    todo, relist = [], []
     for p in plan:
         cur = have.get(p['id'])
         live = cur and any(po.get('state') == 'ACTIVE' for po in cur.get('purchaseOptions', []))
+        same = cur and sorted((x['languageCode'], x.get('title'), x.get('description')) for x in cur.get('listings', [])) == sorted(p['listings'])
         if p['usd'] not in conv:
             conv[p['usd']] = call(s, 'POST', '/pricing:convertRegionPrices', json={'price': money('USD', p['usd'])})
         c = conv[p['usd']]
         regions = c.get('convertedRegionPrices', {})
-        state = 'etkin, dokunulmaz' if live else ('taslak var, tamamlanacak' if cur else 'oluşturulacak')
+        state = (('etkin, metinler aynı' if same else f"etkin, metinler güncellenecek ({len(p['listings'])} dil)") if live
+                 else ('taslak var, tamamlanacak' if cur else 'oluşturulacak'))
         say(f"| `{p['id']}` | {state} | ${p['usd']} | ₺{p['try']} | {len(regions)} | {p['en'][0]} | {p['tr'][0]} |")
         if not live:
             todo.append(p)
+        elif not same:
+            relist.append(p)
+    say('')
+    say('Diller: ' + ', '.join(l for l, _, _ in plan[0]['listings']))
     say('')
     if not o.apply:
-        say(f'{len(todo)} ürün oluşturulacak. Hiçbir şey değiştirilmedi.')
+        say(f'{len(todo)} ürün oluşturulacak, {len(relist)} ürünün metinleri güncellenecek. Hiçbir şey değiştirilmedi.')
         return
+
+    for p in relist:
+        ver = (conv[p['usd']].get('regionVersion') or {}).get('version') or '2022/02'
+        call(s, 'PATCH', f"/onetimeproducts/{p['id']}", json={'packageName': PKG, 'productId': p['id'], 'listings': listing_body(p)},
+             params={'updateMask': 'listings', 'regionsVersion.version': ver})
+        say(f"- `{p['id']}` metinleri güncellendi ({len(p['listings'])} dil)")
 
     for p in todo:
         c = conv[p['usd']]
@@ -123,8 +149,7 @@ def main():
         if other.get('usdPrice') and other.get('eurPrice'):
             po['newRegionsConfig'] = {'usdPrice': other['usdPrice'], 'eurPrice': other['eurPrice'], 'availability': 'AVAILABLE'}
         body = {'packageName': PKG, 'productId': p['id'],
-                'listings': [{'languageCode': 'en-US', 'title': p['en'][0], 'description': p['en'][1]},
-                             {'languageCode': 'tr-TR', 'title': p['tr'][0], 'description': p['tr'][1]}],
+                'listings': listing_body(p),
                 'purchaseOptions': [po]}
         call(s, 'PATCH', f"/onetimeproducts/{p['id']}", json=body,  # Play spells this one path in lower case
              params={'updateMask': 'listings,purchaseOptions', 'allowMissing': 'true', 'regionsVersion.version': ver})
@@ -135,13 +160,13 @@ def main():
     say('')
     say('## Play\'deki son durum')
     j = call(s, 'GET', '/oneTimeProducts', params={'pageSize': 100})
-    say('| Kimlik | Seçenek | Durum | ABD | Türkiye |')
-    say('|---|---|---|---|---|')
+    say('| Kimlik | Seçenek | Durum | ABD | Türkiye | Dil |')
+    say('|---|---|---|---|---|---|')
     for p in sorted(j.get('oneTimeProducts', []), key=lambda x: x['productId']):
         for po in p.get('purchaseOptions', []):
             pr = {x['regionCode']: x.get('price') for x in po.get('regionalPricingAndAvailabilityConfigs', [])}
             say(f"| `{p['productId']}` | {po.get('purchaseOptionId')} | {po.get('state')} | "
-                f"{show(pr['US']) if pr.get('US') else '-'} | {show(pr['TR']) if pr.get('TR') else '-'} |")
+                f"{show(pr['US']) if pr.get('US') else '-'} | {show(pr['TR']) if pr.get('TR') else '-'} | {len(p.get('listings', []))} |")
 
 
 if __name__ == '__main__':
