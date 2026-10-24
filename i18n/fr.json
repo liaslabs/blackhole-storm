@@ -1629,6 +1629,7 @@
 "{n} saat lab hızlandırma": "{n} h d'accélération du labo",
 "yalnızca bu pakette {s} görünümü": "apparence {s}, uniquement dans ce pack",
 "değeri ₺{n}": "valeur ₺{n}",
+"değeri {v}": "valeur {v}",
 "Yeni görünüm takıldı": "Nouvelle apparence équipée",
 "{n}. lab yuvası açıldı": "Emplacement de labo n°{n} débloqué",
 "{n}. yuvan vardı: +{n}": "Tu avais déjà l'emplacement {n} : +{n}",

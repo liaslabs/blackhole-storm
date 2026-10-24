@@ -1629,6 +1629,7 @@
 "{n} saat lab hızlandırma": "{n} h lab speed-up",
 "yalnızca bu pakette {s} görünümü": "{s} look, only in this pack",
 "değeri ₺{n}": "worth ₺{n}",
+"değeri {v}": "worth {v}",
 "Yeni görünüm takıldı": "New look equipped",
 "{n}. lab yuvası açıldı": "Lab slot {n} unlocked",
 "{n}. yuvan vardı: +{n}": "You already had slot {n}: +{n}",

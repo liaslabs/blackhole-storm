@@ -1629,6 +1629,7 @@
 "{n} saat lab hızlandırma": "{n} ساعة تسريع للمختبر",
 "yalnızca bu pakette {s} görünümü": "مظهر {s} في هذه الحزمة فقط",
 "değeri ₺{n}": "قيمته ₺{n}",
+"değeri {v}": "قيمته {v}",
 "Yeni görünüm takıldı": "تم تفعيل المظهر الجديد",
 "{n}. lab yuvası açıldı": "تم فتح خانة المختبر {n}",
 "{n}. yuvan vardı: +{n}": "كانت لديك الخانة {n}: +{n}",
