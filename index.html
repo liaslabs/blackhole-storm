@@ -2143,6 +2143,8 @@ const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 /* RELEASE GATE: updates go out in steps during the closed test. REL is the release this build ships (1.4.6 -> 6, 1.4.7 -> 7 ...);
    a feature waiting for a later release checks rel(n). The developer link always sees everything, so it previews what is coming. */
 const REL=11,rel=n=>DEV||REL>=n;
+// 24 Oct preview: a calmer level 1 (no cards, slow motion for the meteor, a glowing Vortex button, notes held to the end). ?dev&ftue=0 shows the old one
+const FTUE2=()=>DEV?new URLSearchParams(location.search).get('ftue')!=='0':REL>=12;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
@@ -3109,7 +3111,8 @@ const ACHS=[
 ];
 let achShowing=false;const ACH_STALE=5000;
 function checkAchs(){for(const a of ACHS){if(!unlockedAch.has(a.id)&&a.c()){unlockedAch.add(a.id);achQueue.push({...a,at:performance.now()});saveLater();}}if(achQueue.length&&!achShowing)nextAch();}
-function nextAch(){const now=performance.now();while(achQueue.length&&now-(achQueue[0].at||now)>ACH_STALE)achQueue.shift(); // a note that waited too long in line is skipped (the achievement stays unlocked)
+function nextAch(){if(FTUE2()&&typeof G2!=='undefined'&&G2.on&&G2.script&&achQueue.length){achShowing=true;for(const q of achQueue)q.at=performance.now();setTimeout(()=>{achShowing=false;nextAch();},1500);return;} /* FTUE2: notes wait until the tutorial is over */
+  const now=performance.now();while(achQueue.length&&now-(achQueue[0].at||now)>ACH_STALE)achQueue.shift(); // a note that waited too long in line is skipped (the achievement stays unlocked)
   if(!achQueue.length){achShowing=false;return;}achShowing=true;const a=achQueue.shift();
   $('tI').textContent=a.i;$('tT').textContent=a.t;$('tD').textContent=a.d;$('toast').classList.add('on');sfx('achieve',{vol:.55,rev:.3});
   setTimeout(()=>{$('toast').classList.remove('on');setTimeout(nextAch,350);},2400);}
@@ -5683,7 +5686,7 @@ function v2Start(mode){if(typeof lagMark==='function')lagMark('st');if(mode!=='s
     shardAt:mode==='sprint'||G2.L.boss||l<4?1e9:mode==='surv'?40:rrnd(12,Math.max(14,G2.L.dur-18)),
     rr:V2K.r0,cap:V2K.r0*G2.L.capMul,peak:V2K.r0,vx:0,vy:0,combo:0,comboT:0,best:0,rage:0,rageT:0,ready:false,readyT:0,firstRage:false,
     timeT:0,overT:0,overDone:false,immT:0,dodgeCD:0,eaten:0,perfA:0,perfD:0,dmg:0,acc:.6,swarm:0,swarmT:0,
-    script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0,noRage:0,tSh0:0,tNova0:0,tw:null,gb:null});
+    script:mode==='level'&&level===1&&!REPLAY&&!HMODE?v2Script1():null,si:0,st:0,tutSlow:0,rageHint:0,tut:mode==='level'&&level===1&&!HMODE?1:0,touched:false,contUsed:false,failCounted:0,boss:null,ending:0,endT:0,sprBlock:-1,starCont:0,lifeGift:0,monoN:1,monoT:1,arcs:3,afx:[],arcBrk:null,arcFill:9,lastArcT:0,shells:0,shBrk:null,arcFix:null,pdRun:0,gold:0,goldT:-9,cracks:0,regT:0,flaw:0,alarm:null,featShown:0,noRage:0,tSh0:0,tNova0:0,tw:null,gb:null});
   comboCount=0;lostThisLevel=false;lvCombo=0;
   hX=W/2;hY=H*.7;G2.tx=hX;G2.ty=hY;G2.lx=hX;G2.ly=hY;DRAG.id=null;
   G2.hm=mode==='level'&&HMODE?1:0;G2.dstorm=mode==='surv'&&STORM.on?1:0;G2.tSh=mode==='surv'&&rel(9)?3:null;G2.tNova=mode==='surv'&&rel(9)?V2K.nova.max:null; /* 1.4.9: the tournament gives everyone the same 3 shields, apart from their own stock and with none for sale */G2.beltN=0;G2.arcPow=0;G2.eN=0;G2.arcMax=v2ArcMaxL(l);const bst=mode==='level'&&!REPLAY&&SHOP.boostLv===l?SHOP.boostK:'';if(bst){SHOP.boostLv=0;saveG();}if(mode==='level'&&!REPLAY&&(SHOP.arcLv===l||bst==='arc')){G2.arcMax=Math.min(3,G2.arcMax+1);if(SHOP.arcLv===l)SHOP.arcLv=0;saveG();} /* an ad watched after a failed peak: one extra arc for the next try */G2.arc0=G2.arcMax;G2.arcs=G2.arcMax;if(bst){if(bst==='rage')G2.rage=100;else if(bst==='shell')G2.shells=Math.max(G2.shells,1);else if(bst==='gold')G2.gold=1;else if(bst==='shield'){G2.shT=v2ShDur();G2.shTick=0;}const B=BOOSTS[bst];later(()=>{if(G2.on)v2Call(B.ic+' '+T(B.c),'','#9fd8ff',1.6,true);},2400);} /* the level-end ad's head start */if(mode==='level')lives=G2.hm?2:3; // every level starts with 3 lives (2 in Hard Mode); the stars count what is left
@@ -5852,10 +5855,11 @@ function v2RunScript(dt){
   if(rel(11))v2TutFill(dt); // 1.4.9: the tutorial runs a third faster // hold the clock while Rage waits for its tap
   const E=G2.script;
   while(G2.si<E.length&&E[G2.si][0]<=G2.st){const [t,k,x]=E[G2.si++];
-    if(k==='meteor'){const side=hX<W/2?1:-1,mx=clamp(hX+side*(G2.R+sp2(60)),sp2(24),W-sp2(24));v2Obj('meteor',mx,-sp2(30),0,v2Speed('meteor')*.8,{wait:1});v2Call('☄️ METEOR!','ONDAN KAÇ','#ff7a5c',1.2,true);continue;}
+    if(k==='meteor'){const side=hX<W/2?1:-1,mx=clamp(hX+side*(G2.R+sp2(60)),sp2(24),W-sp2(24));v2Obj('meteor',mx,-sp2(30),0,v2Speed('meteor')*.8,{wait:1});v2Call('☄️ METEOR!','ONDAN KAÇ','#ff7a5c',FTUE2()?2.4:1.2,true);if(FTUE2())G2.tutSlow=2.6;continue;} /* FTUE2: slow motion while it comes, no card */
     const xx=x==='hole'?clamp(hX+rnd(-10,10),sp2(30),W-sp2(30)):W*x;const o=v2Edge(k,0,xx);o.vx=0;if(k==='ast'&&G2.si<=1)o.vy*=.75;}
   if(G2.st>=42&&!G2.firstRage&&G2.rage<100&&G2.rageT<=0&&!G2.ready)G2.rage=Math.min(100,G2.rage+dt*40); // the first Rage always arrives, once
-  if(G2.ready&&G2.readyT>5)v2RageGo(); // tutorial only: nobody leaves level 1 without seeing Rage
+  if(FTUE2()&&G2.ready&&!G2.rageHint){G2.rageHint=1;$('rage2')&&$('rage2').classList.add('hl');v2Call(T('DOKUN → VORTEX'),'','#ffb35c',2.6,true);} /* FTUE2: the button glows instead of a card */
+  if(G2.ready&&G2.readyT>(FTUE2()?3:5)){$('rage2')&&$('rage2').classList.remove('hl');v2RageGo();} // tutorial only: nobody leaves level 1 without seeing Rage
   if(rel(11)&&G2.st>=30&&!G2.ev2){G2.ev2=1;evOnce('tut2');} // halfway through the tutorial
   if(G2.si>=E.length&&G2.st>=(E.length?E[E.length-1][0]:0)+2){G2.script=null;if(rel(11)){evOnce('tut3');natMark('tutorial over');}} // the tutorial script is over: normal spawning takes it from here
 }
@@ -6710,6 +6714,7 @@ function v2Score(o,mini){
   const perf=!mini&&o.inG&&o.b<V2K.perfectK*G2.G&&!o.chain;
   const m=MULT2(G2.combo);let pts=K.pts*m;if(perf)pts*=1.5;if(G2.rageT>0)pts*=V2K.rage.score;if(G2.ev&&G2.ev.k==='eclipse')pts*=1.5;pts*=G2.modSc||1;if(o.gold2)pts=Math.max(pts*1.5,150*m);const gs=o.k==='gold'&&G2.mode!=='sprint'&&seasonIs('gold');if(gs){pts*=2;spAdd(2);}if(o.k==='icec')pts*=2;if(G2.mode==='sprint')pts*=1+Math.min(G2.combo,20)*.05; /* in the race a long combo counts double */pts=Math.round(pts);
   const wo=v2WinOut();if(wo&&o.k!=='prey'){pts=0;if(!G2.woT||G2.t-G2.woT>1.2){G2.woT=G2.t;v2Pop(wo>0?T('ÇOK BÜYÜK · 0'):T('ÇOK KÜÇÜK · 0'),'#ff8a7a',15);}} // outside the size window nothing scores
+  if(FTUE2()&&G2.script)pts*=8; /* FTUE2: in the tutorial every bite visibly fills the bar */
   totalScore+=pts;levelScore+=pts;if(o.k==='garc'&&G2.gb)G2.gb.ts+=pts; /* an arc's own points never fill the bar for the next one */G2.eaten++;if(G2.mode!=='sprint')atlasAdd(o.k);v2Spec(o);
   if(o.k==='icec'){G2.iceT=ICE.dur;v2Pop('×2 · +'+pts,'#bfe6ff',19);v2Call('❄ BUZ TUTTU','3 SN AĞIR HAREKET','#bfe6ff',1.2);v2Burst(hX,hY,26,'#dff4ff',1.5,6,.7,2);v2Sfx('gem',{vol:.6,rate:.7});vib(25);}
   if(gs){v2Pop('ALTIN SEZON ×2 · +'+pts,'#ffd76a',19);v2Burst(o.x,o.y,26,'#ffd76a',2,8,.8,2.2);v2Sfx('sparkle',{vol:.5,rate:.9});} // a golden-season gold planet: double points, a shower of gold
@@ -7021,6 +7026,7 @@ function v2TipFor(o){let id=null;
   if(!id||TIPS[id]||v2Tip(id,o))o.tipd=1;}
 function v2Tip(id,tg){
   if(TIPS[id]||G2.tip||gState!=='playing'||G2.ending||G2.tipCD>0||(G2.script&&!G2.touched)||RAID&&gameMode==='sprint')return false; /* no cards during the raid */
+  if(FTUE2()&&G2.script&&(id==='meteor'||id==='rage'||id==='arcs'))return false; /* FTUE2: level 1 shows these by doing; the cards come on the first meteor and Vortex after it */
   if(rel(11)&&SET.tips===false&&!G2.script&&!G2.tut)return false; /* 21 Oct: tips turned off in Settings (the tutorial still teaches) */
   if(TIP_SOFT.has(id)&&!G2.tut&&(G2.tipGap>0||G2.tipN>=2||G2.tipF))return false;
   if(TIP_SOFT.has(id)&&v2TipFlowOn())return v2TipFlow(id,tg);
@@ -7326,7 +7332,7 @@ function v2Frame(dt){
   const f=dt*60;clock+=dt;
   if(rel(9)){let n=0;for(const o of G2.objs)if(o.st==='in')n++;G2.fxBusy=G2.fxBusy?n>8:n>11;} /* 1.4.9: a full screen (12+ bodies) skips the blur passes until it thins out (8) */
   heat=Math.max(G2.rageT>0?.55:Math.min(.4,G2.combo*.02),heat-dt*.8);shock=Math.max(0,shock-dt*1.6);flash=Math.max(0,flash-dt*1.4);
-  if(gState==='playing'){if(G2.mega)v2MegaStep(dt);else if(G2.freeze>0){G2.freeze-=dt;v2FreezeFx(dt);if(G2.freeze<=0&&G2.lifeHit){G2.lifeHit=0;G2.revT=REV_T;}}else v2Update(dt);}
+  if(gState==='playing'){if(G2.mega)v2MegaStep(dt);else if(G2.freeze>0){G2.freeze-=dt;v2FreezeFx(dt);if(G2.freeze<=0&&G2.lifeHit){G2.lifeHit=0;G2.revT=REV_T;}}else v2Update(G2.tutSlow>0?(G2.tutSlow-=dt,dt*.4):dt);}
   else{for(let i=G2.parts.length-1;i>=0;i--){const p=G2.parts[i];p.x+=p.vx*f;p.y+=p.vy*f;p.life-=dt;if(p.life<=0)G2.parts.splice(i,1);}
     for(const o of G2.objs)if(o.st==='sw'&&gState==='lvlup_anim'&&v2SwallowStep(o,dt))o.st='dead';G2.objs=G2.objs.filter(o=>o.st!=='dead');}
   v2Dims();const Rl=G2.R,Gl=G2.G;if(rel(10)&&G2.Rv){G2.R=G2.Rv;G2.G=G2.Gv;} /* drawing uses the size on its way; the true size comes back below */

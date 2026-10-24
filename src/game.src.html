@@ -1826,6 +1826,8 @@ const DEV=/[?&]dev\b/.test(location.search),DEV_LV=1000;
 /* RELEASE GATE: updates go out in steps during the closed test. REL is the release this build ships (1.4.6 -> 6, 1.4.7 -> 7 ...);
    a feature waiting for a later release checks rel(n). The developer link always sees everything, so it previews what is coming. */
 const REL=11,rel=n=>DEV||REL>=n;
+// 24 Oct preview: a calmer level 1 (no cards, slow motion for the meteor, a glowing Vortex button, notes held to the end). ?dev&ftue=0 shows the old one
+const FTUE2=()=>DEV?new URLSearchParams(location.search).get('ftue')!=='0':REL>=12;
 // The Android app (Capacitor) runs this same page from inside the app; native features go through its plugins.
 const NATIVE=!!(window.Capacitor&&window.Capacitor.isNativePlatform&&window.Capacitor.isNativePlatform()),APP_URL='https://liaslabs.github.io/blackhole-storm/';
 const CAP=n=>NATIVE&&window.Capacitor.Plugins?window.Capacitor.Plugins[n]||null:null;
@@ -2792,7 +2794,8 @@ const ACHS=[
 ];
 let achShowing=false;const ACH_STALE=5000;
 function checkAchs(){for(const a of ACHS){if(!unlockedAch.has(a.id)&&a.c()){unlockedAch.add(a.id);achQueue.push({...a,at:performance.now()});saveLater();}}if(achQueue.length&&!achShowing)nextAch();}
-function nextAch(){const now=performance.now();while(achQueue.length&&now-(achQueue[0].at||now)>ACH_STALE)achQueue.shift(); // a note that waited too long in line is skipped (the achievement stays unlocked)
+function nextAch(){if(FTUE2()&&typeof G2!=='undefined'&&G2.on&&G2.script&&achQueue.length){achShowing=true;for(const q of achQueue)q.at=performance.now();setTimeout(()=>{achShowing=false;nextAch();},1500);return;} /* FTUE2: notes wait until the tutorial is over */
+  const now=performance.now();while(achQueue.length&&now-(achQueue[0].at||now)>ACH_STALE)achQueue.shift(); // a note that waited too long in line is skipped (the achievement stays unlocked)
   if(!achQueue.length){achShowing=false;return;}achShowing=true;const a=achQueue.shift();
   $('tI').textContent=a.i;$('tT').textContent=a.t;$('tD').textContent=a.d;$('toast').classList.add('on');sfx('achieve',{vol:.55,rev:.3});
   setTimeout(()=>{$('toast').classList.remove('on');setTimeout(nextAch,350);},2400);}
