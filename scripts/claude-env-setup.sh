@@ -120,15 +120,21 @@ else
   log "graphify kurulamadı"
 fi
 
-# Skill kullanım kuralı: her oturumda okunan global CLAUDE.md'ye bir kez eklenir.
-# Graphify da bu dosyaya yazdığı için ondan sonra çalışır.
-if ! grep -qF '# skill-first' "$HOME/.claude/CLAUDE.md" 2>/dev/null; then
-  cat >> "$HOME/.claude/CLAUDE.md" <<'RULE_EOF'
-
-# skill-first
-Before starting any task, quickly scan the installed skills (global and account) and use every one that fits; say in one line which skill(s) you used. If none fits and the task is a recurring kind, suggest a skill that could be installed (find-skills can search), but never install one without the user's approval.
-RULE_EOF
-fi
+# Skill kullanım kuralı: her oturumda okunan global CLAUDE.md'ye yazılır.
+# Graphify da bu dosyaya yazdığı için ondan sonra çalışır. Eski sürümü varsa yenisiyle değiştirilir.
+python3 - <<'PY_EOF' || log "skill kuralı yazılamadı"
+import re
+from pathlib import Path
+path = Path.home() / ".claude" / "CLAUDE.md"
+rule = ("# skill-first\n"
+        "Before starting any task, quickly scan the installed skills (global and account) and use every one that fits. "
+        "When you used a skill, say in one line which one(s); if you used none, say nothing about skills. "
+        "If none fits and the task is a recurring kind, suggest a skill that could be installed (find-skills can search), "
+        "but never install one without the user's approval.\n")
+text = path.read_text() if path.exists() else ""
+text = re.sub(r"\n*# skill-first\n[^\n]*\n?", "\n", text).rstrip("\n")
+path.write_text((text + "\n\n" if text else "") + rule)
+PY_EOF
 
 # ---------------------------------------------------------------------------
 # C) Key/cookie hook'u: her oturum başında ortam değişkenlerinden ayarlar
