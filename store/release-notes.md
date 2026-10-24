@@ -304,12 +304,7 @@ bildirim, paylaşım, titreşim.
   - Sunucu: `server/fleet.js` (tablolar ilk kullanımda kurulur), günlük işte hafta hesabı ve hareketsizlik kuralları.
 - **Ad süzgeci** (13 Eki): oyuncu ve filo adları için tek ortak dosya (`src/names.js`, oyun ve sunucu aynı dosyayı kullanır): 11 dil küfür/hakaret/aşırıcı listesi, ayrılmış kelimeler (admin, moderatör, resmi, destek, oyun ve stüdyo adları), harf yerine rakam, aksan, Kiril/Latin benzerleri, Arapça hareke, katakana; bağlantı, telefon numarası, uzun harf tekrarı reddedilir. Arapça ve Kürtçe (13 Eki) webden genişletildi: LDNOOBW Arapça listesi, wooorm/cuss Arapça-Latin (arabizi) listesi, sweardictionary.com ve youswear.com; cinsel küfürler, anne/kız kardeş hakaretleri, ima ve argo (ör. كس أختك, متناك, ديوث, kosomak, sharmouta, Kuzê diya te, qundek, sekbav, bênamûs). Yaygın adlar (Zubeyde/زبيدة, İshak/إسحاق, Ferec/فرج, Kisra/كسرى, Kuzey, Kuzgun, Zana, Ata, Amina…) serbest kalsın diye kısa kelimeler yalnızca tam kelime olarak aranır; 196 deneme temiz. Sunucu yayınlanınca (13 Eki) sıralamadaki oyuncu adlarına, yani 1.5.0'a da hemen uygulanır.
 
-```
-<en-US>
-• Smaller download and faster start
-• The game now uses the full screen on newer Android phones
-</en-US>
-```
+(Eski taslak not çıkarıldı, 24 Eki: kod 73'ün notu bu bölümün başında; Play aynı dilde iki not kabul etmez.)
 
 ## 1.5.x (eski plan) · Japonca gelir, Kürtçe kalkar
 - Neden: Japonya oyuncu başına en çok kazandıran mobil pazar ve oyuncular kendi dillerinde oynamayı bekliyor; "her şeyi yut" türü orada sevilen bir tür. Kürtçe mağazada zaten yoktu (Play'in dil listesinde bulunmuyor).
