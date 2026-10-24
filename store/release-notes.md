@@ -271,6 +271,12 @@ Her güncellemede:
 ```
 
 ## 1.5.2 (plan) · Android bakım güncellemesi
+**Kod 75 derlendi, bekliyor** (24 Eki 13:24 TSİ, Android derlemesi 40085554523, `blackhole` 5b6cf8f): 74 + Android 8–9 açılış çökmesine karşı.
+Play Console'da 71 için `MainActivity.onCreate` `java.lang.NoClassDefFoundError`, Android 8.0 ve 9 (biri Lenovo "seoul"), 2 kullanıcı, yığın izi
+gösterilmiyor. 75'te Play Oyunlar girişi, uçtan uca ekran, pencere/çentik ayarı ve çubuk gizleme `try` içinde (biri o telefonda yoksa atlanır),
+sayfa yüklenmeden olan hata ve yakalanmamış çökme uygulamanın kendisinden `/err`'e (`BOOT ...`, sürüm `app-75`). Dahili test'e 74'ün üretim
+incelemesi bitince (inceleme sırasında Play'e değişiklik gönderilmez).
+
 **Kod 73 derlendi** (24 Eki 12:00 TSİ, Android derlemesi 40079988042, `blackhole` 1f71f8e, `bhs-v109`; ilk derleme 40078744250 pencere ve filo düzeltmelerinden önceydi): `EdgeToEdge.enable` super.onCreate'ten sonra,
 R8 açık (`proguard-android-optimize` + Capacitor/eklenti/uygulama koruma kuralları), AGP 9.0 + Gradle 9.1 (`android.builtInKotlin=false`,
 `android.newDsl=false`), paketle birlikte `mapping.txt` (Play yüklemesi onu da gönderir). Oyun: 72 + bakmak için açılan 11 pencere (Sıralama/Filo, Ayarlar, Mağaza, Rehber, Atlas, Görevler,
