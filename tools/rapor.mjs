@@ -6,7 +6,7 @@
 const DEMO = process.argv[2] === '--demo' ? JSON.parse((await import('fs')).readFileSync(process.argv[3], 'utf8')) : null;
 const days = DEMO ? 7 : +process.argv[2] || 7, B = process.argv[3] || 'https://blackhole-storm-lb.liaslabs-games.workers.dev';
 const get = async p => { if (DEMO) return { list: p.startsWith('/evs') ? DEMO.evs : [] }; try { const r = await fetch(B + p); return r.ok ? await r.json() : { list: [] }; } catch (e) { return { list: [] }; } };
-const [pings, evs, live, errs, sus, fst] = await Promise.all([get(`/pings?days=${days}`), get(`/evs?days=${days}`), get('/live?days=3'), get(`/errs?days=${Math.min(days, 30)}`), get('/sus'), get('/fleets/stats')]);
+const [pings, evs, live, errs, sus, fst, pst] = await Promise.all([get(`/pings?days=${days}`), get(`/evs?days=${days}`), get('/live?days=3'), get(`/errs?days=${Math.min(days, 30)}`), get('/sus'), get('/fleets/stats'), get(`/purchases/stats?days=${Math.min(days, 30)}`)]);
 const sum = (l, f) => l.filter(f).reduce((a, x) => a + x.n, 0);
 const E = evs.list || [], P = pings.list || [], ev = k => sum(E, x => x.e === k), pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '–';
 const line = (t, ...c) => console.log(t.padEnd(30) + c.map(x => String(x).padStart(10)).join(''));
@@ -32,6 +32,30 @@ line('', ...d1.map(n => `${n} ${pct(n, dn)}`));
 
 console.log('\n== Filolar (sunucudaki toplamlar) ==');
 if (fst && fst.ok) { line('Filo (açık)', fst.fleets, `(${fst.open})`); line('Bu hafta / bugün kurulan', fst.newWeek, fst.newToday); line('Üye (bu hafta katılan)', fst.members, `(${fst.joinedWeek})`); } else console.log('  (alınamadı)');
+
+console.log('\n== Satın almalar (Google doğruladı; sunucu, kişi bilgisi yok) ==');
+{ // 24 Oct: from the server's verified purchases, so the owner's test-card buys are told apart from real ones
+  const PS = pst.list || [], PRICE = { starter: [19.99, 1.99], quasar_hoard: [199.99, 19.99], captain: [29.99, 2.99], cosmic_id: [19.99, 1.99], no_ads: [99.99, 4.99],
+    gems_s: [9.99, 0.99], gems_m: [24.99, 2.49], gems_l: [49.99, 4.99], stars_pack: [12.99, 1.29], lives_pack: [19.99, 1.99], time_pack: [9.99, 0.99], vip_monthly: [39.99, 3.99] };
+  const NM = { starter: 'Başlangıç Paketi', quasar_hoard: 'Kuasar Hazinesi', captain: 'Kaptan Seti', cosmic_id: 'Kozmik Kimlik', no_ads: 'Reklamsız', gems_s: 'Avuç Elmas',
+    gems_m: 'Kese Elmas', gems_l: 'Sandık Elmas', stars_pack: 'Yıldız Yığını', lives_pack: 'Can Deposu', time_pack: 'Zaman Kristalleri', vip_monthly: 'VIP Kulüp (aylık)' };
+  if (!pst.ok) console.log('  (alınamadı)');
+  else {
+    const yest = new Date(Date.now() - 864e5).toISOString().slice(0, 10), real = PS.filter(x => !x.test), test = PS.filter(x => x.test);
+    const n = (l, f) => l.filter(f).reduce((a, x) => a + x.n, 0);
+    line('', 'Dün', `${Math.min(days, 30)} gün`, 'Test');
+    for (const k of Object.keys(NM)) { const t = n(PS, x => x.sku === k); if (t) line(NM[k], n(real, x => x.sku === k && x.day === yest), n(real, x => x.sku === k), n(test, x => x.sku === k)); }
+    line('TOPLAM', n(real, x => x.day === yest), n(real, () => true), n(test, () => true));
+    const tl = real.filter(x => x.region === 'TR').reduce((a, x) => a + x.n * (PRICE[x.sku] || [0])[0], 0);
+    const usd = real.filter(x => x.region !== 'TR').reduce((a, x) => a + x.n * (PRICE[x.sku] || [0, 0])[1], 0);
+    if (real.length) {
+      line('Liste fiyatıyla (yaklaşık)', `₺${tl.toFixed(2)}`, `$${usd.toFixed(2)}`);
+      const ct = {}; for (const x of real) ct[x.region || '?'] = (ct[x.region || '?'] || 0) + x.n;
+      console.log('  Ülke: ' + Object.entries(ct).sort((a, b) => b[1] - a[1]).map(([c, v]) => `${c} ${v}`).join(' · '));
+      console.log('  (vergi ve Google payı dahil liste fiyatı; yurt dışı ABD fiyatı üzerinden. Kesin tutar: Play Console › Ödeme profili › İşlemler)');
+    } else console.log('  Gerçek satın alma yok.');
+  }
+}
 
 console.log('\n== Kullanım ==');
 for (const [k, t] of [['fm_play', 'Filo görevi oynandı'], ['shop', 'Mağaza açıldı'], ['ad', 'Ödüllü reklam izlendi'], ['ntf_y', 'Bildirim: evet'], ['ntf_n', 'Bildirim: hayır'], ['cl_found', 'Bulut: yeni kurulumda yedek bulundu'], ['cl_rest', 'Bulut: geri yüklendi'], ['cl_new', 'Bulut: yeni başladı']]) line(t, ev(k));
@@ -69,7 +93,7 @@ if (ug.length) {
 }
 const prod = [...new Set(E.filter(x => /^p_/.test(x.e)).map(x => x.e.slice(2)))];
 if (prod.length || groups('g_').length || E.some(x => x.e.startsWith('g_'))) {
-  console.log('\n== Satın almalar (gerçek ödeme, 1.5.2+) ==');
+  console.log('\n== Satın alma bağlamı (oyunun sayaçları; test satın almaları da dahil) ==');
   const pn = prod.reduce((a, k) => a + ev('p_' + k), 0);
   const PN = { starter: 'Başlangıç Paketi', quasar_hoard: 'Kuasar Hazinesi', vip_monthly: 'VIP Kulüp (aylık)', captain: 'Kaptan Seti', cosmic_id: 'Kozmik Kimlik', no_ads: 'Reklamsız', time_pack: '5 Zaman kristali', gems_s: '80 💎', gems_m: '250 💎', gems_l: '700 💎' };
   line('Ürün', 'Adet', 'Pay');

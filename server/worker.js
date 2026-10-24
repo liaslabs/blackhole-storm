@@ -125,6 +125,13 @@ async function ensurePurchases(DB) {
   if (purReady) return;
   await DB.prepare('CREATE TABLE IF NOT EXISTS purchases (token TEXT PRIMARY KEY, sku TEXT NOT NULL, pid TEXT NOT NULL, ts INTEGER NOT NULL)').run();
   await DB.prepare('CREATE TABLE IF NOT EXISTS purchase_installs (token TEXT NOT NULL, pid TEXT NOT NULL, PRIMARY KEY (token, pid))').run();
+  // 24 Oct: whether Google says it was a test purchase (licence tester, test card) and the buyer's country, for the morning report
+  const cols = ((await DB.prepare('PRAGMA table_info(purchases)').all()).results || []).map(c => c.name);
+  if (!cols.includes('test')) {
+    await DB.prepare('ALTER TABLE purchases ADD COLUMN test INTEGER').run();
+    await DB.prepare('UPDATE purchases SET test = 1 WHERE test IS NULL').run(); // the rows before this column were the owner's test purchases (24 Oct)
+  }
+  if (!cols.includes('region')) await DB.prepare('ALTER TABLE purchases ADD COLUMN region TEXT').run();
   purReady = true;
 }
 async function gpVerify(env, DB, pid, sku, token) {
@@ -142,7 +149,8 @@ async function gpVerify(env, DB, pid, sku, token) {
   await ensurePurchases(DB);
   const prev = await DB.prepare('SELECT 1 AS x FROM purchases WHERE token = ?').bind(token).first();
   if (kind === 'c' && !prev && p.consumptionState === 1) return { ok: false };   // consumed somewhere this server never saw: not ours to grant
-  await DB.prepare('INSERT OR IGNORE INTO purchases (token, sku, pid, ts) VALUES (?, ?, ?, ?)').bind(token, sku, pid, Date.now()).run();
+  await DB.prepare('INSERT OR IGNORE INTO purchases (token, sku, pid, ts, test, region) VALUES (?, ?, ?, ?, ?, ?)')
+    .bind(token, sku, pid, Date.now(), p.purchaseType === 0 ? 1 : 0, String(p.regionCode || p.countryCode || '').slice(0, 2)).run();
   const row = await DB.prepare('SELECT sku, pid FROM purchases WHERE token = ?').bind(token).first();
   if (!row || row.sku !== sku) return { ok: false };
   if (kind === 'c') {
@@ -429,6 +437,13 @@ export default {
         await ensureErrs(DB);
         const r = await DB.prepare('SELECT day, m, s, v, p, n FROM errs WHERE day >= ? ORDER BY n DESC LIMIT 60').bind(day(Date.now() - (days - 1) * 864e5)).all();
         return json(req, { list: r.results || [] });
+      }
+      if (url.pathname === '/purchases/stats' && req.method === 'GET') { // 24 Oct: verified purchases per day, product, test or not and country; counts only
+        const days = Math.min(30, Math.max(1, +url.searchParams.get('days') || 7));
+        await ensurePurchases(DB);
+        const r = await DB.prepare("SELECT date(ts / 1000, 'unixepoch') AS day, sku, COALESCE(test, 1) AS test, COALESCE(region, '') AS region, COUNT(*) AS n FROM purchases WHERE ts >= ? GROUP BY day, sku, test, region ORDER BY day")
+          .bind(Date.now() - days * 864e5).all();
+        return json(req, { ok: true, list: r.results || [] });
       }
       if (url.pathname === '/verify' && req.method === 'POST') {
         const b = await req.json().catch(() => ({}));
