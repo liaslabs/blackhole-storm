@@ -9,7 +9,7 @@ A product that already has an active purchase option keeps its prices; only its 
 in line with the files. The VIP subscription (store/play-abonelik.json) is created the same way with one monthly
 auto-renewing base plan; once it exists only its texts are updated.
 """
-import argparse, json, os, re, sys
+import argparse, json, os, re, sys, time
 from decimal import Decimal
 from pathlib import Path
 
@@ -72,7 +72,12 @@ def listing_body(p):
 
 
 def call(s, method, path, **kw):
-    r = s.request(method, BASE + path, **kw)
+    for wait in (5, 15, 45, 0):  # Play's monetization API now and then answers 500/503 for a moment: asked again
+        r = s.request(method, BASE + path, **kw)
+        if r.status_code not in (500, 502, 503, 504) or not wait:
+            break
+        print(f'{r.status_code} {method} {path}: {wait} sn sonra yeniden')
+        time.sleep(wait)
     if r.status_code >= 400:
         say(f'**Play hata verdi ({r.status_code})** `{method} {path}`')
         say('```')
