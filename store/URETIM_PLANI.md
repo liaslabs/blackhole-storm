@@ -153,22 +153,24 @@ Sıra önemli: **C1 → C2 → C3 → C4 → C5** (para), **C6–C8** (beyanlar)
 | C4 | Sen | **Lisans testi** | Ayarlar (hesap) › Lisans testi: kendi Gmail'ini ve aileden deneyecek kişileri ekle, yanıt **RESPOND_NORMALLY**. Bu hesaplar test kartıyla para ödemeden alır |
 | C5 | Birlikte | **Satın alma denemesi** | Kod 68'de mağazadan her türden birer ürün al: `starter` (tek sefer), `gems_s` (tekrar), `cosmic_id` (kalıcı), `vip_monthly` (abonelik). Ben her birinin sunucuda doğrulandığını ve oyunda verildiğini kontrol ederim; sonra uygulamayı silip kurup **Satın alımları geri yükle** denenir |
 
-**Ürün tablosu** (`MONETIZATION.md` ile aynı; fiyatları sen girersin):
+**Ürün tablosu** (`MONETIZATION.md` ile aynı; fiyatları sen girersin). **24 Eki kararı (B):** Türkiye TL fiyatı, diğer ülkeler ABD
+fiyatından Google'ın çevirisiyle (TL'nin kabaca onda biri, dolar). Ürün sayfasında satın alma seçeneği kimliği `default`, tür **Satın al**,
+geriye dönük uyumlu açık (uygulama fiyatı bu seçenekten okur). Varsayılan dil en-US, Türkçe çeviri "Çevirileri yönet"ten.
 
-| Kimlik | Ad | Fiyat |
-|---|---|---|
-| `quasar_hoard` | Kuasar Hazinesi | MONETIZATION.md'deki gibi |
-| `starter` | Başlangıç Paketi | ₺19,99 |
-| `captain` | Kaptan Seti | ₺29,99 |
-| `cosmic_id` | Kozmik Kimlik | MONETIZATION.md'deki gibi |
-| `no_ads` | Reklamsız Oyna | MONETIZATION.md'deki gibi |
-| `gems_s` | Avuç Elmas | ₺9,99 |
-| `gems_m` | Kese Elmas | ₺24,99 |
-| `gems_l` | Sandık Elmas | ₺49,99 |
-| `stars_pack` | Yıldız Yığını | ₺12,99 |
-| `lives_pack` | Can Deposu | ₺19,99 |
-| `time_pack` | Zaman Kristalleri | ₺9,99 |
-| `vip_monthly` | VIP Kulüp (abonelik) | ₺39,99 / ay |
+| Kimlik | Ad | Türkiye | ABD (temel) |
+|---|---|---|---|
+| `quasar_hoard` | Kuasar Hazinesi | ₺199,99 | $19.99 |
+| `starter` | Başlangıç Paketi | ₺19,99 | $1.99 |
+| `captain` | Kaptan Seti | ₺29,99 | $2.99 |
+| `cosmic_id` | Kozmik Kimlik | ₺19,99 | $1.99 |
+| `no_ads` | Reklamsız Oyna | ₺99,99 | $4.99 (yurt dışı piyasası; kural dışı) |
+| `gems_s` | Avuç Elmas | ₺9,99 | $0.99 |
+| `gems_m` | Kese Elmas | ₺24,99 | $2.49 |
+| `gems_l` | Sandık Elmas | ₺49,99 | $4.99 |
+| `stars_pack` | Yıldız Yığını | ₺12,99 | $1.29 |
+| `lives_pack` | Can Deposu | ₺19,99 | $1.99 |
+| `time_pack` | Zaman Kristalleri | ₺9,99 | $0.99 |
+| `vip_monthly` | VIP Kulüp (abonelik) | ₺39,99 / ay | $3.99 / ay |
 
 ### Beyanlar (Play Console › Politika › Uygulama içeriği)
 

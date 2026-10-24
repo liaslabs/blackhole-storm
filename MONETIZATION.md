@@ -28,6 +28,10 @@ her ülke için değiştirilebilir, oyun gerçek fiyatı Google Play'den okur.
 | `lives_pack` | Can Deposu | 10 yedek can | Tekrar alınabilir | ₺19,99 |
 | `time_pack` | Zaman Kristalleri | 5 × (+15 sn) | Tekrar alınabilir | ₺9,99 |
 
+**Yurt dışı fiyatları (24 Eki kararı):** tablodaki fiyatlar Türkiye için. Diğer ülkeler ABD fiyatından Google'ın yerel çevirisiyle:
+quasar_hoard $19.99 · starter $1.99 · captain $2.99 · cosmic_id $1.99 · no_ads $4.99 · gems_s $0.99 · gems_m $2.49 · gems_l $4.99 ·
+stars_pack $1.29 · lives_pack $1.99 · time_pack $0.99 · vip_monthly $3.99/ay. Oyun fiyatı her zaman Google Play'den okur.
+
 Başlangıç paketinin altında "değeri ₺79,99" yazar: içeriğin elmas paketleriyle alınmasının yaklaşık karşılığıdır. Paket hiç o fiyata satılmadığı için "indirim" ya da üstü çizili fiyat kullanılmaz (Play'in yanıltıcı beyan kuralı ve Türkiye'deki indirimli satış kuralları).
 
 ### Abonelik (Play Console → Ürünler → Abonelikler)
