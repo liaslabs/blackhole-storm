@@ -372,6 +372,12 @@ export async function fleetRoute(url, req, DB, json, cleanName, deviceOk = async
     const all = ((await DB.prepare('SELECT best FROM fleet_fm WHERE day = ? AND id = ? AND best > 0 ORDER BY best DESC LIMIT 500').bind(d, mm.id).all()).results || []).map(r => r.best); // every best of the day, values only (for tuning the targets)
     return json(req, { ok: true, day: d, n, me, all, list: rows.map(r => ({ name: r.name, emb: r.emb, fleet: shownName({ fid: r.fid, name: r.fn, hidden: r.hidden }), v: r.best, me: r.pid === pid })) });
   }
+  if (p === '/fleets/stats' && req.method === 'GET') { // 24 Oct: counts only, for the morning report: fleets, members, fleets made this week and today (no names, no ids)
+    const now2 = Date.now(), wk0 = Date.parse(weekOf(now2) + 'T00:00:00Z'), d0 = Date.parse(day(now2) + 'T00:00:00Z');
+    const f = await DB.prepare('SELECT COUNT(*) AS n, SUM(CASE WHEN created >= ? THEN 1 ELSE 0 END) AS w, SUM(CASE WHEN created >= ? THEN 1 ELSE 0 END) AS d, SUM(CASE WHEN open = 1 THEN 1 ELSE 0 END) AS o FROM fleets').bind(wk0, d0).first();
+    const m = await DB.prepare('SELECT COUNT(*) AS n, SUM(CASE WHEN joined >= ? THEN 1 ELSE 0 END) AS w FROM fleet_members').bind(wk0).first();
+    return json(req, { ok: true, fleets: f.n || 0, open: f.o || 0, newWeek: f.w || 0, newToday: f.d || 0, members: m.n || 0, joinedWeek: m.w || 0 });
+  }
   if (p === '/fleets/fm' && req.method === 'GET') { // 18 Oct: today's fleet ranking and the week's champions, in mission points (all fleets)
     const pid = url.searchParams.get('pid'), m = await memberOf(DB, pid), wk = weekOf(), days = weekDays(wk), d = day(), R = await fmRows(DB, days[0], days[6]);
     const board = async get => {

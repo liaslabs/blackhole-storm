@@ -6,7 +6,7 @@
 const DEMO = process.argv[2] === '--demo' ? JSON.parse((await import('fs')).readFileSync(process.argv[3], 'utf8')) : null;
 const days = DEMO ? 7 : +process.argv[2] || 7, B = process.argv[3] || 'https://blackhole-storm-lb.liaslabs-games.workers.dev';
 const get = async p => { if (DEMO) return { list: p.startsWith('/evs') ? DEMO.evs : [] }; try { const r = await fetch(B + p); return r.ok ? await r.json() : { list: [] }; } catch (e) { return { list: [] }; } };
-const [pings, evs, live, errs, sus] = await Promise.all([get(`/pings?days=${days}`), get(`/evs?days=${days}`), get('/live?days=3'), get(`/errs?days=${Math.min(days, 30)}`), get('/sus')]);
+const [pings, evs, live, errs, sus, fst] = await Promise.all([get(`/pings?days=${days}`), get(`/evs?days=${days}`), get('/live?days=3'), get(`/errs?days=${Math.min(days, 30)}`), get('/sus'), get('/fleets/stats')]);
 const sum = (l, f) => l.filter(f).reduce((a, x) => a + x.n, 0);
 const E = evs.list || [], P = pings.list || [], ev = k => sum(E, x => x.e === k), pct = (a, b) => b ? Math.round(a * 100 / b) + '%' : '–';
 const line = (t, ...c) => console.log(t.padEnd(30) + c.map(x => String(x).padStart(10)).join(''));
@@ -29,6 +29,9 @@ for (const [k, t] of F) line(t, ev(k), pct(ev(k), f0));
 const d1 = ['a', 'b', 'c', 'd'].map(k => ev('d1_' + k)), dn = d1.reduce((a, b) => a + b, 0);
 line('İlk can kaybı (sn)', '0–10', '10–30', '30–60', '60+');
 line('', ...d1.map(n => `${n} ${pct(n, dn)}`));
+
+console.log('\n== Filolar (sunucudaki toplamlar) ==');
+if (fst && fst.ok) { line('Filo (açık)', fst.fleets, `(${fst.open})`); line('Bu hafta / bugün kurulan', fst.newWeek, fst.newToday); line('Üye (bu hafta katılan)', fst.members, `(${fst.joinedWeek})`); } else console.log('  (alınamadı)');
 
 console.log('\n== Kullanım ==');
 for (const [k, t] of [['fm_play', 'Filo görevi oynandı'], ['shop', 'Mağaza açıldı'], ['ad', 'Ödüllü reklam izlendi'], ['ntf_y', 'Bildirim: evet'], ['ntf_n', 'Bildirim: hayır'], ['cl_found', 'Bulut: yeni kurulumda yedek bulundu'], ['cl_rest', 'Bulut: geri yüklendi'], ['cl_new', 'Bulut: yeni başladı']]) line(t, ev(k));
