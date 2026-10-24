@@ -37,6 +37,8 @@ SKILLS=(
   "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill ui-styling design-system"
   # Video (Remotion)
   "https://github.com/remotion-dev/skills remotion-best-practices remotion-create remotion-markup remotion-captions remotion-multimedia remotion-render remotion-studio remotion-docs remotion-interactivity"
+  # Web kazıma (Scrapling): toplu ve düzenli veri toplama
+  "https://github.com/D4Vinci/Scrapling scrapling-official"
 )
 
 # ---------------------------------------------------------------------------
@@ -98,6 +100,14 @@ for entry in "${SKILLS[@]}"; do
   (cd /tmp && npx -y skills add "$src" --skill $names --agent claude-code -g -y >/dev/null 2>&1) \
     || log "skill kurulamadı: $names"
 done
+
+# Scrapling: ücretsiz web kazıma kütüphanesi ve tarayıcı bileşenleri.
+# "python3" komutunun kullandığı Python'a kurulur (pip başka bir Python'a kurabiliyor).
+if python3 -m pip install -q "scrapling[fetchers]" >/dev/null 2>&1; then
+  scrapling install >/dev/null 2>&1 || log "scrapling tarayıcı bileşenleri kurulamadı"
+else
+  log "scrapling kurulamadı"
+fi
 
 # Graphify: kod tabanını sorgulanabilir bilgi grafiğine çevirir (/graphify)
 if command -v uv >/dev/null 2>&1 && uv tool install -q graphifyy >/dev/null 2>&1; then
